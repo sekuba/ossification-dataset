@@ -16,6 +16,7 @@
           "date": { "type": "string", "description": "UTC; exact block timestamp when the exploit tx is known, else the documented date" },
           "chain": { "type": "string" },
           "category": {
+            "description": "Root cause. Only code-bug rows feed the score curve. oracle-manipulation / economic-design / governance-design / insider-rug are measured boundary rows (they document why they are NOT code bugs). key-compromise / offchain-infra are a non-exhaustive context sample with no measurable code. not-classified marks rows excluded before classification (see measurement.status).",
             "enum": [
               "code-bug",
               "oracle-manipulation",
@@ -24,7 +25,7 @@
               "key-compromise",
               "insider-rug",
               "offchain-infra",
-              "unclassified"
+              "not-classified"
             ]
           },
           "lossUsd": { "type": "number", "description": "verified USD loss (USD-pegged stables at 1:1); crypto-only figures are excluded from the dataset" },

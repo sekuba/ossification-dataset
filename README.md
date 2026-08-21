@@ -1,95 +1,67 @@
 # Ossification Dataset
 
-The exploit dataset behind L2BEAT's **ossification score**. The score of a
-protocol is the interpolated percentile of its critical perimeter's age within
-this dataset's exploited-code ages: *"ossification N means the unchanged
-perimeter has outlived the code age of N% of recorded code-bug exploits."*
+The exploit dataset behind L2BEAT's **ossification score**: a protocol's score
+is the percentile of its critical perimeter's age within this dataset's
+exploited-code ages — *"ossification N = the unchanged perimeter has outlived
+the code age of N% of recorded code-bug exploits."*
 
-Everything here is verifiable from public onchain data: incident times are
-exploit-transaction block timestamps, code ages come from contract-creation
-lookups and EIP-1967 `Upgraded` logs, and `scripts/verify.mjs` re-derives any
-row from an RPC and the Etherscan API.
+**Only `code-bug` incidents feed the curve.** Everything is verifiable from
+public onchain data; `scripts/verify.mjs` re-derives any measured row.
 
 ## Layout
 
 ```
-protocols/<slug>.json   one file per protocol: its incidents (later: code-age
-                        records for non-exploited protocols)
-curve/v<version>.json   released curve: the sorted code-age knots that define
-                        the score; changes only at deliberate releases
+protocols/<slug>.json   one file per protocol: its incidents
+curve/v<version>.json   released curve knots; changes only at versioned releases
 schema/                 JSON Schema for protocol files
-scripts/build-curve.mjs deterministic rebuild of the curve from protocols/
-scripts/verify.mjs      re-derive one protocol's measurements onchain
+scripts/build-curve.mjs deterministic curve rebuild (--check verifies a release)
+scripts/verify.mjs      re-derive a protocol's measurements from RPC + Etherscan
 ```
 
-## What a row means
+## Incident rows
 
-Each incident carries:
-
-- **onchain anchors**: `exploitTx` (its block timestamp is the incident time),
-  `victimContract`, `chain`;
-- **the measurement**: deployment timestamp, count of pre-incident `Upgraded`
-  events, last-change timestamp, and `codeAgeSeconds` — the age of the
-  exploited code when it was exploited — plus the evidence `basis`;
-- **classification**: a root-cause `category` and a one-sentence evidence
-  `notes`;
-- **loss**: verified USD (USD-pegged stables at 1:1; incidents whose loss is
-  only known in volatile assets are excluded rather than price-converted);
-- **provenance**: post-mortems, curated review, or the DeFiHackLabs PoC file
-  (pinned by commit) the row was extracted from.
-
-Rows that failed verification stay in the dataset with their exclusion status
-(`ATTACKER_DEPLOYED` — the quoted "victim" was deployed by the attacker;
-`NO_CREATION_INFO`; `DEPLOY_AFTER_INCIDENT`) — they are audit trail, not curve
-input.
-
-## The curve
-
-`scripts/build-curve.mjs` rebuilds the released knots deterministically:
-
-- `category === "code-bug"` and `measurement.status === "OK"` only;
-- one observation per `(chain, victimContract)` — repeated exploits of the
-  same contract are not independent; curated rows win over registry rows,
-  then the earliest incident wins;
-- knots are the sorted `codeAgeSeconds`.
-
-The score is the interpolated percentile within the knots, using Weibull
-plotting positions `p_i = (i+1)/(n+1)` (so the extremes approach rather than
-reach 0 and 100).
-
-Check a release: `node scripts/build-curve.mjs --check curve/v2026-08.json`
+Each row: onchain anchors (`exploitTx` — its block timestamp is the incident
+time — `victimContract`, `chain`), the measurement (deploy timestamp,
+pre-incident `Upgraded` events, `codeAgeSeconds`, evidence `basis`), a
+root-cause `category` with one evidence sentence, verified USD loss
+(USD-pegged stables at 1:1; crypto-only figures excluded), and provenance.
+Rows that failed verification stay with their exclusion status
+(`ATTACKER_DEPLOYED`, `NO_CREATION_INFO`, …) as audit trail.
 
 ## Categories
 
-`code-bug` (exploitable flaw in the victim's deployed code or onchain config —
-the class the score is calibrated on), `oracle-manipulation`,
-`economic-design`, `governance-design`, `key-compromise`, `insider-rug`,
-`offchain-infra`. Boundary precedents: state-changing reentrancy is a code
-bug; read-only reentrancy or donation skewing a consumed price is oracle
-manipulation; an owner draining via openly granted powers is an insider rug.
+- `code-bug` — curve input, and nothing else is.
+- `oracle-manipulation`, `economic-design`, `governance-design`,
+  `insider-rug` — measured boundary rows: each documents why it is *not* a
+  code bug (e.g. read-only reentrancy against a price feed; an owner using
+  openly granted powers).
+- `key-compromise`, `offchain-infra` — non-exhaustive context sample with no
+  measurable code; bounds the metric's scope. Statistics over them describe
+  this sample, not the population.
+- `not-classified` — excluded before classification; see `measurement.status`.
 
-## Known limitations
+## Curve
 
-- The dataset is a **numerator**: ages of exploited code. It supports the
-  descriptive percentile score, not a hazard rate — "risk per protocol-year at
-  age t" additionally needs total protocol-years at risk per age bucket
-  (planned: per-protocol code-age records in these same files).
-- Victims with diamond/module-registry/beacon architectures emit no standard
-  upgrade event; their ages may be overstated
-  (`nonStandardUpgradeArchitecture: true`).
-- Losses parsed from community sources are labeled as such; implausible
-  figures were excluded.
-- Old code is not safe: ~14% of measured code-bug exploits hit code older than
-  two years (dormant compiler bugs, long-lived misconfigurations).
+`build-curve.mjs`: measured `code-bug` rows, one observation per
+`(chain, victimContract)` (curated wins, then earliest incident), knots =
+sorted `codeAgeSeconds`. Score = interpolated percentile with Weibull plotting
+positions `p_i = (i+1)/(n+1)`.
+
+## Limitations
+
+This is a numerator (ages of exploited code), not a hazard rate — that would
+also need protocol-years at risk per age bucket (planned: per-protocol
+code-age records in these files). Diamond/registry/beacon victims emit no
+standard upgrade event (`nonStandardUpgradeArchitecture`; age may be
+overstated). Old code is not safe: ~14% of measured code-bug exploits hit
+code older than two years.
 
 ## Updating
 
-1. Add or edit `protocols/<slug>.json` rows (measure with the verification
-   method above; every `OK` row needs onchain anchors).
-2. `node scripts/build-curve.mjs` and review the diff of the knots.
-3. Cut `curve/v<YYYY-MM>.json`, record the change in `CHANGELOG.md`.
-4. Consumers (the L2BEAT frontend) adopt the new curve as a deliberate,
-   versioned release — scores never drift silently.
+Add or edit rows (measured, with onchain anchors) → `node
+scripts/build-curve.mjs` → review the knot diff → cut `curve/v<YYYY-MM>.json`
+and record it in `CHANGELOG.md`. Consumers adopt new curves as deliberate
+releases; scores never drift silently.
 
 ## License
 
