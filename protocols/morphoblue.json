@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "morphoblue",
+  "name": "MorphoBlue",
+  "incidents": [
+    {
+      "name": "MorphoBlue",
+      "date": "2024-10-13T10:27:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 230000,
+      "victimContract": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+      "exploitTx": "0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b",
+      "notes": "Morpho Bundler multicall abused victims' lingering approvals via erc20TransferFrom + supplyCollateral/borrow",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-10/MorphoBlue_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x02DBE46169fDf6555F2A125eEe3dce49703b13f5",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1728815255,
+        "deployTimestamp": 1703754563,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1703754563,
+        "codeAgeSeconds": 25060692,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

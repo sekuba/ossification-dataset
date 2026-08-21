@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bankrollstack",
+  "name": "BankrollStack",
+  "incidents": [
+    {
+      "name": "BankrollStack",
+      "date": "2025-06-19T00:04:28Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 5000,
+      "victimContract": "0x16d0a151297a0393915239373897bCc955882110",
+      "exploitTx": "0x0706425beba4b3f28d5a8af8be26287aa412d076828ec73d8003445c087af5fd",
+      "notes": "Dividend-pool accounting flaw: a single flashloaned buy/sell/withdraw round trip lets the attacker extract the pool's accumulated dividends.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x0706425beba4b3f28d5a8af8be26287aa412d076828ec73d8003445c087af5fd"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-06/BankrollStack_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x172dca3e72e4643ce8b7932f4947347c1e49ba6d",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1750291468,
+        "deployTimestamp": 1625344185,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1625344185,
+        "codeAgeSeconds": 124947283,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

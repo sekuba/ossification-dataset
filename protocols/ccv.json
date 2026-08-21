@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "ccv",
+  "name": "CCV",
+  "incidents": [
+    {
+      "name": "CCV",
+      "date": "2023-12-28T05:08:30Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 3200,
+      "victimContract": "0x37177ccc66ef919894cef37596bbebd76e7a40b2",
+      "exploitTx": "0x6ba4152db9da45f5751f2c083bf77d4b3385373d5660c51fe2e4382718afd9b4",
+      "notes": "unprotected farming-proxy functions manipulated with flashloan to shift token balances and drain",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x6ba4152db9da45f5751f2c083bf77d4b3385373d5660c51fe2e4382718afd9b4"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-12/CCV_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x835b45d38cbdccf99e609436ff38e31ac05bc502",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1703740110,
+        "deployTimestamp": 1703670411,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1703670411,
+        "codeAgeSeconds": 69699,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

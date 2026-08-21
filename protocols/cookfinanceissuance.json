@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "cookfinanceissuance",
+  "name": "CookFinanceIssuance",
+  "incidents": [
+    {
+      "name": "CookFinanceIssuance",
+      "date": "2026-06-27T20:27:03Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 50000,
+      "victimContract": "0x7db3cbaf736c049933a3af28dbed4a4442aa89d0",
+      "exploitTx": "0x51e46828b7aabfa810910b3f8ca535053716e6bcb8b7f94a4ff59757d71a1bca",
+      "notes": "issueWithSingleToken2 accepted attacker-supplied component weightings and traded CKToken holdings via a Pancake spot adapter with zero minimum output, turning a 1-unit issue into real outflows.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x51e46828b7aabfa810910b3f8ca535053716e6bcb8b7f94a4ff59757d71a1bca"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-06/CookFinanceIssuance_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xee18c4c2e123402731f43d680e75ca2809c30f8b",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1782592023,
+        "deployTimestamp": 1647411927,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1647411927,
+        "codeAgeSeconds": 135180096,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

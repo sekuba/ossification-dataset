@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "activepoolurgentredemption",
+  "name": "ActivePoolUrgentRedemption",
+  "incidents": [
+    {
+      "name": "ActivePoolUrgentRedemption",
+      "date": "2025-07-02T23:41:47Z",
+      "chain": "ethereum",
+      "category": "economic-design",
+      "lossUsd": 2696,
+      "victimContract": "0xdee8a9ac2c2819fe6a3bae45a12bff70c604805a",
+      "exploitTx": "0xc8ac54bdab9a2ce670a6ac2540e07dc88b5eeb7e0306e86d1d66f584428b3e0d",
+      "notes": "public shutdown-only urgentRedemption lets a holder arbitrage the redemption bonus on selected undercollateralized troves for sUSDe collateral.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xc8ac54bdab9a2ce670a6ac2540e07dc88b5eeb7e0306e86d1d66f584428b3e0d"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-07/ActivePoolUrgentRedemption_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xc8d64bb25b489ba3fb33f1f81505e8938685c248",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1751499707,
+        "deployTimestamp": 1748046551,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1748046551,
+        "codeAgeSeconds": 3453156,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

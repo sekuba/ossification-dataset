@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "rubic",
+  "name": "Rubic",
+  "incidents": [
+    {
+      "name": "Rubic",
+      "date": "2022-12-25T08:31:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 1400000,
+      "victimContract": "0x3335a88bb18fd3b6824b59af62b50ce494143333",
+      "exploitTx": "0x9a97d85642f956ad7a6b852cf7bed6f9669e2c2815f3279855acf7f1328e7d46",
+      "notes": "RubicProxy: USDC was whitelisted as a routable 'router' (availableRouters setup tx 0x30679e7b at block 15414652, timestamp verified onchain), enabling arbitrary transferFrom of user approvals. knownLastChange = the whitelisting config change, per neptunemutual/solidityscan analyses.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x9a97d85642f956ad7a6b852cf7bed6f9669e2c2815f3279855acf7f1328e7d46"
+        },
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1671957071,
+        "deployTimestamp": 1661247923,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1661507214,
+        "codeAgeSeconds": 10449857,
+        "basis": "documented change (no standard event for this architecture)"
+      },
+      "documentedLastChange": "2022-08-26T09:46:54Z"
+    }
+  ]
+}

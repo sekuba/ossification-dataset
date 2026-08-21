@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "pikefinance",
+  "name": "PikeFinance",
+  "incidents": [
+    {
+      "name": "PikeFinance",
+      "date": "2024-04-30T22:19:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 1400000,
+      "victimContract": "0xfc7599cffea9de127a9f9c748ccb451a34d2f063",
+      "exploitTx": "0xe2912b8bf34d561983f2ae95f34e33ecc7792a2905a3e317fcc98052bce66431",
+      "notes": "uninitialized UUPS proxy: initialize then upgradeToAndCall to attacker impl to withdraw ETH",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xe2912b8bf34d561983f2ae95f34e33ecc7792a2905a3e317fcc98052bce66431"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/PikeFinance_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x19066f7431df29a0910d287c8822936bb7d89e23",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1714515551,
+        "deployTimestamp": 1706635211,
+        "upgradeEventCount": 4,
+        "lastChangeTimestamp": 1714515551,
+        "codeAgeSeconds": 0,
+        "basis": "last of 4 upgrade events (onchain)"
+      }
+    }
+  ]
+}

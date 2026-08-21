@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unverified-03f9",
+  "name": "unverified_03f9",
+  "incidents": [
+    {
+      "name": "unverified_03f9",
+      "date": "2024-09-12T23:36:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 1700,
+      "victimContract": "0x03f911aedc25c770e701b8f563e8102cfacd62c0",
+      "exploitTx": "0x1a3e9eb5e00f39e84f90ca23bd851aa194b1e7a90003e3f6b9b17bbb66dabbb9",
+      "notes": "unvalidated uniswapV3SwapCallback callable directly to drain WETH",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x1a3e9eb5e00f39e84f90ca23bd851aa194b1e7a90003e3f6b9b17bbb66dabbb9"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-09/unverified_03f9_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xf073a21f0d68adacfff34d5b8df04550c944e348",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1726184207,
+        "deployTimestamp": 1650287464,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1650287464,
+        "codeAgeSeconds": 75896743,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

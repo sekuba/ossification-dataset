@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "arbitrumbaseswapper",
+  "name": "ArbitrumBaseSwapper",
+  "incidents": [
+    {
+      "name": "ArbitrumBaseSwapper",
+      "date": "2025-08-08T13:58:32Z",
+      "chain": "arbitrum",
+      "category": "code-bug",
+      "lossUsd": 1847,
+      "victimContract": "0xB5EFF2A863C9B42D823919368A467F26A2648559",
+      "exploitTx": "0xd4fad993e3dfd37e406be0d5225986a2605ba509d893dafc0c77e0be29ab535d",
+      "notes": "public swapTokensForExactTokens spends the contract's own token balance and refunds the remainder to a caller-controlled recipient.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xd4fad993e3dfd37e406be0d5225986a2605ba509d893dafc0c77e0be29ab535d"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-08/ArbitrumBaseSwapper_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x38ae75EAD48102e2431aC8Cea164ed28637388a3",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1754661512,
+        "deployTimestamp": 1703572708,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1703572708,
+        "codeAgeSeconds": 51088804,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "stepp2p",
+  "name": "Stepp2p",
+  "incidents": [
+    {
+      "name": "Stepp2p",
+      "date": "2025-07-20T05:13:17Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 43000,
+      "victimContract": "0x99855380e5f48db0a6babeae312b80885a816dce",
+      "exploitTx": "0xe94752783519da14315d47cde34da55496c39546813ef4624c94825e2d69c6a8",
+      "notes": "cancelSaleOrder and modifySaleOrder both transfer funds for the same saleId, producing a double spend.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xe94752783519da14315d47cde34da55496c39546813ef4624c94825e2d69c6a8"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-07/Stepp2p_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xd7235d08a48cbd3f63b9faa16130f2fdb50b2341",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1752988397,
+        "deployTimestamp": 1746623034,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1746623034,
+        "codeAgeSeconds": 6365363,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

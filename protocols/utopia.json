@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "utopia",
+  "name": "Utopia",
+  "incidents": [
+    {
+      "name": "Utopia",
+      "date": "2023-07-20T05:21:31Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 119000,
+      "victimContract": "0xb1da08c472567eb0ec19639b1822f578d39f3333",
+      "exploitTx": "0xeb4eb487f58d39c05778fed30cd001b986d3c52279e44f46b2de2773e7ee1d5e",
+      "notes": "Utopia airdrop-on-transfer logic lets attacker compute the airdrop receiver and skim/sync the pair to manipulate reserves.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xeb4eb487f58d39c05778fed30cd001b986d3c52279e44f46b2de2773e7ee1d5e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-07/Utopia_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xe84ef3615b8df94c52e5b6ef21acbf0039b29113",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1689830491,
+        "deployTimestamp": 1677241454,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1677241454,
+        "codeAgeSeconds": 12589037,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "summerfi",
+  "name": "SummerFi",
+  "incidents": [
+    {
+      "name": "SummerFi",
+      "date": "2026-07-06T05:17:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 6020000,
+      "victimContract": "0x98c49e13bf99d7cad8069faa2a370933ec9ecf17",
+      "exploitTx": "0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12",
+      "notes": "FleetCommander NAV summed each Ark's totalAssets() with no manipulation guard, so donating cheap vgUSDC into an empty ark inflated share value and the attacker redeemed to drain other LPs.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-07/SummerFi_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x7bf716167b48cf527725722c6d79494b45b3bdca",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1783315079,
+        "deployTimestamp": 1738936343,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1738936343,
+        "codeAgeSeconds": 44378736,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

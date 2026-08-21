@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "julswap",
+  "name": "JulSwap",
+  "incidents": [
+    {
+      "name": "JulSwap",
+      "date": "2021-05-27T22:36:51Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 1500000,
+      "victimContract": "0x32dffc3fe8e3ef3571bf8a72c0d0015c5373f41d",
+      "exploitTx": "0x1751268e620767ff117c5c280e9214389b7c1961c42e77fc704fd88e22f4f77a",
+      "notes": "JulProtocolV2.addBNB mints against manipulable JULb/BNB pool price pumped via flashloaned swaps.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x1751268e620767ff117c5c280e9214389b7c1961c42e77fc704fd88e22f4f77a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2021-05/JulSwap_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xc3bc29941677db01b9645f7b8b72d27e3ba75372",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1622155011,
+        "deployTimestamp": 1600628503,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1600628503,
+        "codeAgeSeconds": 21526508,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

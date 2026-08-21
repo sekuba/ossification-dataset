@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "tesseraswap",
+  "name": "TesseraSwap",
+  "incidents": [
+    {
+      "name": "TesseraSwap",
+      "date": "2026-05-18T21:33:09Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": 20000,
+      "victimContract": "0x55555522005bcae1c2424d474bfd5ed477749e3e",
+      "exploitTx": "0xc2df72ff612c90e07c9e051e7772a39f31fb4ca9e61f5b705f921bffa26b36de",
+      "notes": "TesseraSwap sent out USDC before collecting the owed WETH in the callback with amountCheck=0, so the attacker bought the WETH cheaper and kept the spread.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0xc2df72ff612c90e07c9e051e7772a39f31fb4ca9e61f5b705f921bffa26b36de"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-05/TesseraSwap_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x2352a1fca90182509dca9c12b2cad582a38e8b82",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1779139989,
+        "deployTimestamp": 1761826643,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1761826643,
+        "codeAgeSeconds": 17313346,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

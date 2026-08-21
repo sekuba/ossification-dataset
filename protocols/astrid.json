@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "astrid",
+  "name": "Astrid",
+  "incidents": [
+    {
+      "name": "Astrid",
+      "date": "2023-10-28T10:41:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 228591,
+      "victimContract": "0xbAa87546cF87b5De1b0b52353A86792D40b8BA70",
+      "exploitTx": "0x8af9b5fb3e2e3df8659ffb2e0f0c1f4c90d5a80f4f6fccef143b823ce673fb60",
+      "notes": "Astrid withdraw/claim trusts an attacker-supplied fake restaked-token contract, releasing real staked stETH/rETH/cbETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x8af9b5fb3e2e3df8659ffb2e0f0c1f4c90d5a80f4f6fccef143b823ce673fb60"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-10/Astrid_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x792ec27874e1f614e757a1ae49d00ef5b2c73959",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1698489695,
+        "deployTimestamp": 1696596803,
+        "upgradeEventCount": 2,
+        "lastChangeTimestamp": 1698072491,
+        "codeAgeSeconds": 417204,
+        "basis": "last of 2 upgrade events (onchain)"
+      }
+    }
+  ]
+}

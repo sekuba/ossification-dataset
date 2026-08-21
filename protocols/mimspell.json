@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "mimspell",
+  "name": "MIMSpell",
+  "incidents": [
+    {
+      "name": "MIMSpell",
+      "date": "2023-06-20T14:55:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 17000,
+      "victimContract": "0xa5564a2d1190a141cac438c9fde686ac48a18a79",
+      "exploitTx": "0x2c9f87e285026601a2c8903cf5f10e5b3655fbd0264490c41514ce073c42a9c3",
+      "notes": "ZeroXStargateLPSwapper.swap executes attacker-supplied calldata (arbitrary external call) to steal its USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x2c9f87e285026601a2c8903cf5f10e5b3655fbd0264490c41514ce073c42a9c3"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-06/MIMSpell_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x9d4fd681aacbc49d79c6405c9aa70d1afd5accf3",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1687272935,
+        "deployTimestamp": 1674586931,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1674586931,
+        "codeAgeSeconds": 12686004,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

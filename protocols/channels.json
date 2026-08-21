@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "channels",
+  "name": "Channels",
+  "incidents": [
+    {
+      "name": "Channels",
+      "date": "2023-12-31T23:03:11Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 4400,
+      "victimContract": "0xca797539f004c0f9c206678338f820ac38466d4b",
+      "exploitTx": "0xcf729a9392b0960cd315d7d49f53640f000ca6b8a0bd91866af5821fdf36afc5",
+      "notes": "Compound-fork cToken exchange-rate donation/inflation used to over-borrow markets",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xcf729a9392b0960cd315d7d49f53640f000ca6b8a0bd91866af5821fdf36afc5"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-12/Channels_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xd227dc77561b58c5a2d2644ac0173152a1a5dc3d",
+      "nonStandardUpgradeArchitecture": true,
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1704063791,
+        "deployTimestamp": 1639648681,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1639648681,
+        "codeAgeSeconds": 64415110,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bao",
+  "name": "Bao",
+  "incidents": [
+    {
+      "name": "Bao",
+      "date": "2023-07-04T13:30:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 46000,
+      "victimContract": "0xb0f8fe96b4880adbdede0ddf446bd1e7ef122c4e",
+      "exploitTx": "0xdd7dd68cd879d07cfc2cb74606baa2a5bf18df0e3bda9f6b43f904f4f7bbdfc1",
+      "notes": "cToken exchange rate inflated by donating underlying to a near-empty bdbSTBL market, then over-borrowing baoETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xdd7dd68cd879d07cfc2cb74606baa2a5bf18df0e3bda9f6b43f904f4f7bbdfc1"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-07/Bao_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x00693a01221a5e93fb872637e3a9391ef5f48300",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1688477447,
+        "deployTimestamp": 1676942915,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1676942915,
+        "codeAgeSeconds": 11534532,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

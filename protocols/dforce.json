@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "dforce",
+  "name": "dForce",
+  "incidents": [
+    {
+      "name": "dForce (curve oracle reentrancy)",
+      "date": "2023-02-10T12:00:00Z",
+      "chain": "arbitrum",
+      "category": "oracle-manipulation",
+      "lossUsd": 3600000,
+      "victimContract": null,
+      "exploitTx": null,
+      "notes": "Read-only reentrancy against Curve pool virtual price used as oracle. Scope stats only.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "SCOPE_ONLY"
+      }
+    }
+  ]
+}

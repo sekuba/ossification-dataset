@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "abccapp",
+  "name": "ABCCApp",
+  "incidents": [
+    {
+      "name": "ABCCApp",
+      "date": "2025-08-23T14:32:07Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 10062,
+      "victimContract": "0x1bc016c00f8d603c41a582d5da745905b9d034e5",
+      "exploitTx": "0xee4eae6f70a6894c09fda645fb24ab841e9847a788b1b2e8cb9cc50c1866fb12",
+      "notes": "unvalidated addFixedDay inflates the reward counter so claimDDDD mints/claims oversized DDDD rewards.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xee4eae6f70a6894c09fda645fb24ab841e9847a788b1b2e8cb9cc50c1866fb12"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-08/ABCCApp_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x53feee33527819bb793b72bd67dbf0f8466f7d2c",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1755959527,
+        "deployTimestamp": 1755939316,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1755939316,
+        "codeAgeSeconds": 20211,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

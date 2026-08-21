@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bebop-dex",
+  "name": "Bebop_dex",
+  "incidents": [
+    {
+      "name": "Bebop_dex",
+      "date": "2025-08-12T08:35:00Z",
+      "chain": "arbitrum",
+      "category": "code-bug",
+      "lossUsd": 21000,
+      "victimContract": "0xbeb0b0623f66bE8cE162EbDfA2ec543A522F4ea6",
+      "exploitTx": "0xe5f8fe69b38613a855dbcb499a2c4ecffe318c620a4c4117bd0e298213b7619d",
+      "notes": "Same Bebop/Jam settle() flaw: empty-signature order with attacker-supplied interactions ran transferFrom against victims' standing allowances.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xe5f8fe69b38613a855dbcb499a2c4ecffe318c620a4c4117bd0e298213b7619d"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-08/Bebop_dex_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x59537353248d0b12c7fcca56a4e420ffec4abc91",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1754987700,
+        "deployTimestamp": 1734624692,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1734624692,
+        "codeAgeSeconds": 20363008,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

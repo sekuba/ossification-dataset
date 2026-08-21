@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unverified-1304",
+  "name": "unverified_1304",
+  "incidents": [
+    {
+      "name": "unverified_1304",
+      "date": "2026-03-16T23:20:07Z",
+      "chain": "polygon",
+      "category": "code-bug",
+      "lossUsd": 85730,
+      "victimContract": "0x13046f513802de93f3fc48f0cdb2cb7df22ec01a",
+      "exploitTx": "0x957bcfa47657a198b683feb455f7957e8e6d912b5584a5af510f4ff8a41f4f5a",
+      "notes": "An old CheckoutPool bridge operator had _ALLOW_ALL_ enabled and no operator gate on bridge(), so any caller could drive the paymaster/pool to pay a checkout's target amount from pool excess.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0x957bcfa47657a198b683feb455f7957e8e6d912b5584a5af510f4ff8a41f4f5a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-03/unverified_1304_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x6ff2be5d0e5b3974a818731e3ff6eeec8cd9d970",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1773703207,
+        "deployTimestamp": 1704916742,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1704916742,
+        "codeAgeSeconds": 68786465,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

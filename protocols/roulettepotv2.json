@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "roulettepotv2",
+  "name": "RoulettePotV2",
+  "incidents": [
+    {
+      "name": "RoulettePotV2",
+      "date": "2025-01-11T09:02:05Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 28000,
+      "victimContract": "0xf573748637e0576387289f1914627d716927f90f",
+      "exploitTx": "0xd9e0014a32d96cfc8b72864988a6e1664a9b6a2e90aeaa895fcd42da11cc3490",
+      "notes": "RoulettePotV2 finishRound/swapProfitFees market-swaps fees without slippage protection, sandwiched via flash-swap-manipulated pair price.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xd9e0014a32d96cfc8b72864988a6e1664a9b6a2e90aeaa895fcd42da11cc3490"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-01/RoulettePotV2_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x0000000000004f3d8aaf9175fd824cb00ad4bf80",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1736586125,
+        "deployTimestamp": 1678927602,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1678927602,
+        "codeAgeSeconds": 57658523,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

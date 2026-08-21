@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bbxtoken",
+  "name": "BBXToken",
+  "incidents": [
+    {
+      "name": "BBXToken",
+      "date": "2025-03-20T09:11:00Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 11902,
+      "victimContract": "0x6051428b580f561b627247119eed4d0483b8d28e",
+      "exploitTx": "0x0dd486368444598610239b934dd9e8c6474a06d11380d1cfec4d91568b5ac581",
+      "notes": "BBX burn-on-transfer logic, triggered by repeated zero-value self-transfers, burns BBX from the LP to inflate price before selling.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x0dd486368444598610239b934dd9e8c6474a06d11380d1cfec4d91568b5ac581"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-03/BBXToken_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x8aea7516b3b6aabf474f8872c5e71c1a7907e69e",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1742461860,
+        "deployTimestamp": 1742375453,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1742375453,
+        "codeAgeSeconds": 86407,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

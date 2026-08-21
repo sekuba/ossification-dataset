@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "judao",
+  "name": "JUDAO",
+  "incidents": [
+    {
+      "name": "JUDAO",
+      "date": "2026-04-28T00:00:00Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 205259,
+      "victimContract": "0xf55dff7898930a2d28cdbc39d615b1624ac86888",
+      "exploitTx": "0x956e38b8ddb40ba080c8042c685ae52ee5c1b096f1d7f0c4a6c59be3eb4265bd",
+      "notes": "JUDAO's sell transfer hook (sync mining + isBurnPair reserve burns) credited excess JUDAO to the pair, which the attacker then swapped out for USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x956e38b8ddb40ba080c8042c685ae52ee5c1b096f1d7f0c4a6c59be3eb4265bd"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-04/JUDAO_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x5384b34c74024d6563b323351a4bbfa18432161b",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1777334400,
+        "deployTimestamp": 1768611125,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1768611125,
+        "codeAgeSeconds": 8723275,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

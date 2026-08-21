@@ -1,0 +1,51 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "cream-finance",
+  "name": "Cream Finance",
+  "incidents": [
+    {
+      "name": "Cream Finance (AMP reentrancy)",
+      "date": "2021-08-30T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 18800000,
+      "victimContract": "0x2Db6c82CE72C8d7D770ba1b5F5Ed0b6E075066d6",
+      "exploitTx": null,
+      "notes": "crAMP market: ERC777-style reentrancy through AMP token transfer hooks during borrow. Market listed ~2 months before.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1630324800,
+        "deployTimestamp": 1612850081,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1612850081,
+        "codeAgeSeconds": 17474719,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
+      "name": "Cream Finance (yUSD oracle)",
+      "date": "2021-10-27T12:00:00Z",
+      "chain": "ethereum",
+      "category": "oracle-manipulation",
+      "lossUsd": 130000000,
+      "victimContract": null,
+      "exploitTx": null,
+      "notes": "Flash-loan inflation of yUSD pricePerShare used by Cream's oracle. Not a code defect in the exploited contract's logic.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "SCOPE_ONLY"
+      }
+    }
+  ]
+}

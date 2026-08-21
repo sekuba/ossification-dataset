@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "teamfinance",
+  "name": "TeamFinance",
+  "incidents": [
+    {
+      "name": "TeamFinance",
+      "date": "2022-10-27T08:29:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 15800000,
+      "victimContract": "0x48d118c9185e4dbafe7f3813f8f29ec8a6248359",
+      "exploitTx": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce",
+      "notes": "migrate() lacks parameter validation, allowing migration into an attacker-priced Uniswap V3 pool.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-10/TeamFinance_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x161cebb807ac181d5303a4ccec2fc580cc5899fd",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1666859363,
+        "deployTimestamp": 1662363441,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1662363441,
+        "codeAgeSeconds": 4495922,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

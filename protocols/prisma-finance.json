@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "prisma-finance",
+  "name": "Prisma Finance",
+  "incidents": [
+    {
+      "name": "Prisma Finance",
+      "date": "2024-03-28T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 11600000,
+      "victimContract": "0xB8FA880840A64c25318989B907cCb58FD7A324Df",
+      "exploitTx": null,
+      "notes": "MigrateTroveZap: onFlashLoan did not validate initiator/params, letting anyone migrate (and re-open with attacker params) other users' troves.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1711627200,
+        "deployTimestamp": 1701085787,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1701085787,
+        "codeAgeSeconds": 10541413,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

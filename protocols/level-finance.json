@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "level-finance",
+  "name": "Level Finance",
+  "incidents": [
+    {
+      "name": "Level Finance",
+      "date": "2023-05-01T12:00:00Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1100000,
+      "victimContract": "0x9f00fbd6c095d2c542687ed5afb68d9c3fb2f464",
+      "exploitTx": null,
+      "notes": "LevelReferralControllerV2: claimMultiple allowed repeated claims for the same epoch after an upgrade ~2 weeks earlier.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1682942400,
+        "deployTimestamp": 1681741234,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1681741234,
+        "codeAgeSeconds": 1201166,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

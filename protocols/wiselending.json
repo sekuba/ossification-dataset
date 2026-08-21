@@ -1,0 +1,37 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "wiselending",
+  "name": "WiseLending",
+  "incidents": [
+    {
+      "name": "WiseLending",
+      "date": "2023-10-13T14:39:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 260000,
+      "victimContract": "0x84524baa1951247b3a2617a843e6ece915bb9674",
+      "exploitTx": "0x7ac4a98599596adbf12fffa2bd23e2a2d2ac7e8989b6ea043fcc412a29126555",
+      "notes": "empty-market share-price inflation via WBTC donation then borrow all assets",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x7ac4a98599596adbf12fffa2bd23e2a2d2ac7e8989b6ea043fcc412a29126555"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-10/WiseLending_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1697207963,
+        "deployTimestamp": 1691435639,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1691435639,
+        "codeAgeSeconds": 5772324,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

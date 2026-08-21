@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "dfs",
+  "name": "DFS",
+  "incidents": [
+    {
+      "name": "DFS",
+      "date": "2022-12-30T10:59:56Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1450,
+      "victimContract": "0x2B806e6D78D8111dd09C58943B9855910baDe005",
+      "exploitTx": "0xcddcb447d64c2ce4b3ac5ebaa6d42e26d3ed0ff3831c08923c53ea998f598a7c",
+      "notes": "Reflection/fee-on-transfer accounting lets repeated skim() extract fee-inflated balance and drain the LP.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xcddcb447d64c2ce4b3ac5ebaa6d42e26d3ed0ff3831c08923c53ea998f598a7c"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-12/DFS_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xb358BfD28b02c5e925b89aD8b0Eb35913D2d0805",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1672397996,
+        "deployTimestamp": 1670589083,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1670589083,
+        "codeAgeSeconds": 1808913,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "compound",
+  "name": "Compound",
+  "incidents": [
+    {
+      "name": "Compound (Comptroller COMP distribution)",
+      "date": "2021-09-30T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 80000000,
+      "victimContract": "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B",
+      "exploitTx": null,
+      "notes": "Unitroller: Proposal 062 (executed 2021-09-29) shipped a Comptroller implementation with a broken COMP distribution comparison; drained the next day. Age measured via Unitroller NewImplementation events.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1633003200,
+        "deployTimestamp": 1557191237,
+        "upgradeEventCount": 11,
+        "lastChangeTimestamp": 1632947048,
+        "codeAgeSeconds": 56152,
+        "basis": "last of 11 upgrade events (onchain)"
+      }
+    }
+  ]
+}

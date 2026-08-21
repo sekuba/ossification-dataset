@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "0x8d2e",
+  "name": "0x8d2e",
+  "incidents": [
+    {
+      "name": "0x8d2e",
+      "date": "2025-08-20T16:42:55Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": 40000,
+      "victimContract": "0x8d2Ef0d39A438C3601112AE21701819E13c41288",
+      "exploitTx": "0x6be0c4b5414883a933639c136971026977df4737b061f864a4a04e4bd7f07106",
+      "notes": "uniswapV3SwapCallback lacks access control and transfers all USDC to a caller-specified address.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0x6be0c4b5414883a933639c136971026977df4737b061f864a4a04e4bd7f07106"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-08/0x8d2e_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x4efd5f0749b1b91afdcd2ecf464210db733150e0",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1755708175,
+        "deployTimestamp": 1755671149,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1755671149,
+        "codeAgeSeconds": 37026,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

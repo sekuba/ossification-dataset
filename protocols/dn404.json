@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "dn404",
+  "name": "DN404",
+  "incidents": [
+    {
+      "name": "DN404",
+      "date": "2024-02-10T09:00:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 200000,
+      "victimContract": "0x2c7112245fc4af701ebf90399264a7e89205dad4",
+      "exploitTx": "0xbeef09ee9d694d2b24f3f367568cc6ba1dad591ea9f969c36e5b181fd301be82",
+      "notes": "uninitialized proxy: public init then withdraw drained FLIX tokens",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xbeef09ee9d694d2b24f3f367568cc6ba1dad591ea9f969c36e5b181fd301be82"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-02/DN404_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xd215ffaf0f85fb6f93f11e49bd6175ad58af0dfd",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1707555647,
+        "deployTimestamp": 1698376319,
+        "upgradeEventCount": 7,
+        "lastChangeTimestamp": 1705913951,
+        "codeAgeSeconds": 1641696,
+        "basis": "last of 7 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bizness",
+  "name": "Bizness",
+  "incidents": [
+    {
+      "name": "Bizness",
+      "date": "2024-12-28T02:42:55Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": 15700,
+      "victimContract": "0xd6a7cfa86a41b8f40b8dfeb987582a479eb10693",
+      "exploitTx": "0x984cb29cdb4e92e5899e9c94768f8a34047d0e1074f9c4109364e3682e488873",
+      "notes": "splitLock's ETH refund triggers receive() reentrancy into withdrawLock, double-spending the locked tokens (state-changing reentrancy).",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0x984cb29cdb4e92e5899e9c94768f8a34047d0e1074f9c4109364e3682e488873"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-12/Bizness_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x3cc1edd8a25c912fcb51d7e61893e737c48cd98d",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1735353775,
+        "deployTimestamp": 1731038575,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1731038575,
+        "codeAgeSeconds": 4315200,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

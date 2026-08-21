@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "inkfinance",
+  "name": "INKFinance",
+  "incidents": [
+    {
+      "name": "INKFinance",
+      "date": "2026-05-11T07:24:54Z",
+      "chain": "polygon",
+      "category": "code-bug",
+      "lossUsd": 140000,
+      "victimContract": "0xeF2C77f3B9b8aaa067239bc6B4588Bae26433494",
+      "exploitTx": "0xb469a24ec737be16fe41367a7b5b315c7f03b4e0ff3af50b3a2db03b3066b982",
+      "notes": "INK payroll claimPayroll scaled the payout to the instantaneous treasury balance, so seeding the treasury with a flashloan before claiming drained excess USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0xb469a24ec737be16fe41367a7b5b315c7f03b4e0ff3af50b3a2db03b3066b982"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-05/INKFinance_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x90b147592191388e955401af43842e19faa87ee2",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1778484294,
+        "deployTimestamp": 1703832474,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1703832474,
+        "codeAgeSeconds": 74651820,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

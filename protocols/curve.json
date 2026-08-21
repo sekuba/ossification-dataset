@@ -1,0 +1,95 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "curve",
+  "name": "Curve",
+  "incidents": [
+    {
+      "name": "Curve (Vyper compiler reentrancy)",
+      "date": "2023-07-30T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 70000000,
+      "victimContract": "0x8301AE4fc9c624d1D396cbDAa1ed877821D7C511",
+      "exploitTx": null,
+      "notes": "CRV/ETH pool (immutable, deployed 2021): Vyper 0.2.15-0.3.0 malfunctioning reentrancy locks. Deliberately included as an aged-code counterexample - the defect lived in the compiler, dormant for ~2 years.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1690718400,
+        "deployTimestamp": 1637753758,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1637753758,
+        "codeAgeSeconds": 52964642,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
+      "name": "Curve_exp01.sol",
+      "date": "2023-07-30T13:10:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 41000000,
+      "victimContract": "0x6326debbaa15bcfe603d831e7d75f4fc10d9b43e",
+      "exploitTx": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
+      "notes": "Vyper compiler reentrancy-lock bug lets remove_liquidity reenter add_liquidity, corrupting the pETH/ETH pool balances.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-07/Curve_exp01.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x6ec21d1868743a44318c3c259a6d4953f9978538",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1690722635,
+        "deployTimestamp": 1627336774,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1627336774,
+        "codeAgeSeconds": 63385861,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
+      "name": "Curve_exp02.sol",
+      "date": "2023-07-30T19:08:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 41000000,
+      "victimContract": "0x8301ae4fc9c624d1d396cbdaa1ed877821d7c511",
+      "exploitTx": "0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c",
+      "notes": "Same Vyper reentrancy-lock bug drains the CRV/ETH Curve pool via reentered add/remove liquidity.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-07/Curve_exp02.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xb752def3a1fded45d6c4b9f4a8f18e645b41b324",
+      "duplicateOfCuratedIncident": true,
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1690744103,
+        "deployTimestamp": 1637753758,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1637753758,
+        "codeAgeSeconds": 52990345,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

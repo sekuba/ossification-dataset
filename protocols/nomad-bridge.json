@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "nomad-bridge",
+  "name": "Nomad Bridge",
+  "incidents": [
+    {
+      "name": "Nomad Bridge",
+      "date": "2022-08-01T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 190000000,
+      "victimContract": "0x5D94309E5a0090b165FA4181519701637B6DAEBA",
+      "exploitTx": null,
+      "notes": "Replica proxy: an upgrade + re-initialization on 2022-06-21 set committedRoot to 0x00, making every unproven message 'proven'. Beacon-proxy architecture emits no EIP-1967 Upgraded event on the proxy; last-change date from the documented upgrade transaction (41 days before exploit).",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1659355200,
+        "deployTimestamp": 1650564005,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1655812800,
+        "codeAgeSeconds": 3542400,
+        "basis": "documented change (no standard event for this architecture)"
+      },
+      "documentedLastChange": "2022-06-21"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "erc20tokenbank",
+  "name": "ERC20TokenBank",
+  "incidents": [
+    {
+      "name": "ERC20TokenBank",
+      "date": "2023-05-31T05:54:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 111000,
+      "victimContract": "0x765b8d7cd8ff304f796f4b6fb1bcf78698333f6d",
+      "exploitTx": "0x578a195e05f04b19fd8af6358dc6407aa1add87c3167f053beb990d6b4735f26",
+      "notes": "ExchangeBetweenPools.doExchange performs an unprotected Curve swap with no slippage, sandwiched by attacker.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x578a195e05f04b19fd8af6358dc6407aa1add87c3167f053beb990d6b4735f26"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-05/ERC20TokenBank_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1685512463,
+        "deployTimestamp": 1611740698,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1611740698,
+        "codeAgeSeconds": 73771765,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

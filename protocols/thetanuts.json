@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "thetanuts",
+  "name": "Thetanuts",
+  "incidents": [
+    {
+      "name": "Thetanuts",
+      "date": "2026-06-15T13:53:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 105472,
+      "victimContract": "0xc2c3ae0a7b405058558c9b4a63b373486cb86ac7",
+      "exploitTx": "0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec",
+      "notes": "Same Thetanuts index-vault flaw: flash-borrow shares, claim to crush totalSupply, then free-mint via integer-division truncation to repay and keep component vaults.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-06/Thetanuts_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x30498e4466789e534c72e03b52a16c978655b41e",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1781531639,
+        "deployTimestamp": 1651093496,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1651093496,
+        "codeAgeSeconds": 130438143,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

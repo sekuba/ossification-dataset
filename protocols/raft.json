@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "raft",
+  "name": "Raft",
+  "incidents": [
+    {
+      "name": "Raft",
+      "date": "2023-11-10T18:59:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 3200000,
+      "victimContract": "0x9ab6b21cdf116f611110b048987e58894786c244",
+      "exploitTx": "0xfeedbf51b4e2338e38171f6e19501327294ab1907ab44cfd2d7e7336c975ace7",
+      "notes": "liquidate-triggered index inflation plus rounding let attacker mint collateral shares for 1 wei",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xfeedbf51b4e2338e38171f6e19501327294ab1907ab44cfd2d7e7336c975ace7"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/Raft_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xc1f2b71a502b551a65eee9c96318afdd5fd439fa",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1699642763,
+        "deployTimestamp": 1694609939,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1694609939,
+        "codeAgeSeconds": 5032824,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

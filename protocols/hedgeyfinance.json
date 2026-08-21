@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "hedgeyfinance",
+  "name": "HedgeyFinance",
+  "incidents": [
+    {
+      "name": "HedgeyFinance",
+      "date": "2024-04-19T07:06:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 48000000,
+      "victimContract": "0xBc452fdC8F851d7c5B72e1Fe74DFB63bb793D511",
+      "exploitTx": "0x2606d459a50ca4920722a111745c2eeced1d8a01ff25ee762e22d5d4b1595739",
+      "notes": "createLockedCampaign then cancelCampaign granted attacker approval to drain protocol USDC",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x2606d459a50ca4920722a111745c2eeced1d8a01ff25ee762e22d5d4b1595739"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/HedgeyFinance_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xDed2b1a426E1b7d415A40Bcad44e98F47181dda2",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1713510407,
+        "deployTimestamp": 1700669051,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1700669051,
+        "codeAgeSeconds": 12841356,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

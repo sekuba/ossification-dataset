@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "socket",
+  "name": "Socket",
+  "incidents": [
+    {
+      "name": "Socket (Bungee)",
+      "date": "2024-01-16T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 3300000,
+      "victimContract": "0x3a23F943181408EAC424116Af7b7790c94Cb97a5",
+      "exploitTx": null,
+      "notes": "SocketGateway: a swap route added 3 days earlier performed an unvalidated user-controlled call, draining approvals. Route addition is an addRoute call, not an Upgraded event; date from the documented route-addition tx.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1705406400,
+        "deployTimestamp": 1679065499,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1705060800,
+        "codeAgeSeconds": 345600,
+        "basis": "documented change (no standard event for this architecture)"
+      },
+      "documentedLastChange": "2024-01-12"
+    }
+  ]
+}

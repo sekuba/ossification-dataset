@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "yearn",
+  "name": "Yearn",
+  "incidents": [
+    {
+      "name": "Yearn (yUSDT misconfiguration)",
+      "date": "2023-04-13T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 11500000,
+      "victimContract": "0x83f798e925BcD4017Eb265844FDDABb448f1707D",
+      "exploitTx": null,
+      "notes": "Legacy iearn yUSDT (deployed Feb 2020) was misconfigured to use the Fulcrum iUSDC pool instead of iUSDT since deployment; exploited >3 years later. Deliberately included as an aged-code counterexample.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1681387200,
+        "deployTimestamp": 1581470508,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1581470508,
+        "codeAgeSeconds": 99916692,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "rodeofinance",
+  "name": "RodeoFinance",
+  "incidents": [
+    {
+      "name": "RodeoFinance",
+      "date": "2023-07-11T07:45:25Z",
+      "chain": "arbitrum",
+      "category": "oracle-manipulation",
+      "lossUsd": 888000,
+      "victimContract": "0xf3721d8a2c051643e06bf2646762522fa66100da",
+      "exploitTx": "0xb1be5dee3852c818af742f5dd44def285b497ffc5c2eda0d893af542a09fb25a",
+      "notes": "Rodeo Farms used a manipulable Camelot V2 TWAP oracle for LP pricing, bypassing the health-factor check.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xb1be5dee3852c818af742f5dd44def285b497ffc5c2eda0d893af542a09fb25a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-07/RodeoFinance_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x2f3788f2396127061c46fc07bd0fcb91faace328",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1689061525,
+        "deployTimestamp": 1688390911,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1688390911,
+        "codeAgeSeconds": 670614,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

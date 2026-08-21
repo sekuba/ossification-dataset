@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "tsaggregatorgeneric",
+  "name": "TSAggregatorGeneric",
+  "incidents": [
+    {
+      "name": "TSAggregatorGeneric",
+      "date": "2025-06-14T07:00:43Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1300,
+      "victimContract": "0xb6FA6f1dCd686f4A573fD243a6fABb4Ba36ba98C",
+      "exploitTx": "0x077ea419bd5f0a20dc8f3da1281fbc96d6893201ebfd237742d01ae00a78e610",
+      "notes": "swapIn executes attacker-supplied swapRouter/calldata, letting the aggregator spend the victim's USDT allowance via arbitrary transferFrom.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x077ea419bd5f0a20dc8f3da1281fbc96d6893201ebfd237742d01ae00a78e610"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-06/TSAggregatorGeneric_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xd76Bfdbfe0F47D63C99Ea47f05262E0D43097E5a",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1749884443,
+        "deployTimestamp": 1685898477,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1685898477,
+        "codeAgeSeconds": 63985966,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

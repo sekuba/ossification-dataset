@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "royalroyalties",
+  "name": "RoyalRoyalties",
+  "incidents": [
+    {
+      "name": "RoyalRoyalties",
+      "date": "2026-06-23T16:27:52Z",
+      "chain": "polygon",
+      "category": "code-bug",
+      "lossUsd": 261163,
+      "victimContract": "0xd5b297c08d890376b6cbdba6023a39ffbdf65c78",
+      "exploitTx": "0x7a92106f145045b7a2bdce60a22109739f9b0cd0185bf16ff83fd1fac98cb42e",
+      "notes": "Royal1155LDA incremented per-tier balance bookkeeping even for zero-amount batch items, inflating tierBalanceOf to 100 vs supply 1 so Royalties paid a 100x claim.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0x7a92106f145045b7a2bdce60a22109739f9b0cd0185bf16ff83fd1fac98cb42e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-06/RoyalRoyalties_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xbd829aa63311bb1e3c0ea58a7193364de670bd56",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1782232072,
+        "deployTimestamp": 1680795222,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1680795222,
+        "codeAgeSeconds": 101436850,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

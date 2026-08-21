@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "lixirpermitdrain",
+  "name": "LixirPermitDrain",
+  "incidents": [
+    {
+      "name": "LixirPermitDrain",
+      "date": "2026-06-25T01:21:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 4478,
+      "victimContract": "0xfD4c9a491DD777b8b3e13659e9E379252eC78390",
+      "exploitTx": "0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da",
+      "notes": "Lixir vault-token permit accepted a dummy signature as long as ecrecover returned any nonzero address, so a forged permit granted allowance to drain every holder's shares.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-06/LixirPermitDrain_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x3Fa8cF7FeA68C8E76A9838d77889464DdFb6a6cf",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1782350483,
+        "deployTimestamp": 1626784967,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1626784967,
+        "codeAgeSeconds": 155565516,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

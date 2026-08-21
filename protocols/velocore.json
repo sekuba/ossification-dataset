@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "velocore",
+  "name": "Velocore",
+  "incidents": [
+    {
+      "name": "Velocore",
+      "date": "2024-06-02T12:00:00Z",
+      "chain": "linea",
+      "category": "code-bug",
+      "lossUsd": 6800000,
+      "victimContract": null,
+      "exploitTx": null,
+      "notes": "Balancer-style volatile CPMM pool fee computation flaw. L2 incident (Linea halted its sequencer in response). Excluded from age stats: the pool addresses quoted in public analyses turned out to be attacker-deployed contracts (verified onchain via creation lookups - creators include the attacker EOA), and the victim pool address could not be pinned with confidence.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "SCOPE_ONLY"
+      }
+    }
+  ]
+}

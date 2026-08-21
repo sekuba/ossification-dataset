@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unverified-d132",
+  "name": "unverified_d132",
+  "incidents": [
+    {
+      "name": "unverified_d132",
+      "date": "2025-08-16T19:48:34Z",
+      "chain": "polygon",
+      "category": "code-bug",
+      "lossUsd": 3131,
+      "victimContract": "0xd132B6e4CdB57E8E992C9b968CD4CcdDE3B0bafF",
+      "exploitTx": "0xf90407e2be3834d8534869af41849f72e9fea666cd7e23bf5c52a2fc0a497a75",
+      "notes": "Victim swapSingleToken trusted an attacker-supplied fake pair and paid DAI in the swap callback without authenticating a real pool.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0xf90407e2be3834d8534869af41849f72e9fea666cd7e23bf5c52a2fc0a497a75"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-08/unverified_d132_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xe4B97Db5FAF476DB464Bc271097Fac97d6CE3783",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1755373714,
+        "deployTimestamp": 1732314764,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1732314764,
+        "codeAgeSeconds": 23058950,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

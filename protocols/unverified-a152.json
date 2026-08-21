@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unverified-a152",
+  "name": "unverified_a152",
+  "incidents": [
+    {
+      "name": "unverified_a152",
+      "date": "2026-04-27T19:49:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 229031,
+      "victimContract": "0xa152751251a72f7d9e8a8998e9eadbefbf10e4f3",
+      "exploitTx": "0x57709a498f27c7219b634ae20e7d2cbf9ab8dd6aca7b3845fabf93b57760b576",
+      "notes": "An authorized spender's helper spendFromUser let the spender pull any user's tokens via the shared AllowanceTarget approvals, an access-control flaw draining approved balances.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x57709a498f27c7219b634ae20e7d2cbf9ab8dd6aca7b3845fabf93b57760b576"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-04/unverified_a152_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x224c940003dd0b8aa1a20e655ced0363d573fa46",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1777319399,
+        "deployTimestamp": 1692859391,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1692859391,
+        "codeAgeSeconds": 84460008,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

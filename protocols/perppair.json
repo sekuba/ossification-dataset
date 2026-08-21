@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "perppair",
+  "name": "PerpPair",
+  "incidents": [
+    {
+      "name": "PerpPair",
+      "date": "2026-04-05T09:07:13Z",
+      "chain": "linea",
+      "category": "economic-design",
+      "lossUsd": 165648,
+      "victimContract": "0xb68396dd4230253d27589e2004ac37389836ae17",
+      "exploitTx": "0xcb0744a0d453e5556f162608fae8275dabd14292bffbfcd8394af4610c606447",
+      "notes": "Attacker acted as both LP and trader: an oversized long skewed PerpPair's virtual AMM and the LP immediately realized inflated PnL, a mechanism-design flaw with no code defect or external oracle.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "linea",
+          "ref": "0xcb0744a0d453e5556f162608fae8275dabd14292bffbfcd8394af4610c606447"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-04/PerpPair_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x8d6778d7fae00ad2e0bc12194cf03b756fed9db3",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1775380033,
+        "deployTimestamp": 1772548244,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1772548244,
+        "codeAgeSeconds": 2831789,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

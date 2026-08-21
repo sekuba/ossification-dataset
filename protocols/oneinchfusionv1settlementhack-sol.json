@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "oneinchfusionv1settlementhack-sol",
+  "name": "OneInchFusionV1SettlementHack.sol",
+  "incidents": [
+    {
+      "name": "OneInchFusionV1SettlementHack.sol",
+      "date": "2025-03-05T17:15:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 4500000,
+      "victimContract": "0xa88800cd213da5ae406ce248380802bd53b47647",
+      "exploitTx": "0x62734ce80311e64630a009dd101a967ea0a9c012fabbfce8eac90f0f4ca090d6",
+      "notes": "Yul calldata/memory overflow in Settlement _settleOrder lets a crafted fake interactionLength corrupt the copied calldata and craft a malicious fee suffix.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x62734ce80311e64630a009dd101a967ea0a9c012fabbfce8eac90f0f4ca090d6"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-03/OneInchFusionV1SettlementHack.sol_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xA7264a43A57Ca17012148c46AdBc15a5F951766e",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1741194923,
+        "deployTimestamp": 1671724079,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1671724079,
+        "codeAgeSeconds": 69470844,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

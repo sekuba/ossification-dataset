@@ -1,0 +1,33 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "euler-finance",
+  "name": "Euler Finance",
+  "incidents": [
+    {
+      "name": "Euler Finance",
+      "date": "2023-03-13T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 197000000,
+      "victimContract": "0x27182842E098f60e3D576794A5bFFb0777E025d3",
+      "exploitTx": null,
+      "notes": "Euler main proxy: donateToReserves (added by eIP-14, activated 2022-07-28) skipped the liquidity check, enabling self-liquidation at a discount. Euler's module installer emits no EIP-1967 event; last-change date from the documented eIP-14 activation (~7.5 months before exploit).",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1678708800,
+        "deployTimestamp": 1637899985,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1659009600,
+        "codeAgeSeconds": 19699200,
+        "basis": "documented change (no standard event for this architecture)"
+      },
+      "documentedLastChange": "2022-07-28"
+    }
+  ]
+}

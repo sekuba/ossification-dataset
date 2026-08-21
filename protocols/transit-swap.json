@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "transit-swap",
+  "name": "Transit Swap",
+  "incidents": [
+    {
+      "name": "Transit Swap",
+      "date": "2022-10-01T12:00:00Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 21000000,
+      "victimContract": "0xed1afc8c4604958c2f38a3408fa63b32e737c428",
+      "exploitTx": null,
+      "notes": "Router with arbitrary-call: attacker-controlled call target/data drained user approvals.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1664625600,
+        "deployTimestamp": 1634885536,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1634885536,
+        "codeAgeSeconds": 29740064,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

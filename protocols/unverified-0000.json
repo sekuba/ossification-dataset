@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unverified-0000",
+  "name": "unverified_0000",
+  "incidents": [
+    {
+      "name": "unverified_0000",
+      "date": "2025-05-25T21:54:43Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 5658,
+      "victimContract": "0x000004A70f92f1b22de1201aF76C48365d5D0000",
+      "exploitTx": "0x7ca804d016be67c570a10a620b9ae3027fd6b03d0965da3ec78912be067af024",
+      "notes": "Missing access control on drain selector 0x88417d5c lets any caller transfer the victim contract's ERC20 balances to itself.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x7ca804d016be67c570a10a620b9ae3027fd6b03d0965da3ec78912be067af024"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-05/unverified_0000_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x1491B276528531AD3F41DbE9B00387ABaC55c114",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1748210083,
+        "deployTimestamp": 1747079649,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1747079649,
+        "codeAgeSeconds": 1130434,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

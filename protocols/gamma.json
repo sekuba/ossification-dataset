@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "gamma",
+  "name": "Gamma",
+  "incidents": [
+    {
+      "name": "Gamma",
+      "date": "2024-01-04T03:30:37Z",
+      "chain": "arbitrum",
+      "category": "oracle-manipulation",
+      "lossUsd": 6300000,
+      "victimContract": "0x1F1Ca4e8236CD13032653391dB7e9544a6ad123E",
+      "exploitTx": "0x025cf2858723369d606ee3abbc4ec01eab064a97cc9ec578bf91c6908679be75",
+      "notes": "Algebra pool spot price manipulated, consumed by Gamma Hypervisor/UniProxy deposit pricing",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0x025cf2858723369d606ee3abbc4ec01eab064a97cc9ec578bf91c6908679be75"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-01/Gamma_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x5351536145610aa448a8bf85ba97c71caf31909c",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1704339037,
+        "deployTimestamp": 1687315369,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1687315369,
+        "codeAgeSeconds": 17023668,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

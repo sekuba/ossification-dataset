@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "dlmc",
+  "name": "DLMC",
+  "incidents": [
+    {
+      "name": "DLMC",
+      "date": "2026-06-24T11:15:10Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 222560,
+      "victimContract": "0xf2ca2a3572b26ae7c479dc7ae36d922113b1bdf2",
+      "exploitTx": "0x151025d3f0a782340a74d30ef33a5fad044b838e74437a803f0652e70c231306",
+      "notes": "DLMCToken buy/sell used a reserve-derived livePrice; the attacker inflated it with buys then sold at the inflated price to drain the contract's USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x151025d3f0a782340a74d30ef33a5fad044b838e74437a803f0652e70c231306"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-06/DLMC_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x701bb7b460ae231dbbcfa3d87f0ab5b458429699",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1782299710,
+        "deployTimestamp": 1777295932,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1777295932,
+        "codeAgeSeconds": 5003778,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

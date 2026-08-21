@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "platypus03",
+  "name": "Platypus03",
+  "incidents": [
+    {
+      "name": "Platypus03",
+      "date": "2023-10-12T06:17:09Z",
+      "chain": "avalanche",
+      "category": "code-bug",
+      "lossUsd": 2000000,
+      "victimContract": "0xe5c84c7630a505b6adf69b5594d0ff7fedd5f447",
+      "exploitTx": "0x4425f757715e23d392cda666bc0492d9e5d5848ff89851a1821eab5ed12bb867",
+      "notes": "Platypus pool cash/liability accounting manipulated via deposit/swap/withdraw to inflate LP redemption value",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "avalanche",
+          "ref": "0x4425f757715e23d392cda666bc0492d9e5d5848ff89851a1821eab5ed12bb867"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-10/Platypus03_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x0cd4fd0eecd2c5ad24de7f17ae35f9db6ac51ee7",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1697091429,
+        "deployTimestamp": 1689178028,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1689178028,
+        "codeAgeSeconds": 7913401,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

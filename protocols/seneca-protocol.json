@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "seneca-protocol",
+  "name": "Seneca Protocol",
+  "incidents": [
+    {
+      "name": "Seneca Protocol",
+      "date": "2024-02-28T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 6400000,
+      "victimContract": "0x65c210c59B43EB68112b7a4f75C8393C36491F06",
+      "exploitTx": null,
+      "notes": "Chamber contract exposed an external performOperations with arbitrary call, draining user approvals.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1709121600,
+        "deployTimestamp": 1708377527,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1708377527,
+        "codeAgeSeconds": 744073,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

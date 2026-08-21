@@ -1,0 +1,37 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "qubit-finance",
+  "name": "Qubit Finance",
+  "incidents": [
+    {
+      "name": "Qubit Finance (QBridge)",
+      "date": "2022-01-27T21:41:31Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 80000000,
+      "victimContract": "0x20e5e35ba29dc3b540a1aee781d0814d5c77bce6",
+      "exploitTx": "0x478d83f2ad909c64a9a3d807b3d8399bb67a997f9721fc5580ae2c51fab92acf",
+      "notes": "Ethereum-side QBridge: deposit path allowed a 0-value deposit (safeTransferFrom on address(0) token) to emit a Deposit event minting unbacked qXETH collateral on BSC. Sources: halborn analysis; flaw located in QBridgeHandler on Ethereum.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x478d83f2ad909c64a9a3d807b3d8399bb67a997f9721fc5580ae2c51fab92acf"
+        },
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1643319691,
+        "deployTimestamp": 1638176567,
+        "upgradeEventCount": 3,
+        "lastChangeTimestamp": 1639547760,
+        "codeAgeSeconds": 3771931,
+        "basis": "last of 3 upgrade events (onchain)"
+      }
+    }
+  ]
+}

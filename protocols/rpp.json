@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "rpp",
+  "name": "RPP",
+  "incidents": [
+    {
+      "name": "RPP",
+      "date": "2024-11-05T20:30:56Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 14100,
+      "victimContract": "0x7d1a69302d2a94620d5185f2d80e065454a35751",
+      "exploitTx": "0x76c39537374e7fa7f206ed3c99aa6b14ccf1d2dadaabe6139164cc37966e40bd",
+      "notes": "RPP burn-on-sell token logic manipulated via repeated swaps to drain the pool",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x76c39537374e7fa7f206ed3c99aa6b14ccf1d2dadaabe6139164cc37966e40bd"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-11/RPP_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x709b30b69176a3ccc8ef3bb37219267ee2f5b112",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1730838656,
+        "deployTimestamp": 1730825143,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1730825143,
+        "codeAgeSeconds": 13513,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

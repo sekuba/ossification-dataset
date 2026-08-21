@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "compounderfinance",
+  "name": "CompounderFinance",
+  "incidents": [
+    {
+      "name": "CompounderFinance",
+      "date": "2023-06-07T04:14:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 27174000,
+      "victimContract": "0xaf274e912243b19b882f02d731dacd7cd13072d0",
+      "exploitTx": "0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1",
+      "notes": "Attacker manipulates Compounder/yDAI share exchange rate via Curve imbalance and StrategyDAICurve.deposit to withdraw excess DAI.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-06/CompounderFinance_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x0e816b0d0a66252c72af822d3e0773a2676f3278",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1686111251,
+        "deployTimestamp": 1604800849,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1604800849,
+        "codeAgeSeconds": 81310402,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

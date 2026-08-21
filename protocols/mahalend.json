@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "mahalend",
+  "name": "MahaLend",
+  "incidents": [
+    {
+      "name": "MahaLend",
+      "date": "2023-11-10T22:43:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 20000,
+      "victimContract": "0xfd11aba71c06061f446ade4eec057179f19c23c4",
+      "exploitTx": "0x2881e839d4d562fad5356183e4f6a9d427ba6f475614ce8ef64dbfe557a4a2cc",
+      "notes": "Aave-fork empty-market donation inflated index plus rounding error to over-withdraw",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x2881e839d4d562fad5356183e4f6a9d427ba6f475614ce8ef64dbfe557a4a2cc"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/MahaLend_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x0ec330df28ae6106a774d0add3e540ea8d226e3b",
+      "nonStandardUpgradeArchitecture": true,
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1699656239,
+        "deployTimestamp": 1670829275,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1670829275,
+        "codeAgeSeconds": 28826964,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

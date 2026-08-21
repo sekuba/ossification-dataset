@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "sonne-finance",
+  "name": "Sonne Finance",
+  "incidents": [
+    {
+      "name": "Sonne Finance",
+      "date": "2024-05-14T12:00:00Z",
+      "chain": "optimism",
+      "category": "code-bug",
+      "lossUsd": 20000000,
+      "victimContract": "0xE3B81318B1b6776F0877c3770AfDdFf97b9f5fE5",
+      "exploitTx": null,
+      "notes": "Compound-v2 fork empty-market donation attack on the soVELO market, executed in the window between market creation (timelocked proposal execution) and collateral-factor guard.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1715688000,
+        "deployTimestamp": 1715348413,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1715348413,
+        "codeAgeSeconds": 339587,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

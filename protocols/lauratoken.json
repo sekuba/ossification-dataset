@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "lauratoken",
+  "name": "LAURAToken",
+  "incidents": [
+    {
+      "name": "LAURAToken",
+      "date": "2025-01-01T13:22:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 41200,
+      "victimContract": "0x05641e33fd15baf819729df55500b07b82eb8e89",
+      "exploitTx": "0xef34f4fdf03e403e3c94e96539354fb4fe0b79a5ec927eacc63bc04108dbf420",
+      "notes": "Unprotected removeLiquidityWhenKIncreases() in the LAURA token removes LAURA from the pair, letting attacker steal the pair's WETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xef34f4fdf03e403e3c94e96539354fb4fe0b79a5ec927eacc63bc04108dbf420"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-01/LAURAToken_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x25869347f7993c50410a9b9b9c48f37d79e12a36",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1735737755,
+        "deployTimestamp": 1735578803,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1735578803,
+        "codeAgeSeconds": 158952,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

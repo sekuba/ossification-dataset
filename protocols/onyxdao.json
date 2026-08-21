@@ -1,0 +1,39 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "onyxdao",
+  "name": "OnyxDAO",
+  "incidents": [
+    {
+      "name": "OnyxDAO",
+      "date": "2024-09-26T12:01:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 3800000,
+      "victimContract": "0xf10bc5be84640236c71173d1809038af4ee19002",
+      "exploitTx": "0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729",
+      "notes": "empty-market oToken exchange-rate manipulation plus fake-token liquidateWithSingleRepay bypass",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-09/OnyxDAO_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x680910cf5fc9969a25fd57e7896a14ff1e55f36b",
+      "nonStandardUpgradeArchitecture": true,
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1727352119,
+        "deployTimestamp": 1677598379,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1677598379,
+        "codeAgeSeconds": 49753740,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

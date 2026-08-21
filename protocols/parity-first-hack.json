@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "parity-first-hack",
+  "name": "Parity_first_hack",
+  "incidents": [
+    {
+      "name": "Parity_first_hack",
+      "date": "2017-07-19T12:18:15Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 30000000,
+      "victimContract": "0xBEc591De75b8699A3Ba52F073428822d0Bfc0D7e",
+      "exploitTx": "0x9dbf0326a03a2a3719c27be4fa69aacc9857fd231a8d9dcaede4bb083def75ec",
+      "notes": "Uninitialized library-based wallet: anyone can call initWallet to become owner and execute a drain.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x9dbf0326a03a2a3719c27be4fa69aacc9857fd231a8d9dcaede4bb083def75ec"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2017-07/Parity_first_hack_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xB3764761E297D6f121e79C32A65829Cd1dDb4D32",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1500466695,
+        "deployTimestamp": 1496059295,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1496059295,
+        "codeAgeSeconds": 4407400,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

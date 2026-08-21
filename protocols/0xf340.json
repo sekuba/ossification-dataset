@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "0xf340",
+  "name": "0xf340",
+  "incidents": [
+    {
+      "name": "0xf340",
+      "date": "2025-08-27T12:59:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 4000,
+      "victimContract": "0xf340bd3eb3e82994cff5b8c3493245edbce63436",
+      "exploitTx": "0x103b4550a1a2bdb73e3cb5ea484880cd8bed7e4842ecdd18ed81bf67ed19e03c",
+      "notes": "initVRF lacks access control, letting the attacker set a recipient and repeatedly drain LINK via selector 0x607d60e6.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x103b4550a1a2bdb73e3cb5ea484880cd8bed7e4842ecdd18ed81bf67ed19e03c"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-08/0xf340_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xda97a086fc74b20c88bd71e12e365027e9ec2d24",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1756299575,
+        "deployTimestamp": 1634630519,
+        "upgradeEventCount": 2,
+        "lastChangeTimestamp": 1635051227,
+        "codeAgeSeconds": 121248348,
+        "basis": "last of 2 upgrade events (onchain)"
+      }
+    }
+  ]
+}

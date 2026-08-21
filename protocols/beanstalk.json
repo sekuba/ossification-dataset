@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "beanstalk",
+  "name": "Beanstalk",
+  "incidents": [
+    {
+      "name": "Beanstalk",
+      "date": "2022-04-17T12:00:00Z",
+      "chain": "ethereum",
+      "category": "governance-design",
+      "lossUsd": 182000000,
+      "victimContract": null,
+      "exploitTx": null,
+      "notes": "Flash-loaned governance stake passed and instantly executed a malicious BIP via emergencyCommit. Design flaw in governance parameters rather than an implementation bug; excluded from code-age stats, counted in scope stats.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "SCOPE_ONLY"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "crb2",
+  "name": "Crb2",
+  "incidents": [
+    {
+      "name": "Crb2",
+      "date": "2024-06-16T02:57:33Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 15000,
+      "victimContract": "0xee6De822159765daf0Fd72d71529d7ab026ec2f2",
+      "exploitTx": "0xde59f5bd65e8f48e5b6137a3b4251afbb9b6240d1036fa6f030e21ab6d950aac",
+      "notes": "reflection/fee token internal accounting manipulated via repeated transfers to token to drain pool",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xde59f5bd65e8f48e5b6137a3b4251afbb9b6240d1036fa6f030e21ab6d950aac"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-06/Crb2_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x65bba34c11add305cb2a1f8a68cecbd6e75089cd",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1718506653,
+        "deployTimestamp": 1712826916,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1712826916,
+        "codeAgeSeconds": 5679737,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

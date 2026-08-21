@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "platypus-finance",
+  "name": "Platypus Finance",
+  "incidents": [
+    {
+      "name": "Platypus Finance",
+      "date": "2023-02-16T12:00:00Z",
+      "chain": "avalanche",
+      "category": "code-bug",
+      "lossUsd": 8500000,
+      "victimContract": "0xfF6934aAC9C94E1C39358D4fDCF70aeca77D0AB0",
+      "exploitTx": null,
+      "notes": "MasterPlatypusV4: emergencyWithdraw did not check outstanding USP debt, releasing collateral while keeping the borrowed USP. V4 deployed shortly before the exploit.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1676548800,
+        "deployTimestamp": 1662368051,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1668518918,
+        "codeAgeSeconds": 8029882,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "zunami",
+  "name": "Zunami",
+  "incidents": [
+    {
+      "name": "Zunami",
+      "date": "2023-08-13T22:34:47Z",
+      "chain": "ethereum",
+      "category": "oracle-manipulation",
+      "lossUsd": 2000000,
+      "victimContract": "0xb40b6608b2743e691c9b54ddbdee7bf03cd79f1c",
+      "exploitTx": "0x0788ba222970c7c68a738b0e08fb197e669e61f9b226ceec4cab9b85abe8cceb",
+      "notes": "UZD.cacheAssetPrice rebases balances from a manipulable Sushi spot price plus SDT donation, inflating attacker's UZD.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x0788ba222970c7c68a738b0e08fb197e669e61f9b226ceec4cab9b85abe8cceb"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-08/Zunami_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x5f4c21c9bb73c8b4a296cc256c0cde324db146df",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1691966087,
+        "deployTimestamp": 1678179743,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1678179743,
+        "codeAgeSeconds": 13786344,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

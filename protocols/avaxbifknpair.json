@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "avaxbifknpair",
+  "name": "AvaxBIFKNPair",
+  "incidents": [
+    {
+      "name": "AvaxBIFKNPair",
+      "date": "2025-07-28T06:34:52Z",
+      "chain": "avalanche",
+      "category": "code-bug",
+      "lossUsd": 2423,
+      "victimContract": "0x5b5913eec2031c9d8383e3afcfd269217e481ce1",
+      "exploitTx": "0xab813aeecd174d51a9f6d7d0eb9b323bccedba6c5cce0e965781a08f3473dbd5",
+      "notes": "BIFKN314 flashSwap checks repayment only after the callback, so addLiquidity mints hugely inflated LP shares while pool balances are distorted.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "avalanche",
+          "ref": "0xab813aeecd174d51a9f6d7d0eb9b323bccedba6c5cce0e965781a08f3473dbd5"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-07/AvaxBIFKNPair_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x13459bc2db6053524881415321667d5e16f5f15c",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1753684492,
+        "deployTimestamp": 1746823650,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1746823650,
+        "codeAgeSeconds": 6860842,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

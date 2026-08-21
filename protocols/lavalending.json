@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "lavalending",
+  "name": "LavaLending",
+  "incidents": [
+    {
+      "name": "LavaLending",
+      "date": "2024-10-02T15:11:10Z",
+      "chain": "arbitrum",
+      "category": "code-bug",
+      "lossUsd": 130000,
+      "victimContract": "0x6700b021a8bcfae25a2493d16d7078c928c13151",
+      "exploitTx": "0xb5cfa4ae4d6e459ba285fec7f31caf8885e2285a0b4ff62f66b43e280c947216",
+      "notes": "LP vault deposit/compound/withdraw accounting inflated collateral value to over-borrow the lending pool",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xb5cfa4ae4d6e459ba285fec7f31caf8885e2285a0b4ff62f66b43e280c947216"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-10/LavaLending_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x8a0dfb61cad29168e1067f6b23553035d83fcfb2",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1727881870,
+        "deployTimestamp": 1716266401,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1716266401,
+        "codeAgeSeconds": 11615469,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

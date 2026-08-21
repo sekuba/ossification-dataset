@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "elevatefi",
+  "name": "ElevateFi",
+  "incidents": [
+    {
+      "name": "ElevateFi",
+      "date": "2026-05-19T20:04:48Z",
+      "chain": "polygon",
+      "category": "oracle-manipulation",
+      "lossUsd": 16000,
+      "victimContract": "0xcddc83a34fc9a7b9e6b1df7c14b585cf73283174",
+      "exploitTx": "0x2bd7213a764dd93d18dedeca7f4e0cf5c3cdce1739d79b53e41b72ec9efed87e",
+      "notes": "ElevateFi getPriceUSD read raw DAI/EFI pair reserves, so the attacker pumped the pair spot price to create underpriced package-7 stakes and claim inflated EFI rewards.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0x2bd7213a764dd93d18dedeca7f4e0cf5c3cdce1739d79b53e41b72ec9efed87e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-05/ElevateFi_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x7abd3f84e28f49f8f3d64fa21981fa36e4fb37f0",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1779221088,
+        "deployTimestamp": 1779214774,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1779214774,
+        "codeAgeSeconds": 6314,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

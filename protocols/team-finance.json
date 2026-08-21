@@ -1,0 +1,32 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "team-finance",
+  "name": "Team Finance",
+  "incidents": [
+    {
+      "name": "Team Finance",
+      "date": "2022-10-27T12:00:00Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 14500000,
+      "victimContract": "0xE2fE530C047f2d85298b07D9333C05737f1435fB",
+      "exploitTx": null,
+      "notes": "LockToken proxy: migrate() to Uniswap v3 (added in a recent upgrade) had insufficient validation of lock ownership/params. Age measured via Upgraded events on the proxy.",
+      "sources": [
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1666872000,
+        "deployTimestamp": 1627475806,
+        "upgradeEventCount": 7,
+        "lastChangeTimestamp": 1662445887,
+        "codeAgeSeconds": 4426113,
+        "basis": "last of 7 upgrade events (onchain)"
+      }
+    }
+  ]
+}

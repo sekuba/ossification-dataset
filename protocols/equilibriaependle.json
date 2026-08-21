@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "equilibriaependle",
+  "name": "EquilibriaEPendle",
+  "incidents": [
+    {
+      "name": "EquilibriaEPendle",
+      "date": "2025-08-23T11:20:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 62662,
+      "victimContract": "0x615b0B54e585ab83ba1c94a734cd4499dEc1C956",
+      "exploitTx": "0x185a16017fb4d9b2fefdf5935435253d53d4758238275426b507fe54eb4fe97a",
+      "notes": "VaultEPendle did not update reward debt on share transfers and public getReward(account) let fresh receivers re-claim the same native rewards repeatedly.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x185a16017fb4d9b2fefdf5935435253d53d4758238275426b507fe54eb4fe97a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-08/EquilibriaEPendle_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x4DCCc719f277eBeB8F7fdB68cD4b105E5bC325db",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1755948059,
+        "deployTimestamp": 1696992023,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1696992023,
+        "codeAgeSeconds": 58956036,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

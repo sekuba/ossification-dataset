@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "cexiswap",
+  "name": "CEXISWAP",
+  "incidents": [
+    {
+      "name": "CEXISWAP",
+      "date": "2023-09-21T06:56:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 30000,
+      "victimContract": "0xb8a5890d53df78dee6182a6c0968696e827e3305",
+      "exploitTx": "0xede72a74d8398875b42d92c550539d72c830d3c3271a7641ee1843dc105de59e",
+      "notes": "Uninitialized UUPS proxy: attacker calls initialize to seize admin then upgradeToAndCall a malicious implementation.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xede72a74d8398875b42d92c550539d72c830d3c3271a7641ee1843dc105de59e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-09/CEXISWAP_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x060c169c4517d52c4be9a1dd53e41a3328d16f04",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1695279371,
+        "deployTimestamp": 1633699334,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1695279371,
+        "codeAgeSeconds": 0,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

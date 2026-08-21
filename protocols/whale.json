@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "whale",
+  "name": "WHALE",
+  "incidents": [
+    {
+      "name": "WHALE",
+      "date": "2026-06-17T10:43:36Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 3460,
+      "victimContract": "0xabc79b7c5a0f1fe0ac55fcb7e659d5817e530123",
+      "exploitTx": "0xf8f431b392a50eb997ecae2e35668d6dd4dc8568d002057600d2532e18f36d86",
+      "notes": "WHALE's transfer pipeline (LP credit staging, POL flush, hashrate settlement) let the attacker create a pair reserve imbalance and swap out USDT, a token-accounting flaw.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xf8f431b392a50eb997ecae2e35668d6dd4dc8568d002057600d2532e18f36d86"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-06/WHALE_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xa27eae743cd8c03e9b7c25ebf43dadbbc6df9bfa",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1781693016,
+        "deployTimestamp": 1779812445,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1779812445,
+        "codeAgeSeconds": 1880571,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

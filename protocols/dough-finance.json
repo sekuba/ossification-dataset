@@ -1,0 +1,37 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "dough-finance",
+  "name": "Dough Finance",
+  "incidents": [
+    {
+      "name": "Dough Finance",
+      "date": "2024-07-12T06:26:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 1800000,
+      "victimContract": "0x9f54e8eaa9658316bb8006e03fff1cb191aafbe6",
+      "exploitTx": "0x92cdcc732eebf47200ea56123716e337f6ef7d5ad714a2295794fdc6031ebb2e",
+      "notes": "ConnectorDeleverageParaswap: unvalidated flash-loan calldata executed arbitrary calls with user approvals. Source: certik analysis.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x92cdcc732eebf47200ea56123716e337f6ef7d5ad714a2295794fdc6031ebb2e"
+        },
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1720765571,
+        "deployTimestamp": 1718295743,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1718295743,
+        "codeAgeSeconds": 2469828,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

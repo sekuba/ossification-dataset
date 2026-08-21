@@ -1,0 +1,37 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "hundred-finance",
+  "name": "Hundred Finance",
+  "incidents": [
+    {
+      "name": "Hundred Finance",
+      "date": "2023-04-15T14:12:00Z",
+      "chain": "optimism",
+      "category": "code-bug",
+      "lossUsd": 7400000,
+      "victimContract": "0x35594E4992DFefcB0C20EC487d7af22a30bDec60",
+      "exploitTx": "0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451",
+      "notes": "hWBTC market on Optimism (per Hundred's protocol docs): Compound-v2 fork empty-market exchange-rate inflation via direct donation, then rounding-truncated redeem.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "optimism",
+          "ref": "0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451"
+        },
+        {
+          "type": "curated-review",
+          "ref": "l2beat research; see notes"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1681567920,
+        "deployTimestamp": 1672760507,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1672760507,
+        "codeAgeSeconds": 8807413,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

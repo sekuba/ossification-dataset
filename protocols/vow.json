@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "vow",
+  "name": "VOW",
+  "incidents": [
+    {
+      "name": "VOW",
+      "date": "2024-08-13T11:09:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 1000000,
+      "victimContract": "0x1bbf25e71ec48b84d773809b4ba55b6f4be946fb",
+      "exploitTx": "0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561",
+      "notes": "vscTokenManager fixed VOW-to-vUSD conversion drained via flash-swap arbitrage across pairs",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-08/VOW_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x48de6bf9e301946b0a32b053804c61dc5f00c0c3",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1723547363,
+        "deployTimestamp": 1597991844,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1597991844,
+        "codeAgeSeconds": 125555519,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

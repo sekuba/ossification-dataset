@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "woofi",
+  "name": "Woofi",
+  "incidents": [
+    {
+      "name": "Woofi",
+      "date": "2024-03-05T15:42:06Z",
+      "chain": "arbitrum",
+      "category": "oracle-manipulation",
+      "lossUsd": 8000000,
+      "victimContract": "0xeff23b4be1091b53205e35f3afcd9c7182bf3062",
+      "exploitTx": "0x57e555328b7def90e1fc2a0f7aa6df8d601a8f15803800a5aaf0a20382f21fbd",
+      "notes": "WooPPV2/Wooracle spread-based pricing manipulated via large swaps to drain pool",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0x57e555328b7def90e1fc2a0f7aa6df8d601a8f15803800a5aaf0a20382f21fbd"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/Woofi_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x9961190b258897bca7a12b8f37f415e689d281c4",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1709653326,
+        "deployTimestamp": 1667903661,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1667903661,
+        "codeAgeSeconds": 41749665,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

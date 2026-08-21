@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "agave",
+  "name": "Agave",
+  "incidents": [
+    {
+      "name": "Agave",
+      "date": "2022-03-15T10:25:40Z",
+      "chain": "gnosis",
+      "category": "code-bug",
+      "lossUsd": 1500000,
+      "victimContract": "0x207E9def17B4bd1045F5Af2C651c081F9FDb0842",
+      "exploitTx": "0xa262141abcf7c127b88b4042aee8bf601f4f3372c9471dbd75cb54e76524f18e",
+      "notes": "State-changing reentrancy via onTokenTransfer during aToken burn in liquidationCall corrupts accounting.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "gnosis",
+          "ref": "0xa262141abcf7c127b88b4042aee8bf601f4f3372c9471dbd75cb54e76524f18e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-03/Agave_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x0a16a85be44627c10cee75db06b169c7bc76de2c",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1647339940,
+        "deployTimestamp": 1620378980,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1620378980,
+        "codeAgeSeconds": 26960960,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

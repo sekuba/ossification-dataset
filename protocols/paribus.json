@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "paribus",
+  "name": "Paribus",
+  "incidents": [
+    {
+      "name": "Paribus",
+      "date": "2025-01-18T11:45:05Z",
+      "chain": "arbitrum",
+      "category": "oracle-manipulation",
+      "lossUsd": 86000,
+      "victimContract": "0xaffd437801434643b734d0b2853654876f66f7d7",
+      "exploitTx": "0xf5e753d3da60db214f2261343c1e1bc46e674d2fa4b7a953eaf3c52123aeebd2",
+      "notes": "Attacker inflates PBX price on Camelot, mints an overvalued V3 LP-NFT collateral, and borrows against its manipulated spot valuation.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xf5e753d3da60db214f2261343c1e1bc46e674d2fa4b7a953eaf3c52123aeebd2"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-01/Paribus_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x56190CAC88b8D4b5D5Ed668ef81828913932e7Ed",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1737200705,
+        "deployTimestamp": 1685532851,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1685532851,
+        "codeAgeSeconds": 51667854,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

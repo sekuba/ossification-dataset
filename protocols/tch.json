@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "tch",
+  "name": "TCH",
+  "incidents": [
+    {
+      "name": "TCH",
+      "date": "2024-05-16T15:42:08Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 18000,
+      "victimContract": "0x5d78cfc8732fd328015c9b73699de9556ef06e8e",
+      "exploitTx": "0xa94338d8aa312ed4b97b2a4dcb27f632b1ade6f3abec667e3bf9f002a75dabe0",
+      "notes": "burnToken signature verification bypassed via tampered v-byte to manipulate price",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xa94338d8aa312ed4b97b2a4dcb27f632b1ade6f3abec667e3bf9f002a75dabe0"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-05/TCH_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xb9596d6e53d81981b9f06ca2ca6d3e422232d575",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1715874128,
+        "deployTimestamp": 1715657293,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1715657293,
+        "codeAgeSeconds": 216835,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "erc20transfer",
+  "name": "Erc20transfer",
+  "incidents": [
+    {
+      "name": "Erc20transfer",
+      "date": "2024-10-22T07:57:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 14773,
+      "victimContract": "0x43dc865e916914fd93540461fde124484fbf8faa",
+      "exploitTx": "0x7f2540af4a1f7b0172a46f5539ebf943dd5418422e4faa8150d3ae5337e92172",
+      "notes": "public erc20TransferFrom drained tokens from victims who approved the contract",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x7f2540af4a1f7b0172a46f5539ebf943dd5418422e4faa8150d3ae5337e92172"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-10/Erc20transfer_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1729583831,
+        "deployTimestamp": 1718256239,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1718256239,
+        "codeAgeSeconds": 11327592,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

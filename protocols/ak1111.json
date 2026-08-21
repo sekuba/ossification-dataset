@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "ak1111",
+  "name": "Ak1111",
+  "incidents": [
+    {
+      "name": "Ak1111",
+      "date": "2024-11-24T04:40:53Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 31500,
+      "victimContract": "0xc3B1b45e5784A8efececfC0BE2E28247d3f49963",
+      "exploitTx": "0xc29c98da0c14f4ca436d38f8238f8da1c84c4b1ee6480c4b4facc4b81a013438",
+      "notes": "unprotected nonblockingLzReceive1 minted AK1111 tokens for free",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xc29c98da0c14f4ca436d38f8238f8da1c84c4b1ee6480c4b4facc4b81a013438"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-11/Ak1111_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xCe21C6e4fa557A9041FA98DFf59A4401Ef0a18aC",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1732423253,
+        "deployTimestamp": 1732408337,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1732408337,
+        "codeAgeSeconds": 14916,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

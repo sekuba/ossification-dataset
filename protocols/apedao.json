@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "apedao",
+  "name": "ApeDAO",
+  "incidents": [
+    {
+      "name": "ApeDAO",
+      "date": "2023-07-18T14:01:37Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 7000,
+      "victimContract": "0xb47955b5b7eaf49c815ebc389850eb576c460092",
+      "exploitTx": "0x8d35dfd9968ce61fb969ffe8dcc29eeeae864e466d2cb0b7d26ce63644691994",
+      "notes": "APEDAO reflection accounting lets skim extract excess and public goDead() burns pair balance to inflate price.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x8d35dfd9968ce61fb969ffe8dcc29eeeae864e466d2cb0b7d26ce63644691994"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-07/ApeDAO_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x10703f7114dce7beaf8d23cde4bf72130bb0f56a",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1689688897,
+        "deployTimestamp": 1689381659,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1689381659,
+        "codeAgeSeconds": 307238,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

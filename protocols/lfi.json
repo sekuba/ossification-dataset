@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "lfi",
+  "name": "LFI",
+  "incidents": [
+    {
+      "name": "LFI",
+      "date": "2023-05-22T21:03:18Z",
+      "chain": "polygon",
+      "category": "code-bug",
+      "lossUsd": 36000,
+      "victimContract": "0xfc604b6fd73a1bc60d31be111f798dd0d4137812",
+      "exploitTx": "0xdd82fde0cc2fb7bdc078aead655f6d5e75a267a47c33fa92b658e3573b93ef0c",
+      "notes": "VLFI reward claim isn't reset on transfer, so transferring stake to fresh addresses re-claims rewards repeatedly.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0xdd82fde0cc2fb7bdc078aead655f6d5e75a267a47c33fa92b658e3573b93ef0c"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-05/LFI_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0x11576cb3d8d6328cf319e85b10e09a228e84a8de",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1684789398,
+        "deployTimestamp": 1654636640,
+        "upgradeEventCount": 8,
+        "lastChangeTimestamp": 1684734034,
+        "codeAgeSeconds": 55364,
+        "basis": "last of 8 upgrade events (onchain)"
+      }
+    }
+  ]
+}
