@@ -1,0 +1,43 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "strong-block",
+  "name": "StrongBlock",
+  "incidents": [
+    {
+      "name": "StrongBlock governance takeover",
+      "date": "2026-08-05T21:50:23Z",
+      "chain": "ethereum",
+      "category": "governance-design",
+      "lossUsd": 72000,
+      "victimContract": "0xBDDC7Ef8BaCeacE16DCE005102639a4bB86CB8C1",
+      "exploitTx": "0x3ffa7f6da3f0747660917dd331e060e45ffca8a195578ec8db4c9fbc623b0401",
+      "attacker": "0xACBCa357981870f30130B145762d671891CA810c",
+      "nonStandardUpgradeArchitecture": true,
+      "notes": "The attacker legitimately acquired majority voting weight in the abandoned Governor and used its proposal flow to seize the proxy upgrader before draining the service treasury.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x3ffa7f6da3f0747660917dd331e060e45ffca8a195578ec8db4c9fbc623b0401"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-08/StrongBlock_exp.sol@48c978bb245f"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim creator 0x4b5057b2c87ec9e7c047fb00c0e406dff2fdacad via 0xf1968991020f5551ccb9f76fdc8bd06dbd2b2638b88aced8909558d7b6f43344; not attacker"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1785966623,
+        "deployTimestamp": 1607006978,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1607006978,
+        "codeAgeSeconds": 178959645,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

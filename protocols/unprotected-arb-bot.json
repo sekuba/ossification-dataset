@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unprotected-arb-bot",
+  "name": "UnprotectedArbBot",
+  "incidents": [
+    {
+      "name": "UnprotectedArbBot",
+      "date": "2026-07-30T07:42:59Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": 31700,
+      "victimContract": "0xa31722ca2a32695280d0e7e325b3dd6d699fc170",
+      "exploitTx": "0xe831f3991132cbaffbb4a3738da7d1e254a6c02f0adce605a333229a61e27ad7",
+      "attacker": "0xbdce6bdd52baceadd1fc91bf01f3bc6ab24df17a",
+      "notes": "Selector 0x42be3129 exposed an unauthenticated arbitrary call and token sweep, letting anyone spend the owner's pre-granted WETH allowance through the victim and receive the proceeds.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0xe831f3991132cbaffbb4a3738da7d1e254a6c02f0adce605a333229a61e27ad7"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-07/UnprotectedArbBot_exp.sol@48c978bb245f"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1785397379,
+        "deployTimestamp": 1744560111,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1744560111,
+        "codeAgeSeconds": 40837268,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

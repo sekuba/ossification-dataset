@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unistreet-launchpad",
+  "name": "UnistreetLaunchpad",
+  "incidents": [
+    {
+      "name": "UnistreetLaunchpad arbitrary calldata forwarding",
+      "date": "2026-08-06T00:27:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 17750,
+      "victimContract": "0xFB60CD0B36aD4bD839b91767a6Ad9055AB6aD825",
+      "exploitTx": "0x9583e95d5c88c7966e269197f4b09022f26b7a27ad2c13660dda6774e3136d14",
+      "attacker": "0xc94e23C58b9b2998eDB7ABC8F99393FEaD985076",
+      "notes": "LaunchpadFactoryAuto.launch() forwarded unvalidated caller-supplied calldata as the LP-position custodian, allowing setApprovalForAll and withdrawal of every custodied Uniswap V4 position.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x9583e95d5c88c7966e269197f4b09022f26b7a27ad2c13660dda6774e3136d14"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-08/UnistreetLaunchpad_exp.sol@48c978bb245f"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim creator 0xff7fb7dd56a86727f7c67c4b2b7c6f536f98a0f4 via 0x02bce355d96113230749238eaf68955bb70bc6ab6d3acf79635554e263266c8c; not attacker"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1785976067,
+        "deployTimestamp": 1785685079,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1785685079,
+        "codeAgeSeconds": 290988,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "fox-lp-bonds-pool",
+  "name": "FoxLpBondsPool",
+  "incidents": [
+    {
+      "name": "FoxLpBondsPool spot-priced bond mint",
+      "date": "2026-08-15T23:32:59Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 112976,
+      "victimContract": "0x58e2a853bB14e46bEFD3148bd4280370feA4655a",
+      "exploitTx": "0x8e1775cbfd44db29744cc6687ff1822d2c47321de6e94062f789ad6181ad5514",
+      "attacker": "0x5670d36f00bc7F6860B6AfdDb288E3668efc0ef9",
+      "notes": "FoxLpBondsPool priced a bond from a manipulable PancakeSwap spot quote before its own large swap changed the reserves, then minted an immediate unsupported FOX referral reward.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x8e1775cbfd44db29744cc6687ff1822d2c47321de6e94062f789ad6181ad5514"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-08/FoxLpBondsPool_exp.sol@48c978bb245f"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim creator 0x12896036059ce563b713754f959353f4f4c1c55c via 0x62bedfcbd74c340d77c43b8b9acfbb98c2c40987ccaf877d2f59e3e570b3fd7f; not attacker"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1786836779,
+        "deployTimestamp": 1786345932,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1786345932,
+        "codeAgeSeconds": 490847,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

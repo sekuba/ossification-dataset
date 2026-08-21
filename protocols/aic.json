@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "aic",
+  "name": "AIC",
+  "incidents": [
+    {
+      "name": "AIC reserve-mismatch skim",
+      "date": "2026-08-03T13:03:53Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 21500,
+      "victimContract": "0xc0DC449De632586A00409873521AFC251aC5cE74",
+      "exploitTx": "0x905cc861bcc525d3a8e699583943831b97500bbac11c92dc20ed6edbddd69f87",
+      "attacker": "0xC3cB0872C42BFA5EB3B0258D7EEA2cCaF6a49475",
+      "notes": "AIC fee-on-transfer accounting let repeated AIC/NEX cycles inflate the pair's untracked AIC surplus, which the attacker extracted through the public skim() function.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x905cc861bcc525d3a8e699583943831b97500bbac11c92dc20ed6edbddd69f87"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-08/AIC_exp.sol@48c978bb245f"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim creator 0x13b81c2e8a4edd2aac1a096889b778103b16f7e8 via 0x00b3fde6a293c628c0a23db5fb0aef2e2e033a5e146e8def94f9efa8ad1d57b2; not attacker"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1785762233,
+        "deployTimestamp": 1781656550,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1781656550,
+        "codeAgeSeconds": 4105683,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "lien-finance",
+  "name": "Lien Finance",
+  "incidents": [
+    {
+      "name": "Lien Finance",
+      "date": "2026-07-24T01:26:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 542144.628604,
+      "victimContract": "0x656e5e976d523a427f05b0c212a22a89ccd9ef18",
+      "exploitTx": "0xb96d572b557a12f5ef193e88cca86123a6ae1b6e98b0eeee265870c85848e0e7",
+      "attacker": "0x0d7d9023531ad1a88414e216ee2715f63561808a",
+      "notes": "GeneralizedDotc accepted permissionlessly registered attacker-crafted bond payoff functions and priced them without validating their economic domain, letting nearly worthless bonds pull 542,144.628604 USDC from an LP allowance.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xb96d572b557a12f5ef193e88cca86123a6ae1b6e98b0eeee265870c85848e0e7"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-07/LienFinance_exp.sol@48c978bb245f"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1784856407,
+        "deployTimestamp": 1611651186,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1611651186,
+        "codeAgeSeconds": 173205221,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -5,32 +5,32 @@
   "incidents": [
     {
       "name": "DxSale",
-      "date": "2026-05-27T21:57:32Z",
+      "date": "2026-05-29T00:03:19Z",
       "chain": "bsc",
-      "category": "insider-rug",
+      "category": "code-bug",
       "lossUsd": 7300000,
       "victimContract": "0xEb3a9C56d963b971d320f889bE2fb8B59853e449",
-      "exploitTx": "0xe211904a8a40f653acd64ffc33a42429ef571c1e2da16976d07ac0f9a0bcc9c1",
-      "notes": "Deployer laundered locker ownership through 89 wallets, then the final owner used the owner-only DXLOCKERLP() backdoor to drain all locked LP positions past their timelocks.",
+      "exploitTx": "0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303",
+      "notes": "unlockToken used an if instead of a maturity require and never cleared the locked amount, letting any valid locker repeatedly withdraw its recorded allocation from the contract's shared token balance.",
       "sources": [
         {
           "type": "onchain-tx",
           "chain": "bsc",
-          "ref": "0xe211904a8a40f653acd64ffc33a42429ef571c1e2da16976d07ac0f9a0bcc9c1"
+          "ref": "0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303"
         },
         {
-          "type": "defihacklabs",
-          "ref": "src/test/2026-05/DxSale_exp.sol@ad353ba25fbb"
+          "type": "post-mortem",
+          "ref": "https://blocksec.com/blog/web3-security-dxsale-squidrouter-more"
         }
       ],
       "attacker": "0xC4574DDEF299e7E563971e200433e592EeaaFA69",
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1779919052,
+        "incidentTimestamp": 1780012999,
         "deployTimestamp": 1613863101,
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1613863101,
-        "codeAgeSeconds": 166055951,
+        "codeAgeSeconds": 166149898,
         "basis": "deployment (onchain)"
       }
     }

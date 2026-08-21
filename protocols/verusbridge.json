@@ -34,6 +34,38 @@
         "codeAgeSeconds": 82689924,
         "basis": "deployment (onchain)"
       }
+    },
+    {
+      "name": "VerusBridge duplicate-state-root parser divergence",
+      "date": "2026-07-23T03:45:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 7440000,
+      "victimContract": "0x71518580f36feceffe0721f06ba4703218cd7f63",
+      "exploitTx": "0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099",
+      "notes": "The bridge accepted notarization bytes whose duplicate state-root entries were interpreted differently by Verus and Ethereum, installing an attacker-chosen root and authorizing unbacked imports.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.certik.com/blog/research?tab=incident-analysis"
+        }
+      ],
+      "attacker": "0xbda71b58cec0b1c20a8f87ccd52fa0679747855c",
+      "nonStandardUpgradeArchitecture": true,
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1784778359,
+        "deployTimestamp": 1696372199,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1696372199,
+        "codeAgeSeconds": 88406160,
+        "basis": "deployment (onchain)"
+      }
     }
   ]
 }
