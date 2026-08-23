@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "sentiment",
+  "name": "Sentiment",
+  "incidents": [
+    {
+      "name": "Sentiment Balancer LP oracle read-only reentrancy",
+      "date": "2023-04-04T17:50:29Z",
+      "chain": "arbitrum",
+      "category": "oracle-manipulation",
+      "lossUsd": 1000000,
+      "victimContract": "0x16f3ae9c1727ee38c98417ca08ba785bb7641b5b",
+      "exploitTx": "0xa9ff2b587e2741575daf893864710a5cbb44bb64ccdc487a100fa20741e0f74d",
+      "attacker": "0xdd0cdb4c3b887bc533957bc32463977e432e49c3",
+      "notes": "The victim's own accounting was sound; WeightedBalancerLPOracle.getPrice() read the Balancer vault's token balances and BPT supply without the vault's reentrancy check, so exiting a pool inside the ETH-transfer callback let the attacker have the collateral BPT priced at an inflated value and borrow against it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xa9ff2b587e2741575daf893864710a5cbb44bb64ccdc487a100fa20741e0f74d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/peckshield/status/1643417467879059456"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-04/Sentiment_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: oracle 0x16f3ae9c1727ee38c98417ca08ba785bb7641b5b created 2022-11-14 by 0xc5fc2cbf32c09f89f91caf2023884729116ea5d1 (Sentiment deployer), unrelated to attack sender 0xdd0cdb4c3b887bc533957bc32463977e432e49c3; no EIP-1967 Upgraded events, so the code was ~141 days old; classified oracle-manipulation per the dataset precedent that price-skewing (read-only) reentrancy is an oracle failure rather than a state-changing code bug"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1680630629,
+        "deployTimestamp": 1668464349,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1668464349,
+        "codeAgeSeconds": 12166280,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

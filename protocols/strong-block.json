@@ -27,6 +27,10 @@
         {
           "type": "curated-review",
           "ref": "onchain review: victim creator 0x4b5057b2c87ec9e7c047fb00c0e406dff2fdacad via 0xf1968991020f5551ccb9f76fdc8bd06dbd2b2638b88aced8909558d7b6f43344; not attacker"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: the victim is an AdminUpgradeabilityProxy, so the EIP-1967 implementation slot 0x360894a1...2bbc was read directly rather than trusted to events. It holds 0x145931a8add54e6e0c7753ee0a59ff9e7e2f488d at the creation block 11380285, at the block before the incident (25691526), at the incident block, and at all 41 evenly spaced samples in between, and the proxy's runtime bytecode is byte-identical at the creation and incident blocks; the later implementation 0xf6c7c78f8cec262eafc90f87a88fb5ef43f2e285 that Etherscan shows was installed only after the incident. callTracer on the attack tx also shows the drain executing through the Governor 0x53ca51ba980b6475c13d158c1825013cf81038fc and its logic 0xe89c0d3fce4eb31060b6a0329ba408029d0c4106, with no call reaching the victim proxy. Deployment is the correct basis; 2071.3 days."
         }
       ],
       "measurement": {

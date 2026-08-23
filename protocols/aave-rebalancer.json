@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "aave-rebalancer",
+  "name": "Aave Rebalancer",
+  "incidents": [
+    {
+      "name": "Rebalancer arbitrary call abuses delegated Aave credit",
+      "date": "2026-04-19T07:23:46Z",
+      "chain": "avalanche",
+      "category": "code-bug",
+      "lossUsd": 64357,
+      "victimContract": "0x7A7bAB45363Efb0394Ff27bfA29bb7C0534cA8C9",
+      "exploitTx": "0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b",
+      "attacker": "0xf59dc5521f191Bcb53a9bcBD1654Be81B72EE96F",
+      "notes": "The rebalancer executed caller-supplied target/calldata from its own address with no whitelist, so an attacker had it call Aave Pool.borrow(WAVAX, 7000e18, 2, 0, victim) against the WAVAX borrowing power the victim had delegated to it, then transferred the received WAVAX out with a second arbitrary call.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "avalanche",
+          "ref": "0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/DefimonAlerts/status/2046504796463808991"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-04/AaveRebalancerCreditDelegation_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: rebalancer 0x7A7bAB45363Efb0394Ff27bfA29bb7C0534cA8C9 created 2025-12-31T18:31:23Z by 0x6fdae9edacc6461b21f71a1a6a420197d2b0c3aa (the delegating victim), not the attack-tx sender 0xf59dc5521f191bcb53a9bcbd1654be81b72ee96f; no EIP-1967 events, 108.5 days old. 6,999.91 WAVAX x $9.194 at the incident timestamp (DefiLlama coingecko:avalanche-2) = $64,357."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1776583426,
+        "deployTimestamp": 1767205883,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1767205883,
+        "codeAgeSeconds": 9377543,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

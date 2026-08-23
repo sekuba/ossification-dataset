@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "newfreedao",
+  "name": "NewFreeDAO",
+  "incidents": [
+    {
+      "name": "NewFreeDAO reward contract repeatable claim",
+      "date": "2022-09-08T02:09:25Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1000000,
+      "victimContract": "0x8b068e22e9a4a9bca3c321e0ec428abf32691d1e",
+      "exploitTx": "0x1fea385acf7ff046d928d4041db017e1d7ead66727ce7aacb3296b9d485d4a26",
+      "attacker": "0x22c9736d4fc73a8fa0eb436d2ce919f5849d6fd2",
+      "notes": "The NFD reward contract paid its bonus (selector 0x6811e3b9) to any caller in proportion to that caller's NFD balance and gated it only per address, so a loop that deployed a fresh claimer contract, moved the same NFD into it and claimed again multiplied the payout without limit.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x1fea385acf7ff046d928d4041db017e1d7ead66727ce7aacb3296b9d485d4a26"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-09/NewFreeDAO_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/SlowMist_Team/status/1567854876633309186"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: reward contract 0x8b068e22e9a4a9bca3c321e0ec428abf32691d1e created 2022-09-07T04:01:07Z by 0x5b711b7d9567291bbc1bb505536d79124b85cce8, unrelated to attack sender 0x22c9736d4fc73a8fa0eb436d2ce919f5849d6fd2; no EIP-1967 Upgraded events, age measured from deployment. The PoC header's 4,481 BNB / ~$125M figure is a nominal NFD amount; DeFiHackLabs and SlowMist put the realised loss at ~$1M across three transactions, which is what lossUsd records."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1662602965,
+        "deployTimestamp": 1662523267,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1662523267,
+        "codeAgeSeconds": 79698,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

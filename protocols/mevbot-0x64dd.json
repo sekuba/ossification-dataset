@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "mevbot-0x64dd",
+  "name": "MEV bot 0x64dD59D6",
+  "incidents": [
+    {
+      "name": "BNB48 private-tx MEV bot pancakeCall access control",
+      "date": "2022-09-13T13:07:20Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 147449,
+      "victimContract": "0x64dD59D6C7f09dc05B472ce5CB961b6E10106E1d",
+      "exploitTx": "0xd48758ef48d113b78a09f7b8c7cd663ad79e9965852e872fdfc92234c3e598d2",
+      "attacker": "0xee286554f8b315f0560a15b6f085ddad616d0601",
+      "notes": "The MEV bot's pancakeCall() callback never checked that msg.sender was a genuine PancakeSwap pair, so anyone could invoke it with crafted token0()/token1() and calldata and transfer the bot's whole balance out.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xd48758ef48d113b78a09f7b8c7cd663ad79e9965852e872fdfc92234c3e598d2"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-09/BNB48MEVBot_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blocksecteam.medium.com/the-two-sides-of-the-private-tx-service-on-binance-smart-chain-a76917c3ce51"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: bot 0x64dD59D6C7f09dc05B472ce5CB961b6E10106E1d created 2022-08-30T07:16:40Z by 0x7c58b98bc9860778f0b1e72f945b8ff6fd22e48c, unrelated to attack sender 0xee286554f8b315f0560a15b6f085ddad616d0601; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the exploit transaction moved 25,912.95 USDT, 22,307.55 BUSD, 5,160.33 USDC, 327.93 WBNB, 0.015 BTCB and 0.0975 ETH out of the bot; 327.93 WBNB x $285.39, 0.015 BTCB x $21,396.15 and 0.0975 ETH x $1,636.59 at incidentTimestamp 1663074440 (DefiLlama) give a total of $147,449, close to the ~$140k reported."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1663074440,
+        "deployTimestamp": 1661843800,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1661843800,
+        "codeAgeSeconds": 1230640,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

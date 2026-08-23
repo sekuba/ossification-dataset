@@ -1,0 +1,50 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "silo-finance",
+  "name": "Silo Finance",
+  "incidents": [
+    {
+      "name": "LeverageUsingSiloFlashloanWithGeneralSwap unvalidated swap target",
+      "date": "2025-06-25T14:11:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 545000,
+      "victimContract": "0xCbEe4617ABF667830fe3ee7DC8d6f46380829DF9",
+      "exploitTx": "0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a",
+      "attacker": "0x04377cfaF4b4A44bb84042218cdDa4cEBCf8fd62",
+      "notes": "openLeveragePosition() on the unreleased leverage helper accepted a caller-supplied flashloan target and swap calldata without constraining them to the selected Silo market, so a fake flash lender's onFlashLoan callback made the helper call the real WETH Silo's borrow() on behalf of a third party that had granted it debt-receive approval.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://silofinance.medium.com/post-mortem-unreleased-leverage-contract-exploitd-0ab8f37afcbb"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.quillaudits.com/blog/hack-analysis/how-silo-finance-lost-500k"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-06/SiloFinance_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim is the verified LeverageUsingSiloFlashloanWithGeneralSwap at 0xCbEe4617ABF667830fe3ee7DC8d6f46380829DF9, deployed by Silo 0x6d228fa4dad2163056a48fc2186d716f5c65e89a seven days before the incident and unrelated to the attack sender; 224 WETH was borrowed out of Silo 0x160287E2D3fdCDE9E91317982fc1Cc01C1f94085 against borrower 0x60BAF994f44dd10c19C0c47cbFE6048a4fFe4860"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1750860683,
+        "deployTimestamp": 1750245935,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1750245935,
+        "codeAgeSeconds": 614748,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

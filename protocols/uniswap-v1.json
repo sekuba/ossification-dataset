@@ -1,0 +1,50 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "uniswap-v1",
+  "name": "Uniswap V1",
+  "incidents": [
+    {
+      "name": "Uniswap V1 imBTC exchange ERC-777 reentrancy",
+      "date": "2020-04-18T03:59:24Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 221171,
+      "victimContract": "0xFFcf45b540e6C9F094Ae656D2e34aD11cdfdb187",
+      "exploitTx": "0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e",
+      "attacker": "0x60f3fdb85b2f7faaa888ca7afc382c57f6415a81",
+      "notes": "The Uniswap V1 imBTC exchange updated its reserves after pulling tokens, so imBTC's ERC-777 tokensToSend hook let the attacker re-enter tokenToEthSwapInput() at a stale price and drain the ETH reserve.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2020-04/uniswap-erc777.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.openzeppelin.com/exploiting-uniswap-from-reentrancy-to-actual-profit"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: the imBTC exchange 0xFFcf45b540e6C9F094Ae656D2e34aD11cdfdb187 is a Vyper clone deployed by the Uniswap V1 factory; creation resolved over RPC to 2019-12-06T09:55:01Z, months before the incident and unrelated to the attack sender 0x60f3fdb8...; no EIP-1967 events, age measured from deployment. 1,278 ETH x $173.06 at incidentTimestamp 1587182364 (DefiLlama) = $221,171."
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The exchange is a 46-byte Vyper forwarder whose runtime hardcodes the Uniswap V1 exchange template 0x2157a7894439191e520825fe9399ab8655e0f708 as a PUSH20 immediate, so the delegate target cannot be repointed; the template's runtime is byte-identical at 13 sample points across [9059910, 9894154] and callTracer on the exploit tx confirms the forwarder delegatecalls only the template."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1587182364,
+        "deployTimestamp": 1575626101,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1575626101,
+        "codeAgeSeconds": 11556263,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

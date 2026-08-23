@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "dpc",
+  "name": "DPC",
+  "incidents": [
+    {
+      "name": "DPC staking reward miscalculation",
+      "date": "2022-09-09T10:49:52Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 103755,
+      "victimContract": "0xB75cA3C3e99747d0e2F6e75A9fBD17F5Ac03cebE",
+      "exploitTx": "0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646",
+      "attacker": "0xf211fa86cbc60d693d687075b03dff3c225b25c9",
+      "notes": "DPC.claimStakeLp() recomputed the LP staking reward from the caller's current stake on every call instead of accruing it over elapsed time, so repeated claims in the same day paid the reward many times over.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-09/DPC_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BeosinAlert/status/1568429355919089664"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: DPC 0xB75cA3C3e99747d0e2F6e75A9fBD17F5Ac03cebE created 2022-09-07T09:14:55Z by 0x8e59424663e6ba2327564b28437b6e0294a4725c, unrelated to attack sender 0xf211fa86cbc60d693d687075b03dff3c225b25c9; no EIP-1967 Upgraded events, age measured from deployment. The attack ran as a long series of small claims from 0x2109bbecB0a563e204985524Dd3DB2F6254AB419 and 0xf211fa86cbc60d693d687075b03dff3c225b25c9 (this transaction alone drained 547.75 USDT from the DPC pair); lossUsd uses the ~$103,755 total reported by Beosin. Recheck of the deployment basis (DELEGATECALL audit): the victim sets no EIP-1967 implementation or beacon slot and its runtime is byte-identical at the creation block 21120156 and the incident block 21179552; all ten DELEGATECALL sites are solc external-library calls to the PUSH20 constant 0xff7a90fa8193b51482c37e84f3e9a0798921380b (with the usual EXTCODESIZE guard), a library deployed five blocks before the victim by the same creator 0x8e59424663e6ba2327564b28437b6e0294a4725c and byte-identical over the window, so the target is fixed."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1662720592,
+        "deployTimestamp": 1662542095,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1662542095,
+        "codeAgeSeconds": 178497,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

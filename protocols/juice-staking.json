@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "juice-staking",
+  "name": "Juice (JUICE) Staking",
+  "incidents": [
+    {
+      "name": "Juice JuiceStaking unbounded stake multiplier",
+      "date": "2024-03-09T06:06:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 212074,
+      "victimContract": "0x8584DdbD1E28bCA4bc6Fb96baFe39f850301940e",
+      "exploitTx": "0xc9b2cbc1437bbcd8c328b6d7cdbdae33d7d2a9ef07eca18b4922aac0430991e7",
+      "attacker": "0x3fA19214705BC82cE4b898205157472A79D026BE",
+      "notes": "JuiceStaking.stake() accepted a caller-supplied second parameter that scales the reward accrual without any bound check, so a stake of a small JUICE position followed by harvest() one block later paid out the pool's entire JUICE balance.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xc9b2cbc1437bbcd8c328b6d7cdbdae33d7d2a9ef07eca18b4922aac0430991e7"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/Juice_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: JuiceStaking 0x8584DdbD1E28bCA4bc6Fb96baFe39f850301940e (verified, ContractName JuiceStaking) created 2024-03-08T16:46:47Z by 0x181894edb3796bb68bf5e13ebf76c9ac4d2b790a, not the attack-tx sender 0x3fa19214705bc82ce4b898205157472a79d026be; no EIP-1967 Upgraded events, so the executing code was 13.3 hours old. ~54 ETH at a March 2024 ETH price near $3,900 is far above the $1,000 floor. Loss converted at the incident timestamp: 54 ETH x $3,927.30 (DefiLlama historical ETH price) = $212,074."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1709964419,
+        "deployTimestamp": 1709916407,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1709916407,
+        "codeAgeSeconds": 48012,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

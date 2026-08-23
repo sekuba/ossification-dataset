@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "jumpfarm",
+  "name": "JumpFarm",
+  "incidents": [
+    {
+      "name": "JumpFarm staking share inflation",
+      "date": "2023-09-05T12:42:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 3911,
+      "victimContract": "0x05999eB831ae28Ca920cE645A5164fbdB1D74Fe9",
+      "exploitTx": "0x6189ad07894507d15c5dff83f547294e72f18561dc5662a8113f7eb932a5b079",
+      "attacker": "0x6CE9fa08F139F5e48bc607845E57efE9AA34C9F6",
+      "notes": "The JUMP staking contract credited sJUMP shares on the pre-fee transfer amount of a fee-on-transfer token, so cycling flash-loaned JUMP through stake/unstake minted more JUMP than was deposited.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x6189ad07894507d15c5dff83f547294e72f18561dc5662a8113f7eb932a5b079"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-09/JumpFarm_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/DecurityHQ/status/1699384904218202618"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: staking 0x05999eB831ae28Ca920cE645A5164fbdB1D74Fe9 created 2023-08-08T22:39:35Z by 0x4b19466f0c31b3a9fc239ef76ef37ecdc08a2d9f, unrelated to the attack sender; no EIP-1967 events, age from deployment (27.6 days). ~2.4 ETH x $1,629.70 at incidentTimestamp 1693917731 (DefiLlama) = $3,911."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1693917731,
+        "deployTimestamp": 1691534375,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1691534375,
+        "codeAgeSeconds": 2383356,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "pnetwork",
+  "name": "pNetwork",
+  "incidents": [
+    {
+      "name": "pNetwork Burner convertAndBurn slippage sandwich",
+      "date": "2024-05-21T09:08:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 6225,
+      "victimContract": "0x4d4d05e1205e3A412ae1469C99e0d954113aa76F",
+      "exploitTx": "0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714",
+      "attacker": "0xe6dcf87256866e293b825708bf1f5df8f07519b3",
+      "notes": "Burner.convertAndBurn() is permissionless and swaps the contract's accumulated USDT/WBTC into PNT through Uniswap V2 with a zero minimum-output, so the whole conversion could be sandwiched by pre-buying and re-selling PNT in the same transaction.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-05/Burner_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Burner 0x4d4d05e1205e3A412ae1469C99e0d954113aa76F (verified, ContractName Burner) created 2020-07-27T09:39:05Z by 0x2a24a7a4beb9e6d0431c9bc1800045b8fc27a966, not the attack-tx sender 0xe6dcf87256866e293b825708bf1f5df8f07519b3; no EIP-1967 events, immutable since deployment (1394 days). 1.7 ETH at a May 2024 ETH price near $3,700 is roughly $6.3k, above the $1,000 floor. Same failure mode as the recorded CurveBurner row: a permissionless fee-conversion call with no slippage bound. Loss converted at the incident timestamp: 1.7 ETH x $3,661.59 (DefiLlama historical ETH price) = $6,225."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1716282527,
+        "deployTimestamp": 1595842745,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1595842745,
+        "codeAgeSeconds": 120439782,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

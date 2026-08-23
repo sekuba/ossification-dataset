@@ -21,37 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-07/Conic_exp.sol@ad353ba25fbb"
-        }
-      ],
-      "attacker": "0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa",
-      "measurement": {
-        "status": "OK",
-        "incidentTimestamp": 1689935711,
-        "deployTimestamp": 1688128343,
-        "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1688128343,
-        "codeAgeSeconds": 1807368,
-        "basis": "deployment (onchain)"
-      }
-    },
-    {
-      "name": "Conic_exp2.sol",
-      "date": "2023-07-21T10:35:11Z",
-      "chain": "ethereum",
-      "category": "oracle-manipulation",
-      "lossUsd": 3000000,
-      "victimContract": "0xbb787d6243a8d450659e09ea6fd82f1c859691e9",
-      "exploitTx": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
-      "notes": "Same Conic ETH omnipool: Curve read-only reentrancy manipulates the LP price feed during handleDepeggedCurvePool.",
-      "sources": [
-        {
-          "type": "onchain-tx",
-          "chain": "ethereum",
-          "ref": "0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146"
         },
         {
-          "type": "defihacklabs",
-          "ref": "src/test/2023-07/Conic_exp2.sol@ad353ba25fbb"
+          "type": "curated-review",
+          "ref": "Recheck of the deployment basis (DELEGATECALL audit): the ETH omnipool is not a proxy (no EIP-1967 implementation or beacon slot) and its own runtime is byte-identical at the creation block 17592111 and the incident block 17740955, but ConicEthPool executes two external handlers by DELEGATECALL - controller.curveHandler() and controller.convexHandler() (Address.functionDelegateCall at ConicEthPool.sol lines 277/290/461/470) - so its executing code can be repointed from the immutable Controller 0x013A3Da6591d3427F164862793ab4e388F9B587e. Binary-searching eth_getStorageAt on the Controller shows curveHandler (slot 6) changed at block 17613432, 2023-07-03T12:26:23Z (timestamp 1688387183), from 0x92bffb71bbe241ba9cdfb3a4e56e48dc4f118ed7 to 0xD775ae26F89bcd89e66485324D8830c0EF1e8B6c, corroborated by the Controller's own CurveHandlerSet(address) log (topic 0x40f17cc99608acc0aa583a98bd741564e79111d55e65adc0399f400a707d4831, data 0x...d775ae26) in tx 0x0b1dfe6ee755dc11a9a0d0823e22abcc0cb1f03e5ed0673c1f68183cf84f58e6, sent by the Conic deployer 0xc0f0c674dcf195e2c39dfa7bb59fa968b7f7c575 through the governance proxy 0xcb7c67bdde9f7af0667e8d82bb87f1432bd1d902 - a protocol action, not the attacker's; convexHandler (slot 7) held 0x635228EDAEAd8a76b6ae1779bd7682043321943D unchanged over the same range, and the new curveHandler 0xD775ae26F89bcd89e66485324D8830c0EF1e8B6c (created block 17591566 by the pool's own deployer 0xedaeb101f34d767f263c0fe6b8d494e3d071f0ba) has no DELEGATECALL and identical code from its install to the incident. The last change to the executing code is therefore the curveHandler swap, not the pool deployment: lastChangeTimestamp 1688387183, codeAgeSeconds 1689935711-1688387183 = 1548528 (17.92 d instead of 20.92 d). For completeness the Controller's priceOracle (slot 8) was also repointed twice in the window, last at block 17634814 (2023-07-06T12:29:35Z) to GenericOracle 0x286eF89cD2DA6728FD2cb3e1d1c5766Bcea344b0 - the feed the read-only reentrancy skews - but that oracle is reached by CALL, not DELEGATECALL, so it is not part of the victim's executing code and is not used as the basis."
         }
       ],
       "attacker": "0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa",
@@ -60,10 +33,12 @@
         "incidentTimestamp": 1689935711,
         "deployTimestamp": 1688128343,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1688128343,
-        "codeAgeSeconds": 1807368,
-        "basis": "deployment (onchain)"
-      }
+        "lastChangeTimestamp": 1688387183,
+        "codeAgeSeconds": 1548528,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2023-07-03T12:26:23Z (block 17613432): Conic Controller 0x013A3Da6591d3427F164862793ab4e388F9B587e setCurveHandler -> CurveHandlerSet(0xD775ae26F89bcd89e66485324D8830c0EF1e8B6c), storage slot 6, tx 0x0b1dfe6ee755dc11a9a0d0823e22abcc0cb1f03e5ed0673c1f68183cf84f58e6; the ETH omnipool DELEGATECALLs this handler, so it is part of the victim's executing code",
+      "nonStandardUpgradeArchitecture": true
     }
   ]
 }

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "0vix",
+  "name": "0VIX Protocol",
+  "incidents": [
+    {
+      "name": "0VIX vGHST collateral price manipulation",
+      "date": "2023-04-28T10:45:16Z",
+      "chain": "polygon",
+      "category": "oracle-manipulation",
+      "lossUsd": 2000000,
+      "victimContract": "0xe053a4014b50666ed388ab8cbb18d5834de0ab12",
+      "exploitTx": "0x10f2c28f5d6cd8d7b56210b4d5e0cece27e45a30808cd3d3443c05d4275bb008",
+      "attacker": "0x702ef63881b5241ffb412199547bcd0c6910a970",
+      "notes": "The market worked as designed; 0VIX priced vGHST collateral from the vGHST vault's own GHST-per-share rate, and the attacker inflated that rate by pushing GHST into the vault so a small ovGHST position could borrow out the other 0VIX markets.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0x10f2c28f5d6cd8d7b56210b4d5e0cece27e45a30808cd3d3443c05d4275bb008"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BlockSecTeam/status/1651932529874853888"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-04/0vix_exp.sol (20230428 0vix - FlashLoan Price Manipulation, lost ~$2M)"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: ovGHST market 0xe053a4014b50666ed388ab8cbb18d5834de0ab12 created 2023-03-17 by 0x8e1304ea39c47e791182ba39fdf362a8767d7e97 (0VIX deployer), unrelated to attack sender 0x702ef63881b5241ffb412199547bcd0c6910a970; a single EIP-1967 Upgraded event fired in the creation block itself, so lastChange = deployment and the code was 42 days old"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1682678716,
+        "deployTimestamp": 1679038082,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1679038082,
+        "codeAgeSeconds": 3640634,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-10/Hopelend_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "Onchain review: the victim is an Aave-v3-style InitializableImmutableAdminUpgradeabilityProxy created 2023-08-07T05:31:59Z (block 17861190) by 0x17002566cc3508dfa3c0fa52fcbca990e42fd510, unrelated to the attack sender 0xA8Bbb3742f299B183190a9B079f1C0db8924145b. Its EIP-1967 implementation slot was binary-searched with eth_getStorageAt over [17861190, 18377041] and held 0x3a6d9bf8286a4ada77c15ecf82d4c0c0af95be74 throughout - the implementation the exploit delegatecalls for supply/withdraw/borrow - and the three further addresses running in the victim's context (0x03b89eb02817cc36285da0f175257cbb6bd6105b, 0x51ab0f9684d265a1defffc9701a6a3ce4ac50d98, 0xd8ed919c591a071b1fce031ac30167ed0be8277c) are PUSH20 link-time library constants inside that implementation's immutable bytecode. keccak(eth_getCode) on the proxy is identical at the creation and incident blocks. Deployment basis confirmed."
         }
       ],
       "attacker": "0xA8Bbb3742f299B183190a9B079f1C0db8924145b",

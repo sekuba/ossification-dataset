@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-06/Themis_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "Recheck of the deployment basis (DELEGATECALL audit): the victim is an ERC1967 proxy; its implementation slot holds 0x848f29fe9e3f0ba67095c26ebe48648ccfd8148d at both the creation block 101340897 and the incident block 105524524, with a binary search of eth_getStorageAt over that range finding no intermediate write, and the proxy runtime is byte-identical at both blocks. The implementation's own fourteen DELEGATECALL sites are solc library links to the PUSH20 constants 0x0bbc33cb3d746886b9654fac1b49ec02e8800f33, 0x8edc6f8d93f15006663511d32db2e31cc07dfd3b, 0xa1fe4d65bb423ac9b904102bc4521d9d5398d1a4 and 0xe0c156e269a695623ca25c1ff0e12a91c012f28e, all deployed by the same deployer 0xa58f7d307f57f239cb820f37318aa072610a5b1e just before the proxy and byte-identical over the window, so the executing code is fixed at deployment."
         }
       ],
       "attacker": "0xdb73eb484e7dea3785520d750eabef50a9b9ab33",

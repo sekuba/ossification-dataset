@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2024-11/DeltaPrime_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x62cf82fb0484af382714cd09296260edc1dc0c6c is the DeltaPrime SmartLoanDiamondBeacon, an EIP-2535 diamond that changes facet code with DiamondCut rather than an EIP-1967 Upgraded event; eth_getLogs over creation block 119095598 (2023-08-07) to incident block 273278742 returns 150 DiamondCut logs, the last four of them on 2024-11-07 (12:28:11, 12:28:47, 12:29:18 and 12:29:48 UTC) replacing Penpie/Pendle facets; the final cut, block 271974869 / tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a, Replaces facet 0x130c975a189024cdfe4a4b38706a431463ad0acf (PenpieFacet) carrying claimRewards(address) 0xef5cfb8c, the selector the exploit reentered, so the age is measured from that cut rather than the beacon deployment"
         }
       ],
       "attacker": "0xb87881637b5c8e6885c51ab7d895e53fa7d7c567",
@@ -30,10 +34,11 @@
         "incidentTimestamp": 1731310565,
         "deployTimestamp": 1691424383,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1691424383,
-        "codeAgeSeconds": 39886182,
-        "basis": "deployment (onchain)"
-      }
+        "lastChangeTimestamp": 1730982588,
+        "codeAgeSeconds": 327977,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2024-11-07T12:29:48Z (block 271974869, tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a): last DiamondCut on the SmartLoanDiamondBeacon before the incident, a Replace of PenpieFacet 0x130c975a189024cdfe4a4b38706a431463ad0acf that reinstalled claimRewards(address) (0xef5cfb8c), the exploited selector"
     }
   ]
 }

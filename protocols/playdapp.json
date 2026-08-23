@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "playdapp",
+  "name": "PlayDapp",
+  "incidents": [
+    {
+      "name": "PLA token minter-role key compromise",
+      "date": "2024-02-09T13:45:11Z",
+      "chain": "ethereum",
+      "category": "key-compromise",
+      "lossUsd": 32000000,
+      "victimContract": "0x3a4f40631a4f906c2bad353ed06de7a5d3fcb430",
+      "exploitTx": "0xe8be05f6a3360f63b9e78a30b4ba16ea4c7d0b530a8abf99390f1c831851fb7e",
+      "attacker": "0xd151050d43c28690766f50ce9ea8686c5d243a40",
+      "notes": "The PLA token's owner key was compromised and used to grant the minter role to a fresh attacker address, which then called mint() for 1.79 billion PLA across four transactions; the token's access control worked as written and no code flaw was involved.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xe8be05f6a3360f63b9e78a30b4ba16ea4c7d0b530a8abf99390f1c831851fb7e"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/nefture/playdapp-exploit-post-mortem-of-a-290m-heist-f6803349cde8"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://playdapp.medium.com/playdapp-post-mortem-on-the-hacking-incident-361b4ddfb5a1"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: PLA token 0x3a4f40631a4f906c2bad353ed06de7a5d3fcb430 created 2020-04-22 by PlayDapp deployer 0x6f53e6f92e85c084e10aaf35d4a44dee6a27892d, no upgrade events; the first unauthorized mint (100,000,000 PLA) is signed by the fresh EOA 0xd151050d43c28690766f50ce9ea8686c5d243a40. lossUsd uses the ~$32m the attacker actually converted (Nefture; cryptonews) rather than the $290m nominal value of the minted supply."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1707486311,
+        "deployTimestamp": 1587548415,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1587548415,
+        "codeAgeSeconds": 119937896,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

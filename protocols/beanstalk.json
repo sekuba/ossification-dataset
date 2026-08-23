@@ -4,23 +4,45 @@
   "name": "Beanstalk",
   "incidents": [
     {
-      "name": "Beanstalk",
-      "date": "2022-04-17T12:00:00Z",
+      "name": "Beanstalk flash-loaned governance BIP-18/BIP-19",
+      "date": "2022-04-16T10:54:45Z",
       "chain": "ethereum",
       "category": "governance-design",
       "lossUsd": 182000000,
-      "victimContract": null,
-      "exploitTx": null,
-      "notes": "Flash-loaned governance stake passed and instantly executed a malicious BIP via emergencyCommit. Design flaw in governance parameters rather than an implementation bug; excluded from code-age stats, counted in scope stats.",
+      "victimContract": "0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5",
+      "exploitTx": "0x68cdec0ac76454c3b0f7af0b8a3895db00adf6daaf3b50a99716858c4fa54c6f",
+      "notes": "The attacker flash-loaned ~$1B of stablecoins, deposited them into the Silo to acquire a supermajority of Stalk in the same block, and used emergencyCommit() on a self-submitted BIP whose diamondCut init drained the protocol - legitimately acquired governance power, not a code defect.",
       "sources": [
         {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x68cdec0ac76454c3b0f7af0b8a3895db00adf6daaf3b50a99716858c4fa54c6f"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-04/Beanstalk_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://bean.money/blog/beanstalk-governance-exploit"
+        },
+        {
           "type": "curated-review",
-          "ref": "l2beat research; see notes"
+          "ref": "onchain review: Beanstalk diamond 0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5 created 2021-08-06T22:27:12Z by 0x925753106fcdb6d2f30c3db295328a0a1c5fd1d1, unrelated to the attack sender 0x1c5dcdd0...; the diamond emits DiamondCut, not EIP-1967 Upgraded, so measure.mjs sees zero upgrade events and would wrongly report a 252-day deployment age. Scanning DiamondCut logs on the diamond over blocks 14500000-14595906 gives cuts at 14541362, 14541420 and 14547427; the last (2022-04-08T21:06:19Z, ts 1649451979) is the pre-incident code state, so codeAge = 1650106485 - 1649451979 = 654,506 s (7.6 days). Loss ~$181M drained from the Silo (attacker net ~$76M after repaying the flash loan)."
         }
       ],
       "measurement": {
-        "status": "SCOPE_ONLY"
-      }
+        "status": "OK",
+        "incidentTimestamp": 1650106485,
+        "deployTimestamp": 1628288832,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1649451979,
+        "codeAgeSeconds": 654506,
+        "basis": "documented change"
+      },
+      "attacker": "0x1c5dcdd006ea78a7e4783f9e6021c32935a10fb4",
+      "nonStandardUpgradeArchitecture": true,
+      "documentedLastChange": "2022-04-08T21:06:19Z (block 14547427, tx 0x47f8937e3d03a68e512d67665cdc61cbcfbb122d71a3b5c2817186ddf476e8ef): last DiamondCut on the Beanstalk diamond before the incident"
     }
   ]
 }

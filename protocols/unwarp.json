@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unwarp",
+  "name": "Unwarp",
+  "incidents": [
+    {
+      "name": "Unwarp unwrapWETH pays out more than it receives",
+      "date": "2025-05-14T08:04:55Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": 9000,
+      "victimContract": "0x8bEfC1d90d03011a7d0b35B3a00eC50f8E014802",
+      "exploitTx": "0xac6f716c57bbb1a4c1e92f0a9531019ea2ecfcaea67794bbd27115d400ae9b41",
+      "attacker": "0x5cc162c556092fe1d993b95d1b9e9ce58a11dbc9",
+      "notes": "unwrapWETH(uint256,address) released the caller-supplied amount of ether to the caller-supplied recipient without checking it against what the caller had actually deposited, so a flash-loaned 100.85 WETH transfer was redeemed for 104.83 ETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0xac6f716c57bbb1a4c1e92f0a9531019ea2ecfcaea67794bbd27115d400ae9b41"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-05/Unwarp_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: proxy 0x8bEfC1d90d03011a7d0b35B3a00eC50f8E014802 created 2025-04-25T08:02:09Z by 0x29eb782b8707227fac7620ee7b3ab8c6a34f074b, not the attack-tx sender 0x5cc162c556092fe1d993b95d1b9e9ce58a11dbc9; four EIP-1967 Upgraded events, the last at block 29865499 on 2025-05-06T08:32:25Z installing 0xd971fd39d9714d5eb1b54b931790170a0630f131, so the executing code was 7.98 days old. The PoC transfers 100.852657473363426325 WETH in and calls unwrapWETH for 104.833984375 ETH out. Reported loss ~9k USDT."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1747209895,
+        "deployTimestamp": 1745568129,
+        "upgradeEventCount": 4,
+        "lastChangeTimestamp": 1746520345,
+        "codeAgeSeconds": 689550,
+        "basis": "last of 4 upgrade events (onchain)"
+      }
+    }
+  ]
+}

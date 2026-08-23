@@ -1,0 +1,85 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bankroll-network",
+  "name": "Bankroll Network",
+  "incidents": [
+    {
+      "name": "BankrollNetworkStack buyFor dividend inflation",
+      "date": "2024-09-22T16:50:58Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 230000,
+      "victimContract": "0x564D4126AF2B195fFAa7fB470ED658b1D9D07A54",
+      "exploitTx": "0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0",
+      "attacker": "0x4645863205b47a0a3344684489e8c446a437d66c",
+      "notes": "buyFor() accepts an arbitrary beneficiary and was called ~2810 times with the pool contract itself as the buyer, inflating the Solidity 0.6.8 unchecked dividend accounting so a single flash-loaned buy/sell/withdraw round trip drained the WBNB reserve.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.solidityscan.com/bankroll-network-hack-analysis-5d7cdec35075"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-09/Bankroll_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: BankrollNetworkStack 0x564d4126... created by 0xcb71eb21f53a2f4de0f26dc90518df10be13d1ec on 2021-03-10, no upgrade events; distinct contract from the 2025 BankrollStack rows (bsc 0x16d0a151..., ethereum 0x7b3611b0...)"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1727023858,
+        "deployTimestamp": 1615344835,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1615344835,
+        "codeAgeSeconds": 111679023,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
+      "name": "BankrollNetworkStack donatePool dividend inflation",
+      "date": "2025-06-19T07:14:50Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 15813,
+      "victimContract": "0xAdEfb902CaB716B8043c5231ae9A50b8b4eE7c4e",
+      "exploitTx": "0x7226b3947c7e8651982e5bd777bca52d03ea31d19b515dec123595a4435ae22c",
+      "attacker": "0x2dea406bb3bea68d6be8d9ef0071fdf63082fb52",
+      "notes": "donatePool() credits the donated WBNB to shareholders immediately and the same transaction can buy in and sell out, so a flash-loaned donate -> buy -> sell -> withdraw cycle returned more WBNB than it consumed.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x7226b3947c7e8651982e5bd777bca52d03ea31d19b515dec123595a4435ae22c"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/Phalcon_xyz/status/1943518566831296566"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-06/BankrollNetwork_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xAdEfb902CaB716B8043c5231ae9A50b8b4eE7c4e created 2021-07-07T22:51:29Z by 0xcb71eb21f53a2f4de0f26dc90518df10be13d1ec, which is not the attack-tx sender 0x2dea406bb3bea68d6be8d9ef0071fdf63082fb52; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 24.5 WBNB x $645.43/BNB at the incident timestamp 1750317290 (DefiLlama coingecko:binancecoin) = $15,813."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1750317290,
+        "deployTimestamp": 1625698289,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1625698289,
+        "codeAgeSeconds": 124619001,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

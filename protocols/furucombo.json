@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "furucombo",
+  "name": "Furucombo",
+  "incidents": [
+    {
+      "name": "Furucombo Proxy delegatecall context hijack",
+      "date": "2021-02-27T17:07:12Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 14000000,
+      "victimContract": "0x17e8ca1b4798b97602895f63206afcd1fc90ca5f",
+      "exploitTx": "0x8bf64bd802d039d03c63bf3614afc042f345e158ea0814c74be4b5b14436afb9",
+      "attacker": "0xb624e2b10b84a41687caec94bdd484e48d76b212",
+      "notes": "Proxy._exec() delegatecalled whitelisted handlers, and the Aave V2 handler in turn delegatecalled the Aave lending-pool proxy, so calling initialize() through that path wrote an attacker-controlled implementation into Furucombo's own storage and let the resulting evil contract pull every token users had approved to the Furucombo proxy.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x8bf64bd802d039d03c63bf3614afc042f345e158ea0814c74be4b5b14436afb9"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://slowmist.medium.com/slowmist-analysis-of-the-furucombo-hack-28c9ae558db9"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Furucombo Proxy 0x17e8ca1b created 2021-01-09 by 0xbcb909975715dc8fde643ee44b89e3fd6a35a259, not by attack sender 0xb624e2b1; victim/tx cross-checked against Coinspect learn-evm-attacks test/Business_Logic/Furucombo (loss there stated as $15m; rekt's leaderboard says $14m, used here). Recheck (deployment basis confirmed): the Proxy's EIP-1967 implementation slot was zero for its entire pre-incident life and only became 0x86765dde9304bea32f65330d266155c4fa0c4f04 at block 11940500 (2021-02-27T16:47:53Z) - the attacker's own setup transaction 0x6a14869266a1dcf3f51b102f44b7af7d0a56f1766e5b1908ac80a6a23dbaf449, sent by the same address 0xb624e2b10b84a41687caec94bdd484e48d76b212 19 minutes before the anchored tx - so that slot write is a consequence of the bug, not a pre-incident code change. The Proxy's own runtime keccak(eth_getCode) is identical at the creation block 11618386 and the incident block 11940588, so the exploited code is the deployed Proxy code and deployment is the right basis."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1614445632,
+        "deployTimestamp": 1610165837,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1610165837,
+        "codeAgeSeconds": 4279795,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

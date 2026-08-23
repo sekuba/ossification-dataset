@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "wault-finance",
+  "name": "Wault Finance",
+  "incidents": [
+    {
+      "name": "Wault Finance WUSDMaster WEX spot-price manipulation",
+      "date": "2021-08-04T01:49:05Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 984324,
+      "victimContract": "0xa79Fe386B88FBee6e492EEb76Ec48517d1eC759a",
+      "exploitTx": "0x31262f15a5b82999bf8d9d0f7e58dcb1656108e6031a2797b612216a95e1670e",
+      "attacker": "0x886358f9296de461d12e791bc9ef6f5a03410c64",
+      "notes": "WUSDMaster.stake() and redeem() valued WEX at the manipulable WaultSwap WEX/USDT spot reserves, so a flash loan moved that price and let WUSD be minted and redeemed for far more USDT than it was backed by.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x31262f15a5b82999bf8d9d0f7e58dcb1656108e6031a2797b612216a95e1670e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2021-08/WaultFinance_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://inspexco.medium.com/wault-finance-incident-analysis-wex-price-manipulation-using-wusdmaster-contract-c344be3ed376"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: WUSDMaster 0xa79Fe386B88FBee6e492EEb76Ec48517d1eC759a created 2021-08-03T09:44:23Z by 0x8beca4a43148213b57e650a24ab7562b79dd5448, unrelated to attack sender 0x886358f9296de461d12e791bc9ef6f5a03410c64; the contract was redeployed less than a day before the incident, no EIP-1967 Upgraded events, age measured from deployment. Boundary row: the victim behaved as coded and the attacker moved the WEX spot price it read. Loss converted: 390 ETH x $2,523.91 at incidentTimestamp 1628041745 (DefiLlama coingecko:ethereum) = $984,324."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1628041745,
+        "deployTimestamp": 1627983863,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1627983863,
+        "codeAgeSeconds": 57882,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

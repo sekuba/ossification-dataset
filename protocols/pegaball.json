@@ -9,7 +9,7 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 1513,
-      "victimContract": "0x29003DD6B9970AD658314fFFB61E42F352C41630",
+      "victimContract": "0xb8fcabf7bd88a2489fafbafa5f9a05a0e068cb5e",
       "exploitTx": "0x3cecc3f347edff1d27a0c929f2e7a4c04522afb3a74e24db94684cb6b51b1d65",
       "notes": "buyGamesFrom self-funds purchases from the proxy balance instead of requiring msg.value, letting a vendor drain vendor/referrer cuts.",
       "sources": [
@@ -21,6 +21,14 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2025-06/PegaBall_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: the recorded victim is the logic contract PegaBallV1Implementation, not a proxy - callTracer shows the proxy 0xb8fcabf7bd88a2489fafbafa5f9a05a0e068cb5e DELEGATECALLing into it (buyGamesFrom 0xbb020d29), and the victim itself makes no delegatecall (its two delegatecall sites are OpenZeppelin's ERC1967 _upgradeToAndCall helpers). Its runtime is byte-identical at the creation block 19003242 and the incident block 22626978, and the proxy's EIP-1967 slot has pointed at it since the proxy's creation in that same block 19003242, unchanged to the incident. Deployment is exact; 506.7 days."
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim re-anchored from implementation 0x29003DD6B9970AD658314fFFB61E42F352C41630 to the proxy the protocol runs at, 0xb8fcabf7bd88a2489fafbafa5f9a05a0e068cb5e, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (43775580s -> 43775580s)"
         }
       ],
       "attacker": "0x28a8cB85d9d2C9ee536931De22Fe80e3EfEa3bD6",
@@ -28,10 +36,10 @@
         "status": "OK",
         "incidentTimestamp": 1748988131,
         "deployTimestamp": 1705212551,
-        "upgradeEventCount": 0,
+        "upgradeEventCount": 1,
         "lastChangeTimestamp": 1705212551,
         "codeAgeSeconds": 43775580,
-        "basis": "deployment (onchain)"
+        "basis": "last of 1 upgrade events (onchain)"
       }
     }
   ]

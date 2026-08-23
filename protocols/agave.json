@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2022-03/Agave_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is an Aave-fork InitializableImmutableAdminUpgradeabilityProxy: its EIP-1967 implementation slot held 0x2d5bc0f897ad211ef9f954eadf59c43fb1ec4788 continuously over a 25-point probe of [15927425, 21120284] and that implementation's runtime is likewise constant. callTracer on the exploit tx shows three further delegatecall targets from the pool's context: 0x10ea06d74f8d7681f584558d9200cc7a9b852a9f and 0xf25d23913c6c8de1c3c25539fdabee1e51a06c63 are link-time libraries (runtime begins 73<self>3014) with constant code, and 0x85b79018c781b499f2878bee14e4e8b5db31ac61 is the LendingPoolCollateralManager, which is NOT hardcoded - it is resolved through the addresses provider 0xA91B9095eFa6C0568467562032202108e49c9Ef8. Binary-searching eth_call of getLendingPoolCollateralManager() over the same range shows it set once, at block 15927451 (2021-05-07T09:18:35Z, 135 s after the proxy's creation) and never changed before the incident, so the deployment basis stands."
         }
       ],
       "attacker": "0x0a16a85be44627c10cee75db06b169c7bc76de2c",

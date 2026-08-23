@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "lw-abc6",
+  "name": "LW (0xABC6)",
+  "incidents": [
+    {
+      "name": "LW transferFrom from the token contract without allowance",
+      "date": "2024-07-08T07:33:32Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 7000,
+      "victimContract": "0xABC6e5a63689b8542dbDC4b4f39a7e00d4AC30c8",
+      "exploitTx": "0x96a955304fed48a8fbfb1396ec7658e7dc42b7c140298b80ce4206df34f40e8d",
+      "attacker": "0x56b2d55457b31fb4b78ebddd6718ea2667804a06",
+      "notes": "LW.transferFrom() accepts the token contract itself as the source without checking any allowance, so the attacker pulled 1e33 LW straight out of the contract and sold it into the LW/BUSDT pair.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x96a955304fed48a8fbfb1396ec7658e7dc42b7c140298b80ce4206df34f40e8d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://app.blocksec.com/explorer/tx/bsc/0x96a955304fed48a8fbfb1396ec7658e7dc42b7c140298b80ce4206df34f40e8d"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-07/LW_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xABC6e5a63689b8542dbDC4b4f39a7e00d4AC30c8 created 2024-07-07T06:33:35Z by 0xef200a2238c508dade54fbf6ced707368ff6fbe6, which is not the attack-tx sender 0x56b2d55457b31fb4b78ebddd6718ea2667804a06; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1720424012,
+        "deployTimestamp": 1720334015,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1720334015,
+        "codeAgeSeconds": 89997,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

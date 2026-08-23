@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "eleven-finance",
+  "name": "Eleven Finance",
+  "incidents": [
+    {
+      "name": "Eleven Finance emergencyBurn share accounting",
+      "date": "2021-06-22T22:58:39Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 4500000,
+      "victimContract": "0x27dd6e51bf715cfc0e2fe96af26fc9ded89e4be8",
+      "exploitTx": "0xeaaa8f4d33b1035a790f0d7c4eb6e38db7d6d3b580e0bbc9ba39a9d6b80dd250",
+      "attacker": "0xc71e2f581b77de945c8a7a191b0b238c81f11ed6",
+      "notes": "The nevervault's emergencyBurn() returned the caller's underlying LP without burning the corresponding vault shares, so the attacker could withdraw the same position a second time through the normal withdraw() path.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xeaaa8f4d33b1035a790f0d7c4eb6e38db7d6d3b580e0bbc9ba39a9d6b80dd250"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://peckshield.medium.com/eleven-finance-incident-root-cause-analysis-123b5675fa76"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: vault 0x27dd6e51 created 2021-04-25 by 0x6b3c201575ace5ed6b67df5c91e40b98c0d2be36, not by attack sender 0xc71e2f58; no EIP-1967 upgrade events before the incident"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1624402719,
+        "deployTimestamp": 1619319124,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1619319124,
+        "codeAgeSeconds": 5083595,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "unizen",
+  "name": "Unizen",
+  "incidents": [
+    {
+      "name": "Unizen Trade Aggregator arbitrary call in swap",
+      "date": "2024-03-08T23:49:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 2000000,
+      "victimContract": "0xd3f64BAa732061F8B3626ee44bab354f854877AC",
+      "exploitTx": "0x923d1d63a1165ebd3521516f6d22d015f2e1b4b22d5dc954152b6c089c765fcd",
+      "attacker": "0x2aD8aed847e8d4D3da52AaBB7d0f5c25729D10df",
+      "notes": "A newly upgraded swap entrypoint on the Unizen Trade Aggregator proxy executed an attacker-supplied (target, calldata) Call without whitelisting the target, so transferFrom calls were forwarded to arbitrary ERC-20s and drained every wallet that still had an allowance to the aggregator.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x923d1d63a1165ebd3521516f6d22d015f2e1b4b22d5dc954152b6c089c765fcd"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/SlowMist_Team/status/1766311510362734824"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/UnizenIO_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: proxy 0xd3f64BAa732061F8B3626ee44bab354f854877AC created 2022-09-27 by 0xdbc320a510bcf1a8368ca38fc3ad773e259ced26, not the attacker; ten EIP-1967 Upgraded events, the last at block 19391308 on 2024-03-08T15:21:35Z installing implementation 0xa051fc7d38baa0ace811ad9de4e9f7024e5d8a30 — 8.5 hours before the incident — so codeAge is measured from that upgrade, not from the 2022 deployment. src/test/2024-03/UnizenIO2_exp.sol covers a second drain transaction (0xdd0636e2598f4d7b74f364fedb38f334365fd956747a04a6dd597444af0bc1c0) against the same proxy and is not recorded separately."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1709941775,
+        "deployTimestamp": 1664275451,
+        "upgradeEventCount": 10,
+        "lastChangeTimestamp": 1709911295,
+        "codeAgeSeconds": 30480,
+        "basis": "last of 10 upgrade events (onchain)"
+      }
+    }
+  ]
+}

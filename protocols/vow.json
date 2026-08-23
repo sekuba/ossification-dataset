@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2024-08/VOW_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: VOWToken's nine DELEGATECALL sites all target 0x60ca4ec4412a3b319f4bd6366bb836395336b397, which Etherscan's verified metadata records as the link-time library LToken and which appears as a PUSH20 constant in the runtime - a linked Solidity library address, fixed at deployment and not repointable. callTracer confirms all three delegatecalls in the exploit tx go there, and the token runtime is byte-identical at the creation and incident blocks. Deployment is exact; 1453.2 days."
         }
       ],
       "attacker": "0x48de6bf9e301946b0a32b053804c61dc5f00c0c3",

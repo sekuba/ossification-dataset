@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "ncd-token",
+  "name": "NCD",
+  "incidents": [
+    {
+      "name": "NCD pair surplus skim from throwaway miners",
+      "date": "2024-06-03T12:31:36Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 6400,
+      "victimContract": "0x9601313572eCd84B6B42DBC3e47bc54f8177558E",
+      "exploitTx": "0xbfb9b3b8a0d3c589a02f06c516b5c7b7569739edd00f9836645080f2148aefc7",
+      "attacker": "0xd52f125085b70f7f52bd112500a9c334b7246984",
+      "notes": "NCD's transfer logic leaves surplus NCD in the NCD/USDT pair above its reserves, which the attacker harvested with pair.skim() from a series of throwaway contracts that each register their own mineStartTime.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xbfb9b3b8a0d3c589a02f06c516b5c7b7569739edd00f9836645080f2148aefc7"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/SlowMist_Team/status/1797821034319765604"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-06/NCD_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x9601313572eCd84B6B42DBC3e47bc54f8177558E created 2024-06-01T11:23:07Z by 0x2dfecff1a7ab1436b1695196d80d3e6b15ccc92e, which is not the attack-tx sender 0xd52f125085b70f7f52bd112500a9c334b7246984; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1717417896,
+        "deployTimestamp": 1717240987,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1717240987,
+        "codeAgeSeconds": 176909,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

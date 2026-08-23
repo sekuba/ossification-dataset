@@ -33,6 +33,45 @@
         "codeAgeSeconds": 9156397,
         "basis": "deployment (onchain)"
       }
+    },
+    {
+      "name": "Sharwa Finance pool liquidity double-counted against a margin position",
+      "date": "2025-10-20T04:32:27Z",
+      "chain": "arbitrum",
+      "category": "code-bug",
+      "lossUsd": 146000,
+      "victimContract": "0xd3fde5af30da1f394d6e0d361b552648d0dff797",
+      "exploitTx": "0xd64729c528e6689cb18b0c90345ab0c9ed18fea44247c89af2f1374643fc89c2",
+      "attacker": "0xd356c82e0c85e1568641d084dbdaf76b8df96c08",
+      "notes": "The Sharwa liquidity pool let an LP withdraw shares covering liquidity that had just been lent out to that same actor's freshly opened leveraged long, so after crashing WBTC through Uniswap V3 and closing the position the loss fell entirely on the remaining LPs.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xd64729c528e6689cb18b0c90345ab0c9ed18fea44247c89af2f1374643fc89c2"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.verichains.io/p/vulnerability-analysis-deconstructing"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-10/SharwaFinance_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: pool 0xd3fde5af30da1f394d6e0d361b552648d0dff797 created 2025-10-02T08:41:32Z by 0x8b57f3a9bdf2cfdbf9b2627ff8bea86fb5641a50, not the attack-tx sender 0xd356c82e0c85e1568641d084dbdaf76b8df96c08; no EIP-1967 events, 17.8 days old. The PoC's first transaction provides 2.2M flash-loaned USDC, opens a 36.2M WBTC long and then calls pool.withdraw(pool.balanceOf(this)); the second transaction 0x9f8b4841f805ec50cc6632068f759216d85633fbbe34afde86b97bbc41c23ead closes it. Reported loss 146,000 USD. Distinct from the 2026-05 Sharwa row already in this file."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1760934747,
+        "deployTimestamp": 1759394492,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1759394492,
+        "codeAgeSeconds": 1540255,
+        "basis": "deployment (onchain)"
+      }
     }
   ]
 }

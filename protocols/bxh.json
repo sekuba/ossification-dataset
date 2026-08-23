@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bxh",
+  "name": "BXH",
+  "incidents": [
+    {
+      "name": "BXH staking spot-price manipulation",
+      "date": "2022-09-28T14:23:18Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 40305,
+      "victimContract": "0x27539b1dee647b38e1b987c41c5336b1a8dce663",
+      "exploitTx": "0xa13c8c7a0c97093dba3096c88044273c29cebeee109e23622cd412dcca8f50f4",
+      "attacker": "0x81c63d821b7cdf70c61009a81fef8db5949ac0c9",
+      "notes": "The BXH reward contract valued BXH from the PancakeSwap pair's spot reserves, so a flash loan skewed that price and inflated the USDT the attacker could withdraw.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xa13c8c7a0c97093dba3096c88044273c29cebeee109e23622cd412dcca8f50f4"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-09/BXH_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.jinse.com/lives/319392.html"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x27539b1dee647b38e1b987c41c5336b1a8dce663 created 2022-09-22T03:22:20Z by 0xa81d30d483714438bd7ddd52b6033d65c6f0020c, unrelated to attack sender 0x81c63d821b7cdf70c61009a81fef8db5949ac0c9; no EIP-1967 Upgraded events, age measured from deployment. Boundary row: the victim behaved as coded and the attacker moved the spot price it read."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1664374998,
+        "deployTimestamp": 1663816940,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1663816940,
+        "codeAgeSeconds": 558058,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

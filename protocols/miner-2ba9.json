@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "miner-2ba9",
+  "name": "MINER (BSC)",
+  "incidents": [
+    {
+      "name": "MINER transfer-fee pair skim",
+      "date": "2024-02-13T22:14:18Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1134,
+      "victimContract": "0x2ba9d4a8c41c60b71ff7df2c3f54b008644b954e",
+      "exploitTx": "0x15ab671c9bf918fa4b6a9eed9ccb527f32aca40e926ede2aec2c84dfa9c30512",
+      "attacker": "0x031958a8137745350549fd95055398dd536a07c7",
+      "notes": "MINER's _transfer burns part of the MINER/WBNB pair's balance on each trade, so the attacker looped small buys with pair.skim() to keep pushing the price up before selling out.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x15ab671c9bf918fa4b6a9eed9ccb527f32aca40e926ede2aec2c84dfa9c30512"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-02/MINER_bsc_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x2ba9d4a8c41c60b71ff7df2c3f54b008644b954e created 2024-02-12T11:23:40Z by 0x06f8fc2ceaebb832b338cc8b34191a0e885494a7, which is not the attack-tx sender 0x031958a8137745350549fd95055398dd536a07c7; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 3.5 WBNB x $323.88/BNB at the incident timestamp 1707862458 (DefiLlama coingecko:binancecoin) = $1,134."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1707862458,
+        "deployTimestamp": 1707737020,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1707737020,
+        "codeAgeSeconds": 125438,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "mo-protocol",
+  "name": "MO",
+  "incidents": [
+    {
+      "name": "MO Loan borrow/redeem double accounting",
+      "date": "2024-03-14T04:16:41Z",
+      "chain": "optimism",
+      "category": "code-bug",
+      "lossUsd": 413000,
+      "victimContract": "0xAe7b6514Af26BcB2332FEA53B8Dd57bc13A7838E",
+      "exploitTx": "0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417",
+      "attacker": "0x4e2c6096985e0b2825d06c16f1c8cdc559c1d6f8",
+      "notes": "The MO Loan contract let the same collateral back a new borrow after redeem() returned it, so an 80-iteration borrow/redeem loop against one small MO position drew out the entire MO/USDT pair balance, which was then sold for USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "optimism",
+          "ref": "0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/MO_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Loan 0xAe7b6514Af26BcB2332FEA53B8Dd57bc13A7838E created 2024-03-11T06:33:05Z by 0x9747fa1bfab2690562406d150f173e3c4a2d5aa6, not the attack-tx sender 0x4e2c6096985e0b2825d06c16f1c8cdc559c1d6f8; no EIP-1967 events, 2.9 days old. The PoC loops borrow(mo_balance,0) then redeem(i) until it reverts, confirming the position is reusable. PoC header reports ~413K USD profit."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1710389801,
+        "deployTimestamp": 1710138785,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1710138785,
+        "codeAgeSeconds": 251016,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

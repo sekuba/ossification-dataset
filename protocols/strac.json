@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "strac",
+  "name": "STRAC",
+  "incidents": [
+    {
+      "name": "STRAC token business-logic flaw",
+      "date": "2023-06-27T18:22:50Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 23110,
+      "victimContract": "0x1f90bdeb5674833868ee9b36707b929024e7a513",
+      "exploitTx": "0x1147b3c0f3ebdd524c4e58430bb736eba9f7fa522158f5ad81eb3e2394b466d0",
+      "attacker": "0xc7823188d459e1744c0e5fd58a0e074e92982ea3",
+      "notes": "STRAC's transfer accounting lets a caller inflate the liquidity pair's implied balance without a sync(), so the attacker swapped the resulting imbalance out for the pair's ETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x1147b3c0f3ebdd524c4e58430bb736eba9f7fa522158f5ad81eb3e2394b466d0"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-06/STRAC_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/DecurityHQ/status/1673769624611987487"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: STRAC 0x1f90bdeb5674833868ee9b36707b929024e7a513 created 2022-07-28T09:04:57Z by 0xd1feb6b0c23f36798d9c6c6a88ec7a7a309d59ef, unrelated to attack sender 0xc7823188d459e1744c0e5fd58a0e074e92982ea3; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 12.1629 BSC-pegged ETH left 0x2976bd3774622367ce7a575d28201480e640966f to the attacker; 12.1629 ETH x $1,900.04 at incidentTimestamp 1687890170 (DefiLlama coingecko:ethereum) = $23,110."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1687890170,
+        "deployTimestamp": 1658999097,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1658999097,
+        "codeAgeSeconds": 28891073,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

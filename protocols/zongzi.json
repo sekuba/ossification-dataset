@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "zongzi",
+  "name": "ZongZiFa",
+  "incidents": [
+    {
+      "name": "ZZF burnToHolder spot-price reward drain",
+      "date": "2024-03-25T08:25:45Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 223000,
+      "victimContract": "0xb7a254237e05ccca0a756f75fb78ab2df222911b",
+      "exploitTx": "0x247f4b3dbde9d8ab95c9766588d80f8dae835129225775ebd05a6dd2c69cd79f",
+      "attacker": "0x2c42824ef89d6efa7847d3997266b62599560a26",
+      "notes": "ZZF.burnToHolder() valued burned ZongZi with a live uniswapRouter.getAmountsOut quote against WBNB, so after a flash-loaned pump of the WBNB/ZongZi pair the attacker's burn plus receiveRewards() paid out almost the whole BNB balance held by the ZongZi token contract.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x247f4b3dbde9d8ab95c9766588d80f8dae835129225775ebd05a6dd2c69cd79f"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/ZongZi_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review of verified ZZF source at 0xb7a254237e05ccca0a756f75fb78ab2df222911b: burnToHolder() computes 'deserved' via uniswapRouter.getAmountsOut(amount, [_burnToken, WETH]); contract created 2024-02-08 by 0x95bf53764944fe19629f0e38f0edb02762cfff7c, not by attack sender 0x2c42824ef89d6efa7847d3997266b62599560a26"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1711355145,
+        "deployTimestamp": 1707363477,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1707363477,
+        "codeAgeSeconds": 3991668,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

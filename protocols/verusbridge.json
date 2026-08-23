@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2026-05/VerusBridge_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: 0x71518580f36feceffe0721f06ba4703218cd7f63 is the Verus Delegator, an unverified module-registry proxy that delegatecalls an address[] of 11 module contracts and emits no upgrade event at all, so the code history was recovered in Tier 2 by binary-searching eth_getStorageAt over the array (length slot 13 = 11, data at keccak256(13)+i) between creation block 18272987 (2023-10-03) and each incident block. Last change per module before incident 1 (block 25118335): contracts[7] 2023-11-03T17:11:11Z (block 18492941), contracts[2] 2024-03-21T22:05:59Z (block 19485889), contracts[9] 2024-12-07T20:40:35Z (block 21353057), contracts[10] 2024-12-07T20:43:47Z (block 21353072), contracts[5] 2026-01-09T20:55:35Z (block 24199650) and contracts[0]/[1]/[6]/[8] 2026-02-28T16:29:47Z (block 24556629, tx 0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba from the Verus upgrade signer 0x896e59efcbec700bc9f447af7018bdc5ca1fa5ab, selector 0x60cd61a5); contracts[3] and [4] were untouched since deployment. Age measured from the latest of those, 2026-02-28, rather than the 2023 Delegator deployment"
         }
       ],
       "attacker": "0x5abb91b9c01a5ed3ae762d32b236595b459d5777",
@@ -30,10 +34,11 @@
         "incidentTimestamp": 1779062123,
         "deployTimestamp": 1696372199,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1696372199,
-        "codeAgeSeconds": 82689924,
-        "basis": "deployment (onchain)"
-      }
+        "lastChangeTimestamp": 1772296187,
+        "codeAgeSeconds": 6765936,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2026-02-28T16:29:47Z (block 24556629, tx 0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba): last delegate-contract swap on the Verus Delegator before the incident, recovered by binary-searching eth_getStorageAt over the contracts address[] (length slot 13, data at keccak256(13)+i); that upgrade replaced contracts[0], [1], [6] and [8]"
     },
     {
       "name": "VerusBridge duplicate-state-root parser divergence",
@@ -53,6 +58,10 @@
         {
           "type": "post-mortem",
           "ref": "https://www.certik.com/blog/research?tab=incident-analysis"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: same Verus Delegator 0x71518580f36feceffe0721f06ba4703218cd7f63 as the 2026-05-17 incident; because it emits no upgrade event the code history was recovered in Tier 2 by binary-searching eth_getStorageAt over the contracts address[] (length slot 13, data at keccak256(13)+i) between creation block 18272987 and incident block 25592836. After the May incident every module was replaced twice: contracts[3], [4] and [7] on 2026-07-08T14:57:23Z (block 25488591, tx 0xdcd9821ff75561c03f85673d992ad988f7d067caf1f3df581ac54303537ff84a) and contracts[0], [1], [2], [5], [6], [8], [9], [10] on 2026-07-12T16:57:35Z (block 25517881, tx 0xb29f45f3c788cc635fe746754dfe79b00f36758cbd9f418e69866e72c08e192d), both from the Verus upgrade signer 0x896e59efcbec700bc9f447af7018bdc5ca1fa5ab with selector 0x60cd61a5. Age measured from the 2026-07-12 swap, 10.5 days before the exploit, rather than the 2023 Delegator deployment"
         }
       ],
       "attacker": "0xbda71b58cec0b1c20a8f87ccd52fa0679747855c",
@@ -62,10 +71,11 @@
         "incidentTimestamp": 1784778359,
         "deployTimestamp": 1696372199,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1696372199,
-        "codeAgeSeconds": 88406160,
-        "basis": "deployment (onchain)"
-      }
+        "lastChangeTimestamp": 1783875455,
+        "codeAgeSeconds": 902904,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2026-07-12T16:57:35Z (block 25517881, tx 0xb29f45f3c788cc635fe746754dfe79b00f36758cbd9f418e69866e72c08e192d): last delegate-contract swap on the Verus Delegator before the incident, recovered by binary-searching eth_getStorageAt over the contracts address[] (length slot 13, data at keccak256(13)+i); it replaced 8 of the 11 modules four days after the 2026-07-08 post-hack redeploy (block 25488591)"
     }
   ]
 }

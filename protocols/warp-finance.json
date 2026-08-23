@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "warp-finance",
+  "name": "Warp Finance",
+  "incidents": [
+    {
+      "name": "Warp Finance LP collateral valuation manipulation",
+      "date": "2020-12-17T22:24:41Z",
+      "chain": "ethereum",
+      "category": "oracle-manipulation",
+      "lossUsd": 7760000,
+      "victimContract": "0xba539b9a5c2d412cb10e5770435f362094f9541c",
+      "exploitTx": "0x8bb8dc5c7c830bac85fa48acad2505e9300a91c3ff239c9517d0cae33b595090",
+      "attacker": "0xebc6bd6ac2c9ad4adf4ba57e9f709b8b9cf03c40",
+      "notes": "WarpControl valued deposited Uniswap V2 LP collateral from the pair's live spot reserves, so a flash-loaned swap that doubled the WETH-DAI LP price let the attacker borrow 3.86m DAI and 3.9m USDC against collateral worth a fraction of that; the lending code itself behaved as written.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x8bb8dc5c7c830bac85fa48acad2505e9300a91c3ff239c9517d0cae33b595090"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://warpfinance.medium.com/warp-finance-exploit-summary-recovery-of-funds-5b8fe4a11898"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: resolved the victim from the attack tx logs - 0xba539b9a is the verified WarpControl (the borrow authoriser and collateral valuer); the WarpVaultSC lenders 0x6046c3ab/0xae465fd3/0xdadd9ba3 and WarpVaultLP 0x13db1cb4 also appear. Created 2020-12-16 by 0x8f3e8a974d6eb27316054147fdf0e960dab2e1b3, not by attack sender 0xebc6bd6a - only 1.7 days before the incident, matching Warp's 2020-12-09 launch. lossUsd is the borrowed 3.86m DAI + 3.9m USDC, both USD-pegged 1:1"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1608243881,
+        "deployTimestamp": 1608095530,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1608095530,
+        "codeAgeSeconds": 148351,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "crosswise",
+  "name": "Crosswise Finance",
+  "incidents": [
+    {
+      "name": "MasterChef public setTrustedForwarder()",
+      "date": "2025-05-06T09:21:59Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 2483,
+      "victimContract": "0x70873211CB64c1D4EC027Ea63a399A7D07c4085B",
+      "exploitTx": "0xfe88443d73e8ae6d4799c4d3cc42488730c084624fd2daa5f035c1ad2927ea0f",
+      "attacker": "0xc49f2938327aA2cDc3F2f89Ed17B54b3671F05dE",
+      "notes": "MasterChef.setTrustedForwarder() is public, so the attacker became the trusted forwarder and spoofed _msgSender() through the calldata suffix to set pool 0's deposit fee to 100% and route the fee into the CRSS/WBNB pair.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xfe88443d73e8ae6d4799c4d3cc42488730c084624fd2daa5f035c1ad2927ea0f"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://t.me/defimon_alerts/1002"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-05/crosswise_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x70873211CB64c1D4EC027Ea63a399A7D07c4085B created 2022-01-11T19:27:02Z by 0x0590f20a7f1b6799979d2d59d10242e1081d8d9c, which is not the attack-tx sender 0xc49f2938327aa2cdc3f2f89ed17b54b3671f05de; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 4.16 WBNB x $596.9/BNB at the incident timestamp 1746523319 (DefiLlama coingecko:binancecoin) = $2,483."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1746523319,
+        "deployTimestamp": 1641929222,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1641929222,
+        "codeAgeSeconds": 104594097,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

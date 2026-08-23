@@ -1,0 +1,54 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "elasticswap",
+  "name": "ElasticSwap",
+  "incidents": [
+    {
+      "name": "ElasticSwap exchange decay accounting",
+      "date": "2022-12-13T02:32:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 845000,
+      "victimContract": "0xa0c5aa50ce3cc69b1c478d8235597bc0c51dfdab",
+      "exploitTx": "0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f",
+      "attacker": "0xbeadedbabed6a353c9caa4894aa7e5f883e32967",
+      "notes": "The ElasticSwap ELP exchange tracked internal x*y=k reserves separately from real ERC-20 balances to support rebasing tokens, and the 'decay' correction let an attacker donate into the pool and then redeem liquidity for more than was contributed.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://quillaudits.medium.com/decoding-elastic-swaps-850k-exploit-quillaudits-9ceb7fcd8d1a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-12/ElasticSwap_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: the exploit transaction the PoC cites resolves on Ethereum mainnet, not Avalanche as the PoC's fork suggests; ELP exchange 0x4ae1Da57f2d6b2E9a23d07e264Aa2B3bBCaeD19A created 2022-05-07T15:57:56Z by 0x1806c8c7993086f971bb6f605a5cd3e369e64ed6, not the attack-tx sender 0xbeadedbabed6a353c9caa4894aa7e5f883e32967; no EIP-1967 events, 219.4 days old. Loss $845k per the DeFiHackLabs 2022 index entry for this PoC."
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The Exchange's runtime is byte-identical at the creation block 14730695 and the incident block 16172820, and its five DELEGATECALL sites are solc external-library calls to the link-time-hardcoded MathLib 0xe3c08c95aa81474f44bee23f8c45d470ddad37be (runtime begins 73<self>3014, constant across the window), so nothing about the executing code can be repointed. Flagged separately for a curator, not changed here: callTracer on the cited exploit tx never reaches 0x4ae1Da57...; the ELP exchange actually drained is 0xa0c5aa50ce3cc69b1c478d8235597bc0c51dfdab, another ElasticSwap `Exchange` created 2022-05-10T02:51:50Z (block 14746111), which would give 18,747,657 s (217.0 d) instead of 18,959,691 s (219.4 d)."
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim corrected from ELP exchange 0x4ae1Da57f2d6b2E9a23d07e264Aa2B3bBCaeD19A, which emits no logs at all in the cited exploit transaction, to the ElasticSwap Exchange actually drained, 0xa0c5aa50ce3cc69b1c478d8235597bc0c51dfdab, which emits 14 of that transaction's logs and is its top emitter. Created 2022-05-10T00:11:50Z (block 14746111) by 0x72c6d5b5e7f921e84166dc2061bef4533a5a98db, unrelated to attack sender 0xbeadedbabed6a353c9caa4894aa7e5f883e32967; no EIP-1967 Upgraded events in range. Age 216.99 d, previously 219.44 d against the wrong pool"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1670898767,
+        "deployTimestamp": 1652151110,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1652151110,
+        "codeAgeSeconds": 18747657,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

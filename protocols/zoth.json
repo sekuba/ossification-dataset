@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "zoth",
+  "name": "Zoth",
+  "incidents": [
+    {
+      "name": "USD0PPSubVault deployer-key compromise and malicious upgrade",
+      "date": "2025-03-21T08:47:35Z",
+      "chain": "ethereum",
+      "category": "key-compromise",
+      "lossUsd": 8290000,
+      "victimContract": "0x82f3a0392F58C50fa90542519832471BaE93e43e",
+      "exploitTx": "0x33bf669d125d11c432ac9b52b9d56161101c072fd8b0ac2aa390f5760fb50ca4",
+      "attacker": "0x3b33c5Cd948Be5863b72cB3D6e9C0b36E67d01E5",
+      "notes": "No contract flaw: Zoth's deployer key held the UUPS upgrade authority for the USD0PPSubVaultUpgradeable proxy, and whoever obtained it called upgradeToAndCall() to install a self-authored implementation with an unrestricted withdraw(), emptying the vault 36 seconds later.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x33bf669d125d11c432ac9b52b9d56161101c072fd8b0ac2aa390f5760fb50ca4"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://rekt.news/zoth-rekt"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.halborn.com/blog/post/explained-the-zoth-hack-march-2025"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: proxy 0x82f3a039...e43e was created by Zoth deployer 0x3604582f56565d7060D73829FfB9EBD579218Dca (not the attack sender 0x3b33c5Cd...); the last of its seven Upgraded events, at block 22094140 in tx 0xb2335f7bf58abbcaa006d0a2bed7db2c64a5dabed56fb1759260adc012c49abe, installed the attacker's own implementation 0xc89d7894341e13d5067d003af5346b257d861f56 — so the mechanical code age of 36s measures the attacker's implementation, not Zoth's; this row is context only and never feeds the curve"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1742546855,
+        "deployTimestamp": 1735533383,
+        "upgradeEventCount": 7,
+        "lastChangeTimestamp": 1742546819,
+        "codeAgeSeconds": 36,
+        "basis": "last of 7 upgrade events (onchain)"
+      }
+    }
+  ]
+}

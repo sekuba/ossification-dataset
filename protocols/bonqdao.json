@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bonqdao",
+  "name": "BonqDAO",
+  "incidents": [
+    {
+      "name": "BonqDAO Tellor oracle price manipulation",
+      "date": "2023-02-01T18:29:18Z",
+      "chain": "polygon",
+      "category": "oracle-manipulation",
+      "lossUsd": null,
+      "lossOther": "100,514,098 BEUR + 113,813,998 ALBT (nominal)",
+      "victimContract": "0x8f55d884cad66b79e1a131f6bcb0e66f4fd84d5b",
+      "exploitTx": "0x31957ecc43774d19f54d9968e95c69c882468b46860f921668f2c55fadd51b19",
+      "attacker": "0xcAcf2D28B2A5309e099f0C6e8C60Ec3dDf656642",
+      "notes": "BonqDAO read wALBT's price straight from TellorFlex's latest report instead of getDataBefore(), and staking as a Tellor reporter cost far less than the borrow it unlocked, so the attacker reported an absurdly high wALBT price and minted 100.5M BEUR against a trove, then reported an absurdly low one and liquidated other users' wALBT troves.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0x31957ecc43774d19f54d9968e95c69c882468b46860f921668f2c55fadd51b19"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/@omniscia.io/bonq-protocol-incident-post-mortem-4fd79fe5c932"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-02/BonqDAO_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x8f55d884cad66b79e1a131f6bcb0e66f4fd84d5b created 2022-11-06T03:05:11Z by 0xd936413365550ec6f390bdd5849ffd813fdf4e11, not the attack-tx sender 0xcacf2d28b2a5309e099f0c6e8c60ec3ddf656642; no EIP-1967 events, 87.6 days old. The second transaction 0xa02d0c3d16d6ee0e0b6a42c3cc91997c2b40c87d777136dedebe8ee0f47f32b1 performs the liquidation leg and is not recorded separately. BEUR and ALBT are the project's own illiquid tokens and the nominal ~$88M headline was never realisable, so no lossUsd is asserted; realised proceeds were still far above the $1,000 floor."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1675276158,
+        "deployTimestamp": 1667703911,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1667703911,
+        "codeAgeSeconds": 7572247,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

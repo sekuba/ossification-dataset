@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "alp-apo",
+  "name": "ALP / APO",
+  "incidents": [
+    {
+      "name": "VUN public _swap arbitrary router call",
+      "date": "2024-03-06T08:30:38Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 10000,
+      "victimContract": "0xD188492217F09D18f2B0ecE3F8948015981e961a",
+      "exploitTx": "0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca",
+      "attacker": "0xff61Ba33Ed51322BB716EAb4137Adf985644b94d",
+      "notes": "VUN's internal _swap(address,bytes) was left public, so any caller could make the vault execute an arbitrary 1inch unoswapTo call and route the vault's ALP_APO holdings to itself before redeeming them.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://app.blocksec.com/explorer/tx/bsc/0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/ALP_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xD188492217F09D18f2B0ecE3F8948015981e961a created 2023-12-19T03:01:30Z by 0x78000b0605e81ea9df54b33f72ebc61b5f5c8077, which is not the attack-tx sender 0xff61ba33ed51322bb716eab4137adf985644b94d; 1 EIP-1967 Upgraded events on the victim before the incident; code age measured from last of 1 upgrade events (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1709713838,
+        "deployTimestamp": 1702954890,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1702954890,
+        "codeAgeSeconds": 6758948,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

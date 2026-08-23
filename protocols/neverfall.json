@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "neverfall",
+  "name": "NeverFall",
+  "incidents": [
+    {
+      "name": "NeverFall price manipulation",
+      "date": "2023-05-02T16:45:22Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 74251,
+      "victimContract": "0x5ABDe8B434133C98c36F4B21476791D95D888bF5",
+      "exploitTx": "0xccf513fa8a8ed762487a0dcfa54aa65c74285de1bc517bd68dbafa2813e4b7cb",
+      "attacker": "0x53b757db8b9f3375d71eafe53e411a16acde75ee",
+      "notes": "The NeverFall contract sizes its USDT payout from the live pool reserves it reads, so a flash loan moved that price and let the attacker redeem far more USDT than deposited.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xccf513fa8a8ed762487a0dcfa54aa65c74285de1bc517bd68dbafa2813e4b7cb"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-05/NeverFall_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BeosinAlert/status/1653619782317662211"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: NeverFall 0x5ABDe8B434133C98c36F4B21476791D95D888bF5 created 2023-03-17T03:41:41Z by 0x051d6a5f987e4fc53b458ec4f88a104356e6995a, unrelated to attack sender 0x53b757db8b9f3375d71eafe53e411a16acde75ee; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the attacker netted 74,250.89 USDT after repaying the flash loan. Boundary row: the victim behaved as coded and the attacker moved the price it read."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1683045922,
+        "deployTimestamp": 1679024501,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1679024501,
+        "codeAgeSeconds": 4021421,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

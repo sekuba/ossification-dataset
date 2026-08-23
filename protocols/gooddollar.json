@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "gooddollar",
+  "name": "GoodDollar",
+  "incidents": [
+    {
+      "name": "GoodDollar GoodCompoundStaking collectInterest reentrancy",
+      "date": "2023-12-16T23:53:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 625141,
+      "victimContract": "0x0c6c80d2061afa35e160f3799411d83bdeea0a5a",
+      "exploitTx": "0x726459a46839c915ee2fb3d8de7f986e3c7391c605b7a622112161a84c7384d0",
+      "attacker": "0x6738fa889ff31f82d9fe8862ec025dbe318f3fde",
+      "notes": "The GoodDollar staking contract's collectInterest() took an unvalidated recipient and called back into it before updating stake accounting, letting the attacker re-enter deposit()/withdraw() and pull the cDAI-backed reserve out as DAI.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x726459a46839c915ee2fb3d8de7f986e3c7391c605b7a622112161a84c7384d0"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-12/GoodDollar_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/MetaSec_xyz/status/1736428284756607386"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: proxy 0x0c6c80d2061afa35e160f3799411d83bdeea0a5a created 2022-03-07T08:26:15Z by 0x3de7216149f12d8f51540d9a870149560fc11bfb, unrelated to the attack sender; three EIP-1967 Upgraded events, the last on 2023-09-22T09:25:11Z (block 18190480, implementation 0x4a37a8d7cdb43d89b4dbd7ecfaeaf9bd39e24929), so age runs from that upgrade (85.6 days) rather than from the 2022 deployment. Loss read from the tx receipt: 625,140.68 DAI ended up with the attacker's second address 0x6c08f56ff2b15db7ddf2f123f5bffb68e308161b (DAI at 1:1); the additional G$ leg is the project's own illiquid token and is not valued."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1702770839,
+        "deployTimestamp": 1646641575,
+        "upgradeEventCount": 3,
+        "lastChangeTimestamp": 1695374711,
+        "codeAgeSeconds": 7396128,
+        "basis": "last of 3 upgrade events (onchain)"
+      }
+    }
+  ]
+}

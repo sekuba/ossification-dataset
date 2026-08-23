@@ -3,7 +3,8 @@
  *
  * For every incident with an exploitTx and victimContract:
  *   - incident timestamp = the attack transaction's block timestamp
- *   - deployment timestamp = victim creation tx (Etherscan v2 lookup)
+ *   - deployment timestamp = victim creation tx (Etherscan v2 lookup, falling
+ *     back to a binary search over eth_getCode when the chain has no explorer)
  *   - last pre-incident change = max(deployment, EIP-1967 Upgraded logs in
  *     [creation block, incident block])
  *   - code age = incident - last change
@@ -12,6 +13,10 @@
  * Rows measured from a documented change (`documentedLastChange`) or without
  * an exploit tx are reported as MANUAL — their evidence is the cited source,
  * not a standard event, and cannot be re-derived mechanically.
+ *
+ * A failed upgrade-log lookup reports UNVERIFIED rather than being treated as
+ * "no upgrades": swallowing it would silently derive the deployment age and
+ * confirm a row measured from the wrong basis.
  *
  * Usage:
  *   ETHERSCAN_API_KEY=... RPC_URL_ETHEREUM=... node scripts/verify.mjs protocols/euler-finance.json
@@ -37,6 +42,8 @@ const CHAIN_IDS = {
   mantle: 5000,
   mode: 34443,
 }
+// Chains absent here (or absent from Etherscan v2) still work: the creation
+// lookup falls back to RPC. Any chain is measurable given RPC_URL_<CHAIN>.
 
 async function rpc(chain, method, params) {
   const url = process.env[`RPC_URL_${chain.toUpperCase()}`]
@@ -66,6 +73,55 @@ async function etherscan(chain, params) {
 const blockTs = async (chain, tag) =>
   Number.parseInt((await rpc(chain, 'eth_getBlockByNumber', [tag, false])).timestamp, 16)
 
+/**
+ * Creation block over plain RPC: binary-search the first block at which the
+ * address has code. Needed for chains Etherscan v2 does not serve (Fantom,
+ * Scroll, Mode, zkSync, Metis, Cronos, ...). ~log2(head) eth_getCode calls.
+ */
+async function creationBlockViaRpc(chain, address, headBlock) {
+  const hasCode = async (b) =>
+    (await rpc(chain, 'eth_getCode', [address, '0x' + b.toString(16)])) !== '0x'
+  if (!(await hasCode(headBlock).catch(() => false))) return null
+  let lo = 0
+  let hi = headBlock
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi) / 2)
+    if (await hasCode(mid)) hi = mid
+    else lo = mid + 1
+  }
+  return lo
+}
+
+/**
+ * eth_getLogs over [from, to], halving the window whenever a provider rejects
+ * the range (limits vary: 2k on public Avalanche, 10k on rpc.linea.build, ...).
+ * A range cap is a provider quirk, not a failure to verify — only a genuinely
+ * broken lookup should reach the UNVERIFIED path.
+ */
+async function getLogsChunked(chain, address, fromBlock, toBlock) {
+  const out = []
+  const walk = async (lo, hi) => {
+    try {
+      const part = await rpc(chain, 'eth_getLogs', [
+        {
+          address,
+          topics: [UPGRADED_TOPIC],
+          fromBlock: '0x' + lo.toString(16),
+          toBlock: '0x' + hi.toString(16),
+        },
+      ])
+      out.push(...part)
+    } catch (e) {
+      if (lo >= hi) throw e
+      const mid = Math.floor((lo + hi) / 2)
+      await walk(lo, mid)
+      await walk(mid + 1, hi)
+    }
+  }
+  await walk(Number.parseInt(fromBlock, 16), Number.parseInt(toBlock, 16))
+  return out
+}
+
 async function verify(incident) {
   const { chain, victimContract, exploitTx, measurement } = incident
   if (!exploitTx || !victimContract || measurement?.status !== 'OK') return 'SKIP (not mechanically measured)'
@@ -73,25 +129,38 @@ async function verify(incident) {
   const tx = await rpc(chain, 'eth_getTransactionByHash', [exploitTx])
   if (!tx?.blockNumber) return 'FAIL: exploit tx not found'
   const incidentTs = await blockTs(chain, tx.blockNumber)
-  const creation = (
-    await etherscan(chain, {
-      module: 'contract',
-      action: 'getcontractcreation',
-      contractaddresses: victimContract,
-    })
-  )[0]
-  if (!creation) return 'FAIL: no creation info'
+  const creation = await etherscan(chain, {
+    module: 'contract',
+    action: 'getcontractcreation',
+    contractaddresses: victimContract,
+  })
+    .then((r) => r[0])
+    .catch(() => null)
   let deployTs
   let creationBlock = '0x0'
-  if (creation.timestamp) deployTs = Number(creation.timestamp)
-  else {
+  if (creation?.timestamp) {
+    deployTs = Number(creation.timestamp)
+    if (creation.blockNumber) creationBlock = '0x' + Number(creation.blockNumber).toString(16)
+  } else if (creation?.txHash) {
     const ctx = await rpc(chain, 'eth_getTransactionByHash', [creation.txHash])
     creationBlock = ctx.blockNumber
     deployTs = await blockTs(chain, ctx.blockNumber)
+  } else {
+    // No explorer for this chain (Etherscan v2 serves only some) - find the
+    // creation block over plain RPC by binary-searching eth_getCode.
+    const block = await creationBlockViaRpc(chain, victimContract, Number.parseInt(tx.blockNumber, 16))
+    if (block === null) return 'FAIL: no creation info (explorer and RPC lookup both failed)'
+    creationBlock = '0x' + block.toString(16)
+    deployTs = await blockTs(chain, creationBlock)
   }
-  const logs = await rpc(chain, 'eth_getLogs', [
-    { address: victimContract, topics: [UPGRADED_TOPIC], fromBlock: creationBlock, toBlock: tx.blockNumber },
-  ]).catch(() => [])
+  let logs
+  try {
+    logs = await getLogsChunked(chain, victimContract, creationBlock, tx.blockNumber)
+  } catch (e) {
+    // Never treat a failed lookup as "no upgrades": that silently yields the
+    // deployment age and would confirm a row that measured from the wrong basis.
+    return `UNVERIFIED: upgrade-log lookup failed (${e.message}); cannot confirm the last change`
+  }
   let lastChange = deployTs
   for (const log of logs) {
     const ts = await blockTs(chain, log.blockNumber)

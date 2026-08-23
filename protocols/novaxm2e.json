@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "novaxm2e",
+  "name": "NovaX M2E",
+  "incidents": [
+    {
+      "name": "NovaX stake/withdraw valuation sandwich",
+      "date": "2024-08-06T04:05:51Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 25000,
+      "victimContract": "0x55C9EEbd368873494C7d06A4900E8F5674B11bD2",
+      "exploitTx": "0xb1ad1188d620746e2e64785307a7aacf2e8dbda4a33061a4f2fbc9721048e012",
+      "attacker": "0x81ca56b6973ff63e3ff2b3f99cb6a6d211269e79",
+      "notes": "TokenStake.stake() records the deposit as a USDT value at the pair's live rate and withdraw() pays it back out in tokens at the rate then, so the attacker staked, dumped the pool inside a flash swap and withdrew far more NovaXM2E.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xb1ad1188d620746e2e64785307a7aacf2e8dbda4a33061a4f2fbc9721048e012"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/EXVULSEC/status/1820676684410147276"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-08/NovaXM2E_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x55C9EEbd368873494C7d06A4900E8F5674B11bD2 created 2024-06-13T15:42:04Z by 0x1d874e61a930c017b6f98ca36665b2587318ab07, which is not the attack-tx sender 0x81ca56b6973ff63e3ff2b3f99cb6a6d211269e79; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1722917151,
+        "deployTimestamp": 1718293324,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1718293324,
+        "codeAgeSeconds": 4623827,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

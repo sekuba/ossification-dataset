@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "ktaf",
+  "name": "kTAF (kTeslaAppleFacebook market)",
+  "incidents": [
+    {
+      "name": "kTAF liquidation seize rounding",
+      "date": "2023-10-19T17:31:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 8000,
+      "victimContract": "0xf5140fc35c6f94d02d7466f793feb0216082d7e5",
+      "exploitTx": "0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4",
+      "attacker": "0x9b99d7ce9e39c68ab93348fd31fd4c99f79e4b19",
+      "notes": "Repeatedly liquidating tiny slices of an underwater kDAI loan against the low-value kTAF market let liquidateCalculateSeizeTokens round the seized kTAF collateral up each time, so the attacker seized more collateral than the DAI it repaid was worth.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-10/kTAF_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://defimon.xyz/attack/mainnet/0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: kTAF 0xf5140fc35c6f94d02d7466f793feb0216082d7e5 (CErc20Immutable, symbol kTAF) created 2020-07-24T00:02:01Z by 0xa13b3e79f2ed49bc05af2274dc509d73a75cafe2, unrelated to the attack sender; CErc20Immutable has no delegatecall implementation slot and emitted no EIP-1967 events, so age runs from deployment (1182.7 days). Loss ~$8K per the PoC header, realised in DAI."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1697736719,
+        "deployTimestamp": 1595548921,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1595548921,
+        "codeAgeSeconds": 102187798,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

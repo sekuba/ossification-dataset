@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "curio",
+  "name": "Curio DAO",
+  "incidents": [
+    {
+      "name": "CurioDAO DSChief hat takeover and CGT mint",
+      "date": "2024-03-23T17:53:23Z",
+      "chain": "ethereum",
+      "category": "governance-design",
+      "lossUsd": 180000,
+      "victimContract": "0x579a3244f38112b8aabefce0227555c9b6e7aaf0",
+      "exploitTx": "0x4ff4028b03c3df468197358b99f5160e5709e7fce3884cc8ce818856d058e106",
+      "attacker": "0xdaaa6294c47b5743bdafe0613d1926ee27ae8cf5",
+      "notes": "Curio's MakerDAO-fork DSChief let the attacker lock only 20 CGT and lift() itself to hat because the sitting hat carried a smaller approval, after which DSPause.plot()/exec() with a zero delay delegatecalled an attacker spell that minted ~1B CGT and drained every CGT pool.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x4ff4028b03c3df468197358b99f5160e5709e7fce3884cc8ce818856d058e106"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://investcurio.medium.com/curiodaos-recovery-plan-1255427f35de"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/CGT_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim DSChief 0x579a3244f38112b8aabefce0227555c9b6e7aaf0 created 2021-05-24 by 0x63ea2d3fcb0759ab9ad46edc5269d7debd0bdbe6, not by attack sender 0xdaaa6294c47b5743bdafe0613d1926ee27ae8cf5; no upgrade events. lossUsd uses the realized-extraction figure of ~$180k from quadrigainitiative.com rather than the widely quoted $16m, which is the nominal value of the ~1B CGT minted (the attacker still holds most of it and CGT liquidity was thin)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1711216403,
+        "deployTimestamp": 1621824055,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1621824055,
+        "codeAgeSeconds": 89392348,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

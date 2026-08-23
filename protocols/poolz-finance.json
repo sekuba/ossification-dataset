@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "poolz-finance",
+  "name": "Poolz Finance",
+  "incidents": [
+    {
+      "name": "Poolz LockedDeal CreateMassPools integer overflow",
+      "date": "2023-03-15T03:16:02Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 390000,
+      "victimContract": "0x8BfAA473a899439d8E07BF86a8C6cE5De42fE54B",
+      "exploitTx": "0x39718b03ae346dfe0210b1057cf9f0c378d9ab943512264f06249ae14030c5d5",
+      "attacker": "0x190cd736f5825ff0ae0141b5c9cb7fcd042cef2a",
+      "notes": "LockedDeal's CreateMassPools() sums the per-pool amounts in an unchecked uint256 addition, so an overflowing amount array let the attacker register pools crediting the contract's whole MNZ/SIP/ECIO/WOD balance while transferring almost nothing in.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x39718b03ae346dfe0210b1057cf9f0c378d9ab943512264f06249ae14030c5d5"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-03/poolz_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/peckshield/status/1635860470359015425"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: LockedDeal 0x8BfAA473a899439d8E07BF86a8C6cE5De42fE54B created 2021-07-29T11:05:08Z by 0xf7f1f00b13f4c3d818f052498902067ab91a3a66, unrelated to attack sender 0x190cd736f5825ff0ae0141b5c9cb7fcd042cef2a; no EIP-1967 Upgraded events, age measured from deployment. The realised proceeds came from selling the released project tokens over subsequent transactions, so lossUsd uses the ~$390K reported by PeckShield across BSC, Ethereum and Polygon deployments."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1678850162,
+        "deployTimestamp": 1627556708,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1627556708,
+        "codeAgeSeconds": 51293454,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

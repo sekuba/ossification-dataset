@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "convergence-finance",
+  "name": "Convergence Finance",
+  "incidents": [
+    {
+      "name": "CvxRewardDistributor claimMultipleStaking",
+      "date": "2024-08-01T14:59:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 210000,
+      "victimContract": "0x2b083beaaC310CC5E190B1d2507038CcB03E7606",
+      "exploitTx": "0x636be30e58acce0629b2bf975b5c3133840cd7d41ffc3b903720c528f01c65d9",
+      "attacker": "0x03560a9d7a2c391fb1a087c33650037ae30de3aa",
+      "notes": "claimMultipleStaking() did not check that entries of the claimContracts array were registered staking contracts, so a caller-supplied fake contract was invoked as a staking service and returned reward amounts that minted 58M CVG to the attacker.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x636be30e58acce0629b2bf975b5c3133840cd7d41ffc3b903720c528f01c65d9"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.verichains.io/p/convergence-incident-how-a-simple"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-08/Convergence_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: CvxRewardDistributor proxy 0x2b083bea... created by 0xfffde9a2bb7c9a6dfd1f0235f5af4f599e3265ec on 2024-07-14, single Upgraded event to impl 0x47c69e8c909ce626af73c955a5e34a20b7c71f19 in the creation block; exploited 17.9 days later"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1722524387,
+        "deployTimestamp": 1720974971,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1720974971,
+        "codeAgeSeconds": 1549416,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

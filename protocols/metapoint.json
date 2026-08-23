@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "metapoint",
+  "name": "MetaPoint",
+  "incidents": [
+    {
+      "name": "MetaPoint user contract unrestricted approve",
+      "date": "2023-04-11T20:32:59Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 811775,
+      "victimContract": "0x724DbEA8A0ec7070de448ef4AF3b95210BDC8DF6",
+      "exploitTx": "0xdb01fa33bf5b79a3976ed149913ba0a18ddd444a072a2f34a0042bf32e4e7995",
+      "attacker": "0x0d1969a30bb4ba02e731862edbced5f5abba8373",
+      "notes": "Each MetaPoint per-user contract exposes an approve() that grants an unlimited POT allowance to whoever calls it, so the attacker called it on every user contract and transferFrom-ed their POT away.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xdb01fa33bf5b79a3976ed149913ba0a18ddd444a072a2f34a0042bf32e4e7995"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-04/MetaPoint_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/PeckShieldAlert/status/1645980197987192833"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: MetaPoint user contract 0x724DbEA8A0ec7070de448ef4AF3b95210BDC8DF6 (the first of eleven drained in the PoC) created 2023-04-09T11:53:44Z by 0xe56d3acbcdbe499400798e3e4bd129a82479a8bc, unrelated to attack sender 0x0d1969a30bb4ba02e731862edbced5f5abba8373; no EIP-1967 Upgraded events, age measured from deployment. The paired withdraw transaction 0x41853747231dcf01017cf419e6e4aa86757e59479964bafdce0921d3e616cc67 moved 27,392.56 USDT out of the POT/USDT pool for 83.86 WBNB; lossUsd converts the 2,500 BNB reported for the whole incident: 2,500 BNB x $324.71 at incidentTimestamp 1681245179 (DefiLlama coingecko:binancecoin) = $811,775."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1681245179,
+        "deployTimestamp": 1681041224,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1681041224,
+        "codeAgeSeconds": 203955,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

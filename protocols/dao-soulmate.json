@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "dao-soulmate",
+  "name": "DAO SoulMate",
+  "incidents": [
+    {
+      "name": "SoulMate vault unprotected redeem()",
+      "date": "2024-01-22T17:14:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 319000,
+      "victimContract": "0x82c063afefb226859abd427ae40167cb77174b68",
+      "exploitTx": "0x1ea0a2e88efceccb2dd93e6e5cb89e5421666caeefb1e6fc41b68168373da342",
+      "attacker": "0xd215ffaf0f85fb6f93f11e49bd6175ad58af0dfd",
+      "notes": "The vault's redeem(shares, receiver) had no access control and no check that the caller owned the shares, so the attacker passed the contract's own share balance and received the entire token basket (USDC, DAI, MATIC, AAVE, ENS, ZRX, UNI).",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x1ea0a2e88efceccb2dd93e6e5cb89e5421666caeefb1e6fc41b68168373da342"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-01/DAO_SoulMate_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/MetaSec_xyz/status/1749743245599617282"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: vault 0x82c063afefb226859abd427ae40167cb77174b68 created 2023-07-25T00:11:35Z by 0x76136c44421b9dce602b2f5af32f2203b8a1aaf5, unrelated to the attack sender; unverified, no EIP-1967 events, age from deployment. Loss ~$319K per the PoC header, taken in a basket of blue-chip ERC20s."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1705943675,
+        "deployTimestamp": 1690243895,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1690243895,
+        "codeAgeSeconds": 15699780,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

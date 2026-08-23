@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bce",
+  "name": "BCE",
+  "incidents": [
+    {
+      "name": "BCE deferred burn against the PancakeSwap pair",
+      "date": "2026-03-23T05:59:13Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 679000,
+      "victimContract": "0xcdb189d377ac1cf9d7b1d1a988f2025b99999999",
+      "exploitTx": "0x85ac5d15f16d49ae08f90ab0e554ebfcb145712342c5b7704e305d602146d452",
+      "attacker": "0x9f7eabd7c3538ba6b9d10eede63712c0ecce6d69",
+      "notes": "BCE accrued a scheduledDestruction amount on sells and settled it during a later ordinary transfer by burning that amount out of the PancakeSwap pair's own balance and calling sync(), collapsing the BCE reserve so the attacker's remaining BCE could be sold into the distorted pair for its USDT side.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x85ac5d15f16d49ae08f90ab0e554ebfcb145712342c5b7704e305d602146d452"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blocksec.com/blog/weekly-web3-security-incident-roundup-mar-23-mar-29-2026"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-03/bce_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: BCE token (verified source) created 2026-03-22 by EOA 0x1fe979226d796c65a2b1a044c69c2e91628bcfce, one day before the incident and unrelated to the attack sender 0x9f7EABD7...; the attacker flash-borrowed from Moolah and levered through Venus and paid a 15% builder tip, i.e. an external searcher rather than the deployer. DefiLlama and BlockSec both record $679,000; the DeFiHackLabs header says ~800,000 USDT. Recheck of the deployment basis (DELEGATECALL audit): the victim sets no EIP-1967 implementation or beacon slot and its runtime is byte-identical at the creation block 88017532 and the incident block 88215293; its four DELEGATECALL sites are solc external-library calls to the PUSH20 constant 0xc70934c9cd57aa01959aa493845085b29d17d520 (library created at block 87898821), whose code is likewise byte-identical over the window, so the executing code is fixed at deployment."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1774245553,
+        "deployTimestamp": 1774156513,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1774156513,
+        "codeAgeSeconds": 89040,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

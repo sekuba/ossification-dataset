@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "minterest",
+  "name": "Minterest",
+  "incidents": [
+    {
+      "name": "mUSDY flashLoan exchange-rate reentrancy",
+      "date": "2024-07-14T13:24:26Z",
+      "chain": "mantle",
+      "category": "code-bug",
+      "lossUsd": 1400000,
+      "victimContract": "0x5edBD8808F48Ffc9e6D4c0D6845e0A0B4711FD5c",
+      "exploitTx": "0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd",
+      "attacker": "0x618f768af6291705eb13e0b2e96600b3851911d1",
+      "notes": "The mUSDY market's ERC-3156 flashLoan() ran the borrower callback while the market's cash balance was still reduced, so lending USDY back inside the callback minted mTokens at an inflated exchange rate; 24 repetitions built collateral used to borrow WETH and mETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "mantle",
+          "ref": "0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://minterest.com/blog/minterest-security-incident-post-mortem-report/"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-07/Minterest_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: mUSDY proxy 0x5edbd880... (symbol mUSDY, comptroller 0x8...) created by 0x66f850099e6d5dbd712d15244b65bd822f36be7e on 2024-01-23; two EIP-1967 Upgraded events, the last 2024-02-22 to impl 0x4b351368459ccc0024197d24ab7ba278e4c6f510"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1720963466,
+        "deployTimestamp": 1706027145,
+        "upgradeEventCount": 2,
+        "lastChangeTimestamp": 1708620479,
+        "codeAgeSeconds": 12342987,
+        "basis": "last of 2 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "vinu",
+  "name": "Viral Inu (VINU)",
+  "incidents": [
+    {
+      "name": "VINU public addLiquidityETH with caller-supplied router",
+      "date": "2023-06-06T11:06:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 6000,
+      "victimContract": "0xF7ef0D57277ad6C2baBf87aB64bA61AbDd2590D2",
+      "exploitTx": "0xaf46a42fe1ed7193b25c523723dc047c7500e50a00ecb7bbb822d665adb3e1f3",
+      "attacker": "0x9748c8540a5f752ba747f1203ac13dae789033de",
+      "notes": "VINU.addLiquidityETH(router, to, pair) was public and took the router address from the caller, so the attacker passed a fake router, moved the token side of the pair at will, synced the reserves and swapped the whole ETH reserve out.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xaf46a42fe1ed7193b25c523723dc047c7500e50a00ecb7bbb822d665adb3e1f3"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-06/VINU_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/hexagate_/status/1666051854386511873"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: VINU 0xF7ef0D57277ad6C2baBf87aB64bA61AbDd2590D2 created 2023-06-06T10:46:47Z by 0x42b9b986e14be1483ecf5f2af7f713f2c6558d75 - 19.8 minutes before the incident - and that deployer is not the attack sender 0x9748c854... nor its funder; the deployer's own tx list shows it deploying VINU and adding liquidity, i.e. a genuine (very fresh) launch that was exploited immediately. No EIP-1967 events, age from deployment (1,188 seconds). Loss ~$6K per the PoC header, taken in ETH."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1686049595,
+        "deployTimestamp": 1686048407,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1686048407,
+        "codeAgeSeconds": 1188,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

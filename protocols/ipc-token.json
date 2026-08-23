@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "ipc-token",
+  "name": "IPC",
+  "incidents": [
+    {
+      "name": "IPC sells burn the pair's balance",
+      "date": "2025-01-07T15:52:22Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 591934,
+      "victimContract": "0xEAb0d46682Ac707A06aEFB0aC72a91a3Fd6Fe5d1",
+      "exploitTx": "0x5ef1edb9749af6cec511741225e6d47103e0b647d1e41e08649caaff66942a91",
+      "attacker": "0x09ea8b5e546914746f3dc686ac164486a607fb7b",
+      "notes": "Every IPC sell burns IPC held by the IPC/USDT pair to pump the price, so a DODO-funded loop of sells and syncs let the attacker walk the pool up and extract its USDT reserve.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x5ef1edb9749af6cec511741225e6d47103e0b647d1e41e08649caaff66942a91"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/TenArmorAlert/status/1876663900663370056"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-01/IPC_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xEAb0d46682Ac707A06aEFB0aC72a91a3Fd6Fe5d1 created 2024-12-31T05:17:04Z by 0x94f91f4b610fa3c112e26a742baf5602b46d6035, which is not the attack-tx sender 0x09ea8b5e546914746f3dc686ac164486a607fb7b; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). Loss measured from the exploit transaction: the attack sender nets 591,934.20 USDT of ERC-20 Transfer flow, consistent with the ~590K USDT reported."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1736265142,
+        "deployTimestamp": 1735622224,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1735622224,
+        "codeAgeSeconds": 642918,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

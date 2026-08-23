@@ -1,0 +1,51 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "audius",
+  "name": "Audius",
+  "incidents": [
+    {
+      "name": "Audius Governance proxy re-initialization",
+      "date": "2022-07-23T23:11:36Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 6100000,
+      "victimContract": "0x4deca517d6817b6510798b7328f2314d3003abac",
+      "exploitTx": "0x4227bca8ed4b8915c7eec0e14ad3748a88c4371d4176e716e8007249b9980dc9",
+      "attacker": "0xa0c7bd318d69424603cbf91e9969870f21b8ab4c",
+      "notes": "A storage-layout collision in the Audius upgradeable proxies left the Initializable `initialized` flag sharing a slot with another variable, so the attacker re-called Governance.initialize() to install himself as guardian and then evaluated a self-submitted proposal moving 18.5M AUDIO out of the community treasury.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x4227bca8ed4b8915c7eec0e14ad3748a88c4371d4176e716e8007249b9980dc9"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.audius.co/article/audius-governance-takeover-post-mortem-7-23-22"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-07/Audius_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Governance proxy 0x4deca517d6817b6510798b7328f2314d3003abac created 2020-10-22 by 0xde21d46753633a177223faa6e56e8f6cd24cca04 (Audius deployer), unrelated to attack sender 0xa0c7bd318d69424603cbf91e9969870f21b8ab4c; no EIP-1967 Upgraded events (Audius uses its own AudiusAdminUpgradeabilityProxy, upgrades go through a registry) so the age is measured from proxy deployment and may be overstated; the exploit sequence was 0xfefd829e246002a8fd061eede7501bccb6e244a9aacea0ebceaecef5d877a984 (re-initialize + proposal), 0x3c09c6306b67737227edc24c663462d870e7c2bf39e9ab66877a980c900dd5d5 (vote) and this evaluateProposal tx that executed the treasury transfer; ~18.5M AUDIO valued at ~$6.1M were taken and later sold for 704 ETH (~$1.08M realized)"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck (storage, not events): the Governance proxy's single DELEGATECALL in the attack tx goes to 0x35dd16dfa4ea1522c29ddd087e8f076cad0ae5e8, and the EIP-1967 implementation slot holds exactly that address at the creation block 11103280, at the incident block 15201799 and at all 201 evenly spaced samples in between; the proxy runtime is byte-identical at both blocks. The current implementation 0x1c91af03a390b4c619b444425b3119e553b5b44b was installed only after the hack. The age is therefore not overstated: 639.9 days from deployment is the real figure."
+        }
+      ],
+      "nonStandardUpgradeArchitecture": true,
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1658617896,
+        "deployTimestamp": 1603333553,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1603333553,
+        "codeAgeSeconds": 55284343,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

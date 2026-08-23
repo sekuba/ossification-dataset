@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "vtswap",
+  "name": "VTSwap",
+  "incidents": [
+    {
+      "name": "VTSwapHook pre-fee reserve update",
+      "date": "2026-03-28T01:37:10Z",
+      "chain": "arbitrum",
+      "category": "code-bug",
+      "lossUsd": null,
+      "lossOther": "4,507,034.03 vATH + 2,007,935.14 ATH",
+      "victimContract": "0xbf4b4A83708474528A93C123F817e7f2A0637a88",
+      "exploitTx": "0x61a37afac7991e25391d72846819644a0938ce20ebab25ccf3a1123e1bb9459d",
+      "attacker": "0xF378840dE079c70f55218cD3AF99D2D81ba154BA",
+      "notes": "VTSwapHook priced its nonlinear VT/T curve on fee-adjusted amounts but wrote back reserves using the full pre-fee specified amount, so alternating an exact-input ATH->vATH swap with an exact-output vATH->ATH swap left the caller with positive Uniswap V4 PoolManager deltas in both currencies.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0x61a37afac7991e25391d72846819644a0938ce20ebab25ccf3a1123e1bb9459d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/DefimonAlerts/status/2038647146098954283"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-03/VTSwapHook_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: VTSwapHook 0xbf4b4A83708474528A93C123F817e7f2A0637a88 created 2025-07-25T09:06:29Z by 0x1e1840f1eb9d9b89f4b1f2ad469e31e9877b820d, not the attack-tx sender 0xf378840de079c70f55218cd3af99d2d81ba154ba; no EIP-1967 events, 245.7 days old. Loss stated only in vATH and ATH, whose price is bound to the exploited pool, so no USD figure is asserted; at the widely quoted ATH price of a few cents the 2.0M ATH leg alone is far above the $1,000 floor."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1774661830,
+        "deployTimestamp": 1753434389,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1753434389,
+        "codeAgeSeconds": 21227441,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

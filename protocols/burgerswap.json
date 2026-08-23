@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "burgerswap",
+  "name": "BurgerSwap",
+  "incidents": [
+    {
+      "name": "BurgerSwap DemaxPair missing k invariant",
+      "date": "2021-05-27T18:54:46Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 7200000,
+      "victimContract": "0x7ac55ac530f2c29659573bde0700c6758d69e677",
+      "exploitTx": "0xac8a739c1f668b13d065d56a03c37a686e0aa1c9339e79fcbc5a2d0a6311e333",
+      "attacker": "0x6c9f2b95ca3432e5ec5bcd9c19de0636a23a4994",
+      "notes": "DemaxPair.swap() omits Uniswap V2's constant-product require entirely and only checks that some input arrived, trusting the onlyPlatform router's amount maths, so re-entering the router through an attacker-issued fake token mid-path let the BURGER/WBNB pair be swapped past its invariant.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xac8a739c1f668b13d065d56a03c37a686e0aa1c9339e79fcbc5a2d0a6311e333"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://rekt.news/burgerswap-rekt/"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: I read the verified DemaxPair source at 0x7ac55ac5 - swap() has no balanceAdjusted/k require, only 'INSUFFICIENT_INPUT_AMOUNT'; pair created 2020-09-19 by 0xbc554d0fa1745aeb52acba8343106cf8aca038ca (same deployer as DemaxPlatform), not by attack sender 0x6c9f2b95"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1622141686,
+        "deployTimestamp": 1600478809,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1600478809,
+        "codeAgeSeconds": 21662877,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

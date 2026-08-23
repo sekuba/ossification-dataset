@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-07/Libertify_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The vault is an EIP-1167 minimal proxy whose runtime hardcodes the LibertiVault master 0x089d9868b58ef37d5804281e106d9b7e71a4d05f, so the delegate target cannot be repointed; the master's runtime is byte-identical at 13 sample points across [40785922, 44941585] and contains zero DELEGATECALL opcodes, and callTracer on the exploit tx confirms the clone delegatecalls only the master."
         }
       ],
       "attacker": "0xfd2d3ffb05ad00e61e3c8d8701cb9036b7a16d02",

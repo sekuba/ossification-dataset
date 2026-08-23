@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "okc-project",
+  "name": "OKC Project",
+  "incidents": [
+    {
+      "name": "OKC miner pool LP spot-price manipulation",
+      "date": "2023-11-13T18:51:57Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 6268,
+      "victimContract": "0x36016C4F0E0177861E6377f73C380c70138E13EE",
+      "exploitTx": "0xd85c603f71bb84437bc69b21d785f982f7630355573566fa365dbee4cd236f08",
+      "attacker": "0xbbcc139933d1580e7c40442e09263e90e6f1d66d",
+      "notes": "The OKC miner pool valued staked USDT/OKC LP from the pair's live reserves, which the attacker skewed with chained DODO and PancakeV3 flash loans before staking and redeeming.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xd85c603f71bb84437bc69b21d785f982f7630355573566fa365dbee4cd236f08"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://lunaray.medium.com/okc-project-hack-analysis-0907312f519b"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/OKC_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x36016C4F0E0177861E6377f73C380c70138E13EE created 2023-11-13T14:16:26Z by 0xd1ec464ba8e02391c2491ccc9b63d4f60cdc9e5a, which is not the attack-tx sender 0xbbcc139933d1580e7c40442e09263e90e6f1d66d; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). Loss taken from the exploit transaction itself: the attacker EOA nets 6,268.10 USDT of ERC-20 Transfer flow in this tx."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1699901517,
+        "deployTimestamp": 1699884986,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1699884986,
+        "codeAgeSeconds": 16531,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

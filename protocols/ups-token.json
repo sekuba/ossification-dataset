@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "ups-token",
+  "name": "UPS Token",
+  "incidents": [
+    {
+      "name": "UPS transfers to pair do not change pair balance",
+      "date": "2024-04-08T13:00:38Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 28000,
+      "victimContract": "0x3dA4828640aD831F3301A4597821Cc3461B06678",
+      "exploitTx": "0xd03702e17171a32464ce748b8797008d59e2dbcecd3b3847d5138414566c886d",
+      "attacker": "0xc4c306c20b4a22f1d261f11c40e88603dd2a2888",
+      "notes": "UPS's _transfer leaves the UPS/USDT pair's UPS balance unchanged when tokens are sent to it, so the attacker repeatedly swapped, skimmed and synced to pull the pair's USDT out.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xd03702e17171a32464ce748b8797008d59e2dbcecd3b3847d5138414566c886d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://app.blocksec.com/explorer/tx/bsc/0xd03702e17171a32464ce748b8797008d59e2dbcecd3b3847d5138414566c886d"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/UPS_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x3dA4828640aD831F3301A4597821Cc3461B06678 created 2024-04-08T07:08:42Z by 0x51c81533b28534ff5f63c57efeebd5cce5b87e8c, which is not the attack-tx sender 0xc4c306c20b4a22f1d261f11c40e88603dd2a2888; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1712581238,
+        "deployTimestamp": 1712560122,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1712560122,
+        "codeAgeSeconds": 21116,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

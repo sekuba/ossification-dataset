@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "satx",
+  "name": "SATX",
+  "incidents": [
+    {
+      "name": "SATX pair surplus skim",
+      "date": "2024-04-16T16:08:55Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 25987,
+      "victimContract": "0xFd80a436dA2F4f4C42a5dBFA397064CfEB7D9508",
+      "exploitTx": "0x7e02ee7242a672fb84458d12198fae4122d7029ba64f3673e7800d811a8de93f",
+      "attacker": "0xBEF24B94C205999ea17d2ae4941cE849C9114bfd",
+      "notes": "SATX's transfer logic leaves surplus SATX in the SATX/WBNB pair above its reserves, which the attacker repeatedly harvested with skim() and sync() before withdrawing the pair's WBNB.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x7e02ee7242a672fb84458d12198fae4122d7029ba64f3673e7800d811a8de93f"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/SATX_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xFd80a436dA2F4f4C42a5dBFA397064CfEB7D9508 created 2024-01-24T14:38:05Z by 0x256db6a4f6f8b5310ad7d31bfbf629f9df406c0f, which is not the attack-tx sender 0xbef24b94c205999ea17d2ae4941ce849c9114bfd; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). The PoC header quotes the loss as ~999M SATX; measured from the exploit transaction the attacker nets 49.3396 WBNB, roughly USD 28K at April 2024 prices. 49.34 WBNB x $526.703478/BNB at the incident timestamp 1713283735 (DefiLlama coingecko:binancecoin) = $25,987."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1713283735,
+        "deployTimestamp": 1706107085,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1706107085,
+        "codeAgeSeconds": 7176650,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

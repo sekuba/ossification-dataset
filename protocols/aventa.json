@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "aventa",
+  "name": "Aventa",
+  "incidents": [
+    {
+      "name": "AventaRewardClaim balance-based claim replayed from fresh addresses",
+      "date": "2025-04-27T07:45:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": null,
+      "lossOther": "16,019,528 AVENTA",
+      "victimContract": "0x33b860fc7787e9e4813181b227eaffa0cada4c73",
+      "exploitTx": "0x59446b1f58457c83d18864bbfaa8930c9438da33017ad41f08397cf79a8c63e5",
+      "attacker": "0x7c982E93d6B1eDE9626A84EbeafBC42e5991Dee8",
+      "notes": "AventaRewardClaim sized a claim from the caller's current IntelliQuant balance and only required user == msg.sender, so a chain of fresh helper addresses could each buy IntelliQuant, claim AVENTA out of the owner's allowance, and sell both tokens back within a single flash-swap.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x59446b1f58457c83d18864bbfaa8930c9438da33017ad41f08397cf79a8c63e5"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://t.me/defimon_alerts/927"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-04/AventaRewardClaim_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: AventaRewardClaim 0x33b860fc7787e9e4813181b227eaffa0cada4c73 created 2024-08-29T13:20:59Z by 0x084163a613970cf80c519408dee254bba2bbd667, not the attack-tx sender 0x7c982e93d6b1ede9626a84ebeafbc42e5991dee8; no EIP-1967 events, 240.8 days old. AVENTA is the project's own illiquid token, so no USD figure is asserted; the transaction's WETH transfer log shows roughly 3.9 WETH of sale proceeds routed to the helper addresses (about $7k at $1,804.24, DefiLlama, at the incident timestamp), which is an order-of-magnitude check that the $1,000 floor is cleared."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1745739959,
+        "deployTimestamp": 1724937659,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1724937659,
+        "codeAgeSeconds": 20802300,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

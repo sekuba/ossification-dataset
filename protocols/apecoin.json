@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "apecoin",
+  "name": "ApeCoin",
+  "incidents": [
+    {
+      "name": "ApeCoin airdrop claim without ownership snapshot",
+      "date": "2022-03-17T12:13:14Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": null,
+      "lossOther": "60,564 APE claimed with flash-loaned BAYC NFTs",
+      "victimContract": "0x025C6da5BD0e6A5dd1350fda9e3B6a614B205a1F",
+      "exploitTx": "0xeb8c3bebed11e2e4fcd30cbfc2fb3c55c4ca166003c7f7d319e78eaab9747098",
+      "attacker": "0x6703741e913a30d6604481472b6d81f3da45e6e8",
+      "notes": "The ApeCoin airdrop contract paid out against current BAYC/MAYC ownership instead of a pre-announced snapshot, so the attacker flash-loaned five BAYC out of the NFTX vault, claimed 60,564 APE for them and returned the NFTs in the same transaction.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xeb8c3bebed11e2e4fcd30cbfc2fb3c55c4ca166003c7f7d319e78eaab9747098"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-05/Bayc_apecoin_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/0xfoobar/status/1504392265914597377"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: airdrop contract 0x025C6da5BD0e6A5dd1350fda9e3B6a614B205a1F created 2022-03-17T11:50:36Z by 0x295d587aa3ca6e57e227a4430ab7c4c00989a195, unrelated to the attack sender; no EIP-1967 events, age from deployment - the claim was drained 1,358 seconds (22.6 minutes) after the contract went live. Loss is denominated in APE itself, whose price on its own launch day is not a reliable deep-market reference, so lossUsd is left null; contemporaneous quotes put 60,564 APE well above $500,000."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1647519194,
+        "deployTimestamp": 1647517836,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1647517836,
+        "codeAgeSeconds": 1358,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "it-token",
+  "name": "IT Token",
+  "incidents": [
+    {
+      "name": "IT transfer-to-pair mints to pair",
+      "date": "2024-03-13T13:28:47Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 13000,
+      "victimContract": "0x1AC5Fac863c0a026e029B173f2AE4D33938AB473",
+      "exploitTx": "0xb33057f57ce451aa8cbb65508d298fe3c627509cc64a394736dace2671b6dcfa",
+      "attacker": "0xb495573cd2246e7cc7d6d2b37d779463295e5ab0",
+      "notes": "Transferring IT out of the IT/USDT pair also mints IT back to the pair, so the attacker used a PancakeV3 flash loan to cycle transfers and swaps and extract the USDT reserve.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xb33057f57ce451aa8cbb65508d298fe3c627509cc64a394736dace2671b6dcfa"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://app.blocksec.com/explorer/tx/bsc/0xb33057f57ce451aa8cbb65508d298fe3c627509cc64a394736dace2671b6dcfa"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/IT_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x1AC5Fac863c0a026e029B173f2AE4D33938AB473 created 2024-03-09T20:56:42Z by 0xf66c906920e09126907def2b7daeeb9688ddd694, which is not the attack-tx sender 0xb495573cd2246e7cc7d6d2b37d779463295e5ab0; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1710336527,
+        "deployTimestamp": 1710017802,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1710017802,
+        "codeAgeSeconds": 318725,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

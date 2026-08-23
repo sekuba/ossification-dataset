@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "z123",
+  "name": "Z123",
+  "incidents": [
+    {
+      "name": "Z123 swap burns pool liquidity",
+      "date": "2024-04-22T08:02:00Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 135000,
+      "victimContract": "0xb000f121A173D7Dd638bb080fEe669a2F3Af9760",
+      "exploitTx": "0xc0c4e99a76da80a4cf43d3110364840151226c0a197c1728bb60dc3f1b3a6a27",
+      "attacker": "0x3026C464d3Bd6Ef0CeD0D49e80f171b58176Ce32",
+      "notes": "Every Z123 swap burns liquidity out of its own pool, so repeated swaps inside a PancakeV3 flash loan left the reserves disproportionate and the attacker arbitraged the difference.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xc0c4e99a76da80a4cf43d3110364840151226c0a197c1728bb60dc3f1b3a6a27"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/Z123_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xb000f121A173D7Dd638bb080fEe669a2F3Af9760 created 2023-09-18T06:09:30Z by 0x5f8982c9eee579d5263442500419684eb9fe48cb, which is not the attack-tx sender 0x3026c464d3bd6ef0ced0d49e80f171b58176ce32; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1713772920,
+        "deployTimestamp": 1695017370,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1695017370,
+        "codeAgeSeconds": 18755550,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

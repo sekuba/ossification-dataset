@@ -1,0 +1,173 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bzx",
+  "name": "bZx",
+  "incidents": [
+    {
+      "name": "bZx Fulcrum ETHDenver flash-loan margin trade",
+      "date": "2020-02-15T01:38:57Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 355522,
+      "victimContract": "0x1cf226e9413addaf22412a2e182f9c0de44af002",
+      "exploitTx": "0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838",
+      "attacker": "0x148426fdc4c8a51b96b4bed827907b5fa6491ad0",
+      "notes": "iTokens_loanOpeningFunctions.takeOrderFromiToken guarded the collateral check with a short-circuiting OR - require((loanDataBytes.length == 0 && sentAmounts[6] == sentAmounts[1]) || !OracleInterface(oracle).shouldLiquidate(...)) - so with empty loanDataBytes the left operand was true and shouldLiquidate() was never called, letting a 5x short open against the iETH pool that was instantly underwater after 5,637 ETH was swapped into 51 WBTC on Uniswap V1.",
+      "nonStandardUpgradeArchitecture": true,
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.palkeo.com/en/projets/ethereum/bzx.html"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: the exploit path is attacker contract 0x4f4e0f2cb72e718fc0433222768c57e823162152 -> iETH LoanToken 0x77f973fcaf871459aa58cd81881ce453759281bc (marginTradeFromDeposit, selector 0x1c5d1da5) -> BZxProxy 0x1cf226e9413addaf22412a2e182f9c0de44af002 (takeOrderFromiToken, selector 0xb1eac3ad), which DELEGATECALLs the iTokens_loanOpeningFunctions module 0xf0a42ec4ebb7664af5dae5c3209345d545da838a carrying the skipped shouldLiquidate check. BZxProxy was created 2019-01-28 by 0xadff3ada12ed0f8a87e31e5a04dfd2ee054e1118 (bZx deployer), unrelated to attack sender 0x148426fdc4c8a51b96b4bed827907b5fa6491ad0. BZxProxy is a per-selector module registry (mapping(bytes4 => address) targets) that emits no EIP-1967 Upgraded event, so module installs were recovered by calling targets(bytes4) under binary search over block height: targets(0xb1eac3ad) first held 0xfbc580e4f16234d5783314f1d4195971eff453f4 and was rewritten to 0xf0a42ec4 at block 9443140 (2020-02-08T16:24:12Z, tx 0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f from the bZx deployer via settings contract 0xbb536eb24fb89b544d4bd9e9f1f34d9fd902bb96); the other selectors the exploit drives were installed earlier (targets(0x327ab639) 2019-08-08, targets(0xb1fd9e05) 2019-12-06), so the flawed module is also the most recent install and sets the age at 6.39d rather than the 3.16y deployment figure. bZx replaced this module three days later - the same selector resolves to 0x3756fa458880fa8fe53604101cf31c542ef22f6f in the 2020-02-18 transaction. Loss not recorded in USD: the attacker took 71.4 ETH directly (6.41 ETH left in 0x4f4e0f2c plus 64.97 ETH forwarded to the EOA) and left an unrepaid Compound position worth ~1,200 ETH, the 1,271 ETH figure reported everywhere; the iETH pool's WETH balance fell from 4,858.74 to 160.72 WETH inside the transaction, leaving the undercollateralized loan behind. Order-of-magnitude sanity check only (ETH ~ $265 in Feb 2020, so ~$0.3m): far above the $1,000 floor."
+        },
+        {
+          "type": "curated-review",
+          "ref": "loss converted at the incident timestamp (1581730737) via DefiLlama coins: 1,271 ETH x $279.72 = $355,522"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1581730737,
+        "deployTimestamp": 1548659959,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1581179052,
+        "codeAgeSeconds": 551685,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2020-02-08T16:24:12Z (block 9443140, tx 0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f): BZxProxy targets(0xb1eac3ad) rewritten to the iTokens_loanOpeningFunctions module 0xf0a42ec4ebb7664af5dae5c3209345d545da838a containing the bypassed shouldLiquidate check; located by binary-searching the public targets(bytes4) getter over block height"
+    },
+    {
+      "name": "bZx sUSD Kyber spot-price manipulation",
+      "date": "2020-02-18T03:13:58Z",
+      "chain": "ethereum",
+      "category": "oracle-manipulation",
+      "lossUsd": 637640,
+      "victimContract": "0xaa6198fe597dfc331471ae7deba026fb299297fc",
+      "exploitTx": "0x762881b07feb63c436dee38edd4ff1f7a74c33091e534af56c9f7d49b5ecac15",
+      "attacker": "0xb8c6ad5fe7cb6cc72f2c4196dca11fbb272a8cbf",
+      "notes": "The BZxOracle priced collateral off Kyber's getExpectedRate; the attacker bought sUSD from the Synthetix depot at ~$1 and then pushed the Kyber sUSD/ETH spot rate above $2 through the Uniswap and Synthetix reserves, so the oracle returned a doubled sUSD value and the protocol lent 6,796 ETH against it - the contracts behaved exactly as written, only the consumed price was wrong.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x762881b07feb63c436dee38edd4ff1f7a74c33091e534af56c9f7d49b5ecac15"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.palkeo.com/en/projets/ethereum/bzx.html"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://peckshield.medium.com/bzx-hack-ii-full-disclosure-with-detailed-profit-analysis-8126eecc1360"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: the transaction goes attacker EOA 0xb8c6ad5fe7cb6cc72f2c4196dca11fbb272a8cbf -> iETH LoanToken 0x77f973fcaf871459aa58cd81881ce453759281bc flashBorrowToken (0x66fa576f) -> attacker contract 0x360f85f0b74326cddff33a812b05353bc537747b, which round-trips sUSD through the Synthetix depot 0x172e09691dfbbc035e37c73b62095caa16ee2388 and 19 Kyber trades before borrowing; the price the borrow is sized against is read by BZxOracle 0xaa6198fe597dfc331471ae7deba026fb299297fc, which STATICCALLs Kyber 0x818e6fecd516ecc3849daf6845e3ec868087b755 getExpectedRate (0x809a9e55) six times. That oracle was created 2020-02-17T00:55:43Z (block 9498957) by 0xadff3ada12ed0f8a87e31e5a04dfd2ee054e1118, the bZx deployer, unrelated to the attack sender - it is the replacement oracle bZx shipped after the 2020-02-15 incident, in use for 20.97 hours before this one. It is a plain non-proxy contract: no DELEGATECALL appears in the exploit trace and its codehash is identical (0xdb972a7db9bbcc6b4131490943344fac3aaa3e67836e7553135861350e2bc869) at its creation block and at the incident block, so the age is measured from deployment. Classified oracle-manipulation, not code-bug: the flaw is in trusting a manipulable Kyber spot rate, not in bZx's own logic. Loss not recorded in USD: attacker contract 0x360f85f0 held 0 ETH before the transaction and 2,378.153715 ETH after, while the iETH pool's WETH balance fell from 18,586.28 to 11,787.02 WETH. Order-of-magnitude sanity check only (ETH ~ $270 in Feb 2020, so ~$0.6m): far above the $1,000 floor."
+        },
+        {
+          "type": "curated-review",
+          "ref": "loss converted at the incident timestamp (1581995638) via DefiLlama coins: 2,378 ETH x $268.14 = $637,640"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1581995638,
+        "deployTimestamp": 1581920143,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1581920143,
+        "codeAgeSeconds": 75495,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
+      "name": "bZx iETH self-transfer duplication",
+      "date": "2020-09-13T09:10:01Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 8000000,
+      "victimContract": "0xb983e01458529665007ff7e0cddecdb74b967eb6",
+      "exploitTx": "0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5",
+      "attacker": "0xd1c0f1316140d6bf1a9e2eea8a227dad151f69b7",
+      "notes": "LoanTokenLogic's _internalTransferFrom cached the sender and receiver balances before writing them and never rejected _from == _to, so each self-transfer of iETH credited the receiver without debiting the sender and doubled the attacker's iETH before burnToEther().",
+      "nonStandardUpgradeArchitecture": true,
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://bzx.network/blog/incident"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: iETH token 0xb983e014 created 2020-09-03 by 0xb7f72028d9b502dc871c444363a7ac5a52546608 (bZx deployer), not by attack sender 0xd1c0f131; it is a bZx setTarget proxy that emits no EIP-1967 Upgraded event, so the logic pointer was recovered by binary-searching eth_getStorageAt on target_ (storage slot 20, from the verified LoanTokenLogicWeth layout) between the creation and incident blocks: it held 0x11ba2b39bc80464c14b7eea54d2ec93d8f60e7b8 at deployment, then 0xe8279915fe5fb202041c3b3bf97d0f95949d503f, and was last written to 0xde744d544a9d768e96c21b5f087fc54b776e9b25 at block 10796875, 2020-09-04T19:53:15Z by setTarget(address) tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c from the deployer, and stayed there through the incident; 0xde744d54 is the LoanTokenLogicWeth carrying the flawed _internalTransferFrom, so the real code age is 8.55d rather than the 10.36d deployment figure"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1599988201,
+        "deployTimestamp": 1599093312,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1599249195,
+        "codeAgeSeconds": 739006,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2020-09-04T19:53:15Z (block 10796875, tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c): setTarget(address) wrote target_ (storage slot 20) = 0xde744d544a9d768e96c21b5f087fc54b776e9b25, the LoanTokenLogicWeth implementation containing the flawed _internalTransferFrom; located by binary-searching eth_getStorageAt on slot 20"
+    },
+    {
+      "name": "bZx iToken empty-pool donation rounding",
+      "date": "2023-12-02T02:26:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 208000,
+      "victimContract": "0x7f3fe9d492a9a60aebb06d82cba23c6f32cad10b",
+      "exploitTx": "0x0fc5c0d41e5506fdb9434fab4815a4ff671afc834e47a533b3bed7182ece73b0",
+      "attacker": "0x5a7c7eb8d13a53d42a15d2b1d1b694ccc5141ea5",
+      "notes": "After the iYFI pool was emptied the attacker minted 5 wei of iYFI, donated YFI straight to the pool to inflate its price per share, and used the rounded-up collateral value to borrow out the iETH and iWBTC pools while still redeeming the 5 wei.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x0fc5c0d41e5506fdb9434fab4815a4ff671afc834e47a533b3bed7182ece73b0"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-12/bZx_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/MetaSec_xyz/status/1730811240942088263"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: iYFI 0x7f3fe9d492a9a60aebb06d82cba23c6f32cad10b created 2020-09-03T00:36:30Z by 0xb7f72028d9b502dc871c444363a7ac5a52546608, unrelated to the attack sender; no EIP-1967 Upgraded events between creation and the incident, age from deployment (1185 days). Loss ~$208K per the PoC header, taken as ETH and WBTC across two txs; only the first is recorded."
+        },
+        {
+          "type": "curated-review",
+          "ref": "delegatecall-target review (callTracer + prestateTracer on the exploit tx, then eth_getStorageAt over [creation block, incident block]): like the other bZx iTokens this is a setTarget proxy that emits no EIP-1967 Upgraded event; the exploit tx DELEGATECALLs 0x7f3fe9d4...d10b -> 0x624f7f89414011b276c60ea2337bfba936d1cbbe for every selector (mint, burn, transferFrom, borrow), and prestateTracer confirms that address is read from storage slot 20 (target_ in the verified LoanTokenLogic layout). Binary-searching slot 20 between the creation block 10785097 and the incident block 18695729 gives eight logic swaps: 0x11ba2b39 at deployment, then 0xbab2cb0d (2020-09-03), 0x1e9682d8 (2020-09-04), 0x7f5f0f68 (2020-09-13), 0xd172991b (2020-09-13), 0xfb772316 (2020-11-16), 0xd154ee49 (2021-11-15), 0x528d205b (2022-05-13) and 0x624f7f89414011b276c60ea2337bfba936d1cbbe at block 16275583, 2022-12-27T10:47:47Z, unchanged across 60 samples to the incident. The exploited donation-rounding code was 339.6 days old, not the 1185 days measured from deployment - the same setTarget mechanism already corrected on the iETH row in this file"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1701484019,
+        "deployTimestamp": 1599093390,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1672138067,
+        "codeAgeSeconds": 29345952,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2022-12-27T10:47:47Z (block 16275583): the iYFI setTarget proxy target_ pointer, storage slot 20, was last written to 0x624f7f89414011b276c60ea2337bfba936d1cbbe",
+      "nonStandardUpgradeArchitecture": true
+    }
+  ]
+}

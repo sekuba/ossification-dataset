@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "opyn",
+  "name": "Opyn",
+  "incidents": [
+    {
+      "name": "Opyn ETH put double exercise",
+      "date": "2020-08-04T09:41:56Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 371260,
+      "victimContract": "0x951d51baefb72319d9fbe941e1615938d89abfe2",
+      "exploitTx": "0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a",
+      "attacker": "0x915c2d6f571d3d47a182dd59d5f41e87d4c3fb8e",
+      "notes": "oToken.exercise() looped over the supplied vault array while re-using the same msg.value for each vault instead of tracking the cumulative ETH paid, so one ETH payment exercised the put against several vaults and removeUnderlying() returned the attacker's own collateral.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/opyn/opyn-eth-put-exploit-post-mortem-1a009e3347a8"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: oToken 0x951d51ba created 2020-07-30 by 0xde99ea535749f02da84d13e6f8253291e32d3a7f, not by attack sender 0x915c2d6f; loss denominated in USDC (USD-pegged 1:1) per the Opyn post-mortem"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1596534116,
+        "deployTimestamp": 1596146843,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1596146843,
+        "codeAgeSeconds": 387273,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

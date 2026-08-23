@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "spectra-finance",
+  "name": "Spectra Finance",
+  "incidents": [
+    {
+      "name": "Spectra Router arbitrary call",
+      "date": "2024-07-23T14:53:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 73325,
+      "victimContract": "0x3d20601ac0Ba9CAE4564dDf7870825c505B69F1a",
+      "exploitTx": "0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744",
+      "attacker": "0x53635bf7b92b9512f6de0eb7450b26d5d1ad9a4c",
+      "notes": "The Router's command executor did not validate the target/parameters of the commands it dispatched, so the attacker crafted a transferFrom-style call and pulled 188,013 asdCRV out of wallets that had approved the router.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.verichains.io/p/spectra-protocol-exploit-arbitrary"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-07/Spectra_finance_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: router proxy 0x3d20601a... created by 0x020d5ca8bd6451d4c44f784e594f02f352903e61 on 2024-06-28 with a single Upgraded event to impl 0x51bdbfcd7656e2c25ad1bc8037f70572b7142ecc in the creation block; loss is the 188,013 asdCRV (~$73,325) figure from Verichains, not the larger at-risk approval total"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1721746439,
+        "deployTimestamp": 1719593783,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1719593783,
+        "codeAgeSeconds": 2152656,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

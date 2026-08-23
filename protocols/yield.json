@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2024-04/Yield_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The verified Strategy source contains no delegatecall and links no libraries; the 0xf4 bytes that a naive byte scan flags sit in the trailing constant/metadata region (pc 15755+ of 15872), not in reachable code. Runtime is byte-identical at the creation block 75244845 and the incident block 206219812, and callTracer on the exploit tx shows 5 frames executing at the victim with zero DELEGATECALL out of its context."
         }
       ],
       "attacker": "0x1abe06f451e2d569b3e9123baf33b51f68878656",

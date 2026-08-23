@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "lodestar-finance",
+  "name": "Lodestar Finance",
+  "incidents": [
+    {
+      "name": "Lodestar plvGLP exchange-rate manipulation",
+      "date": "2022-12-10T16:43:26Z",
+      "chain": "arbitrum",
+      "category": "oracle-manipulation",
+      "lossUsd": 6500000,
+      "victimContract": "0xcc25dac54a1a62061b596fd3baf7d454f34c56ff",
+      "exploitTx": "0xc523c6307b025ebd9aef155ba792d1ba18d5d83f97c7a846f267d3d9a3004e8c",
+      "attacker": "0xc29d94386ff784006ff8461c170d1953cc9e2b5c",
+      "notes": "The lending market behaved as designed; Lodestar's plvGLP oracle derived the collateral price from the GlpDepositor's assets-per-share ratio, and the attacker inflated that ratio with GlpDepositor.donate() so a flash-loaned plvGLP position could borrow out the other Lodestar markets.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xc523c6307b025ebd9aef155ba792d1ba18d5d83f97c7a846f267d3d9a3004e8c"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.lodestarfinance.io/post-mortem-summary-13f5fe0bb336"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-12/Lodestar_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: lplvGLP market 0xcc25dac54a1a62061b596fd3baf7d454f34c56ff created 2022-11-21 by 0x67e57a0ec37768eaf99a364975ec4e1f98920d01 (Lodestar deployer), unrelated to attack sender 0xc29d94386ff784006ff8461c170d1953cc9e2b5c; no EIP-1967 Upgraded events, so the market code was 18.9 days old; reported attacker profit ~$6.5M against ~$6.9M of protocol loss Recheck of the deployment basis (DELEGATECALL audit): the victim is a Compound-fork CErc20Delegator, whose implementation lives in plain storage slot 18 rather than an EIP-1967 slot; binary-searching eth_getStorageAt on slot 18 over [40021576, 45121904] shows it holds 0x4eb611232ce3a738d9ee20467a5dd2ecf3b2d919 unchanged from creation to the incident (no NewImplementation in the window), the delegator runtime is byte-identical at both blocks, and the CToken implementation itself contains no DELEGATECALL, so the executing code dates from deployment."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1670690606,
+        "deployTimestamp": 1669054761,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1669054761,
+        "codeAgeSeconds": 1635845,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

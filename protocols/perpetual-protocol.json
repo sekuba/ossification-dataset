@@ -26,6 +26,10 @@
         {
           "type": "curated-review",
           "ref": "trace shows the same unguarded OrderBook selector hit 0x772f48f073c1f328c264619fc3bba28e3efdefb0 and 0x4e26b6815d82baa6b8c15fe4ffb646dfb4b474c7; the latter caused 2,990.435495 of the total 3,062.213107 USDC.e loss and was deployed by 0x849a19c0746fb0d335e02dec0d0b3e057e585176"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck (storage, not events): all seven DELEGATECALLs the OrderBook proxy makes in the attack tx go to 0x6ba44773cc1388605f57e7c3730f8aff70773e5a, which is the value of the EIP-1967 implementation slot at the creation block 438459, at the incident block 154311432 and at all 41 evenly spaced samples in between; the proxy runtime is byte-identical at both ends. Deployment is the correct basis; 1694.5 days."
         }
       ],
       "measurement": {

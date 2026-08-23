@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "gain",
+  "name": "GAIN",
+  "incidents": [
+    {
+      "name": "GAIN transfer-fee burn from pair",
+      "date": "2024-02-21T17:49:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 52236,
+      "victimContract": "0xdE59b88abEFA5e6C8aA6D742EeE0f887Dab136ac",
+      "exploitTx": "0x7acc896b8d82874c67127ff3359d7437a15fdb4229ed83da00da1f4d8370764e",
+      "attacker": "0x0000000f95c09138dfea7d9bcf3478fc2e13dcab",
+      "notes": "GAIN's transfer took its fee out of the recipient pair's balance, so a loop of dust transfers followed by pair.skim()/sync() drained the GAIN reserve and let the attacker buy back the pool's WETH cheaply.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x7acc896b8d82874c67127ff3359d7437a15fdb4229ed83da00da1f4d8370764e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-02/GAIN_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://etherscan.io/tx/0x7acc896b8d82874c67127ff3359d7437a15fdb4229ed83da00da1f4d8370764e"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: GAIN 0xdE59b88abEFA5e6C8aA6D742EeE0f887Dab136ac created 2022-07-21T12:33:28Z by 0x62e346c7b61a751355d2246e84bbb6b161d3c1c3, unrelated to the attack sender; no EIP-1967 events, age from deployment (580.2 days). ~18 ETH x $2,902.00 at incidentTimestamp 1708537763 (DefiLlama) = $52,236."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1708537763,
+        "deployTimestamp": 1658406808,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1658406808,
+        "codeAgeSeconds": 50130955,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "token-of-power",
+  "name": "Token of Power",
+  "incidents": [
+    {
+      "name": "Token of Power Aragon vote capture",
+      "date": "2026-06-09T12:32:59Z",
+      "chain": "ethereum",
+      "category": "governance-design",
+      "lossUsd": 1580000,
+      "victimContract": "0xb501d26ba74eab601576b62617cf41042bef6865",
+      "exploitTx": "0x967aa34c69b7775c718545c7f94d92e965eb5fc553c0f27f6f1a9c65c93ac156",
+      "attacker": "0xff8eF7bC455a57e5893232203052Ce0232b39Fa2",
+      "notes": "Not a code bug: an old attacker-controlled contract legitimately held 8,192.000001 TOP against a 16,384 TOP snapshot supply, so the Aragon Voting app let it create, pass and execute a mint-10-billion-TOP proposal in one transaction, after which the minted TOP was sold into the Balancer BPool.",
+      "nonStandardUpgradeArchitecture": true,
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x967aa34c69b7775c718545c7f94d92e965eb5fc553c0f27f6f1a9c65c93ac156"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/DefimonAlerts/status/2064616112822583505"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-06/TOPBPool_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Aragon Voting proxy 0xb501d26ba74eab601576b62617cf41042bef6865 created 2021-03-09 by 0x4a7489a3e94efc8f4c4ee266ed297d3031f123a7, unrelated to attack sender; Aragon AppProxyUpgradeable emits no EIP-1967 Upgraded event so the age is an upper bound; impl 0xb935c3d80229d5d92f3761b17cd81dc2610e3a45, TokenManager 0x3ac1856376C25A7AeBBAd1C2A10db63b5dbB7306; 944.20 WETH realised"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: the victim is an Aragon AppProxyUpgradeable, whose executing code comes from the Kernel rather than from any slot on the proxy itself. Its AppStorage slots resolve as documented - kernel at keccak('aragonOS.appStorage.kernel') = 0x4172f0f7...137b holds 0xbf478b6f3adf3b9683e8591d9295f86039e7ac46, appId at keccak('aragonOS.appStorage.appId') = 0xd6254962...639b holds 0x9fa3927f639745e587912d4b0fea7ef9013bf93fb907d29faeab57417ba6e1d4 - and callTracer confirms the proxy DELEGATECALLs 0xb935c3d80229d5d92f3761b17cd81dc2610e3a45. Binary-searching the Kernel's apps[keccak('base')][appId] entry (slot keccak(appId . keccak(keccak('base') . 0)) = 0xbf596794...c178) over [12003000, 25279892] shows a single write, at block 12003441 / 2021-03-09T09:14:54Z - the victim's own deployment block and timestamp - and no change since. The second DELEGATECALL in the tx, to the CallsScript EVM script executor 0x5ceb19e1890f677c3676d5ecdf7c501eba01a054, is to a 2019 contract whose runtime is byte-identical at both blocks. Deployment is the correct basis; 1918.1 days."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1781008379,
+        "deployTimestamp": 1615281294,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1615281294,
+        "codeAgeSeconds": 165727085,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

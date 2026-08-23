@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "omniestate",
+  "name": "OmniEstate",
+  "incidents": [
+    {
+      "name": "OmniEstate invest parameter validation",
+      "date": "2023-01-17T00:54:20Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 70297,
+      "victimContract": "0x6f40A3d0c89cFfdC8A1af212A019C220A295E9bB",
+      "exploitTx": "0x49bed801b9a9432728b1939951acaa8f2e874453d39c7d881a62c2c157aa7613",
+      "attacker": "0x9bbd94506398a1459f0cd3b2638512627390255e",
+      "notes": "The OmniEstate contract's invest() accepts a caller-supplied amount without checking it against the tokens actually transferred in, so the attacker booked a large investment for nothing and withdrew the ORT proceeds.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x49bed801b9a9432728b1939951acaa8f2e874453d39c7d881a62c2c157aa7613"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-01/OmniEstate_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BlockSecTeam/status/1615232012834705408"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: OmniEstate 0x6f40A3d0c89cFfdC8A1af212A019C220A295E9bB created 2021-12-14T01:19:59Z by 0xd993af5263dcd70b6991fa31e1fe247f9cd3208f, unrelated to attack sender 0x9bbd94506398a1459f0cd3b2638512627390255e; three EIP-1967 Upgraded events, the last at 1647953316 (2022-03-22T11:28:36Z), which is the basis for the age. Loss converted from the reported 236 BNB: 236 BNB x $297.87 at incidentTimestamp 1673916860 (DefiLlama coingecko:binancecoin) = $70,297."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1673916860,
+        "deployTimestamp": 1639444799,
+        "upgradeEventCount": 3,
+        "lastChangeTimestamp": 1647953316,
+        "codeAgeSeconds": 25963544,
+        "basis": "last of 3 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -5,28 +5,37 @@
   "incidents": [
     {
       "name": "Level Finance",
-      "date": "2023-05-01T12:00:00Z",
+      "date": "2023-05-01T13:11:15Z",
       "chain": "bsc",
       "category": "code-bug",
       "lossUsd": 1100000,
-      "victimContract": "0x9f00fbd6c095d2c542687ed5afb68d9c3fb2f464",
-      "exploitTx": null,
+      "victimContract": "0x977087422c008233615b572fbc3f209ed300063a",
+      "exploitTx": "0x6aef8bb501a53e290837d4398b34d5d4d881267512cfe78eb9ba7e59f41dad04",
       "notes": "LevelReferralControllerV2: claimMultiple allowed repeated claims for the same epoch after an upgrade ~2 weeks earlier.",
       "sources": [
         {
           "type": "curated-review",
-          "ref": "l2beat research; see notes"
+          "ref": "onchain review (RPC only, BSC): LevelReferralControllerV2 0x9f00fbd6c095d2c542687ed5afb68d9c3fb2f464 created 2023-04-17T14:20:34Z at block 27429090 (ts 1681741234). Immutability check rather than an upgrade scan: eth_getLogs for EIP-1967 Upgraded (topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) over [27429090, incident block 27828716] returns 0 logs; eth_getCode is byte-identical at the creation block and the incident block (9421 bytes both); and disassembling the runtime (skipping PUSH immediates) finds zero DELEGATECALL, CALLCODE, CREATE2 and SELFDESTRUCT opcodes, so the contract cannot execute foreign code and its own code provably never changed. There is therefore no non-standard upgrade channel to recover and the deployment basis is exact. The 'upgrade ~2 weeks earlier' in the notes is this deployment itself - V2 was a fresh contract replacing an earlier referral controller. CONFIRMED: codeAgeSeconds 1201166 (13.9d) unchanged."
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-05/Level_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim re-anchored from the LevelReferralControllerV2 implementation 0x9f00fbd6c095d2c542687ed5afb68d9c3fb2f464 to its TransparentUpgradeableProxy 0x977087422c008233615b572fbc3f209ed300063a, which emits 196 of the exploit tx's logs and whose EIP-1967 slot holds that implementation; the proxy was upgraded to the flawed implementation on 2023-04-18T08:16:11Z (block 27450541), one day after the implementation itself was deployed, so the executing code is 13.20 d old rather than the 13.90 d measured from implementation deployment. Creator 0x6442b001c5acce8cb71986ad65b22684821a927a is unrelated to attack sender 0x61bbd8c1bc09c4f4549f3f77be5ad61a9929412e"
         }
       ],
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1682942400,
-        "deployTimestamp": 1681741234,
-        "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1681741234,
-        "codeAgeSeconds": 1201166,
-        "basis": "deployment (onchain)"
-      }
+        "incidentTimestamp": 1682946675,
+        "deployTimestamp": 1676818374,
+        "upgradeEventCount": 2,
+        "lastChangeTimestamp": 1681805771,
+        "codeAgeSeconds": 1140904,
+        "basis": "last of 2 upgrade events (onchain)"
+      },
+      "attacker": "0x61bbd8c1bc09c4f4549f3f77be5ad61a9929412e"
     }
   ]
 }

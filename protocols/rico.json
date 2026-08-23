@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2024-04/Rico_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x598c6c1cd9459f882530fc9d7da438cb74c6cb3b is the Rico BankDiamond, an EIP-2535 diamond whose facet code changes via DiamondCut and never emits an EIP-1967 Upgraded event; eth_getLogs over creation block 176310105 (2024-02-01) to incident block 202973713 finds five DiamondCut logs: two at deployment (2024-02-01T07:03:32Z and 07:03:51Z) and three in one tx 0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc at block 193149212, 2024-03-22T21:18:40Z, which removed seven selectors, added facet 0x254834c73e3070a674ea8059be3c813694070f06 and Replaced facets 0xc6d7b37fe18a3dd007f9b1c3b339b8c6043b3ccf (21 selectors, including flash(address,bytes) 0xa0a7930a, the exploited entry point) and 0x8dfb233ef877dd5a260a52eced01a0f7e160b7b2 (5 selectors); the age is therefore measured from that cut rather than the diamond deployment"
         }
       ],
       "attacker": "0xc91cb089084f0126458a1938b794aa73b9f9189d",
@@ -30,10 +34,11 @@
         "incidentTimestamp": 1713616643,
         "deployTimestamp": 1706771012,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1706771012,
-        "codeAgeSeconds": 6845631,
-        "basis": "deployment (onchain)"
-      }
+        "lastChangeTimestamp": 1711142320,
+        "codeAgeSeconds": 2474323,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2024-03-22T21:18:40Z (block 193149212, tx 0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc): last DiamondCut on BankDiamond before the incident; it Replaced facet 0xc6d7b37fe18a3dd007f9b1c3b339b8c6043b3ccf, which serves flash(address,bytes) (0xa0a7930a), the function the exploit abused"
     }
   ]
 }

@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "mara-c6a8",
+  "name": "MARA (0xc6a8)",
+  "incidents": [
+    {
+      "name": "MARA proxy unauthenticated swap entry point",
+      "date": "2024-09-24T16:42:59Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 5337,
+      "victimContract": "0xc6a8c02dd5a3dd1616ec072bfc7c9d3df9682a63",
+      "exploitTx": "0x0fe3716431f8c2e43217c3ca6d25eed87e14d0fbfa9c9ee8ce4cef2e5ec4583c",
+      "attacker": "0x3026c464d3bd6ef0ced0d49e80f171b58176ce32",
+      "notes": "The MARA proxy exposes an unauthenticated payable entry point (selector 0x5fc985ea) that runs caller-supplied swap paths with the contract's own funds, letting the attacker skew the MARA pair inside a DODO flash loan and sell into it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x0fe3716431f8c2e43217c3ca6d25eed87e14d0fbfa9c9ee8ce4cef2e5ec4583c"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-09/MARA_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xc6a8c02dd5a3dd1616ec072bfc7c9d3df9682a63 created 2024-07-13T08:24:31Z by 0x1e28945e3be54673b632e9300ec9c8dfee0be26e, which is not the attack-tx sender 0x3026c464d3bd6ef0ced0d49e80f171b58176ce32; 4 EIP-1967 Upgraded events on the victim before the incident; code age measured from last of 4 upgrade events (onchain). 8.8 WBNB x $606.53/BNB at the incident timestamp 1727196179 (DefiLlama coingecko:binancecoin) = $5,337."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1727196179,
+        "deployTimestamp": 1720859071,
+        "upgradeEventCount": 4,
+        "lastChangeTimestamp": 1724165653,
+        "codeAgeSeconds": 3030526,
+        "basis": "last of 4 upgrade events (onchain)"
+      }
+    }
+  ]
+}

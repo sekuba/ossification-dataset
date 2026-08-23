@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "incufi",
+  "name": "INcufi",
+  "incidents": [
+    {
+      "name": "Ncufi self-referred STAKE commission farming",
+      "date": "2024-06-18T20:54:56Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 59643,
+      "victimContract": "0x80df77b2Ae5828FF499A735ee823D6CD7Cf95f5a",
+      "exploitTx": "0x556419e0a6ee8e6de6b3679605f9f62ad013007419a1b55c9f56590a824bfb52",
+      "attacker": "0xb6911dee6a5b1c65ad1ac11a99aec09c2cf83c0e",
+      "notes": "Ncufi.register() lets a caller name a referrer it also controls and STAKE() pays the referral commission out of the pool immediately, so 100 self-referred 10,000-BUSD stakes returned far more than they cost.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x556419e0a6ee8e6de6b3679605f9f62ad013007419a1b55c9f56590a824bfb52"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://app.blocksec.com/explorer/tx/bsc/0x556419e0a6ee8e6de6b3679605f9f62ad013007419a1b55c9f56590a824bfb52"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-06/INcufi_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x80df77b2Ae5828FF499A735ee823D6CD7Cf95f5a created 2024-05-16T16:10:05Z by 0xb79c0bbeb77fce9e6662b3416f01392ab66c3b14, which is not the attack-tx sender 0xb6911dee6a5b1c65ad1ac11a99aec09c2cf83c0e; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1718744096,
+        "deployTimestamp": 1715875805,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1715875805,
+        "codeAgeSeconds": 2868291,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

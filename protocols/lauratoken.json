@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2025-01/LAURAToken_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1167 minimal-proxy clone whose 45-byte runtime hardcodes the master 0x539d54074e052ae82de4936ae6bb213ab773559e, so the DELEGATECALL target cannot be repointed; the master's runtime is byte-identical at the clone's creation block 21516710 and the incident block 21529888 and contains no DELEGATECALL, so deployment is exact."
         }
       ],
       "attacker": "0x25869347f7993c50410a9b9b9c48f37d79e12a36",

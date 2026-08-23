@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "heavens-gate",
+  "name": "Heaven's Gate (HATE)",
+  "incidents": [
+    {
+      "name": "sHATE staking share inflation",
+      "date": "2023-09-05T09:57:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 13056,
+      "victimContract": "0x8EBd6c7D2B79CA4Dc5FBdEc239a8Bb0F214212b8",
+      "exploitTx": "0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834",
+      "attacker": "0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6",
+      "notes": "The HATE staking contract credited sHATE on the pre-fee amount of the fee-on-transfer HATE token, so a flash-swapped stake/unstake cycle returned more HATE than went in and the surplus was sold into the HATE/ETH pair.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-09/HeavensGate_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/hexagate_/status/1699003711937216905"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: staking 0x8EBd6c7D2B79CA4Dc5FBdEc239a8Bb0F214212b8 created 2023-05-20T02:00:23Z by 0x7d3047d0aaffeac7eb45f04070c248bc34d89f74, unrelated to the attack sender; no EIP-1967 events, age from deployment (108.3 days). ~8 ETH x $1,632.05 at incidentTimestamp 1693907855 (DefiLlama) = $13,056; a second tx 0x8e1b0ab098c4cc5f632e00b0842b5f825bbd15ded796d4a59880bb724f6c5372 repeated the attack and is not counted."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1693907855,
+        "deployTimestamp": 1684548023,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1684548023,
+        "codeAgeSeconds": 9359832,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

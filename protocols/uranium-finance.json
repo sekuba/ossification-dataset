@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "uranium-finance",
+  "name": "Uranium Finance",
+  "incidents": [
+    {
+      "name": "Uranium Finance v2 pair k-check miscalculation",
+      "date": "2021-04-28T03:02:52Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 50000000,
+      "victimContract": "0x9b9bad4c6513e0ff3fb77c739359d59601c7caff",
+      "exploitTx": "0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991",
+      "attacker": "0xc47bdd0a852a88a019385ea3ff57cf8de79f019d",
+      "notes": "The v2 UraniumPair.swap() scaled its balance adjustment by 10000 for the new fee but kept Uniswap's 1000**2 factor on the reserve side of the constant-product require, making the post-swap invariant check 100x too weak and letting the attacker take ~99% of each pair's reserves for a token dust input.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/immunefi/building-a-poc-for-the-uranium-heist-ec83fbd83e9f"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim is the v2 WBNB/BUSD pair 0x9b9bad4c returned by UraniumFactory 0xa943ea143cd7e79806d670f4a7cf08f8922a454f at the attack block, created 2021-04-16 by 0x659aab4b03053fe60002778efe104562a3909762 (the v2 migration), not by attack sender 0xc47bdd0a; the single tx drained several sibling pairs sharing the same pair code"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1619578972,
+        "deployTimestamp": 1618554862,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1618554862,
+        "codeAgeSeconds": 1024110,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

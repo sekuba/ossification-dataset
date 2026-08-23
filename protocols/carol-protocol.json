@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "carol-protocol",
+  "name": "CAROL Protocol",
+  "incidents": [
+    {
+      "name": "CAROL Protocol sell() reentrancy on ethReserved",
+      "date": "2023-11-30T12:55:47Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": 53000,
+      "victimContract": "0x26fe408BbD7A490fEB056DA8e2D1e007938E5685",
+      "exploitTx": "0xd962d397a7f8b3aadce1622e705b9e33b430e86e0d306d6fb8ccbc5957b4185c",
+      "attacker": "0x5aa27d556f898846b9bad32f0cdba5b1f8bc3144",
+      "notes": "CAROLProtocol.sell() routed the payout through swapExactTokensForETH, which calls the seller's receive() before the contract's ethReserved bookkeeping is finalised, so re-entering from that callback let a bond position funded by chained flash loans be sold against a manipulated reserve figure.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0xd962d397a7f8b3aadce1622e705b9e33b430e86e0d306d6fb8ccbc5957b4185c"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/MetaSec_xyz/status/1730496513359647167"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/CAROLProtocol_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: CAROLProtocol 0x26fe408BbD7A490fEB056DA8e2D1e007938E5685 created 2023-09-07T13:32:03Z by 0xf993ac8c118e3cc16a8c37accfdd442b2fd66666, not the attack-tx sender 0x5aa27d556f898846b9bad32f0cdba5b1f8bc3144; no EIP-1967 events, 84.0 days old. The PoC's own comment marks sell() as the flawed function and ethReserved as the state manipulated from receive(). Preparation transaction 0x6462f5e358eb2c7769e6aa59ce43277be4799b297bc4c9503610443b9d56cc24 creates the bond. Reported loss ~$53K."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1701348947,
+        "deployTimestamp": 1694093523,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1694093523,
+        "codeAgeSeconds": 7255424,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

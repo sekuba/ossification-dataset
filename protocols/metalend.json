@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "metalend",
+  "name": "MetaLend",
+  "incidents": [
+    {
+      "name": "MetaLend empty-market donation share inflation",
+      "date": "2023-11-25T12:36:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 4000,
+      "victimContract": "0x5578f2e245e932a599c46215a0ca88707230f17b",
+      "exploitTx": "0x4c684fb2618c29743531dec9253ede1b757bda0b323dc2f305e3b50ab1773da7",
+      "attacker": "0x0c06340f5024c114fe196fcb38e42d20ab00f6eb",
+      "notes": "The lending market computed its exchange rate from the raw underlying balance, so donating ETH into an empty market inflated one wei of collateral share to an arbitrary value and let the attacker borrow out the WBTC reserves.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x4c684fb2618c29743531dec9253ede1b757bda0b323dc2f305e3b50ab1773da7"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/MetaLend_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/MetaSec_xyz/status/1728424965257691173"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: market 0x5578f2e245e932a599c46215a0ca88707230f17b created 2022-02-06T17:48:09Z by 0x01289fe1a73c538aca35ec1352df2de8cbc32b9d, unrelated to the attack sender; unverified but no EIP-1967 events, age from deployment. Loss ~$4K per the PoC header, realised in WBTC swapped to WETH; clears the $1,000 floor."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1700915819,
+        "deployTimestamp": 1644169689,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1644169689,
+        "codeAgeSeconds": 56746130,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

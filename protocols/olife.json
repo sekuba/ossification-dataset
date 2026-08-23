@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "olife",
+  "name": "OceanLife (OLIFE)",
+  "incidents": [
+    {
+      "name": "OLIFE reflection deliver drain",
+      "date": "2023-04-19T01:04:41Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 11079,
+      "victimContract": "0xb5a0Ce3Acd6eC557d39aFDcbC93B07a1e1a9e3fa",
+      "exploitTx": "0xa21692ffb561767a74a4cbd1b78ad48151d710efab723b1efa5f1e0147caab0a",
+      "attacker": "0xfb8ef8de849079559801bff8848178640cdd41b7",
+      "notes": "Calling OLIFE's transfer() and deliver() shrinks rSupply and tSupply so the reflection rate rises and the liquidity pair's OLIFE balance inflates without a sync(), letting the attacker swap the surplus out for WBNB.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xa21692ffb561767a74a4cbd1b78ad48151d710efab723b1efa5f1e0147caab0a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-04/OLIFE_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BeosinAlert/status/1648520494516420608"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: OLIFE 0xb5a0Ce3Acd6eC557d39aFDcbC93B07a1e1a9e3fa created 2021-06-04T16:54:29Z by 0x60a3da04d69f65774595983190970b4fbb67f6ce, unrelated to attack sender 0xfb8ef8de849079559801bff8848178640cdd41b7; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 32.2863 WBNB left the OLIFE/WBNB pair; 32.2863 WBNB x $343.14 at incidentTimestamp 1681866281 (DefiLlama coingecko:binancecoin) = $11,079."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1681866281,
+        "deployTimestamp": 1622825669,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1622825669,
+        "codeAgeSeconds": 59040612,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "stephero-nfts",
+  "name": "StepHero NFTs",
+  "incidents": [
+    {
+      "name": "StepHeroNFTs self-referral claimReferral()",
+      "date": "2025-02-21T04:23:10Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 89898,
+      "victimContract": "0x9823E10A0bF6F64F59964bE1A7f83090bf5728aB",
+      "exploitTx": "0xef386a69ca6a147c374258a1bf40221b0b6bd9bc449a7016dbe5240644581877",
+      "attacker": "0xFb1cc1548D039f14b02cfF9aE86757Edd2CDB8A5",
+      "notes": "claimReferral(address) pays out referral commission accrued from the caller's own buyAsset() purchases with no check that the referral was independent, so a flash-loaned 1000 BNB self-referred purchase could be claimed back repeatedly.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xef386a69ca6a147c374258a1bf40221b0b6bd9bc449a7016dbe5240644581877"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-02/StepHeroNFTs_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x9823E10A0bF6F64F59964bE1A7f83090bf5728aB created 2021-08-31T08:03:50Z by 0x7c1620dabfac63ba40ae2bb453dd5d5f65d19102, which is not the attack-tx sender 0xfb1cc1548d039f14b02cff9ae86757edd2cdb8a5; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 137.9 BNB x $651.91/BNB at the incident timestamp 1740111790 (DefiLlama coingecko:binancecoin) = $89,898."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1740111790,
+        "deployTimestamp": 1630397030,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1630397030,
+        "codeAgeSeconds": 109714760,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

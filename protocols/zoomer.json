@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "zoomer",
+  "name": "Zoomer",
+  "incidents": [
+    {
+      "name": "Zoomer buyback contract spot-price manipulation",
+      "date": "2024-02-23T15:41:35Z",
+      "chain": "ethereum",
+      "category": "oracle-manipulation",
+      "lossUsd": 50200,
+      "victimContract": "0x9700204D77A67A18eA8F1B47275897b21e5eFA97",
+      "exploitTx": "0x06d7e7436414c658a33452d28400799f3637e83930dcec39b3bd065dabc6ef04",
+      "attacker": "0xb0380b6d7a63e7cbf274c3b3c8838abbd6bd4abe",
+      "notes": "The unverified ZOOMER buyback contract paid ETH for ZOOMER at the Uniswap V2 spot price, so a 200 ETH flash-loaned buy that pumped the WETH/ZOOMER pair let five freshly created contracts each sell 30.27M ZOOMER into it at the inflated rate.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x06d7e7436414c658a33452d28400799f3637e83930dcec39b3bd065dabc6ef04"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/ChainAegis/status/1761246415488225668"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-02/Zoomer_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x9700204D77A67A18eA8F1B47275897b21e5eFA97 created 2024-02-18T03:43:47Z by 0x3e49da81338d87c22f2f2c16d2874de2ad28c581, not the attack-tx sender 0xb0380b6d7a63e7cbf274c3b3c8838abbd6bd4abe; no EIP-1967 events. Balance diff across blocks 19291249->19291250 shows the victim's ETH falling from 17.300 to 0.152 ETH while its ZOOMER balance rose by 145.1M, confirming it bought ZOOMER for ETH at the manipulated spot price; ~17 ETH at a February 2024 ETH price near $2,950 clears the $1,000 floor. Repeated through five CREATE2 helper contracts, each capped at 30,265,400 ZOOMER. Loss converted at the incident timestamp: 17.15 ETH x $2,927.14 (DefiLlama historical ETH price) = $50,200."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1708702895,
+        "deployTimestamp": 1708227827,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1708227827,
+        "codeAgeSeconds": 475068,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "quixotic",
+  "name": "Quixotic",
+  "incidents": [
+    {
+      "name": "Quixotic marketplace unvalidated ERC-20 transfer path",
+      "date": "2022-07-01T05:03:55Z",
+      "chain": "optimism",
+      "category": "code-bug",
+      "lossUsd": 100000,
+      "victimContract": "0x065e8A87b8F11aED6fAcf9447aBe5E8C5D7502b6",
+      "exploitTx": "0x5dc519726e1236eb846271f6699e03cdd1a8fd593a2900c71cd2aabbdb7c92e6",
+      "attacker": "0x0A0805082EA0fc8bfdCc6218a986efda6704eFE5",
+      "notes": "The Quixotic NFT marketplace let an order specify the ERC-20 to pull and the account to pull it from without proving the order came from that account, so every wallet holding an allowance to the marketplace could be drained of OP and other tokens.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "optimism",
+          "ref": "0x5dc519726e1236eb846271f6699e03cdd1a8fd593a2900c71cd2aabbdb7c92e6"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-07/Quixotic_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: the PoC carries no transaction hash, so transactions touching the marketplace 0x065e8A87b8F11aED6fAcf9447aBe5E8C5D7502b6 in the PoC's fork block window (13591381-13591390) were listed with eth_getLogs; the one recorded here, 0x5dc51972...92e6 at block 13591384, was sent by 0x0a0805082ea0fc8bfdcc6218a986efda6704efe5, the address the PoC pranks as the exploiter, and three sibling transactions in the same window repeat the drain. The marketplace was created 2022-05-25T20:21:59Z by 0xec1557a67d4980c948cd473075293204f4d280fd, not the attacker; no EIP-1967 Upgraded events, 36.4 days old. Loss $100K per the DeFiHackLabs 2022 index entry for this PoC."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1656651835,
+        "deployTimestamp": 1653510119,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1653510119,
+        "codeAgeSeconds": 3141716,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

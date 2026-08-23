@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "harvest-finance",
+  "name": "Harvest Finance",
+  "incidents": [
+    {
+      "name": "Harvest Finance fUSDC vault (Curve y pool price manipulation)",
+      "date": "2020-10-26T02:53:58Z",
+      "chain": "ethereum",
+      "category": "oracle-manipulation",
+      "lossUsd": 25000000,
+      "victimContract": "0xf0358e8c3cd5fa238a29301d0bea3d63a17bedbe",
+      "exploitTx": "0x35f8d2f572fceaac9288e5d462117850ef2694786992a8c3f6d02612277b0877",
+      "attacker": "0xf224ab004461540778a914ea397c589b677e27bb",
+      "notes": "The fUSDC vault priced deposits and withdrawals off the instantaneous share price of the Curve y pool it farmed, so flash-loan swaps that skewed that pool let the attacker mint fUSDC cheaply and redeem it at the restored price; the vault code itself behaved as written.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x35f8d2f572fceaac9288e5d462117850ef2694786992a8c3f6d02612277b0877"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://rekt.news/harvest-finance-rekt/"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: fUSDC vault 0xf0358e8c created 2020-10-19 by 0xf00dd244228f51547f0563e60bca65a30fbf5f7f, not by attack sender 0xf224ab00; the cited tx is one of the ~17 repeated mint/redeem rounds and its logs touch the fUSDC vault (not the fUSDT vault) Recheck of the deployment basis (DELEGATECALL audit): the fUSDC vault is an EIP-1967 proxy; its implementation slot holds 0x9b3be0cc5dd26fd0254088d03d8206792715588b at both the creation block 11086842 and the incident block 11129474, and a binary search of eth_getStorageAt over that range finds no intermediate write (the slot was read directly rather than relying on Upgraded events); the proxy runtime is byte-identical at both blocks and the implementation contains no DELEGATECALL of its own, so the six-and-a-half-day age is measured from the right point."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1603680838,
+        "deployTimestamp": 1603116154,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1603116154,
+        "codeAgeSeconds": 564684,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

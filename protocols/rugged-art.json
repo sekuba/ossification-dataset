@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "rugged-art",
+  "name": "Rugged Art",
+  "incidents": [
+    {
+      "name": "Rugged Art RuggedMarket targetedPurchase arbitrary router call",
+      "date": "2024-02-19T14:00:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 14486,
+      "victimContract": "0x2648f5592c09a260C601ACde44e7f8f2944944Fb",
+      "exploitTx": "0x5a63da39b5b83fccdd825fed0226f330f802e995b8e49e19fbdd246876c67e1f",
+      "attacker": "0x9733303117504c146a4e22261f2685ddb79780ef",
+      "notes": "RuggedMarket.targetedPurchase() forwarded attacker-supplied UniversalRouter commands and inputs without validating them, letting a flash-loan-funded caller sweep the market's RUGGED balance and NFTs and then unstake against it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x5a63da39b5b83fccdd825fed0226f330f802e995b8e49e19fbdd246876c67e1f"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-02/RuggedArt_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: proxy 0x2648f5592c09a260C601ACde44e7f8f2944944Fb created 2024-02-15 by 0xe2b2a4b7ef40ccc1392a680a0e1e74f7efdd87ea (not the attacker or the attack-tx sender 0x9733303117504c146a4e22261f2685ddb79780ef); two EIP-1967 Upgraded events, the last on 2024-02-17T00:23:47Z installing implementation 0xfe380fe1db07e531e3519b9ae3ea9f7888ce20c6 (the address the PoC labels RuggedMarket), so the executing code was 2.57 days old at the incident. ~5 ETH at a February 2024 ETH price of roughly $2,900 is well above the $1,000 floor. Loss converted at the incident timestamp: 5 ETH x $2,897.20 (DefiLlama historical ETH price) = $14,486."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1708351223,
+        "deployTimestamp": 1707976739,
+        "upgradeEventCount": 2,
+        "lastChangeTimestamp": 1708129427,
+        "codeAgeSeconds": 221796,
+        "basis": "last of 2 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "fpr",
+  "name": "FPR",
+  "incidents": [
+    {
+      "name": "FPR helper contracts public setAdmin",
+      "date": "2022-12-14T18:28:37Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 26275,
+      "victimContract": "0x81c5664be54d89E725ef155F14cf34e6213297B7",
+      "exploitTx": "0xec1b969e1435a1449dd5179404c54b5c60e49f15a1bf6bf8922e8d2978102f4a",
+      "attacker": "0xE3104e645BC3f6fD821930a6a39EE509a0E87D3b",
+      "notes": "The FPR helper contracts exposed setAdmin(address) to any caller, so the attacker made themselves admin and used remaining(address,address) to sweep the contracts' FPR and LP holdings.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xec1b969e1435a1449dd5179404c54b5c60e49f15a1bf6bf8922e8d2978102f4a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-12/FPR_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/chainlight_io/status/1603282848311480320"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: helper 0x81c5664be54d89E725ef155F14cf34e6213297B7 created 2022-12-14T07:59:22Z by 0x2d71adecb7a4f75f7fb21816a980cac307d276d9, unrelated to attack sender 0xe3104e645bc3f6fd821930a6a39ee509a0e87d3b; no EIP-1967 Upgraded events, age measured from deployment. Four identical helper contracts were drained (0x81c5664b..., 0xE2f0A9B6..., 0x39eb555f..., 0xBa5B235C...); the first is recorded as the victim. Loss verified onchain: 26,274.80 USDT left the FPR/USDT pair 0x039D05a19e3436c536bE5c814aaa70FcdbDde58b to the attacker in this transaction."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1671042517,
+        "deployTimestamp": 1671004762,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1671004762,
+        "codeAgeSeconds": 37755,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2025-11/DRLVaultV3_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1167 minimal-proxy clone whose 45-byte runtime hardcodes the master 0x8aa6b0e10bd6dbaf5159967f92f2e740afe2b4c3 (created at block 23731141), so the DELEGATECALL target cannot be repointed; the master's runtime is byte-identical at the clone's creation block 23767200 and the incident block 23769387 and contains no DELEGATECALL, so the 7.3-hour age is measured from the deployment of code that never changed."
         }
       ],
       "attacker": "0xC0ffeEBABE5D496B2DDE509f9fa189C25cF29671",

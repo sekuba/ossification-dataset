@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "mevbot-0x0ad8",
+  "name": "MEV bot 0x0ad8",
+  "incidents": [
+    {
+      "name": "MEV bot 0x0ad8 unprotected arbitrary call",
+      "date": "2022-11-08T15:05:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 91638,
+      "victimContract": "0x0ad8229d4bc84135786ae752b9a9d53392a8afd4",
+      "exploitTx": "0x674f74b30a3d7bdf15fa60a7c29d96a402ea894a055f624164a8009df98386a0",
+      "attacker": "0xae39a6c2379bef53334ea968f4c711c8cf3898b6",
+      "notes": "The bot exposed a public entry point that executed caller-supplied calldata with no access control, letting the attacker make it pull 91,638 USDC out of a companion contract that had approved it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x674f74b30a3d7bdf15fa60a7c29d96a402ea894a055f624164a8009df98386a0"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-11/MEV_0ad8_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/Supremacy_CA/status/1590337718755954690"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: bot 0x0ad8229d4bc84135786ae752b9a9d53392a8afd4 created 2020-05-07T04:25:30Z by 0xd5b5b26521665cb37623dca0e49c553b41dbf076, unrelated to the attack sender; no EIP-1967 events, age from deployment. Loss read from the tx receipt: 91,638.11 USDC moved from 0x211b6a11... to the attacker EOA."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1667919911,
+        "deployTimestamp": 1588825530,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1588825530,
+        "codeAgeSeconds": 79094381,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

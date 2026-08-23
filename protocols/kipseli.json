@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "kipseli",
+  "name": "Kipseli",
+  "incidents": [
+    {
+      "name": "Kipseli PropAMMWrapper quote-unit mismatch",
+      "date": "2026-04-21T21:24:17Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": 72350,
+      "victimContract": "0xd35c6717cca1e04696b694dcb1643ac3620d2152",
+      "exploitTx": "0x96edeeb3d49d7a54c60d227bedce5bf64df5d52effd9fd80334175a9553db3bb",
+      "attacker": "0x2352a1fca90182509dca9c12b2cad582a38e8b82",
+      "notes": "PropAMMWrapper paid out the integer returned by a USDC-denominated (6-decimal) quoter as raw units of tokenOut without asserting tokenOut was the quote token, so a WETH -> cbBTC route worth about 92 USDC transferred ~0.926 cbBTC (8 decimals) instead.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0x96edeeb3d49d7a54c60d227bedce5bf64df5d52effd9fd80334175a9553db3bb"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blocksec.com/blog/weekly-web3-security-roundup-2026-04-26"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-04/KipseliPropAMM_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim is the verified PropAMMWrapper created 2026-04-14 by 0xaee25670e53e86e1e6247c77fdaaf422a3c55b8d (not the attacker), no Upgraded events - the exploited code was 7.5 days old. DefiLlama records $72,350 (Input Validation / Missing Input Validation, Base)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1776806657,
+        "deployTimestamp": 1776158735,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1776158735,
+        "codeAgeSeconds": 647922,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

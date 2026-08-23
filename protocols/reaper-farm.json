@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "reaper-farm",
+  "name": "Reaper Farm",
+  "incidents": [
+    {
+      "name": "Reaper Farm vault missing access control on deposit-for",
+      "date": "2022-08-02T05:10:49Z",
+      "chain": "fantom",
+      "category": "code-bug",
+      "lossUsd": 1700000,
+      "victimContract": "0xcdA5deA176F2dF95082f4daDb96255Bdb2bc7C7D",
+      "exploitTx": "0xc929f3b9312ff26be0adb1c3ff832dbdafdcbcaad33d002744effd515e53c9d5",
+      "attacker": "0x5636e55e4a72299a0f194c001841e2ce75bb527a",
+      "notes": "The Reaper vault exposed a deposit path that took the source address as a parameter with no check that it was the caller, so anyone could pull tokens from every wallet that had approved the vault.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "fantom",
+          "ref": "0xc929f3b9312ff26be0adb1c3ff832dbdafdcbcaad33d002744effd515e53c9d5"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-08/ReaperFarm_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review on Fantom over a public RPC: the PoC carries no transaction hash, so the exploit tx was recovered by querying eth_getLogs on the vault 0xcdA5deA176F2dF95082f4daDb96255Bdb2bc7C7D across the PoC's fork block window (44045897-44045905), which yields 0xc929f3b9...c9d5 at block 44045900 with ten logs. Creation resolved by binary search over eth_getCode to block 41839240, 2022-07-02T12:48:36Z, creator 0x6539519e69343535a2af6583d9bae3ad74c6a293, not the attack-tx sender 0x5636e55e4a72299a0f194c001841e2ce75bb527a; no EIP-1967 Upgraded events, 30.7 days old. Loss ~1.7M US$ across multiple ERC-20s per the DeFiHackLabs 2022 index entry for this PoC."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1659417049,
+        "deployTimestamp": 1656766116,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1656766116,
+        "codeAgeSeconds": 2650933,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

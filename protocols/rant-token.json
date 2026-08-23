@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "rant-token",
+  "name": "RANT",
+  "incidents": [
+    {
+      "name": "RANT pays out BNB for tokens sent to the token contract",
+      "date": "2025-07-05T15:16:36Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 204017,
+      "victimContract": "0xc321ac21a07b3d593b269acdace69c3762ca2dd0",
+      "exploitTx": "0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99",
+      "attacker": "0xad2cb8f48e74065a0b884af9c5a4ecbba101be23",
+      "notes": "A flash-loan-funded buy of 9.66e25 RANT from the RANT/WBNB pair followed by a single transfer of 1.07e25 RANT into the RANT token contract returned enough BNB to repay the loan and keep 311 BNB, i.e. RANT's transfer handler redeems tokens sent to itself out of its own reserves at a rate detached from the pool price.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/Phalcon_xyz/status/1941788315549946225"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-07/RANTToken_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xc321ac21a07b3d593b269acdace69c3762ca2dd0 created 2025-07-03T11:47:40Z by 0x2373241ec958124cbd3636fc9561f7ec623adbe3, which is not the attack-tx sender 0xad2cb8f48e74065a0b884af9c5a4ecbba101be23; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 311.4 BNB x $655.16/BNB at the incident timestamp 1751728596 (DefiLlama coingecko:binancecoin) = $204,017."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1751728596,
+        "deployTimestamp": 1751543260,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1751543260,
+        "codeAgeSeconds": 185336,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "safemoon",
+  "name": "SafeMoon",
+  "incidents": [
+    {
+      "name": "SafeMoon public burn() after upgrade",
+      "date": "2023-03-28T19:26:27Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 8900000,
+      "victimContract": "0x42981d0bfbaf196529376ee702f2a9eb9092fcb5",
+      "exploitTx": "0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934",
+      "attacker": "0x286e09932b8d096cba3423d12965042736b8f850",
+      "notes": "An upgrade pushed hours before the incident made burn(address,uint256) callable by anyone, so the attacker burned nearly all SFM held by the SafeMoon/WBNB PancakeSwap pair, sync()'d the pool to the inflated SFM price and sold its own SFM back into the drained reserve.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.zellic.io/blog/safemoon-exploit-explained/"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-03/safeMoon_exp.sol (20230328 SafeMoon Hack - Access Control, lost $8.9M)"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: SFM proxy 0x42981d0bfbaf196529376ee702f2a9eb9092fcb5 created 2021-12-03 by 0x678ee23173dce625a90ed651e91ca5138149f590 (SafeMoon deployer), unrelated to attack sender 0x286e09932b8d096cba3423d12965042736b8f850; 23 EIP-1967 Upgraded events, the last on 2023-03-28T13:10:56Z to implementation 0xeb11a0a0bef1ac028b8c2d4cd64138dd5938ca7a, i.e. 6h15m before the exploit - that upgrade introduced the public burn; ~80% of the funds were later returned"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1680031587,
+        "deployTimestamp": 1638538413,
+        "upgradeEventCount": 23,
+        "lastChangeTimestamp": 1680009056,
+        "codeAgeSeconds": 22531,
+        "basis": "last of 23 upgrade events (onchain)"
+      }
+    }
+  ]
+}

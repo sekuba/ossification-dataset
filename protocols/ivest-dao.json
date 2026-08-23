@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "ivest-dao",
+  "name": "iVest DAO",
+  "incidents": [
+    {
+      "name": "iVest donation-on-burn double debit",
+      "date": "2024-08-12T04:52:39Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 156000,
+      "victimContract": "0x786fCF76dC44B29845f284B81f5680b6c47302c6",
+      "exploitTx": "0x12f27e81e54684146ec50973ea94881c535887c2e2f30911b3402a55d67d121d",
+      "attacker": "0x4645863205b47a0a3344684489e8c446a437d66c",
+      "notes": "Transfers to the zero address trigger the token's _MakeDonation path, which debits the sender's balance a second time; repeatedly sending iVest to the PancakeSwap pair and calling skim/sync shrank the pair's token reserve and let the attacker swap the reserve out for WBNB.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x12f27e81e54684146ec50973ea94881c535887c2e2f30911b3402a55d67d121d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.tradingview.com/news/cointelegraph:62f377c83094b:0-weird-null-address-ivest-hack-millions-of-pcs-still-vulnerable-to-sinkclose-malware-crypto-sec/"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-08/IvestDao_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: iVest token 0x786fcf76... created by 0x3421d514fcd2cf1303bc13d88bcb3e75e8032642 on 2024-06-15, no upgrade events; attack sender 0x46458632... unrelated to the creator; loss uses the $156k QuillAudits figure"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1723438359,
+        "deployTimestamp": 1718489801,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1718489801,
+        "codeAgeSeconds": 4948558,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

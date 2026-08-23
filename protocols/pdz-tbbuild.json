@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "pdz-tbbuild",
+  "name": "PDZ / TBBuild",
+  "incidents": [
+    {
+      "name": "TBBuild burnToHolder reward accounting",
+      "date": "2025-08-16T01:08:11Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 2753,
+      "victimContract": "0x664201579057f50D23820d20558f4b61bd80BDda",
+      "exploitTx": "0x81fd00eab3434eac93bfdf919400ae5ca280acd891f95f47691bbe3cbf6f05a5",
+      "attacker": "0x48234fb95d4d3e5a09f3ec4dd57f68281b78c825",
+      "notes": "TBBuild.burnToHolder() credits the caller with rewards proportional to a burn it never charges against the reward pool, so the attacker burned flash-bought PDZ and drew the payout with receiveRewards().",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x81fd00eab3434eac93bfdf919400ae5ca280acd891f95f47691bbe3cbf6f05a5"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/tikkalaresearch/status/1957500585965678828"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-08/PDZ_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x664201579057f50D23820d20558f4b61bd80BDda created 2024-01-25T19:19:37Z by 0xf9daa56857df4edebb5ca4adc7c8db39fc683422, which is not the attack-tx sender 0x48234fb95d4d3e5a09f3ec4dd57f68281b78c825; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 3.3 BNB x $834.26/BNB at the incident timestamp 1755306491 (DefiLlama coingecko:binancecoin) = $2,753."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1755306491,
+        "deployTimestamp": 1706210377,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1706210377,
+        "codeAgeSeconds": 49096114,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

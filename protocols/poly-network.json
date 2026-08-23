@@ -15,7 +15,7 @@
       "sources": [
         {
           "type": "curated-review",
-          "ref": "l2beat research; see notes"
+          "ref": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 12997265, 2021-08-10T12:00:00Z). EthCrossChainManager 0x838bF9E95CB12Dd76a54C9f9D2E3082EAF928270 was created at block 10650091, 2020-08-13T06:51:11Z. It is unverified on Etherscan but is provably not a proxy: zero DELEGATECALL opcodes in the runtime, no EIP-1967 Upgraded event, and byte-identical eth_getCode at the creation block and the incident block, so the deployment basis is exact. Storage was checked too: slot 1 (EthCrossChainDataAddress) is unchanged since creation at 0xcf2afe102057ba5c16f899271045a0a37fcb10f2, and the single pre-incident write to slot 0 (the packed owner + paused pair, block 12996855, 2021-08-10T10:31:52Z, owner -> 0x5a51e2ebf8d136926b9ca7b59b60464e7c44d2eb with paused set) is the response to the attack, not a code change. The selector-collision flaw was present in the deployed bytecode from day one."
         }
       ],
       "measurement": {

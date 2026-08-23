@@ -4,37 +4,42 @@
   "name": "Curve",
   "incidents": [
     {
-      "name": "Curve (Vyper compiler reentrancy)",
-      "date": "2023-07-30T12:00:00Z",
+      "name": "Curve CRV/ETH pool (Vyper reentrancy lock)",
+      "date": "2023-07-30T19:08:23Z",
       "chain": "ethereum",
       "category": "code-bug",
-      "lossUsd": 70000000,
+      "lossUsd": 19465922,
       "victimContract": "0x8301AE4fc9c624d1D396cbDAa1ed877821D7C511",
-      "exploitTx": null,
-      "notes": "CRV/ETH pool (immutable, deployed 2021): Vyper 0.2.15-0.3.0 malfunctioning reentrancy locks. Deliberately included as an aged-code counterexample - the defect lived in the compiler, dormant for ~2 years.",
+      "exploitTx": "0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c",
+      "notes": "Vyper 0.2.15-0.3.0 emitted a malfunctioning reentrancy lock, letting remove_liquidity reenter add_liquidity and corrupt the CRV/ETH pool's balances; the defect lived in the compiler and lay dormant in immutable pool code for ~1.7 years.",
       "sources": [
         {
           "type": "curated-review",
-          "ref": "l2beat research; see notes"
+          "ref": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 17805708, 2023-07-30T12:00:00Z). The CRV/ETH crypto pool 0x8301AE4fc9c624d1D396cbDAa1ed877821D7C511 was created at block 13676995, 2021-11-24T11:35:58Z. Curve v2 pools are immutable Vyper contracts and this one is confirmed so onchain: zero DELEGATECALL opcodes in the runtime, no EIP-1967 Upgraded event, and a byte-identical eth_getCode at the creation block and the incident block. Deployment basis is exact - the defect lived in the Vyper 0.2.15-0.3.0 compiler's reentrancy locks, dormant in unchanged bytecode for ~613 days."
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: merged with the duplicate Curve_exp02 record for the same pool. Loss re-derived from the exploit tx rather than the $70m event-wide headline, which spans several pools: the pool's ETH balance fell 11,212.8724 -> 3,532.3787 (7,680.4937 ETH x $1,877.17) and it lost 7,193,401.7753 CRV (x $0.7018), = $19,465,922 at the incident block (DefiLlama)"
         }
       ],
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1690718400,
+        "incidentTimestamp": 1690744103,
         "deployTimestamp": 1637753758,
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1637753758,
-        "codeAgeSeconds": 52964642,
+        "codeAgeSeconds": 52990345,
         "basis": "deployment (onchain)"
-      }
+      },
+      "attacker": "0xb752def3a1fded45d6c4b9f4a8f18e645b41b324"
     },
     {
-      "name": "Curve_exp01.sol",
+      "name": "Curve pETH/ETH pool (Vyper reentrancy lock)",
       "date": "2023-07-30T13:10:35Z",
       "chain": "ethereum",
       "category": "code-bug",
-      "lossUsd": 41000000,
-      "victimContract": "0x6326debbaa15bcfe603d831e7d75f4fc10d9b43e",
+      "lossUsd": 11314640,
+      "victimContract": "0x9848482da3ee3076165ce6497eda906e66bb85c5",
       "exploitTx": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
       "notes": "Vyper compiler reentrancy-lock bug lets remove_liquidity reenter add_liquidity, corrupting the pETH/ETH pool balances.",
       "sources": [
@@ -46,48 +51,67 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-07/Curve_exp01.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim corrected from 0x6326debbaa15bcfe603d831e7d75f4fc10d9b43e, which emits no logs in the cited exploit tx and holds no ETH, to the pETH/ETH pool actually drained, 0x9848482da3ee3076165ce6497eda906e66bb85c5 (top emitter, ETH 6,185.5591 -> 156.7112). 6,028.8479 ETH x $1,876.75 = $11,314,640; created 2022-09-27 by 0x7a271674b5fae043f42f183092f48fb06d6d551b, no upgrade events. Age 305.90 d, previously 733.63 d against the wrong contract"
         }
       ],
       "attacker": "0x6ec21d1868743a44318c3c259a6d4953f9978538",
       "measurement": {
         "status": "OK",
         "incidentTimestamp": 1690722635,
-        "deployTimestamp": 1627336774,
+        "deployTimestamp": 1664293031,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1627336774,
-        "codeAgeSeconds": 63385861,
+        "lastChangeTimestamp": 1664293031,
+        "codeAgeSeconds": 26429604,
         "basis": "deployment (onchain)"
       }
     },
     {
-      "name": "Curve_exp02.sol",
-      "date": "2023-07-30T19:08:23Z",
+      "name": "Curve LlamaLend sDOLA-long2 oracle manipulation",
+      "date": "2026-03-02T03:00:11Z",
       "chain": "ethereum",
-      "category": "code-bug",
-      "lossUsd": 41000000,
-      "victimContract": "0x8301ae4fc9c624d1d396cbdaa1ed877821d7c511",
-      "exploitTx": "0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c",
-      "notes": "Same Vyper reentrancy-lock bug drains the CRV/ETH Curve pool via reentered add/remove liquidity.",
+      "category": "oracle-manipulation",
+      "lossUsd": 240567,
+      "victimContract": "0xad444663c6c92b497225c6ce65fee2e7f78bfb86",
+      "exploitTx": "0xb93506af8f1a39f6a31e2d34f5f6a262c2799fef6e338640f42ab8737ed3d8a4",
+      "attacker": "0x33a0aab2642c78729873786e5903cc30f9a94be2",
+      "notes": "The sDOLA-long2 market's CryptoFromPoolVaultWAgg oracle priced collateral as p_collateral * sDOLA.convertToAssets(1e18), an atomically manipulable spot share rate, so a flash-loaned mass redemption of ~10.6M sDOLA crashed the reported collateral value and let the attacker hard-liquidate 27 solvent borrowers.",
       "sources": [
         {
           "type": "onchain-tx",
           "chain": "ethereum",
-          "ref": "0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c"
+          "ref": "0xb93506af8f1a39f6a31e2d34f5f6a262c2799fef6e338640f42ab8737ed3d8a4"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://gov.curve.finance/t/llamalend-sdola-long2-post-mortem/11020"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.darknavy.org/web3/exploits/sdola-llamalend-oracle-manipulation/"
         },
         {
           "type": "defihacklabs",
-          "ref": "src/test/2023-07/Curve_exp02.sol@ad353ba25fbb"
+          "ref": "src/test/2026-03/Curve_LlamaLend_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xaD444663... is the LlamaLend 'crvUSD Controller' created 2025-03-19 by 0xf7bd34dd44b92fb2f9c3d2e31aaad06570a853a6 (not the attacker), no Upgraded events; collateral_token() returns sDOLA 0xb45ad160634c528Cc3D2926d9807104FA3157305 and its AMM 0x0079885E248B572CdC4559A8B156745e2d8EA1f7 reports price_oracle_contract() 0x88822eE517Bfe9A1b97bf200b0b6D3F356488fF2. Curve's post-mortem puts seized borrower equity at ~$822K and attacker net at ~$245K; DARKNAVY measures attacker profit at $240,567 across 27 liquidated borrowers. Also reported as an Inverse Finance / DOLA incident."
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The pool is Vyper and its runtime is byte-identical at the creation block 22083746 and the incident block 24566937; the two 0xf4 bytes a naive scan flags are at pc 21831/21928 of 22709, inside the trailing data/immutables region. callTracer on the exploit tx shows 58 frames executing the pool's own code and zero DELEGATECALL out of its context, so the executing code is the pool's own and cannot be repointed."
         }
       ],
-      "attacker": "0xb752def3a1fded45d6c4b9f4a8f18e645b41b324",
-      "duplicateOfCuratedIncident": true,
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1690744103,
-        "deployTimestamp": 1637753758,
+        "incidentTimestamp": 1772420411,
+        "deployTimestamp": 1742421467,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1637753758,
-        "codeAgeSeconds": 52990345,
+        "lastChangeTimestamp": 1742421467,
+        "codeAgeSeconds": 29998944,
         "basis": "deployment (onchain)"
       }
     }

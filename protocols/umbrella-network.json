@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "umbrella-network",
+  "name": "Umbrella Network",
+  "incidents": [
+    {
+      "name": "Umbrella StakingRewards unchecked stake accounting",
+      "date": "2022-03-20T07:48:54Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 700000,
+      "victimContract": "0xB3FB1D01B07A706736Ca175f827e4F56021b85dE",
+      "exploitTx": "0x33479bcfbc792aa0f8103ab0d7a3784788b5b0e1467c81ffbed1b7682660b4fa",
+      "attacker": "0x1751e3e1aaf1a3e7b973c889b7531f43fc59f7d0",
+      "notes": "The rewards pool dropped SafeMath on the assumption that stake amounts could not overflow, so a crafted stake wrapped the reward accounting and let the attacker claim rewards far beyond the pool's intended emissions.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x33479bcfbc792aa0f8103ab0d7a3784788b5b0e1467c81ffbed1b7682660b4fa"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-03/Umbrella_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/umbrella-network/umbrella-network-rewards-pool-exploit-post-mortem-2c9b2b8ff1e5"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: StakingRewards 0xB3FB1D01B07A706736Ca175f827e4F56021b85dE created 2022-03-14T17:05:30Z by 0xa6e4ffa19b213abea258ae72e8e1a209b9e543e7, unrelated to the attack sender; no EIP-1967 events, age from deployment - the pool was only 5.6 days old. Loss ~700K reported (UMB rewards, drained on both Ethereum and BNB Chain); the Ethereum leg is recorded here."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1647762534,
+        "deployTimestamp": 1647277530,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1647277530,
+        "codeAgeSeconds": 485004,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

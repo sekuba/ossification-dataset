@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "metawin-0x431abb",
+  "name": "MetaWin (unverified BSC staking)",
+  "incidents": [
+    {
+      "name": "MetaWin buy/bindParent referral farming",
+      "date": "2023-12-01T11:20:40Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 500000,
+      "victimContract": "0x431abb27dab05f4e7cdeaa18390fe39364197500",
+      "exploitTx": "0xbeea4ff215b15870e22ed0e4d36ccd595974ffd55c3d75dad2230196cc379a52",
+      "attacker": "0xa9edec4496bd013dac805fb221edefc53cbfaf05",
+      "notes": "The unverified staking contract lets any address call buy() and bindParent() to register itself as its own referral chain, so the attacker minted referral rewards for stakes it fully controlled and claimed them out.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xbeea4ff215b15870e22ed0e4d36ccd595974ffd55c3d75dad2230196cc379a52"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/Phalcon_xyz/status/1730625352953901123"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-12/UnverifiedContr_0x431abb_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x431abb27dab05f4e7cdeaa18390fe39364197500 created 2023-11-30T05:20:45Z by 0x1abeab1ab075a7188d23dded842b2c7f41cf3e11, which is not the attack-tx sender 0xa9edec4496bd013dac805fb221edefc53cbfaf05; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1701429640,
+        "deployTimestamp": 1701321645,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1701321645,
+        "codeAgeSeconds": 107995,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "weco",
+  "name": "WECO",
+  "incidents": [
+    {
+      "name": "WECOStaking deposit accounting",
+      "date": "2023-11-16T18:16:29Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 18000,
+      "victimContract": "0xd672b766d66662f5c6fd798a999e1193a7945451",
+      "exploitTx": "0x2040a481c933b50ee31aba257c2041c48bb7a0b4bf4b4fad1ac165f19c4269e8",
+      "attacker": "0xf5f21746ff9351f16a42fa272d7707cc35760e4b",
+      "notes": "WECOStaking.deposit() returns more WECOIN to the depositor than it takes in, so the attacker looped 1-token deposits until the staking contract's WECOIN balance was drained.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x2040a481c933b50ee31aba257c2041c48bb7a0b4bf4b4fad1ac165f19c4269e8"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/MetaSec_xyz/status/1725311048625041887"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/WECO_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xd672b766d66662f5c6fd798a999e1193a7945451 created 2023-08-11T20:33:33Z by 0xcc424d4af7add42bed4ae68e27a1547ee81173b1, which is not the attack-tx sender 0xf5f21746ff9351f16a42fa272d7707cc35760e4b; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1700158589,
+        "deployTimestamp": 1691786013,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1691786013,
+        "codeAgeSeconds": 8372576,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

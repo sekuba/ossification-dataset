@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "res-token",
+  "name": "RES Token",
+  "incidents": [
+    {
+      "name": "RES token pair-balance manipulation",
+      "date": "2022-10-06T10:15:50Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 290671,
+      "victimContract": "0xecCD8B08Ac3B587B7175D40Fb9C60a20990F8D21",
+      "exploitTx": "0xe59fa48212c4ee716c03e648e04f0ca390f4a4fc921a890fded0e01afa4ba96d",
+      "attacker": "0x986b2e2a1cf303536138d8ac762447500fd781c6",
+      "notes": "The RES token's transfer hook rewrites the RES/USDT pair's own RES balance without syncing the reserves, letting the attacker repeatedly swap the imbalance out of the pair for USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xe59fa48212c4ee716c03e648e04f0ca390f4a4fc921a890fded0e01afa4ba96d"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-10/RES_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://quillaudits.medium.com/res-token-290k-flash-loan-exploit-quillaudits-9300657fff7b"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: RES 0xecCD8B08Ac3B587B7175D40Fb9C60a20990F8D21 created 2022-07-20T13:06:03Z by 0xf53ff2f90ab93a429b5c6ac0e62825e50ccee195, unrelated to attack sender 0x986b2e2a1cf303536138d8ac762447500fd781c6; no EIP-1967 Upgraded events, age measured from deployment. DeFiHackLabs carries two PoCs (RES_exp and RES_exp2) for this same incident; one row is recorded. lossUsd uses the 290,671 USDT stated in the PoC header and the QuillAudits write-up."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1665051350,
+        "deployTimestamp": 1658322363,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1658322363,
+        "codeAgeSeconds": 6728987,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

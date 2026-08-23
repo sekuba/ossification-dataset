@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "xloot",
+  "name": "xLOOT",
+  "incidents": [
+    {
+      "name": "xLOOT staking redeem counts the same NFT id repeatedly",
+      "date": "2026-04-15T14:19:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 14535,
+      "victimContract": "0x9d87Ff196646A99BDdb16876066aA863900118b4",
+      "exploitTx": "0xab19752a450a205ccaca9afb8505e2d8b79593ee2edab1f67bdec27a4f14871f",
+      "attacker": "0xAcDcD2e9787E889305200900d6Cf6C0548578630",
+      "notes": "Staking.redeem(uint256[]) totals the reward for every supplied token id, checking only ownerOf(id), before it advances nextRedeem[id], so seven owned xLOOT ids repeated 155 times each collected the freshly opened epoch reward 1,085 times.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xab19752a450a205ccaca9afb8505e2d8b79593ee2edab1f67bdec27a4f14871f"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/DefimonAlerts/status/2044709964091187660"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-04/XLootStaking_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: staking proxy 0x9d87Ff196646A99BDdb16876066aA863900118b4 created 2023-12-21T11:59:11Z by 0x50de00357b4c96defe9780bc285dc939bbb5ea2e, not the attack-tx sender 0xacdcd2e9787e889305200900d6cf6c0548578630; a single EIP-1967 Upgraded event at deployment installs implementation 0xf3A3648bB1Da9D3aeA107da77E6f5bA9Cf313127 (the address the PoC header names as the vulnerable contract), so the executing code was 846.1 days old. 6.21 ETH x $2,340.58 at the incident timestamp (DefiLlama) = $14,535."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1776262763,
+        "deployTimestamp": 1703159951,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1703159951,
+        "codeAgeSeconds": 73102812,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

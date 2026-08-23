@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "xbridge",
+  "name": "XBridge",
+  "incidents": [
+    {
+      "name": "XBridge permissionless listToken then withdrawTokens",
+      "date": "2024-04-24T07:18:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 1600000,
+      "victimContract": "0x47Ddb6A433B76117a98FBeAb5320D8b67D468e31",
+      "exploitTx": "0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae",
+      "attacker": "0x0cfc28d16d07219249c6d6d6ae24e7132ee4caa7",
+      "notes": "XBridge.listToken() carried no access control, so the attacker listed the tokens already held by the bridge against a corresponding token of their choosing and then called withdrawTokens() to move the bridge's real deposits out.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/CyversAlerts/status/1783045506471432610"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/XBridge_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: bridge proxy 0x47Ddb6A433B76117a98FBeAb5320D8b67D468e31 created 2023-10-20 by 0xfe6fb9ded2651fd325512657d34911d2fb5d646b, not the attacker; five EIP-1967 Upgraded events, the last at block 19720066 on 2024-04-23T19:05:23Z installing 0x354cca2f55dde182d36fe34d673430e226a3cb8c (the address the PoC header calls the vulnerable contract) \u2014 12.2 hours before the exploit. The drain completes in a second transaction 0x903d88a92cbc0165a7f662305ac1bff97430dbcccaa0fe71e101e18aa9109c92; the deposit transaction recorded here is the one the PoC replays."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1713943115,
+        "deployTimestamp": 1697802095,
+        "upgradeEventCount": 5,
+        "lastChangeTimestamp": 1713899123,
+        "codeAgeSeconds": 43992,
+        "basis": "last of 5 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "pancakehunny",
+  "name": "PancakeHunny",
+  "incidents": [
+    {
+      "name": "PancakeHunny HunnyMinter mintFor reward inflation",
+      "date": "2021-06-03T02:24:49Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1348,
+      "lossOther": "3.39 WBNB in this transaction; the exploit contract was run 91 times (PancakeHunny incident report)",
+      "victimContract": "0x109Ea28dbDea5E6ec126FbC8c33845DFe812a300",
+      "exploitTx": "0x765de8357994a206bb90af57dcf427f48a2021f2f28ca81f2c00bc3b9842be8e",
+      "attacker": "0x0ef50be29c82ecf2158ec1886dc6692a2b0db411",
+      "notes": "HunnyMinter.mintFor() sized the HUNNY reward from IBEP20(flip).balanceOf(address(this)) instead of the performance-fee amount actually transferred in, so a flash-loaned CakeFlipVault deposit minted an inflated HUNNY reward.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x765de8357994a206bb90af57dcf427f48a2021f2f28ca81f2c00bc3b9842be8e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2021-06/PancakeHunny_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/hunnyfinance/pancakehunny-post-mortem-analysis-de78967401d8"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: HunnyMinter 0x109Ea28dbDea5E6ec126FbC8c33845DFe812a300 created 2021-06-01T03:31:00Z by 0xe5f7e3dd9a5612eccb228392f47b7ddba8ce4f1a, unrelated to attack sender 0x0ef50be29c82ecf2158ec1886dc6692a2b0db411; no EIP-1967 Upgraded events before the incident, age measured from deployment. Order-of-magnitude check: 3.39 WBNB moved in this transaction and the incident report states the exploit contract was executed 91 times, so the incident is well above the $1,000 floor. lossUsd converts only the 3.39 WBNB moved in this transaction: 3.39 WBNB x $397.53 at incidentTimestamp 1622687089 (DefiLlama coingecko:binancecoin) = $1,348; the full incident is larger because the exploit contract was run 91 times, but no per-incident figure is published."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1622687089,
+        "deployTimestamp": 1622518260,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1622518260,
+        "codeAgeSeconds": 168829,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

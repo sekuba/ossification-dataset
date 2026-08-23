@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "token-3913",
+  "name": "3913 Token",
+  "incidents": [
+    {
+      "name": "3913 pair surplus skim",
+      "date": "2023-11-02T05:07:16Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 31354,
+      "victimContract": "0xd74F28c6E0E2c09881Ef2d9445F158833c174775",
+      "exploitTx": "0x8163738d6610ca32f048ee9d30f4aa1ffdb3ca1eddf95c0eba086c3e936199ed",
+      "attacker": "0xb29f18b89e56cc0151c7c17de0625a21018d8ae7",
+      "notes": "3913's transfer logic leaves surplus 3913 in the PancakeSwap pair above its recorded reserves, so the attacker repeatedly harvested the surplus with pair.skim() into helper contracts and sold it for BUSD.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x8163738d6610ca32f048ee9d30f4aa1ffdb3ca1eddf95c0eba086c3e936199ed"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://defimon.xyz/attack/bsc/0x8163738d6610ca32f048ee9d30f4aa1ffdb3ca1eddf95c0eba086c3e936199ed"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/3913_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xd74F28c6E0E2c09881Ef2d9445F158833c174775 created 2023-11-01T08:22:22Z by 0x40aef5550b3e23cbc8cd6575598efddd9489854b, which is not the attack-tx sender 0xb29f18b89e56cc0151c7c17de0625a21018d8ae7; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1698901636,
+        "deployTimestamp": 1698826942,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1698826942,
+        "codeAgeSeconds": 74694,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

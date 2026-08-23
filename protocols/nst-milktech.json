@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "nst-milktech",
+  "name": "NST (Milktech)",
+  "incidents": [
+    {
+      "name": "NST swap contract unrestricted minter",
+      "date": "2023-06-02T03:02:47Z",
+      "chain": "polygon",
+      "category": "code-bug",
+      "lossUsd": 40000,
+      "victimContract": "0x9D101E71064971165Cd801E39c6B07234B65aa88",
+      "exploitTx": "0xa1f2377fc6c24d7cd9ca084cafec29e5d5c8442a10aae4e7e304a4fbf548be6d",
+      "attacker": "0xcb3585f3e09f0238a3f61838502590a23f15bb5b",
+      "notes": "The unverified NST/USDT swap contract held the NST Minter role and let an arbitrary caller drive the sellNST path against freshly minted NST, converting worthless tokens into the contract's USDT at the fixed peg rate.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0xa1f2377fc6c24d7cd9ca084cafec29e5d5c8442a10aae4e7e304a4fbf548be6d"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-06/NST_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: swap contract 0x9D101E71064971165Cd801E39c6B07234B65aa88 created 2023-03-07T18:50:38Z by 0x7b1bc47bc095d2f030a8678dcaeb68c793b9d8e9, not the attack-tx sender 0xcb3585f3e09f0238a3f61838502590a23f15bb5b; unverified, no EIP-1967 events, 86.3 days old. Loss $40k per the DeFiHackLabs 2023 index entry for this PoC."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1685674967,
+        "deployTimestamp": 1678215038,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1678215038,
+        "codeAgeSeconds": 7459929,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

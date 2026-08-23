@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2026-04/unverified_a152_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: the victim's single DELEGATECALL in the exploit tx (selector 0xaced3248) goes to 0xc5107fc88af7a0536f9197cfc68fc86fd60ed846, which prestateTracer shows is read from the keccak slot 0xf4efdb76b845a8770afe715c2e72e59b0624107b44d7824eb8bf07159a5a9c29. Binary-searching that slot over [17982849, 24973582] finds exactly one write, at block 17982856 - seven blocks and 84 seconds after the creation block, i.e. part of the deployment/registration sequence - and no change in the following 977 days. The runtime is byte-identical at both blocks. Deployment remains the right basis (the 84-second offset is inside the deploy sequence and is not recorded as a separate change); 977.5 days."
         }
       ],
       "attacker": "0x224c940003dd0b8aa1a20e655ced0363d573fa46",

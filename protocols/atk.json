@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "atk",
+  "name": "ATK (Journey of Awakening)",
+  "incidents": [
+    {
+      "name": "ATK getPrice spot-price manipulation",
+      "date": "2022-10-12T05:03:19Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 127677,
+      "victimContract": "0x9cb928bf50ed220ac8f703bce35be5ce7f56c99c",
+      "exploitTx": "0x601b8ab0c1d51e71796a0df5453ca671ae23de3d5ec9ffd87b9c378504f99c32",
+      "attacker": "0x3DF6cd58716d22855aFb3B828F82F10708AfbB4f",
+      "notes": "The ATK token's getPrice() returns the ATK/BUSDT pair's live reserve ratio, and the staking contract's claimReward() sizes its payout from it, so a flash loan moved the price and inflated the reward.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x601b8ab0c1d51e71796a0df5453ca671ae23de3d5ec9ffd87b9c378504f99c32"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-10/ATK_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.certik.com/resources/blog/1YsQo8TnxCvwalqvtkFLtC-journey-of-awakening-incident-analysis"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: ATK 0x9cb928bf50ed220ac8f703bce35be5ce7f56c99c created 2022-10-04T05:15:26Z by 0x3ed61a183ba5a60040c65917661f9a966a52e0ee, unrelated to attack sender 0x3df6cd58716d22855afb3b828f82f10708afbb4f; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 127,677.36 USDT left the staking contract 0xd228faee4f73a73fcc73b6d9a1bd25ee1d6ee611 to the attacker in this transaction. Boundary row: the reward logic behaved as coded and the attacker moved the price getPrice() reads."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1665550999,
+        "deployTimestamp": 1664860526,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1664860526,
+        "codeAgeSeconds": 690473,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

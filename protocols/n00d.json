@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "n00d",
+  "name": "n00d (Xn00d bar)",
+  "incidents": [
+    {
+      "name": "Xn00d ERC-777 reentrancy",
+      "date": "2022-10-25T16:46:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 29394,
+      "victimContract": "0x3561081260186E69369E6C32F280836554292E08",
+      "exploitTx": "0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea",
+      "attacker": "0x8ca72f46056d85db271dd305f6944f32a9870ff0",
+      "notes": "The Xn00d SushiBar-style staking contract accepted the ERC-777 n00d token and pulled it with transferFrom before minting shares, so the attacker's ERC-1820 tokensToSend hook re-entered enter() and minted shares against the same deposit repeatedly.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-10/N00d_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BlockSecTeam/status/1584959295829180416"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Xn00d 0x3561081260186E69369E6C32F280836554292E08 created 2022-09-26T06:42:23Z by 0xee6209bd47c3d58eeba1f25437b76989074f0d19, unrelated to the attack sender; no EIP-1967 events, age from deployment (29.4 days). Loss read from the tx receipt: 20.8215 WETH unwrapped by the attack contract; 20.8215 x $1,411.70 at incidentTimestamp 1666716419 (DefiLlama) = $29,394."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1666716419,
+        "deployTimestamp": 1664174543,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1664174543,
+        "codeAgeSeconds": 2541876,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

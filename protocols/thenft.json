@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "thenft",
+  "name": "TheNFT V2",
+  "incidents": [
+    {
+      "name": "TheNFTV2 burn() stale approval reuse",
+      "date": "2023-11-25T08:17:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 19000,
+      "victimContract": "0x79a7D3559D73EA032120A69E59223d4375DEb595",
+      "exploitTx": "0xd5b4d68432cbbd912130bbb5b93399031ddbb400d8f723c78050574de7533106",
+      "attacker": "0x2F746bC70f72aAF3340B8BbFd254fd91a3996218",
+      "notes": "TheNFTV2.burn() paid out the underlying TheDAO tokens and moved the NFT to a dead address without clearing the token approval, so the attacker could transferFrom it back out of the dead address and burn the same NFT again in a loop.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xd5b4d68432cbbd912130bbb5b93399031ddbb400d8f723c78050574de7533106"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/TheNFTV2_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/MetaTrustAlert/status/1728616715825848377"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: TheNFTV2 0x79a7D3559D73EA032120A69E59223d4375DEb595 created 2022-01-19T06:45:15Z by 0xc43473fa66237e9af3b2d886ee1205b81b14b2c8, unrelated to the attack sender; no EIP-1967 events, age from deployment (675 days). Loss ~19K per the PoC header, realised by selling the repeatedly redeemed TheDAO tokens into the Uniswap pair."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1700900243,
+        "deployTimestamp": 1642574715,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1642574715,
+        "codeAgeSeconds": 58325528,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

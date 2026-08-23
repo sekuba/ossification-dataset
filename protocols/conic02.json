@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-07/Conic02_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "Onchain review: crvUSD omnipool 0x369cbc5c6f139b1132d3b91b87241b37fc5b971f created 2023-06-08T18:00:59Z (block 17438004) by 0xedaeb101f34d767f263c0fe6b8d494e3d071f0ba, unrelated to the attack sender 0xb6369f59fc24117b16742c9dfe064894d03b3b80. The pool is not itself a proxy (implementation() reverts; Etherscan's Proxy flag is a false positive) and its keccak(eth_getCode) is identical at the creation and incident blocks, but _depositToCurvePool/_withdrawFromCurvePool run `controller.curveHandler().functionDelegateCall(...)` and `controller.convexHandler().functionDelegateCall(...)`, so part of the executing code is fetched from the Controller at call time. Reading the Controller's storage rather than any event: slot 6 (curveHandler) changed 0x92bffb71bbe241ba9cdfb3a4e56e48dc4f118ed7 -> 0xd775ae26f89bcd89e66485324d8830c0ef1e8b6c at block 17613432 (2023-07-03T12:26:23Z), and slot 7 (convexHandler, 0x635228edaead8a76b6ae1779bd7682043321943d) never changed over [17438004, 17743469]. Both handlers appear as delegatecall targets of the victim in the exploit trace. Age measured from the curveHandler swap: 18.3 days rather than the 42.9 days the deployment basis gave."
         }
       ],
       "attacker": "0xb6369f59fc24117b16742c9dfe064894d03b3b80",
@@ -29,10 +33,12 @@
         "incidentTimestamp": 1689966095,
         "deployTimestamp": 1686256859,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1686256859,
-        "codeAgeSeconds": 3709236,
-        "basis": "deployment (onchain)"
-      }
+        "lastChangeTimestamp": 1688387183,
+        "codeAgeSeconds": 1578912,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2023-07-03T12:26:23Z (block 17613432): the Conic Controller 0x013A3Da6591d3427F164862793ab4e388F9B587e had its curveHandler (controller storage slot 6) changed 0x92bffb71bbe241ba9cdfb3a4e56e48dc4f118ed7 -> 0xd775ae26f89bcd89e66485324d8830c0ef1e8b6c; the omnipool executes that handler's code in its own context via Address.functionDelegateCall, so this is a change of the victim's executing code",
+      "nonStandardUpgradeArchitecture": true
     }
   ]
 }

@@ -1,0 +1,94 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "openleverage",
+  "name": "OpenLeverage",
+  "incidents": [
+    {
+      "name": "OpBorrowing liquidation clears shared LToken debt",
+      "date": "2024-04-01T05:18:53Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 234000,
+      "victimContract": "0xf436f8fe7b26d87eb74e5446acec2e8ad4075e47",
+      "exploitTx": "0xf78a85eb32a193e3ed2e708803b57ea8ea22a7f25792851e3de2d7945e6d02d5",
+      "attacker": "0x5bb5b6d41c3e5e41d9b9ed33d12f1537a1293d5f",
+      "notes": "OpBorrowing.liquidate() settled positions through LToken.repayBorrowEndByOpenLev(), which zeroes the borrower's entire LToken debt shared with OpenLevV1 margin trades, so the attacker reentered OpBorrowing.borrow() from the untrusted dexData swap callback of marginTrade() to open a dust position, liquidated it, and then withdrew the now debt-free margin collateral with payoffTrade().",
+      "nonStandardUpgradeArchitecture": true,
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xf78a85eb32a193e3ed2e708803b57ea8ea22a7f25792851e3de2d7945e6d02d5"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://neptunemutual.com/blog/how-was-open-leverage-exploited/"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/OpenLeverage2_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xf436f8fe7b26d87eb74e5446acec2e8ad4075e47 is the OPBorrowingDelegator created 2023-03-22 by 0xe9547cf7e592f83c5141bb50648317e35d27d29b (OpenLeverage deployer), not by attack sender 0x5bb5b6d41c3e5e41d9b9ed33d12f1537a1293d5f; it is a custom delegator that emits NewImplementation rather than EIP-1967 Upgraded, and its only NewImplementation event (block 37968060, 2024-04-18) is the post-incident patch, so the exploited code dates from the constructor-set implementation"
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. OPBorrowingDelegator declares DelegatorInterface before Adminable, so `implementation` is storage slot 0; it held 0xd3150b1242315e16845fe21b536f53a82b6b85a5 continuously over a 25-point probe of [26681424, 37470329] and callTracer on the exploit tx shows the delegator delegatecalling only that address (a leaf - its single 0xf4 byte is inside the trailing metadata)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1711948733,
+        "deployTimestamp": 1679476244,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1679476244,
+        "codeAgeSeconds": 32472489,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
+      "name": "RewardVaultDelegator uninitialized initialize()",
+      "date": "2023-10-22T08:26:39Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 8000,
+      "victimContract": "0x7bACB1c805CbbF7c4f74556a4B34FDE7793d0887",
+      "exploitTx": "0xd88f26f2f9145fa413db0cfd5d3eb121e3a50a3fdcee16c9bd4731e68332ce4b",
+      "attacker": "0x8ebd046992afe07eacce6b9b3878fdb45830f42b",
+      "notes": "RewardVaultDelegator.initialize() was left callable on the deployed delegator, letting the attacker overwrite admin and then point setImplementation() at its own contract to sweep user allowances.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xd88f26f2f9145fa413db0cfd5d3eb121e3a50a3fdcee16c9bd4731e68332ce4b"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://defimon.xyz/exploit/bsc/0x5366c6ba729d9cf8d472500afc1a2976ac2fe9ff"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-10/OpenLeverage_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x7bACB1c805CbbF7c4f74556a4B34FDE7793d0887 created 2023-03-01T08:23:57Z by 0xe9547cf7e592f83c5141bb50648317e35d27d29b, which is not the attack-tx sender 0x8ebd046992afe07eacce6b9b3878fdb45830f42b; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis, and the implementation swap seen at the incident block is the attack itself. RewardVaultDelegator keeps `implementation` at storage slot 0; it held the deployment value 0x3d11015d9044cabbb2504448e37f20d0d56e36f8 from creation through block 32820951 and only moved to 0x5366c6ba729d9cf8d472500afc1a2976ac2fe9ff inside the exploit block 32820952, where the sole NewImplementation event also fires (slot 1 `admin` is overwritten in the same block). callTracer shows the delegator executing 0x3d11015d... before and 0x5366c6ba... after the takeover, so the code the attacker hit is the deployment-time implementation."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1697963199,
+        "deployTimestamp": 1677659037,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1677659037,
+        "codeAgeSeconds": 20304162,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

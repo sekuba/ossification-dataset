@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bearn-dao",
+  "name": "Bearn DAO",
+  "incidents": [
+    {
+      "name": "BvaultsStrategy convertDustToEarned unprotected swap",
+      "date": "2023-12-05T21:53:03Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 769000,
+      "victimContract": "0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e",
+      "exploitTx": "0x51913be3f31d5ddbfc77da789e5f9653ed6b219a52772309802226445a1edd5f",
+      "attacker": "0xce27b195fa6de27081a86b98b64f77f5fb328dd5",
+      "notes": "BvaultsStrategy.convertDustToEarned() is permissionless and swaps the strategy's holdings through PancakeSwap with no minimum-output check, so a flash-loan-skewed pool let the attacker capture the strategy's swap.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x51913be3f31d5ddbfc77da789e5f9653ed6b219a52772309802226445a1edd5f"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/AnciliaInc/status/1732159377749180646"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-12/BEARNDAO_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e created 2021-03-02T08:33:22Z by 0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36, which is not the attack-tx sender 0xce27b195fa6de27081a86b98b64f77f5fb328dd5; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1701813183,
+        "deployTimestamp": 1614674002,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1614674002,
+        "codeAgeSeconds": 87139181,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

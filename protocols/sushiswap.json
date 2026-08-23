@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "sushiswap",
+  "name": "SushiSwap",
+  "incidents": [
+    {
+      "name": "SushiSwap RouteProcessor2 unvalidated route pool",
+      "date": "2023-04-09T02:35:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 3300000,
+      "victimContract": "0x044b75f554b886a065b9567891e45c79542d7357",
+      "exploitTx": "0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32",
+      "attacker": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+      "notes": "RouteProcessor2.processRoute() never checked that the pool address encoded in the user-supplied `route` was a real UniswapV3 pool, so an attacker-controlled 'pool' could call back into uniswapV3SwapCallback and make the router execute transferFrom against any wallet that had approved it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.sushi.com/blog/routeprocessor2-post-mortem"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-04/Sushi_Router_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: RouteProcessor2 0x044b75f554b886a065b9567891e45c79542d7357 created 2023-04-05 by 0xf87bc5535602077d340806d71f805ea9907a843d (Sushi deployer), unrelated to the attack senders; no EIP-1967 Upgraded events, so the exploited code was 3.8 days old. The flaw was exploited by many independent senders in blocks 17007838-17007844 draining approvals from 0x31d3243cfb54b34fc9c73e1cb1137124bd6b13e1; the tx recorded here is the 800 WETH drain named in Sushi's own post-mortem, sent by the MEV searcher c0ffeebabe.eth which returned funds, while other replays (e.g. 0x8ac0b9656b7c39be0d3d73828d2041e8c0e27712) kept them"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1681007759,
+        "deployTimestamp": 1680677219,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1680677219,
+        "codeAgeSeconds": 330540,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

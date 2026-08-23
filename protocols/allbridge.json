@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "allbridge",
+  "name": "Allbridge",
+  "incidents": [
+    {
+      "name": "Allbridge BSC pool spot-price manipulation",
+      "date": "2023-04-01T21:57:02Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 573000,
+      "victimContract": "0x312bc7eaaf93f1c60dc5afc115fccde161055fb0",
+      "exploitTx": "0x7ff1364c3b3b296b411965339ed956da5d17058f3164425ce800d64f1aef8210",
+      "attacker": "0xc578d755cd56255d3ff6e92e1b6371ba945e3984",
+      "notes": "The swap pool behaved as designed; after flash-loaning enough BUSD/USDT to become effectively the sole liquidity provider, the attacker used swaps to skew the pool's own balance-ratio price and then deposited and withdrew against that skewed spot price to extract more than was put in.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x7ff1364c3b3b296b411965339ed956da5d17058f3164425ce800d64f1aef8210"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BeosinAlert/status/1642372700726505473"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-04/Allbridge_exp.sol (20230402 Allbridge - FlashLoan price manipulation)"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: pool proxy 0x312bc7eaaf93f1c60dc5afc115fccde161055fb0 created 2022-04-18 by 0x8c6644415b3f3cd7fc0a453c5be3d3306fe0b2f9 (Allbridge deployer), unrelated to attack sender 0xc578d755cd56255d3ff6e92e1b6371ba945e3984; 1 EIP-1967 Upgraded event on 2022-08-31 to implementation 0x2c3c340233338d875637304b06f4f6faf9bebd20, giving a 213-day code age; separate from the 2026 Allbridge CCTP incident already in this dataset (different chain and contract)"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1680386222,
+        "deployTimestamp": 1650271019,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1661956922,
+        "codeAgeSeconds": 18429300,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

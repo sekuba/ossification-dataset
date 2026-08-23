@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "nalakuvara",
+  "name": "Nalakuvara",
+  "incidents": [
+    {
+      "name": "LotteryTicketSwap50 spot-priced ticket swap",
+      "date": "2025-05-09T12:09:33Z",
+      "chain": "base",
+      "category": "oracle-manipulation",
+      "lossUsd": 105470,
+      "victimContract": "0x172119155a48DE766B126de95c2cb331D3A5c7C2",
+      "exploitTx": "0x16a99aef4fab36c84ba4616668a03a5b37caa12e2fc48923dba4e711d2094699",
+      "attacker": "0x3026C464d3Bd6Ef0CeD0D49e80f171b58176Ce32",
+      "notes": "LotteryTicketSwap50 exchanged USDC for tickets at a rate taken from the Nalakuvara/USDC Uniswap V2 pair, so a 2.93M USDC Uniswap V3 flash loan that skewed that pair let the attacker mint and redeem tickets at a manipulated rate and walk away with the swap contract's USDC.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0x16a99aef4fab36c84ba4616668a03a5b37caa12e2fc48923dba4e711d2094699"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-05/Nalakuvara_LotteryTicket50_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: LotteryTicketSwap50 0x172119155a48DE766B126de95c2cb331D3A5c7C2 created 2025-05-08T14:09:19Z by 0x66d9748e58f3bbfb4e400b3c6991bd578dabbeb2, not the attack-tx sender 0x3026c464d3bd6ef0ced0d49e80f171b58176ce32; no EIP-1967 events, 22 hours old. Loss 105,470 USDC taken at 1:1 as a USD-pegged stable."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1746792573,
+        "deployTimestamp": 1746713359,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1746713359,
+        "codeAgeSeconds": 79214,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

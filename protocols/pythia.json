@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "pythia",
+  "name": "Pythia Finance",
+  "incidents": [
+    {
+      "name": "Pythia staking reward re-claim",
+      "date": "2024-09-03T03:42:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 53000,
+      "victimContract": "0xe2910b29252F97bb6F3Cc5E66BfA0551821C7461",
+      "exploitTx": "0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3",
+      "attacker": "0xd861e6f1760d014d6ee6428cf7f7d732563c74c0",
+      "notes": "claimRewards() paid out against the caller's current staking-token balance without settling or resetting reward accounting when that balance was transferred, so the attacker recycled the same stake through fresh helper contracts and claimed the reward pool ~30 times in one transaction.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://quadrigainitiative.com/casestudy/pythiafinancestakingcontractvulnerabilityandrugpull.php"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-09/Pythia_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: staking contract 0xe2910b29... created by 0xae730f689ac162440536ce006caff10fe759ab52 on 2024-09-02T17:31:59Z, 10 hours before the attack; attack sender 0xd861e6f1... is unrelated to the creator"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1725334943,
+        "deployTimestamp": 1725298319,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1725298319,
+        "codeAgeSeconds": 36624,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

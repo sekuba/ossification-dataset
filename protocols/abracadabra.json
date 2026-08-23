@@ -15,7 +15,11 @@
       "sources": [
         {
           "type": "curated-review",
-          "ref": "l2beat research; see notes"
+          "ref": "onchain review (no exploit tx in this row; DeFiHackLabs src/test/2024-01/MIMSpell2_exp.sol names the same victim. Incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 19119184, 2024-01-30T12:00:00Z). The victim 0x7259e152103756e1616A77Ae982353c3751A6a90 is an EIP-1167 minimal proxy created at block 16520538, 2023-01-30T15:28:47Z; its 45-byte runtime (0x363d3d373d3d3d363d73c4113ae18e0d3213c6a06947a2ffc70ad3517c775af43d82803e903d91602b57fd5bf3) hardcodes the CauldronV4 master 0xc4113ae18e0d3213c6a06947a2ffc70ad3517c77 in the bytecode rather than in storage, so the delegate target cannot be repointed. The clone runtime is byte-identical at its creation block and the incident block, and the master (created 2023-01-26T02:59:11Z, block 16488159) itself contains zero DELEGATECALL opcodes and emits no EIP-1967 Upgraded event. The effective code therefore never changed after the clone was deployed and the deployment basis is exact."
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis (re-check of the existing note). The clone's 45-byte runtime and the CauldronV4 master 0xc4113ae18e0d3213c6a06947a2ffc70ad3517c77's 22 kB runtime are each byte-identical at 13 sample points across [16520538, 19119184], so neither the hardcoded delegate target nor the master's code moved before the incident."
         }
       ],
       "measurement": {

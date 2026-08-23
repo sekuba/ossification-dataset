@@ -1,0 +1,48 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "phoenix-finance",
+  "name": "Phoenix Finance",
+  "incidents": [
+    {
+      "name": "Phoenix proxy access control and arbitrary external call",
+      "date": "2023-03-07T10:50:54Z",
+      "chain": "polygon",
+      "category": "code-bug",
+      "lossUsd": 100000,
+      "victimContract": "0x65BaF1DC6fA0C7E459A36E2E310836B396D1B1de",
+      "exploitTx": "0x6fa6374d43df083679cdab97149af8207cda2471620a06d3f28b115136b8e2c4",
+      "attacker": "0x1b288fba50e9c44d8bb269a403dcb21d5f8c6059",
+      "notes": "The Phoenix proxy exposed a function that executed a caller-supplied target and calldata with no access control, letting an arbitrary caller move the contract's USDC and leveraged-token holdings out.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0x6fa6374d43df083679cdab97149af8207cda2471620a06d3f28b115136b8e2c4"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-03/Phoenix_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Phoenix proxy 0x65BaF1DC6fA0C7E459A36E2E310836B396D1B1de created 2021-08-05T00:43:27Z by 0xdba6252381cc81a533c7afa6972dacb665f7794c, not the attack-tx sender 0x1b288fba50e9c44d8bb269a403dcb21d5f8c6059; no EIP-1967 Upgraded events, 579.4 days old. Summing this receipt's ERC-20 Transfer logs gives a net +10,142.67 USDC and +405.04 WETH_BULL_X3 to the attack contract; the DeFiHackLabs 2023 index reports ~$100k for the incident overall, which is the figure recorded here."
+        },
+        {
+          "type": "curated-review",
+          "ref": "delegatecall-target review (callTracer + prestateTracer on the exploit tx, then eth_getStorageAt over [creation block, incident block]): the phxProxy keeps its implementation outside the EIP-1967 slot. The exploit tx DELEGATECALLs 0x65baf1dc...b1de -> 0x6d68beb09ea7e76d561ea8c4aac34a6611dd9821 (three selectors) and -> 0x95620f30263ac0b0b4ffd9b7465838084e89cb84 (selector 0xa9678a18); prestateTracer locates the first in mapping slot 0x116ee98954c8ad885d026f66ba1704d2c92f33e78300484a0108dbee58e9c722 and the second in slot 14. Binary-searching both between the creation block 17630226 and the incident block 40067323: the mapping slot ran 0xff367f14 (deployment) -> 0x6f4fb876 (2021-08-07) -> 0x584ae6bc (2021-08-31) -> 0x9dfee585 (2021-09-08) -> 0x6d68beb09ea7e76d561ea8c4aac34a6611dd9821 at block 19095584, 2021-09-14T11:11:41Z; slot 14 ran 0x44922501 (deployment) -> 0x5870b306 (2021-08-31) -> 0x3e9e2ae9 (2021-09-14) -> 0x95620f30263ac0b0b4ffd9b7465838084e89cb84 at block 19172145, 2021-09-16T13:23:04Z. Both are constant across 60 samples to the incident; the age runs from the later install, 536.9 days rather than 579.4 from deployment"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1678186254,
+        "deployTimestamp": 1628124207,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1631798584,
+        "codeAgeSeconds": 46387670,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2021-09-16T13:23:04Z (block 19172145): the phxProxy module pointer at storage slot 14 was last repointed to 0x95620f30263ac0b0b4ffd9b7465838084e89cb84; the main implementation pointer had been repointed to 0x6d68beb09ea7e76d561ea8c4aac34a6611dd9821 two days earlier, at block 19095584",
+      "nonStandardUpgradeArchitecture": true
+    }
+  ]
+}

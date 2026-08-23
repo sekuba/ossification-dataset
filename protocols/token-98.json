@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "token-98",
+  "name": "98 Token",
+  "incidents": [
+    {
+      "name": "98Token swap helper unprotected swapTokensForTokens()",
+      "date": "2025-01-04T05:51:00Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 28000,
+      "victimContract": "0xB040D88e61EA79a1289507d56938a6AD9955349C",
+      "exploitTx": "0x61da5b502a62d7e9038d73e31ceb3935050430a7f9b7e29b9b3200db3095f91d",
+      "attacker": "0x67a5f6bd9f8763c7e6c4ea0b54d1b14b9e5ee7e2",
+      "notes": "The 98 swap contract's public swapTokensForTokens(address[],uint256,uint256,address) spends the contract's own token balance and sends the proceeds to a caller-supplied recipient, so the attacker drained its entire 98 holding to itself.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x61da5b502a62d7e9038d73e31ceb3935050430a7f9b7e29b9b3200db3095f91d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/TenArmorAlert/status/1875462686353363435"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-01/98Token_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xB040D88e61EA79a1289507d56938a6AD9955349C created 2025-01-03T07:23:26Z by 0x0d06757892d3a5772b23bdb6198cb2613419fd94, which is not the attack-tx sender 0x67a5f6bd9f8763c7e6c4ea0b54d1b14b9e5ee7e2; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1735969860,
+        "deployTimestamp": 1735889006,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1735889006,
+        "codeAgeSeconds": 80854,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

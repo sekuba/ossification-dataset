@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "aperture-finance",
+  "name": "Aperture Finance",
+  "incidents": [
+    {
+      "name": "Aperture Finance arbitrary call approval drain",
+      "date": "2026-01-25T17:10:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 3670000,
+      "victimContract": "0xd83d960debec397fb149b51f8f37dd3b5cfa8913",
+      "exploitTx": "0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a",
+      "attacker": "0xe3e73f1e6ace2b27891d41369919e8f57129e8ea",
+      "notes": "The closed-source Aperture router forwarded caller-supplied call targets and calldata without validation, letting the attacker make the contract invoke ERC-20 transferFrom() and ERC-721 transfers against the standing token and Uniswap V3 position approvals users had granted it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blocksec.com/blog/17m-closed-source-smart-contract-exploit-arbitrary-call-swapnet-aperture"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.solidityscan.com/aperture-finance-hack-analysis-22dca439ff33/"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim created 2025-12-15 by 0xbeef63ae5a2102506e8a352a5bb32aa8b30b3112 (not the attacker), no EIP-1967 Upgraded event before the incident. The anchored tx is the attacker's contract-creation tx; its logs show 36.918 WBTC pulled from user 0x5240b03be5bc101a0082074666dd89ad883e1f9d to the attacker EOA plus a Uniswap V3 position mint. Reported incident total $3.67M across Ethereum/Arbitrum/Base."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1769361035,
+        "deployTimestamp": 1765826879,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1765826879,
+        "codeAgeSeconds": 3534156,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

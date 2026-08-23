@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "annex-finance",
+  "name": "Annex Finance",
+  "incidents": [
+    {
+      "name": "Annex Liquidator unvalidated flash-swap callback",
+      "date": "2022-11-18T15:49:19Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1968,
+      "victimContract": "0xe65E970F065643bA80E5822edfF483A1d75263E3",
+      "exploitTx": "0x3757d177482171dcfad7066c5e88d6f0f0fe74b28f32e41dd77137cad859c777",
+      "attacker": "0x40fb8d322cc4887d6c2bf886755300ea79f6a874",
+      "notes": "The Annex Liquidator's PancakeSwap flash-swap callback never verified that msg.sender was a legitimate factory pair, so the attacker created a pair for a worthless self-minted token and had it call the liquidator, draining its WBNB.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x3757d177482171dcfad7066c5e88d6f0f0fe74b28f32e41dd77137cad859c777"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-11/Annex_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/AnciliaInc/status/1593690338526273536"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Liquidator 0xe65E970F065643bA80E5822edfF483A1d75263E3 created 2022-11-17T07:31:44Z by 0x50086caf6a8b4aef941d6512ad0d2a25c48469a9, unrelated to attack sender 0x40fb8d322cc4887d6c2bf886755300ea79f6a874; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 7.2259 WBNB left the liquidator; 7.2259 WBNB x $272.38 at incidentTimestamp 1668786559 (DefiLlama coingecko:binancecoin) = $1,968."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1668786559,
+        "deployTimestamp": 1668670304,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1668670304,
+        "codeAgeSeconds": 116255,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

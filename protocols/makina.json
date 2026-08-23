@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "makina",
+  "name": "Makina Finance",
+  "incidents": [
+    {
+      "name": "Makina DUSD Caliber AUM revaluation",
+      "date": "2026-01-20T03:40:35Z",
+      "chain": "ethereum",
+      "category": "oracle-manipulation",
+      "lossUsd": 4130000,
+      "victimContract": "0xd1a1c248b253f1fc60eacd90777b9a63f8c8c1bc",
+      "exploitTx": "0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5",
+      "attacker": "0x935bfb495e33f74d2e9735df1da66ace442ede48",
+      "notes": "Caliber.accountForPosition() / Machine.updateTotalAum() were permissionless and valued the DUSD machine's Curve MIM-3LP3CRV position with the pool's spot calc_withdraw_one_coin(), so a ~$280M flash-loan skew of the Curve balances propagated into DUSD's share oracle and let the caller swap out of the DUSD/USDC pool at the inflated rate.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://makinafi.substack.com/p/post-mortem-january-20th-2026-incident"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-01/makina_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Caliber 0xD1A1C248... is a BeaconProxy (beacon 0x3f5a881db86d6f495823028a1e892e7b2cd7e162, last beacon Upgraded at block 23426675, before the Caliber deployment), created 2025-10-25 by 0x6f59929ebab4502b6ccd0fffbd1436d9554050f2. The anchored transaction is the MEV-builder front-run (sender 0x935bfb49...) of the original attacker 0x2f934b0fd5c4f99bab37d47604a3a1aeadef1ccc; reported loss $4.13M (PeckShield/CertiK), ~$5.1M pool loss per GoPlus. Recheck (deployment basis confirmed, read from storage rather than events): the Caliber proxy's EIP-1967 beacon slot held 0x3f5a881db86d6f495823028a1e892e7b2cd7e162 unchanged over [23654997, 24273361], and the beacon's own implementation (its storage slot 1) held 0x06147e073b854521c7b778280e7d7dbafb2d4898 unchanged over the same range, both confirmed by binary-searching eth_getStorageAt; the only further address executed in the victim's context during the exploit, 0xfd162a672928bf40e5a81f0d11501d2849841fa6, is a PUSH32 constant inside that implementation. keccak(eth_getCode) on the proxy is identical at the creation and incident blocks."
+        }
+      ],
+      "nonStandardUpgradeArchitecture": true,
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1768880435,
+        "deployTimestamp": 1761401627,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1761401627,
+        "codeAgeSeconds": 7478808,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

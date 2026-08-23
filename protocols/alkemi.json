@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "alkemi",
+  "name": "Alkemi",
+  "incidents": [
+    {
+      "name": "Alkemi Earn self-liquidation collateral inflation",
+      "date": "2026-03-10T12:10:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 89310,
+      "victimContract": "0x4822D9172e5b76b9Db37B75f5552F9988F98a888",
+      "exploitTx": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d",
+      "attacker": "0x0ed1c01b8420a965d7bd2374db02896464c91cd7",
+      "notes": "AlkemiEarn.liquidateBorrow() let a borrower liquidate their own position with the borrowed asset also serving as the collateral asset, crediting more supply than the repayment consumed, so a flash-loaned supply/borrow/self-liquidate/withdraw sequence walked out with more ETH than was deposited.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/blockaid_/status/2031351883470676048"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-03/AlkemiEarn_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: AlkemiEarn proxy 0x4822D9172e5b76b9Db37B75f5552F9988F98a888 created 2021-09-07T18:41:12Z by 0x520da6e55eb070aa872cd08fe2665da44535cd33, not the attack-tx sender 0x0ed1c01b8420a965d7bd2374db02896464c91cd7; two EIP-1967 Upgraded events, the last at block 13685518 on 2021-11-25T20:14:20Z installing 0x85a948fd70b2b415bda93324581fb5fff1293df7, so the executing code was 1565.7 days old. 43.45 ETH x $2,055.46 at the incident timestamp (DefiLlama) = $89,310."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1773144611,
+        "deployTimestamp": 1631040072,
+        "upgradeEventCount": 2,
+        "lastChangeTimestamp": 1637871260,
+        "codeAgeSeconds": 135273351,
+        "basis": "last of 2 upgrade events (onchain)"
+      }
+    }
+  ]
+}

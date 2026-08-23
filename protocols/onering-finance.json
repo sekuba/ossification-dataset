@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "onering-finance",
+  "name": "OneRing Finance",
+  "incidents": [
+    {
+      "name": "OneRing vault share pricing manipulation",
+      "date": "2022-03-21T18:44:10Z",
+      "chain": "fantom",
+      "category": "oracle-manipulation",
+      "lossUsd": 1450000,
+      "victimContract": "0x4e332D616b5bA1eDFd87c899E534D996c336a2FC",
+      "exploitTx": "0xca8dd33850e29cf138c8382e17a19e77d7331b57c7a8451648788bbb26a70145",
+      "attacker": "0x12efed3512ea7b76f79bcde4a387216c7bce905e",
+      "notes": "The OneRing vault derived its share price from the live state of the underlying stablecoin pools, so a flash-loaned USDC deposit that moved those pools let the attacker mint shares cheaply and redeem them at the restored price.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "fantom",
+          "ref": "0xca8dd33850e29cf138c8382e17a19e77d7331b57c7a8451648788bbb26a70145"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-03/OneRing_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review on Fantom over a public RPC: the PoC carries no transaction hash, so the exploit tx was recovered by querying eth_getLogs on the vault 0x4e332D616b5bA1eDFd87c899E534D996c336a2FC across the PoC's fork block window (34041497-34041503), which yields exactly one transaction, 0xca8dd338...0145 at block 34041500. Creation resolved by binary search over eth_getCode to block 23872504, 2021-12-03T12:34:32Z, creator 0x94c1deb52be70d6f281e6cdf2cd99c9e839808c4, not the attack-tx sender 0x12efed3512ea7b76f79bcde4a387216c7bce905e. Five EIP-1967 Upgraded events; the last is at block 33628407, 2022-03-17T03:01:55Z, installing 0xc06826f52f29b34c5d8b2c61abf844cebcf78abf, so the executing code was 4.65 days old. Loss $1.45 million per the DeFiHackLabs 2022 index entry for this PoC."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1647888250,
+        "deployTimestamp": 1638534872,
+        "upgradeEventCount": 5,
+        "lastChangeTimestamp": 1647486115,
+        "codeAgeSeconds": 402135,
+        "basis": "last of 5 upgrade events (onchain)"
+      }
+    }
+  ]
+}

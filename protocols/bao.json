@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-07/Bao_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. CErc20Delegator: `implementation` is storage slot 19 (slot 18 is `underlying`), holding 0xdb3401bef8f66e7f6cd95984026c26a4f47eee84 at all 25 sample points across [16673620, 17620871]; the only NewImplementation(address,address) on the market is the 0x0 -> 0xdb3401be write in its creation block 16673620; and callTracer on the exploit tx shows the market delegatecalling only that implementation, which has zero DELEGATECALL opcodes."
         }
       ],
       "attacker": "0x00693a01221a5e93fb872637e3a9391ef5f48300",

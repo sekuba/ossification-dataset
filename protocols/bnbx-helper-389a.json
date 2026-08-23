@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bnbx-helper-389a",
+  "name": "BNBX helper 0x389a",
+  "incidents": [
+    {
+      "name": "BNBX helper unrestricted transferFrom of user allowances",
+      "date": "2024-04-27T16:00:17Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 44288,
+      "victimContract": "0x389a9ae29fbe53cca7bc8b7a4d9d0a04078e1c24",
+      "exploitTx": "0xea88dc6dbd81d09c572b5849e0d4508598edcf8f11c9a995cd8fe7e6c194f39e",
+      "attacker": "0x123fa25c574bb3158ecf6515595932a92a1da510",
+      "notes": "The BNBX helper contract exposes an unauthenticated path that calls transferFrom on arbitrary holders that had approved it, so the attacker pulled BNBX out of ten user addresses and sold it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xea88dc6dbd81d09c572b5849e0d4508598edcf8f11c9a995cd8fe7e6c194f39e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/BNBX_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x389a9ae29fbe53cca7bc8b7a4d9d0a04078e1c24 created 2024-04-24T07:29:07Z by 0x82fa83cdfd6eafe40477417b70abae2ff9297151, which is not the attack-tx sender 0x123fa25c574bb3158ecf6515595932a92a1da510; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). Loss measured from the exploit transaction: the attacker contract nets 75.4672 WBNB of ERC-20 Transfer flow. 75.47 WBNB x $586.850343/BNB at the incident timestamp 1714233617 (DefiLlama coingecko:binancecoin) = $44,288."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1714233617,
+        "deployTimestamp": 1713943747,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1713943747,
+        "codeAgeSeconds": 289870,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

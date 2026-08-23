@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "betapresale",
+  "name": "Beta Presale",
+  "incidents": [
+    {
+      "name": "PresaleBEP20 public set(address) withdrawal redirect",
+      "date": "2025-05-19T16:12:10Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1287,
+      "victimContract": "0x760C2aAa22220f24B9343b2a91A62dD664953853",
+      "exploitTx": "0x47670c20325924e89aa87fcdd41df88c21246bd972056736e7964799831abf12",
+      "attacker": "0xc49f2938327aA2cDc3F2f89Ed17B54b3671F05dE",
+      "notes": "PresaleBEP20.set(address) is public and deposit() enforces its 100 BNB cap only per msg.sender while forwarding deposits straight to the mutable withdrawAddress, so the attacker redirected withdrawals to itself and recycled a 100 WBNB flash loan through 70 fresh depositors.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x47670c20325924e89aa87fcdd41df88c21246bd972056736e7964799831abf12"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://t.me/defimon_alerts/1092"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-05/BetaPresale_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x760C2aAa22220f24B9343b2a91A62dD664953853 created 2021-04-14T09:12:04Z by 0xd54a14ad4edc542709504a8f8e6b790843b2a664, which is not the attack-tx sender 0xc49f2938327aa2cdc3f2f89ed17b54b3671f05de; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 1.921686798824852706 WBNB x $645.48/BNB at the incident timestamp 1747671130 (DefiLlama coingecko:binancecoin) = $1,240, plus 46.47 BUSD at 1:1 = $1,287 total."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1747671130,
+        "deployTimestamp": 1618391524,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1618391524,
+        "codeAgeSeconds": 129279606,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "game-auction",
+  "name": "Game (NFT bid auction)",
+  "incidents": [
+    {
+      "name": "Game newBidEtherMin logic error",
+      "date": "2024-02-12T19:11:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 52572,
+      "victimContract": "0x52d69c67536f55efefe02941868e5e762538dbd6",
+      "exploitTx": "0x0eb8f8d148508e752d9643ccf49ac4cb0c21cbad346b5bbcf2d06974d31bd5c4",
+      "attacker": "0x145766a51ae96e69810fe76f6f68fd0e95675a0b",
+      "notes": "Game.newBidEtherMin() computed the minimum next bid wrongly, so makeBid()'s `require(msg.value > newBidEtherMin())` could be satisfied with a near-zero bid while the contract refunded the previous bidder in full, draining its ETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x0eb8f8d148508e752d9643ccf49ac4cb0c21cbad346b5bbcf2d06974d31bd5c4"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-02/Game_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/AnciliaInc/status/1757533144033739116"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Game 0x52d69c67536f55efefe02941868e5e762538dbd6 created 2024-02-12T10:39:35Z by 0x28d808550ed0a9a15bd3b9103664b8c12abfa740, unrelated to the attack sender; no EIP-1967 events, age from deployment - only 30,732 seconds (8.5 hours) old at the incident. ~20 ETH x $2,628.59 at incidentTimestamp 1707765107 (DefiLlama) = $52,572."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1707765107,
+        "deployTimestamp": 1707734375,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1707734375,
+        "codeAgeSeconds": 30732,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

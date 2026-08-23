@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "wsm-presale",
+  "name": "WSM presale",
+  "incidents": [
+    {
+      "name": "WSM presale buyWithBNB spot pricing",
+      "date": "2024-04-04T16:25:24Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 18000,
+      "victimContract": "0xfb071837728455c581f370704b225ac9eabdfa4a",
+      "exploitTx": "0x5a475a73343519f899527fdb9850f68f8fc73168073c72a3cff8c0c7b8a1e520",
+      "attacker": "0x3026C464d3Bd6Ef0CeD0D49e80f171b58176Ce32",
+      "notes": "The presale contract's buyWithBNB() prices WSM from the BNB/WSM pool spot rate, so a flash loan that skewed the pool let the attacker buy 2.5e24 WSM far below market.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x5a475a73343519f899527fdb9850f68f8fc73168073c72a3cff8c0c7b8a1e520"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/WSM_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xc0afd0e40bb3dcaebd9451aa5c319b745bf792b4 created 2024-02-08T13:58:57Z by 0x07d993c71bcd38d532a8691fdaa34bdaa815d63b, which is not the attack-tx sender 0x3026c464d3bd6ef0ced0d49e80f171b58176ce32; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). Loss reported by the PoC as 2,517,438,179,912,631,607,253,979 WSM, approximately USD 18K."
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim re-anchored from implementation 0xc0afd0e40bb3dcaebd9451aa5c319b745bf792b4 to the proxy the protocol runs at, 0xfb071837728455c581f370704b225ac9eabdfa4a, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (4847187s -> 4844110s)"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1712247924,
+        "deployTimestamp": 1684922893,
+        "upgradeEventCount": 5,
+        "lastChangeTimestamp": 1707403814,
+        "codeAgeSeconds": 4844110,
+        "basis": "last of 5 upgrade events (onchain)"
+      }
+    }
+  ]
+}

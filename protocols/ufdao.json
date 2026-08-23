@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "ufdao",
+  "name": "UF DAO",
+  "incidents": [
+    {
+      "name": "UF DAO SHOP incorrect parameter setting",
+      "date": "2023-01-11T22:13:24Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 90071,
+      "victimContract": "0xCA49EcF7e7bb9bBc9D1d295384663F6BA5c0e366",
+      "exploitTx": "0x933d19d7d822e84e34ca47ac733226367fbee0d9c0c89d88d431c4f99629d77a",
+      "attacker": "0xc578d755cd56255d3ff6e92e1b6371ba945e3984",
+      "notes": "The UF DAO SHOP contract let a caller set the purchase parameters that determine how much UFT is minted for a given payment, so the attacker bought UFT for almost nothing and redeemed it against the treasury's USDC.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x933d19d7d822e84e34ca47ac733226367fbee0d9c0c89d88d431c4f99629d77a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-01/UFDao_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BlockSecTeam/status/1613507804412940289"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: SHOP 0xCA49EcF7e7bb9bBc9D1d295384663F6BA5c0e366 created 2021-11-14T12:25:33Z by 0x5befa2d163e40e148df83921e1cc59e044df5471, unrelated to attack sender 0xc578d755cd56255d3ff6e92e1b6371ba945e3984; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 89,958.97 USDC left 0x2101e0F648A2b5517FD2C5D9618582E9De7a651A and the attacker netted 90,070.59 USDC."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1673475204,
+        "deployTimestamp": 1636892733,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1636892733,
+        "codeAgeSeconds": 36582471,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

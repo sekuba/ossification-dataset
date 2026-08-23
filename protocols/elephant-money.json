@@ -1,0 +1,85 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "elephant-money",
+  "name": "Elephant Money",
+  "incidents": [
+    {
+      "name": "Elephant Money Reserve ELEPHANT spot-price manipulation",
+      "date": "2022-04-12T16:49:33Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 11200000,
+      "victimContract": "0xd520a3b47e42a1063617a9b6273b206a07bdf834",
+      "exploitTx": "0xec317deb2f3efdc1dbf7ed5d3902cdf2c33ae512151646383a8cf8cbcd3d4577",
+      "attacker": "0xe552133cc829a7f7e98e349763fac7ab0f3828b0",
+      "notes": "The Reserve minted and redeemed TRUNK against ELEPHANT valued at the PancakeSwap ELEPHANT/WBNB spot price, so the attacker flash-loaned WBNB and BUSD to pump ELEPHANT, minted TRUNK at the inflated valuation, dumped ELEPHANT and redeemed the TRUNK back out of the collapsed reserve.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xec317deb2f3efdc1dbf7ed5d3902cdf2c33ae512151646383a8cf8cbcd3d4577"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/elephant-money/reserve-exploit-52fd36ccc7e8"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-04/Elephant_Money_exp.sol (20220412 ElephantMoney - Flashloan & Price Oracle Manipulation, lost $11.2 million)"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Reserve 0xd520a3b47e42a1063617a9b6273b206a07bdf834 (unverified on BscScan) created 2022-02-16 by 0x16e76819ac1f0dfbecc48dfe93b198830e0c85eb (Elephant Money deployer), unrelated to attack sender 0xe552133cc829a7f7e98e349763fac7ab0f3828b0; no EIP-1967 Upgraded events, so the code was 54.8 days old; mint()/redeem() on this contract are the calls the DeFiHackLabs PoC drives"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1649782173,
+        "deployTimestamp": 1645050177,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1645050177,
+        "codeAgeSeconds": 4731996,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
+      "name": "Elephant Status unprotected sweep()",
+      "date": "2023-12-06T10:27:58Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 165000,
+      "victimContract": "0x8cf0a553ab3896e4832ebcc519a7a60828ab5740",
+      "exploitTx": "0xd423ae0e95e9d6c8a89dcfed243573867e4aad29ee99a9055728cbbe0a523439",
+      "attacker": "0xbbcc139933d1580e7c40442e09263e90e6f1d66d",
+      "notes": "The Elephant Status contract exposes an unprotected sweep() that pushes its accumulated WBNB into the reserve and moves the ELEPHANT price, which the attacker cycled inside PancakeV3 flash loans.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xd423ae0e95e9d6c8a89dcfed243573867e4aad29ee99a9055728cbbe0a523439"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/Phalcon_xyz/status/1732354930529435940"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-12/ElephantStatus_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x8cf0a553ab3896e4832ebcc519a7a60828ab5740 created 2022-09-23T23:47:32Z by 0x16e76819ac1f0dfbecc48dfe93b198830e0c85eb, which is not the attack-tx sender 0xbbcc139933d1580e7c40442e09263e90e6f1d66d; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1701858478,
+        "deployTimestamp": 1663976852,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1663976852,
+        "codeAgeSeconds": 37881626,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "xave-finance",
+  "name": "Xave Finance",
+  "incidents": [
+    {
+      "name": "Xave Finance SafeNap DAO module unrestricted execution",
+      "date": "2022-10-08T17:04:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": null,
+      "lossOther": "100,000,000,000,000 RNBW minted and RNBW ownership transferred to the attacker",
+      "victimContract": "0x8f9036732b9aa9b82D8F35e54B71faeb2f573E2F",
+      "exploitTx": "0xc18ec2eb7d41638d9982281e766945d0428aaeda6211b4ccb6626ea7cff31f4a",
+      "attacker": "0x0f44f3489D17e42ab13A6beb76E57813081fc1E2",
+      "notes": "The SafeNap DAO module let any address submit and then execute arbitrary Gnosis Safe transactions without a governance check, which the attacker used to mint 100 trillion RNBW and take ownership of the token.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xc18ec2eb7d41638d9982281e766945d0428aaeda6211b4ccb6626ea7cff31f4a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-10/XaveFinance_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/xave-finance/post-mortem-safenap-dao-module-bug-505958e9c716"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: module 0x8f9036732b9aa9b82D8F35e54B71faeb2f573E2F created 2021-06-24T18:41:14Z by 0x30ca8f1e13978a7a819af012665cfa7e49f1c554, unrelated to the attack sender; no EIP-1967 events, age from deployment. Loss is denominated in minted RNBW; the token price collapsed and no reliable realised-USD figure exists, but the sold portion was well above the $1,000 floor."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1665248651,
+        "deployTimestamp": 1624560074,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1624560074,
+        "codeAgeSeconds": 40688577,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -5,29 +5,35 @@
   "incidents": [
     {
       "name": "Socket (Bungee)",
-      "date": "2024-01-16T12:00:00Z",
+      "date": "2024-01-16T19:11:23Z",
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 3300000,
       "victimContract": "0x3a23F943181408EAC424116Af7b7790c94Cb97a5",
-      "exploitTx": null,
-      "notes": "SocketGateway: a swap route added 3 days earlier performed an unvalidated user-controlled call, draining approvals. Route addition is an addRoute call, not an Upgraded event; date from the documented route-addition tx.",
+      "exploitTx": "0xc6c3331fa8c2d30e1ef208424c08c039a89e510df2fb6ae31e5aa40722e28fd6",
+      "notes": "SocketGateway: the swap route registered 3 days earlier (routeId 406 -> 0xCC5fDA5e3cA925bd0bb428C8b2669496eE43067e) performed an unvalidated user-controlled call, draining approvals. Route installation emits NewRouteAdded(uint32,address), not an EIP-1967 Upgraded event.",
+      "nonStandardUpgradeArchitecture": true,
       "sources": [
         {
           "type": "curated-review",
-          "ref": "l2beat research; see notes"
+          "ref": "onchain review (RPC only): SocketGateway 0x3a23F943181408EAC424116Af7b7790c94Cb97a5 created 2023-03-17T15:04:59Z at block 16848303; 0 EIP-1967 Upgraded logs over [16848303, 19019307]. Code is installed as routes and controllers, so all 8 topics the gateway emits in the window were enumerated: the change channels are NewRouteAdded(uint32,address) 0x7977983873e5c968018b0deaedba28f6ce6253277670e94e627fbc08efc50cb1 (22 events, routeIds 0x181-0x196) and ControllerAdded(uint32,address) 0x7601ed90c4c6f485f9633a9355c473c63ec60dfb8e04d060dbda9a80cf48eb68 (3 events: 2023-04-05, 2023-06-27, 2023-07-31); RouteDisabled (0xc60cf0bdf6c913c2d080d151c29909503abb49cdd09b459a7a10a16a466d02da) and ControllerDisabled never fired, and the remaining topics are OwnerNominated/OwnerClaimed and high-volume bridge events. The last route installed before the incident is routeId 406 -> 0xCC5fDA5e3cA925bd0bb428C8b2669496eE43067e at block 18996162, 2024-01-13T06:23:47Z, tx 0x1df44e224c7a715da25fa33dcad2ca3a930d1a4dafd263e61c07b52673d505f4 - exactly the route the exploit (tx 0xc6c3331fa8c2d30e1ef208424c08c039a89e510df2fb6ae31e5aa40722e28fd6, 2024-01-16T19:11:23Z) invoked through executeRoute(406, ...). The previously recorded day-level date 2024-01-12 is one day early; age 345600s -> 279373s. The registry row socketgateway.json measures the same change against the exact exploit-tx timestamp 1705432283 and therefore reports 305256s."
+        },
+        {
+          "type": "curated-review",
+          "ref": "merged with the duplicate socketgateway record, adopting its exploit tx and route-registry measurement"
         }
       ],
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1705406400,
+        "incidentTimestamp": 1705432283,
         "deployTimestamp": 1679065499,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1705060800,
-        "codeAgeSeconds": 345600,
-        "basis": "documented change (no standard event for this architecture)"
+        "lastChangeTimestamp": 1705127027,
+        "codeAgeSeconds": 305256,
+        "basis": "documented change"
       },
-      "documentedLastChange": "2024-01-12"
+      "documentedLastChange": "2024-01-13T06:23:47Z (block 18996162, tx 0x1df44e224c7a715da25fa33dcad2ca3a930d1a4dafd263e61c07b52673d505f4): NewRouteAdded(uint32,address) on the gateway registered routeId 406 -> route 0xCC5fDA5e3cA925bd0bb428C8b2669496eE43067e, the vulnerable route the exploit called through executeRoute",
+      "attacker": "0x50DF5a2217588772471B84aDBbe4194A2Ed39066"
     }
   ]
 }

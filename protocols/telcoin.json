@@ -1,0 +1,50 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "telcoin",
+  "name": "Telcoin",
+  "incidents": [
+    {
+      "name": "Telcoin CloneableProxy re-initialisation",
+      "date": "2023-12-25T17:23:40Z",
+      "chain": "polygon",
+      "category": "code-bug",
+      "lossUsd": 1240000,
+      "victimContract": "0x56BCADff30680EBB540a84D75c182A5dC61981C0",
+      "exploitTx": "0x35f50851c3b754b4565dc3e69af8f9bdb6555edecc84cf0badf8c1e8141d902d",
+      "attacker": "0xdb4b84f0e601e40a02b54497f26e03ef33f3a5b7",
+      "notes": "The Telcoin wallet CloneableProxy left its OpenZeppelin _initialized flag clear, so anyone could call initialize(address,bytes) again to point the proxy at their own implementation and have it delegatecall arbitrary code that transferred out the wallet's TEL.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "polygon",
+          "ref": "0x35f50851c3b754b4565dc3e69af8f9bdb6555edecc84cf0badf8c1e8141d902d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blocksec.com/phalcon/blog/telcoin-security-incident-in-depth-analysis"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-12/Telcoin_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: CloneableProxy 0x56BCADff30680EBB540a84D75c182A5dC61981C0 created 2021-11-23T10:50:52Z by 0x0d0fbdfb774049aea1aaf8d88cd41cd10830c5a3, not the attack-tx sender 0xdb4b84f0e601e40a02b54497f26e03ef33f3a5b7; no EIP-1967 Upgraded event, 762.3 days old. The PoC reads storage slot 0 before and after and shows _initialized flipping from 0 to 1 during the exploit, confirming the proxy had never been marked initialised. Reported loss ~$1.24M across the wallet clones drained in the campaign."
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: the CloneableProxy's 45-byte runtime is an EIP-1167 clone of the fixed master 0x10d0e9755c67ab37089acb4f51e8b4ee407fe853, and the master in turn delegatecalls the address in the EIP-1967 beacon slot. prestateTracer on the attack tx shows that slot held 0x3f443c31dab3dab882f9fe621f97b74c3c14837d before the exploit, and the exploit's re-initialisation is precisely what overwrote it with the attacker module 0x10e5c8d3537856f141272e1c39befdab4dd8bde0 that is then delegatecalled. Binary-searching the slot over [21704647, 51546495] (i.e. up to the block before the incident) shows 0x3f443c31... constant from creation; the runtimes of both the master and 0x3f443c31... are byte-identical at the creation and incident blocks. Deployment is the correct basis; 762.3 days."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1703525020,
+        "deployTimestamp": 1637664652,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1637664652,
+        "codeAgeSeconds": 65860368,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

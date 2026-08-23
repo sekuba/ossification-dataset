@@ -2,19 +2,42 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Ossification dataset protocol file",
   "type": "object",
-  "required": ["slug", "name", "incidents"],
+  "required": [
+    "slug",
+    "name",
+    "incidents"
+  ],
   "properties": {
-    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-    "name": { "type": "string" },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "name": {
+      "type": "string"
+    },
     "incidents": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "date", "chain", "category", "lossUsd", "sources", "measurement"],
+        "required": [
+          "name",
+          "date",
+          "chain",
+          "category",
+          "sources",
+          "measurement"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "date": { "type": "string", "description": "UTC; exact block timestamp when the exploit tx is known, else the documented date" },
-          "chain": { "type": "string" },
+          "name": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "description": "UTC; exact block timestamp when the exploit tx is known, else the documented date"
+          },
+          "chain": {
+            "type": "string"
+          },
           "category": {
             "description": "Root cause. Only code-bug rows feed the score curve. oracle-manipulation / economic-design / governance-design / insider-rug are measured boundary rows (they document why they are NOT code bugs). key-compromise / offchain-infra are a non-exhaustive context sample with no measurable code. not-classified marks rows excluded before classification (see measurement.status).",
             "enum": [
@@ -28,37 +51,102 @@
               "not-classified"
             ]
           },
-          "lossUsd": { "type": "number", "description": "verified USD loss (USD-pegged stables at 1:1); crypto-only figures are excluded from the dataset" },
-          "victimContract": { "type": ["string", "null"], "description": "the contract containing the exploited flaw" },
-          "exploitTx": { "type": ["string", "null"], "description": "onchain anchor: the attack transaction; its block timestamp is the incident time" },
-          "attacker": { "type": "string" },
-          "notes": { "type": "string", "description": "one-sentence root-cause evidence" },
-          "documentedLastChange": { "type": "string", "description": "for architectures emitting no standard upgrade event: the documented change date/tx the age is measured from" },
-          "nonStandardUpgradeArchitecture": { "type": "boolean", "description": "diamond/module-registry/beacon victims whose changes emit no EIP-1967 event; age may be overstated" },
-          "duplicateOfCuratedIncident": { "type": "boolean", "description": "registry row whose (chain, contract) also appears in a curated row; excluded from the curve" },
+          "lossUsd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "high-confidence USD loss, at least 1000 (USD-pegged stables at 1:1); null when no such figure exists, in which case use lossOther"
+          },
+          "lossOther": {
+            "type": "string",
+            "description": "the loss in its reported non-USD units, e.g. \"513,774 ETH permanently frozen\"; the primary figure when no high-confidence USD conversion exists (lossUsd null), and useful context alongside lossUsd otherwise"
+          },
+          "victimContract": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "the contract containing the exploited flaw"
+          },
+          "exploitTx": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "onchain anchor: the attack transaction; its block timestamp is the incident time"
+          },
+          "attacker": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string",
+            "description": "one-sentence root-cause evidence"
+          },
+          "documentedLastChange": {
+            "type": "string",
+            "description": "for architectures emitting no standard upgrade event: the documented change date/tx the age is measured from"
+          },
+          "nonStandardUpgradeArchitecture": {
+            "type": "boolean",
+            "description": "diamond/module-registry/beacon victims whose changes emit no EIP-1967 event; age may be overstated"
+          },
           "sources": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["type", "ref"],
+              "required": [
+                "type",
+                "ref"
+              ],
               "properties": {
-                "type": { "enum": ["onchain-tx", "post-mortem", "defihacklabs", "curated-review"] },
-                "chain": { "type": "string" },
-                "ref": { "type": "string" }
+                "type": {
+                  "enum": [
+                    "onchain-tx",
+                    "post-mortem",
+                    "defihacklabs",
+                    "curated-review"
+                  ]
+                },
+                "chain": {
+                  "type": "string"
+                },
+                "ref": {
+                  "type": "string"
+                }
               }
             }
           },
           "measurement": {
             "type": "object",
-            "required": ["status"],
+            "required": [
+              "status"
+            ],
             "properties": {
-              "status": { "type": "string", "description": "OK, or the exclusion reason (ATTACKER_DEPLOYED, NO_CREATION_INFO, DEPLOY_AFTER_INCIDENT, NOT_MEASURED, ...)" },
-              "incidentTimestamp": { "type": "integer" },
-              "deployTimestamp": { "type": "integer" },
-              "upgradeEventCount": { "type": "integer" },
-              "lastChangeTimestamp": { "type": "integer" },
-              "codeAgeSeconds": { "type": "integer", "description": "incident - last change; the curve knot" },
-              "basis": { "type": "string", "description": "deployment (onchain) | last of N upgrade events (onchain) | documented change" }
+              "status": {
+                "type": "string",
+                "description": "OK, or the exclusion reason (ATTACKER_DEPLOYED, NO_CREATION_INFO, DEPLOY_AFTER_INCIDENT, NOT_MEASURED, ...)"
+              },
+              "incidentTimestamp": {
+                "type": "integer"
+              },
+              "deployTimestamp": {
+                "type": "integer"
+              },
+              "upgradeEventCount": {
+                "type": "integer"
+              },
+              "lastChangeTimestamp": {
+                "type": "integer"
+              },
+              "codeAgeSeconds": {
+                "type": "integer",
+                "description": "incident - last change; the curve knot"
+              },
+              "basis": {
+                "type": "string",
+                "description": "deployment (onchain) | last of N upgrade events (onchain) | documented change"
+              }
             }
           }
         }

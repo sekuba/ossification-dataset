@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "aes-token",
+  "name": "AES Token",
+  "incidents": [
+    {
+      "name": "AES deflationary transfer pair-balance flaw",
+      "date": "2022-12-07T08:57:06Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 61608,
+      "victimContract": "0xdDc0CFF76bcC0ee14c3e73aF630C029fe020F907",
+      "exploitTx": "0xca4d0d24aa448329b7d4eb81be653224a59e7b081fc7a1c9aad59c5a38d0ae19",
+      "attacker": "0x286e09932b8d096cba3423d12965042736b8f850",
+      "notes": "AES's deflationary transfer burns from the liquidity pair's own balance without a sync(), so the attacker shrank the AES reserve and swapped the resulting imbalance out for the pair's USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xca4d0d24aa448329b7d4eb81be653224a59e7b081fc7a1c9aad59c5a38d0ae19"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-12/AES_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BlockSecTeam/status/1600442137811689473"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: AES 0xdDc0CFF76bcC0ee14c3e73aF630C029fe020F907 created 2022-12-06T14:38:44Z by 0x7c64e03e0a4ed9c19f1ab8b85b8e10ea59bbd150, unrelated to attack sender 0x286e09932b8d096cba3423d12965042736b8f850; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 61,608.04 USDT left the AES/USDT pair 0x40eD17221b3B2D8455F4F1a05CAc6b77c5f707e3 to the attacker."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1670403426,
+        "deployTimestamp": 1670337524,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1670337524,
+        "codeAgeSeconds": 65902,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

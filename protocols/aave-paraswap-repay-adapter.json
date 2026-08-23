@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "aave-paraswap-repay-adapter",
+  "name": "Aave ParaSwap Repay Adapter",
+  "incidents": [
+    {
+      "name": "ParaSwapRepayAdapter V3 unvalidated paraswapData",
+      "date": "2024-08-28T04:29:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 56000,
+      "victimContract": "0x02e7b8511831b1b02d9018215a0f8f500ea5c6b3",
+      "exploitTx": "0xc27c3ec61c61309c9af35af062a834e0d6914f9352113617400577c0f2b0e9de",
+      "attacker": "0x6ea83f23795f55434c38ba67fcc428aec0c296dc",
+      "notes": "swapAndRepay/_buyOnParaSwap forwarded caller-supplied paraswapData to Augustus and left the collateral-asset allowance standing, so a crafted swap payload let the attacker pull tokens users had approved to the periphery adapter.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xc27c3ec61c61309c9af35af062a834e0d6914f9352113617400577c0f2b0e9de"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.solidityscan.com/aave-repay-adapter-hack-analysis-aafd234e15b9"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-08/AAVE_Repay_Adapter.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: adapter 0x02e7b851... created by 0x57dc6c401819ea097db8d4b66d8e35cda0277a73 in tx 0xfebcf4a63b149c5605b46bdfe8a255c7e4435a1990ad535603bd8d75c4a63a0b (2023-07-12), unrelated to attack sender 0x6ea83f23...; no EIP-1967 Upgraded events before the incident"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1724819351,
+        "deployTimestamp": 1689173807,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1689173807,
+        "codeAgeSeconds": 35645544,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

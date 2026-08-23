@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2025-05/unverified_0000_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "Recheck of the deployment basis (DELEGATECALL audit): the unverified victim sets no EIP-1967 implementation or beacon slot and its runtime is byte-identical at the creation block 49557639 and the incident block 50311056; its single DELEGATECALL (pc 0x03c7) forwards the full calldata to an address taken from the stack after a loop comparing CALLER against a whitelist, i.e. a per-call target supplied by the caller rather than an installed implementation read from storage, so nothing about the victim's own code changed after deployment."
         }
       ],
       "attacker": "0x1491B276528531AD3F41DbE9B00387ABaC55c114",

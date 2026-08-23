@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "dexible",
+  "name": "Dexible",
+  "incidents": [
+    {
+      "name": "Dexible v2 selfSwap arbitrary router call",
+      "date": "2023-02-17T04:20:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 2000000,
+      "victimContract": "0xDE62E1b0edAa55aAc5ffBE21984D321706418024",
+      "exploitTx": "0x138daa4cbeaa3db42eefcec26e234fc2c89a4aa17d6b1870fc460b2856fd11a6",
+      "attacker": "0x684083f312ac50f538cc4b634d85a2feafaab77a",
+      "notes": "Dexible v2's selfSwap() forwarded a caller-supplied router address and calldata without an allowlist, so the attacker pointed it at ERC20 contracts and had Dexible transferFrom the balances of every wallet still holding an approval to it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x138daa4cbeaa3db42eefcec26e234fc2c89a4aa17d6b1870fc460b2856fd11a6"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-02/Dexible_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/peckshield/status/1626493024879673344"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Dexible v2 0xDE62E1b0edAa55aAc5ffBE21984D321706418024 created 2023-02-15T17:31:47Z by 0xb631e8650fb4befdae74ab9f86a9cb65bc134706, unrelated to the attack sender; no EIP-1967 events, age from deployment - only 125,328 seconds (1.45 days) old at the incident. The recorded tx is the TRU leg the PoC replays; the ~$2M figure is PeckShield's total across all drained approvals. Recheck of the deployment basis (DELEGATECALL audit): DexibleProxy is a custom timelocked proxy that keeps its logic pointer in the diamond-style slot ProxyStorage.DATA_KEY 0x21b00fb42ba9970a2143fc9fb216ce19c58db008c8d83ff3a715bbc79598d7f0, not in an EIP-1967 slot; a binary search of eth_getStorageAt on that slot over [16635649, 16646023] shows it holds 0x33e690aea97e4ef25f0d140f1bf044d663091daf packed with the 604800-second timelock, unchanged from creation to the incident (the proposeUpgrade/upgradeLogic path was never used), and the logic contract - created one block before the proxy by the same deployer - is byte-identical over the window and contains no DELEGATECALL of its own, so the 1.45-day age is measured from the right point."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1676607635,
+        "deployTimestamp": 1676482307,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1676482307,
+        "codeAgeSeconds": 125328,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

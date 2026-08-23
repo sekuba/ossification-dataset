@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "laundromat",
+  "name": "Laundromat",
+  "incidents": [
+    {
+      "name": "Laundromat 2016 contract drained via unguarded entrypoint",
+      "date": "2025-04-08T07:28:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 1500,
+      "victimContract": "0x934cbbE5377358e6712b5f041D90313d935C501C",
+      "exploitTx": "0x08ffb5f7ab6421720ab609b6ab0ff5622fba225ba351119c21ef92c78cb8302c",
+      "attacker": "0xd6BE07499d408454D090c96bd74A193F61f706F4",
+      "notes": "The long-dormant Laundromat contract exposed a withdrawal path with no caller authorisation, letting an arbitrary address sweep its remaining ether balance.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x08ffb5f7ab6421720ab609b6ab0ff5622fba225ba351119c21ef92c78cb8302c"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/TenArmorAlert/status/1909814943290884596"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-04/Laundromat_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Laundromat 0x934cbbE5377358e6712b5f041D90313d935C501C created 2016-12-12T20:32:16Z by 0x8c6562b4742b428d6c5f6fab564498ac09cfb0c2, not the attack-tx sender 0xd6be07499d408454d090c96bd74a193f61f706f4; no EIP-1967 events and no delegatecall upgrade path, so the code was 3038.5 days old. Reported loss 1.5k USD, above the $1,000 floor."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1744097291,
+        "deployTimestamp": 1481574736,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1481574736,
+        "codeAgeSeconds": 262522555,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

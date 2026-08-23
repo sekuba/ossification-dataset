@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bigfi",
+  "name": "BIGFI",
+  "incidents": [
+    {
+      "name": "BIGFI reflection-token pair drain",
+      "date": "2023-03-22T12:37:23Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 30306,
+      "victimContract": "0xd3d4B46Db01C006Fb165879f343fc13174a1cEeB",
+      "exploitTx": "0x9fe19093a62a7037d04617b3ac4fbf5cb2d75d8cb6057e7e1b3c75cbbd5a5adc",
+      "attacker": "0x76a88c2baebf251701435abbe8af11ad52b0ab04",
+      "notes": "BIGFI is a reflective deflationary token: deliver() cuts the reflected supply and inflates the liquidity pair's balance without a sync(), so the attacker swapped the inflated balance out for the pair's USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x9fe19093a62a7037d04617b3ac4fbf5cb2d75d8cb6057e7e1b3c75cbbd5a5adc"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-03/BIGFI_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/HypernativeLabs/status/1638522680654675970"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: BIGFI 0xd3d4B46Db01C006Fb165879f343fc13174a1cEeB created 2023-03-07T21:16:44Z by 0x602546d439ea254f3372c3985840750c6b9c6ddb, unrelated to attack sender 0x76a88c2baebf251701435abbe8af11ad52b0ab04; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 30,466.10 USDT left the BIGFI/USDT pair and 30,306.10 USDT reached the attack contract."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1679488643,
+        "deployTimestamp": 1678223804,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1678223804,
+        "codeAgeSeconds": 1264839,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

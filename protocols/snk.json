@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "snk",
+  "name": "SNK",
+  "incidents": [
+    {
+      "name": "SNK minter reward calculation error",
+      "date": "2023-05-10T00:46:42Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 197726,
+      "victimContract": "0xA3f5ea945c4970f48E322f1e70F4CC08e70039ee",
+      "exploitTx": "0x7394f2520ff4e913321dd78f67dd84483e396eb7a25cbb02e06fe875fc47013a",
+      "attacker": "0x6b67f9e79180e08cb42132754bc9f88558b1e535",
+      "notes": "The SNK minter multiplies a parent account's rewardPerToken by the summed balances of all its children, so stacking referral children multiplied the mintable SNK, which the attacker sold into the BUSD pool.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x7394f2520ff4e913321dd78f67dd84483e396eb7a25cbb02e06fe875fc47013a"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-05/SNK_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/Phalcon_xyz/status/1656176776425644032"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: SNK minter 0xA3f5ea945c4970f48E322f1e70F4CC08e70039ee created 2022-12-27T15:55:14Z by 0x040e73929ee1db37b5ad532a4c3bcef67a91c016, unrelated to attack sender 0x6b67f9e79180e08cb42132754bc9f88558b1e535; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 197,725.73 USDT left the SNK pool 0x7957096Bd7324357172B765C4b0996Bb164ebfd4 in this transaction (the earlier 0xace1129259... transaction only set the position up)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1683679602,
+        "deployTimestamp": 1672156514,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1672156514,
+        "codeAgeSeconds": 11523088,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

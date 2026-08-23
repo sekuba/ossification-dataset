@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "xst",
+  "name": "XST",
+  "incidents": [
+    {
+      "name": "XST fee-on-transfer skim loop",
+      "date": "2022-08-09T20:04:26Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 45877,
+      "victimContract": "0x91383A15C391c142b80045D8b4730C1c37ac0378",
+      "exploitTx": "0x873f7c77d5489c1990f701e9bb312c103c5ebcdcf0a472db726730814bfd55f3",
+      "attacker": "0x334f3606886456537d0eb616497e770cbd2fbe5d",
+      "notes": "XST charged its transfer fee in a way that credited the Uniswap pair on every pair.skim(), so repeatedly skimming the pair to itself inflated the attacker's XST balance, which was then dumped for the pool's WETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x873f7c77d5489c1990f701e9bb312c103c5ebcdcf0a472db726730814bfd55f3"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-08/XST_exp2.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://tools.blocksec.com/tx/eth/0x873f7c77d5489c1990f701e9bb312c103c5ebcdcf0a472db726730814bfd55f3"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: XST proxy 0x91383A15C391c142b80045D8b4730C1c37ac0378 created 2021-01-24T05:02:06Z by 0xcee3101c0a8167f083f34b95a2f243c9b0bef6a6, unrelated to the attack sender; one EIP-1967 Upgraded event on 2021-02-06T03:16:49Z installing logic 0xb276647e70cb3b81a1ca302cf8de280ff0ce5799 (the logic named in the PoC), so age runs from that upgrade (549.7 days). Loss read from the tx receipt: 27.13 WETH unwrapped by the attack contract; x $1,691.01 at incidentTimestamp 1660075466 (DefiLlama) = $45,877."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1660075466,
+        "deployTimestamp": 1611464526,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1612581409,
+        "codeAgeSeconds": 47494057,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

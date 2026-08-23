@@ -26,6 +26,10 @@
         {
           "type": "curated-review",
           "ref": "verified Sodium implementation deployed by 0x0f369f61983cb0c4a432e4a81aaaa24f2d48be45 in tx 0x259d0c343896630f0a94cd7d4ff69fd489d424618368aa362a37b9662e21cce4; sampled victim wallets pointed to it before the attack"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: same implementation contract as the Lumi row. Its runtime is byte-identical at the creation block 142595379 and the incident block 483046805 and it holds no implementation slot of any kind; callTracer shows the exploit tx DELEGATECALLs *into* it from the wallet proxies (executeWithSodiumAuthSession / validateUserOp 0x3a871cdd), so the executing code is its own 2023 bytecode. The two delegatecall sites inside it are OpenZeppelin Address.functionDelegateCall and the caller-supplied Enum.Operation.DelegateCall path, neither an upgrade point. Deployment is exact; 995.0 days."
         }
       ],
       "measurement": {

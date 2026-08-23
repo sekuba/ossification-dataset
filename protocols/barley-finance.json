@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "barley-finance",
+  "name": "Barley Finance",
+  "incidents": [
+    {
+      "name": "wBARL pod flash-loan bond reentrancy",
+      "date": "2024-01-28T17:54:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 130000,
+      "victimContract": "0x04c80bb477890f3021f03b068238836ee20aa0b8",
+      "exploitTx": "0x995e880635f4a7462a420a58527023f946710167ea4c6c093d7d193062a33b01",
+      "attacker": "0x7b3a6eff1c9925e509c2b01a389238c1fcc462b6",
+      "notes": "The wBARL WeightedIndex pod's flash() sent out the pod's entire BARL reserve and only checked the balance after the callback, so the attacker called bond() inside the callback and minted pod shares against the flash-loaned BARL, repeating it before debonding.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x995e880635f4a7462a420a58527023f946710167ea4c6c093d7d193062a33b01"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/Phalcon_xyz/status/1751788389139992824"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-01/BarleyFinance_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x04c80bb477890f3021f03b068238836ee20aa0b8 is the verified WeightedIndex (wBARL) pod created 2024-01-26 by 0x1aa354a9b333be75141ad8270313e34b6f51e3d4, two days before the incident; attack sender 0x7b3a6eff1c9925e509c2b01a389238c1fcc462b6 is unrelated to the creator; no upgrade events"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1706464499,
+        "deployTimestamp": 1706273675,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1706273675,
+        "codeAgeSeconds": 190824,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

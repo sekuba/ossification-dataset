@@ -4,9 +4,9 @@
  * Inclusion rule (must match the published methodology):
  *   - category === 'code-bug'
  *   - measurement.status === 'OK'
- *   - one observation per (chain, victimContract): repeated exploits of the
- *     same contract are not independent. Curated rows win over registry rows,
- *     then the earliest incident wins; later collisions are dropped.
+ *   - one observation per incident: each exploit is an observation of code
+ *     failing at that age, including a second exploit of the same code.
+ *     Each incident appears once; duplicated records are merged, not flagged.
  *
  * Output: sorted exploited-code ages in seconds (the curve knots).
  *   node scripts/build-curve.mjs            # prints summary + writes curve/next.json
@@ -28,22 +28,16 @@ for (const file of readdirSync(dir).sort()) {
 const isCurated = (r) => r.sources.some((s) => s.type === 'curated-review')
 rows.sort((a, b) => Number(isCurated(b)) - Number(isCurated(a)) || a.date.localeCompare(b.date))
 
-const seen = new Set()
 const knots = []
 for (const r of rows) {
   if (r.category !== 'code-bug' || r.measurement?.status !== 'OK') continue
-  const key = `${r.chain}:${(r.victimContract ?? '').toLowerCase()}`
-  if (r.victimContract) {
-    if (seen.has(key)) continue
-    seen.add(key)
-  }
   knots.push(r.measurement.codeAgeSeconds)
 }
 knots.sort((a, b) => a - b)
 
 const curve = {
   n: knots.length,
-  rule: 'sorted exploited-code ages (seconds) of measured code-bug incidents, deduped by (chain, victimContract) with curated rows winning',
+  rule: 'sorted exploited-code ages (seconds) of measured code-bug incidents, one observation per incident',
   score:
     'ossification(ageSeconds) = interpolated percentile within ageKnots using Weibull plotting positions p_i = (i+1)/(n+1)',
   ageKnots: knots,

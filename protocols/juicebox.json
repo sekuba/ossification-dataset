@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "juicebox",
+  "name": "Juicebox",
+  "incidents": [
+    {
+      "name": "Juicebox V3 REVLoans fake loan source",
+      "date": "2026-04-20T01:08:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 52000,
+      "victimContract": "0x1880d832aa283d05b8eab68877717e25fbd550bb",
+      "exploitTx": "0x9adbd62355eb72b4ff6c58716a503133672ed9317ab930a4c6aa31c7a1a8f938",
+      "attacker": "0x23245f620d1e910ad76e6b6de4f8284a53c9ad2d",
+      "notes": "REVLoans.borrowFrom() registered the caller-supplied REVLoanSource (token + terminal) into _loanSourcesOf without checking it was a real registered JB terminal, so an attacker-deployed fake terminal inflated totalBorrowedFrom and let tiny revnet-token collateral borrow the revnet #3 ETH treasury out of JBMultiTerminal.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x9adbd62355eb72b4ff6c58716a503133672ed9317ab930a4c6aa31c7a1a8f938"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blocksec.com/blog/weekly-web3-security-roundup-2026-04-26"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-04/JuiceboxREVLoans_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: REVLoans (verified source) created 2025-09-12 by 0x755ff2f75a0a586ecfa2b9a3c959cb662458a105 (not the attacker), no EIP-1967 Upgraded events; attack tx sent directly by the attacker EOA. Loss 21.77 ETH; DefiLlama records $52,000, BlockSec ~$50.7K."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1776647315,
+        "deployTimestamp": 1757677187,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1757677187,
+        "codeAgeSeconds": 18970128,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

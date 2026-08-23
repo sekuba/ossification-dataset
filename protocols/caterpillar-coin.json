@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "caterpillar-coin",
+  "name": "Caterpillar Coin (CUT)",
+  "incidents": [
+    {
+      "name": "CUT value-preservation LP pricing",
+      "date": "2024-09-10T12:40:52Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 1400000,
+      "victimContract": "0x7b2e7cb89824236cb7096cde7a153af30f3ecbaf",
+      "exploitTx": "0x2c123d08ca3d50c4b875c0b5de1b5c85d0bf9979dffbf87c48526e3a67396827",
+      "attacker": "0x560a77bc06dcc77EEe687acB65D46B580a63eB45",
+      "notes": "valuePreservationByRemoveLP() priced the CUT compensation owed on an LP removal from the live PancakeSwap USDT/CUT reserve ratio, so a large in-transaction swap skewed that spot price and paid out ~275bn CUT instead of ~61bn.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x2c123d08ca3d50c4b875c0b5de1b5c85d0bf9979dffbf87c48526e3a67396827"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.certik.com/resources/blog/caterpillar-coin-cut-token-incident-analysis"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-09/Caterpillar_Coin_CUT_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: helper 0x7b2e7cb8... (unverified) created by 0x714254c993a42e427b16f18c2541cb188c3ee978 on 2024-07-28, not the attack sender; cast run of the exploit tx confirms the CUT token 0x7057f3b0... calls into 0x7b2e7cb8...; loss is the aggregate of three attack txs (0x2c123d08..., 0xce6e474d..., 0x6262c0f1...) anchored on the first"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1725972052,
+        "deployTimestamp": 1722193748,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1722193748,
+        "codeAgeSeconds": 3778304,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

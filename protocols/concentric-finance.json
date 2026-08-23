@@ -1,0 +1,48 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "concentric-finance",
+  "name": "Concentric Finance",
+  "incidents": [
+    {
+      "name": "Cone Vault malicious implementation adminMint",
+      "date": "2024-01-22T07:56:47Z",
+      "chain": "arbitrum",
+      "category": "key-compromise",
+      "lossUsd": 1720000,
+      "victimContract": "0x8883d82e852f966ce88a9a9917d70d6f9e3933d9",
+      "exploitTx": "0xc2c73bafe207f4c141568405895ed79570ff4bbe9118d3d755390d9966cdd982",
+      "attacker": "0x105f52fcc329cef4cbe25bc946f8a3738414e4a1",
+      "nonStandardUpgradeArchitecture": true,
+      "notes": "Concentric's deployer wallet was social-engineered and the attacker used its proxy-admin rights to point the Cone Vault proxies at implementation 0xf36c407f3c467e9364ac1b2486aa199751ba177d, which added a backdoor adminMint() that burns LP from the staking contract and mints vault shares to the caller plus withdrawFromAdmin() to pull any balance still approved to the vault.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "arbitrum",
+          "ref": "0xc2c73bafe207f4c141568405895ed79570ff4bbe9118d3d755390d9966cdd982"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/neptune-mutual/how-was-concentric-finance-exploited-d0320f4a846c"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/ConcentricFi/status/1749418658818830622"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: attack tx calls Cone Vault V1 WETH/USDC proxy 0x8883d82e852f966ce88a9a9917d70d6f9e3933d9 with selector 0xc1f26123 (adminMint) from EOA 0x105f52fcc329cef4cbe25bc946f8a3738414e4a1; the proxy was created 2023-11-03 by 0xeaf6e2a3d22a9775a1cc692b207b7d8dd6a4944c, not by the attacker. It is an EIP-173-style proxy that emits no EIP-1967 Upgraded events, so the malicious upgrade is invisible to the mechanical measurement and the age is measured from deployment - flagged nonStandardUpgradeArchitecture. Tier-1 measurement: the hardhat-deploy EIP-173 proxy does emit its own ProxyImplementationUpdated(address,address) event (topic 0x5570d70a002632a7b0b3c9304cc89efb62d8da9eca0dbd7752c83b7379068296); eth_getLogs over [creation 146573591, incident 172948936] returns exactly two - 0x0 -> 0x8b85b292be63e4c3592ecf09b5500575037018e0 at deployment (block 146573591, 2023-11-03T02:47:32Z) and 0x8b85b292... -> 0xf36c407f3c467e9364ac1b2486aa199751ba177d at block 172948684 (2024-01-22T07:55:43Z, tx 0x6266b5d3ff0a8d366ac9d9470a3215e8ab0ac3dc4992b2d5381e059254b04737), i.e. the attacker's backdoor implementation was installed 64 seconds before the drain, so the exploited code was 64 seconds old rather than 80 days."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1705910207,
+        "deployTimestamp": 1698979652,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1705910143,
+        "codeAgeSeconds": 64,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2024-01-22T07:55:43Z (block 172948684, tx 0x6266b5d3ff0a8d366ac9d9470a3215e8ab0ac3dc4992b2d5381e059254b04737): the malicious upgrade itself - ProxyImplementationUpdated(address,address) (topic 0x5570d70a002632a7b0b3c9304cc89efb62d8da9eca0dbd7752c83b7379068296) emitted by the vault proxy 0x8883d82e852f966ce88a9a9917d70d6f9e3933d9, moving the implementation from 0x8b85b292be63e4c3592ecf09b5500575037018e0 to the backdoored 0xf36c407f3c467e9364ac1b2486aa199751ba177d, 64 seconds before the adminMint() drain"
+    }
+  ]
+}

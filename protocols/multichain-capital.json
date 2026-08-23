@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "multichain-capital",
+  "name": "Multi-Chain Capital",
+  "incidents": [
+    {
+      "name": "MCC reflection deliver() + pair skim",
+      "date": "2023-05-09T07:35:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 18420,
+      "victimContract": "0x1a7981D87E3b6a95c1516EB820E223fE979896b3",
+      "exploitTx": "0xf72f1d10fc6923f87279ce6c0aef46e372c6652a696f280b0465a301a92f2e26",
+      "attacker": "0x8a4571c3a618e00d04287ca6385b6b020ce7a305",
+      "notes": "MCC used the same RFI reflection accounting as HODL: deliver() burned the caller's reflected balance and inflated every other holder's tokenFromReflection(), and the attacker skimmed the inflated MCC out of the MCC/WETH pair.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xf72f1d10fc6923f87279ce6c0aef46e372c6652a696f280b0465a301a92f2e26"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-05/MultiChainCapital_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BeosinAlert/status/1655846558762692608"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: MCC 0x1a7981D87E3b6a95c1516EB820E223fE979896b3 created 2021-11-19T16:23:07Z by 0xfa21382cdf68cca1b3a7107a8cc80688eefbeebc (the fee-excluded address), unrelated to the attack sender; no EIP-1967 events, age from deployment (535.6 days). ~10 ETH x $1,842.04 at incidentTimestamp 1683617735 (DefiLlama) = $18,420."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1683617735,
+        "deployTimestamp": 1637338987,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1637338987,
+        "codeAgeSeconds": 46278748,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

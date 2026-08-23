@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "four-meme",
+  "name": "Four.meme",
+  "incidents": [
+    {
+      "name": "Four.meme launchpad liquidity migration into pre-initialized pool",
+      "date": "2025-02-11T04:36:37Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 183000,
+      "victimContract": "0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+      "exploitTx": "0x2902f93a0e0e32893b6d5c907ee7bb5dabc459093efa6dbc6e6ba49f85c27f61",
+      "attacker": "0x935d6cf073eab37ca2b5878af21329d5dbf4f4a5",
+      "notes": "The launchpad's addLiquidity() migration did not check that the PancakeSwap V3 pool for the graduating token was still uninitialized, so the attacker created and initialized the pool at a manipulated sqrtPriceX96 beforehand and swapped out the BNB the launchpad then deposited.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x2902f93a0e0e32893b6d5c907ee7bb5dabc459093efa6dbc6e6ba49f85c27f61"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://securrtech.medium.com/the-four-meme-exploit-a-deep-dive-into-the-183-000-hack-6f45369029be"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-02/FourMeme_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review of the BSC sequence: attacker contract creates+initializes the V3 pool in block 46555725 (tx 0x4235b006...), the Four.meme launchpad 0x5c9520...762b executes addLiquidity (selector 0x55110640) from its own operator 0x74d86638f359bdff6ec55d78a97f294747f8f5b3 in block 46555731 (tx 0xe0daa3bf...), attacker takes profit in block 46555732; launchpad creator 0xe096774fef711a0b28cb7bc9839b892bd5e2f603 is unrelated to the attacker"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1739248597,
+        "deployTimestamp": 1725527007,
+        "upgradeEventCount": 10,
+        "lastChangeTimestamp": 1738991019,
+        "codeAgeSeconds": 257578,
+        "basis": "last of 10 upgrade events (onchain)"
+      }
+    }
+  ]
+}

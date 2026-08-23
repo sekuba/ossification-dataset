@@ -30,6 +30,10 @@
         {
           "type": "curated-review",
           "ref": "verified Sodium implementation deployed by 0x0f369f61983cb0c4a432e4a81aaaa24f2d48be45 in tx 0x259d0c343896630f0a94cd7d4ff69fd489d424618368aa362a37b9662e21cce4; the attack transaction's destination was attacker infrastructure"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: the verified Sodium implementation's runtime is byte-identical at the creation block 142595379 and the incident block 483389834, and it holds no EIP-1967, beacon or low storage slot. callTracer shows it is never the caller of a DELEGATECALL in the attack - it is the callee, executed in the context of the wallet proxies (e.g. 0x0209d8fcb0c36399eb49e018a245c55fd37d16bd DELEGATECALLs into it with validateUserOp 0x3a871cdd). Its own two delegatecall sites are OpenZeppelin Address.functionDelegateCall and the caller-supplied Enum.Operation.DelegateCall branch of executeTransaction, neither of which can repoint the contract's own code. Deployment is exact; 996.0 days."
         }
       ],
       "measurement": {

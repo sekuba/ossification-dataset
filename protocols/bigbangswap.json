@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bigbangswap",
+  "name": "BigBangSwap",
+  "incidents": [
+    {
+      "name": "BigBangSwap sellRewardToken fixed-rate buyback",
+      "date": "2024-04-10T14:33:57Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 5000,
+      "victimContract": "0xa45d4359246dbd523ab690bef01da06b07450030",
+      "exploitTx": "0x94055664287a565d4867a97ba6d5d2e28c55d10846e3f83355ba84bd1b9280fc",
+      "attacker": "0xc1b6f9898576d722dbf604aaa452cfea3a639c59",
+      "notes": "The BigBangSwap proxy's sellRewardToken() buys BGG back for BUSD at a rate that ignores the market price, so the attacker bought BGG cheaply on PancakeSwap inside a DODO flash loan and sold it straight back to the proxy.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x94055664287a565d4867a97ba6d5d2e28c55d10846e3f83355ba84bd1b9280fc"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/DecurityHQ/status/1778075039293727143"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-04/BigBangSwap_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xa45d4359246dbd523ab690bef01da06b07450030 created 2023-10-19T06:24:04Z by 0x60191e2b43cbe002d58d693f57acd0060e4276c2, which is not the attack-tx sender 0xc1b6f9898576d722dbf604aaa452cfea3a639c59; 15 EIP-1967 Upgraded events on the victim before the incident; code age measured from last of 15 upgrade events (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1712759637,
+        "deployTimestamp": 1697696644,
+        "upgradeEventCount": 15,
+        "lastChangeTimestamp": 1712189883,
+        "codeAgeSeconds": 569754,
+        "basis": "last of 15 upgrade events (onchain)"
+      }
+    }
+  ]
+}

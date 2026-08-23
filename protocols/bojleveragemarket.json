@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2025-07/BoJLeverageMarket_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1967 proxy over an Aave-v3-style Pool; its implementation slot holds 0xf441a52fc1898febb78fba81eed3002cbb45d571 at both the creation block 32861311 and the incident block 33136656 with no intermediate write found by binary-searching eth_getStorageAt, and both the proxy and the implementation runtimes are byte-identical at those blocks. The implementation's fourteen DELEGATECALLs are linked-library constants (0x0e905c9fa92006c3c934e6ea15de85c0a8e10683, 0x9c6c8778c84ba0ae9858b0ce63cee62aae6591ee, 0x9eafbc7dcdcef5762ce353df033b70d6ff7ca94f, 0xa059a6c6ed25c221c32a41d7f457dd3b0807c5fa), all deployed by the same deployer minutes earlier and unchanged over the window."
         }
       ],
       "attacker": "0xdf4089d9845C87ed8FD109bD724f30339C2d0B7B",

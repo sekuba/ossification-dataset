@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "seaman",
+  "name": "SEAMAN",
+  "incidents": [
+    {
+      "name": "SEAMAN transfer business-logic flaw",
+      "date": "2022-11-29T07:11:32Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 7782,
+      "victimContract": "0x6bc9b4976ba6f8C9574326375204eE469993D038",
+      "exploitTx": "0x6f1af27d08b10caa7e96ec3d580bf39e29fd5ece00abda7d8955715403bf34a8",
+      "attacker": "0x4b1f47be1f678076f447585beba025e3a046a9fa",
+      "notes": "SEAMAN's transfer() triggers a GVC buy-back sized from the pair's live reserves on every transfer, so the attacker repeatedly forced that internal swap and drained the GVC/USDT pool.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x6f1af27d08b10caa7e96ec3d580bf39e29fd5ece00abda7d8955715403bf34a8"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-11/SEAMAN_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/peckshield/status/1597493955939405825"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: SEAMAN 0x6bc9b4976ba6f8C9574326375204eE469993D038 created 2022-06-29T04:08:06Z by 0x3abe7c2c88d4b1a536a460b5c9cf40b1eaa1de6d, unrelated to attack sender 0x4b1f47be1f678076f447585beba025e3a046a9fa; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 8,585.75 USDT left 0x6637914482670f91f43025802b6755f27050b0a6 and 7,781.78 USDT reached the attack contract."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1669705892,
+        "deployTimestamp": 1656475686,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1656475686,
+        "codeAgeSeconds": 13230206,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

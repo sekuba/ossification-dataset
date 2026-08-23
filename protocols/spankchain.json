@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "spankchain",
+  "name": "SpankChain",
+  "incidents": [
+    {
+      "name": "SpankChain LedgerChannel reentrancy",
+      "date": "2018-10-07T00:39:30Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 38000,
+      "victimContract": "0xf91546835f756DA0c10cFa0CDA95b15577b84aA7",
+      "exploitTx": "0x21e9d20b57f6ae60dac23466c8395d47f42dc24628e5a31f224567a2b4effa88",
+      "attacker": "0xcf267eA3f1ebae3C29feA0A3253F94F3122C2199",
+      "notes": "LedgerChannel opened a channel with an attacker-controlled ERC20 whose transfer() re-entered LCOpenTimeout()/consensusCloseChannel before the channel state was cleared, letting the attacker withdraw the channel's ETH repeatedly.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x21e9d20b57f6ae60dac23466c8395d47f42dc24628e5a31f224567a2b4effa88"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2018-10/SpankChain_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/spankchain/we-got-spanked-what-we-know-so-far-d5ed3a0f38fe"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: LedgerChannel 0xf91546835f756DA0c10cFa0CDA95b15577b84aA7 created 2018-08-30T09:35:59Z by 0x406fffca2a6d1997b9ef573d67efe74ba786dff1, unrelated to the attack sender; no proxy, no upgrade events, age measured from deployment. USD figure taken from SpankChain's own post-mortem (165.38 ETH, ~$38,000). Recheck (deployment basis confirmed): keccak(eth_getCode) is identical at the creation block 6239908 and the incident block 6467248; the six DELEGATECALLs in the runtime are calls into the ECTools library linked at deploy time (Etherscan's library map records ECTools:0xcb107c7d2a93e638b20342f46b10b9b6d81377bf, present as a PUSH20 constant in the bytecode), an address that cannot be repointed, and none of them is taken in the exploit trace."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1538872770,
+        "deployTimestamp": 1535621759,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1535621759,
+        "codeAgeSeconds": 3251011,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

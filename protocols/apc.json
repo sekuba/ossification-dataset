@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "apc",
+  "name": "APC",
+  "incidents": [
+    {
+      "name": "APC TransSwap spot-price swap",
+      "date": "2022-12-01T09:10:36Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 40477,
+      "victimContract": "0x5a88114F02bfFb04a9A13a776f592547B3080237",
+      "exploitTx": "0xbcaecea2044101c80f186ce5327bec796cd9e054f0c240ddce93e2aead337370",
+      "attacker": "0xc578d755cd56255d3ff6e92e1b6371ba945e3984",
+      "notes": "The TransSwap proxy priced APC against MUSD from the APC pair's live reserves, so a flash loan pumped APC, swapped it into MUSD at the inflated rate and swapped back once the price had been dumped.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xbcaecea2044101c80f186ce5327bec796cd9e054f0c240ddce93e2aead337370"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-12/APC_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BlockSecTeam/status/1598262002010378241"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: TransSwap proxy 0x5a88114F02bfFb04a9A13a776f592547B3080237 created 2022-11-24T20:50:51Z by 0x0f8470262ac99e91751b26e37aae4ebf1e666666, unrelated to attack sender 0xc578d755cd56255d3ff6e92e1b6371ba945e3984; the single EIP-1967 Upgraded event is the one emitted at construction, so the age is the deployment age. Loss verified onchain: 44,077.14 USDT left 0x3de032d5d11c94d2d79dba0c34d7851ffaa05dd8 and the attacker netted 40,477.14 USDT in the first of the two attack transactions. Boundary row: the swap contract behaved as coded and the attacker moved the price it read."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1669885836,
+        "deployTimestamp": 1669323051,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1669323051,
+        "codeAgeSeconds": 562785,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

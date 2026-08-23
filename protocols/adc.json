@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "adc",
+  "name": "ADC (MainPool)",
+  "incidents": [
+    {
+      "name": "MainPool public calcStepIncome()",
+      "date": "2024-02-02T05:28:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 45951,
+      "victimContract": "0xdE46fcF6aB7559E4355b8eE3D7fBa0f2730CDdd8",
+      "exploitTx": "0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db",
+      "attacker": "0x24a0c66f185874b251eb70bee2c2e35e39848419",
+      "notes": "MainPool.calcStepIncome(id, amount, step) was callable by anyone with arbitrary arguments and credited the caller's withdrawable income directly, so the attacker joined the game and then wrote itself an income entry it withdrew as ETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-02/ADC_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/EXVULSEC/status/1753294675971313790"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: MainPool 0xdE46fcF6aB7559E4355b8eE3D7fBa0f2730CDdd8 created 2020-05-16T01:31:35Z by 0x25fd6a8ffad09b691777ce17e99f9b23956251a9, unrelated to the attack sender; no EIP-1967 events, age from deployment (1357.2 days). ~20 ETH x $2,297.54 at incidentTimestamp 1706851727 (DefiLlama) = $45,951."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1706851727,
+        "deployTimestamp": 1589592695,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1589592695,
+        "codeAgeSeconds": 117259032,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

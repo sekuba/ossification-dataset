@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "cellframe",
+  "name": "Cellframe Network",
+  "incidents": [
+    {
+      "name": "Cellframe LP migration calculation flaw",
+      "date": "2023-06-01T02:07:55Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 75265,
+      "victimContract": "0xB4E47c13dB187D54839cd1E08422Af57E5348fc1",
+      "exploitTx": "0x943c2a5f89bc0c17f3fe1520ec6215ed8c6b897ce7f22f1b207fea3f79ae09a6",
+      "attacker": "0x2525c811ecf22fc5fcde03c67112d34e97da6079",
+      "notes": "The Cellframe LpMigration contract computes the new-token payout from the pool's current reserves at migration time instead of a fixed snapshot, so skewing the old CELL/WBNB pool with a flash loan first made the migration pay out far more.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x943c2a5f89bc0c17f3fe1520ec6215ed8c6b897ce7f22f1b207fea3f79ae09a6"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-06/Cellframe_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/numencyber/status/1664132985883615235"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: LpMigration 0xB4E47c13dB187D54839cd1E08422Af57E5348fc1 created 2022-11-14T12:24:22Z by 0x65def3ea531fd80354ec11c611ae4faa06068f27, unrelated to attack sender 0x2525c811ecf22fc5fcde03c67112d34e97da6079; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the attack contract 0x1e2a251b29e84e1d6d762c78a9db5113f5ce7c48 netted 245.5228 WBNB; 245.5228 WBNB x $306.55 at incidentTimestamp 1685585275 (DefiLlama coingecko:binancecoin) = $75,265, matching the ~$76k reported."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1685585275,
+        "deployTimestamp": 1668428662,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1668428662,
+        "codeAgeSeconds": 17156613,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

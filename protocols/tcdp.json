@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "tcdp",
+  "name": "tCDP",
+  "incidents": [
+    {
+      "name": "tCDP transferFrom checks the wrong allowance",
+      "date": "2025-04-28T01:21:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 3586,
+      "victimContract": "0xdA4c9Ee8373fd1095379a3Dd457A0c78968AaF03",
+      "exploitTx": "0x9879031462b16dbf063377c4a8e5b043662576a9a3fb282c5a656953ad00684e",
+      "attacker": "0xd49cB0924F871BcFD78eA4187D9e6bd943F85D98",
+      "notes": "tCDP.transferFrom() debits _allowed[msg.sender][to] instead of checking _allowed[from][msg.sender], so a self-approval let the attacker move every outstanding tCDP balance out of three unrelated holders and burn it to redeem the contract's Compound ETH collateral.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x9879031462b16dbf063377c4a8e5b043662576a9a3fb282c5a656953ad00684e"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://t.me/defimon_alerts/932"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-04/tcdp_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: tCDP 0xdA4c9Ee8373fd1095379a3Dd457A0c78968AaF03 created 2020-05-23T14:50:40Z by 0x1d075f1f543bb09df4530f44ed21ca50303a65b2 (one of the drained holders), not the attack-tx sender 0xd49cb0924f871bcfd78ea4187d9e6bd943f85d98; no EIP-1967 events, 1800.4 days old. 2.02 ETH x $1,775.02 at the incident timestamp (DefiLlama) = $3,586."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1745803283,
+        "deployTimestamp": 1590245440,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1590245440,
+        "codeAgeSeconds": 155557843,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

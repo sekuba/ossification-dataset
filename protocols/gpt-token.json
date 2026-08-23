@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "gpt-token",
+  "name": "GPT Token",
+  "incidents": [
+    {
+      "name": "GPT fee-mechanism exploitation",
+      "date": "2023-05-24T16:00:38Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 42973,
+      "victimContract": "0xa1679abEF5Cd376cC9A1C4c2868Acf52e08ec1B3",
+      "exploitTx": "0xb77cb34cd01204bdad930d8c172af12462eef58dea16199185b77147d6533391",
+      "attacker": "0x054a3574d8082112575843dd944ff42c58dda38d",
+      "notes": "GPT's transfer fee is taken from the liquidity pair's own balance and routed back into the token without a sync(), so repeated flash-loaned transfers shifted the reserve and let the attacker extract the pair's USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xb77cb34cd01204bdad930d8c172af12462eef58dea16199185b77147d6533391"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-05/GPT_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/Phalcon_xyz/status/1661424685320634368"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: GPT 0xa1679abEF5Cd376cC9A1C4c2868Acf52e08ec1B3 created 2023-05-24T13:23:49Z by 0xc1727c083ea796addefcf594ce9114160a49f3aa, unrelated to attack sender 0x054a3574d8082112575843dd944ff42c58dda38d; no EIP-1967 Upgraded events, age measured from deployment (the token was under three hours old). Loss verified onchain: 58,520.32 USDT left the GPT pair 0x77a684943aA033e2E9330f12D4a1334986bCa3ef and 42,973.44 USDT reached the attack contract."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1684944038,
+        "deployTimestamp": 1684934629,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1684934629,
+        "codeAgeSeconds": 9409,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

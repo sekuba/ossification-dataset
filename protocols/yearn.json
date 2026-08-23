@@ -15,7 +15,7 @@
       "sources": [
         {
           "type": "curated-review",
-          "ref": "l2beat research; see notes"
+          "ref": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 17038416, 2023-04-13T12:00:00Z). Legacy iearn yUSDT 0x83f798e925BcD4017Eb265844FDDABb448f1707D was created at block 9465216, 2020-02-12T01:21:48Z. Etherscan verifies it as `yUSDT`; the runtime bytecode contains zero DELEGATECALL opcodes, it emits no EIP-1967 Upgraded event, and eth_getCode is byte-identical at the creation block and the incident block, so the contract provably never changed and the deployment basis is exact. The iUSDC/iUSDT misconfiguration was baked into the constructor arguments at deployment. Aged-code counterexample: ~1156 days."
         }
       ],
       "measurement": {

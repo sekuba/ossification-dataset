@@ -15,7 +15,7 @@
       "sources": [
         {
           "type": "curated-review",
-          "ref": "l2beat research; see notes"
+          "ref": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 14029360, 2022-01-18T12:00:00Z). AnyswapV4Router 0x6b7a87899490EcE95443e979cA9485CBE7E71522 was created at block 12657964, 2021-06-18T10:44:06Z. It is not a proxy: zero DELEGATECALL opcodes in the runtime, no EIP-1967 Upgraded event, and byte-identical eth_getCode at the creation block and the incident block, so the deployment basis is exact. Storage was checked against the verified named layout (cast storage): slot 0 `_oldMPC`, slot 1 `_newMPC`, slot 2 `_newMPCEffectiveTime`; the only pre-incident storage change (slot 0 at block 12806663, 2021-07-11T14:56:16Z -> 0x8b44a687224496276811555efa3f2d0acd667a72) is an MPC key rotation, not a code change."
         }
       ],
       "measurement": {

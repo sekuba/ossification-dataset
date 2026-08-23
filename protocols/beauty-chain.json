@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "beauty-chain",
+  "name": "Beauty Chain (BEC)",
+  "incidents": [
+    {
+      "name": "BEC batchTransfer integer overflow",
+      "date": "2018-04-22T03:28:52Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": null,
+      "lossOther": "2 x 5.79e76 BEC minted from nothing; exchanges halted BEC and the token's market value collapsed",
+      "victimContract": "0xC5d105E63711398aF9bbff092d4B6769C82F793D",
+      "exploitTx": "0xad89ff16fd1ebe3a0a7cf4ed282302c06626c1af33221ebe0d3a470aba4a660f",
+      "attacker": "0x09a34e01fbaa49f27b0b129d3c5e6e21ed5fe93c",
+      "notes": "BecToken.batchTransfer() computed `uint256 amount = uint256(cnt) * _value` without SafeMath, so two receivers with _value = 2^255 overflowed the total to zero and passed the balance check while crediting each receiver 2^255 BEC.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xad89ff16fd1ebe3a0a7cf4ed282302c06626c1af33221ebe0d3a470aba4a660f"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2018-04/BEC_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://blog.peckshield.com/2018/04/22/batchOverflow/"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: BecToken 0xC5d105E63711398aF9bbff092d4B6769C82F793D created 2018-02-09T11:27:42Z by 0x36642d20f2e288f18a9a21b544aa853c594dd312, unrelated to the attack sender 0x09a34e01...; plain non-upgradeable token, no EIP-1967 events, age measured from deployment. No credible realised-USD figure exists (the mint was never fully sold), so lossUsd is left null."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1524367732,
+        "deployTimestamp": 1518175662,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1518175662,
+        "codeAgeSeconds": 6192070,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

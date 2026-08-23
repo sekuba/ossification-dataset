@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "beefy-moocakectx",
+  "name": "Beefy Moo CAKE CTX vault",
+  "incidents": [
+    {
+      "name": "Beefy Moo CAKE CTX share-price donation inflation",
+      "date": "2022-11-06T21:30:38Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 140000,
+      "victimContract": "0x489afbAED0Ea796712c9A6d366C16CA3876D8184",
+      "exploitTx": "0x03d363462519029cf9a544d44046cad0c7e64c5fb1f2adf5dd5438a9a0d2ec8e",
+      "attacker": "0x35700c4a7bd65048f01d6675f09d15771c0facd5",
+      "notes": "The Moo CAKE CTX vault derives its share price from the StrategySyrup balance, which counts CAKE that anyone can donate to the underlying SmartChef, so a donation followed by depositAll()/withdrawAll() returned more CAKE than was put in.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x03d363462519029cf9a544d44046cad0c7e64c5fb1f2adf5dd5438a9a0d2ec8e"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-11/MooCAKECTX_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BeosinAlert/status/1589501207181393920"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: vault 0x489afbAED0Ea796712c9A6d366C16CA3876D8184 created 2020-10-27T18:44:49Z (block 1717330, tx 0x4d92d7691edbd013f3ac32cc4c300efe19fbb3f312bfc2d208351525ceb235bd) by 0xc362fa359031a081d21cb9d57c29e055fecbcb06, unrelated to attack sender 0x35700c4a7bd65048f01d6675f09d15771c0facd5; no EIP-1967 Upgraded events, age measured from deployment. lossUsd uses the ~$140k reported by DeFiHackLabs; the exploit transaction moved ~53,786 CAKE out of the SmartChef and 37.5 WBNB to the attacker's addresses."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1667770238,
+        "deployTimestamp": 1603824289,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1603824289,
+        "codeAgeSeconds": 63945949,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

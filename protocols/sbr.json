@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "sbr",
+  "name": "SBR",
+  "incidents": [
+    {
+      "name": "SBR token drain",
+      "date": "2025-03-07T01:27:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 18431,
+      "victimContract": "0x460B1AE257118Ed6F63Ed8489657588a326a206D",
+      "exploitTx": "0xe4c1aeacf8c93f8e39fe78420ce7a114ecf59dea90047cd2af390b30af54e7b9",
+      "attacker": "0x7a6488348a7626c10e35df9ae0a2ad916a56a952",
+      "notes": "The freshly deployed SBR token exposed an unguarded balance-manipulation path that let an arbitrary caller strip the SBR/WETH Uniswap V2 pair of its SBR reserve, resync the pair and sell into the drained pool for the pair's WETH.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xe4c1aeacf8c93f8e39fe78420ce7a114ecf59dea90047cd2af390b30af54e7b9"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/TenArmorAlert/status/1897826817429442652"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-03/SBRToken_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: SBR 0x460B1AE257118Ed6F63Ed8489657588a326a206D created 2025-03-07T00:16:47Z by 0x0feb4a8e33bb9c0c26bad43b5e521504e1aaec47, not the attack-tx sender 0x7a6488348a7626c10e35df9ae0a2ad916a56a952; no EIP-1967 events, so the executing code was 70 minutes old. 8.495 ETH x $2,169.65 at the incident timestamp (DefiLlama) = $18,431."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1741310843,
+        "deployTimestamp": 1741306607,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1741306607,
+        "codeAgeSeconds": 4236,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

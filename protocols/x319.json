@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "x319",
+  "name": "X319",
+  "incidents": [
+    {
+      "name": "X319 unprotected claimEther()",
+      "date": "2024-11-09T14:34:32Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 12900,
+      "victimContract": "0xedd632eaf3b57e100ae9142e8ed1641e5fd6b2c0",
+      "exploitTx": "0x679028cb0a5af35f57cbea120ec668a5caf72d74fcc6972adc7c75ef6c9a9092",
+      "attacker": "0xe60329a82c5add1898ba273fc53835ac7e6fd5ca",
+      "notes": "claimEther(address,uint256) has no access control, so the attacker called it from a throwaway contract constructor and sent 20.85 BNB of the contract's balance to itself.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x679028cb0a5af35f57cbea120ec668a5caf72d74fcc6972adc7c75ef6c9a9092"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/TenArmorAlert/status/1855263208124416377"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-11/X319_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xedd632eaf3b57e100ae9142e8ed1641e5fd6b2c0 created 2024-11-09T09:38:20Z by 0x01785130a07a8dd935271535fd7e512986c5dc5e, which is not the attack-tx sender 0xe60329a82c5add1898ba273fc53835ac7e6fd5ca; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1731162872,
+        "deployTimestamp": 1731145100,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1731145100,
+        "codeAgeSeconds": 17772,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

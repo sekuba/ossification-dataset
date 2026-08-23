@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "starlink",
+  "name": "Starlink (STARL)",
+  "incidents": [
+    {
+      "name": "Starlink transfer business-logic flaw",
+      "date": "2023-02-16T22:48:03Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 11809,
+      "victimContract": "0x518281F34dbf5B76e6cdd3908a6972E8EC49e345",
+      "exploitTx": "0x146586f05a4513136deab3557ad15df8f77ffbcdbd0dd0724bc66dbeab98a962",
+      "attacker": "0x187473cf30e2186f8fb0feda1fd21bad9aa177ca",
+      "notes": "The Starlink token's transfer logic moves tokens out of the liquidity pair's own balance without a sync(), so the attacker collapsed the reserve and swapped a small holding out for the pair's WBNB.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x146586f05a4513136deab3557ad15df8f77ffbcdbd0dd0724bc66dbeab98a962"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-02/Starlink_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/NumenAlert/status/1626447469361102850"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: Starlink 0x518281F34dbf5B76e6cdd3908a6972E8EC49e345 created 2022-02-22T13:21:20Z by 0xe2a8b3bc543a6412865cc9179a08409d18ef8694, unrelated to attack sender 0x187473cf30e2186f8fb0feda1fd21bad9aa177ca; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 38.3598 WBNB left the pair 0x425444dA1410940CFdfB6A980Bd16aA7a5376d6D; 38.3598 WBNB x $307.85 at incidentTimestamp 1676587683 (DefiLlama coingecko:binancecoin) = $11,809."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1676587683,
+        "deployTimestamp": 1645536080,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1645536080,
+        "codeAgeSeconds": 31051603,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

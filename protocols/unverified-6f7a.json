@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2025-08/unverified_6f7a_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "delegatecall-target review (callTracer + prestateTracer on the exploit tx, then eth_getStorageAt over [creation block, incident block]): the victim is an EIP173ProxyWithReceive, which stores its implementation in the EIP-1967 slot but announces changes with ProxyImplementationUpdated rather than Upgraded, so the standard event scan finds nothing. The exploit tx DELEGATECALLs 0x6f7a14bd...ea68 -> 0x338ffeaccf929c88fb9574dc202dc1714b1903e7 (selector 0xbfd479c4). eth_getStorageAt on slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc held 0x078a27f9de51359764ad48e663e8d8debd26656c at the creation block 13806773 and was rewritten once, at block 13844065 / 2021-12-20T19:49:44Z, to the implementation that was live at the incident (constant across 60 samples afterwards). Age 1340.6 days rather than 1346.4 from deployment"
         }
       ],
       "attacker": "0xe4B97Db5FAF476DB464Bc271097Fac97d6CE3783",
@@ -29,10 +33,12 @@
         "incidentTimestamp": 1755858827,
         "deployTimestamp": 1639531414,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1639531414,
-        "codeAgeSeconds": 116327413,
-        "basis": "deployment (onchain)"
-      }
+        "lastChangeTimestamp": 1640029784,
+        "codeAgeSeconds": 115829043,
+        "basis": "documented change"
+      },
+      "documentedLastChange": "2021-12-20T19:49:44Z (block 13844065): the EIP-1967 implementation slot was rewritten from 0x078a27f9de51359764ad48e663e8d8debd26656c to 0x338ffeaccf929c88fb9574dc202dc1714b1903e7",
+      "nonStandardUpgradeArchitecture": true
     }
   ]
 }

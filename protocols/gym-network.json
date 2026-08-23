@@ -1,0 +1,85 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "gym-network",
+  "name": "GYM Network",
+  "incidents": [
+    {
+      "name": "GymSinglePool depositFromOtherContract missing access control",
+      "date": "2022-06-08T05:18:03Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 2100000,
+      "victimContract": "0xa8987285e100a8b557f06a7889f79e0064b359f2",
+      "exploitTx": "0x8432c1c6613995eeea8a3ae2cfeb9577913db6b7b35dbe26a8c56c02066096e6",
+      "attacker": "0xb2c035eee03b821cbe78644e5da8b8eaa711d2e5",
+      "notes": "GymSinglePool.depositFromOtherContract() had no caller authorization, so anyone could book an arbitrary deposit amount for themselves without transferring any tokens and then withdraw the GYMNET the fake position had accrued.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x8432c1c6613995eeea8a3ae2cfeb9577913db6b7b35dbe26a8c56c02066096e6"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://www.certik.com/skynet-report/gym-network-exploit-analysis"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-06/Gym_2_exp.sol (20220608 GYMNetwork - Accesscontrol, lost $2.1 million)"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: pool proxy 0xa8987285e100a8b557f06a7889f79e0064b359f2 created 2022-05-15 by 0xc08d6d75fdd67005fa21933bd281b1e6180184b2 (GYM deployer), unrelated to attack sender 0xb2c035eee03b821cbe78644e5da8b8eaa711d2e5; attack tx located from the pool's own logs at BSC block 18501050; 8 EIP-1967 Upgraded events, the last on 2022-06-05 to implementation 0x0288fba0bf19072d30490a0f3c81cd9b0634258a - the upgrade that shipped the unprotected function, 2.4 days before the incident; the team's fix added an onlyBank modifier"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1654665483,
+        "deployTimestamp": 1652611304,
+        "upgradeEventCount": 8,
+        "lastChangeTimestamp": 1654453915,
+        "codeAgeSeconds": 211568,
+        "basis": "last of 8 upgrade events (onchain)"
+      }
+    },
+    {
+      "name": "Gym Network LiquidityMigrationV2 migrate() flaw",
+      "date": "2022-04-09T15:38:34Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 561595,
+      "victimContract": "0x1BEfe6f3f0E8edd2D4D15Cae97BAEe01E51ea4A4",
+      "exploitTx": "0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5",
+      "attacker": "0x74298086c94dab3252c5dac979c9755c2eb08e49",
+      "notes": "LiquidityMigrationV2.migrate() converted GYM/WBNB LP into GYMNET/WBNB LP without validating the incoming LP's composition, so a flash loan minted LP against a skewed GYM pair and migrated it out for far more GYMNET-backed liquidity than it was worth.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-04/Gym_1_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://medium.com/@Beosin_com/beosin-analysis-of-the-attack-on-gymdefi-e5a23bfd93fe"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: LiquidityMigrationV2 0x1BEfe6f3f0E8edd2D4D15Cae97BAEe01E51ea4A4 created 2022-03-24T11:10:59Z by 0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2, unrelated to attack sender 0x74298086c94dab3252c5dac979c9755c2eb08e49; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the attack sender netted 1,327.14 WBNB in the exploit transaction. Loss converted: 1,327.14 WBNB x $423.16 at incidentTimestamp 1649518714 (DefiLlama coingecko:binancecoin) = $561,595."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1649518714,
+        "deployTimestamp": 1648120259,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1648120259,
+        "codeAgeSeconds": 1398455,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

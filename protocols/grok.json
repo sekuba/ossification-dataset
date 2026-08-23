@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "grok",
+  "name": "GROK",
+  "incidents": [
+    {
+      "name": "GROK token pair-balance accounting",
+      "date": "2023-11-10T02:51:35Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 55132,
+      "victimContract": "0x8390a1DA07E376ef7aDd4Be859BA74Fb83aA02D5",
+      "exploitTx": "0x3e9bcee951cdad84805e0c82d2a1e982e71f2ec301a1cbd344c832e0acaee813",
+      "attacker": "0x864e656c57a5a119f332c47326a35422294db5c9",
+      "notes": "GROK's transfer logic let the attacker shrink the Uniswap V3 pool's own GROK balance during a flash swap, so the position could be closed against a manipulated pool balance and the pool's WETH extracted.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x3e9bcee951cdad84805e0c82d2a1e982e71f2ec301a1cbd344c832e0acaee813"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-11/grok_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/Phalcon_xyz/status/1722841076120130020"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: GROK 0x8390a1DA07E376ef7aDd4Be859BA74Fb83aA02D5 created 2023-11-04T04:19:11Z by 0xf9387ac9f61cc22994a59a6008f827435ce744b6, unrelated to the attack sender; no EIP-1967 events, age from deployment (5.9 days). ~26 ETH x $2,120.46 at incidentTimestamp 1699584695 (DefiLlama) = $55,132."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1699584695,
+        "deployTimestamp": 1699071551,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1699071551,
+        "codeAgeSeconds": 513144,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

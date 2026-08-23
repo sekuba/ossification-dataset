@@ -4,6 +4,45 @@
   "name": "Balancer",
   "incidents": [
     {
+      "name": "Balancer STA deflationary-token pool drain",
+      "date": "2020-06-28T18:03:11Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 103353,
+      "victimContract": "0x0e511aa1a137aad267dfe3a6bfca0b856c1a3682",
+      "exploitTx": "0x013be97768b702fe8eccef1a40544d5ecb3c1961ad5f87fee4d16fdc08c78106",
+      "attacker": "0xbf675c80540111a310b06e1482f9127ef4e7469a",
+      "notes": "The BPool credited swapExactAmountIn with the requested tokenAmountIn instead of the amount actually received, and exposed a permissionless gulp() that resyncs a token's recorded balance to the real one, so repeatedly swapping the 1%-transfer-fee token STA and calling gulp drove the pool's recorded STA balance to 1 wei and let 1 STA be swapped out for essentially the whole WETH side - the pool's own accounting, not any external price, is what failed.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x013be97768b702fe8eccef1a40544d5ecb3c1961ad5f87fee4d16fdc08c78106"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2020-06/Balancer_20200628_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: BPool 0x0e511aa1a137aad267dfe3a6bfca0b856c1a3682 (STA/WETH) was created 2020-05-29T13:57:13Z at block 10160718 by 0x43189898d712df36d37c41d2897843482f729c65 through BFactory 0x9424b1412450d0f8fc2255faf6046b98213b76bd, unrelated to attack sender 0xbf675c80540111a310b06e1482f9127ef4e7469a or its attack contract 0x81d73c55458f024cdc82bbf27468a2deaa631407. A BPool is a plain non-proxy contract; its codehash is identical (0x974df1c33872ba8aab782be5117ff348802441590f84ed7701d734bb9c21683e) at the creation block and at the block before the incident, so the age is measured from deployment: 30.23 days. Classified code-bug rather than a mere token incompatibility because the defect is in the deployed pool code - it books tokenAmountIn rather than the delta actually received, and gulp() lets anyone rewrite the recorded balance. Loss not recorded in USD: the pool's WETH balance fell from 455.924127 to 0.077179 WETH inside the transaction (455.85 WETH taken). Order-of-magnitude sanity check only (ETH ~ $225 in June 2020, so ~$0.1m): far above the $1,000 floor. This row covers the STA pool only; a second Balancer pool (STONK) was drained the same day in a separate transaction."
+        },
+        {
+          "type": "curated-review",
+          "ref": "loss converted at the incident timestamp (1593367391) via DefiLlama coins: 455.85 WETH x $226.73 = $103,353"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1593367391,
+        "deployTimestamp": 1590755833,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1590755833,
+        "codeAgeSeconds": 2611558,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
       "name": "Balancer",
       "date": "2023-08-27T07:55:59Z",
       "chain": "ethereum",
@@ -31,6 +70,45 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1639434927,
         "codeAgeSeconds": 53688032,
+        "basis": "deployment (onchain)"
+      }
+    },
+    {
+      "name": "Balancer V2 composable stable pool rounding",
+      "date": "2025-11-03T07:46:47Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 120000000,
+      "victimContract": "0xDACf5Fa19b1f720111609043ac67A9818262850c",
+      "exploitTx": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+      "attacker": "0x506D1f9EFe24f0d47853aDca907EB8d89AE03207",
+      "notes": "A precision-loss/rounding defect in the Balancer V2 composable stable pool maths let a sequence of crafted batchSwaps inside one transaction shift the pool's invariant in the attacker's favour and extract the osETH/wETH and wstETH/wETH pools' reserves.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/BlockSecTeam/status/1986057732810518640"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-11/BalancerV2_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: osETH/wETH composable stable pool 0xDACf5Fa19b1f720111609043ac67A9818262850c created 2023-11-28T23:02:59Z by 0x854b004700885a61107b458f11ecc169a019b764 (the ComposableStablePoolFactory deployer), not the attack-tx sender 0x506d1f9efe24f0d47853adca907eb8d89ae03207; pools of this factory are immutable and emit no EIP-1967 Upgraded event, so age runs from deployment (705.4 days). The same transaction also hits wstETH/wETH pool 0x93d199263632a4EF4Bb438F1feB99e57b4b5f0BD; a follow-up withdrawal transaction is 0xd155207261712c35fa3d472ed1e51bfcd816e616dd4f517fa5959836f5b48569. Loss recorded as the ~$120M reported across the campaign."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1762156007,
+        "deployTimestamp": 1701212579,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1701212579,
+        "codeAgeSeconds": 60943428,
         "basis": "deployment (onchain)"
       }
     }

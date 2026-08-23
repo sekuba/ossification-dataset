@@ -9,7 +9,7 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 20000,
-      "victimContract": "0xfd11aba71c06061f446ade4eec057179f19c23c4",
+      "victimContract": "0x76f0c94ced5b48020bf0d7f3d0ceabc877744cb5",
       "exploitTx": "0x2881e839d4d562fad5356183e4f6a9d427ba6f475614ce8ef64dbfe557a4a2cc",
       "notes": "Aave-fork empty-market donation inflated index plus rounding error to over-withdraw",
       "sources": [
@@ -21,17 +21,28 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-11/MahaLend_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: the victim's executing code is immutable - zero DELEGATECALL opcodes in the deployed runtime and an identical codehash at the creation block and the incident block - so the deployment basis is an exact measurement, not an upper bound; nonStandardUpgradeArchitecture removed accordingly"
+        },
+        {
+          "type": "curated-review",
+          "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis (correcting one detail of the earlier note: the runtime does contain 14 DELEGATECALL opcodes, but they are solc external-library calls to seven link-time-hardcoded addresses, not an upgrade hook). The recorded victim is the Aave-v3 `Pool` implementation, not the live pool - every storage slot 0..59 reads zero at both the creation and incident blocks. The live pool proxy is 0x76f0c94ced5b48020bf0d7f3d0ceabc877744cb5, created 13 blocks (168 s) after the implementation, and its EIP-1967 slot has held 0xfd11aba7... from its creation block 16167084 to the incident (25-point probe, single 0x0 -> impl transition). So the executing code is unchanged from the implementation's deployment either way."
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim re-anchored from implementation 0xfd11aba71c06061f446ade4eec057179f19c23c4 to the proxy the protocol runs at, 0x76f0c94ced5b48020bf0d7f3d0ceabc877744cb5, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (28826964s -> 28826796s)"
         }
       ],
       "attacker": "0x0ec330df28ae6106a774d0add3e540ea8d226e3b",
-      "nonStandardUpgradeArchitecture": true,
       "measurement": {
         "status": "OK",
         "incidentTimestamp": 1699656239,
-        "deployTimestamp": 1670829275,
+        "deployTimestamp": 1670829443,
         "upgradeEventCount": 0,
-        "lastChangeTimestamp": 1670829275,
-        "codeAgeSeconds": 28826964,
+        "lastChangeTimestamp": 1670829443,
+        "codeAgeSeconds": 28826796,
         "basis": "deployment (onchain)"
       }
     }

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "babyswap",
+  "name": "BabySwap",
+  "incidents": [
+    {
+      "name": "BabySwap swap-fee parameter access control",
+      "date": "2022-10-01T14:46:33Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 65056,
+      "victimContract": "0x5c9f1A9CeD41cCC5DcecDa5AFC317b72f1e49636",
+      "exploitTx": "0xcca7ea9d48e00e7e32e5d005b57ec3cac28bc3ad0181e4ca208832e62aa52efe",
+      "attacker": "0x0000000038b8889b6ab9790e20FC16fdC5714922",
+      "notes": "A privileged parameter setter on the BabySwap contract was reachable by any caller, letting the attacker reconfigure the swap/fee routing and drain the pool's USDT.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xcca7ea9d48e00e7e32e5d005b57ec3cac28bc3ad0181e4ca208832e62aa52efe"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-10/BabySwap_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BlockSecTeam/status/1576441612812836865"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x5c9f1A9CeD41cCC5DcecDa5AFC317b72f1e49636 created 2021-06-02T06:44:05Z by 0xc0a56aee755bd397235367008f7c2c4599768395, unrelated to attack sender 0x0000000038b8889b6ab9790e20fc16fdc5714922; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 65,055.71 USDT left 0xe730c7b7470447ad4886c763247012dfd233baff to the attack contract in the exploit transaction."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1664635593,
+        "deployTimestamp": 1622616245,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1622616245,
+        "codeAgeSeconds": 42019348,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

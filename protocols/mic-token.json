@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "mic-token",
+  "name": "MIC Token",
+  "incidents": [
+    {
+      "name": "MIC public swapManual()",
+      "date": "2024-01-02T23:09:14Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 500000,
+      "victimContract": "0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57",
+      "exploitTx": "0x316c35d483b72700e6f4984650d217304146b3732bb148e32fa7f8017843eb24",
+      "attacker": "0x1703062d657c1ca439023f0993d870f4707a37ff",
+      "notes": "MIC.swapManual() is public and sells the token contract's own MIC into the pair, so the attacker triggered it inside a flash loan and harvested the fee-claimer payouts.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x316c35d483b72700e6f4984650d217304146b3732bb148e32fa7f8017843eb24"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/MetaSec_xyz/status/1742484748239536173"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-01/MIC_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57 created 2023-12-28T12:54:14Z by 0x6095b5b5008c0ffd24220c423dca59a8bd9ba6ad, which is not the attack-tx sender 0x1703062d657c1ca439023f0993d870f4707a37ff; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1704236954,
+        "deployTimestamp": 1703768054,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1703768054,
+        "codeAgeSeconds": 468900,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

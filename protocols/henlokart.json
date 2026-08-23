@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "henlokart",
+  "name": "HenloKart",
+  "incidents": [
+    {
+      "name": "HenloKart ETH transfer helper credits contract balance",
+      "date": "2025-02-26T08:18:19Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": 1456,
+      "victimContract": "0x27fafc210e4b240786d9ef3aa44399fb7e107f6f",
+      "exploitTx": "0xf9ccb244be71ce3ff8c61021dc43a51c21bd1e11d73e61e64d05a9218f832c7e",
+      "attacker": "0xc2b2197ca4b2ee3b4eb61fc59e6d592d04a2e26a",
+      "notes": "HenloKart's ETH transfer helper treated from == msg.sender as authority to pay out of the contract's own balance rather than requiring msg.value, so a zero-value race commitment was funded from the contract, and an inverted cancel-lock check let the attacker cancel immediately and take the fake deposit back.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0xf9ccb244be71ce3ff8c61021dc43a51c21bd1e11d73e61e64d05a9218f832c7e"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://t.me/defimon_alerts/518"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-02/HenloKart_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: proxy 0x27fafc210e4b240786d9ef3aa44399fb7e107f6f created 2025-02-22T18:32:29Z by 0x72c3c8b0cacdf6e36b39c9462a42756b2a294ccb, not the attack-tx sender 0xc2b2197ca4b2ee3b4eb61fc59e6d592d04a2e26a; a single EIP-1967 Upgraded event at deployment installs 0x5e30de98d133f956e118233ed8e054e0f5e65781, so the executing code was 3.57 days old. 0.59 ETH x $2,467.27 at the incident timestamp (DefiLlama) = $1,456."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1740557899,
+        "deployTimestamp": 1740249149,
+        "upgradeEventCount": 1,
+        "lastChangeTimestamp": 1740249149,
+        "codeAgeSeconds": 308750,
+        "basis": "last of 1 upgrade events (onchain)"
+      }
+    }
+  ]
+}

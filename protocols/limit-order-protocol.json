@@ -1,0 +1,47 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "limit-order-protocol",
+  "name": "LimitOrderProtocol (Base)",
+  "incidents": [
+    {
+      "name": "LimitOrderProtocol unrestricted transferTokens helper",
+      "date": "2025-02-11T05:32:27Z",
+      "chain": "base",
+      "category": "code-bug",
+      "lossUsd": null,
+      "lossOther": "2,800,000 BRAINS",
+      "victimContract": "0xCe8D7Cd4DdB3Fd50bAae0Cc59DBfd786a7f0e44e",
+      "exploitTx": "0xf16c30f57d6f47d68fe8ee6ed1986ed9c0d837b00750daef9c742c395b55d564",
+      "attacker": "0xc2B2197ca4B2eE3b4EB61Fc59E6D592d04a2e26A",
+      "notes": "The implementation behind the LimitOrderProtocol proxy exposed a transferTokens() helper with no caller restriction, so the attacker used a user's standing BRAINS allowance to the protocol to move that user's entire BRAINS balance out.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "base",
+          "ref": "0xf16c30f57d6f47d68fe8ee6ed1986ed9c0d837b00750daef9c742c395b55d564"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://t.me/defimon_alerts/447"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2025-02/LimitOrderProtocol_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: implementation 0xCe8D7Cd4DdB3Fd50bAae0Cc59DBfd786a7f0e44e created 2025-02-07T02:02:53Z by 0xcb4c2db59a22bd221bb5b0059f565a4164c56d43, not the attack-tx sender 0xc2b2197ca4b2ee3b4eb61fc59e6d592d04a2e26a; no EIP-1967 events on it, 4.15 days old; the proxy that delegates to it is 0xb5486f71c902fe0844bb07221fa8f47834d90b1b. Floor check: DefiLlama prices base:0xF25B7DD973e30Dcf219fbED7bD336b9ab5A05DD9 (BRAINS) at $0.00070821 near the incident timestamp, so 2,800,000 BRAINS is about $1,983 - above the $1,000 floor but small, and BRAINS is thin enough that no lossUsd is asserted."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1739251947,
+        "deployTimestamp": 1738893773,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1738893773,
+        "codeAgeSeconds": 358174,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "defrost-finance",
+  "name": "Defrost Finance",
+  "incidents": [
+    {
+      "name": "Defrost LSWUSDC reentrancy",
+      "date": "2022-12-23T11:27:45Z",
+      "chain": "avalanche",
+      "category": "code-bug",
+      "lossUsd": 173638,
+      "victimContract": "0xfF152e21C5A511c478ED23D1b89Bb9391bE6de96",
+      "exploitTx": "0xc6fb8217e45870a93c25e2098f54f6e3b24674a3083c30664867de474bf0212d",
+      "attacker": "0x7373dca267bdc623dfba228696c9d4e8234469f6",
+      "notes": "The Defrost LSWUSDC vault released the underlying USDC before updating the caller's share accounting, so re-entering the withdrawal from the token callback let one deposit be redeemed repeatedly until the vault's USDC was gone.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "avalanche",
+          "ref": "0xc6fb8217e45870a93c25e2098f54f6e3b24674a3083c30664867de474bf0212d"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/PeckShieldAlert/status/1606276020276891650"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-12/Defrost_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: LSWUSDC 0xfF152e21C5A511c478ED23D1b89Bb9391bE6de96 created 2022-09-13T02:51:58Z by 0x3cd5854fe3a13707b7882d8290d3cae793a7751a, not the attack-tx sender 0x7373dca267bdc623dfba228696c9d4e8234469f6; no EIP-1967 events, 101.4 days old. Summing the ERC-20 Transfer logs of the exploit receipt gives a net +173,637.63 USDC to the attack contract 0x792e8f3727cad6e00c58d478798f0907c4cec340, which matches the ~$170k figure in the DeFiHackLabs 2022 index; USDC taken at 1:1."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1671794865,
+        "deployTimestamp": 1663037518,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1663037518,
+        "codeAgeSeconds": 8757347,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

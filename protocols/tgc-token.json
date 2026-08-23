@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "tgc-token",
+  "name": "TGC",
+  "incidents": [
+    {
+      "name": "TGC helper unprotected buy/sell entry points",
+      "date": "2024-05-11T13:03:27Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 32000,
+      "victimContract": "0x32F9188d6D86Bf88dbAc3ceEe5958aDf1aa609df",
+      "exploitTx": "0x12e8c24dec36a29fdd9b9d7a8b587b3abd2519089b6438c194e6e5eb357b68d8",
+      "attacker": "0x36fb87c3e65ec608d37e38bd556fb6ebdb3d8a39",
+      "notes": "The unverified TGC helper exposes unauthenticated entry points (selectors 0x836aefb0 and 0xfd5a466f) that move the helper's TGC and USDT through the pair, which the attacker drove from inside a PancakeSwap swap callback.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x12e8c24dec36a29fdd9b9d7a8b587b3abd2519089b6438c194e6e5eb357b68d8"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/ChainAegis/status/1789490986588205529"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-05/TGC_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x32F9188d6D86Bf88dbAc3ceEe5958aDf1aa609df created 2024-05-09T19:13:06Z by 0x35a4f4e2b372fd76c0d5e969bd977f4a4683e11e, which is not the attack-tx sender 0x36fb87c3e65ec608d37e38bd556fb6ebdb3d8a39; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1715432607,
+        "deployTimestamp": 1715281986,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1715281986,
+        "codeAgeSeconds": 150621,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

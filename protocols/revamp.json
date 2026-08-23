@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "revamp",
+  "name": "Revamp",
+  "incidents": [
+    {
+      "name": "Revamp contributor reward cap self-triggered",
+      "date": "2026-03-19T02:57:12Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 1946,
+      "victimContract": "0x46280c1a2e17cfc151f50a885363408368bb163a",
+      "exploitTx": "0xa0ff1de61793b0915038e644a2b45372be8d49e1060b6b2cd5e3482d7d4325ba",
+      "attacker": "0x42579d63bd5945fcfde5adff4edc40c34869914e",
+      "notes": "revamp() rewards earlier contributors from later contributions with only a 2x cap and no check that the two contributions are independent, so the attacker sized a first contribution to half the contract's balance, funded a second from a helper address and withdrew both principals plus the capped reward.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xa0ff1de61793b0915038e644a2b45372be8d49e1060b6b2cd5e3482d7d4325ba"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/DefimonAlerts/status/2034532544239088053"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2026-03/Revamp_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: victim 0x46280c1a2e17cfc151f50a885363408368bb163a created 2025-07-06T14:05:02Z by 0x6915ffc19ca9019608dcf4a912504b795e643823, which is not the attack-tx sender 0x42579d63bd5945fcfde5adff4edc40c34869914e; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 2.99 BNB x $650.702246/BNB at the incident timestamp 1773889032 (DefiLlama coingecko:binancecoin) = $1,946."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1773889032,
+        "deployTimestamp": 1751810702,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1751810702,
+        "codeAgeSeconds": 22078330,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

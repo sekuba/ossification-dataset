@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "bbt",
+  "name": "BBT",
+  "incidents": [
+    {
+      "name": "BBT token unprotected setRegistry enables unlimited mint",
+      "date": "2024-03-12T08:31:59Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 20102,
+      "victimContract": "0x3541499cda8CA51B24724Bb8e7Ce569727406E04",
+      "exploitTx": "0x4019890fe5a5bd527cd3b9f7ee6d94e55b331709b703317860d028745e33a8ca",
+      "attacker": "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54",
+      "notes": "BBT.setRegistry(address) had no access control, so the attacker pointed the token at a registry contract of their own whose getContractAddress() returned the caller, passing the mint() authorization check and minting 1e31 BBT that was dumped on Uniswap V2.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x4019890fe5a5bd527cd3b9f7ee6d94e55b331709b703317860d028745e33a8ca"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://x.com/8olidity/status/1767470002566058088"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2024-03/BBT_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: TransparentUpgradeableProxy 0x3541499cda8CA51B24724Bb8e7Ce569727406E04 created 2024-01-18 by 0xb0ab5d6f8e99c07fa4965524bbe9c57d9ed35a38, not the attack-tx sender; three EIP-1967 Upgraded events, the last at block 19113181 on 2024-01-29T15:49:35Z installing 0x74463ed91bfa45bca06d59e8b383a89709842f69, so the executing code was 42.7 days old. 5.06 ETH at a March 2024 ETH price near $4,000 is roughly $20k, above the $1,000 floor. Loss converted at the incident timestamp: 5.06 ETH x $3,972.80 (DefiLlama historical ETH price) = $20,102."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1710232319,
+        "deployTimestamp": 1705597763,
+        "upgradeEventCount": 3,
+        "lastChangeTimestamp": 1706543375,
+        "codeAgeSeconds": 3688944,
+        "basis": "last of 3 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "rabby-wallet",
+  "name": "Rabby Wallet",
+  "incidents": [
+    {
+      "name": "Rabby Wallet SwapRouter arbitrary call",
+      "date": "2022-10-11T11:04:23Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 200000,
+      "victimContract": "0x6eb211caf6d304a76efe37d9abdfaddc2d4363d1",
+      "exploitTx": "0x914c1ae4f03657064f0b1d5ddc6e06f39e82bce6fb2f726efdca52c092fbfc26",
+      "attacker": "0xb687550842a24d7fbc6aad238fd7e0687ed59d55",
+      "notes": "Rabby's swap router forwarded an unvalidated (target, calldata) pair from the caller, so the attacker made the router call transferFrom on token contracts and sweep balances from every user who had approved it.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x914c1ae4f03657064f0b1d5ddc6e06f39e82bce6fb2f726efdca52c092fbfc26"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-10/RabbyWallet_SwapRouter_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/Rabby_io/status/1579833969566449666"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: router 0x6eb211caf6d304a76efe37d9abdfaddc2d4363d1 created 2022-09-12T01:35:55Z by 0x5853ed4f26a3fcea565b3fbc698bb19cdf6deb85, unrelated to the attack sender; unverified, no EIP-1967 events, age from deployment. The PoC replays only the first of ~20 drain txs; the USD figure is the aggregate reported by SlowMist."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1665486263,
+        "deployTimestamp": 1662946555,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1662946555,
+        "codeAgeSeconds": 2539708,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

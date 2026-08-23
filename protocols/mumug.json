@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "mumug",
+  "name": "MU / MUG",
+  "incidents": [
+    {
+      "name": "MUBank spot-price mint",
+      "date": "2022-12-10T01:21:34Z",
+      "chain": "avalanche",
+      "category": "oracle-manipulation",
+      "lossUsd": 57000,
+      "victimContract": "0x4aA679402c6afcE1E0F7Eb99cA4f09a30ce228ab",
+      "exploitTx": "0xab39a17cdc200c812ecbb05aead6e6f574712170eafbd73736b053b168555680",
+      "attacker": "0xd46b44a0e0b90e0136cf456df633cd15a87de77e",
+      "notes": "MUBank minted MUG against MU at the live MU/MUG pair price, so buying MU on the pair first and then depositing it let the attacker mint MUG at an inflated rate and sell it back for USDC.e.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "avalanche",
+          "ref": "0xab39a17cdc200c812ecbb05aead6e6f574712170eafbd73736b053b168555680"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BeosinAlert/status/1601422462012469248"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2022-12/MUMUG_exp.sol"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: MUBank 0x4aA679402c6afcE1E0F7Eb99cA4f09a30ce228ab created 2022-12-09T18:20:29Z by 0xf243d79910cbd70a0eaf405b08e80065a67d5e14, not the attack-tx sender 0xd46b44a0e0b90e0136cf456df633cd15a87de77e; no EIP-1967 events, so the executing code was 7 hours old. Loss $57k per the DeFiHackLabs 2022 index entry for this PoC."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1670635294,
+        "deployTimestamp": 1670610029,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1670610029,
+        "codeAgeSeconds": 25265,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

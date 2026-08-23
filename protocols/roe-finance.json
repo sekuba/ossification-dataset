@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "roe-finance",
+  "name": "ROE Finance",
+  "incidents": [
+    {
+      "name": "ROE Finance LP-collateral valuation",
+      "date": "2023-01-11T15:28:59Z",
+      "chain": "ethereum",
+      "category": "oracle-manipulation",
+      "lossUsd": 39982,
+      "victimContract": "0x5F360c6b7B25DfBfA4F10039ea0F7ecfB9B02E60",
+      "exploitTx": "0x927b784148b60d5233e57287671cdf67d38e3e69e5b6d0ecacc7c1aeaa98985b",
+      "attacker": "0x67a909f2953fb1138bea4b60894b51291d2d0795",
+      "notes": "ROE valued Uniswap V2 LP collateral from the pair's live reserves, so a flash-loaned 5.67M USDC swap through the WBTC/USDC pair moved the LP price and let the attacker borrow far more than the position was worth; the lending logic itself behaved as written.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x927b784148b60d5233e57287671cdf67d38e3e69e5b6d0ecacc7c1aeaa98985b"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-01/RoeFinance_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BlockSecTeam/status/1613267000913960976"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: ROE 0x5F360c6b7B25DfBfA4F10039ea0F7ecfB9B02E60 created 2022-08-10T11:49:08Z by 0x7433d4158c702dc6bf0974e0bb4eea152cfbdd6a, unrelated to the attack sender; four EIP-1967 Upgraded events, the last on 2022-11-12T20:52:35Z (block 15956445, implementation 0x574ff39184dee9e46f6c3229b95e0e0938e398d0), so age runs from that upgrade (59.8 days) rather than the 154-day-old deployment. Loss netted from the tx receipt: 51,661.15 + 14,345.05 USDC out minus 26,024.07 USDC returned = 39,982.13 USDC (the 5,673,090.34 USDC leg is the Balancer flash loan, repaid in full)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1673450939,
+        "deployTimestamp": 1660132148,
+        "upgradeEventCount": 4,
+        "lastChangeTimestamp": 1668286355,
+        "codeAgeSeconds": 5164584,
+        "basis": "last of 4 upgrade events (onchain)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "pickle-finance",
+  "name": "Pickle Finance",
+  "incidents": [
+    {
+      "name": "Pickle Finance ControllerV4 fake-jar swap",
+      "date": "2020-11-21T18:37:24Z",
+      "chain": "ethereum",
+      "category": "code-bug",
+      "lossUsd": 19700000,
+      "victimContract": "0x6847259b2b3a4c17e7c43c54409810af48ba5210",
+      "exploitTx": "0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0",
+      "attacker": "0xbac8a476b95ec741e56561a66231f92bc88bb3a8",
+      "notes": "ControllerV4.swapExactJarForJar validated only approvedJarConverters for the call targets and never checked that _fromJar/_toJar were Pickle jars, so an attacker-deployed fake jar turned the controller into an arbitrary-call proxy that withdrew the real DAI strategy's cDAI.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://github.com/banteg/evil-jar"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: I read the verified ControllerV4 source at 0x6847259b - swapExactJarForJar only requires approvedJarConverters[_targets[i]], with no jar whitelist; contract created 2020-10-23 by 0xf00d98806a785bb0e1854a0ccc8a39c9c4f4316a, not by attack sender 0xbac8a476; loss of 19,759,355 DAI counted 1:1 in USD. Recheck (deployment basis confirmed): ControllerV4's runtime is unchanged - identical keccak(eth_getCode) at the creation block 11109198 and the incident block 11303123 - and it holds no implementation slot. The single DELEGATECALL taken in the exploit goes to the jar converter 0x6186e99d9cfb05e1fdf1b442178806e81da21dd8, which the same Pickle deployer 0xf00d98806a785bb0e1854a0ccc8a39c9c4f4316a created 278 s after the controller (block 11109222) and whitelisted in approvedJarConverters (mapping at slot 11) 288 s after it (block 11109224, 2020-10-23T00:09:04Z), verified by binary-searching eth_getStorageAt on keccak(converter . 11) - the same deployment session, and worth 288 s out of a 2.57 M-second age, so deployment remains the basis."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1605983844,
+        "deployTimestamp": 1603411456,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1603411456,
+        "codeAgeSeconds": 2572388,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}

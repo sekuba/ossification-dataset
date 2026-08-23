@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2026-06/LixirPermitDrain_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "deployment-basis recheck: the victim's 45-byte runtime is an EIP-1167 minimal proxy (363d3d373d3d3d363d73...5af43d82803e903d91602b57fd5bf3) whose master 0x2ce186c52cf150000bf8ad2b4679d4ad619395cd is baked into the bytecode and cannot be repointed; callTracer confirms every DELEGATECALL in the attack, including the forged permit (0xd505accf), lands on that master. The clone's runtime is byte-identical at the creation and incident blocks. Deployment is exact; 1800.5 days."
         }
       ],
       "attacker": "0x3Fa8cF7FeA68C8E76A9838d77889464DdFb6a6cf",

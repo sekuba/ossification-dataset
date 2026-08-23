@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "pancakebunny",
+  "name": "PancakeBunny",
+  "incidents": [
+    {
+      "name": "PancakeBunny BunnyMinterV2 LP price manipulation",
+      "date": "2021-05-19T22:34:28Z",
+      "chain": "bsc",
+      "category": "oracle-manipulation",
+      "lossUsd": 45000000,
+      "victimContract": "0x8cb88701790f650f273c8bb2cc4c5f439cd65219",
+      "exploitTx": "0x897c2de73dd55d7701e1b69ffb3a17b0f4801ced88b0c75fe1551c5fcce6a979",
+      "attacker": "0xa0acc61547f6bd066f7c9663c17a312b6ad7e187",
+      "notes": "BunnyMinterV2 sized the BUNNY performance-fee mint from the spot value of the WBNB-USDT LP reported by PriceCalculatorBSC, so a flash-loan-skewed Pancake pair made the vault's harvest mint ~7m BUNNY; the minter executed exactly as designed on a manipulated price.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x897c2de73dd55d7701e1b69ffb3a17b0f4801ced88b0c75fe1551c5fcce6a979"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://cmichel.io/bsc-pancake-bunny-exploit-post-mortem/"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: VaultFlipToFlip 0x633e538ecf0bee1a18c2edfe10c4da0d6e71e77b (in the attack tx logs) reports minter() == 0x8cb88701 (BunnyMinterV2), which is the contract consuming the manipulated LP price; minter proxy created 2021-03-10 by 0xe87f02606911223c2cf200398ffaf353f60801f7, last EIP-1967 Upgraded 2021-04-27, not attacker-deployed"
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1621463668,
+        "deployTimestamp": 1615339981,
+        "upgradeEventCount": 3,
+        "lastChangeTimestamp": 1619496929,
+        "codeAgeSeconds": 1966739,
+        "basis": "last of 3 upgrade events (onchain)"
+      }
+    }
+  ]
+}

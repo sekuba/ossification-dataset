@@ -1,0 +1,46 @@
+{
+  "$schema": "../schema/protocol.schema.json",
+  "slug": "landnft",
+  "name": "landNFT",
+  "incidents": [
+    {
+      "name": "landNFT miner mint without permission check",
+      "date": "2023-05-14T16:39:50Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 149616,
+      "victimContract": "0x2e599883715D2f92468Fa5ae3F9aab4E930E3aC7",
+      "exploitTx": "0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048",
+      "attacker": "0x96b89c2560bcc43c342c12ba9c33dab7eb571a90",
+      "notes": "The miner contract's mint(address[],uint256[]) has no permission check, so the attacker minted 200 land NFTs to themselves and redeemed them for XQJ and then BUSD.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-05/landNFT_exp.sol"
+        },
+        {
+          "type": "post-mortem",
+          "ref": "https://twitter.com/BeosinAlert/status/1658000784943124480"
+        },
+        {
+          "type": "curated-review",
+          "ref": "onchain review: miner 0x2e599883715D2f92468Fa5ae3F9aab4E930E3aC7 created 2023-03-06T09:48:58Z by 0xdd9e4fe7a975a637c29f3da23b2477ae1a9f8ad8, unrelated to attack sender 0x96b89c2560bcc43c342c12ba9c33dab7eb571a90; no EIP-1967 Upgraded events, age measured from deployment. lossUsd uses the 149,616 BUSD reported by Beosin (BUSD taken at 1:1)."
+        }
+      ],
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1684082390,
+        "deployTimestamp": 1678096138,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1678096138,
+        "codeAgeSeconds": 5986252,
+        "basis": "deployment (onchain)"
+      }
+    }
+  ]
+}
