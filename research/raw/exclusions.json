@@ -90,6 +90,15 @@
       "exploitTx": "0xf1818f62c635e5c80ef16b7857da812c74ce330ebed46682b4d173bffe84c666",
       "defihacklabs": "src/test/2022-08/Circle_exp2.sol@ad353ba25fbb",
       "reason": "VICTIM_MISATTRIBUTED: the recorded victim is the UniswapV2 DAI/USDC pair, which contains no exploited flaw - it is only the CDP collateral token. The abused cdpAllow authority sits on a private, unverified, single-user CDP-management contract (0xbee1dee31365272bc6e5021c8ac66bede8bed641, deployed 2022-04-15, only ever called by its deployer), so there is no identifiable protocol victim contract (inclusion rule 2). Same attacker in both txs three days apart. Can re-enter only if a protocol-level victim is verifiably pinned."
+    },
+    {
+      "name": "SmartMesh",
+      "chain": "ethereum",
+      "date": "2018-04-24T19:16:19Z",
+      "candidateVictim": "0x55f93985431fc9304077687a35a1ba103dc1e081",
+      "exploitTx": "0x1abab4c8db9a30e703114528e31dee129a3a758f7f8abc3b6494aad3d304e43f",
+      "defihacklabs": "src/test/2018-04/SmartMesh_exp.sol@ad353ba25fbb",
+      "reason": "LOSS_NOT_ESTABLISHED: the selected transaction exploits transferProxy's unchecked _value + _feeSmt addition and creates artificial SMT ledger balances, but its receipt and call trace transfer no ETH or external reserve asset. Subsequent onchain activity only sends the artificial SMT to exchange deposit addresses; the attacker address records no onchain sale proceeds. The inherited $140M figure has no asset-flow or valuation provenance and does not establish at least $1,000 of stolen or permanently locked assets."
     }
   ]
 }

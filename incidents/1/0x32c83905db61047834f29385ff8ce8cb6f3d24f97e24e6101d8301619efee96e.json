@@ -24,28 +24,51 @@
     "summary": "The Uniswap V1 imBTC exchange updated its reserves after pulling tokens, so imBTC's ERC-777 tokensToSend hook let the attacker re-enter tokenToEthSwapInput() at a stale price and drain the ETH reserve."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 221171,
+      "amount": 232239.46,
       "valuationTimestamp": 1587182364,
-      "method": "legacy-unspecified",
+      "method": "reported",
       "sourceIds": [
+        "source-3",
         "source-4"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "1278",
+        "usdValue": 232239.46,
+        "valuation": {
+          "method": "reported",
+          "timestamp": 1587182364,
+          "unitPriceUsd": null,
+          "sourceIds": [
+            "source-3"
+          ]
+        },
+        "sourceIds": [
+          "source-3",
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The Eye of Horus campaign analysis identifies 525 reentrant transactions against the same imBTC exchange and reports 1,278 ETH of accumulated profit, worth $232,239.46 over the campaign. The code-age anchor is one transaction from that sequence; its trace independently reproduces 0.083716857663001059 ETH of net profit."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xffcf45b540e6c9f094ae656d2e34ad11cdfdb187",
-      "relationship": "unknown",
+      "relationship": "minimal-proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x2157a7894439191e520825fe9399ab8655e0f708",
+        "codeHash": "0xb9205fc3f30b0ad30c6f03a0f464f8fd435fbf28cdbb6071054d62fb506a4b96"
       },
       "deployment": {
         "timestamp": 1575626101,
@@ -65,28 +88,28 @@
           "type": "deployment",
           "address": "0xffcf45b540e6c9f094ae656d2e34ad11cdfdb187"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The factory-created 46-byte Vyper forwarder immutably selected the Uniswap V1 exchange template containing the reentrant token-to-ETH path."
       },
       "codeAgeSeconds": 11556263,
-      "failureModeId": "legacy:eip155:1:0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e:failure-1",
+      "failureModeId": "failure:uniswap-v1-erc777-reentrancy-stale-token-reserve",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-4",
           "source-6"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5",
           "source-6"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/uniswap-v1.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -96,7 +119,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e"
@@ -106,7 +132,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -116,27 +143,24 @@
       "id": "source-3",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
-      "url": "https://blog.openzeppelin.com/exploiting-uniswap-from-reentrancy-to-actual-profit"
+      "url": "https://eprint.iacr.org/2021/284.pdf"
     },
     {
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: the imBTC exchange 0xFFcf45b540e6C9F094Ae656D2e34aD11cdfdb187 is a Vyper clone deployed by the Uniswap V1 factory; creation resolved over RPC to 2019-12-06T09:55:01Z, months before the incident and unrelated to the attack sender 0x60f3fdb8...; no EIP-1967 events, age measured from deployment. 1,278 ETH x $173.06 at incidentTimestamp 1587182364 (DefiLlama) = $221,171."
-    },
-    {
-      "id": "source-5",
-      "type": "review-note",
-      "supports": [
-        "code-history"
-      ],
-      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The exchange is a 46-byte Vyper forwarder whose runtime hardcodes the Uniswap V1 exchange template 0x2157a7894439191e520825fe9399ab8655e0f708 as a PUSH20 immediate, so the delegate target cannot be repointed; the template's runtime is byte-identical at 13 sample points across [9059910, 9894154] and callTracer on the exploit tx confirms the forwarder delegatecalls only the template."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T13:13:41Z",
+      "note": "Reviewed the exploit call trace, exact ETH value movements, factory creation transaction, forwarder and template bytecode, pinned reproduction, and campaign analysis. The imBTC exchange is a 46-byte Vyper minimal proxy whose runtime hardcodes template 0x2157a7894439191e520825fe9399ab8655e0f708 and delegatecalls it during the exploit. That template pays ETH before imBTC.transferFrom completes; imBTC invokes the attacker's ERC-777 tokensToSend hook during transferFrom, permitting a nested tokenToEthSwapInput against the unchanged token balance. Factory transaction 0x95fad6ac213a300c76c873f52598c32b61fedefa62e01acab8f06311a76d435f created the exchange and immutably selected the template; both forwarder and template runtime hashes are identical at creation and immediately before the exploit. In the selected transaction the exchange receives 1 ETH and pays 0.611341052127704463 plus 0.472375805535296596 ETH, an exact net loss of 0.083716857663001059 ETH forwarded as profit to the attacker EOA. The campaign analysis attributes 1,278 ETH of accumulated profit across 525 transactions to this same exchange defect."
     },
     {
       "id": "source-6",
@@ -147,13 +171,23 @@
       ],
       "chainId": 1,
       "transactionHash": "0x95fad6ac213a300c76c873f52598c32b61fedefa62e01acab8f06311a76d435f"
+    },
+    {
+      "id": "source-7",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1587095964&to=1587189564",
+      "observedAt": 1787576959
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/uniswap-v1.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

@@ -24,19 +24,42 @@
     "summary": "RuggedMarket.targetedPurchase() forwarded attacker-supplied UniversalRouter commands and inputs without validating them, letting a flash-loan-funded caller sweep the market's RUGGED balance and NFTs and then unstake against it."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
       "amount": 14486,
       "valuationTimestamp": 1708351223,
-      "method": "legacy-unspecified",
+      "method": "incident-price",
       "sourceIds": [
-        "source-3"
+        "source-2",
+        "source-6"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "5",
+        "usdValue": 14486,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1708351220,
+          "unitPriceUsd": 2897.2,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-2"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "The commit-pinned reproduction reports approximately 5 ETH of net proceeds. The USD amount values that reported quantity at DefiLlama's incident-time ETH price."
   },
   "targets": [
     {
@@ -57,37 +80,38 @@
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1708129427,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 19244002,
+        "transactionHash": "0x324fd78bdef3c104ee23b3210a3d5f5f703fdfc96c49e267f4b1d1d42e7d3f3b",
+        "transactionIndex": 18,
+        "logIndex": 61,
         "mechanism": {
           "type": "event",
           "address": "0x2648f5592c09a260c601acde44e7f8f2944944fb",
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+        "description": "The second and final pre-incident Upgraded event selected RuggedMarket implementation 0xfe380fe1db07e531e3519b9ae3ea9f7888ce20c6."
       },
       "codeAgeSeconds": 221796,
-      "failureModeId": "legacy:eip155:1:0x5a63da39b5b83fccdd825fed0226f330f802e995b8e49e19fbdd246876c67e1f:failure-1",
+      "failureModeId": "failure:ruggedmarket-arbitrary-universal-router-calldata",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-3",
-          "source-4"
+          "source-3"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/rugged-art.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -97,7 +121,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x5a63da39b5b83fccdd825fed0226f330f802e995b8e49e19fbdd246876c67e1f"
@@ -107,7 +134,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -117,11 +145,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: proxy 0x2648f5592c09a260C601ACde44e7f8f2944944Fb created 2024-02-15 by 0xe2b2a4b7ef40ccc1392a680a0e1e74f7efdd87ea (not the attacker or the attack-tx sender 0x9733303117504c146a4e22261f2685ddb79780ef); two EIP-1967 Upgraded events, the last on 2024-02-17T00:23:47Z installing implementation 0xfe380fe1db07e531e3519b9ae3ea9f7888ce20c6 (the address the PoC labels RuggedMarket), so the executing code was 2.57 days old at the incident. ~5 ETH at a February 2024 ETH price of roughly $2,900 is well above the $1,000 floor. Loss converted at the incident timestamp: 5 ETH x $2,897.20 (DefiLlama historical ETH price) = $14,486."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:26:34Z",
+      "note": "Reviewed the exploit receipt and call trace, proxy deployment, exploit-time bytecode, all Upgraded logs from deployment through the incident, and the commit-pinned reproduction. targetedPurchase executes through proxy 0x2648f5592c09a260c601acde44e7f8f2944944fb and delegates to 0xfe380fe1db07e531e3519b9ae3ea9f7888ce20c6, forwarding attacker-selected Universal Router commands. Exactly two pre-incident Upgraded events exist; the last is log 61 of transaction 0x324fd7...d3f3b and selects that artifact. The reproduction reports approximately 5 ETH of proceeds; the valuation uses the timestamped DefiLlama ETH price."
     },
     {
       "id": "source-4",
@@ -132,13 +164,33 @@
       ],
       "chainId": 1,
       "transactionHash": "0x6f079d20776b9e96ebb754f03cd2eeb9df8ba4a3c22cf3b23f288593602efe6c"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x324fd78bdef3c104ee23b3210a3d5f5f703fdfc96c49e267f4b1d1d42e7d3f3b"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1708351223/coingecko:ethereum",
+      "observedAt": 1787574394
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/rugged-art.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

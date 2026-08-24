@@ -21,20 +21,22 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "The bridge's receive() recovered a signer with ecrecover but never required it to equal the caller-supplied signatures[i].signatory, so any garbage signature passed the quota/duplicate checks and released bridged tokens."
+    "summary": "The bridge's receive() logic did not bind each recovered signer to its declared signatory. Unauthorized attestations could therefore satisfy the quota and duplicate-signatory checks and release bridged tokens."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 800000,
       "valuationTimestamp": 1625272990,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-3"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "ChainSwap's post-mortem reported an approximately $800,000 incident total. The publication does not provide an auditable asset-by-asset allocation for this Ethereum anchor, so assets remain unexpanded."
   },
   "targets": [
     {
@@ -60,32 +62,36 @@
         "transactionIndex": 33,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "storage-write",
+          "address": "0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5",
+          "storageSlot": "0xc23ad3b8698fdd56cdfe9f7feef345bbc2ef01abc106afb48c4d9ac42cc7bae5",
+          "valueBefore": "0x0000000000000000000000003c894caf21f18f42d8d06daf26983c4b6a32fc1c",
+          "valueAfter": "0x000000000000000000000000ec2c74c9e2457d328bc6216858280ea13e740e8a"
         },
-        "description": "2021-05-04T20:09:27Z (block 12369818, tx 0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595): ProxyFactory 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 productImplementations('TokenMapped') changed from 0x3c894caf21f18f42d8d06daf26983c4b6a32fc1c to 0xec2c74c9e2457d328bc6216858280ea13e740e8a, the implementation the proxy executed at the incident"
+        "description": "ProxyFactory productImplementations('TokenMapped') changed from 0x3c894caf21f18f42d8d06daf26983c4b6a32fc1c to 0xec2c74c9e2457d328bc6216858280ea13e740e8a, the implementation the product proxy executed at the incident."
       },
       "codeAgeSeconds": 5114023,
-      "failureModeId": "legacy:eip155:1:0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be:failure-1",
+      "failureModeId": "failure:chainswap-unbound-recovered-signatory",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-4",
           "source-5",
-          "source-6",
-          "source-7"
+          "source-6"
         ],
         "codeHistorySourceIds": [
           "source-4",
           "source-5",
-          "source-6",
-          "source-7"
+          "source-6"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/chainswap.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -95,7 +101,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity"
       ],
       "chainId": 1,
       "transactionHash": "0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be"
@@ -115,30 +122,27 @@
       "id": "source-3",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
-      "url": "https://chainswap.medium.com/chainswap-post-mortem-and-compensation-plan-6b967dcf5b9e"
+      "url": "https://chain-swap.medium.com/chainswap-post-mortem-and-compensation-plan-90cad50898ab"
     },
     {
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: bridge proxy 0x7fe68FC06e1A870DcbeE0acAe8720396DC12FC86 created 2021-03-13T23:07:57Z by 0xc96ecc8456cd0e5b20c1c40989adad9c1809da9c, unrelated to the attack sender 0x941a9e3b...; no EIP-1967 Upgraded events between creation and the incident, age measured from deployment."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T13:30:52Z",
+      "note": "Reviewed the exploit receipt and call trace, proxy-creation trace, verified factory and product-proxy source, transaction-local factory state diff, the TokenMapped mapping value and implementation runtime through the pre-exploit block, every successful external transaction to factory proxy 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 from product-proxy deployment through the pre-exploit block, the factory's implementation-upgrade history, commit-pinned reproduction, and ChainSwap's post-mortem. The incident executes product proxy 0x7fe68fc06e1a870dcbee0acae8720396dc12fc86, whose immutable factory/name slots select productImplementations('TokenMapped'). Its governor throughout the relevant final interval is code-empty EOA 0xc96ecc8456cd0e5b20c1c40989adad9c1809da9c, so governance-only mapping changes must be top-level transactions from that address. The complete 252-transaction factory history contains two successful initializer calls capable of selecting TokenMapped code and no direct upgradeProductImplementationsTo call. The first retained 0x3c894caf21f18f42d8d06daf26983c4b6a32fc1c; the second, transaction 0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595, changed mapping slot 0xc23ad3b8698fdd56cdfe9f7feef345bbc2ef01abc106afb48c4d9ac42cc7bae5 to 0xec2c74c9e2457d328bc6216858280ea13e740e8a. That value and its 8,906-byte runtime hash 0xbb2e5ca0cbda8dcde380e595cd41881ca8f80d56fdd28d6414b35855819baa20 remain unchanged immediately before the incident, and the exploit trace delegates to it."
     },
     {
       "id": "source-5",
-      "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
-      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CORRECTION, by the same method already recorded for this file's BSC row. The victim is a ChainSwap InitializableProductProxy: its EIP-1967 implementation slot is empty and the delegate target is resolved as IProxyFactory(factory).productImplementations(name), with FACTORY_SLOT 0x7a45a402e4cb6e08ebc196f20f66d5d30e67285a2a8aa80503fa409e727a4af1 = 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 and NAME_SLOT 0x4cd9b827ca535ceb0880425d70eff88561ecdf04dc32fcf7ff3b15c587f8a870 = 'TokenMapped', both constant over [12033100, 12751488] (25-point probe each). Binary-searching eth_call of productImplementations('TokenMapped') over the same range: 0x3c894caf21f18f42d8d06daf26983c4b6a32fc1c at creation, changed to 0xec2c74c9e2457d328bc6216858280ea13e740e8a at block 12369818 (2021-05-04T20:09:27Z) by tx 0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595 from the deployer 0xc96ecc8456cd0e5b20c1c40989adad9c1809da9c, then constant to the incident (51-point dense re-probe). callTracer on the exploit tx confirms the proxy delegatecalled only 0xec2c74c9e2457d328bc6216858280ea13e740e8a, which has zero DELEGATECALL opcodes. Age 1625272990 - 1620158967 = 5,114,023 s (59.2 d), was 9,596,113 s (111.1 d) from deployment."
-    },
-    {
-      "id": "source-6",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
@@ -148,7 +152,7 @@
       "transactionHash": "0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595"
     },
     {
-      "id": "source-7",
+      "id": "source-6",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
@@ -159,10 +163,12 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/chainswap.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The reported $800,000 loss is an aggregate without a published per-asset allocation for this Ethereum transaction."
+    ],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -174,8 +180,5 @@
       "date": "2021-07-03T00:43:10Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2021-05-04T20:09:27Z (block 12369818, tx 0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595): ProxyFactory 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 productImplementations('TokenMapped') changed from 0x3c894caf21f18f42d8d06daf26983c4b6a32fc1c to 0xec2c74c9e2457d328bc6216858280ea13e740e8a, the implementation the proxy executed at the incident"
-  ]
+  "notes": []
 }

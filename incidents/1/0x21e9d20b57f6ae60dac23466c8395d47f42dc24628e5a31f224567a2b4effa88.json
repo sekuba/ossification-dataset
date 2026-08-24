@@ -21,31 +21,72 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "LedgerChannel opened a channel with an attacker-controlled ERC20 whose transfer() re-entered LCOpenTimeout()/consensusCloseChannel before the channel state was cleared, letting the attacker withdraw the channel's ETH repeatedly."
+    "summary": "LCOpenTimeout transferred the channel's ETH and then called an attacker-controlled token before deleting the channel state, so the token's transfer callback could repeatedly re-enter LCOpenTimeout and withdraw the same ETH balance."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 38000,
+      "amount": 42000,
       "valuationTimestamp": 1538872770,
-      "method": "legacy-unspecified",
+      "method": "reported",
       "sourceIds": [
-        "source-4"
+        "source-3"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "165.38",
+        "usdValue": 38000,
+        "valuation": {
+          "method": "reported",
+          "timestamp": 1538872770,
+          "unitPriceUsd": 229.7738541540694,
+          "sourceIds": [
+            "source-3"
+          ]
+        },
+        "sourceIds": [
+          "source-3"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "BOOTY"
+        },
+        "amount": null,
+        "usdValue": 4000,
+        "valuation": {
+          "method": "reported",
+          "timestamp": 1538872770,
+          "unitPriceUsd": null,
+          "sourceIds": [
+            "source-3"
+          ]
+        },
+        "sourceIds": [
+          "source-3"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "SpankChain's post-mortem reports 165.38 ETH drained (about $38,000) and about $4,000 of BOOTY immobilized. This records the loss at exploit time; the attacker's later return of funds does not reduce the incident-time amount."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xf91546835f756da0c10cfa0cda95b15577b84aa7",
-      "relationship": "proxy",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xf91546835f756da0c10cfa0cda95b15577b84aa7",
+        "codeHash": "0x46a8b25053a9cf565e3032a4e9348281eda7cc5f3837a3613aea7a3dd9b9d3c2"
       },
       "deployment": {
         "timestamp": 1535621759,
@@ -65,14 +106,15 @@
           "type": "deployment",
           "address": "0xf91546835f756da0c10cfa0cda95b15577b84aa7"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "This transaction deployed the direct LedgerChannel runtime; its statically linked ECTools library address is embedded in that runtime."
       },
       "codeAgeSeconds": 3251011,
-      "failureModeId": "legacy:eip155:1:0x21e9d20b57f6ae60dac23466c8395d47f42dc24628e5a31f224567a2b4effa88:failure-1",
+      "failureModeId": "failure:reentrant-timeout-before-channel-deletion",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-4",
+          "source-3",
           "source-5"
         ],
         "codeHistorySourceIds": [
@@ -81,11 +123,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/spankchain.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -95,7 +137,9 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause"
       ],
       "chainId": 1,
       "transactionHash": "0x21e9d20b57f6ae60dac23466c8395d47f42dc24628e5a31f224567a2b4effa88"
@@ -115,22 +159,14 @@
       "id": "source-3",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "url": "https://medium.com/spankchain/we-got-spanked-what-we-know-so-far-d5ed3a0f38fe"
     },
     {
       "id": "source-4",
-      "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
-      "note": "onchain review: LedgerChannel 0xf91546835f756DA0c10cFa0CDA95b15577b84aA7 created 2018-08-30T09:35:59Z by 0x406fffca2a6d1997b9ef573d67efe74ba786dff1, unrelated to the attack sender; no proxy, no upgrade events, age measured from deployment. USD figure taken from SpankChain's own post-mortem (165.38 ETH, ~$38,000). Recheck (deployment basis confirmed): keccak(eth_getCode) is identical at the creation block 6239908 and the incident block 6467248; the six DELEGATECALLs in the runtime are calls into the ECTools library linked at deploy time (Etherscan's library map records ECTools:0xcb107c7d2a93e638b20342f46b10b9b6d81377bf, present as a PUSH20 constant in the bytecode), an address that cannot be repointed, and none of them is taken in the exploit trace."
-    },
-    {
-      "id": "source-5",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
@@ -138,13 +174,27 @@
       ],
       "chainId": 1,
       "transactionHash": "0xddcc9e6114bc7ea46ecb7b13cde4ca2144401b79da96cb6a50dd1b1feb2f2aca"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:07:16Z",
+      "note": "Reviewed the official SpankChain post-mortem, exploit and deployment transactions, verified LedgerChannel source, archive-node runtime at deployment block 6239908 and immediately before exploit block 6467248, and the commit-pinned reproduction. In the anchor transaction the attacker supplies 5 ETH, the malicious token callback re-enters LCOpenTimeout, LedgerChannel makes thirty-two 5 ETH withdrawals before deleting the channel, and the attack contract forwards 160 ETH to the attacker. The vulnerable ordering is in LedgerChannel itself. It is a direct contract rather than a proxy: the DELEGATECALL instructions in its verified runtime target the ECTools address statically linked at deployment, and the exploit path does not execute them. The 17,133-byte runtime has hash 0x46a8b25053a9cf565e3032a4e9348281eda7cc5f3837a3613aea7a3dd9b9d3c2 at both historical blocks, establishing deployment as the applicable code-selection event. The protocol's own report aggregates 165.38 ETH stolen and about $4,000 of BOOTY immobilized across the incident."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/spankchain.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

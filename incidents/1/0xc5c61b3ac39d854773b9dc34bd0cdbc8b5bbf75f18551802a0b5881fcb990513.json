@@ -15,30 +15,117 @@
       "transactionIndex": 8,
       "timestamp": 1778114855
     },
-    "attackerAddresses": []
+    "attackerAddresses": [
+      "0xc3ebddea4f69df717a8f5c89e7cf20c1c0389100"
+    ]
   },
   "classification": {
     "rootCause": "code-bug",
     "summary": "RFQ proxy had permissionless registerAllowedOrderSigner and checked authorization against order.taker (attacker) instead of order.maker, draining the maker's approved balances."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 5870000,
-      "valuationTimestamp": 1778114855,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "amount": 5890058.972715741,
+      "valuationTimestamp": 1778112000,
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-6",
+        "source-7"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "1291.16110521587917927",
+        "usdValue": 3035537.509782689,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1778112000,
+          "unitPriceUsd": 2351.0137484161237,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT"
+        },
+        "amount": "206282.446876",
+        "usdValue": 206282.446876,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1778114855,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+          "symbol": "WBTC"
+        },
+        "amount": "16.93910519",
+        "usdValue": 1379467.527182052,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1778112000,
+          "unitPriceUsd": 81436.85936825167,
+          "sourceIds": [
+            "source-7"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "1268771.488875",
+        "usdValue": 1268771.488875,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1778114855,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The receipt records the resolver's exact WETH, USDT, WBTC, and USDC outflows. The USDC component is net of four raw USDC units paid back by the attacker-signed orders."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xeeeeee53033f7227d488ae83a27bc9a9d5051756",
-      "relationship": "proxy",
+      "relationship": "module-router",
       "codeArtifact": {
         "address": "0x88eb28009351fb414a5746f5d8ca91cdc02760d8",
         "codeHash": "0x80813a5be8ae42e8d46f185d760bbf65f162f742395b9d96be27db5d3d3a1531"
@@ -54,33 +141,38 @@
         "kind": "module-change",
         "timestamp": 1727181431,
         "blockNumber": 20820500,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "transactionHash": "0xd15db1cd036ee8eea912f6b3efbc9812221b2f367d8621925bed4c34c1ae1008",
+        "transactionIndex": 98,
+        "logIndex": 269,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "event",
+          "address": "0xeeeeee53033f7227d488ae83a27bc9a9d5051756",
+          "eventTopic": "0x2ae221083467de52078b0096696ab88d8d53a7ecb44bb65b56a2bab687598367",
+          "codeAddressLocation": "data-word-1-address"
         },
-        "description": "2024-09-24T12:37:11Z (block 20820500): the RFQ router module slots backing the two exploited selectors were last repointed to 0x88eb28009351fb414a5746f5d8ca91cdc02760d8"
+        "description": "The later of the two module-selection events repointed exploited selector 0xea7faa61 to 0x88eb28009351fb414a5746f5d8ca91cdc02760d8; selector 0x4112e1c2 was repointed two blocks earlier."
       },
       "codeAgeSeconds": 50933424,
-      "failureModeId": "legacy:eip155:1:0xc5c61b3ac39d854773b9dc34bd0cdbc8b5bbf75f18551802a0b5881fcb990513:failure-1",
+      "failureModeId": "failure:rfq-signer-authorization-wrong-party",
       "evidence": {
         "identitySourceIds": [
           "source-2",
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/trustedvolumes.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -90,7 +182,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xc5c61b3ac39d854773b9dc34bd0cdbc8b5bbf75f18551802a0b5881fcb990513"
@@ -100,7 +195,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
@@ -110,10 +206,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "delegatecall-target review (callTracer + prestateTracer on the exploit tx, then eth_getStorageAt over [creation block, incident block]): the victim holds no EIP-1967 slot and no low storage slot - it is a selector-to-module router. The exploit tx DELEGATECALLs 0xeeeeee53...1756 -> 0x88eb28009351fb414a5746f5d8ca91cdc02760d8 twice (selectors 0xea7faa61 and 0x4112e1c2), and prestateTracer shows that address read from the keccak slots 0x5955181dc8ce5ace66c1381b7c1d9e383dc48785bde6e1b360d80ddb0ed66fe5 and 0x7b810de52829a346e3111da05d9f909e0b9f42c113f6778a31f5262c8f9d2ba9. Binary-searching both between the creation block 20572034 and the incident block 25039670 gives the same two-step history: installed as 0x626784d4af1e8d37b13b42f5fd2c9959c1711952 on 2024-08-20 (blocks 20572604 / 20572606, hours after deployment) and replaced by 0x88eb28009351fb414a5746f5d8ca91cdc02760d8 on 2024-09-24 at blocks 20820498 (12:36:47Z) and 20820500 (12:37:11Z), constant across 60 samples to the incident. Age from the later of the two installs: 589.5 days rather than 624.2 from deployment"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:28:23Z",
+      "note": "Reviewed the exploit receipt and call trace, router creation, selector-to-module storage and events, the complete 50-event module history through the exploit, and the commit-pinned replay. The exploit invokes selectors 0xea7faa61 and 0x4112e1c2 at router 0xeeeeee53033f7227d488ae83a27bc9a9d5051756; both delegate to module 0x88eb28009351fb414a5746f5d8ca91cdc02760d8. Their event histories contain an initial selection of 0x626784d4af1e8d37b13b42f5fd2c9959c1711952 and one replacement each: block 20820498 for 0x4112e1c2 and block 20820500 log 269 for 0xea7faa61. No later selection event for either selector occurred. The receipt records exact resolver outflows of 1,291.161105215879179270 WETH, 206,282.446876 USDT, 16.93910519 WBTC, and 1,268,771.488879 USDC, offset by 0.000004 USDC paid to the resolver."
     },
     {
       "id": "source-4",
@@ -124,13 +225,43 @@
       ],
       "chainId": 1,
       "transactionHash": "0xeaecec6ba7a407c7fbd0ac36d87bf46eeae5e696b3f97263acdf53be3f47043f"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xd15db1cd036ee8eea912f6b3efbc9812221b2f367d8621925bed4c34c1ae1008"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1778028455&to=1778118455",
+      "observedAt": 1787574503
+    },
+    {
+      "id": "source-7",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=1778028455&to=1778118455",
+      "observedAt": 1787574503
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/trustedvolumes.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -142,8 +273,5 @@
       "date": "2026-05-07T00:47:35Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2024-09-24T12:37:11Z (block 20820500): the RFQ router module slots backing the two exploited selectors were last repointed to 0x88eb28009351fb414a5746f5d8ca91cdc02760d8"
-  ]
+  "notes": []
 }

@@ -24,17 +24,41 @@
     "summary": "ENF_ETHLEV ERC4626 withdraw is reentered via ETH callback to withdraw assets twice against stale share accounting."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 286000,
-      "valuationTimestamp": 1691566463,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "amount": 295911.91000020964,
+      "valuationTimestamp": 1691564400,
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-6"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "159.324268834097852251",
+        "usdValue": 295911.91000020964,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1691564400,
+          "unitPriceUsd": 1857.2933813889872,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The trace records 320.599641877332363469 ETH deposited into the strategy and 479.923910711430215720 ETH returned by the two reentrant withdrawals, for an exact strategy net loss of 159.324268834097852251 ETH."
   },
   "targets": [
     {
@@ -55,37 +79,39 @@
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1677391955,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 16710548,
+        "transactionHash": "0xdfe12c81e01804e8b1babe5cd25481432439393893d34f6cc0088ebc478f1558",
+        "transactionIndex": 27,
+        "logIndex": 66,
         "mechanism": {
           "type": "event",
           "address": "0x5655c442227371267c165101048e4838a762675d",
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 3 pre-incident Upgraded event(s)."
+        "description": "The last of three pre-exploit Upgraded events restored implementation 0x863e572b215fd67c855d973f870266cf827aea5e."
       },
       "codeAgeSeconds": 14174508,
-      "failureModeId": "legacy:eip155:1:0x6e6e556a5685980317cb2afdb628ed4a845b3cbd1c98bdaffd0561cb2c4790fa:failure-1",
+      "failureModeId": "failure:erc4626-withdraw-reentrancy-stale-shares",
       "evidence": {
         "identitySourceIds": [
           "source-2",
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/earningfram.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -95,7 +121,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x6e6e556a5685980317cb2afdb628ed4a845b3cbd1c98bdaffd0561cb2c4790fa"
@@ -105,7 +134,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
@@ -115,10 +145,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: victim re-anchored from implementation 0x863e572b215fd67c855d973f870266cf827aea5e to the proxy the protocol runs at, 0x5655c442227371267c165101048e4838a762675d, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (23501340s -> 14174508s)"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:28:23Z",
+      "note": "Reviewed the exploit receipt and call trace, the proxy creation and EIP-1967 implementation slot, the complete pre-exploit Upgraded-event history, and the commit-pinned reproduction. The exploit executes the ERC4626 withdrawal path at proxy 0x5655c442227371267c165101048e4838a762675d through implementation 0x863e572b215fd67c855d973f870266cf827aea5e. Three Upgraded events occurred before the incident; the last, at block 16710548 log 66, restored this implementation and no later Upgraded event occurred. During the exploit, 320.599641877332363469 ETH entered the strategy and two reentrant withdrawal legs returned 320.097765098000317500 and 159.826145613429898220 ETH."
     },
     {
       "id": "source-4",
@@ -129,13 +164,33 @@
       ],
       "chainId": 1,
       "transactionHash": "0x743a4dd4b4647a1098875bace2e28d5a4a16a109ec04a00e7f5dcb15e8b40c49"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xdfe12c81e01804e8b1babe5cd25481432439393893d34f6cc0088ebc478f1558"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1691480063&to=1691570063",
+      "observedAt": 1787574503
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/earningfram.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

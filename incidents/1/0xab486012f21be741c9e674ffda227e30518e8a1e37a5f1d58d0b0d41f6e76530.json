@@ -21,31 +21,113 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "Fuse pool cEther (fToken) exitMarket/borrow cross-function reentrancy via .call value transfer before state update."
+    "summary": "Fuse's fETH borrow path transferred ETH before recording the borrow. The borrower's callback could therefore exit its collateral market while the Comptroller still observed the old debt, then drain the pool's other markets."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 80000000,
       "valuationTimestamp": 1651311149,
-      "method": "legacy-unspecified",
+      "method": "reported",
       "sourceIds": [
-        "source-4"
+        "source-3",
+        "source-6"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "2927.029580000003424703",
+        "usdValue": 8283377.928911468,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1651309200,
+          "unitPriceUsd": 2829.9604436903087,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "7144266.341363",
+        "usdValue": 7144266.341363,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1651311149,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT"
+        },
+        "amount": "132959.900829",
+        "usdValue": 132959.900829,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1651311149,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x853d955acef822db058eb8505911ed77f175b99e",
+          "symbol": "FRAX"
+        },
+        "amount": "776937.058467725803492533",
+        "usdValue": 776937.0584677258,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1651311149,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The approximately $80 million gross loss is the widely reported total across the Fuse pools drained through the same reentrant borrow defect. The four structured asset components reproduce the exact pool-127 outflows in the code-age anchor transaction and provide an onchain lower-bound cross-check for the campaign estimate."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x26267e41ceca7c8e0f143554af707336f27fa051",
-      "relationship": "unknown",
+      "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xd77e28a1b9a9cfe1fc2eee70e391c05d25853cbf",
+        "codeHash": "0x66fb56b08658840bdb33cc7c890cfbeaf4aac3d9aa248650cbb102854cbd9c9d"
       },
       "deployment": {
         "timestamp": 1637706844,
@@ -65,28 +147,28 @@
           "type": "deployment",
           "address": "0x26267e41ceca7c8e0f143554af707336f27fa051"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The fETH delegator selected the defect-bearing CEtherDelegate during construction and retained that implementation through the exploit."
       },
       "codeAgeSeconds": 13604305,
-      "failureModeId": "legacy:eip155:1:0xab486012f21be741c9e674ffda227e30518e8a1e37a5f1d58d0b0d41f6e76530:failure-1",
+      "failureModeId": "failure:fuse-eth-borrow-reentrancy",
       "evidence": {
         "identitySourceIds": [
-          "source-2",
-          "source-4",
-          "source-5"
-        ],
-        "codeHistorySourceIds": [
+          "source-1",
           "source-2",
           "source-3",
-          "source-5"
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/rari-fuse.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -96,39 +178,42 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xab486012f21be741c9e674ffda227e30518e8a1e37a5f1d58d0b0d41f6e76530"
     },
     {
       "id": "source-2",
-      "type": "review-note",
+      "type": "source-code",
       "supports": [
         "target-identity",
-        "code-history"
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review (no exploit tx in this row; DeFiHackLabs src/test/2022-04/Rari_exp.sol names the same victim as fETH-127. Incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 14685453, 2022-04-30T12:00:00Z). The victim 0x26267e41CeCa7C8E0f143554Af707336f27Fa051 is a Fuse CEtherDelegator (verified) created at block 13673508, 2021-11-23T22:34:04Z. It emits no EIP-1967 Upgraded event; its fallback reads the implementation from storage slot 0 (it delegatecalls sload(0) with selector 0x1db78944 = `_prepare()`, Fuse's auto-upgrade hook, then delegatecalls sload(0) with the original calldata), and `implementation()` (0x5c60da1b) returns that same slot. Two independent checks show the pointer never moved: eth_getLogs for Compound's NewImplementation(address,address) over [creation, incident] returns exactly one event, the 0x0 -> 0xd77e28a1b9a9cfe1fc2eee70e391c05d25853cbf write in the creation block, and a binary search of eth_getStorageAt on slot 0 finds it unchanged since creation. The implementation 0xd77e28a1b9a9cfe1fc2eee70e391c05d25853cbf (deployed 2021-10-01T07:05:21Z) itself contains zero DELEGATECALL opcodes, so it is a leaf. Fuse's `_prepare()` auto-upgrade never fired for this market and the deployment basis is exact."
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-04/Rari_exp.sol"
     },
     {
       "id": "source-3",
       "type": "review-note",
       "supports": [
-        "code-history"
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis (independent re-check of the existing note). Slot 0 held 0xd77e28a1b9a9cfe1fc2eee70e391c05d25853cbf at all 25 sample points across [13673508, 14685453], and the only NewImplementation(address,address) event on the delegator is the 0x0 -> 0xd77e28a1 write in its creation block 13673508."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T14:08:33Z",
+      "note": "Reviewed the selected exploit receipt and call trace, exact native and ERC-20 outflows, pinned reproduction, verified CEtherDelegate source, proxy creation trace, implementation slot, complete NewImplementation event history, historical runtime hashes, and the reported campaign loss. The pool-127 fETH delegator 0x26267e41ceca7c8e0f143554af707336f27fa051 executes the defect-bearing CEtherDelegate 0xd77e28a1b9a9cfe1fc2eee70e391c05d25853cbf. During borrow, that implementation sends ETH with an external call before recording the new account borrow; the callback exits the attacker's collateral market while the Comptroller still sees the old debt. The exploit transaction then extracts ETH, USDC, USDT, and FRAX from pool 127. Slot 0 selects 0xd77e28a1b9a9cfe1fc2eee70e391c05d25853cbf at proxy deployment block 13673508 and immediately before exploit block 14684814. The sole NewImplementation event through the exploit is the zero-to-d77e28 assignment in the creation transaction. The artifact runtime hash is 0x66fb56b08658840bdb33cc7c890cfbeaf4aac3d9aa248650cbb102854cbd9c9d at both historical checks. The selected transaction's exact outflows support the approximately $80 million reported multi-pool campaign total."
     },
     {
       "id": "source-4",
-      "type": "review-note",
-      "supports": [
-        "target-identity",
-        "loss"
-      ],
-      "note": "exploit tx backfilled and verified onchain (block 14684814): the exit-fee reentrancy drain of Fuse pool 127 fETH 0x26267e41ceca7c8e0f143554af707336f27fa051 (this row's victim), the tx DeFiHackLabs reproduces and CertiK's analysis cites; the wider incident drained ~7 pools across sequential txs from the same attacker"
-    },
-    {
-      "id": "source-5",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
@@ -136,13 +221,31 @@
       ],
       "chainId": 1,
       "transactionHash": "0x3c6b1afd5e81a4dc2483e3c4a0ed785ee57ea855e5fa67ea9d7aa7a4703290d9"
+    },
+    {
+      "id": "source-5",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1651309000&to=1651313500",
+      "observedAt": 1787580513
+    },
+    {
+      "id": "source-6",
+      "type": "post-mortem",
+      "supports": [
+        "loss"
+      ],
+      "url": "https://www.sec.gov/file/33-11306"
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/rari-fuse.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

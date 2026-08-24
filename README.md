@@ -5,7 +5,8 @@ failure, and the resulting loss.
 
 ## Interface
 
-Each file under `incidents/<chainId>/` represents one exploit transaction and
+Each file under `incidents/<chainId>/` represents one selected exploit or
+failure-finalizing transaction and
 uses the stable ID `eip155:<chainId>:<exploitTx>`. The incident owns its
 classification and loss. Its targets own independently measured code ages.
 

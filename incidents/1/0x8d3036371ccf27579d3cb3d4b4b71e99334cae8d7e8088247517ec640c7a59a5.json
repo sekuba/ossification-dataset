@@ -6,7 +6,7 @@
     "name": "Pawnfi",
     "slug": "pawnfi"
   },
-  "name": "Pawnfi",
+  "name": "ApeStaking NFT ownership accounting",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -21,20 +21,134 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "ApeStaking.setCollectRate is unprotected; attacker sets it to 100% and drains staked APE via deposit/withdraw loop."
+    "summary": "ApeStaking's deposit path could attribute an already-staked NFT position and caller-supplied stake amounts to a temporary NFT holder without receiving corresponding ApeCoin, allowing repeated withdrawApeCoin calls to drain APE and support cross-market borrowing."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 820000,
+      "amount": 629929.32,
       "valuationTimestamp": 1686969707,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "incident-price",
+      "sourceIds": [
+        "source-3",
+        "source-5"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "190.744764897999370387",
+        "usdValue": 327764.36,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1686969707,
+          "unitPriceUsd": 1718.34,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-3",
+          "source-6"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+          "symbol": "WBTC"
+        },
+        "amount": "7.000099",
+        "usdValue": 183724.6,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1686969707,
+          "unitPriceUsd": 26246,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-3",
+          "source-7"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT"
+        },
+        "amount": "102469.546694",
+        "usdValue": 102469.55,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1686969707,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-7"
+          ]
+        },
+        "sourceIds": [
+          "source-3",
+          "source-7"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "6996.324771",
+        "usdValue": 6996.32,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1686969707,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-8"
+          ]
+        },
+        "sourceIds": [
+          "source-3",
+          "source-8"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x4d224452801aced8b2f0aebe155379bb5d594381",
+          "symbol": "APE"
+        },
+        "amount": "4276.679165404022135955",
+        "usdValue": 8974.49,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1686969707,
+          "unitPriceUsd": 2.0984725784514255,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-3",
+          "source-6",
+          "source-7",
+          "source-8",
+          "source-9"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "Assets extracted into attacker-controlled accounts across the successful Pawnfi exploit calls from block 17496620 through 17496648, after APE flash-loan repayment. ETH is the gross protocol payout before gas; token amounts are final attacker balances. Values use DefiLlama's closest incident-time observations and stablecoin par."
   },
   "targets": [
     {
@@ -53,20 +167,22 @@
         "creatorAddress": "0x1d49fc8371c0c999b5a00bf745d5133968f22171"
       },
       "lastCodeChange": {
-        "kind": "deployment",
+        "kind": "implementation-change",
         "timestamp": 1685856671,
         "blockNumber": 17405188,
         "transactionHash": "0xe6d512aeeea5be068b460fe24a6d30f61e508e69179856d9290d1e8cb3c82c0a",
         "transactionIndex": 17,
-        "logIndex": null,
+        "logIndex": 49,
         "mechanism": {
-          "type": "deployment",
-          "address": "0x0b89032e2722b103386adccae18b2f5d4986afa0"
+          "type": "event",
+          "address": "0x0b89032e2722b103386adccae18b2f5d4986afa0",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "The proxy's sole pre-exploit Upgraded event selected the defect-bearing implementation during proxy deployment."
       },
       "codeAgeSeconds": 1113036,
-      "failureModeId": "legacy:eip155:1:0x8d3036371ccf27579d3cb3d4b4b71e99334cae8d7e8088247517ec640c7a59a5:failure-1",
+      "failureModeId": "failure:nft-stake-ownership-accounting",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -79,10 +195,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/pawnfi.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -92,7 +209,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x8d3036371ccf27579d3cb3d4b4b71e99334cae8d7e8088247517ec640c7a59a5"
@@ -112,10 +230,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: victim re-anchored from implementation 0x85018CF6F53c8bbD03c3137E71F4FCa226cDa92C to the proxy the protocol runs at, 0x0b89032e2722b103386adccae18b2f5d4986afa0, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (1114692s -> 1113036s)"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T11:52:27Z",
+      "note": "Reviewed the first exploit receipt and call trace, the proxy creation receipt, complete Upgraded(address) log range from block 17405188 through the exploit block, pre-exploit implementation hash, verified ApeStaking source, pinned reproduction, all successful attacker calls in blocks 17496620-17496648, and historical prices. The exploit executes proxy 0x0b89032e2722b103386adccae18b2f5d4986afa0 and delegates the affected staking functions to 0x85018cf6f53c8bbd03c3137e71f4fca226cda92c. Its sole pre-exploit Upgraded event is creation log 49 and selects that implementation. The defect is NFT/stake ownership accounting, not setCollectRate authorization: setCollectRate only changes the caller's payout preference. After APE flash-loan repayment, the attacker controlled 7.000099 WBTC, 102469.546694 USDT, 6996.324771 USDC, and 4276.679165404022135955 APE; protocol calls also paid 190.744764897999370387 gross ETH before gas. DefiLlama's closest high-confidence observations value these assets at $629,929.32."
     },
     {
       "id": "source-4",
@@ -126,13 +249,61 @@
       ],
       "chainId": 1,
       "transactionHash": "0xe6d512aeeea5be068b460fe24a6d30f61e508e69179856d9290d1e8cb3c82c0a"
+    },
+    {
+      "id": "source-5",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1686969707/coingecko:ethereum,ethereum:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599,ethereum:0x4d224452801aced8b2f0aebe155379bb5d594381?searchWidth=4h",
+      "observedAt": 1787572347
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "loss"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x94fbebf08af9e354cd9336e920165bff8b6086b709f4f8cdb4a56ddfd0705602"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "loss"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xe855cc3bad87933bf742fd474bd0ae0ec58d45e9c1a0643b9700dafe8faf0864"
+    },
+    {
+      "id": "source-8",
+      "type": "onchain-transaction",
+      "supports": [
+        "loss"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc2b5493e8a1ba34412543bdff8d45648b2dac7f392d1b60f2cf9c962064247ae"
+    },
+    {
+      "id": "source-9",
+      "type": "onchain-transaction",
+      "supports": [
+        "loss"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc73e837da287377d47ffe6fb3a786438d90b1f41c33c96c750916644cbd5e89f"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/pawnfi.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "DefiLlama's closest APE observation is about 2.7 hours before the first exploit transaction; ETH and WBTC observations are within about one minute."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

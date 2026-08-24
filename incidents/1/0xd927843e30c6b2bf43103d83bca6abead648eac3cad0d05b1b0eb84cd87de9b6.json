@@ -24,29 +24,51 @@
     "summary": "getBuyBackPrice divides the contract's ETH reserve by token.totalSupply() even though the contract itself held ~79% of that supply as unsold inventory, so purchase() sold that inventory for a fraction of the reserve share it entitles the buyer to and buyBack() immediately redeemed it at the full per-supply price, letting a flash-loaned purchase/buyBack loop drain the reserve."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 10775,
+      "amount": 10782.19,
       "valuationTimestamp": 1722938291,
-      "method": "legacy-unspecified",
+      "method": "incident-price",
       "sourceIds": [
         "source-3",
         "source-4"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "4.372869914943298279",
+        "usdValue": 10782.19,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1722938291,
+          "unitPriceUsd": 2465.7,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-3"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exact amount is the victim contract's net ETH outflow across seven purchase/buyBack rounds in the exploit trace. It excludes the attacker's flash-loan principal and transaction gas."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x09a80172ed7335660327cd664876b5df6fe06108",
-      "relationship": "proxy",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x09a80172ed7335660327cd664876b5df6fe06108",
+        "codeHash": "0x3d5e00bc4c97981d2b270895a01c69466c564f9a42f4140b9d7eeae4bae1b9bf"
       },
       "deployment": {
         "timestamp": 1523389343,
@@ -66,10 +88,10 @@
           "type": "deployment",
           "address": "0x09a80172ed7335660327cd664876b5df6fe06108"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The verified non-proxy runtime was created in this transaction and remained byte-identical through the exploit."
       },
       "codeAgeSeconds": 199548948,
-      "failureModeId": "legacy:eip155:1:0xd927843e30c6b2bf43103d83bca6abead648eac3cad0d05b1b0eb84cd87de9b6:failure-1",
+      "failureModeId": "failure:buyback-total-supply-mispricing",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -82,11 +104,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/ompx.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -96,7 +118,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xd927843e30c6b2bf43103d83bca6abead648eac3cad0d05b1b0eb84cd87de9b6"
@@ -116,19 +141,25 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: OMPxContract 0x09a80172ed7335660327cd664876b5df6fe06108 was created 2018-04-10T18:22:23Z at block 5417094 by 0xeb79db7b4ce44bfb549104cafc8f51cc93a686fb, unrelated to attack sender 0x40d115198d71cab59668b51dd112a07d273d5831 or its attack contract 0xfaddf57d079b01e53d1fe3476cc83e9bcc705854. It is a verified non-proxy Solidity 0.4 contract and its codehash is identical (0x3d5e00bc4c97981d2b270895a01c69466c564f9a42f4140b9d7eeae4bae1b9bf) at the creation block and at the block before the incident, so the age is measured from deployment: 6.33 years. Mechanism confirmed against state at block 20468779: OMPX totalSupply 2,269,323e18 with 1,799,614e18 (79.3%) held by the victim itself, ETH reserve 5.6955 ETH, and the discount coefficients read from discounts(i) are 198/190/180/150 against descPrecision 100, i.e. purchase is nominally at a 1.5-2x markup - the profit comes from the totalSupply denominator, not from a discount. The trace shows 7 purchase/buyBack rounds: round one pays 100 ETH with 93.2257 ETH refunded (net 6.7743 ETH) and is bought back for 9.2914 ETH. Loss not recorded in USD: the victim's ETH balance fell from 5.695503 to 1.322633 ETH, i.e. 4.372870 ETH, matching the 4.37 ETH in the DeFiHackLabs PoC; the ~$107k headline circulated elsewhere is irreconcilable with that (the PoC itself quotes ~$11.5k). Order-of-magnitude sanity check only (ETH ~ $2,400 in Aug 2024, so ~$10k): above the $1,000 floor."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:11:40Z",
+      "note": "Reviewed the exploit receipt and complete call trace, direct creation receipt, runtime at creation and immediately before exploitation, verified OMPxContract source, pinned reproduction, exploit-time state, and historical ETH price. OMPxContract 0x09a80172ed7335660327cd664876b5df6fe06108 is a direct Solidity 0.4 deployment whose runtime hash 0x3d5e00bc4c97981d2b270895a01c69466c564f9a42f4140b9d7eeae4bae1b9bf is unchanged from block 5417094 through the exploit. At pre-exploit state it held 1,799,614 of 2,269,323 OMPX supply as inventory. Pricing buybacks against total supply therefore valued purchased inventory as if it were an external reserve claim. The trace executes seven purchase/buyBack rounds; its fourteen victim-to-attacker ETH payments total 704.372869914943298279 ETH against 700 ETH paid in, draining exactly 4.372869914943298279 ETH. At DefiLlama's $2,465.70 incident-time ETH observation, the loss is $10,782.19."
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "price-data",
       "supports": [
         "loss"
       ],
-      "note": "loss converted at the incident timestamp (1722938291) via DefiLlama coins: 4.37 ETH x $2,465.70 = $10,775"
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1722938291/coingecko:ethereum?searchWidth=4h",
+      "observedAt": 1787573500
     },
     {
       "id": "source-5",
@@ -142,10 +173,10 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/ompx.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

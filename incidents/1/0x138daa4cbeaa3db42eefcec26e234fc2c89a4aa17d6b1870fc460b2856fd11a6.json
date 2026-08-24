@@ -24,19 +24,19 @@
     "summary": "Dexible v2's selfSwap() forwarded a caller-supplied router address and calldata without an allowlist, so the attacker pointed it at ERC20 contracts and had Dexible transferFrom the balances of every wallet still holding an approval to it."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 2000000,
+      "amount": 2047635.17,
       "valuationTimestamp": 1676607635,
-      "method": "legacy-unspecified",
+      "method": "reported",
       "sourceIds": [
-        "source-4"
+        "source-3"
       ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "Dexible reported $2,047,635.17 taken from 17 approved wallets across Ethereum and Arbitrum. This is the reported gross incident total."
   },
   "targets": [
     {
@@ -65,12 +65,13 @@
           "type": "deployment",
           "address": "0xde62e1b0edaa55aac5ffbe21984d321706418024"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The proxy constructor selected the vulnerable Dexible implementation; no proposal or completed implementation upgrade occurred before the exploit."
       },
       "codeAgeSeconds": 125328,
-      "failureModeId": "legacy:eip155:1:0x138daa4cbeaa3db42eefcec26e234fc2c89a4aa17d6b1870fc460b2856fd11a6:failure-1",
+      "failureModeId": "failure:dexible-self-swap-arbitrary-router-call",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-4",
           "source-5"
@@ -81,10 +82,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/dexible.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -94,7 +96,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity"
       ],
       "chainId": 1,
       "transactionHash": "0x138daa4cbeaa3db42eefcec26e234fc2c89a4aa17d6b1870fc460b2856fd11a6"
@@ -114,19 +117,24 @@
       "id": "source-3",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
-      "url": "https://twitter.com/peckshield/status/1626493024879673344"
+      "url": "https://blockchain.news/news/2-million-worth-of-cryptocurrency-lost-in-dexible-hack"
     },
     {
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: Dexible v2 0xDE62E1b0edAa55aAc5ffBE21984D321706418024 created 2023-02-15T17:31:47Z by 0xb631e8650fb4befdae74ab9f86a9cb65bc134706, unrelated to the attack sender; no EIP-1967 events, age from deployment - only 125,328 seconds (1.45 days) old at the incident. The recorded tx is the TRU leg the PoC replays; the ~$2M figure is PeckShield's total across all drained approvals. Recheck of the deployment basis (DELEGATECALL audit): DexibleProxy is a custom timelocked proxy that keeps its logic pointer in the diamond-style slot ProxyStorage.DATA_KEY 0x21b00fb42ba9970a2143fc9fb216ce19c58db008c8d83ff3a715bbc79598d7f0, not in an EIP-1967 slot; a binary search of eth_getStorageAt on that slot over [16635649, 16646023] shows it holds 0x33e690aea97e4ef25f0d140f1bf044d663091daf packed with the 604800-second timelock, unchanged from creation to the incident (the proposeUpgrade/upgradeLogic path was never used), and the logic contract - created one block before the proxy by the same deployer - is byte-identical over the window and contains no DELEGATECALL of its own, so the 1.45-day age is measured from the right point."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T00:00:00Z",
+      "note": "Reviewed the exploit and proxy-creation traces, commit-pinned reproduction, verified proxy and implementation source, complete proxy event interval, custom logic pointer, implementation runtime, and reported loss. The exploit delegates selfSwap to 0x33e690aea97e4ef25f0d140f1bf044d663091daf. logic() selects that address both at proxy deployment block 16635649 and immediately before the exploit; complete UpgradeProposed and UpgradedLogic log queries over blocks 16635649 through 16646023 returned no events. The implementation hash is unchanged from its deployment through the exploit and its runtime contains no SELFDESTRUCT, so proxy deployment is the latest executable-code selection event."
     },
     {
       "id": "source-5",
@@ -140,10 +148,12 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/dexible.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The reported loss is a combined Ethereum-and-Arbitrum incident total; the source does not publish per-asset quantities."
+    ],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

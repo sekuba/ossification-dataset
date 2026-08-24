@@ -24,20 +24,43 @@
     "summary": "iTokens_loanOpeningFunctions.takeOrderFromiToken guarded the collateral check with a short-circuiting OR - require((loanDataBytes.length == 0 && sentAmounts[6] == sentAmounts[1]) || !OracleInterface(oracle).shouldLiquidate(...)) - so with empty loanDataBytes the left operand was true and shouldLiquidate() was never called, letting a 5x short open against the iETH pool that was instantly underwater after 5,637 ETH was swapped into 51 WBTC on Uniswap V1."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 355522,
-      "valuationTimestamp": 1581730737,
-      "method": "legacy-unspecified",
+      "amount": 339644.2909511765,
+      "valuationTimestamp": 1581728400,
+      "method": "incident-price",
       "sourceIds": [
+        "source-2",
         "source-3",
         "source-4"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "1193",
+        "usdValue": 339644.2909511765,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1581728400,
+          "unitPriceUsd": 284.6976453907598,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-2",
+          "source-3"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "The 1,193 ETH amount is the attacker's realized net profit after unwinding the Compound position. The earlier 1,271 ETH estimate valued that position before the unwind."
   },
   "targets": [
     {
@@ -45,8 +68,8 @@
       "executionAddress": "0x1cf226e9413addaf22412a2e182f9c0de44af002",
       "relationship": "module-router",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xf0a42ec4ebb7664af5dae5c3209345d545da838a",
+        "codeHash": "0x44f77ad85331dea10c32e06309bdbb8226643621d59b6b16723fbc87f867fb6a"
       },
       "deployment": {
         "timestamp": 1548659959,
@@ -63,14 +86,20 @@
         "transactionIndex": 36,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "storage-write",
+          "address": "0x1cf226e9413addaf22412a2e182f9c0de44af002",
+          "storageSlot": "0x256361903829814b9e3a3327bdb9da8cbda4af9137dd310659667e590d3b9f68",
+          "valueBefore": "0x000000000000000000000000fbc580e4f16234d5783314f1d4195971eff453f4",
+          "valueAfter": "0x000000000000000000000000f0a42ec4ebb7664af5dae5c3209345d545da838a"
         },
-        "description": "2020-02-08T16:24:12Z (block 9443140, tx 0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f): BZxProxy targets(0xb1eac3ad) rewritten to the iTokens_loanOpeningFunctions module 0xf0a42ec4ebb7664af5dae5c3209345d545da838a containing the bypassed shouldLiquidate check; located by binary-searching the public targets(bytes4) getter over block height"
+        "description": "The final pre-incident write to targets(0xb1eac3ad) selected the vulnerable iTokens_loanOpeningFunctions module."
       },
       "codeAgeSeconds": 551685,
-      "failureModeId": "legacy:eip155:1:0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838:failure-1",
+      "failureModeId": "failure:bzx-short-circuit-collateral-check",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
+          "source-2",
           "source-3",
           "source-5",
           "source-6"
@@ -82,11 +111,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/bzx.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -96,7 +125,9 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause"
       ],
       "chainId": 1,
       "transactionHash": "0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838"
@@ -105,7 +136,9 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "url": "https://www.palkeo.com/en/projets/ethereum/bzx.html"
     },
@@ -113,19 +146,25 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: the exploit path is attacker contract 0x4f4e0f2cb72e718fc0433222768c57e823162152 -> iETH LoanToken 0x77f973fcaf871459aa58cd81881ce453759281bc (marginTradeFromDeposit, selector 0x1c5d1da5) -> BZxProxy 0x1cf226e9413addaf22412a2e182f9c0de44af002 (takeOrderFromiToken, selector 0xb1eac3ad), which DELEGATECALLs the iTokens_loanOpeningFunctions module 0xf0a42ec4ebb7664af5dae5c3209345d545da838a carrying the skipped shouldLiquidate check. BZxProxy was created 2019-01-28 by 0xadff3ada12ed0f8a87e31e5a04dfd2ee054e1118 (bZx deployer), unrelated to attack sender 0x148426fdc4c8a51b96b4bed827907b5fa6491ad0. BZxProxy is a per-selector module registry (mapping(bytes4 => address) targets) that emits no EIP-1967 Upgraded event, so module installs were recovered by calling targets(bytes4) under binary search over block height: targets(0xb1eac3ad) first held 0xfbc580e4f16234d5783314f1d4195971eff453f4 and was rewritten to 0xf0a42ec4 at block 9443140 (2020-02-08T16:24:12Z, tx 0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f from the bZx deployer via settings contract 0xbb536eb24fb89b544d4bd9e9f1f34d9fd902bb96); the other selectors the exploit drives were installed earlier (targets(0x327ab639) 2019-08-08, targets(0xb1fd9e05) 2019-12-06), so the flawed module is also the most recent install and sets the age at 6.39d rather than the 3.16y deployment figure. bZx replaced this module three days later - the same selector resolves to 0x3756fa458880fa8fe53604101cf31c542ef22f6f in the 2020-02-18 transaction. Loss not recorded in USD: the attacker took 71.4 ETH directly (6.41 ETH left in 0x4f4e0f2c plus 64.97 ETH forwarded to the EOA) and left an unrepaid Compound position worth ~1,200 ETH, the 1,271 ETH figure reported everywhere; the iETH pool's WETH balance fell from 4,858.74 to 160.72 WETH inside the transaction, leaving the undercollateralized loan behind. Order-of-magnitude sanity check only (ETH ~ $265 in Feb 2020, so ~$0.3m): far above the $1,000 floor."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:30:55Z",
+      "note": "Reviewed the exploit receipt and call trace, the deployment transaction, the module bytecode, targets(bytes4) values over the complete deployment-to-exploit interval, the module-install transaction's storage diff, and the technical incident analysis. The exploit path reaches BZxProxy 0x1cf226e9413addaf22412a2e182f9c0de44af002 with takeOrderFromiToken selector 0xb1eac3ad and delegates to 0xf0a42ec4ebb7664af5dae5c3209345d545da838a. That module's collateral requirement short-circuits before shouldLiquidate when the empty-data equality branch is true, allowing the underwater 5x short. The proxy's selector mapping is at slot 39; keccak256(bytes4(0xb1eac3ad) || uint256(39)) is 0x256361903829814b9e3a3327bdb9da8cbda4af9137dd310659667e590d3b9f68. Transaction 0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f changes that slot from 0xfbc580e4f16234d5783314f1d4195971eff453f4 to the recorded artifact, and targets(0xb1eac3ad) remains unchanged through the exploit. The loss uses the documented 1,193 ETH realized attacker profit after the Compound position was unwound rather than its earlier 1,271 ETH marked estimate."
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "price-data",
       "supports": [
         "loss"
       ],
-      "note": "loss converted at the incident timestamp (1581730737) via DefiLlama coins: 1,271 ETH x $279.72 = $355,522"
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1581644337&to=1581734337",
+      "observedAt": 1787574655
     },
     {
       "id": "source-5",
@@ -149,10 +188,12 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/bzx.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The protocol reported its loss to whole-ETH precision."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -164,8 +205,5 @@
       "date": "2020-02-15T01:38:57Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2020-02-08T16:24:12Z (block 9443140, tx 0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f): BZxProxy targets(0xb1eac3ad) rewritten to the iTokens_loanOpeningFunctions module 0xf0a42ec4ebb7664af5dae5c3209345d545da838a containing the bypassed shouldLiquidate check; located by binary-searching the public targets(bytes4) getter over block height"
-  ]
+  "notes": []
 }

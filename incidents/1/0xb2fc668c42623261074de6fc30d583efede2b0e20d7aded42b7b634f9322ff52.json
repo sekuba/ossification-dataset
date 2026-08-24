@@ -24,17 +24,61 @@
     "summary": "Flash-loaned WETH deposited as CrocSwapDex native surplus collateral, then a tick-by-tick walk of the ETH/USDC curve with a narrow mint-and-harvest let the attacker disburse more surplus than was deposited, exposing a surplus-collateral accounting flaw in the dex."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 110600,
-      "valuationTimestamp": 1780845995,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "amount": 110844.04423579527,
+      "valuationTimestamp": 1780845964,
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-7"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "33.721988711712491517",
+        "usdValue": 54930.23601279526,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1780845964,
+          "unitPriceUsd": 1628.914489070943,
+          "sourceIds": [
+            "source-7"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "55913.808223",
+        "usdValue": 55913.808223,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1780845995,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "After the 50 WETH Balancer flash loan was repaid, the receipt records 33.721988711712491517 WETH and 55,913.808223 USDC leaving the attack helper as proceeds. The downstream USDC-to-WETH conversion and builder payments are excluded to avoid double counting."
   },
   "targets": [
     {
@@ -42,8 +86,8 @@
       "executionAddress": "0xaaaaaaaaa24eeeb8d57d431224f73832bc34f688",
       "relationship": "module-router",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xa9dd587ad17aed82cac5596b16dcc9defec885cb",
+        "codeHash": "0x1e88df5c48f19904726c697da99a666832bce08a9d9f84121c250bcfe6d68c58"
       },
       "deployment": {
         "timestamp": 1685327111,
@@ -54,36 +98,39 @@
       },
       "lastCodeChange": {
         "kind": "module-change",
-        "timestamp": 1708990415,
-        "blockNumber": 19315038,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "timestamp": 1708989167,
+        "blockNumber": 19314934,
+        "transactionHash": "0x8619bd3a1cce5c3a0a16288d0ebece5ad07cd1b7d6308a9ffe00dce77328f2b3",
+        "transactionIndex": 153,
+        "logIndex": 419,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "event",
+          "address": "0xaaaaaaaaa24eeeb8d57d431224f73832bc34f688",
+          "eventTopic": "0x6d6175bccbf61a37eb104b2e776524b39d3c237dbc07dc62fc29c8b3e79f1b3c",
+          "codeAddressLocation": "topic1-address"
         },
-        "description": "2024-02-26T23:33:35Z (block 19315038): last CrocSwapDex callpath sidecar install before the incident; the WarmPath sidecar carrying surplus-collateral accounting (callpath 1) was reinstalled 21 minutes earlier at 2024-02-26T23:12:47Z, block 19314934"
+        "description": "The final pre-incident callpath-1 sidecar-install event selected WarmPath 0xa9dd587ad17aed82cac5596b16dcc9defec885cb; event data identifies callpath 1."
       },
-      "codeAgeSeconds": 71855580,
-      "failureModeId": "legacy:eip155:1:0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52:failure-1",
+      "codeAgeSeconds": 71856828,
+      "failureModeId": "failure:ambient-surplus-collateral-over-disbursement",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-3",
-          "source-4",
-          "source-5"
+          "source-4"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/ambient-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -93,7 +140,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52"
@@ -121,10 +171,15 @@
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: CrocSwapDex 0xAaAaAAAaA24eEeb8d57D431224f73832bC34f688 created 2023-05-29 by 0x8023901399d7927181892642a0913b06fda30847, unrelated to attack sender; the dex declares only CrocKnockoutCross and emits no EIP-1967 Upgraded event, so code changes were recovered by binary-searching eth_getStorageAt over proxyPaths_ (address[65536] at slot 1, callpath k at slot 1+k) between the creation and incident blocks: callpaths 0/2/3/4/7 installed 2023-05-29, callpath 1 reinstalled 2024-02-26T23:12:47Z (block 19314934, WarmPath 0xa9dd587ad17aed82cac5596b16dcc9defec885cb) and callpath 5 2024-02-26T23:33:35Z (block 19315038); callpaths 6/8-12/128-133 unset. The exploit drives callpaths 1, 2 and 3. Age measured from the latest install rather than deployment; ~67.85 ETH extracted"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T13:12:00Z",
+      "note": "Reviewed the exploit receipt and call trace, CrocSwapDex creation trace and exploit-time bytecode, every sidecar-install event from deployment through the incident, the callpath-1 installation transaction, and the commit-pinned reproduction. The exploit's repeated swap and surplus-accounting calls execute at CrocSwapDex 0xaaaaaaaaa24eeeb8d57d431224f73832bc34f688 and delegate to WarmPath 0xa9dd587ad17aed82cac5596b16dcc9defec885cb. The complete install-event history contains two callpath-1 selections; the final one is log 419 of transaction 0x8619bd...f2b3 and selects that artifact. The receipt establishes net post-flash-loan proceeds of 33.721988711712491517 WETH and 55,913.808223 USDC."
     },
     {
       "id": "source-5",
@@ -135,13 +190,33 @@
       ],
       "chainId": 1,
       "transactionHash": "0x11f2acc5882e7a6903bcbb39d1af7cd6cad99afd7e421197f48a537ae73a7f3a"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x8619bd3a1cce5c3a0a16288d0ebece5ad07cd1b7d6308a9ffe00dce77328f2b3"
+    },
+    {
+      "id": "source-7",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1780845995/coingecko:ethereum",
+      "observedAt": 1787577120
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/ambient-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -153,8 +228,5 @@
       "date": "2026-06-07T15:26:35Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2024-02-26T23:33:35Z (block 19315038): last CrocSwapDex callpath sidecar install before the incident; the WarmPath sidecar carrying surplus-collateral accounting (callpath 1) was reinstalled 21 minutes earlier at 2024-02-26T23:12:47Z, block 19314934"
-  ]
+  "notes": []
 }

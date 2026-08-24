@@ -21,29 +21,64 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "The StabilizerNFT ERC-1967 proxy was deployed uninitialized in its own transaction and initialized 12 seconds later by an attacker who took DEFAULT_ADMIN_ROLE and UPGRADER_ROLE and installed a clandestine implementation behind a spoofed Upgraded event, and 79 days later that retained upgrade right was used to swap in a purpose-built implementation that minted 98.45M unbacked USPD against a flash-loaned deposit and drained 236.84 stETH from the position escrows plus 302,909 USDC from the USPD/USDC pool."
+    "summary": "The StabilizerNFT ERC-1967 proxy was deployed without initialization. Twelve seconds later an attacker initialized it, retained the admin and upgrader roles, and later used those permissions to install purpose-built implementations that minted unbacked USPD and drained stETH from position escrows plus USDC from the USPD/USDC pool."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 1049845,
+      "amount": 1049844.910352753,
       "valuationTimestamp": 1764871703,
-      "method": "legacy-unspecified",
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-1",
+        "source-7"
       ]
     },
     "minimumUsd": null,
     "assets": [
       {
-        "description": "236.84 stETH + 302,909 USDC, against 98.45M unbacked USPD minted",
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xae7ab96520de3a18e5e111b5eaab095312d7fe84",
+          "symbol": "stETH"
+        },
+        "amount": "236.842877402051689989",
+        "usdValue": 746936.0536067531,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1764871703,
+          "unitPriceUsd": 3153.719722543291,
+          "sourceIds": [
+            "source-7"
+          ]
+        },
         "sourceIds": [
-          "source-4"
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "302908.856746",
+        "usdValue": 302908.856746,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1764871703,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
         ]
       }
     ],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "high",
+    "notes": "The exploit receipt records three stETH transfers from position escrows directly to the attacker and an exact USDC transfer from the USPD/USDC pool through the proxy to the attacker. DefiLlama's nearest stETH observation to the incident timestamp is at 1764872102. The repaid Balancer WETH flash loan, unbacked USPD issuance, and residual LP tokens are excluded."
   },
   "targets": [
     {
@@ -51,8 +86,8 @@
       "executionAddress": "0x1346b4d6867a382b02b19a8d131d9b96b18585f2",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x4c4eacbe5d5232698d12c379be14a0e561001c21",
+        "codeHash": "0x145a90272df19ac3ec1e4f48dfa7f6f97ae7eff253c4210e831ec52fd404ad9e"
       },
       "deployment": {
         "timestamp": 1758027719,
@@ -63,35 +98,45 @@
       },
       "lastCodeChange": {
         "kind": "implementation-change",
-        "timestamp": 1758135467,
-        "blockNumber": 23384737,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "timestamp": 1764851723,
+        "blockNumber": 23939725,
+        "transactionHash": "0xe6715708c0e3b2b3a0a10ab1b25785b8d04db09ef71196c5ea313d8a0676f823",
+        "transactionIndex": 198,
+        "logIndex": 607,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "event",
+          "address": "0x1346b4d6867a382b02b19a8d131d9b96b18585f2",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
         },
-        "description": "2025-09-17T18:57:47Z (block 23384737): the proxy's EIP-1967 implementation slot was silently restored to the audited StabilizerNFT implementation 0x11a880b0c9d50b4aef7527d458497e60fa602429 with no Upgraded event, ending the 33-hour window in which the attacker's clandestine implementation 0xac075b9bf166e5154cc98f62ee7b94e5345cc090 was the executing code; that audited code then ran unchanged until the attacker swapped in the purpose-built 0x4c4eacbe5d5232698d12c379be14a0e561001c21 on 2025-12-04T12:35:23Z as part of the drain"
+        "description": "The final pre-incident Upgraded event selected 0x4c4eacbe5d5232698d12c379be14a0e561001c21; the EIP-1967 slot holds that address from block 23939725 through the block immediately before the incident."
       },
-      "codeAgeSeconds": 6736236,
-      "failureModeId": "legacy:eip155:1:0xa7cab072bf0453301a0ab1b06c49a9405d115824fc617fb42cba9b70f3b893c2:failure-1",
+      "codeAgeSeconds": 19980,
+      "failureModeId": "failure:uspd-uninitialized-proxy-role-takeover",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-4",
-          "source-5"
+          "source-6",
+          "source-8"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6",
+          "source-8",
+          "source-9",
+          "source-10"
         ]
       },
       "verification": {
-        "tier": "provisional",
+        "tier": "reviewed",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/uspd.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "A curve-eligible code-age measurement requires failure-bearing code that predates adversarial control; the drain executes attacker-installed 0x4c4e...1c21 and then 0xa3d2...a21b, while the causal condition is role state established by the uninitialized deployment."
+        ],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -101,7 +146,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xa7cab072bf0453301a0ab1b06c49a9405d115824fc617fb42cba9b70f3b893c2"
@@ -126,11 +174,15 @@
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review (Ethereum). Victim: StabilizerNFT ERC1967Proxy 0x1346b4d6867a382b02b19a8d131d9b96b18585f2, created 2025-09-16T13:01:59Z block 23375794 by the USPD deployer 0x555350445E1f1ca212edB8cF397a383695ff7a36 in tx 0x3477bb4cb7cfcd12664ca224ad8468cfe2168fa1e779333c847a02bea1623d23 — not the attacker and not the exploit-tx sender 0x083379bdac3e138cb0c7210e0282fbc466a3215a, so rule 2 holds. Note that public write-ups label 0x11a880b0c9d50b4aef7527d458497e60fa602429 the 'proxy contract'; onchain that address is the audited StabilizerNFT *implementation* (24 KB of runtime code, same deployer), so the row uses the proxy. Timeline from the proxy's Upgraded logs plus eth_getStorageAt on slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc: 2025-09-16T13:01:59Z block 23375794 creation -> 0x11a880b0... ; 2025-09-16T13:02:11Z block 23375795 tx 0xc0b7e490caac2b8cfa5e62d1b28a5e7dba7600e623c71352acbc9b23c2b65b7c, sent by 0x7C97313f349608f59A07C23b18Ce523A33219d83 through Multicall3, front-runs the team's initialize(): it emits Initialized(1) and RoleGranted for DEFAULT_ADMIN_ROLE and role 0x189ab7a9244df0848122154315af71fe140f3db0fe014031783b0946b8c9d2e3 to 0xc2a0ad4bd62676692f9dca88b750bec98e526c42, then Upgraded -> 0xac075b9bf166e5154cc98f62ee7b94e5345cc090 (clandestine implementation, itself deployed 2025-07-28 by unrelated CPIMP infrastructure 0xac82fa44b7e2c71db3931a47698de656ed6d2fca) followed by a second Upgraded in the same tx claiming 0x11a880b0... again — the slot really reads 0xac075b9b... at the end of that block, so the second event is spoofed; 2025-09-17T18:57:47Z block 23384737 the slot is silently restored to the audited 0x11a880b0... with no Upgraded event at all; 2025-12-04T12:35:23Z block 23939725 tx 0xe6715708c0e3b2b3a0a10ab1b25785b8d04db09ef71196c5ea313d8a0676f823 upgrades to 0x4c4eacbe5d5232698d12c379be14a0e561001c21, deployed 12 seconds earlier by the attacker; 2025-12-04T18:08:23Z the drain tx itself upgrades to 0xa3d2616ee942b36648eaa55976ee7b761bd2a21b (deployed by the attack sender ~6 minutes before). Age is measured from 2025-09-17T18:57:47Z, the last change to the victim's executing code that is not part of the attack's own execution: from that moment the audited implementation ran continuously for ~78 days. The two December implementation writes are the exploit machinery (contracts deployed by the attacker seconds before use) and are excluded; taking the December upgrade instead would give 19,980 s and measuring from deployment 6,843,984 s. verify.mjs, which takes the max Upgraded timestamp, would derive 0 s because the last Upgraded event is emitted inside the drain tx — hence the documented-change basis. Loss from the drain tx logs: 232.9651 + 3.7293 + 0.1485 = 236.8429 stETH to the attacker at stETH/USD 3153.719722543291 (curl https://coins.llama.fi/prices/historical/1764871703/coingecko:staked-ether; coingecko:ethereum reads 3153.449311643833 at the same timestamp) = $746,936, plus 302,908.86 USDC pulled out of the USPD/USDC pool 0x06cf5f9b93e9fcfdb33d6b3791eb152567cd8d36 = $1,049,845 total. The 3,121.95 WETH is a Balancer flash loan, repaid in the same tx; the 10 mint cycles issue 9,845,436.95 USPD each (98,454,369 USPD total) and the residual 1,621,355 USPD/USDC LP tokens the attacker keeps are backed by that unbacked USPD and are not counted."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:47:50Z",
+      "note": "Reviewed the proxy deployment and initialization receipts, exploit receipt and call trace, complete Upgraded-event history through the incident, EIP-1967 slot values around each final change, exploit-time implementation bytecode, and both attacker-artifact creation transactions. The proxy emitted four Upgraded events before the incident: its initial audited implementation, two events in the attacker initialization transaction, and the final pre-incident selection of 0x4c4eacbe5d5232698d12c379be14a0e561001c21 at block 23939725. Storage confirms 0x4c4e...1c21 remained selected through block 23941342. The exploit first delegates upgradeToAndCall to that artifact and switches to 0xa3d2616ee942b36648eaa55976ee7b761bd2a21b inside the drain transaction; later victim calls execute the latter. Both are attacker-installed drain machinery, so the prior 78-day audited-implementation age is not an exploit-executed-code measurement. Receipt transfers establish 236.842877402051689989 stETH and 302,908.856746 USDC lost."
     },
     {
       "id": "source-5",
@@ -141,13 +193,62 @@
       ],
       "chainId": 1,
       "transactionHash": "0x3477bb4cb7cfcd12664ca224ad8468cfe2168fa1e779333c847a02bea1623d23"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xe6715708c0e3b2b3a0a10ab1b25785b8d04db09ef71196c5ea313d8a0676f823"
+    },
+    {
+      "id": "source-7",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1764871703/coingecko:staked-ether",
+      "observedAt": 1787575707
+    },
+    {
+      "id": "source-8",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x69e38b5cf0f31b0b92fed858631146be9015cf47d1366a9101b10d269b7c8d1c"
+    },
+    {
+      "id": "source-9",
+      "type": "onchain-transaction",
+      "supports": [
+        "code-history",
+        "root-cause"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc0b7e490caac2b8cfa5e62d1b28a5e7dba7600e623c71352acbc9b23c2b65b7c"
+    },
+    {
+      "id": "source-10",
+      "type": "onchain-transaction",
+      "supports": [
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x6a748155bb97e5d25626173593060ee2f6bc76174541e5b1ef9690f8d895e9f2"
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/uspd.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -160,7 +261,6 @@
     }
   },
   "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2025-09-17T18:57:47Z (block 23384737): the proxy's EIP-1967 implementation slot was silently restored to the audited StabilizerNFT implementation 0x11a880b0c9d50b4aef7527d458497e60fa602429 with no Upgraded event, ending the 33-hour window in which the attacker's clandestine implementation 0xac075b9bf166e5154cc98f62ee7b94e5345cc090 was the executing code; that audited code then ran unchanged until the attacker swapped in the purpose-built 0x4c4eacbe5d5232698d12c379be14a0e561001c21 on 2025-12-04T12:35:23Z as part of the drain"
+    "The record is fully revalidated but excluded from the code-age curve because the exploit-executed implementations were selected after adversarial control was established."
   ]
 }

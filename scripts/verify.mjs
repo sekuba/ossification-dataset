@@ -81,6 +81,13 @@ async function rpc(chainId, method, params) {
 const hexInt = (value) => (value === null || value === undefined ? null : Number.parseInt(value, 16))
 const blockTag = (number) => `0x${number.toString(16)}`
 const lower = (value) => value?.toLowerCase()
+const storageWord = (value) => `0x${(value ?? '0x0').replace(/^0x/, '').padStart(64, '0')}`.toLowerCase()
+
+function keyedCaseInsensitive(object, key) {
+  if (!object || typeof object !== 'object') return undefined
+  const actualKey = Object.keys(object).find((candidate) => lower(candidate) === lower(key))
+  return actualKey === undefined ? undefined : object[actualKey]
+}
 
 function comparePosition(left, right) {
   return (
@@ -193,6 +200,19 @@ async function transactionAnchor(chainId, anchor, label, report, { requireSucces
   if (diffs.length > 0) fail(report, label, diffs.join(', '))
   else pass(report, label, `${anchor.transactionHash} at ${actualBlock}:${actualIndex}`)
   return { tx, receipt, block, blockNumber: actualBlock, transactionIndex: actualIndex, timestamp: actualTimestamp }
+}
+
+async function verifyTransactionSet(source, report) {
+  const failures = []
+  for (const transactionHash of source.transactionHashes) {
+    const receipt = await rpc(source.chainId, 'eth_getTransactionReceipt', [transactionHash])
+    if (!receipt) failures.push(`${transactionHash}: missing receipt`)
+    else if (receipt.status !== undefined && receipt.status !== '0x1')
+      failures.push(`${transactionHash}: receipt status ${receipt.status}`)
+  }
+  const label = `${source.id}:transaction-set`
+  if (failures.length > 0) fail(report, label, failures.join(', '))
+  else pass(report, label, `${source.transactionHashes.length} successful transactions on eip155:${source.chainId}`)
 }
 
 async function verifyTrace(chainId, exploitHash, target, report) {
@@ -439,11 +459,38 @@ async function verifyChangeMechanism(chainId, target, anchored, report) {
       fail(report, label, `storage values ${before} -> ${after} do not match the record`)
     else {
       pass(report, label, `${mechanism.storageSlot}: ${before} -> ${after} at block boundaries`)
-      incomplete(
-        report,
-        `${target.id}:storage-write-attribution`,
-        'block-boundary values do not prove which transaction wrote the slot; a transaction-local state diff is required',
-      )
+      try {
+        const diff = await rpc(chainId, 'debug_traceTransaction', [
+          change.transactionHash,
+          { tracer: 'prestateTracer', tracerConfig: { diffMode: true } },
+        ])
+        if (!diff?.pre || !diff?.post)
+          throw new Error('prestateTracer did not return a diffMode pre/post result')
+        const preAccount = keyedCaseInsensitive(diff?.pre, mechanism.address)
+        const postAccount = keyedCaseInsensitive(diff?.post, mechanism.address)
+        const preValue = keyedCaseInsensitive(preAccount?.storage, mechanism.storageSlot)
+        const postValue = keyedCaseInsensitive(postAccount?.storage, mechanism.storageSlot)
+        if (preValue === undefined && postValue === undefined) {
+          fail(report, `${target.id}:storage-write-attribution`, 'transaction state diff does not change the declared slot')
+        } else {
+          const diffBefore = storageWord(preValue)
+          const diffAfter = storageWord(postValue)
+          if (diffBefore !== mechanism.valueBefore || diffAfter !== mechanism.valueAfter)
+            fail(
+              report,
+              `${target.id}:storage-write-attribution`,
+              `transaction state diff ${diffBefore} -> ${diffAfter} does not match the record`,
+            )
+          else
+            pass(
+              report,
+              `${target.id}:storage-write-attribution`,
+              `${change.transactionHash} wrote the declared transition`,
+            )
+        }
+      } catch (error) {
+        inconclusive(report, `${target.id}:storage-write-attribution`, error.message)
+      }
     }
     return
   }
@@ -517,6 +564,15 @@ async function verifyFile(file) {
       report,
     )
     if (exploit) {
+      for (const source of incident.sources ?? []) {
+        if (source.type === 'onchain-transaction-set') {
+          try {
+            await verifyTransactionSet(source, report)
+          } catch (error) {
+            inconclusive(report, `${source.id}:transaction-set`, error.message)
+          }
+        }
+      }
       for (const target of incident.targets) {
         try {
           await verifyTarget(incident, target, exploit, report)

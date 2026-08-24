@@ -24,7 +24,7 @@
     "id": {
       "type": "string",
       "pattern": "^eip155:[1-9][0-9]*:0x[0-9a-f]{64}$",
-      "description": "Stable incident identity: eip155:<chainId>:<exploit transaction hash>."
+      "description": "Stable incident identity: eip155:<chainId>:<selected incident transaction hash>."
     },
     "protocol": { "$ref": "#/$defs/protocol" },
     "name": { "type": "string", "minLength": 1 },
@@ -661,6 +661,7 @@
     "source": {
       "oneOf": [
         { "$ref": "#/$defs/onchainSource" },
+        { "$ref": "#/$defs/onchainTransactionSetSource" },
         { "$ref": "#/$defs/postMortemSource" },
         { "$ref": "#/$defs/priceDataSource" },
         { "$ref": "#/$defs/sourceCodeSource" },
@@ -677,6 +678,28 @@
         "supports": { "$ref": "#/$defs/supports" },
         "chainId": { "type": "integer", "minimum": 1 },
         "transactionHash": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "onchainTransactionSetSource": {
+      "type": "object",
+      "required": ["id", "type", "supports", "chainId", "transactionHashes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^source-[1-9][0-9]*$" },
+        "type": { "const": "onchain-transaction-set" },
+        "supports": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": { "const": "loss" }
+        },
+        "chainId": { "type": "integer", "minimum": 1 },
+        "transactionHashes": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/hash" }
+        }
       }
     },
     "postMortemSource": {

@@ -1,0 +1,355 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0x03182d3f0956a91c4e4c8f225bbc7975f9434fab042228c7acdc5ec9a32626ef",
+  "protocol": {
+    "name": "GMX v1",
+    "slug": "gmx"
+  },
+  "name": "GMX v1 short-accounting reentrancy",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0x03182d3f0956a91c4e4c8f225bbc7975f9434fab042228c7acdc5ec9a32626ef",
+      "blockNumber": 355880237,
+      "transactionIndex": 2,
+      "timestamp": 1752064211
+    },
+    "attackerAddresses": [
+      "0xdf3340a436c27655ba62f8281565c9925c3a5221",
+      "0x7d3bd50336f64b7a473c51f54e7f0bd6771cc355"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "PositionManager.executeDecreaseOrder updated ShortsTracker before executing the external order and its callback. Re-entry from that callback interleaved another position change while global short data and Vault position data described different states, corrupting GLP valuation and enabling underpriced minting followed by inflated redemptions."
+  },
+  "loss": {
+    "kind": "gross-assets-lost",
+    "usd": {
+      "amount": 42213353.028577134,
+      "valuationTimestamp": 1752064201,
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-4",
+        "source-5"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f",
+          "symbol": "WBTC"
+        },
+        "amount": "88.17336478",
+        "usdValue": 9648811.3078754,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1752064201,
+          "unitPriceUsd": 109430,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+          "symbol": "WETH"
+        },
+        "amount": "3205.50915468372143587",
+        "usdValue": 8521269.096078832,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1752064203,
+          "unitPriceUsd": 2658.32,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+          "symbol": "USDC.e"
+        },
+        "amount": "187343.427631",
+        "usdValue": 187343.427631,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1752064211,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0xf97f4df75117a78c1a5a0dbb814af92458539fb4",
+          "symbol": "LINK"
+        },
+        "amount": "23800.209308406681099727",
+        "usdValue": 336296.95752778644,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1752064201,
+          "unitPriceUsd": 14.13,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0",
+          "symbol": "UNI"
+        },
+        "amount": "65479.241421767977905495",
+        "usdValue": 535620.194830062,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1752064201,
+          "unitPriceUsd": 8.18,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+          "symbol": "USDT"
+        },
+        "amount": "1343601.991557",
+        "usdValue": 1343601.991557,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1752064211,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0x17fc002b466eec40dae837fc4be5c67993ddbd6f",
+          "symbol": "FRAX"
+        },
+        "amount": "10548626.304231692487914531",
+        "usdValue": 10548626.304231692,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1752064211,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1",
+          "symbol": "DAI"
+        },
+        "amount": "1338385.137937366936342579",
+        "usdValue": 1338385.137937367,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1752064211,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 42161,
+          "tokenAddress": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+          "symbol": "USDC"
+        },
+        "amount": "9753398.610908",
+        "usdValue": 9753398.610908,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1752064211,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The loss is the exact net decrease of the GMX Vault's nine external reserve assets during the selected transaction. This nets the attack contract's same-transaction USDC and FRAX deposits against withdrawals so recycled liquidity is counted once. Liquid assets use DefiLlama prices within ten seconds before the transaction; stable assets use par."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x75e42e6f01baf1d6022bea862a28774a9f8a4a0c",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0x75e42e6f01baf1d6022bea862a28774a9f8a4a0c",
+        "codeHash": "0xf9175761e946278037a7ec0fb8e8930f52df3a85fcf19484a207be0732405e57"
+      },
+      "deployment": {
+        "timestamp": 1665653281,
+        "blockNumber": 29852256,
+        "transactionHash": "0xcd5b472c13f7180967d9f6157ce6c12397e41185cb74290d1f7b101bfeb316af",
+        "transactionIndex": 1,
+        "creatorAddress": "0x5f799f365fa8a2b60ac0429c48b153ca5a6f0cf8"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1665653281,
+        "blockNumber": 29852256,
+        "transactionHash": "0xcd5b472c13f7180967d9f6157ce6c12397e41185cb74290d1f7b101bfeb316af",
+        "transactionIndex": 1,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x75e42e6f01baf1d6022bea862a28774a9f8a4a0c"
+        },
+        "description": "The vulnerable executeDecreaseOrder function executes in PositionManager's direct runtime. The contract was created in the recorded transaction, and its runtime hash at deployment matches the pre-exploit runtime hash."
+      },
+      "codeAgeSeconds": 86410930,
+      "failureModeId": "failure:gmx-v1-position-manager-reentrant-short-accounting",
+      "evidence": {
+        "identitySourceIds": [
+          "source-1",
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x03182d3f0956a91c4e4c8f225bbc7975f9434fab042228c7acdc5ec9a32626ef"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2025-07/gmx_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0xcd5b472c13f7180967d9f6157ce6c12397e41185cb74290d1f7b101bfeb316af"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T14:06:51Z",
+      "note": "Reviewed the selected transaction receipt and call trace, the commit-pinned reproduction, PositionManager's verified runtime source, its creation transaction, and runtime bytecode at deployment and immediately before the exploit. The trace enters PositionManager.executeDecreaseOrder, updates ShortsTracker, calls OrderBook, and re-enters the attacker callback before the outer position transition is complete. The selected transaction contains the inflated GLP mint/redemption loop and the Vault reserve outflows. Loss quantities are each token's net Vault outflow in this transaction; same-transaction attacker deposits are subtracted. PositionManager is a direct contract whose deployment and pre-exploit runtime hashes are identical."
+    },
+    {
+      "id": "source-5",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1752064211/arbitrum:0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f,arbitrum:0x82af49447d8a07e3bd95bd0d56f35241523fbab1,arbitrum:0xf97f4df75117a78c1a5a0dbb814af92458539fb4,arbitrum:0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0",
+      "observedAt": 1787580411
+    }
+  ],
+  "verification": {
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
+    ]
+  },
+  "notes": [
+    "The legacy record used the first attacker setup transaction as its identity. This record is anchored to the later keeper transaction that executes the vulnerable callback sequence and contains the reserve loss."
+  ]
+}

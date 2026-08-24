@@ -16,7 +16,8 @@
       "timestamp": 1750860683
     },
     "attackerAddresses": [
-      "0x04377cfaf4b4a44bb84042218cdda4cebcf8fd62"
+      "0x04377cfaf4b4a44bb84042218cdda4cebcf8fd62",
+      "0x79c5c002410a67ac7a0cde2c2217c3f560859c7e"
     ]
   },
   "classification": {
@@ -24,26 +25,50 @@
     "summary": "openLeveragePosition() on the unreleased leverage helper accepted a caller-supplied flashloan target and swap calldata without constraining them to the selected Silo market, so a fake flash lender's onFlashLoan callback made the helper call the real WETH Silo's borrow() on behalf of a third party that had granted it debt-receive approval."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 545000,
-      "valuationTimestamp": 1750860683,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "amount": 546092.5115717358,
+      "valuationTimestamp": 1750860673,
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-7"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "224",
+        "usdValue": 546092.5115717358,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1750860673,
+          "unitPriceUsd": 2437.912998088106,
+          "sourceIds": [
+            "source-7"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exploit receipt records exactly 224 WETH transferred from Silo 0x160287e2d3fdcde9e91317982fc1cc01c1f94085 to the attacker EOA while debt shares were assigned to the approved third-party borrower."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xcbee4617abf667830fe3ee7dc8d6f46380829df9",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xcbee4617abf667830fe3ee7dc8d6f46380829df9",
+        "codeHash": "0xe5d7d3644cbc8f842140fec2a6aa9dd5ff6cd7de4fc999ebf2f70cb25f4fbd2f"
       },
       "deployment": {
         "timestamp": 1750245935,
@@ -63,26 +88,28 @@
           "type": "deployment",
           "address": "0xcbee4617abf667830fe3ee7dc8d6f46380829df9"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The direct leverage-helper runtime was deployed in this transaction and is byte-identical immediately before the incident."
       },
       "codeAgeSeconds": 614748,
-      "failureModeId": "legacy:eip155:1:0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a:failure-1",
+      "failureModeId": "failure:silo-leverage-unvalidated-flashloan-and-swap-targets",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-4",
           "source-5",
           "source-6"
         ],
         "codeHistorySourceIds": [
+          "source-5",
           "source-6"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/silo-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -92,7 +119,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a"
@@ -128,9 +158,15 @@
       "id": "source-5",
       "type": "review-note",
       "supports": [
-        "target-identity"
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: victim is the verified LeverageUsingSiloFlashloanWithGeneralSwap at 0xCbEe4617ABF667830fe3ee7DC8d6f46380829DF9, deployed by Silo 0x6d228fa4dad2163056a48fc2186d716f5c65e89a seven days before the incident and unrelated to the attack sender; 224 WETH was borrowed out of Silo 0x160287E2D3fdCDE9E91317982fc1Cc01C1f94085 against borrower 0x60BAF994f44dd10c19C0c47cbFE6048a4fFe4860"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T13:11:23Z",
+      "note": "Reviewed the exploit receipt and call trace, leverage-helper creation receipt, runtime bytecode at deployment and immediately before the incident, runtime disassembly, verified source, official post-mortem, and commit-pinned reproduction. LeverageUsingSiloFlashloanWithGeneralSwap 0xcbee4617abf667830fe3ee7dc8d6f46380829df9 is a direct contract whose runtime is byte-identical at both anchors and contains no DELEGATECALL or SELFDESTRUCT. The attacker calls openLeveragePosition with a fake flash lender. That lender invokes onFlashLoan with attacker-chosen swap data; GeneralSwapModule then makes an unconstrained low-level call to exchangeProxy 0x160287e2d3fdcde9e91317982fc1cc01c1f94085 using borrow(uint256,address,address), transferring 224 WETH to the attacker and assigning debt to a third party that had approved the helper."
     },
     {
       "id": "source-6",
@@ -141,13 +177,23 @@
       ],
       "chainId": 1,
       "transactionHash": "0xff6a12947da09c007f501668cc12d7ea9bdecff91d7fd39a8129303c8c6fd53c"
+    },
+    {
+      "id": "source-7",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1750860683/coingecko:ethereum",
+      "observedAt": 1787577083
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/silo-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

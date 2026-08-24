@@ -16,7 +16,8 @@
       "timestamp": 1716282527
     },
     "attackerAddresses": [
-      "0xe6dcf87256866e293b825708bf1f5df8f07519b3"
+      "0xe6dcf87256866e293b825708bf1f5df8f07519b3",
+      "0x1bcc8378943aaee2d99a4e73ddf6c01f62825844"
     ]
   },
   "classification": {
@@ -24,28 +25,50 @@
     "summary": "Burner.convertAndBurn() is permissionless and swaps the contract's accumulated USDT/WBTC into PNT through Uniswap V2 with a zero minimum-output, so the whole conversion could be sandwiched by pre-buying and re-selling PNT in the same transaction."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 6225,
-      "valuationTimestamp": 1716282527,
-      "method": "legacy-unspecified",
+      "amount": 6320.950352695166,
+      "valuationTimestamp": 1716282399,
+      "method": "incident-price",
       "sourceIds": [
-        "source-3"
+        "source-1",
+        "source-5"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "1.726285094628080033",
+        "usdValue": 6320.950352695166,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1716282399,
+          "unitPriceUsd": 3661.5912240480675,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "After the 70 WETH Balancer flash loan was repaid, the call trace records the helper unwrapping and transferring exactly 1.726285094628080033 ETH to the attacker EOA. Transaction gas is excluded."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x4d4d05e1205e3a412ae1469c99e0d954113aa76f",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x4d4d05e1205e3a412ae1469c99e0d954113aa76f",
+        "codeHash": "0xdfb709fce48433e0e0c226f0077ab6dd17d2f668f70e077f0aa3ea504f26d68c"
       },
       "deployment": {
         "timestamp": 1595842745,
@@ -65,10 +88,10 @@
           "type": "deployment",
           "address": "0x4d4d05e1205e3a412ae1469c99e0d954113aa76f"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The vulnerable conversion executes directly in Burner's immutable runtime. The address had no code immediately before the creation transaction, and its 4,973-byte runtime hash at deployment matches the pre-exploit hash."
       },
       "codeAgeSeconds": 120439782,
-      "failureModeId": "legacy:eip155:1:0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714:failure-1",
+      "failureModeId": "failure:pnetwork-permissionless-zero-min-output-burn",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -81,11 +104,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/pnetwork.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -95,7 +118,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714"
@@ -115,11 +141,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: Burner 0x4d4d05e1205e3A412ae1469C99e0d954113aa76F (verified, ContractName Burner) created 2020-07-27T09:39:05Z by 0x2a24a7a4beb9e6d0431c9bc1800045b8fc27a966, not the attack-tx sender 0xe6dcf87256866e293b825708bf1f5df8f07519b3; no EIP-1967 events, immutable since deployment (1394 days). 1.7 ETH at a May 2024 ETH price near $3,700 is roughly $6.3k, above the $1,000 floor. Same failure mode as the recorded CurveBurner row: a permissionless fee-conversion call with no slippage bound. Loss converted at the incident timestamp: 1.7 ETH x $3,661.59 (DefiLlama historical ETH price) = $6,225."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T13:08:29Z",
+      "note": "Reviewed the selected exploit receipt and call trace, the commit-pinned reproduction, the Burner creation trace, and bytecode at the pre-deployment, deployment, and pre-exploit boundaries. The helper calls Burner's permissionless conversion directly; the target performs no delegatecall. The target runtime first appears in the recorded creation transaction and remains hash-identical through the block before the exploit. After repayment of the 70 WETH flash loan, the trace records exactly 1.726285094628080033 ETH transferred from the helper to the attacker EOA."
     },
     {
       "id": "source-4",
@@ -130,13 +160,23 @@
       ],
       "chainId": 1,
       "transactionHash": "0x0f30caf7f1d11b5795d869edf87182693d3c42f23872ca06f6089d16db0a4e18"
+    },
+    {
+      "id": "source-5",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1716282500/coingecko:ethereum",
+      "observedAt": 1787576909
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/pnetwork.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

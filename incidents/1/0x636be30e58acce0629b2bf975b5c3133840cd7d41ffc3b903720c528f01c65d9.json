@@ -24,17 +24,46 @@
     "summary": "claimMultipleStaking() did not check that entries of the claimContracts array were registered staking contracts, so a caller-supplied fake contract was invoked as a staking service and returned reward amounts that minted 58M CVG to the attacker."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 210000,
       "valuationTimestamp": 1722524387,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-2"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "60.058285738671884767",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x3175df0976dfa876431c2e9ee6bc45b65d3473cc",
+          "symbol": "crvFRAX"
+        },
+        "amount": "15925.234299672041310152",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "Gross swap proceeds transferred to the attacker in the exploit transaction. Asset amounts are exact token Transfer events; the aggregate USD value is reported by Verichains."
   },
   "targets": [
     {
@@ -53,20 +82,22 @@
         "creatorAddress": "0xfffde9a2bb7c9a6dfd1f0235f5af4f599e3265ec"
       },
       "lastCodeChange": {
-        "kind": "deployment",
+        "kind": "implementation-change",
         "timestamp": 1720974971,
         "blockNumber": 20305978,
         "transactionHash": "0xf52827a8730c83fb015e18063db9800dbd600f38b63872d67b9db08f78ee4c8f",
         "transactionIndex": 39,
-        "logIndex": null,
+        "logIndex": 31,
         "mechanism": {
-          "type": "deployment",
-          "address": "0x2b083beaac310cc5e190b1d2507038ccb03e7606"
+          "type": "event",
+          "address": "0x2b083beaac310cc5e190b1d2507038ccb03e7606",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "The proxy's sole pre-exploit Upgraded event selected the defect-bearing implementation during proxy deployment."
       },
       "codeAgeSeconds": 1549416,
-      "failureModeId": "legacy:eip155:1:0x636be30e58acce0629b2bf975b5c3133840cd7d41ffc3b903720c528f01c65d9:failure-1",
+      "failureModeId": "failure:staking-claim-contract-not-validated",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -79,10 +110,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/convergence-finance.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -92,7 +124,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x636be30e58acce0629b2bf975b5c3133840cd7d41ffc3b903720c528f01c65d9"
@@ -101,7 +134,8 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "url": "https://blog.verichains.io/p/convergence-incident-how-a-simple"
     },
@@ -120,10 +154,15 @@
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: CvxRewardDistributor proxy 0x2b083bea... created by 0xfffde9a2bb7c9a6dfd1f0235f5af4f599e3265ec on 2024-07-14, single Upgraded event to impl 0x47c69e8c909ce626af73c955a5e34a20b7c71f19 in the creation block; exploited 17.9 days later"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T11:52:27Z",
+      "note": "Reviewed the exploit receipt and call trace, proxy creation receipt, complete Upgraded(address) log range from block 20305978 through the exploit block, pre-exploit implementation hash, pinned reproduction, and Verichains analysis. The exploit calls CvxRewardDistributor proxy 0x2b083beaac310cc5e190b1d2507038ccb03e7606, which delegates claimMultipleStaking to 0x47c69e8c909ce626af73c955a5e34a20b7c71f19. Its sole pre-exploit Upgraded event is creation log 31 and selects that implementation. The unvalidated caller-supplied staking contract inflated the CVG claim. The exploit receipt records 60.058285738671884767 WETH and 15925.234299672041310152 crvFRAX transferred from the swap pools to the attacker; Verichains reports approximately $210,000."
     },
     {
       "id": "source-5",
@@ -137,10 +176,12 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/convergence-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The USD value is reported rather than independently reconstructed from incident-time prices."
+    ],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

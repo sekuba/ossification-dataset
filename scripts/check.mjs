@@ -366,6 +366,11 @@ function verifyIncident(record, state, errors) {
   for (const [assetIndex, asset] of (incident.loss?.assets ?? []).entries()) {
     if (incidentReviewed && asset.sourceIds.length === 0)
       errors.push(`${label}: reviewed loss.assets[${assetIndex}] must cite loss evidence`)
+    if (asset.valuation?.timestamp > exploit.timestamp)
+      errors.push(
+        `${label}: loss.assets[${assetIndex}].valuation.timestamp is after the exploit; ` +
+          'incident-price evidence must be contemporaneous or earlier',
+      )
     const assetSourceIds = [
       ...(asset.sourceIds ?? []),
       ...(asset.valuation?.sourceIds ?? []),

@@ -6,7 +6,7 @@
     "name": "Burnt Bubba (LevX FarmingLPToken)",
     "slug": "burntbubba"
   },
-  "name": "FarmingLPToken emergencyWithdraw accounting",
+  "name": "FarmingLPToken spot-quote share inflation",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -21,22 +21,64 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "FarmingLPToken.emergencyWithdraw() returned the caller's full underlying LP position without checking that the caller still held the corresponding shares, so the attacker transferred the shares away first and then withdrew the LP tokens as well."
+    "summary": "FarmingLPToken minted shares from manipulable router spot quotes. After inflating the quoted SUSHI value of a small LP deposit, the attacker used the resulting shares to withdraw the vault's pre-existing USDC/WETH LP tokens and transferred surplus shares away before the withdrawal burn."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 3000,
-      "valuationTimestamp": 1701296999,
-      "method": "legacy-unspecified",
+      "amount": 3196.7957349305914,
+      "valuationTimestamp": 1701295200,
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-1",
+        "source-6"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "1601.512305",
+        "usdValue": 1601.512305,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1701296999,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "0.786674387891306409",
+        "usdValue": 1595.2834299305914,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1701295200,
+          "unitPriceUsd": 2027.882761261333,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exploited vault transferred 0.000020144470251713 SushiSwap USDC/WETH LP tokens, which the attack contract burned in the same transaction for exactly 1,601.512305 USDC and 0.786674387891306409 WETH."
   },
   "targets": [
     {
@@ -65,28 +107,28 @@
           "type": "deployment",
           "address": "0xa44e79a2c9a8965e7a6fa77bf0ca8faf50e6c73e"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "This EIP-1167 clone deployment immutably selected the defect-bearing FarmingLPToken implementation."
       },
       "codeAgeSeconds": 27932688,
-      "failureModeId": "legacy:eip155:1:0x2b6d0af0dc513a15e325703405739057f9de6ef3f99934b957653b8a3fade4c6:failure-1",
+      "failureModeId": "failure:spot-quote-share-minting",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-4",
-          "source-5",
-          "source-6"
+          "source-5"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5",
-          "source-6"
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/burntbubba.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -96,7 +138,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x2b6d0af0dc513a15e325703405739057f9de6ef3f99934b957653b8a3fade4c6"
@@ -106,7 +151,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -124,23 +170,18 @@
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: FarmingLPToken 0xa44e79a2c9a8965e7a6fa77bf0ca8faf50e6c73e created 2023-01-10T15:25:11Z by 0x7e788c62c9ca849dce399e90f912beae14424616, unrelated to the attack sender; no EIP-1967 events, age from deployment. Loss ~$3K taken in USDC/WETH per the PoC header; order-of-magnitude check on the tx receipt confirms it clears the $1,000 floor."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T11:40:42Z",
+      "note": "Reviewed the exploit receipt and call trace, verified implementation source, factory-creation trace, clone and implementation runtimes, and commit-pinned reproduction. FarmingLPToken's deposit path mints shares from router spot quotes, which the attack manipulates before redeeming the old USDC/WETH LP position through emergencyWithdraw. The victim is an EIP-1167 clone whose runtime immutably selects 0x44d1c6b94b282c678c95b7f4b18de5a53ea4fa9f. Clone and implementation hashes are unchanged from block 16377287 through the pre-exploit state, and the implementation contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction. The creation trace identifies factory 0xee083e0f0f5de2ff34662f1ef6f76d897d5047ef. The receipt records the exact LP transfer and its burn into 1,601.512305 USDC and 0.786674387891306409 WETH."
     },
     {
       "id": "source-5",
-      "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
-      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is an EIP-1167 minimal proxy whose runtime hardcodes the FarmingLPToken master 0x44d1c6b94b282c678c95b7f4b18de5a53ea4fa9f, so the delegate target cannot be repointed. The master's runtime is byte-identical at 13 sample points across [16377287, 18680255] and contains zero DELEGATECALL opcodes; callTracer on the exploit tx confirms the clone delegatecalls only the master."
-    },
-    {
-      "id": "source-6",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
@@ -148,23 +189,24 @@
       ],
       "chainId": 1,
       "transactionHash": "0x04093e5bad15cbb93163dd1266fe2a923bb770c64775c1ea0e4a32193690743d"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1701295199&to=1701298799",
+      "observedAt": 1787568316
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/burntbubba.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/burntbubba.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-11-29T22:29:59Z"
-    }
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
+    ]
   },
   "notes": []
 }

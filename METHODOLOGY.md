@@ -9,8 +9,8 @@ evidence needed for independent review.
 A primary incident satisfies three conditions:
 
 1. A defect in executed EVM code caused the exploit.
-2. A successful exploit transaction and an implicated execution context are
-   identified onchain.
+2. A successful transaction that executes the defect or finalizes its loss,
+   together with an implicated execution context, is identified onchain.
 3. Stolen or permanently locked assets have an evidenced USD value or lower
    bound of at least 1,000.
 
@@ -20,8 +20,8 @@ incidents.
 
 ## Incident and target units
 
-An incident is anchored to one successful exploit transaction and owns the
-classification and loss measurement.
+An incident is anchored to one successful exploit or failure-finalizing
+transaction and owns the classification and loss measurement.
 
 A target is an independently aged execution context and code artifact implicated
 in that incident. It distinguishes:
@@ -91,6 +91,12 @@ Provider and unsupported-method outcomes are `INCONCLUSIVE`.
 Loss is the value stolen or permanently locked because of the defect. `kind`
 states whether the measurement is gross assets lost, net loss, or permanently
 locked value.
+
+A loss spanning several transactions or chains is one incident when they form a
+coherent campaign caused by the same defect. The incident anchor fixes the
+code-age timestamp; the loss covers the campaign. Evidence can combine onchain
+transactions, project reports, technical post-mortems, and reputable published
+analysis. Reported estimates state their scope and valuation method.
 
 Reviewed asset components identify the chain and token, decimal quantity, USD
 value, valuation timestamp and method, and evidence IDs. Stable assets may use

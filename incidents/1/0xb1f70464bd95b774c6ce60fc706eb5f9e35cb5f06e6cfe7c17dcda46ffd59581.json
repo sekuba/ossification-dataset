@@ -21,68 +21,73 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "EthCrossChainManager: crafted cross-chain message called EthCrossChainData.putCurEpochConPubKeyBytes via hash-collided function selector, replacing the keepers. Bug present since deployment."
+    "summary": "EthCrossChainManager accepted an attacker-selected destination and method string from an authenticated cross-chain message. The string f1121318093 produced the selector of EthCrossChainData.putCurEpochConPubKeyBytes(bytes), allowing the attacker to replace the keeper public key and authorize later withdrawals."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 611000000,
       "valuationTimestamp": 1628588920,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-3",
+        "source-4",
+        "source-5"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "high",
+    "notes": "The approximately $611 million gross loss covers the Ethereum, BNB Chain, and Polygon withdrawals enabled by the keeper-key takeover. Poly Network reports more than $610 million stolen and Chainalysis reports $613 million across the three chains; $611 million preserves the contemporaneous incident estimate. The attacker later returned the assets, separately from exploit-time gross loss."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270",
-      "relationship": "proxy",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270",
+        "codeHash": "0x453bdc92fb3b5a86df479506ccd67704b05254ee11e6330fc5e97c6b2070328d"
       },
       "deployment": {
         "timestamp": 1597301471,
         "blockNumber": 10650091,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionHash": "0x0a51dcb1acfd4f44b5198d344f88acd1887fc694c4ff67c8e2bb8be6e9f1ae77",
+        "transactionIndex": 92,
+        "creatorAddress": "0xac171e587438ec2bc9a9bc502633d0bfc850d612"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1597301471,
         "blockNumber": 10650091,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x0a51dcb1acfd4f44b5198d344f88acd1887fc694c4ff67c8e2bb8be6e9f1ae77",
+        "transactionIndex": 92,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "This transaction deployed the direct EthCrossChainManager runtime containing the unrestricted destination and method-selector construction used by the selected transaction."
       },
       "codeAgeSeconds": 31287449,
-      "failureModeId": "legacy:eip155:1:0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581:failure-1",
+      "failureModeId": "failure:poly-network-selector-collision",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-3"
         ],
         "codeHistorySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/poly-network.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -92,35 +97,60 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause"
       ],
       "chainId": 1,
       "transactionHash": "0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581"
     },
     {
       "id": "source-2",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "target-identity",
-        "code-history",
-        "root-cause"
+        "code-history"
       ],
-      "note": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 12997265, 2021-08-10T12:00:00Z). EthCrossChainManager 0x838bF9E95CB12Dd76a54C9f9D2E3082EAF928270 was created at block 10650091, 2020-08-13T06:51:11Z. It is unverified on Etherscan but is provably not a proxy: zero DELEGATECALL opcodes in the runtime, no EIP-1967 Upgraded event, and byte-identical eth_getCode at the creation block and the incident block, so the deployment basis is exact. Storage was checked too: slot 1 (EthCrossChainDataAddress) is unchanged since creation at 0xcf2afe102057ba5c16f899271045a0a37fcb10f2, and the single pre-incident write to slot 0 (the packed owner + paused pair, block 12996855, 2021-08-10T10:31:52Z, owner -> 0x5a51e2ebf8d136926b9ca7b59b60464e7c44d2eb with paused set) is the response to the attack, not a code change. The selector-collision flaw was present in the deployed bytecode from day one."
+      "chainId": 1,
+      "transactionHash": "0x0a51dcb1acfd4f44b5198d344f88acd1887fc694c4ff67c8e2bb8be6e9f1ae77"
     },
     {
       "id": "source-3",
       "type": "review-note",
       "supports": [
-        "target-identity"
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "exploit tx backfilled and verified onchain (block 12996659; tx to-address is the victim EthCrossChainManager): the Ethereum-leg attack tx cited by rekt.news and SlowMist"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T14:01:00Z",
+      "note": "Reviewed the selected transaction, its call trace and calldata, the deployment transaction, archive-node runtimes, the main campaign inflows on Ethereum, BNB Chain, and Polygon, Poly Network's post-mortem, and Chainalysis reporting. The selected successful transaction calls verifyHeaderAndExecuteTx on EthCrossChainManager 0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270 directly. Its decoded cross-chain payload selects EthCrossChainData 0xcf2afe102057ba5c16f899271045a0a37fcb10f2 and method string f1121318093; the trace shows the manager calling putCurEpochConPubKeyBytes(bytes), replacing the keeper key. The manager was directly deployed at block 10650091:92 by 0xac171e587438ec2bc9a9bc502633d0bfc850d612. Its 19,242-byte runtime hashes to 0x453bdc92fb3b5a86df479506ccd67704b05254ee11e6330fc5e97c6b2070328d both at deployment and immediately before the selected transaction, and disassembly contains no DELEGATECALL, SELFDESTRUCT, CREATE, or CREATE2 opcode. Subsequent bridge withdrawals sent ten material assets to the Ethereum attacker address, five to the BNB Chain attacker address, and USDC.e in two Polygon transactions. The onchain withdrawals and independent reports support the $611 million same-bug campaign total."
+    },
+    {
+      "id": "source-4",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://medium.com/poly-network/honour-exploit-and-code-how-we-lost-610m-dollar-and-got-it-back-c4a7d0606267"
+    },
+    {
+      "id": "source-5",
+      "type": "post-mortem",
+      "supports": [
+        "loss"
+      ],
+      "url": "https://www.chainalysis.com/blog/2022-defi-hacks/"
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/poly-network.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

@@ -21,29 +21,53 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "AnyswapV4Router: anySwapOutUnderlyingWithPermit did not validate the token, letting attackers pull WETH from accounts with stale approvals (WETH has no permit; fallback executed)."
+    "summary": "AnyswapV4Router treated a non-reverting permit call as proof of authorization. WETH's fallback returned successfully without creating an allowance, after which the router consumed users' pre-existing approvals."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 3000000,
-      "valuationTimestamp": 1642612358,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "amount": 1381492.3324227873,
+      "valuationTimestamp": 1642611600,
+      "method": "incident-price",
+      "sourceIds": [
+        "source-3",
+        "source-6"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "445",
+        "usdValue": 1381492.3324227873,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1642611600,
+          "unitPriceUsd": 3104.4771515118814,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-3"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "Multichain reported 445 WETH lost as of January 18. The anchor transaction transferred exactly 308.636644758370382903 WETH; the 445 WETH record is the contemporaneous incident aggregate across affected users and transactions. The USD value uses the nearest preceding CoinGecko ETH observation, 12 minutes 38 seconds before the anchor."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x6b7a87899490ece95443e979ca9485cbe7e71522",
-      "relationship": "proxy",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x6b7a87899490ece95443e979ca9485cbe7e71522",
+        "codeHash": "0xd486e19e680b62428460944b53af4651a00108b45a6d9dd69040aa0044284434"
       },
       "deployment": {
         "timestamp": 1624013046,
@@ -63,27 +87,28 @@
           "type": "deployment",
           "address": "0x6b7a87899490ece95443e979ca9485cbe7e71522"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The AnyswapV4Router is a directly executed contract; its creation is the candidate latest executable-code event."
       },
       "codeAgeSeconds": 18599312,
-      "failureModeId": "legacy:eip155:1:0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7:failure-1",
+      "failureModeId": "failure:multichain-permit-success-without-authorization",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/multichain.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -93,31 +118,51 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7"
     },
     {
       "id": "source-2",
-      "type": "review-note",
+      "type": "source-code",
       "supports": [
         "target-identity",
-        "code-history"
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 14029360, 2022-01-18T12:00:00Z). AnyswapV4Router 0x6b7a87899490EcE95443e979cA9485CBE7E71522 was created at block 12657964, 2021-06-18T10:44:06Z. It is not a proxy: zero DELEGATECALL opcodes in the runtime, no EIP-1967 Upgraded event, and byte-identical eth_getCode at the creation block and the incident block, so the deployment basis is exact. Storage was checked against the verified named layout (cast storage): slot 0 `_oldMPC`, slot 1 `_newMPC`, slot 2 `_newMPCEffectiveTime`; the only pre-incident storage change (slot 0 at block 12806663, 2021-07-11T14:56:16Z -> 0x8b44a687224496276811555efa3f2d0acd667a72) is an MPC key rotation, not a code change."
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-01/Anyswap_exp.sol"
     },
     {
       "id": "source-3",
-      "type": "review-note",
+      "type": "post-mortem",
       "supports": [
-        "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
-      "note": "exploit tx backfilled and verified onchain (block 14037237; AnyswapV4Router victim in receipt logs): the canonical DeFiHackLabs-referenced attack tx of the Jan 2022 permit flaw - many copycat txs followed public disclosure"
+      "url": "https://medium.com/multichainorg/answers-to-the-frequently-asked-questions-about-multichain-vulnerability-b3efe109a308"
     },
     {
       "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T13:30:52Z",
+      "note": "Reviewed the exploit receipt and call trace, router-creation anchor, archive-node runtime at deployment block 12657964 and immediately before incident block 14037237, verified router metadata, commit-pinned reproduction, Multichain's incident FAQ, and incident-time ETH price observation. The incident calls 0x6b7a87899490ece95443e979ca9485cbe7e71522 directly and the trace contains no delegated implementation, correcting the legacy proxy classification. The 18,508-byte router runtime has hash 0xd486e19e680b62428460944b53af4651a00108b45a6d9dd69040aa0044284434 at both historical blocks, establishing deployment as its applicable code-selection event. The anchor transaction moved exactly 308.636644758370382903 WETH; Multichain reported 445 WETH lost across the incident as of January 18."
+    },
+    {
+      "id": "source-5",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
@@ -125,13 +170,25 @@
       ],
       "chainId": 1,
       "transactionHash": "0xf1080c8a90d86e428a736b1d63e097b33b7ea941b1657656f485a94d4a192839"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1642608758&to=1642615958",
+      "observedAt": 1787573452
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/multichain.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The 445 WETH loss is Multichain's contemporaneous multi-transaction aggregate; the anchor transaction accounts for 308.636644758370382903 WETH."
+    ],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

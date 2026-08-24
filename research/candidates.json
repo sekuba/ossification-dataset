@@ -24,16 +24,16 @@
         "legacyV1": 748
       },
       "byDisposition": {
-        "excluded": 9,
-        "included": 1222,
+        "excluded": 10,
+        "included": 1217,
         "out-of-scope": 261,
-        "pending": 19,
+        "pending": 23,
         "unresolved": 96
       },
       "openByReason": {
         "incident-anchors": 1,
         "loss-evidence": 18,
-        "semantic-research": 96
+        "semantic-research": 100
       }
     }
   },
@@ -50,7 +50,7 @@
     },
     "exclusions": {
       "file": "research/raw/exclusions.json",
-      "sha256": "fd35db82f6959500ae9a94099aa132c78f4ef2c2eca017de7757efe6fa33969d"
+      "sha256": "0b51dcc72e6761b623ca3b3bdd0dacb50af691f3724a90681310bf461c2ddc14"
     },
     "legacyV1": {
       "file": "research/raw/legacy-v1.json",
@@ -65,21 +65,21 @@
     },
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
-      "files": 618,
-      "sha256": "9a4a862a1c0a133301269b03f40ef2af2b41c3a0aedb2db8929eeb753a3867c2"
+      "files": 617,
+      "sha256": "c1d0c8ebd074faa99e2b554ce47915b71aacbc66df07c2a06fed0f0c0fd1772f"
     }
   },
   "counts": {
-    "total": 1489,
+    "total": 1490,
     "bySource": {
       "defihacklabs": 869,
-      "exclusion": 10,
+      "exclusion": 11,
       "legacy": 130,
       "web-list": 480
     },
     "byDisposition": {
-      "excluded": 19,
-      "included": 667,
+      "excluded": 21,
+      "included": 666,
       "out-of-scope": 270,
       "pending": 10,
       "unresolved": 523
@@ -188,6 +188,9 @@
       "coverage": {
         "kind": "direct-reference"
       },
+      "relatedExclusionIds": [
+        "exclusion:11"
+      ],
       "matchedRows": [
         {
           "file": "research/raw/legacy-v1.json",
@@ -198,11 +201,11 @@
         }
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:1:0x1abab4c8db9a30e703114528e31dee129a3a758f7f8abc3b6494aad3d304e43f"
+        "status": "excluded",
+        "exclusionIds": [
+          "exclusion:11"
         ],
-        "reason": "The source is linked to at least one incident admitted to the primary dataset."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -1944,7 +1947,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:1:0x62d280abc60f8b604175ab24896c989e6092e496ac01f2f5399b2a62e9feaacf"
+          "eip155:1:0xd62f044cf4d6aa759b3724886c3ab4149c825234d5075df74fa2a25577f7f810"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -2711,7 +2714,7 @@
         "exclusionIds": [
           "exclusion:9"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -2735,7 +2738,7 @@
         "exclusionIds": [
           "exclusion:10"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -7686,7 +7689,7 @@
         "exclusionIds": [
           "exclusion:1"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -12324,7 +12327,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:1:0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60"
+          "eip155:1:0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -13309,7 +13312,7 @@
         "exclusionIds": [
           "exclusion:3"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -15759,7 +15762,7 @@
         "exclusionIds": [
           "exclusion:4"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -15896,7 +15899,7 @@
         "exclusionIds": [
           "exclusion:7"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -18916,7 +18919,7 @@
         "exclusionIds": [
           "exclusion:6"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -19453,7 +19456,7 @@
         "exclusionIds": [
           "exclusion:8"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -19506,7 +19509,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:42161:0x0b8cd648fb585bc3d421fc02150013eab79e211ef8d1c68100f2820ce90a4712"
+          "eip155:42161:0x03182d3f0956a91c4e4c8f225bbc7975f9434fab042228c7acdc5ec9a32626ef"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -20169,7 +20172,7 @@
         "exclusionIds": [
           "exclusion:2"
         ],
-        "reason": "The source has at least one explicit exclusion adjudication and no linked dataset row."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -23723,6 +23726,31 @@
       "disposition": {
         "status": "excluded",
         "reason": "VICTIM_MISATTRIBUTED: the recorded victim is the UniswapV2 DAI/USDC pair, which contains no exploited flaw - it is only the CDP collateral token. The abused cdpAllow authority sits on a private, unverified, single-user CDP-management contract (0xbee1dee31365272bc6e5021c8ac66bede8bed641, deployed 2022-04-15, only ever called by its deployer), so there is no identifiable protocol victim contract (inclusion rule 2). Same attacker in both txs three days apart. Can re-enter only if a protocol-level victim is verifiably pinned."
+      }
+    },
+    {
+      "id": "exclusion:11",
+      "source": {
+        "kind": "exclusion",
+        "file": "research/raw/exclusions.json",
+        "entryIndex": 10,
+        "defihacklabs": {
+          "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+          "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+          "path": "src/test/2018-04/SmartMesh_exp.sol",
+          "recordedRef": "src/test/2018-04/SmartMesh_exp.sol@ad353ba25fbb"
+        }
+      },
+      "candidate": {
+        "name": "SmartMesh",
+        "chain": "ethereum",
+        "date": "2018-04-24T19:16:19Z",
+        "candidateVictim": "0x55f93985431fc9304077687a35a1ba103dc1e081",
+        "exploitTx": "0x1abab4c8db9a30e703114528e31dee129a3a758f7f8abc3b6494aad3d304e43f"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "LOSS_NOT_ESTABLISHED: the selected transaction exploits transferProxy's unchecked _value + _feeSmt addition and creates artificial SMT ledger balances, but its receipt and call trace transfer no ETH or external reserve asset. Subsequent onchain activity only sends the artificial SMT to exchange deposit addresses; the attacker address records no onchain sale proceeds. The inherited $140M figure has no asset-flow or valuation provenance and does not establish at least $1,000 of stolen or permanently locked assets."
       }
     },
     {

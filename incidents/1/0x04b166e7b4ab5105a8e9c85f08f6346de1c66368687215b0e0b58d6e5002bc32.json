@@ -24,28 +24,51 @@
     "summary": "RouteProcessor2.processRoute() never checked that the pool address encoded in the user-supplied `route` was a real UniswapV3 pool, so an attacker-controlled 'pool' could call back into uniswapV3SwapCallback and make the router execute transferFrom against any wallet that had approved it."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 3300000,
-      "valuationTimestamp": 1681007759,
-      "method": "legacy-unspecified",
+      "amount": 3348383.0972033967,
+      "valuationTimestamp": 1681005600,
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-2",
+        "source-6"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "1800",
+        "usdValue": 3348383.0972033967,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1681005600,
+          "unitPriceUsd": 1860.2128317796648,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-2",
+          "source-6"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Sushi's official post-mortem reports approximately 1,800 WETH drained across 18 replay transactions. The incident-time WETH price values that campaign at $3.35 million. The anchor receipt independently reproduces 800 WETH of the gross outflow; subsequent recoveries are separate from exploit-time loss."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x044b75f554b886a065b9567891e45c79542d7357",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x044b75f554b886a065b9567891e45c79542d7357",
+        "codeHash": "0xf9b86791ebacf39275775bec89c170be417ccc86a6b0d41bf020058f117337b8"
       },
       "deployment": {
         "timestamp": 1680677219,
@@ -65,15 +88,15 @@
           "type": "deployment",
           "address": "0x044b75f554b886a065b9567891e45c79542d7357"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The non-upgradeable RouteProcessor2 runtime was installed by this direct CREATE and remained the exploit-executed code."
       },
       "codeAgeSeconds": 330540,
-      "failureModeId": "legacy:eip155:1:0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32:failure-1",
+      "failureModeId": "failure:routeprocessor2-unvalidated-v3-pool-callback",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-3",
-          "source-4",
-          "source-5"
+          "source-4"
         ],
         "codeHistorySourceIds": [
           "source-4",
@@ -81,11 +104,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/sushiswap.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -95,7 +118,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32"
@@ -104,7 +130,8 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "url": "https://www.sushi.com/blog/routeprocessor2-post-mortem"
     },
@@ -113,7 +140,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -123,12 +151,15 @@
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
         "loss",
         "root-cause"
       ],
-      "note": "onchain review: RouteProcessor2 0x044b75f554b886a065b9567891e45c79542d7357 created 2023-04-05 by 0xf87bc5535602077d340806d71f805ea9907a843d (Sushi deployer), unrelated to the attack senders; no EIP-1967 Upgraded events, so the exploited code was 3.8 days old. The flaw was exploited by many independent senders in blocks 17007838-17007844 draining approvals from 0x31d3243cfb54b34fc9c73e1cb1137124bd6b13e1; the tx recorded here is the 800 WETH drain named in Sushi's own post-mortem, sent by the MEV searcher c0ffeebabe.eth which returned funds, while other replays (e.g. 0x8ac0b9656b7c39be0d3d73828d2041e8c0e27712) kept them"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:57:26Z",
+      "note": "Reviewed the exploit receipt and call trace, RouteProcessor2 creation trace and historical runtime, Sushi's official post-mortem, and the commit-pinned reproduction. The exploit contract calls processRoute on 0x044b75f554b886a065b9567891e45c79542d7357 with an attacker-selected pool, then repeatedly calls the router's uniswapV3SwapCallback selector. The router directly executes the failure-bearing callback code and performs eight 100 WETH transferFrom calls against the approved wallet. The 11,861-byte direct runtime has hash 0xf9b86791ebacf39275775bec89c170be417ccc86a6b0d41bf020058f117337b8 both at deployment block 16980905 and immediately before the exploit; the exploit trace contains no delegatecall. The creation transaction is an EOA CREATE, and Sushi describes RouteProcessor2 as non-upgradeable, establishing deployment as the complete code-selection history and an age of 330,540 seconds."
     },
     {
       "id": "source-5",
@@ -139,13 +170,23 @@
       ],
       "chainId": 1,
       "transactionHash": "0x9a89d2f5528bf07661e92f3f78a3311396f11f15da19e3ec4d880be1ad1a4bec"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1681000559&to=1681007759",
+      "observedAt": 1787576246
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/sushiswap.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

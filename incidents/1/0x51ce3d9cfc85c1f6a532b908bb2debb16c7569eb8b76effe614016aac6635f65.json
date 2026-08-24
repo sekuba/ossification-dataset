@@ -6,7 +6,7 @@
     "name": "HYPR",
     "slug": "hypr"
   },
-  "name": "HYPR L1StandardBridge uninitialized initialize()",
+  "name": "HYPR L1StandardBridge reinitialization",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -21,22 +21,45 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "The HYPR L1StandardBridge (an L1ChugSplashProxy) was deployed without being initialized, so the attacker called initialize() to set itself as the cross-domain messenger and then called finalizeERC20Withdrawal() to release 2.57M HYPR from the bridge."
+    "summary": "The HYPR L1StandardBridge implementation cleared the storage used by Initializable, leaving the deployed bridge reinitializable. The incident transaction reinitialized the bridge and released 2.57 million escrowed HYPR."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 200000,
+      "amount": 220000,
       "valuationTimestamp": 1702438235,
-      "method": "legacy-unspecified",
+      "method": "reported",
       "sourceIds": [
         "source-4"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x31adda225642a8f4d7e90d4152be6661ab22a5a2",
+          "symbol": "HYPR"
+        },
+        "amount": "2570000",
+        "usdValue": 220000,
+        "valuation": {
+          "method": "reported",
+          "timestamp": 1702438235,
+          "unitPriceUsd": null,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-2",
+          "source-3",
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "The transaction and commit-pinned reproduction record exactly 2,570,000 HYPR transferred from bridge custody. Rekt reported the amount as approximately $220,000; no independently reproducible incident-time HYPR price series was retained."
   },
   "targets": [
     {
@@ -62,30 +85,37 @@
         "transactionIndex": 17,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "storage-write",
+          "address": "0x40c31236b228935b0329eff066b1ad96e319595e",
+          "storageSlot": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+          "valueBefore": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "valueAfter": "0x000000000000000000000000e468b43b4ae4d750cd6a5d7edacc1a751302c99c"
         },
-        "description": "2023-11-15T00:02:47Z (block 18573592, tx 0x4cdfc7580172bee1a1decbe6190e0a018533259f324923c059f2833336cd0351): the bridge proxy's EIP-1967 implementation slot went 0x0 -> 0xe468b43b4ae4d750cd6a5d7edacc1a751302c99c, set through the ProxyAdmin 0xba86cd28d937f1cc7c74a365368477408578364a (selector 0x9623609d) by the deployer 0xb46c51ceaa6a191574f75dfcb4312e3c0b6405fb; the only log emitted was Initialized(2), no Upgraded event, which is why the event scan found none"
+        "description": "The ProxyAdmin transaction installed 0xe468b43b4ae4d750cd6a5d7edacc1a751302c99c in the bridge proxy's EIP-1967 implementation slot and initialized it. The receipt emitted Initialized(2), so selection is represented by the storage transition rather than an implementation-address event."
       },
       "codeAgeSeconds": 2431668,
-      "failureModeId": "legacy:eip155:1:0x51ce3d9cfc85c1f6a532b908bb2debb16c7569eb8b76effe614016aac6635f65:failure-1",
+      "failureModeId": "failure:hypr-initializable-storage-reset",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-4",
+          "source-3",
           "source-5",
-          "source-6"
+          "source-6",
+          "source-7"
         ],
         "codeHistorySourceIds": [
-          "source-4",
           "source-5",
-          "source-6"
+          "source-6",
+          "source-7"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/hypr.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -95,7 +125,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity"
       ],
       "chainId": 1,
       "transactionHash": "0x51ce3d9cfc85c1f6a532b908bb2debb16c7569eb8b76effe614016aac6635f65"
@@ -105,7 +136,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -115,22 +147,36 @@
       "id": "source-3",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
-      "url": "https://twitter.com/BlockSecTeam/status/1735197818883588574"
+      "url": "https://blog.verichains.io/p/hypers-op-stack-bridge-exploit-analysis"
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "post-mortem",
       "supports": [
-        "target-identity",
-        "code-history",
         "loss"
       ],
-      "note": "onchain review: bridge proxy 0x40c31236b228935b0329eff066b1ad96e319595e created 2023-11-14T17:39:11Z by 0xb46c51ceaa6a191574f75dfcb4312e3c0b6405fb, unrelated to the attack sender; it is an L1ChugSplashProxy, which changes code through setCode/setStorage rather than an EIP-1967 Upgraded event, so nonStandardUpgradeArchitecture is set. The proxy's full pre-incident tx list contains only the deployment and user depositETH/depositERC20 calls (the two initialize() txs on it are dated 2023-12-14, after the incident), which at first suggested deployment as the last code change - superseded by the recheck below. Loss ~$200K per the PoC header; HYPR is the project's own token so no unit conversion applies. Recheck: reading the slot rather than the events shows the proxy had NO executing code at deployment - the EIP-1967 implementation slot was zero from the creation block 18571688 until block 18573592 (2023-11-15T00:02:47Z), where a binary search over eth_getStorageAt places the single write to 0xe468b43b4ae4d750cd6a5d7edacc1a751302c99c, the implementation the exploit delegatecalls (initialize() 0xc4d66de8 then finalizeERC20Withdrawal() 0xa9f9e675). The write came from the ProxyAdmin 0xba86cd28d937f1cc7c74a365368477408578364a and emitted only Initialized(2), no Upgraded event. Age measured from the implementation install, 6h24m after the proxy was deployed: 28.14 days rather than 28.41."
+      "url": "https://rekt.news/zh/hypr-network-rekt"
     },
     {
       "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T13:30:52Z",
+      "note": "Reviewed the exploit receipt and call trace, deployment and implementation-install anchors, transaction-local implementation-slot state diff, pre-exploit implementation slot and runtime hash, the verified L1ChugSplashProxy and ProxyAdmin architecture, every external and internal call to ProxyAdmin 0xba86cd28d937f1cc7c74a365368477408578364a from proxy deployment through the pre-exploit block, the commit-pinned reproduction, Verichains analysis, and reported loss. The exploit executes bridge proxy 0x40c31236b228935b0329eff066b1ad96e319595e and delegates to 0xe468b43b4ae4d750cd6a5d7edacc1a751302c99c. Of the 12 successful external ProxyAdmin calls in that interval, transaction 0x4cdfc7580172bee1a1decbe6190e0a018533259f324923c059f2833336cd0351 is the only call selecting code for this bridge; no internal ProxyAdmin calls occurred. Its state diff changes the proxy's EIP-1967 implementation slot from zero to 0xe468b43b4ae4d750cd6a5d7edacc1a751302c99c, and that value and runtime remain present immediately before the exploit. The transaction transferred exactly 2,570,000 HYPR from bridge custody."
+    },
+    {
+      "id": "source-6",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
@@ -140,7 +186,7 @@
       "transactionHash": "0x4cdfc7580172bee1a1decbe6190e0a018533259f324923c059f2833336cd0351"
     },
     {
-      "id": "source-6",
+      "id": "source-7",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
@@ -151,10 +197,12 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/hypr.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The $220,000 value is a contemporaneous reported approximation."
+    ],
+    "reviewSourceIds": [
+      "source-5"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -166,8 +214,5 @@
       "date": "2023-12-13T03:30:35Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2023-11-15T00:02:47Z (block 18573592, tx 0x4cdfc7580172bee1a1decbe6190e0a018533259f324923c059f2833336cd0351): the bridge proxy's EIP-1967 implementation slot went 0x0 -> 0xe468b43b4ae4d750cd6a5d7edacc1a751302c99c, set through the ProxyAdmin 0xba86cd28d937f1cc7c74a365368477408578364a (selector 0x9623609d) by the deployer 0xb46c51ceaa6a191574f75dfcb4312e3c0b6405fb; the only log emitted was Initialized(2), no Upgraded event, which is why the event scan found none"
-  ]
+  "notes": []
 }

@@ -24,19 +24,41 @@
     "summary": "The Router's command executor did not validate the target/parameters of the commands it dispatched, so the attacker crafted a transferFrom-style call and pulled 188,013 asdCRV out of wallets that had approved the router."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 73325,
       "valuationTimestamp": 1721746439,
-      "method": "legacy-unspecified",
+      "method": "reported",
       "sourceIds": [
-        "source-4"
+        "source-2"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x43e54c2e7b3e294de3a155785f52ab49d87b9922",
+          "symbol": "asdCRV"
+        },
+        "amount": "188013.365080870249823427",
+        "usdValue": 73325,
+        "valuation": {
+          "method": "reported",
+          "timestamp": 1721746439,
+          "unitPriceUsd": null,
+          "sourceIds": [
+            "source-2"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-2"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "Gross loss in this exploit transaction. The asdCRV amount is the exact Transfer emitted by the token; the USD value is the contemporaneous amount reported by Verichains."
   },
   "targets": [
     {
@@ -55,20 +77,22 @@
         "creatorAddress": "0x020d5ca8bd6451d4c44f784e594f02f352903e61"
       },
       "lastCodeChange": {
-        "kind": "deployment",
+        "kind": "implementation-change",
         "timestamp": 1719593783,
         "blockNumber": 20191518,
         "transactionHash": "0xeda25ed9cdbfa5a1fa3ef994eaca81f3905c4441f4bf56c820054774d7d30c52",
         "transactionIndex": 23,
-        "logIndex": null,
+        "logIndex": 171,
         "mechanism": {
-          "type": "deployment",
-          "address": "0x3d20601ac0ba9cae4564ddf7870825c505b69f1a"
+          "type": "event",
+          "address": "0x3d20601ac0ba9cae4564ddf7870825c505b69f1a",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "The proxy's sole pre-exploit Upgraded event selected the defect-bearing implementation during proxy deployment."
       },
       "codeAgeSeconds": 2152656,
-      "failureModeId": "legacy:eip155:1:0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744:failure-1",
+      "failureModeId": "failure:router-arbitrary-call-validation",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -81,10 +105,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/spectra-finance.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -94,7 +119,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744"
@@ -103,7 +129,8 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "url": "https://blog.verichains.io/p/spectra-protocol-exploit-arbitrary"
     },
@@ -122,11 +149,15 @@
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: router proxy 0x3d20601a... created by 0x020d5ca8bd6451d4c44f784e594f02f352903e61 on 2024-06-28 with a single Upgraded event to impl 0x51bdbfcd7656e2c25ad1bc8037f70572b7142ecc in the creation block; loss is the 188,013 asdCRV (~$73,325) figure from Verichains, not the larger at-risk approval total"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T11:52:27Z",
+      "note": "Reviewed the exploit receipt and call trace, proxy creation receipt, complete Upgraded(address) log range from block 20191518 through the exploit block, pre-exploit implementation bytecode hash, pinned reproduction, and Verichains analysis. The exploit calls proxy 0x3d20601ac0ba9cae4564ddf7870825c505b69f1a, which delegates the vulnerable command to 0x51bdbfcd7656e2c25ad1bc8037f70572b7142ecc. Its only pre-exploit upgrade event is log 171 in the creation transaction and selects that implementation. The exploit receipt records an exact transfer of 188013.365080870249823427 asdCRV; Verichains reports its contemporaneous value as $73,325."
     },
     {
       "id": "source-5",
@@ -140,10 +171,12 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/spectra-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The USD value is a contemporaneous reported valuation; no independent incident-time price series was reconstructed."
+    ],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

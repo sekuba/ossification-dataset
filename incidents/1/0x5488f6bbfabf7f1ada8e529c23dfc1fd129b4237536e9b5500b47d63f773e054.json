@@ -24,17 +24,19 @@
     "summary": "ZKSwap 1.0's VerifierExit began verifyExitProof() with an unconditional `return true`, so once the rollup was pushed into Exodus Mode the attacker's forged exit proofs against the frozen state root were accepted and the L1 bridge released its balances."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 5000000,
       "valuationTimestamp": 1752070967,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-2"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "Gross bridge loss reported by Blockaid for the exploit sequence anchored by this forged-exit transaction. A token-by-token incident ledger was not published in the cited analysis."
   },
   "targets": [
     {
@@ -46,43 +48,44 @@
         "codeHash": "0x6598e055c93c3f1f4d1109ef77ec5008185badb18d8a2fe8250a70e32d65f5a0"
       },
       "deployment": {
-        "timestamp": 1752066815,
-        "blockNumber": 22881853,
-        "transactionHash": "0xfdb93e00f3b1d24303db7f43eaa5ef50d3fde957ddeec7c0feb8c5497ba11182",
-        "transactionIndex": 294,
-        "creatorAddress": "0x7d1a14eed7af8e26f24bf08ba6ed7a339abcf037"
+        "timestamp": 1613135194,
+        "blockNumber": 11841962,
+        "transactionHash": "0x88d1ab73c6f4b447a4411eaf4bbc1f4d8dbd3409fdcf4baef5209b665aa545df",
+        "transactionIndex": 8,
+        "creatorAddress": "0x1787bb09b5958065dd0558012aa1efa662156601"
       },
       "lastCodeChange": {
         "kind": "deployment",
-        "timestamp": 1752066815,
-        "blockNumber": 22881853,
-        "transactionHash": "0xfdb93e00f3b1d24303db7f43eaa5ef50d3fde957ddeec7c0feb8c5497ba11182",
-        "transactionIndex": 294,
+        "timestamp": 1613135194,
+        "blockNumber": 11841962,
+        "transactionHash": "0x88d1ab73c6f4b447a4411eaf4bbc1f4d8dbd3409fdcf4baef5209b665aa545df",
+        "transactionIndex": 8,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x961369d347ef7a6896bdd39cbe2b89e3911f521f"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The proxy constructor selected the defect-bearing VerifierExit implementation; the upgrade gatekeeper completed no pre-exploit upgrade."
       },
-      "codeAgeSeconds": 4152,
-      "failureModeId": "legacy:eip155:1:0x5488f6bbfabf7f1ada8e529c23dfc1fd129b4237536e9b5500b47d63f773e054:failure-1",
+      "codeAgeSeconds": 138935773,
+      "failureModeId": "failure:exit-proof-unconditional-acceptance",
       "evidence": {
         "identitySourceIds": [
           "source-3",
+          "source-4",
           "source-5"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4",
-          "source-5"
+          "source-4"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/zkswap.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -101,7 +104,8 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "url": "https://www.blockaid.io/blog/how-zkswaps-5m-exploit-couldve-been-prevented-with-onchain-monitoring"
     },
@@ -109,35 +113,45 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "callTracer review of the fake-exit tx: the attacker contract 0x2D3103c8Fdd9d9411E24f555fdad6B22F29F613A calls the ZKSwap bridge proxy 0x8ECa806Aecc86CE90Da803b080Ca4E3A9b8097ad (selector 0xd6973fc6) which STATICCALLs the VerifierExit proxy 0x961369d3...f521f 15 times with selector 0xc81a27ad, every one returning 0x...01 for a forged proof; bridge storage slot 6 holds the VerifierExit address, both proxies were created in the same 2021-02-12 deployment tx by 0x7d1a14eed7af8e26f24bf08ba6ed7a339abcf037 (not the attacker), and the VerifierExit proxy has emitted no logs at all in its lifetime, so it was never upgraded; the exodus trigger was tx 0xfdb93e00f3b1d24303db7f43eaa5ef50d3fde957ddeec7c0feb8c5497ba11182"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T11:52:27Z",
+      "note": "Reviewed the exploit receipt and call trace, the exact proxy creation trace, verified Proxy and UpgradeGatekeeper source, complete UpgradeComplete event range from proxy deployment through the exploit, implementation storage at both endpoints, pre-exploit artifact hash, pinned VerifierExit source, and Blockaid analysis. The bridge calls proxy 0x961369d347ef7a6896bdd39cbe2b89e3911f521f fifteen times and each call delegates to 0xd12f4d8329584f36aed67f807f42d9a02beb9534, returning true. Factory 0x1787bb09b5958065dd0558012aa1efa662156601 created the proxy in transaction 0x88d1ab73c6f4b447a4411eaf4bbc1f4d8dbd3409fdcf4baef5209b665aa545df and selected that implementation. The proxy permits implementation changes only through master 0x714b2d10210f2a3a7aa614f949259c87613689ab; its verified UpgradeGatekeeper emits UpgradeComplete after applying changes, and no such event exists before exploitation. Blockaid reports a $5 million bridge loss."
     },
     {
       "id": "source-4",
-      "type": "review-note",
-      "supports": [
-        "code-history"
-      ],
-      "note": "deployment-basis recheck (storage, not events): the VerifierExit proxy's single DELEGATECALL in the exploit tx (selector 0xc81a27ad) goes to 0xd12f4d8329584f36aed67f807f42d9a02beb9534, and the EIP-1967 implementation slot holds that address at the creation block 11841962, at the incident block 22882195 and at all 41 evenly spaced samples in between; the proxy runtime is byte-identical at both blocks. The always-true verifier really was the 2021 deployment; 1607.6 days."
-    },
-    {
-      "id": "source-5",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
         "code-history"
       ],
       "chainId": 1,
-      "transactionHash": "0xfdb93e00f3b1d24303db7f43eaa5ef50d3fde957ddeec7c0feb8c5497ba11182"
+      "transactionHash": "0x88d1ab73c6f4b447a4411eaf4bbc1f4d8dbd3409fdcf4baef5209b665aa545df"
+    },
+    {
+      "id": "source-5",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/l2labs/zkswap-contracts",
+      "commit": "fa2d8c3541c78b3b54d4ff74bbf2a2a62bad755a",
+      "path": "contracts/VerifierExit.sol"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/zkswap.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The cited analysis reports the aggregate USD loss but does not publish a token-by-token incident ledger."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

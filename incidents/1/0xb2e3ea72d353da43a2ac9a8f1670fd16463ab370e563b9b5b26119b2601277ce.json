@@ -6,7 +6,7 @@
     "name": "Team Finance",
     "slug": "team-finance"
   },
-  "name": "Team Finance",
+  "name": "Team Finance arbitrary-pair migration drain",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -16,25 +16,82 @@
       "timestamp": 1666859363
     },
     "attackerAddresses": [
-      "0x161cebb807ac181d5303a4ccec2fc580cc5899fd"
+      "0x161cebb807ac181d5303a4ccec2fc580cc5899fd",
+      "0xcff07c4e6aa9e2fec04daaf5f41d1b10f3adadf4",
+      "0xba399a2580785a2ded740f5e30ec89fb3e617e6e"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "LockToken proxy: migrate() to Uniswap v3 (added in a recent upgrade) had insufficient validation of lock ownership/params. Age measured via Upgraded events on the proxy."
+    "summary": "LockToken.migrate() authorized the caller using one lock ID but accepted a separate caller-supplied Uniswap V2 pair and liquidity amount. The attacker used locks for a worthless self-made token to migrate other users' locked LP balances into attacker-controlled Uniswap V3 positions."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 14500000,
       "valuationTimestamp": 1666859363,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-6"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "820.656168224540431638",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "symbol": "DAI"
+        },
+        "amount": "6429327.658867991361672391",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xf3b9569f82b18aef890de263b84189bd33ebe452",
+          "symbol": "CAW"
+        },
+        "amount": "74613657577043.894100214078695625",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc5fb36dd2fb59d3b98deff88425a3f425ee469ed",
+          "symbol": "TSUKA"
+        },
+        "amount": "11837577.721300283",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "The $14.5 million value is the contemporaneous reported incident aggregate. The listed quantities reproduce the anchor transaction's final attacker-controlled balances: ETH from the attack contract state diff and DAI, CAW, and TSUKA from receipt transfers. The DAI was obtained by swapping the stolen USDC inside the same transaction."
   },
   "targets": [
     {
@@ -55,38 +112,40 @@
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1662445887,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 15482466,
+        "transactionHash": "0x027468bdcc23f7e17e9c79a6a1b89e749b0ca9675422869900ec1257315284ac",
+        "transactionIndex": 116,
+        "logIndex": 434,
         "mechanism": {
           "type": "event",
           "address": "0xe2fe530c047f2d85298b07d9333c05737f1435fb",
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 7 pre-incident Upgraded event(s)."
+        "description": "The last of seven pre-incident Upgraded events selected the implementation that introduced the vulnerable Uniswap V2-to-V3 migration path."
       },
       "codeAgeSeconds": 4413476,
-      "failureModeId": "legacy:eip155:1:0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce:failure-1",
+      "failureModeId": "failure:team-finance-unbound-migration-pair",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-3",
-          "source-4"
+          "source-4",
+          "source-5",
+          "source-7"
         ],
         "codeHistorySourceIds": [
           "source-2",
-          "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/team-finance.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-2"
         ]
       }
     }
@@ -96,7 +155,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce"
@@ -105,19 +167,15 @@
       "id": "source-2",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain re-verification (RPC only): LockToken proxy 0xE2fE530C047f2d85298b07D9333C05737f1435fB created 2021-07-28T12:36:46Z at block 12914481. Standard EIP-1967 proxy: eth_getLogs for Upgraded (topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) over [12914481, 15839275] returns exactly 7 events - 2021-08-05T06:44:50Z 0x3ef7442df454ba6b7c1deec8ddf29cfb2d6e56c7, 2021-08-06T06:54:04Z 0x767a2180335caaf060ea4ca4e858efc6d7f1f5e8, 2022-05-17T08:47:08Z 0x62bec667dc3c9eba0e16578d11604cf01a7c8b91, 2022-07-15T12:49:20Z 0xb8a00e3f653c4ea6a38eee379f827361e0a9a5aa, 2022-08-15T15:13:03Z 0x2a20a12216cc43d4469fc94ae051f245a02c7d3a, 2022-08-27T09:21:17Z 0x13f23dbea59e4d9009f99258d45eed9527d204a6, and 2022-09-06T06:31:27Z 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 (block 15482466, tx 0x027468bdcc23f7e17e9c79a6a1b89e749b0ca9675422869900ec1257315284ac, ts 1662445887) - the upgrade that shipped the Uniswap-v3 migrate() path. The stored upgradeEventCount 7, lastChangeTimestamp 1662445887 and codeAgeSeconds 4426113 reproduce exactly. CONFIRMED unchanged."
-    },
-    {
-      "id": "source-3",
-      "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
-      "note": "onchain review: exploit tx 0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce adopted from the duplicate teamfinance row, whose victim was the implementation 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 behind this proxy; measured from the last of 7 EIP-1967 upgrades"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:40:45Z",
+      "note": "Reviewed the exploit receipt, call trace, transaction-local account state diff, LockToken deployment, implementation runtime hash, all seven Upgraded events from deployment through the incident, the final upgrade receipt, verified implementation source, pinned reproduction, and SlowMist analysis. LockToken.migrate() checks the caller against the supplied lock ID but separately trusts caller-supplied pair, liquidity, token, price, and recipient parameters. The attacker used four locks for a self-made token to migrate other users' locked LP balances and receive the resulting assets. The transaction increased attacker-controlled balances by exactly 820.656168224540431638 ETH, 6,429,327.658867991361672391 DAI after in-transaction USDC swaps, 74,613,657,577,043.894100214078695625 CAW, and 11,837,577.721300283 TSUKA. The reported aggregate was approximately $14.5 million. Upgrade transaction 0x027468bdcc23f7e17e9c79a6a1b89e749b0ca9675422869900ec1257315284ac selected 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 at log 434; it was the last of seven selection events, and the exploit trace delegates to that artifact whose pre-exploit runtime hash is 0x2d49f76b37b39e8abb856d472f1df3bd5eaf178d91ee1accd885505a079d1e20."
     },
     {
       "id": "source-4",
@@ -128,13 +186,46 @@
       ],
       "chainId": 1,
       "transactionHash": "0xef39e05e7cd26a551fc0014f67dc9088aa97a0184e22ab10c54d6f412cf30e56"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x027468bdcc23f7e17e9c79a6a1b89e749b0ca9675422869900ec1257315284ac"
+    },
+    {
+      "id": "source-6",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://slowmist.medium.com/analysis-review-of-team-finance-exploit-f439c2f63e2"
+    },
+    {
+      "id": "source-7",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-10/TeamFinance_exp.sol"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/team-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The $14.5 million USD value is reported; the exact onchain quantities are retained without per-token USD allocations."
+    ],
+    "reviewSourceIds": [
+      "source-2"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

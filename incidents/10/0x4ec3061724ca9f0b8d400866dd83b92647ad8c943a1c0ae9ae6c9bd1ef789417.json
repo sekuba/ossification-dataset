@@ -16,36 +16,58 @@
       "timestamp": 1710389801
     },
     "attackerAddresses": [
-      "0x4e2c6096985e0b2825d06c16f1c8cdc559c1d6f8"
+      "0x4e2c6096985e0b2825d06c16f1c8cdc559c1d6f8",
+      "0x700a7002484f2f3b4516e4f3c550fb8d9b080ac1"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "The MO Loan contract let the same collateral back a new borrow after redeem() returned it, so an 80-iteration borrow/redeem loop against one small MO position drew out the entire MO/USDT pair balance, which was then sold for USDT."
+    "summary": "MO Loan accepted zero-duration borrows that could be redeemed immediately while each borrow also removed and burned MO from the MO/USDT pair and synchronized its reserves. Reusing the returned MO across borrow/redeem cycles collapsed the pair's MO reserve, after which a final borrow drained Loan USDT and swaps drained the pair's USDT."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 413000,
+      "amount": 745302.919887,
       "valuationTimestamp": 1710389801,
-      "method": "legacy-unspecified",
+      "method": "stablecoin-par",
       "sourceIds": [
-        "source-3"
+        "source-1"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 10,
+          "tokenAddress": "0x94b008aa00579c1307b0ef2c499ad98a8ce58e58",
+          "symbol": "USDT"
+        },
+        "amount": "745302.919887",
+        "usdValue": 745302.919887,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1710389801,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Receipt-level token deltas show 331,465.404544 USDT leaving Loan 0xae7b...838e and 413,837.515343 USDT leaving the MO/USDT pair 0x4a6e...8991. The attacker helper and EOA retain 745,302.919885 USDT in total; the remaining 0.000002 USDT stays in the swap router."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xae7b6514af26bcb2332fea53b8dd57bc13a7838e",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xae7b6514af26bcb2332fea53b8dd57bc13a7838e",
+        "codeHash": "0x479b827fa80af48c946de75d33c7f8209b20f405a3b6652c9dae74f3f3a582ed"
       },
       "deployment": {
         "timestamp": 1710138785,
@@ -65,12 +87,13 @@
           "type": "deployment",
           "address": "0xae7b6514af26bcb2332fea53b8dd57bc13a7838e"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The direct Loan runtime was deployed in this transaction and is byte-identical immediately before the incident."
       },
       "codeAgeSeconds": 251016,
-      "failureModeId": "legacy:eip155:10:0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417:failure-1",
+      "failureModeId": "failure:mo-zero-duration-borrow-redeem-pair-depletion",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-3",
           "source-4"
@@ -81,11 +104,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/mo-protocol.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -95,7 +118,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 10,
       "transactionHash": "0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417"
@@ -115,11 +141,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: Loan 0xAe7b6514Af26BcB2332FEA53B8Dd57bc13A7838E created 2024-03-11T06:33:05Z by 0x9747fa1bfab2690562406d150f173e3c4a2d5aa6, not the attack-tx sender 0x4e2c6096985e0b2825d06c16f1c8cdc559c1d6f8; no EIP-1967 events, 2.9 days old. The PoC loops borrow(mo_balance,0) then redeem(i) until it reverts, confirming the position is reusable. PoC header reports ~413K USD profit."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:59:16Z",
+      "note": "Reviewed the exploit receipt and call trace, Loan creation receipt, bytecode at deployment and immediately before the incident, runtime disassembly, verified Loan source, onchain configuration, and the commit-pinned reproduction. Loan 0xae7b6514af26bcb2332fea53b8dd57bc13a7838e is a direct contract whose runtime is byte-identical at both anchors and contains no DELEGATECALL or SELFDESTRUCT. The trace executes borrow(uint256,uint256) 57 times and redeem(uint256) 55 times. borrowRates[0]=80 permits zero-duration orders; redeem allows duration zero immediately. Each borrow transfers USDT to the borrower, directs the MO/USDT pair to burn 90% of the borrowed MO amount and send 10% to Loan, then syncs the pair. Reusing returned MO collapses the pair's MO reserve. Exact receipt deltas establish gross losses of 331,465.404544 USDT from Loan and 413,837.515343 USDT from the pair."
     },
     {
       "id": "source-4",
@@ -133,10 +163,10 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/mo-protocol.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

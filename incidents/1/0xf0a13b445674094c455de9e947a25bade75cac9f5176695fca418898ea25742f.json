@@ -3,7 +3,7 @@
   "schemaVersion": "2.0.0",
   "id": "eip155:1:0xf0a13b445674094c455de9e947a25bade75cac9f5176695fca418898ea25742f",
   "protocol": {
-    "name": "DEP USDT / LEV USDC",
+    "name": "DEPUSDT",
     "slug": "dep-usdt"
   },
   "name": "DEPUSDT proxy unprotected approval",
@@ -24,19 +24,40 @@
     "summary": "The DEPUSDT vault proxy exposed an approval/authorisation entry point with no access control, so the attacker granted itself an allowance over the vault's USDT and transferred the deposits out."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 69000,
+      "amount": 69961.509697,
       "valuationTimestamp": 1686818459,
-      "method": "legacy-unspecified",
+      "method": "stablecoin-par",
       "sourceIds": [
-        "source-4"
+        "source-1"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT"
+        },
+        "amount": "69961.509697",
+        "usdValue": 69961.509697,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1686818459,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Exact USDT transferred from the DEPUSDT proxy to the attacker, valued at stablecoin par. The separate LEVUSDC transaction is a separate incident and is excluded."
   },
   "targets": [
     {
@@ -55,22 +76,25 @@
         "creatorAddress": "0x83bd7b62301c36824718772181cad8b8180a82f3"
       },
       "lastCodeChange": {
-        "kind": "deployment",
+        "kind": "implementation-change",
         "timestamp": 1684584203,
         "blockNumber": 17300520,
         "transactionHash": "0x527c2cda04772fa7d156739c85d07ae25bf0665d68bea98a88e8d67f807c99ae",
         "transactionIndex": 116,
-        "logIndex": null,
+        "logIndex": 262,
         "mechanism": {
-          "type": "deployment",
-          "address": "0x7b190a928aa76eece5cb3e0f6b3bdb24fcdd9b4f"
+          "type": "event",
+          "address": "0x7b190a928aa76eece5cb3e0f6b3bdb24fcdd9b4f",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "Constructor-time Upgraded event selected the vulnerable DEPUSDT implementation."
       },
       "codeAgeSeconds": 2234256,
-      "failureModeId": "legacy:eip155:1:0xf0a13b445674094c455de9e947a25bade75cac9f5176695fca418898ea25742f:failure-1",
+      "failureModeId": "failure:depusdt-unrestricted-token-approval",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-4",
           "source-5"
@@ -81,10 +105,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/dep-usdt.json; no semantic revalidation was inherited."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -94,7 +119,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xf0a13b445674094c455de9e947a25bade75cac9f5176695fca418898ea25742f"
@@ -122,11 +150,15 @@
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: proxy 0x7b190a928aa76eece5cb3e0f6b3bdb24fcdd9b4f created 2023-05-20T12:03:23Z by 0x83bd7b62301c36824718772181cad8b8180a82f3, unrelated to the attack sender; a single EIP-1967 Upgraded event in the creation block installs 0x94290106d2a32bc89be9f1c3a3f3394f64578aa6 and no later upgrade precedes the incident, so age runs from that install. The sibling LEVUSDC proxy 0x2a2b195558cf89aa617979ce28880bbf7e17bc45 lost a further ~$36K in tx 0x800a5b3178f680feebb81af69bd3dff791b886d4ce31615e601f2bb1f543bb2e; only the DEPUSDT leg is recorded here. Loss is USD-pegged stablecoins at 1:1."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T11:42:26Z",
+      "note": "Reviewed the exploit receipt and call trace, proxy creation and constructor log, pre-exploit implementation slot and runtimes, a complete Upgraded-event query, and the commit-pinned reproduction. The attacker calls unrestricted approveToken through DEPUSDT proxy 0x7b190a928aa76eece5cb3e0f6b3bdb24fcdd9b4f, delegated to implementation 0x94290106d2a32bc89be9f1c3a3f3394f64578aa6, then transfers 69,961.509697 USDT from the proxy. The constructor emitted the only Upgraded event through the exploit, selecting that implementation at log 262."
     },
     {
       "id": "source-5",
@@ -140,10 +172,10 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/dep-usdt.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

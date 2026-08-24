@@ -140,9 +140,21 @@ const legacyV1 = readJson(legacyV1Path)
 const primaryRecords = parsePrimaryIncidents(primaryPaths)
 
 const primaryByTx = new Map()
+const primaryByDfhlPath = new Map()
 for (const { incident } of primaryRecords) {
   const tx = incident.incident.exploit.transactionHash
   primaryByTx.set(tx, [...(primaryByTx.get(tx) ?? []), incident.id])
+  for (const source of incident.sources ?? []) {
+    if (
+      source.type === 'source-code' &&
+      source.repository === 'https://github.com/SunWeb3Sec/DeFiHackLabs'
+    ) {
+      primaryByDfhlPath.set(source.path, [
+        ...(primaryByDfhlPath.get(source.path) ?? []),
+        incident.id,
+      ])
+    }
+  }
 }
 
 if (
@@ -250,12 +262,24 @@ function legacyCoordinates(row) {
 }
 
 function dfhlDisposition(rows, poc) {
-  const incidentIds = unique(rows.flatMap((row) => row.incidentIds)).sort()
+  const incidentIds = unique([
+    ...rows.flatMap((row) => row.incidentIds),
+    ...(primaryByDfhlPath.get(poc) ?? []),
+  ]).sort()
   if (incidentIds.length > 0) {
     return {
       status: 'included',
       incidentIds,
       reason: 'The source is linked to at least one incident admitted to the primary dataset.',
+    }
+  }
+
+  const exclusionIndexes = exclusionsByPoc.get(poc) ?? []
+  if (exclusionIndexes.length > 0) {
+    return {
+      status: 'excluded',
+      exclusionIds: exclusionIndexes.map((index) => `exclusion:${index + 1}`),
+      reason: 'The source has an explicit exclusion adjudication and no admitted primary incident.',
     }
   }
 
@@ -272,15 +296,6 @@ function dfhlDisposition(rows, poc) {
           status: 'pending',
           reason: 'A linked legacy code-bug row exists, but no matching primary incident id was found.',
         }
-  }
-
-  const exclusionIndexes = exclusionsByPoc.get(poc) ?? []
-  if (exclusionIndexes.length > 0) {
-    return {
-      status: 'excluded',
-      exclusionIds: exclusionIndexes.map((index) => `exclusion:${index + 1}`),
-      reason: 'The source has at least one explicit exclusion adjudication and no linked dataset row.',
-    }
   }
 
   return {

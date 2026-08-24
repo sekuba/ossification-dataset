@@ -21,22 +21,44 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "ParticleExchange.onERC721Received() was callable directly rather than only from a real ERC721 transfer, so the attacker supplied a hand-built Lien struct with an attacker-controlled collection address and made the exchange settle a loan against a worthless NFT, releasing the pool's WETH."
+    "summary": "ParticleExchange trusted caller-supplied ERC721 callback and lien data, letting a malicious collection fabricate NFT ownership and credit an unbacked ETH balance."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 138651,
-      "valuationTimestamp": 1707977327,
-      "method": "legacy-unspecified",
+      "amount": 138969.98873208265,
+      "valuationTimestamp": 1707976800,
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-1",
+        "source-9"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "50.126827091960426151",
+        "usdValue": 138969.98873208265,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1707976800,
+          "unitPriceUsd": 2772.36754836157,
+          "sourceIds": [
+            "source-9"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exploit changes the attack contract's ParticleExchange accountBalance from zero to exactly 50.126827091960426151 ETH, equal to the exchange's full ETH balance at that block."
   },
   "targets": [
     {
@@ -57,41 +79,39 @@
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1696291763,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 18266339,
+        "transactionHash": "0x1113e0f43e3f062e91aac24b2901c67bf59d51145078ad668e7de8340d223f24",
+        "transactionIndex": 42,
+        "logIndex": 165,
         "mechanism": {
           "type": "event",
           "address": "0x7c5c9afecf4013c43217fb6a626a4687381f080d",
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+        "description": "The second and final pre-incident Upgraded event selected the vulnerable ParticleExchange implementation."
       },
       "codeAgeSeconds": 11685564,
-      "failureModeId": "legacy:eip155:1:0xd9b3e229acc755881890394cc76fde0d7b83b1abd4d046b0f69c1fd9fd495ff6:failure-1",
+      "failureModeId": "failure:particle-forged-erc721-callback-lien",
       "evidence": {
         "identitySourceIds": [
           "source-2",
           "source-4",
-          "source-5",
-          "source-6",
-          "source-7"
+          "source-7",
+          "source-8"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5",
-          "source-6",
-          "source-7"
+          "source-7",
+          "source-8"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/particle-trade.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -101,7 +121,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xd9b3e229acc755881890394cc76fde0d7b83b1abd4d046b0f69c1fd9fd495ff6"
@@ -131,27 +154,33 @@
       "supports": [
         "target-identity",
         "code-history",
+        "root-cause",
+        "loss",
+        "incident-anchor"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T12:30:55Z",
+      "note": "Reviewed the exploit receipt and call trace, accountBalance state before and after the exploit, the deployment transaction, the exploit-time implementation slot, the commit-pinned reproduction, and a complete Upgraded-event query from deployment through the exploit. The exploit calls proxy 0x7c5c9afecf4013c43217fb6a626a4687381f080d, which delegates both forged onERC721Received callbacks to 0xe4764f9cd8ecc9659d3abf35259638b20ac536e4. The malicious collection controls ownerOf and safeTransferFrom, allowing caller-supplied lien data to create an unbacked credit. Two Upgraded events exist; the final event is log 165 of 0x1113e0f43e3f062e91aac24b2901c67bf59d51145078ad668e7de8340d223f24 and selects the recorded implementation. The exploit raises the attack contract's accountBalance from zero to exactly 50.126827091960426151 ETH, the full exchange balance."
+    },
+    {
+      "id": "source-8",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1113e0f43e3f062e91aac24b2901c67bf59d51145078ad668e7de8340d223f24"
+    },
+    {
+      "id": "source-9",
+      "type": "price-data",
+      "supports": [
         "loss"
       ],
-      "note": "onchain review: ParticleExchange 0xe4764f9cd8ecc9659d3abf35259638b20ac536e4 created 2023-10-02T23:57:35Z by 0x777777bdaae4d3e6babe3aec1d40bc9caa4f7f65, unrelated to the attack sender; no EIP-1967 events, age from deployment. ~50 ETH x $2,773.01 at incidentTimestamp 1707977327 (DefiLlama) = $138,651."
-    },
-    {
-      "id": "source-5",
-      "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
-      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The recorded victim is the UUPS implementation, not the live exchange - storage slot 0 reads 0xff (`_disableInitializers()` in the constructor) and it is never entered directly in the exploit tx. The live proxy is 0x7c5c9afecf4013c43217fb6a626a4687381f080d (created 2023-09-07T20:35:23Z, first Upgraded to 0x674ac9250fc4a5e54b129206a8ed817d22ffe2c6); it emitted Upgraded to the recorded implementation at block 18266339, 2023-10-03T00:09:23Z - 708 s after that implementation's own deployment - and never again before the incident, so the deployment basis is exact to within 12 minutes either way."
-    },
-    {
-      "id": "source-6",
-      "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
-      "note": "onchain review: victim re-anchored from implementation 0xe4764f9cd8ecc9659d3abf35259638b20ac536e4 to the proxy the protocol runs at, 0x7c5c9afecf4013c43217fb6a626a4687381f080d, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (11686272s -> 11685564s)"
+      "provider": "CoinGecko",
+      "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1707890927&to=1707980927",
+      "observedAt": 1787574655
     },
     {
       "id": "source-7",
@@ -165,10 +194,10 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/particle-trade.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
