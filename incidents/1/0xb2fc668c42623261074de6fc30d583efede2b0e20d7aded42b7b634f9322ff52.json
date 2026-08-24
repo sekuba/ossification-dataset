@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52",
+  "protocol": {
+    "name": "Ambient Finance",
+    "slug": "ambient-finance"
+  },
+  "name": "Ambient CrocSwapDex surplus-collateral accounting",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1780845995
+    },
+    "attackerAddresses": [
+      "0x0000000000037e625b2502c26029aea237f102af"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Flash-loaned WETH deposited as CrocSwapDex native surplus collateral, then a tick-by-tick walk of the ETH/USDC curve with a narrow mint-and-harvest let the attacker disburse more surplus than was deposited, exposing a surplus-collateral accounting flaw in the dex."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 110600,
+      "valuationTimestamp": 1780845995,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xaaaaaaaaa24eeeb8d57d431224f73832bc34f688",
+      "relationship": "module-router",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1685327111,
+        "blockNumber": 19314934,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x8023901399d7927181892642a0913b06fda30847"
+      },
+      "lastCodeChange": {
+        "kind": "module-change",
+        "timestamp": 1708990415,
+        "blockNumber": 19315038,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2024-02-26T23:33:35Z (block 19315038): last CrocSwapDex callpath sidecar install before the incident; the WarmPath sidecar carrying surplus-collateral accounting (callpath 1) was reinstalled 21 minutes earlier at 2024-02-26T23:12:47Z, block 19314934"
+      },
+      "codeAgeSeconds": 71855580,
+      "failureModeId": "legacy:eip155:1:0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/ambient-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/TenArmorAlert/status/2063816231023427861"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-06/AmbientCrocSwapDex_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: CrocSwapDex 0xAaAaAAAaA24eEeb8d57D431224f73832bC34f688 created 2023-05-29 by 0x8023901399d7927181892642a0913b06fda30847, unrelated to attack sender; the dex declares only CrocKnockoutCross and emits no EIP-1967 Upgraded event, so code changes were recovered by binary-searching eth_getStorageAt over proxyPaths_ (address[65536] at slot 1, callpath k at slot 1+k) between the creation and incident blocks: callpaths 0/2/3/4/7 installed 2023-05-29, callpath 1 reinstalled 2024-02-26T23:12:47Z (block 19314934, WarmPath 0xa9dd587ad17aed82cac5596b16dcc9defec885cb) and callpath 5 2024-02-26T23:33:35Z (block 19315038); callpaths 6/8-12/128-133 unset. The exploit drives callpaths 1, 2 and 3. Age measured from the latest install rather than deployment; ~67.85 ETH extracted"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/ambient-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/ambient-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2026-06-07T15:26:35Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2024-02-26T23:33:35Z (block 19315038): last CrocSwapDex callpath sidecar install before the incident; the WarmPath sidecar carrying surplus-collateral accounting (callpath 1) was reinstalled 21 minutes earlier at 2024-02-26T23:12:47Z, block 19314934"
+  ]
+}

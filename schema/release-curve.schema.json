@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://l2beat.com/schemas/ossification-dataset/release-curve.schema.json",
+  "title": "Ossification code-age curve release",
+  "type": "object",
+  "required": [
+    "$schema",
+    "formatVersion",
+    "description",
+    "cohortRules",
+    "counts",
+    "observations",
+    "ageKnots",
+    "deduplicatedObservations",
+    "provisionalObservations",
+    "otherExcludedObservations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "const": "../../schema/release-curve.schema.json" },
+    "formatVersion": { "const": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "cohortRules": { "$ref": "#/$defs/cohortRules" },
+    "counts": { "$ref": "#/$defs/counts" },
+    "observations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/selectedObservation" }
+    },
+    "ageKnots": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 0 }
+    },
+    "deduplicatedObservations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/deduplicatedObservation" }
+    },
+    "provisionalObservations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/excludedObservation" }
+    },
+    "otherExcludedObservations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/excludedObservation" }
+    }
+  },
+  "$defs": {
+    "cohortRules": {
+      "type": "object",
+      "required": [
+        "unit",
+        "datasetAdmission",
+        "curveUsdComparability",
+        "curveInclusion",
+        "codeChangeKinds",
+        "deduplication",
+        "deduplicationSelectionOrder",
+        "incidentReference",
+        "ordering",
+        "excludedTargetTiers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "unit": { "type": "string", "minLength": 1 },
+        "datasetAdmission": { "type": "string", "minLength": 1 },
+        "curveUsdComparability": { "type": "string", "minLength": 1 },
+        "curveInclusion": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "codeChangeKinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["deployment", "implementation-change", "module-change"] }
+        },
+        "deduplication": { "type": "string", "minLength": 1 },
+        "deduplicationSelectionOrder": { "type": "string", "minLength": 1 },
+        "incidentReference": { "type": "string", "minLength": 1 },
+        "ordering": { "type": "string", "minLength": 1 },
+        "excludedTargetTiers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["mechanical", "provisional"] }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "required": [
+        "sourceIncidents",
+        "sourceTargets",
+        "eligibleBeforeDeduplication",
+        "curveObservations",
+        "deduplicatedObservations",
+        "provisionalObservations",
+        "otherExcludedObservations",
+        "incidentsByVerificationTier",
+        "targetsByVerificationTier",
+        "exclusionReasons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sourceIncidents": { "type": "integer", "minimum": 0 },
+        "sourceTargets": { "type": "integer", "minimum": 0 },
+        "eligibleBeforeDeduplication": { "type": "integer", "minimum": 0 },
+        "curveObservations": { "type": "integer", "minimum": 0 },
+        "deduplicatedObservations": { "type": "integer", "minimum": 0 },
+        "provisionalObservations": { "type": "integer", "minimum": 0 },
+        "otherExcludedObservations": { "type": "integer", "minimum": 0 },
+        "incidentsByVerificationTier": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "provisional": { "type": "integer", "minimum": 0 },
+            "reviewed": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "targetsByVerificationTier": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "provisional": { "type": "integer", "minimum": 0 },
+            "mechanical": { "type": "integer", "minimum": 0 },
+            "reviewed": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "exclusionReasons": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "nullableHash": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "required": [
+        "observationId",
+        "incidentId",
+        "targetId",
+        "chainId",
+        "exploit",
+        "incidentVerificationTier",
+        "targetVerificationTier",
+        "targetCurveEligible",
+        "failureModeId",
+        "codeArtifactCodeHash",
+        "codeAgeSeconds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "observationId": {
+          "type": "string",
+          "pattern": "^eip155:[1-9][0-9]*:0x[0-9a-f]{64}#target-[1-9][0-9]*$"
+        },
+        "incidentId": {
+          "type": "string",
+          "pattern": "^eip155:[1-9][0-9]*:0x[0-9a-f]{64}$"
+        },
+        "targetId": { "type": "string", "pattern": "^target-[1-9][0-9]*$" },
+        "chainId": { "type": "integer", "minimum": 1 },
+        "exploit": {
+          "type": "object",
+          "required": ["blockNumber", "transactionIndex", "timestamp"],
+          "additionalProperties": false,
+          "properties": {
+            "blockNumber": { "type": ["integer", "null"], "minimum": 0 },
+            "transactionIndex": { "type": ["integer", "null"], "minimum": 0 },
+            "timestamp": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "incidentVerificationTier": { "enum": ["provisional", "reviewed"] },
+        "targetVerificationTier": { "enum": ["provisional", "mechanical", "reviewed"] },
+        "targetCurveEligible": { "type": "boolean" },
+        "failureModeId": { "type": "string", "minLength": 1 },
+        "codeArtifactCodeHash": { "$ref": "#/$defs/nullableHash" },
+        "codeAgeSeconds": { "type": "integer", "minimum": 0 },
+        "exclusionReasons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "duplicateOf": {
+          "type": "string",
+          "pattern": "^eip155:[1-9][0-9]*:0x[0-9a-f]{64}#target-[1-9][0-9]*$"
+        },
+        "deduplicationKey": {
+          "type": "object",
+          "required": ["codeArtifactCodeHash", "failureModeId"],
+          "additionalProperties": false,
+          "properties": {
+            "codeArtifactCodeHash": {
+              "type": "string",
+              "pattern": "^0x[0-9a-f]{64}$"
+            },
+            "failureModeId": {
+              "type": "string",
+              "pattern": "^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$"
+            }
+          }
+        }
+      }
+    },
+    "selectedObservation": {
+      "$ref": "#/$defs/observation",
+      "properties": {
+        "incidentVerificationTier": { "const": "reviewed" },
+        "targetVerificationTier": { "const": "reviewed" },
+        "targetCurveEligible": { "const": true },
+        "failureModeId": { "pattern": "^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$" },
+        "codeArtifactCodeHash": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+      },
+      "not": {
+        "anyOf": [
+          { "required": ["exclusionReasons"] },
+          { "required": ["duplicateOf"] },
+          { "required": ["deduplicationKey"] }
+        ]
+      }
+    },
+    "deduplicatedObservation": {
+      "$ref": "#/$defs/observation",
+      "required": ["duplicateOf", "deduplicationKey"],
+      "properties": {
+        "incidentVerificationTier": { "const": "reviewed" },
+        "targetVerificationTier": { "const": "reviewed" },
+        "targetCurveEligible": { "const": true },
+        "failureModeId": { "pattern": "^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$" },
+        "codeArtifactCodeHash": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+      },
+      "not": { "required": ["exclusionReasons"] }
+    },
+    "excludedObservation": {
+      "$ref": "#/$defs/observation",
+      "required": ["exclusionReasons"],
+      "not": {
+        "anyOf": [
+          { "required": ["duplicateOf"] },
+          { "required": ["deduplicationKey"] }
+        ]
+      }
+    }
+  }
+}

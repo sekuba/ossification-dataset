@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:250:0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6",
+  "protocol": {
+    "name": "Grim Finance",
+    "slug": "grim-finance"
+  },
+  "name": "Grim Finance GrimBoostVault depositFor reentrancy",
+  "incident": {
+    "chainId": 250,
+    "exploit": {
+      "transactionHash": "0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6",
+      "blockNumber": 25345003,
+      "transactionIndex": null,
+      "timestamp": 1639849155
+    },
+    "attackerAddresses": [
+      "0xdefc385d7038f391eb0063c2f7c238cfb55b206c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "GrimBoostVault.depositFor(token, amount, user) took the deposit token as a caller-supplied parameter and minted shares around an unguarded external transferFrom call, so the attacker passed its own contract as the token and re-entered depositFor from that callback, minting eight tranches of vault shares against a single SpiritSwap BTC/WFTM LP deposit before burning them all in withdrawAll to drain the vault."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 30000000,
+      "valuationTimestamp": 1639849155,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x660184ce8af80e0b1e5a1172a16168b15f4136bf",
+      "relationship": "diamond",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1630366055,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1630366055,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x660184ce8af80e0b1e5a1172a16168b15f4136bf"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 9483100,
+      "failureModeId": "legacy:eip155:250:0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/grim-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 250,
+      "transactionHash": "0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://rekt.news/grim-finance-rekt/"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2021-12/Grim_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "Onchain review over plain JSON-RPC. Etherscan v2 does not serve Fantom, so the victim's creation was resolved with no explorer at all, by binary-searching eth_getCode against the archive endpoint https://rpc.fantom.network (https://rpc.ftm.tools is dead and the l2beat Fantom key is disabled): GrimBoostVault 0x660184CE8AF80e0B1e5A1172A16168b15f4136bF first has code at block 15934352 (deployTimestamp 1630366055 = 2021-08-30T23:27:35Z), creation tx 0x163c49f8dcfc3c3242f6ff30b64445497b808c46e2f2c0e85c433314b678d9e0 recovered from eth_getBlockReceipts (receipt.contractAddress, direct deploy), creator 0xaa4273346d21a935bdf1302418d9531342d8142c. That creator is neither the attack-tx sender 0xdefc385d7038f391eb0063c2f7c238cfb55b206c nor the attack contract 0xb08ccb39741d746dd1818641900f182448eb5e41, so the victim is not attacker-deployed. Last change: over [15934352, 25345003] the victim emitted zero EIP-1967 Upgraded, zero BeaconUpgraded, zero Compound-fork NewImplementation(address,address), zero DiamondCut and zero AdminChanged events; its EIP-1967 implementation slot 0x3608...2bbc and beacon slot 0xa3f0...3d50 both read zero, so there is no implementation pointer to binary-search and the contract is a plain 8488-byte non-proxy vault. A full topic sweep of every log the vault ever emitted in that range returns only ERC20 Transfer (848x) plus a single OwnershipTransferred in the creation block, so deployment is the correct basis. Incident: attack tx in block 25345003, timestamp 1639849155 = 2021-12-18T17:39:15Z, status 1, 53 logs. Decoded from the receipt: a 937830 WFTM + 30 BTC flash loan from the Beethoven X vault 0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce (fee 281.349 WFTM), the proceeds added as SpiritSwap BTC/WFTM LP 0x279b2c897737a50405ED2091694F225D83F2D3bA, then eight mint Transfers out of the vault to the attack contract (0.0324, 0.1147, 0.4065, 1.4406, 5.1049, 18.0894, 64.1009 and 227.1455 shares - the seven reentrant depositFor calls plus the final real LP deposit) and one burn of the 316.4350 total. The $30m loss is rekt.news' aggregate for the Grim vaults drained that day; this row anchors on the GrimBoostVault transaction rekt.news cites and DeFiHackLabs reproduces (src/test/2021-12/Grim_exp.sol, forked at block 25345002)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/grim-finance.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/grim-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-12-18T17:39:15Z"
+    }
+  },
+  "notes": []
+}

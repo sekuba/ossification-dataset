@@ -1,0 +1,129 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x8af9b5fb3e2e3df8659ffb2e0f0c1f4c90d5a80f4f6fccef143b823ce673fb60",
+  "protocol": {
+    "name": "Astrid",
+    "slug": "astrid"
+  },
+  "name": "Astrid",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x8af9b5fb3e2e3df8659ffb2e0f0c1f4c90d5a80f4f6fccef143b823ce673fb60",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1698489695
+    },
+    "attackerAddresses": [
+      "0x792ec27874e1f614e757a1ae49d00ef5b2c73959"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Astrid withdraw/claim trusts an attacker-supplied fake restaked-token contract, releasing real staked stETH/rETH/cbETH."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 228591,
+      "valuationTimestamp": 1698489695,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xbaa87546cf87b5de1b0b52353a86792d40b8ba70",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1696596803,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1698072491,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xbaa87546cf87b5de1b0b52353a86792d40b8ba70",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 417204,
+      "failureModeId": "legacy:eip155:1:0x8af9b5fb3e2e3df8659ffb2e0f0c1f4c90d5a80f4f6fccef143b823ce673fb60:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/astrid.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x8af9b5fb3e2e3df8659ffb2e0f0c1f4c90d5a80f4f6fccef143b823ce673fb60"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-10/Astrid_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/astrid.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/astrid.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 2,
+      "date": "2023-10-28T10:41:35Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0x9f906fcd8fceaa6745e8d1c004861dcfa9b5e6a893fe1e8c5d0013a4e982e6a8",
+  "protocol": {
+    "name": "AllbridgeCCTP",
+    "slug": "allbridge-cctp"
+  },
+  "name": "Allbridge CCTP phantom deposit",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0x9f906fcd8fceaa6745e8d1c004861dcfa9b5e6a893fe1e8c5d0013a4e982e6a8",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1787104037
+    },
+    "attackerAddresses": [
+      "0x2419432344b0b892e592b2601b98eae702ba360e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "CCTPTokenMessenger credited an attested generic Circle message from its untrusted body without verifying a USDC mint or recipient, enabling a phantom deposit to pass the Router's solvency check."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 190156,
+      "valuationTimestamp": 1787104037,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xf9b710e427bf4d93598e0f80a84de22c7ad9b577",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1777378093,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1777378093,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xf9b710e427bf4d93598e0f80a84de22c7ad9b577"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 9725944,
+      "failureModeId": "legacy:eip155:8453:0x9f906fcd8fceaa6745e8d1c004861dcfa9b5e6a893fe1e8c5d0013a4e982e6a8:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/allbridge-cctp.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0x9f906fcd8fceaa6745e8d1c004861dcfa9b5e6a893fe1e8c5d0013a4e982e6a8"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
+      "path": "src/test/2026-08/AllbridgeCCTP_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "onchain review: victim creator 0xfa00c78931f236949d1b52e60d9dbe762a632641 via 0x1685d88033341bdcc3afc1b9790b76654a0c5abfe61e545a06e3d17430bc5261; not attacker"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/allbridge-cctp.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/allbridge-cctp.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-08-19T01:47:17Z"
+    }
+  },
+  "notes": []
+}

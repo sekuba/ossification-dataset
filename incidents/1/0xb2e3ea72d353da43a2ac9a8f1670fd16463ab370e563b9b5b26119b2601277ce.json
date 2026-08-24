@@ -1,0 +1,140 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce",
+  "protocol": {
+    "name": "Team Finance",
+    "slug": "team-finance"
+  },
+  "name": "Team Finance",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1666859363
+    },
+    "attackerAddresses": [
+      "0x161cebb807ac181d5303a4ccec2fc580cc5899fd"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "LockToken proxy: migrate() to Uniswap v3 (added in a recent upgrade) had insufficient validation of lock ownership/params. Age measured via Upgraded events on the proxy."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 14500000,
+      "valuationTimestamp": 1666859363,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe2fe530c047f2d85298b07d9333c05737f1435fb",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1627475806,
+        "blockNumber": 12914481,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1662445887,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xe2fe530c047f2d85298b07d9333c05737f1435fb",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 7 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 4413476,
+      "failureModeId": "legacy:eip155:1:0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-2",
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/team-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain re-verification (RPC only): LockToken proxy 0xE2fE530C047f2d85298b07D9333C05737f1435fB created 2021-07-28T12:36:46Z at block 12914481. Standard EIP-1967 proxy: eth_getLogs for Upgraded (topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) over [12914481, 15839275] returns exactly 7 events - 2021-08-05T06:44:50Z 0x3ef7442df454ba6b7c1deec8ddf29cfb2d6e56c7, 2021-08-06T06:54:04Z 0x767a2180335caaf060ea4ca4e858efc6d7f1f5e8, 2022-05-17T08:47:08Z 0x62bec667dc3c9eba0e16578d11604cf01a7c8b91, 2022-07-15T12:49:20Z 0xb8a00e3f653c4ea6a38eee379f827361e0a9a5aa, 2022-08-15T15:13:03Z 0x2a20a12216cc43d4469fc94ae051f245a02c7d3a, 2022-08-27T09:21:17Z 0x13f23dbea59e4d9009f99258d45eed9527d204a6, and 2022-09-06T06:31:27Z 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 (block 15482466, tx 0x027468bdcc23f7e17e9c79a6a1b89e749b0ca9675422869900ec1257315284ac, ts 1662445887) - the upgrade that shipped the Uniswap-v3 migrate() path. The stored upgradeEventCount 7, lastChangeTimestamp 1662445887 and codeAgeSeconds 4426113 reproduce exactly. CONFIRMED unchanged."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: exploit tx 0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce adopted from the duplicate teamfinance row, whose victim was the implementation 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 behind this proxy; measured from the last of 7 EIP-1967 upgrades"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/team-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/team-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 7,
+      "date": "2022-10-27T08:29:23Z"
+    }
+  },
+  "notes": []
+}

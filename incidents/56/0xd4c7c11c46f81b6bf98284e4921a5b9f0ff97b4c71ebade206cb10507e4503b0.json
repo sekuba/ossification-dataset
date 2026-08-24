@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0",
+  "protocol": {
+    "name": "Bankroll Network",
+    "slug": "bankroll-network"
+  },
+  "name": "BankrollNetworkStack buyFor dividend inflation",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1727023858
+    },
+    "attackerAddresses": [
+      "0x4645863205b47a0a3344684489e8c446a437d66c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "buyFor() accepts an arbitrary beneficiary and was called ~2810 times with the pool contract itself as the buyer, inflating the Solidity 0.6.8 unchecked dividend accounting so a single flash-loaned buy/sell/withdraw round trip drained the WBNB reserve."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 230000,
+      "valuationTimestamp": 1727023858,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x564d4126af2b195ffaa7fb470ed658b1d9d07a54",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1615344835,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xcb71eb21f53a2f4de0f26dc90518df10be13d1ec"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1615344835,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x564d4126af2b195ffaa7fb470ed658b1d9d07a54"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 111679023,
+      "failureModeId": "legacy:eip155:56:0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bankroll-network.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blog.solidityscan.com/bankroll-network-hack-analysis-5d7cdec35075"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-09/Bankroll_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: BankrollNetworkStack 0x564d4126... created by 0xcb71eb21f53a2f4de0f26dc90518df10be13d1ec on 2021-03-10, no upgrade events; distinct contract from the 2025 BankrollStack rows (bsc 0x16d0a151..., ethereum 0x7b3611b0...)"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bankroll-network.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bankroll-network.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-09-22T16:50:58Z"
+    }
+  },
+  "notes": []
+}

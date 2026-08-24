@@ -1,0 +1,128 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xf4bfef1655f2092cf062c008153a5be66069b2b1fedcacbf4037c1f3cc8a9f45",
+  "protocol": {
+    "name": "Compound",
+    "slug": "compound"
+  },
+  "name": "Compound (Comptroller COMP distribution)",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xf4bfef1655f2092cf062c008153a5be66069b2b1fedcacbf4037c1f3cc8a9f45",
+      "blockNumber": 13324198,
+      "transactionIndex": null,
+      "timestamp": 1632965906
+    },
+    "attackerAddresses": [
+      "0x309d413391e975b553b7b8d19bc11f8a6c2eb889"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Unitroller: Proposal 062 (executed 2021-09-29T20:24:08Z) shipped a Comptroller implementation with a broken COMP distribution comparison; drained the next day. The Unitroller is a Compound-fork proxy that announces implementation changes with NewImplementation(address,address), not EIP-1967 Upgraded."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 80000000,
+      "valuationTimestamp": 1632965906,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1557191237,
+        "blockNumber": 7710671,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1632947048,
+        "blockNumber": 13322798,
+        "transactionHash": "0xc5098f8fb149262d7f26d32c0642e0e8bee5383d9df9c4988070f63a23cb9912",
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2021-09-29T20:24:08Z (block 13322798, tx 0xc5098f8fb149262d7f26d32c0642e0e8bee5383d9df9c4988070f63a23cb9912): NewImplementation(address,address) on the Unitroller set the Comptroller implementation to 0x374abb8ce19a73f2c4efad642bda76c797f19233 (Proposal 062) - the last of 11 such events before the incident, corroborated by a binary search of Unitroller storage slot 2 (comptrollerImplementation)"
+      },
+      "codeAgeSeconds": 18858,
+      "failureModeId": "legacy:eip155:1:0xf4bfef1655f2092cf062c008153a5be66069b2b1fedcacbf4037c1f3cc8a9f45:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/compound.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xf4bfef1655f2092cf062c008153a5be66069b2b1fedcacbf4037c1f3cc8a9f45"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review (RPC only): Unitroller 0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B created 2019-05-07T01:07:17Z at block 7710671. Compound-fork proxy: eth_getLogs for EIP-1967 Upgraded (topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) over [7710671, 13326968] returns 0 logs; implementation changes are announced by NewImplementation(address,address) (topic 0xd604de94d45953f9138079ec1b82d533cb2160c906d1076d1f7ed54befbca97a) emitted by the Unitroller itself. Exactly 11 such events in the window: 2019-05-07T01:08:08Z -> 0x62f18c451af964197341d3c86d27e98c41bb8fcc, 2019-05-08T22:50:18Z -> 0x178053c06006e67e09879c09ff012ff9d263df29, 2019-10-23T17:01:55Z -> 0xf592ef673057a451c49c9433e278c5d59b56132c, 2020-03-16T17:23:56Z -> 0x97bd4cc841fc999194174cd1803c543247a014fe, 2020-06-15T18:21:43Z -> 0x9d0a0443ff4bb04391655b8cd205683d9fa75550, 2020-07-02T19:02:42Z -> 0xaf601cbff871d0be62d18f79c31e387c76fa0374, 2020-09-13T15:12:02Z -> 0x7b5e3521a049c8ff88e6349f33044c6cc33c113c, 2020-12-10T17:03:56Z -> 0x7d47d3f06a9c10576bc5dc87cefbf3288f96ea04, 2020-12-26T14:29:17Z -> 0xbe7616b06f71e363a310aa8ce8ad99654401ead7, 2021-07-06T16:57:38Z -> 0x75442ac771a7243433e033f3f8eab2631e22938f, and 2021-09-29T20:24:08Z (block 13322798, tx 0xc5098f8fb149262d7f26d32c0642e0e8bee5383d9df9c4988070f63a23cb9912) -> 0x374abb8ce19a73f2c4efad642bda76c797f19233, which is Proposal 062. Cross-checked against storage: the Unitroller's comptrollerImplementation lives in slot 2 (UnitrollerAdminStorage: admin, pendingAdmin, comptrollerImplementation, pendingComptrollerImplementation) and a binary search of eth_getStorageAt over [7710671, 13326968] puts its last change at exactly block 13322798, ts 1632947048, value 0x374abb8ce19a73f2c4efad642bda76c797f19233 - identical to the last event. Stored lastChangeTimestamp 1632947048 and codeAgeSeconds 56152 are CONFIRMED unchanged; only the basis wording is corrected (upgradeEventCount set to 0 because the 11 events are NewImplementation, not EIP-1967 Upgraded)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/compound.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/compound.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2021-09-30T01:38:26Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2021-09-29T20:24:08Z (block 13322798, tx 0xc5098f8fb149262d7f26d32c0642e0e8bee5383d9df9c4988070f63a23cb9912): NewImplementation(address,address) on the Unitroller set the Comptroller implementation to 0x374abb8ce19a73f2c4efad642bda76c797f19233 (Proposal 062) - the last of 11 such events before the incident, corroborated by a binary search of Unitroller storage slot 2 (comptrollerImplementation)"
+  ]
+}

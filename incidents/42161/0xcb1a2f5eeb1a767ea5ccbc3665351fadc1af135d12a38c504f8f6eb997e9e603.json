@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0xcb1a2f5eeb1a767ea5ccbc3665351fadc1af135d12a38c504f8f6eb997e9e603",
+  "protocol": {
+    "name": "LavaLending",
+    "slug": "lavalending"
+  },
+  "name": "LavaLending UniV3Wrapper unclaimed-fee inflation",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0xcb1a2f5eeb1a767ea5ccbc3665351fadc1af135d12a38c504f8f6eb997e9e603",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1711666653
+    },
+    "attackerAddresses": [
+      "0x851aa754c39bf23cdaac2025367514dfd7530418"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "UniV3Wrapper.getUnclaimedFees() ran its _limitFees() cap only against combined two-token fee growth, so fees generated in a single token by attacker-driven swaps in the USDC/USDC.e pool were added in full to getAssetsBasedOnPrice(), inflating the wrapper LP price read by the lending market's WrapperOracle and allowing an over-borrow."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 340000,
+      "valuationTimestamp": 1711666653,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x10bda01ac4e644fd84a04dab01e15a5edcee46dd",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1708330012,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1709821709,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x10bda01ac4e644fd84a04dab01e15a5edcee46dd",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 1844944,
+      "failureModeId": "legacy:eip155:42161:0xcb1a2f5eeb1a767ea5ccbc3665351fadc1af135d12a38c504f8f6eb997e9e603:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/lavalending.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0xcb1a2f5eeb1a767ea5ccbc3665351fadc1af135d12a38c504f8f6eb997e9e603"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://quadrigainitiative.com/casestudy/lavalendingflashloanattack.php"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-03/LavaLending_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: UniV3Wrapper ERC1967 proxy 0x10bda01ac4e644fd84a04dab01e15a5edcee46dd created 2024-02-19 by Lava deployer 0xe56a6ca72979a511782cf6d4d0e3be80b6f1e681, last Upgraded event 2024-03-07 to impl 0xf6b3c18023c1e387a673b3101c73fc985290fbd9 whose getUnclaimedFees()/_limitFees() is the code the team announced it would fix; attack sender 0x851aa754c39bf23cdaac2025367514dfd7530418 is unrelated to the creator"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/lavalending.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/lavalending.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 2,
+      "date": "2024-03-28T22:57:33Z"
+    }
+  },
+  "notes": []
+}

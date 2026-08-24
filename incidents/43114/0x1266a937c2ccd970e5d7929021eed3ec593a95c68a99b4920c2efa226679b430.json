@@ -1,0 +1,144 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:43114:0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430",
+  "protocol": {
+    "name": "Platypus Finance",
+    "slug": "platypus-finance"
+  },
+  "name": "Platypus MasterPlatypusV4 emergencyWithdraw solvency check",
+  "incident": {
+    "chainId": 43114,
+    "exploit": {
+      "transactionHash": "0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1676575014
+    },
+    "attackerAddresses": [
+      "0xeff003d64046a6f521ba31f39405cb720e953958"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "MasterPlatypusV4: emergencyWithdraw did not check outstanding USP debt, releasing collateral while keeping the borrowed USP. V4 deployed shortly before the exploit."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 8500000,
+      "valuationTimestamp": 1676575014,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xff6934aac9c94e1c39358d4fdcf70aeca77d0ab0",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1662368051,
+        "blockNumber": 22409704,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xcd7874f7430f9f62129c3fef1bc8cb8ef7bad224"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1668518918,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xff6934aac9c94e1c39358d4fdcf70aeca77d0ab0",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 8056096,
+      "failureModeId": "legacy:eip155:43114:0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/platypus-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 43114,
+      "transactionHash": "0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-02/Platypus_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: MasterPlatypusV4 0xfF6934aAC9C94E1C39358D4fDCF70aeca77D0AB0 created 2022-09-05T08:54:11Z by 0xcd7874f7430f9f62129c3fef1bc8cb8ef7bad224, not the attack-tx sender 0xeff003d64046a6f521ba31f39405cb720e953958; one EIP-1967 Upgraded event, at block 22409704 on 2022-11-15T13:28:38Z installing 0xc007f27b757a782c833c568f5851ae1dfe0e6ec7, so the executing code was 93.2 days old. Loss ~$8.5M as previously recorded."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/platypus-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/platypus-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2023-02-16T19:16:54Z"
+    }
+  },
+  "notes": []
+}

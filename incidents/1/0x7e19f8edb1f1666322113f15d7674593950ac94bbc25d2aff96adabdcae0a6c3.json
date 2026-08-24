@@ -1,0 +1,144 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3",
+  "protocol": {
+    "name": "Pythia Finance",
+    "slug": "pythia"
+  },
+  "name": "Pythia staking reward re-claim",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1725334943
+    },
+    "attackerAddresses": [
+      "0xd861e6f1760d014d6ee6428cf7f7d732563c74c0"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "claimRewards() paid out against the caller's current staking-token balance without settling or resetting reward accounting when that balance was transferred, so the attacker recycled the same stake through fresh helper contracts and claimed the reward pool ~30 times in one transaction."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 53000,
+      "valuationTimestamp": 1725334943,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe2910b29252f97bb6f3cc5e66bfa0551821c7461",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1725298319,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xae730f689ac162440536ce006caff10fe759ab52"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1725298319,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xe2910b29252f97bb6f3cc5e66bfa0551821c7461"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 36624,
+      "failureModeId": "legacy:eip155:1:0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/pythia.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://quadrigainitiative.com/casestudy/pythiafinancestakingcontractvulnerabilityandrugpull.php"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-09/Pythia_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "onchain review: staking contract 0xe2910b29... created by 0xae730f689ac162440536ce006caff10fe759ab52 on 2024-09-02T17:31:59Z, 10 hours before the attack; attack sender 0xd861e6f1... is unrelated to the creator"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/pythia.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/pythia.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-09-03T03:42:23Z"
+    }
+  },
+  "notes": []
+}

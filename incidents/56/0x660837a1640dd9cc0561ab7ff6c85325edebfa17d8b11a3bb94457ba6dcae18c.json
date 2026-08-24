@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x660837a1640dd9cc0561ab7ff6c85325edebfa17d8b11a3bb94457ba6dcae18c",
+  "protocol": {
+    "name": "Trade On Orion",
+    "slug": "tradeonorion"
+  },
+  "name": "Exchange redeemAtomic signature not bound to order sender",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x660837a1640dd9cc0561ab7ff6c85325edebfa17d8b11a3bb94457ba6dcae18c",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1716870310
+    },
+    "attackerAddresses": [
+      "0x51177db1ff3b450007958447946a2eee388288d2"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Exchange.redeemAtomic() accepts a RedeemOrder whose signature is not bound to order.sender, so the attacker signed orders with its own key and repeatedly redeemed other users' locked stake to its own address."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 645000,
+      "valuationTimestamp": 1716870310,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe9d1d2a27458378dd6c6f0b2c390807aed2217ca",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1614529905,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x33459acd9ca8493c0e0163eac92a928e293b2218"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1709657681,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xe9d1d2a27458378dd6c6f0b2c390807aed2217ca",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 29 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 7212629,
+      "failureModeId": "legacy:eip155:56:0x660837a1640dd9cc0561ab7ff6c85325edebfa17d8b11a3bb94457ba6dcae18c:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/tradeonorion.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x660837a1640dd9cc0561ab7ff6c85325edebfa17d8b11a3bb94457ba6dcae18c"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/MetaSec_xyz/status/1796008961302258001"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-05/Tradeonorion_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0xe9d1D2a27458378Dd6C6F0b2c390807AEd2217Ca created 2021-02-28T16:31:45Z by 0x33459acd9ca8493c0e0163eac92a928e293b2218, which is not the attack-tx sender 0x51177db1ff3b450007958447946a2eee388288d2; 29 EIP-1967 Upgraded events on the victim before the incident; code age measured from last of 29 upgrade events (onchain)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/tradeonorion.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/tradeonorion.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 29,
+      "date": "2024-05-28T04:25:10Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+  "protocol": {
+    "name": "Velocore",
+    "slug": "velocore"
+  },
+  "name": "Velocore ConstantProductPool fee underflow",
+  "incident": {
+    "chainId": 59144,
+    "exploit": {
+      "transactionHash": "0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1717281449
+    },
+    "attackerAddresses": [
+      "0x8cdc37ed79c5ef116b9dc2a53cb86acaca3716bf"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Velocore's ConstantProductPool computed its swap fee with an unchecked multiplier that overflows once a single withdrawal takes effectively the whole LP supply, so a flash-loaned burn of the USDC/ETH VLP returned far more than the pool held and drained it through the vault's execute path."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 6800000,
+      "valuationTimestamp": 1717281449,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe2c67a9b15e9e7ff8a9cb0dfb8fee5609923e5db",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1691213069,
+        "blockNumber": 128549,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1691213069,
+        "blockNumber": 128549,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xe2c67a9b15e9e7ff8a9cb0dfb8fee5609923e5db"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 26068380,
+      "failureModeId": "legacy:eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/velocore.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 59144,
+      "transactionHash": "0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/BeosinAlert/status/1797247874528645333"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-06/Velocore_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review over a Linea archive RPC (linea-rpc.publicnode.com; the l2beat Linea endpoint does not serve 2024 blocks): the USDC/ETH VLP pool 0xe2c67A9B15e9E7FF8A9Cb0dFb8feE5609923E5DB was created at block 128549, 2023-08-05T05:24:29Z, by the Velocore factory deployer 0xca0671f5c50e4f28ae847480ee24cfe11c5c1b35, not the attack-tx sender 0x8cdc37ed79c5ef116b9dc2a53cb86acaca3716bf; cast logs finds no Upgraded event on the pool before the incident block 5079177 (2024-06-02T02:37:29Z), so the executing code was 301.7 days old. Swaps are routed through the Velocore vault 0x1d0188c4B276A09366D05d6Be06aF61a73bC7535. Loss ~$6.88M as previously recorded."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/velocore.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/velocore.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-06-01T22:37:29Z"
+    }
+  },
+  "notes": []
+}

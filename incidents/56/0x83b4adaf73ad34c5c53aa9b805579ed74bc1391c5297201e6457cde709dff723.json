@@ -1,0 +1,152 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x83b4adaf73ad34c5c53aa9b805579ed74bc1391c5297201e6457cde709dff723",
+  "protocol": {
+    "name": "ChainSwap",
+    "slug": "chainswap"
+  },
+  "name": "ChainSwap MappingToken receive() unauthorised signatories",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x83b4adaf73ad34c5c53aa9b805579ed74bc1391c5297201e6457cde709dff723",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1625944650
+    },
+    "attackerAddresses": [
+      "0xeda5066780de29d00dfb54581a707ef6f52d8113"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The bridge's receive(fromChainId,to,nonce,volume,Signature[]) counted the supplied signature entries towards its threshold without checking that each signatory was an authorised bridge signer, so anyone could mint bridged tokens to themselves."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 4400000,
+      "valuationTimestamp": 1625944650,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x089165ac9a7bf61833da86268f34a01652543466",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1620973167,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x6132d220feec1f83a9f0718a8bfd296a0ed67619"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1625625385,
+        "blockNumber": 8935896,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2021-07-07T02:36:25Z (block 8935896): ProxyFactory 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 productImplementations('MappingToken') changed from 0xdcb4d17894bd508c0d00b6ddf00ea60e413ef98b to 0xe92998f47118335ba33d1eba87282584f53519b5, the implementation the proxy executed at the incident"
+      },
+      "codeAgeSeconds": 319265,
+      "failureModeId": "legacy:eip155:56:0x83b4adaf73ad34c5c53aa9b805579ed74bc1391c5297201e6457cde709dff723:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/chainswap.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x83b4adaf73ad34c5c53aa9b805579ed74bc1391c5297201e6457cde709dff723"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2021-07/Chainswap_exp2.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://chain-swap.medium.com/chainswap-exploit-11-july-2021-post-mortem-6e4e346e5a32"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: proxy 0x089165ac9a7Bf61833Da86268F34A01652543466 created 2021-05-14T06:19:27Z by 0x6132d220feec1f83a9f0718a8bfd296a0ed67619, unrelated to attack sender 0xeda5066780de29d00dfb54581a707ef6f52d8113. It is a ChainSwap InitializableProductProxy: its EIP-1967 implementation slot is zero and it resolves code through IProxyFactory(factory).productImplementations(name), with factory 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 (FACTORY_SLOT 0x7a45a402e4cb6e08ebc196f20f66d5d30e67285a2a8aa80503fa409e727a4af1) and name 'MappingToken' (NAME_SLOT 0x4cd9b827ca535ceb0880425d70eff88561ecdf04dc32fcf7ff3b15c587f8a870), so no EIP-1967 Upgraded event is ever emitted. Binary-searching eth_call of productImplementations('MappingToken') over [7395576, 9042275] gives 0x860da66ce2962233112d5f738bec5f14d865e690 at creation and 0xe92998f47118335ba33d1eba87282584f53519b5 from block 8935896 (2021-07-07T02:36:25Z) onwards, unchanged through the incident block (spot-checked at 8950000, 8990000, 9020000, 9042274 and 9042275; it moves again to 0x9c88ffe3779204154e33e4812a5a6507f37b6fea by block 9100000). The 2021-07-07 install is the fix deployed after the 2021-07-02 ChainSwap incident, so the code the attacker hit was three days old. Loss figure $4.4M from the ChainSec DeFi exploit timeline for the 10 July 2021 ChainSwap incident."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/chainswap.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/chainswap.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2021-07-10T19:17:30Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2021-07-07T02:36:25Z (block 8935896): ProxyFactory 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 productImplementations('MappingToken') changed from 0xdcb4d17894bd508c0d00b6ddf00ea60e413ef98b to 0xe92998f47118335ba33d1eba87282584f53519b5, the implementation the proxy executed at the incident"
+  ]
+}

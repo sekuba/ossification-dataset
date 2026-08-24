@@ -1,0 +1,139 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0x6caa65b3fc5c8d4c7104574c3a15cd6208f742f9ada7d81ba027b20473137705",
+  "protocol": {
+    "name": "Yield",
+    "slug": "yield"
+  },
+  "name": "Yield",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0x6caa65b3fc5c8d4c7104574c3a15cd6208f742f9ada7d81ba027b20473137705",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1714439999
+    },
+    "attackerAddresses": [
+      "0x1abe06f451e2d569b3e9123baf33b51f68878656"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "donation to strategy vault manipulated mint/burn share accounting to extract pool tokens"
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 181000,
+      "valuationTimestamp": 1714439999,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x3b4ffd93ce5fcf97e61aa8275ec241c76cc01a47",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0x3b4ffd93ce5fcf97e61aa8275ec241c76cc01a47",
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1680178349,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1680178349,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x3b4ffd93ce5fcf97e61aa8275ec241c76cc01a47"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 34261650,
+      "failureModeId": "legacy:eip155:42161:0x6caa65b3fc5c8d4c7104574c3a15cd6208f742f9ada7d81ba027b20473137705:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/yield.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x6caa65b3fc5c8d4c7104574c3a15cd6208f742f9ada7d81ba027b20473137705"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2024-04/Yield_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The verified Strategy source contains no delegatecall and links no libraries; the 0xf4 bytes that a naive byte scan flags sit in the trailing constant/metadata region (pc 15755+ of 15872), not in reachable code. Runtime is byte-identical at the creation block 75244845 and the incident block 206219812, and callTracer on the exploit tx shows 5 frames executing at the victim with zero DELEGATECALL out of its context."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/yield.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/yield.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-04-30T01:19:59Z"
+    }
+  },
+  "notes": []
+}

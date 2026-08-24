@@ -1,0 +1,141 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:137:0x7a92106f145045b7a2bdce60a22109739f9b0cd0185bf16ff83fd1fac98cb42e",
+  "protocol": {
+    "name": "RoyalRoyalties",
+    "slug": "royalroyalties"
+  },
+  "name": "RoyalRoyalties",
+  "incident": {
+    "chainId": 137,
+    "exploit": {
+      "transactionHash": "0x7a92106f145045b7a2bdce60a22109739f9b0cd0185bf16ff83fd1fac98cb42e",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1782232072
+    },
+    "attackerAddresses": [
+      "0xbd829aa63311bb1e3c0ea58a7193364de670bd56"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Royal1155LDA incremented per-tier balance bookkeeping even for zero-amount batch items, inflating tierBalanceOf to 100 vs supply 1 so Royalties paid a 100x claim."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 261163,
+      "valuationTimestamp": 1782232072,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x7c885c4bfd179fb59f1056fbea319d579a278075",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1641853454,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1680801550,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x7c885c4bfd179fb59f1056fbea319d579a278075",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 12 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 101430522,
+      "failureModeId": "legacy:eip155:137:0x7a92106f145045b7a2bdce60a22109739f9b0cd0185bf16ff83fd1fac98cb42e:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/royalroyalties.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 137,
+      "transactionHash": "0x7a92106f145045b7a2bdce60a22109739f9b0cd0185bf16ff83fd1fac98cb42e"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2026-06/RoyalRoyalties_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim re-anchored from implementation 0xd5b297c08d890376b6cbdba6023a39ffbdf65c78 to the proxy the protocol runs at, 0x7c885c4bfd179fb59f1056fbea319d579a278075, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (101436850s -> 101430522s)"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/royalroyalties.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/royalroyalties.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 12,
+      "date": "2026-06-23T16:27:52Z"
+    }
+  },
+  "notes": []
+}

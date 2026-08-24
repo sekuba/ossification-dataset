@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5",
+  "protocol": {
+    "name": "GYM Network",
+    "slug": "gym-network"
+  },
+  "name": "Gym Network LiquidityMigrationV2 migrate() flaw",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1649518714
+    },
+    "attackerAddresses": [
+      "0x74298086c94dab3252c5dac979c9755c2eb08e49"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "LiquidityMigrationV2.migrate() converted GYM/WBNB LP into GYMNET/WBNB LP without validating the incoming LP's composition, so a flash loan minted LP against a skewed GYM pair and migrated it out for far more GYMNET-backed liquidity than it was worth."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 561595,
+      "valuationTimestamp": 1649518714,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x1befe6f3f0e8edd2d4d15cae97baee01e51ea4a4",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1648120259,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1648120259,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x1befe6f3f0e8edd2d4d15cae97baee01e51ea4a4"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1398455,
+      "failureModeId": "legacy:eip155:56:0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/gym-network.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-04/Gym_1_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/@Beosin_com/beosin-analysis-of-the-attack-on-gymdefi-e5a23bfd93fe"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: LiquidityMigrationV2 0x1BEfe6f3f0E8edd2D4D15Cae97BAEe01E51ea4A4 created 2022-03-24T11:10:59Z by 0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2, unrelated to attack sender 0x74298086c94dab3252c5dac979c9755c2eb08e49; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the attack sender netted 1,327.14 WBNB in the exploit transaction. Loss converted: 1,327.14 WBNB x $423.16 at incidentTimestamp 1649518714 (DefiLlama coingecko:binancecoin) = $561,595."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/gym-network.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/gym-network.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-04-09T15:38:34Z"
+    }
+  },
+  "notes": []
+}

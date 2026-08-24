@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x9fcf38d0af4dd08f4d60f7658b623e35664e74bca0eaebdb0c3b9a6965d6257b",
+  "protocol": {
+    "name": "SquidSwap 0xd309",
+    "slug": "squidswap-d309"
+  },
+  "name": "SquidSwap unbounded internal swap sandwiched",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x9fcf38d0af4dd08f4d60f7658b623e35664e74bca0eaebdb0c3b9a6965d6257b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1712557816
+    },
+    "attackerAddresses": [
+      "0x418038cd60d7ad3006075411765c34048907e7e7"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "SquidSwap's public swapTokens()/sellSwappedTokens() sell the contract's own SQUID holdings through PancakeSwap with no minimum-output check, so the attacker skewed the pool inside a PancakeV3 flash loan and sandwiched the contract's swap."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 87000,
+      "valuationTimestamp": 1712557816,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xd309f0fd5c3b90ecfb7024ede7d329d9582492c5",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1710066786,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xff00d2d6210a537b517138389c29c8a6bb56dad7"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1710066786,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xd309f0fd5c3b90ecfb7024ede7d329d9582492c5"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 2491030,
+      "failureModeId": "legacy:eip155:56:0x9fcf38d0af4dd08f4d60f7658b623e35664e74bca0eaebdb0c3b9a6965d6257b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/squidswap-d309.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x9fcf38d0af4dd08f4d60f7658b623e35664e74bca0eaebdb0c3b9a6965d6257b"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://app.blocksec.com/explorer/tx/bsc/0x9fcf38d0af4dd08f4d60f7658b623e35664e74bca0eaebdb0c3b9a6965d6257b"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-04/SQUID_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0xd309f0Fd5C3b90ecFb7024eDe7D329d9582492c5 created 2024-03-10T10:33:06Z by 0xff00d2d6210a537b517138389c29c8a6bb56dad7, which is not the attack-tx sender 0x418038cd60d7ad3006075411765c34048907e7e7; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/squidswap-d309.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/squidswap-d309.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-04-08T06:30:16Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0x5a7462b79d6df0048299c229bdca232ea6dcb97d80cd3b512c28e67db2370d47",
+  "protocol": {
+    "name": "AIXBTForcedSwap",
+    "slug": "aixbtforcedswap"
+  },
+  "name": "AIXBTForcedSwap",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0x5a7462b79d6df0048299c229bdca232ea6dcb97d80cd3b512c28e67db2370d47",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1737909061
+    },
+    "attackerAddresses": [
+      "0x312b559b41139c75a75c7ae1ea4454e661a02647"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Victim selector accepts a hardcoded bytecode constant keccak256(\"1205060227\") as auth bypass, letting anyone force it to swap its full balance into attacker pools."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 13597,
+      "valuationTimestamp": 1737909061,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x32cd8541ccd275a70dda33a9fd490d948a78e1ff",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1736841011,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1736841011,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x32cd8541ccd275a70dda33a9fd490d948a78e1ff"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1068050,
+      "failureModeId": "legacy:eip155:8453:0x5a7462b79d6df0048299c229bdca232ea6dcb97d80cd3b512c28e67db2370d47:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/aixbtforcedswap.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0x5a7462b79d6df0048299c229bdca232ea6dcb97d80cd3b512c28e67db2370d47"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2025-01/AIXBTForcedSwap_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/aixbtforcedswap.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/aixbtforcedswap.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-01-26T16:31:01Z"
+    }
+  },
+  "notes": []
+}

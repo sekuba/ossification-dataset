@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x4a304ff08851106691f626045b0f55d403e3a0958363bdf82b96e8ce7209c3a6",
+  "protocol": {
+    "name": "Midas Capital",
+    "slug": "midas-capital"
+  },
+  "name": "Midas Capital jarvisFRAX3CRV precision loss",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x4a304ff08851106691f626045b0f55d403e3a0958363bdf82b96e8ce7209c3a6",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1687021303
+    },
+    "attackerAddresses": [
+      "0x4b92cc3452ef1e37528470495b86d3f976470734"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The Midas cToken's exchange-rate maths loses precision on a market with very few outstanding shares, so donating collateral rounded the redeem/borrow accounting in the attacker's favour and let them over-borrow the pool."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 600000,
+      "valuationTimestamp": 1687021303,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xf8527dc5611b589cbb365acacaac0d1dc70b25cb",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1681365364,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x27521eae4ee4153214cadc3ecd703b9b0326c908"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1686666072,
+        "blockNumber": 29067669,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2023-06-13T14:21:12Z (BSC block 29067669): the CErc20Delegator's implementation (CDelegationStorage slot 0) changed 0x1d48efba40d11c22315dd278e69268bca9dd5d7d -> 0xf3c870b7c201515e2552d018ec2a15910fd35909 and, in the same block, the market's registered diamond extension changed 0x2a8c6f2ddf8cb3d82407a07dc795f095a3ad8a0f -> 0xe4fea88df81eba4f579208fa5abeb10aaf84e3f4; found by binary-searching eth_getStorageAt on slot 0 and on keccak(keccak(\"diamond.standard.diamond.storage\")+2) (extensions[0]), and corroborated by the market's own NewImplementation(address,address) event"
+      },
+      "codeAgeSeconds": 355231,
+      "failureModeId": "legacy:eip155:56:0x4a304ff08851106691f626045b0f55d403e3a0958363bdf82b96e8ce7209c3a6:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/midas-capital.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x4a304ff08851106691f626045b0f55d403e3a0958363bdf82b96e8ce7209c3a6"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-06/MidasCapitalXYZ_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/midas-capital/midas-exploit-post-mortem-1ae266222994"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim market 0xf8527dc5611b589cbb365acacaac0d1dc70b25cb created 2023-04-13T05:56:04Z by 0x27521eae4ee4153214cadc3ecd703b9b0326c908, unrelated to attack sender 0x4b92cc3452ef1e37528470495b86d3f976470734; no EIP-1967 Upgraded events on the market (it uses Compound's own NewImplementation instead - see the recheck below). The exploit transaction moved 274,358.98 BUSD and 1,077.93 WBNB through 0x85faac652b707fdf6907ef726751087f9e0b6687; lossUsd uses the ~$600K stated in the Midas post-mortem. Recheck (deployment basis was wrong, by a wide margin): the market is a Midas CErc20Delegator whose fallback delegatecalls `implementation` at storage slot 0 and, through the implementation's DiamondExtension fallback, a registered extension. Its own 618-byte runtime never changed (identical keccak(eth_getCode) at creation block 27304205 and incident block 29185769), but binary-searching eth_getStorageAt on slot 0 over [27304205, 29185768] finds six implementation swaps after deployment: 0x62473df8 (creation) -> 0x74517010 (block 27392990, 2023-04-16) -> 0x8e156d3c (27539708, 2023-04-21) -> 0xb8729ec6 (27543808, 2023-04-21) -> 0x13a2eb85 (28121136, 2023-05-11) -> 0x1d48efba (28886223, 2023-06-07) -> 0xf3c870b7c201515e2552d018ec2a15910fd35909 (29067669, 2023-06-13T14:21:12Z). The market's NewImplementation(address,address) log series matches the storage search block for block, and the diamond extension slot (extensions[0] at keccak(keccak(\"diamond.standard.diamond.storage\")+2)) was rewritten to 0xe4fea88df81eba4f579208fa5abeb10aaf84e3f4 in that same block 29067669. Both addresses are exactly the two the victim delegatecalls in the exploit trace. The exploited exchange-rate code was therefore 4.1 days old, not the 65.5 days the deployment basis gave."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/midas-capital.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/midas-capital.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2023-06-17T17:01:43Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2023-06-13T14:21:12Z (BSC block 29067669): the CErc20Delegator's implementation (CDelegationStorage slot 0) changed 0x1d48efba40d11c22315dd278e69268bca9dd5d7d -> 0xf3c870b7c201515e2552d018ec2a15910fd35909 and, in the same block, the market's registered diamond extension changed 0x2a8c6f2ddf8cb3d82407a07dc795f095a3ad8a0f -> 0xe4fea88df81eba4f579208fa5abeb10aaf84e3f4; found by binary-searching eth_getStorageAt on slot 0 and on keccak(keccak(\"diamond.standard.diamond.storage\")+2) (extensions[0]), and corroborated by the market's own NewImplementation(address,address) event"
+  ]
+}

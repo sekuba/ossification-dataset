@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5",
+  "protocol": {
+    "name": "bZx",
+    "slug": "bzx"
+  },
+  "name": "bZx iETH self-transfer duplication",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1599988201
+    },
+    "attackerAddresses": [
+      "0xd1c0f1316140d6bf1a9e2eea8a227dad151f69b7"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "LoanTokenLogic's _internalTransferFrom cached the sender and receiver balances before writing them and never rejected _from == _to, so each self-transfer of iETH credited the receiver without debiting the sender and doubled the attacker's iETH before burnToEther()."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 8000000,
+      "valuationTimestamp": 1599988201,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb983e01458529665007ff7e0cddecdb74b967eb6",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1599093312,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xb7f72028d9b502dc871c444363a7ac5a52546608"
+      },
+      "lastCodeChange": {
+        "kind": "module-change",
+        "timestamp": 1599249195,
+        "blockNumber": 10796875,
+        "transactionHash": "0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c",
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2020-09-04T19:53:15Z (block 10796875, tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c): setTarget(address) wrote target_ (storage slot 20) = 0xde744d544a9d768e96c21b5f087fc54b776e9b25, the LoanTokenLogicWeth implementation containing the flawed _internalTransferFrom; located by binary-searching eth_getStorageAt on slot 20"
+      },
+      "codeAgeSeconds": 739006,
+      "failureModeId": "legacy:eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bzx.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://bzx.network/blog/incident"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: iETH token 0xb983e014 created 2020-09-03 by 0xb7f72028d9b502dc871c444363a7ac5a52546608 (bZx deployer), not by attack sender 0xd1c0f131; it is a bZx setTarget proxy that emits no EIP-1967 Upgraded event, so the logic pointer was recovered by binary-searching eth_getStorageAt on target_ (storage slot 20, from the verified LoanTokenLogicWeth layout) between the creation and incident blocks: it held 0x11ba2b39bc80464c14b7eea54d2ec93d8f60e7b8 at deployment, then 0xe8279915fe5fb202041c3b3bf97d0f95949d503f, and was last written to 0xde744d544a9d768e96c21b5f087fc54b776e9b25 at block 10796875, 2020-09-04T19:53:15Z by setTarget(address) tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c from the deployer, and stayed there through the incident; 0xde744d54 is the LoanTokenLogicWeth carrying the flawed _internalTransferFrom, so the real code age is 8.55d rather than the 10.36d deployment figure"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bzx.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bzx.json",
+      "originalIncidentIndex": 2,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2020-09-13T09:10:01Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2020-09-04T19:53:15Z (block 10796875, tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c): setTarget(address) wrote target_ (storage slot 20) = 0xde744d544a9d768e96c21b5f087fc54b776e9b25, the LoanTokenLogicWeth implementation containing the flawed _internalTransferFrom; located by binary-searching eth_getStorageAt on slot 20"
+  ]
+}

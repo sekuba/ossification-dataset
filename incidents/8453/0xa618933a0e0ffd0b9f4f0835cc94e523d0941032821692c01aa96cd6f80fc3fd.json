@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0xa618933a0e0ffd0b9f4f0835cc94e523d0941032821692c01aa96cd6f80fc3fd",
+  "protocol": {
+    "name": "NORMIE",
+    "slug": "normie"
+  },
+  "name": "NORMIE swapAndLiquify triggered on the token's own balance",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0xa618933a0e0ffd0b9f4f0835cc94e523d0941032821692c01aa96cd6f80fc3fd",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1716694913
+    },
+    "attackerAddresses": [
+      "0xf7f3a556ac21d081f6dba961b6a84e52e37a717d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "NORMIE's _transfer fired an internal swapAndLiquify of the contract's accumulated fee balance whenever that balance crossed a threshold randomised from block.timestamp and block.difficulty, with no slippage bound, so flash-swapped NORMIE routed through the SushiSwap pair let the attacker choose when the contract sold and capture the proceeds."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 490000,
+      "valuationTimestamp": 1716694913,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x7f12d13b34f5f4f0a9449c16bcd42f0da47af200",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1709763017,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xd8056b0f8aa2126a8db6f0b3109fe9127617beb2"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1709763017,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x7f12d13b34f5f4f0a9449c16bcd42f0da47af200"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 6931896,
+      "failureModeId": "legacy:eip155:8453:0xa618933a0e0ffd0b9f4f0835cc94e523d0941032821692c01aa96cd6f80fc3fd:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/normie.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0xa618933a0e0ffd0b9f4f0835cc94e523d0941032821692c01aa96cd6f80fc3fd"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/lookonchain/status/1794680612399542672"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-05/NORMIE_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: NORMIE 0x7F12d13B34F5F4f0a9449c16Bcd42f0da47AF200 created 2024-03-06T22:10:17Z by 0xd8056b0f8aa2126a8db6f0b3109fe9127617beb2, not the attack-tx sender 0xf7f3a556ac21d081f6dba961b6a84e52e37a717d; no EIP-1967 events, 80.2 days old. Its verified source shows _transfer computing tokensToSwap from _minimumTokensBeforeSwap scaled by (keccak256(block.timestamp, block.difficulty) % 11) + 90 and comparing it with balanceOf(address(this)), i.e. a self-balance-triggered swapback. Loss $490K per the DeFiHackLabs 2024 index entry and the PoC header."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/normie.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/normie.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-05-26T03:41:53Z"
+    }
+  },
+  "notes": []
+}

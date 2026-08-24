@@ -1,0 +1,145 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57",
+  "protocol": {
+    "name": "SwapNet",
+    "slug": "swapnet"
+  },
+  "name": "SwapNet Router arbitrary call",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1769369029
+    },
+    "attackerAddresses": [
+      "0x6caad74121bf602e71386505a4687f310e0d833e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The closed-source SwapNet Router's swap entrypoint (selector 0x87395540) performed a low-level call to a caller-supplied target with caller-supplied calldata and no target validation, so passing a token address made the router itself execute transferFrom() against users' standing infinite approvals."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 13430000,
+      "valuationTimestamp": 1769369029,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x616000e384ef1c2b52f5f3a88d57a3b64f23757e",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1762578323,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x9cb8d9bae84830b7f5f11ee5048c04a80b8514ba"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1763702185,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x616000e384ef1c2b52f5f3a88d57a3b64f23757e",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 4 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 5666844,
+      "failureModeId": "legacy:eip155:8453:0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/swapnet.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blog.verichains.io/p/swapnet-exploit-analysis"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blocksec.com/blog/17m-closed-source-smart-contract-exploit-arbitrary-call-swapnet-aperture"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim proxy created 2025-11-08 by 0x9cb8d9bae84830b7f5f11ee5048c04a80b8514ba (not the attacker); four Upgraded(address) events with the implementation in log data, the last on 2025-11-21 pointing at 0xdc3914ca7b18a2bf41b43a263258b71e32296d7d. The anchored tx is the attacker's contract-creation tx whose constructor moved 13,342,433.169249 USDC from victim 0xba15e9b644685cb845af18a738abd40c6bcd78ed to the attacker EOA; the reported incident total across Base/BSC/Arbitrum is $13.43M for 18 users. The EIP-1967 implementation slot has since been zeroed."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/swapnet.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/swapnet.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 4,
+      "date": "2026-01-25T19:23:49Z"
+    }
+  },
+  "notes": []
+}

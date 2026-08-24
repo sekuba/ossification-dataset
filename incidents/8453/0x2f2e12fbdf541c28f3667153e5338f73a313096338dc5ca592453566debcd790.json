@@ -1,0 +1,161 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0x2f2e12fbdf541c28f3667153e5338f73a313096338dc5ca592453566debcd790",
+  "protocol": {
+    "name": "Vault4626",
+    "slug": "vault4626"
+  },
+  "name": "Vault4626 idle-WETH totalAssets inflation",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0x2f2e12fbdf541c28f3667153e5338f73a313096338dc5ca592453566debcd790",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1782706497
+    },
+    "attackerAddresses": [
+      "0xa27eae743cd8c03e9b7c25ebf43dadbbc6df9bfa"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "totalAssets() quotes idle non-asset WETH sitting in the vault into USDC asset terms while redeem() pays the redeemer both the USDC asset value and the underlying WETH itself, so the attacker deposited flash-loaned USDC for nearly all the shares, donated WETH to inflate totalAssets, and redeemed to take the donated WETH back plus the vault's share of it - a double-count in the vault's own accounting."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 21346,
+      "valuationTimestamp": 1782706497,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4",
+        "source-5"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x72dbaa8a09d71d09c6de0de439968e1e7c122020",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1778132587,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xc7d5acaea25f06450aae5a6ee0ec5f70d4fe355f"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1781169473,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x72dbaa8a09d71d09c6de0de439968e1e7c122020",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 8 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 1537024,
+      "failureModeId": "legacy:eip155:8453:0x2f2e12fbdf541c28f3667153e5338f73a313096338dc5ca592453566debcd790:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/vault4626.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0x2f2e12fbdf541c28f3667153e5338f73a313096338dc5ca592453566debcd790"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-06/Vault4626_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/DefimonAlerts/status/2071495744071086510"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim recorded as the live vault proxy 0x72dbAA8A09d71D09c6De0de439968e1E7c122020 rather than the implementation 0xD08579102fc28355C5839019b730Ce58F84E6a4d that DeFiHackLabs labels 'vulnerable contract' - the implementation holds no state and no funds, while the proxy is the ERC-4626 vault the attacker deposited into and redeemed from, and only the proxy carries the code-change history the age is measured over. Both were created by 0xc7d5acaea25f06450aae5a6ee0ec5f70d4fe355f, unrelated to attack sender 0xA27eAE743Cd8C03E9b7c25ebF43DADbBC6Df9bFA (whose attack contract 0x870e3d0f18ce5e0894e206c68885f2b6dba16199 was created by the exploit transaction itself). The proxy was created 2026-05-02 at block 45671620 and emits standard EIP-1967 Upgraded events: 8 of them up to the incident (blocks 45671620, 45671736, 46166499, 46284783, 46459149, 46459157, 47019073, 47190063), the last installing exactly the flawed implementation 0xd08579102fc28355c5839019b730ce58f84e6a4d at 2026-06-11T09:17:53Z, 17.79 days before the exploit. Loss not recorded in USD: the attacker's WETH balance rose from 4.837426 to 18.366634 WETH across the transaction, i.e. 13.529208 WETH, matching the ~13.53 WETH in the DeFiHackLabs PoC. Order-of-magnitude sanity check only: 13.5 ETH is far above the $1,000 floor at any plausible ETH price."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "loss"
+      ],
+      "note": "loss converted at the incident timestamp (1782706497) via DefiLlama coins: 13.53 WETH x $1,577.71 = $21,346"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/vault4626.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/vault4626.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 8,
+      "date": "2026-06-29T04:14:57Z"
+    }
+  },
+  "notes": []
+}

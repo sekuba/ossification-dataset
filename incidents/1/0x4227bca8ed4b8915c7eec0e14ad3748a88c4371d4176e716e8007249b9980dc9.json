@@ -1,0 +1,173 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x4227bca8ed4b8915c7eec0e14ad3748a88c4371d4176e716e8007249b9980dc9",
+  "protocol": {
+    "name": "Audius",
+    "slug": "audius"
+  },
+  "name": "Audius Governance proxy re-initialization",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x4227bca8ed4b8915c7eec0e14ad3748a88c4371d4176e716e8007249b9980dc9",
+      "blockNumber": 15201799,
+      "transactionIndex": 8,
+      "timestamp": 1658617896
+    },
+    "attackerAddresses": [
+      "0xa0c7bd318d69424603cbf91e9969870f21b8ab4c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "A storage-layout collision in the Audius upgradeable proxies left the Initializable `initialized` flag sharing a slot with another variable, so the attacker re-called Governance.initialize() to install himself as guardian and then evaluated a self-submitted proposal moving 18.5M AUDIO out of the community treasury."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 6100000,
+      "valuationTimestamp": 1658617896,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x4deca517d6817b6510798b7328f2314d3003abac",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": "0x35dd16dfa4ea1522c29ddd087e8f076cad0ae5e8",
+        "codeHash": "0x874e23b77179162e528aae1af8fa45eefde15b71495c13093b723a3367bac00c"
+      },
+      "deployment": {
+        "timestamp": 1603333553,
+        "blockNumber": 11103280,
+        "transactionHash": "0x1c865588300c717cb1e71dc699bb23b26b4ad929967394ab74816a4b1a83228a",
+        "transactionIndex": 54,
+        "creatorAddress": "0xde21d46753633a177223faa6e56e8f6cd24cca04"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1603333553,
+        "blockNumber": 11103280,
+        "transactionHash": "0x1c865588300c717cb1e71dc699bb23b26b4ad929967394ab74816a4b1a83228a",
+        "transactionIndex": 54,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x4deca517d6817b6510798b7328f2314d3003abac"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 55284343,
+      "failureModeId": "legacy:eip155:1:0x4227bca8ed4b8915c7eec0e14ad3748a88c4371d4176e716e8007249b9980dc9:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-1",
+          "source-3",
+          "source-4",
+          "source-6"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5",
+          "source-6"
+        ]
+      },
+      "verification": {
+        "tier": "mechanical",
+        "curveEligible": false,
+        "limitations": [
+          "Exploit, deployment, call relationship, implementation slot endpoints, and pre-exploit runtime hash were mechanically reproduced onchain.",
+          "Endpoint storage proofs and event scans do not exclude every possible intermediate silent change and reversion; code-history completeness needs review."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor",
+        "target-identity"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x4227bca8ed4b8915c7eec0e14ad3748a88c4371d4176e716e8007249b9980dc9"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blog.audius.co/article/audius-governance-takeover-post-mortem-7-23-22"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-07/Audius_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "Governance proxy deployment and exploit call trace were reproduced onchain. The exploit sequence reinitialized governance, voted, then evaluated the treasury-transfer proposal. Approximately 18.5M AUDIO valued at about $6.1M were taken and later sold for 704 ETH."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "deployment-basis recheck (storage, not events): the Governance proxy's single DELEGATECALL in the attack tx goes to 0x35dd16dfa4ea1522c29ddd087e8f076cad0ae5e8, and the EIP-1967 implementation slot holds exactly that address at the creation block 11103280, at the incident block 15201799 and at all 201 evenly spaced samples in between; the proxy runtime is byte-identical at both blocks. The current implementation 0x1c91af03a390b4c619b444425b3119e553b5b44b was installed only after the hack. The age is therefore not overstated: 639.9 days from deployment is the real figure."
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1c865588300c717cb1e71dc699bb23b26b4ad929967394ab74816a4b1a83228a"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/audius.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/audius.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-07-23T23:11:36Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true."
+  ]
+}

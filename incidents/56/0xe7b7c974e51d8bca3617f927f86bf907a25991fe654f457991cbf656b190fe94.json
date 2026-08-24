@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xe7b7c974e51d8bca3617f927f86bf907a25991fe654f457991cbf656b190fe94",
+  "protocol": {
+    "name": "BDEX",
+    "slug": "bdex"
+  },
+  "name": "BDEX BvaultsStrategy unprotected withdrawal",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xe7b7c974e51d8bca3617f927f86bf907a25991fe654f457991cbf656b190fe94",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1667152122
+    },
+    "attackerAddresses": [
+      "0x5bfaa396c6fb7278024c6d7230b17d97ce8ab62d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The BvaultsStrategy exposed its swap/withdraw entry point to any caller, so the attacker moved the strategy's WBNB out through the BDEX pair."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 5952,
+      "valuationTimestamp": 1667152122,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb2b1dc3204ee8899d6575f419e72b53e370f6b20",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1620715936,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1620715936,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb2b1dc3204ee8899d6575f419e72b53e370f6b20"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 46436186,
+      "failureModeId": "legacy:eip155:56:0xe7b7c974e51d8bca3617f927f86bf907a25991fe654f457991cbf656b190fe94:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bdex.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xe7b7c974e51d8bca3617f927f86bf907a25991fe654f457991cbf656b190fe94"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-11/BDEX_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BeosinAlert/status/1588579143830343683"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: BvaultsStrategy 0xB2B1DC3204ee8899d6575F419e72B53E370F6B20 created 2021-05-11T06:52:16Z by 0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36, unrelated to attack sender 0x5bfaa396c6fb7278024c6d7230b17d97ce8ab62d; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 18.9245 WBNB left the strategy; 18.9245 WBNB x $314.52 at incidentTimestamp 1667152122 (DefiLlama coingecko:binancecoin) = $5,952."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bdex.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bdex.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-10-30T17:48:42Z"
+    }
+  },
+  "notes": []
+}

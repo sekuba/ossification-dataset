@@ -1,36 +1,22 @@
 # Changelog
 
-## curve v2026-08.2 (2026-08-24)
+## v2 — evidence-first redesign (unreleased)
 
-757 incidents across 721 protocol files, 742 measured; 624 curve knots (from
-629). $7.10bn in recorded losses. A correctness and auditability release: no
-new candidate sweeps, every change re-verified onchain.
+V2 defines a new incident-and-target interface for audited code age and loss.
 
-Quantiles moved within noise: median 42.3d -> 41.3d, under-1-day
-12.4% -> 12.2%, over-1-year 22.6% -> 22.1%.
+- Replaced protocol buckets with one stable incident per
+  `eip155:<chainId>:<exploitTx>`.
+- Assigned classification and loss to incidents and code age to independent
+  targets.
+- Distinguished execution context from defect-bearing code artifacts.
+- Added exact transaction ordering, typed code-change mechanisms, runtime
+  hashes, creator evidence, and claim-addressed sources.
+- Split incident review from target verification.
+- Restricted curve admission to reviewed executable-code observations.
+- Grouped repeated failures by
+  `(codeArtifact.codeHash, failureModeId)`.
+- Added a reproducible candidate ledger and deterministic release manifest.
+- Located analytical scoring and model policy in downstream consumers.
 
-## curve v2026-08.1 (2026-08-23)
-
-767 incidents across 736 protocols, 744 measured; 629 curve knots (up from
-243). $7.11bn in recorded losses. Sources and candidate-list yields are in
-`SOURCES.md`.
-
-Coverage. The DeFiHackLabs backlog was worked to completion against
-`b3719ce`: 562 proof-of-concepts had no overlap with the dataset, 161 remain
-(72 already recorded under other identifiers, 89 documented rejections). The
-automated web-research list contributed 108 rows from 480 candidates. Eight
-`SCOPE_ONLY` rows became measured curve inputs, among them Beanstalk, Cream,
-UwU Lend and GMX.
-
-The curve tripled without changing shape: under-1-day 12.3% -> 12.5%,
-over-1-year 22.2% -> 22.4%, older-than-two-years 14.4% -> 14.3%. The median
-falls 58.3d -> 42.3d and the tail extends to 3,038d.
-
-## curve v2026-08 (2026-08-21)
-
-Initial release. 320 incidents across 313 protocols (2017–2026), 282 with
-onchain-measured exploited-code age; 243 curve knots (measured code-bug
-incidents, one observation per contract). Sources: 51 hand-curated incidents
-and 269 rows extracted from SunWeb3Sec/DeFiHackLabs @ ad353ba25fbb, every row
-re-verified onchain (exploit tx, victim creation, pre-incident upgrade logs;
-attacker-deployed "victims" excluded).
+Git history and tags retain v1, while `research/raw/legacy-v1.json` preserves its
+complete migration input.

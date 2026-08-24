@@ -1,0 +1,138 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e",
+  "protocol": {
+    "name": "DODO",
+    "slug": "dodo"
+  },
+  "name": "DODO DVM re-callable init()",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1615237065
+    },
+    "attackerAddresses": [
+      "0x368a6558255bccac517da5106647d8182c571b23"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "DVM.init() is external with no initializer guard and no access control, so inside a flashLoan callback the attacker re-pointed _BASE_TOKEN_/_QUOTE_TOKEN_ at worthless tokens they controlled, making the flash-loan repayment check pass against the fake balances while the pool's real wCRES and USDT walked out."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1139456,
+      "valuationTimestamp": 1615237065,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x051ebd717311350f1684f89335bed4abd083a2b6",
+      "relationship": "minimal-proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1614341266,
+        "blockNumber": 11932747,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x96627558c67e7cf488d8fa9f359daefb43c7e834"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1614341266,
+        "blockNumber": 11932747,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x051ebd717311350f1684f89335bed4abd083a2b6"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 895799,
+      "failureModeId": "legacy:eip155:1:0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/dodo.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blog.dodoex.io/dodo-pool-incident-postmortem-with-a-little-help-from-our-friends-327e66872d42"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: I read the verified DVM source at 0x051ebd71 - init() is a plain external function with no guard. The attack tx moves 1,139,456.204397 USDT and 133,548.94 wCRES out of this pool against fake-token inflows; lossUsd is set to the USDT leg only (USD-pegged 1:1, directly verified) rather than the $2m-$3.8m headline that aggregates several pools and unconverted wCRES. Pool created 2021-02-26 by 0x96627558c67e7cf488d8fa9f359daefb43c7e834, not by attack sender 0x368a6558 Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1167 minimal-proxy clone: its 45-byte runtime is 363d3d373d3d3d363d73 followed by the master 0x2bbd66fc4898242bdbd2583bbe1d76e8b8f71445, so the DELEGATECALL target is baked into the code and cannot be repointed; the master's runtime is byte-identical at the clone's creation block 11932747 and the incident block 12000165 and contains no DELEGATECALL of its own, so the deployment basis is exact."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/dodo.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/dodo.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-03-08T20:57:45Z"
+    }
+  },
+  "notes": []
+}

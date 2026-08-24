@@ -1,0 +1,132 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xc38a6e2259a85ced94238a0b0a49697992f2a6b8140c28f3fd2343d3d8434130",
+  "protocol": {
+    "name": "Drips Network",
+    "slug": "drips-network"
+  },
+  "name": "DaiDripsHub unsafe signed conversion",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xc38a6e2259a85ced94238a0b0a49697992f2a6b8140c28f3fd2343d3d8434130",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1784020595
+    },
+    "attackerAddresses": [
+      "0x84da7a5e2315eb798f04b75554aeb15047269cce"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "DaiDripsHub.give() cast an unbounded caller-supplied uint128 to int128 before negation, so a value above int128.max flipped the transfer direction and withdrew the DAI reserve."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 24883,
+      "valuationTimestamp": 1784020595,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x73043143e0a6418cc45d82d4505b096b802fd365",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1639438263,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1639438263,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x73043143e0a6418cc45d82d4505b096b802fd365"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 144582332,
+      "failureModeId": "legacy:eip155:1:0xc38a6e2259a85ced94238a0b0a49697992f2a6b8140c28f3fd2343d3d8434130:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/drips-network.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc38a6e2259a85ced94238a0b0a49697992f2a6b8140c28f3fd2343d3d8434130"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blog.verichains.io/p/drips-network-when-giving-became"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "onchain review: 24,882.995421947667857715 DAI moved reserve -> hub -> attacker contract; proxy creator 0xabadefe1ce7bb6f1d5146f3f476701f791b18c6c"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/drips-network.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/drips-network.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2026-07-14T09:16:35Z"
+    }
+  },
+  "notes": []
+}

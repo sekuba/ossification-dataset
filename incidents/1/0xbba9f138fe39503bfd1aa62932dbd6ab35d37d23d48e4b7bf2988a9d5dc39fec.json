@@ -1,0 +1,139 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec",
+  "protocol": {
+    "name": "Thetanuts",
+    "slug": "thetanuts"
+  },
+  "name": "Thetanuts",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1781531639
+    },
+    "attackerAddresses": [
+      "0x30498e4466789e534c72e03b52a16c978655b41e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Same Thetanuts index-vault flaw: flash-borrow shares, claim to crush totalSupply, then free-mint via integer-division truncation to repay and keep component vaults."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 105472,
+      "valuationTimestamp": 1781531639,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xc2c3ae0a7b405058558c9b4a63b373486cb86ac7",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1651093496,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1651093496,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xc2c3ae0a7b405058558c9b4a63b373486cb86ac7"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 130438143,
+      "failureModeId": "legacy:eip155:1:0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/thetanuts.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2026-06/Thetanuts_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "loss"
+      ],
+      "note": "onchain review of the exploit tx: the attack contract's net gain is 105,471.4991 USDC plus 33,593.77 TN-CSCPv1 vault shares (AVAXUSD/BNBUSD/MATICUSD). The ~$2.1M figure circulating for this incident is the at-risk amount, of which ~$2M was rescued by a whitehat, so it is not the realised loss; the duplicate thetanutsfi row carrying that figure was removed"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/thetanuts.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/thetanuts.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-06-15T13:53:59Z"
+    }
+  },
+  "notes": []
+}

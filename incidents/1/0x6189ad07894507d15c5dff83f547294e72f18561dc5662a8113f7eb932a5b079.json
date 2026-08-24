@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x6189ad07894507d15c5dff83f547294e72f18561dc5662a8113f7eb932a5b079",
+  "protocol": {
+    "name": "JumpFarm",
+    "slug": "jumpfarm"
+  },
+  "name": "JumpFarm staking share inflation",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x6189ad07894507d15c5dff83f547294e72f18561dc5662a8113f7eb932a5b079",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1693917731
+    },
+    "attackerAddresses": [
+      "0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The JUMP staking contract credited sJUMP shares on the pre-fee transfer amount of a fee-on-transfer token, so cycling flash-loaned JUMP through stake/unstake minted more JUMP than was deposited."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 3911,
+      "valuationTimestamp": 1693917731,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x05999eb831ae28ca920ce645a5164fbdb1d74fe9",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1691534375,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x4b19466f0c31b3a9fc239ef76ef37ecdc08a2d9f"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1691534375,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x05999eb831ae28ca920ce645a5164fbdb1d74fe9"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 2383356,
+      "failureModeId": "legacy:eip155:1:0x6189ad07894507d15c5dff83f547294e72f18561dc5662a8113f7eb932a5b079:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/jumpfarm.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x6189ad07894507d15c5dff83f547294e72f18561dc5662a8113f7eb932a5b079"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-09/JumpFarm_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/DecurityHQ/status/1699384904218202618"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: staking 0x05999eB831ae28Ca920cE645A5164fbdB1D74Fe9 created 2023-08-08T22:39:35Z by 0x4b19466f0c31b3a9fc239ef76ef37ecdc08a2d9f, unrelated to the attack sender; no EIP-1967 events, age from deployment (27.6 days). ~2.4 ETH x $1,629.70 at incidentTimestamp 1693917731 (DefiLlama) = $3,911."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/jumpfarm.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/jumpfarm.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-09-05T12:42:11Z"
+    }
+  },
+  "notes": []
+}

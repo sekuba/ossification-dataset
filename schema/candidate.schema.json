@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://l2beat.com/schemas/ossification-dataset/candidate.schema.json",
+  "title": "Ossification research candidate ledger",
+  "description": "The generated, source-addressed disposition ledger. Overlapping source entries are intentionally retained.",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "description",
+    "generatedFrom",
+    "counts",
+    "candidates"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "const": "../schema/candidate.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "generatedFrom": {
+      "type": "object",
+      "required": [
+        "defihacklabs",
+        "webList",
+        "exclusions",
+        "legacyV1",
+        "primaryIncidents"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "defihacklabs": { "$ref": "#/$defs/defihacklabsInput" },
+        "webList": { "$ref": "#/$defs/webInput" },
+        "exclusions": { "$ref": "#/$defs/fileInput" },
+        "legacyV1": { "$ref": "#/$defs/legacyV1Input" },
+        "primaryIncidents": {
+          "type": "object",
+          "required": ["glob", "files", "sha256"],
+          "additionalProperties": false,
+          "properties": {
+            "glob": { "type": "string", "minLength": 1 },
+            "files": { "type": "integer", "minimum": 1 },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "required": ["total", "bySource", "byDisposition", "defihacklabsCoverage"],
+      "additionalProperties": false,
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "bySource": { "$ref": "#/$defs/countMap" },
+        "byDisposition": { "$ref": "#/$defs/countMap" },
+        "defihacklabsCoverage": {
+          "type": "object",
+          "required": ["total", "directReference", "otherIdentifier", "noDatasetRow"],
+          "additionalProperties": false,
+          "properties": {
+            "total": { "type": "integer", "minimum": 0 },
+            "directReference": { "type": "integer", "minimum": 0 },
+            "otherIdentifier": { "type": "integer", "minimum": 0 },
+            "noDatasetRow": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidate" }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "incidentId": {
+      "type": "string",
+      "pattern": "^eip155:[1-9][0-9]*:0x[0-9a-f]{64}$"
+    },
+    "countMap": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "fileInput": {
+      "type": "object",
+      "required": ["file", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "defihacklabsInput": {
+      "type": "object",
+      "required": ["file", "commit", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "const": "research/raw/defihacklabs-coverage.json" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "webInput": {
+      "type": "object",
+      "required": ["file", "lineNumbers", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "const": "research/raw/web-candidates.md" },
+        "lineNumbers": { "const": "1-based" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "legacyV1Input": {
+      "type": "object",
+      "required": ["file", "rows", "sha256", "originalSource"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "const": "research/raw/legacy-v1.json" },
+        "rows": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "originalSource": {
+          "type": "object",
+          "required": ["glob", "files", "incidents", "sha256"],
+          "additionalProperties": false,
+          "properties": {
+            "glob": { "type": "string", "minLength": 1 },
+            "files": { "type": "integer", "minimum": 1 },
+            "incidents": { "type": "integer", "minimum": 1 },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "required": ["id", "source", "disposition"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(dfhl:|web:|exclusion:|legacy:).+"
+        },
+        "source": { "$ref": "#/$defs/source" },
+        "coverage": { "$ref": "#/$defs/coverage" },
+        "relatedExclusionIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^exclusion:[1-9][0-9]*$" }
+        },
+        "matchedRows": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/matchedRow" }
+        },
+        "candidate": { "$ref": "#/$defs/rawCandidate" },
+        "legacyRecord": { "$ref": "#/$defs/legacyRecord" },
+        "disposition": { "$ref": "#/$defs/disposition" }
+      }
+    },
+    "source": {
+      "oneOf": [
+        { "$ref": "#/$defs/defihacklabsSource" },
+        { "$ref": "#/$defs/webSource" },
+        { "$ref": "#/$defs/exclusionSource" },
+        { "$ref": "#/$defs/legacySource" }
+      ]
+    },
+    "defihacklabsSource": {
+      "type": "object",
+      "required": ["kind", "repository", "commit", "path", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "defihacklabs" },
+        "repository": { "const": "https://github.com/SunWeb3Sec/DeFiHackLabs" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "path": { "type": "string", "pattern": "^src/test/.+\\.sol$" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "webSource": {
+      "type": "object",
+      "required": ["kind", "file", "line"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "web-list" },
+        "file": { "const": "research/raw/web-candidates.md" },
+        "line": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "exclusionSource": {
+      "type": "object",
+      "required": ["kind", "file", "entryIndex"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "exclusion" },
+        "file": { "const": "research/raw/exclusions.json" },
+        "entryIndex": { "type": "integer", "minimum": 0 },
+        "defihacklabs": {
+          "type": "object",
+          "required": ["repository", "commit", "path", "recordedRef"],
+          "additionalProperties": false,
+          "properties": {
+            "repository": { "const": "https://github.com/SunWeb3Sec/DeFiHackLabs" },
+            "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+            "path": { "type": "string", "pattern": "^src/test/.+\\.sol$" },
+            "recordedRef": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "legacySource": {
+      "type": "object",
+      "required": ["kind", "file", "entryIndex", "original"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "legacy" },
+        "file": { "const": "research/raw/legacy-v1.json" },
+        "entryIndex": { "type": "integer", "minimum": 0 },
+        "original": {
+          "type": "object",
+          "required": ["file", "incidentIndex"],
+          "additionalProperties": false,
+          "properties": {
+            "file": { "type": "string", "pattern": "^protocols/[a-z0-9-]+\\.json$" },
+            "incidentIndex": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": ["direct-reference", "other-identifier", "no-dataset-row"]
+        },
+        "legacyDatasetFile": { "type": "string", "minLength": 1 },
+        "matchedBy": { "type": "string", "minLength": 1 },
+        "alsoHasDirectReference": { "type": "boolean" },
+        "hint": { "type": "string" }
+      }
+    },
+    "matchedRow": {
+      "type": "object",
+      "required": ["file", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "entryIndex": { "type": "integer", "minimum": 0 },
+        "originalFile": { "type": "string", "minLength": 1 },
+        "incidentIndex": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "rawCandidate": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["date", "project", "reportedLoss", "mechanism"],
+          "additionalProperties": false,
+          "properties": {
+            "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+            "project": { "type": "string", "minLength": 1 },
+            "reportedLoss": { "type": "string", "minLength": 1 },
+            "mechanism": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["name", "chain", "date", "candidateVictim", "exploitTx"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "chain": { "type": "string", "minLength": 1 },
+            "date": { "type": "string", "format": "date-time" },
+            "candidateVictim": { "type": "string", "pattern": "^0x[0-9a-f]{40}$" },
+            "exploitTx": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+          }
+        }
+      ]
+    },
+    "legacyRecord": {
+      "type": "object",
+      "required": ["protocol", "name", "date", "chain", "category", "measurementStatus", "victimContract", "notes", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "protocol": {
+          "type": "object",
+          "required": ["name", "slug"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "slug": { "type": "string", "minLength": 1 }
+          }
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "date": { "type": "string", "format": "date-time" },
+        "chain": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "measurementStatus": { "type": "string", "minLength": 1 },
+        "lossUsd": { "type": ["number", "null"], "minimum": 0 },
+        "lossOther": { "type": "string", "minLength": 1 },
+        "victimContract": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "pattern": "^0x[0-9a-f]{40}$" }
+          ]
+        },
+        "exploitTx": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+          ]
+        },
+        "notes": { "type": "string", "minLength": 1 },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "ref"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "minLength": 1 },
+              "chain": { "type": "string", "minLength": 1 },
+              "ref": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "required": ["status", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": ["included", "excluded", "out-of-scope", "pending", "unresolved"]
+        },
+        "reason": { "type": "string", "minLength": 1 },
+        "incidentIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/incidentId" }
+        },
+        "exclusionIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^exclusion:[1-9][0-9]*$" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "included" } },
+            "required": ["status"]
+          },
+          "then": { "required": ["incidentIds"] },
+          "else": { "not": { "required": ["incidentIds"] } }
+        }
+      ]
+    }
+  }
+}

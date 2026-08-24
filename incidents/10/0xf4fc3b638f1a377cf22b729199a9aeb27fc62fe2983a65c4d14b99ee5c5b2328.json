@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:10:0xf4fc3b638f1a377cf22b729199a9aeb27fc62fe2983a65c4d14b99ee5c5b2328",
+  "protocol": {
+    "name": "NBLGAME",
+    "slug": "nblgame"
+  },
+  "name": "NblNftStake withdrawNft reentrancy",
+  "incident": {
+    "chainId": 10,
+    "exploit": {
+      "transactionHash": "0xf4fc3b638f1a377cf22b729199a9aeb27fc62fe2983a65c4d14b99ee5c5b2328",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1706184915
+    },
+    "attackerAddresses": [
+      "0x1fd0a6a5e232eeba8020a40535ad07013ec4ef12"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "NblNftStake.withdrawNft() returned the staked ERC-721 with safeTransferFrom before clearing the slot's NBL accounting and carried no reentrancy guard, so the onERC721Received callback re-entered depositNft/depositNbl and withdrew the contract's whole NBL balance."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 180000,
+      "valuationTimestamp": 1706184915,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x5499178919c79086fd580d6c5f332a4253244d91",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1705282195,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xcea80f944a0b90e62adbd2999c89d27e39e51c73"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1705282195,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x5499178919c79086fd580d6c5f332a4253244d91"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 902720,
+      "failureModeId": "legacy:eip155:10:0xf4fc3b638f1a377cf22b729199a9aeb27fc62fe2983a65c4d14b99ee5c5b2328:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/nblgame.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 10,
+      "transactionHash": "0xf4fc3b638f1a377cf22b729199a9aeb27fc62fe2983a65c4d14b99ee5c5b2328"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/SlowMist_Team/status/1750526097106915453"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-01/NBLGAME_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: NblNftStake 0x5499178919C79086fd580d6c5f332a4253244D91 created 2024-01-15T01:29:55Z by 0xcea80f944a0b90e62adbd2999c89d27e39e51c73, not the attack-tx sender 0x1fd0a6a5e232eeba8020a40535ad07013ec4ef12; no EIP-1967 events, 10.4 days old. The PoC comment marks withdrawNft as the flawed function with no reentrancy protection. Reported loss ~$180k."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/nblgame.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/nblgame.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-01-25T12:15:15Z"
+    }
+  },
+  "notes": []
+}

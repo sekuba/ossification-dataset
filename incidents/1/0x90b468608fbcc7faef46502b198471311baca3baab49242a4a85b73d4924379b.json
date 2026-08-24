@@ -1,0 +1,148 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x90b468608fbcc7faef46502b198471311baca3baab49242a4a85b73d4924379b",
+  "protocol": {
+    "name": "CoW",
+    "slug": "cow"
+  },
+  "name": "CoW Protocol solver SwapGuard unprotected call",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x90b468608fbcc7faef46502b198471311baca3baab49242a4a85b73d4924379b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1675738391
+    },
+    "attackerAddresses": [
+      "0xc0e82c1ed4786f8b7f806d1b8a6335ec485266ff"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "A whitelisted solver's SwapGuard helper exposed an entry point that executed caller-supplied interactions with no access control, so the attacker routed a settlement through it and moved GPv2Settlement's DAI buffer to itself."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 166000,
+      "valuationTimestamp": 1675738391,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xcd07a7695e3372acd2b2077557de93e667b92bd8",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1674661415,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x37ec2a900632cea128f4c9ebc3a2a95659c2c567"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1674661415,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xcd07a7695e3372acd2b2077557de93e667b92bd8"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1076976,
+      "failureModeId": "legacy:eip155:1:0x90b468608fbcc7faef46502b198471311baca3baab49242a4a85b73d4924379b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/cow.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x90b468608fbcc7faef46502b198471311baca3baab49242a4a85b73d4924379b"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-02/CowSwap_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/peckshield/status/1622801412727148544"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "root-cause"
+      ],
+      "note": "onchain review: SwapGuard 0xcD07a7695E3372aCD2B2077557DE93e667B92bd8 created 2023-01-25T15:43:35Z by 0x37ec2a900632cea128f4c9ebc3a2a95659c2c567, unrelated to the attack sender 0xc0e82c1e...; no EIP-1967 events, age from deployment (12.5 days). The tx receipt shows 114,824.89 DAI leaving GPv2Settlement 0x9008D19f58AAbD9eD0D60971565AA8510560ab41 for the attacker; the ~$166K headline figure covers the full set of assets taken. The settlement contract itself behaved as designed - the flaw is in the solver helper, so that is recorded as the victim contract."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/cow.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/cow.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-02-07T02:53:11Z"
+    }
+  },
+  "notes": []
+}

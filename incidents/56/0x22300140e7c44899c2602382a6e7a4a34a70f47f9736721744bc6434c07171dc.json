@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x22300140e7c44899c2602382a6e7a4a34a70f47f9736721744bc6434c07171dc",
+  "protocol": {
+    "name": "RWT Token",
+    "slug": "rwt-token"
+  },
+  "name": "RWT privileged sell reserve burn",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x22300140e7c44899c2602382a6e7a4a34a70f47f9736721744bc6434c07171dc",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1784432030
+    },
+    "attackerAddresses": [
+      "0x84dd3a5d4de44c8ad0ce032beab8bc3f01d1dcf7"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The role-authorized RWT sell contract exposed sell() without caller authorization and each call burned tokens from the AMM pair before sync, letting anyone repeatedly inflate the pool price and drain USDT."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 118000,
+      "valuationTimestamp": 1784432030,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x8812bb5fb89d69d35ac84d2c37b55769395b9f90",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1784088328,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1784088328,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x8812bb5fb89d69d35ac84d2c37b55769395b9f90"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 343702,
+      "failureModeId": "legacy:eip155:56:0x22300140e7c44899c2602382a6e7a4a34a70f47f9736721744bc6434c07171dc:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/rwt-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x22300140e7c44899c2602382a6e7a4a34a70f47f9736721744bc6434c07171dc"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.panewslab.com/ko/articles/019f92da-d10d-745b-b1e2-1d6e3f8b495a"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2026-07/RWT_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/rwt-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/rwt-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-07-19T03:33:50Z"
+    }
+  },
+  "notes": []
+}

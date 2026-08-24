@@ -1,0 +1,139 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da",
+  "protocol": {
+    "name": "LixirPermitDrain",
+    "slug": "lixirpermitdrain"
+  },
+  "name": "LixirPermitDrain",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1782350483
+    },
+    "attackerAddresses": [
+      "0x3fa8cf7fea68c8e76a9838d77889464ddfb6a6cf"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Lixir vault-token permit accepted a dummy signature as long as ecrecover returned any nonzero address, so a forged permit granted allowance to drain every holder's shares."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 4478,
+      "valuationTimestamp": 1782350483,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xfd4c9a491dd777b8b3e13659e9e379252ec78390",
+      "relationship": "minimal-proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1626784967,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1626784967,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xfd4c9a491dd777b8b3e13659e9e379252ec78390"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 155565516,
+      "failureModeId": "legacy:eip155:1:0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/lixirpermitdrain.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2026-06/LixirPermitDrain_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "deployment-basis recheck: the victim's 45-byte runtime is an EIP-1167 minimal proxy (363d3d373d3d3d363d73...5af43d82803e903d91602b57fd5bf3) whose master 0x2ce186c52cf150000bf8ad2b4679d4ad619395cd is baked into the bytecode and cannot be repointed; callTracer confirms every DELEGATECALL in the attack, including the forged permit (0xd505accf), lands on that master. The clone's runtime is byte-identical at the creation and incident blocks. Deployment is exact; 1800.5 days."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/lixirpermitdrain.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/lixirpermitdrain.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-06-25T01:21:23Z"
+    }
+  },
+  "notes": []
+}

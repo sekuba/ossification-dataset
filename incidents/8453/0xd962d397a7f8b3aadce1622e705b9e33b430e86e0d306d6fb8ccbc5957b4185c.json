@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0xd962d397a7f8b3aadce1622e705b9e33b430e86e0d306d6fb8ccbc5957b4185c",
+  "protocol": {
+    "name": "CAROL Protocol",
+    "slug": "carol-protocol"
+  },
+  "name": "CAROL Protocol sell() reentrancy on ethReserved",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0xd962d397a7f8b3aadce1622e705b9e33b430e86e0d306d6fb8ccbc5957b4185c",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1701348947
+    },
+    "attackerAddresses": [
+      "0x5aa27d556f898846b9bad32f0cdba5b1f8bc3144"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "CAROLProtocol.sell() routed the payout through swapExactTokensForETH, which calls the seller's receive() before the contract's ethReserved bookkeeping is finalised, so re-entering from that callback let a bond position funded by chained flash loans be sold against a manipulated reserve figure."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 53000,
+      "valuationTimestamp": 1701348947,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x26fe408bbd7a490feb056da8e2d1e007938e5685",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1694093523,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xf993ac8c118e3cc16a8c37accfdd442b2fd66666"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1694093523,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x26fe408bbd7a490feb056da8e2d1e007938e5685"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 7255424,
+      "failureModeId": "legacy:eip155:8453:0xd962d397a7f8b3aadce1622e705b9e33b430e86e0d306d6fb8ccbc5957b4185c:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/carol-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0xd962d397a7f8b3aadce1622e705b9e33b430e86e0d306d6fb8ccbc5957b4185c"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/MetaSec_xyz/status/1730496513359647167"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-11/CAROLProtocol_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: CAROLProtocol 0x26fe408BbD7A490fEB056DA8e2D1e007938E5685 created 2023-09-07T13:32:03Z by 0xf993ac8c118e3cc16a8c37accfdd442b2fd66666, not the attack-tx sender 0x5aa27d556f898846b9bad32f0cdba5b1f8bc3144; no EIP-1967 events, 84.0 days old. The PoC's own comment marks sell() as the flawed function and ethReserved as the state manipulated from receive(). Preparation transaction 0x6462f5e358eb2c7769e6aa59ce43277be4799b297bc4c9503610443b9d56cc24 creates the bond. Reported loss ~$53K."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/carol-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/carol-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-11-30T12:55:47Z"
+    }
+  },
+  "notes": []
+}

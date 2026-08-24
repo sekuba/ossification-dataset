@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x3cecc3f347edff1d27a0c929f2e7a4c04522afb3a74e24db94684cb6b51b1d65",
+  "protocol": {
+    "name": "PegaBall",
+    "slug": "pegaball"
+  },
+  "name": "PegaBall",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x3cecc3f347edff1d27a0c929f2e7a4c04522afb3a74e24db94684cb6b51b1d65",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1748988131
+    },
+    "attackerAddresses": [
+      "0x28a8cb85d9d2c9ee536931de22fe80e3efea3bd6"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "buyGamesFrom self-funds purchases from the proxy balance instead of requiring msg.value, letting a vendor drain vendor/referrer cuts."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1513,
+      "valuationTimestamp": 1748988131,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb8fcabf7bd88a2489fafbafa5f9a05a0e068cb5e",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1705212551,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1705212551,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb8fcabf7bd88a2489fafbafa5f9a05a0e068cb5e"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 43775580,
+      "failureModeId": "legacy:eip155:1:0x3cecc3f347edff1d27a0c929f2e7a4c04522afb3a74e24db94684cb6b51b1d65:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/pegaball.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3cecc3f347edff1d27a0c929f2e7a4c04522afb3a74e24db94684cb6b51b1d65"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2025-06/PegaBall_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "deployment-basis recheck: the recorded victim is the logic contract PegaBallV1Implementation, not a proxy - callTracer shows the proxy 0xb8fcabf7bd88a2489fafbafa5f9a05a0e068cb5e DELEGATECALLing into it (buyGamesFrom 0xbb020d29), and the victim itself makes no delegatecall (its two delegatecall sites are OpenZeppelin's ERC1967 _upgradeToAndCall helpers). Its runtime is byte-identical at the creation block 19003242 and the incident block 22626978, and the proxy's EIP-1967 slot has pointed at it since the proxy's creation in that same block 19003242, unchanged to the incident. Deployment is exact; 506.7 days."
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim re-anchored from implementation 0x29003DD6B9970AD658314fFFB61E42F352C41630 to the proxy the protocol runs at, 0xb8fcabf7bd88a2489fafbafa5f9a05a0e068cb5e, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (43775580s -> 43775580s)"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/pegaball.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/pegaball.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2025-06-03T22:02:11Z"
+    }
+  },
+  "notes": []
+}

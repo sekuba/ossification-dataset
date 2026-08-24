@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x3ad998a01ad1f1bbe6dba6a08e658c1749dabfa4a07da20ded3c73bcd6970d20",
+  "protocol": {
+    "name": "MetaDragon",
+    "slug": "metadragon"
+  },
+  "name": "MetaDragon unrestricted transform() minting",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x3ad998a01ad1f1bbe6dba6a08e658c1749dabfa4a07da20ded3c73bcd6970d20",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1716972425
+    },
+    "attackerAddresses": [
+      "0xc468d9a3a5557bff457586438c130e3afbec2ff9"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "MetaDragon's _transfer branch `if (to == address(this) || to == erc721) { transform(value); }` lets any caller mint by transferring to the token itself, which the attacker used to print and dump MetaDragon."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 180000,
+      "valuationTimestamp": 1716972425,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xef1f39d8391cddcaee62b8b383cb992f46a6ce4f",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1714717330,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x27851617ac8fd50a8328a16f864912905c4cb4fb"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1714717330,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xef1f39d8391cddcaee62b8b383cb992f46a6ce4f"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 2255095,
+      "failureModeId": "legacy:eip155:56:0x3ad998a01ad1f1bbe6dba6a08e658c1749dabfa4a07da20ded3c73bcd6970d20:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/metadragon.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x3ad998a01ad1f1bbe6dba6a08e658c1749dabfa4a07da20ded3c73bcd6970d20"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/Phalcon_xyz/status/1795746828064854497"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-05/MetaDragon_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0xEF1f39d8391cdDcaee62b8b383cB992F46a6ce4f created 2024-05-03T06:22:10Z by 0x27851617ac8fd50a8328a16f864912905c4cb4fb, which is not the attack-tx sender 0xc468d9a3a5557bff457586438c130e3afbec2ff9; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/metadragon.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/metadragon.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-05-29T08:47:05Z"
+    }
+  },
+  "notes": []
+}

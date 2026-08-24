@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x3b19e152943f31fe0830b67315ddc89be9a066dc89174256e17bc8c2d35b5af8",
+  "protocol": {
+    "name": "Uwerx",
+    "slug": "uwerx"
+  },
+  "name": "Uwerx WERX transfer burn from pair",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x3b19e152943f31fe0830b67315ddc89be9a066dc89174256e17bc8c2d35b5af8",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1690965899
+    },
+    "attackerAddresses": [
+      "0x6057a831d43c395198a10cf2d7d6d6a063b1fce4"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "WERX's transfer() deducted its fee from the Uniswap pair's balance instead of the sender's, so a loop of tiny transfers to the pair burned the token reserve and let the attacker swap a small WERX position for nearly all of the pool's ETH."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 326797,
+      "valuationTimestamp": 1690965899,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x4306b12f8e824ce1fa9604bbd88f2ad4f0fe3c54",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1675786763,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x6a2a1481c09d55da3a733fae5691ee72f344555e"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1675786763,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x4306b12f8e824ce1fa9604bbd88f2ad4f0fe3c54"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 15179136,
+      "failureModeId": "legacy:eip155:1:0x3b19e152943f31fe0830b67315ddc89be9a066dc89174256e17bc8c2d35b5af8:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/uwerx.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3b19e152943f31fe0830b67315ddc89be9a066dc89174256e17bc8c2d35b5af8"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-08/Uwerx_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/deeberiroz/status/1686683788795846657"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: WERX 0x4306b12f8e824ce1fa9604bbd88f2ad4f0fe3c54 created 2023-02-07T16:19:23Z by 0x6a2a1481c09d55da3a733fae5691ee72f344555e, unrelated to the attack sender; no EIP-1967 events, age from deployment. ~176 ETH x $1,856.80 at incidentTimestamp 1690965899 (DefiLlama) = $326,797."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/uwerx.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/uwerx.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-08-02T08:44:59Z"
+    }
+  },
+  "notes": []
+}

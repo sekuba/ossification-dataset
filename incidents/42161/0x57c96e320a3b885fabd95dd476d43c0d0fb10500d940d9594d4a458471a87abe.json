@@ -1,0 +1,129 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0x57c96e320a3b885fabd95dd476d43c0d0fb10500d940d9594d4a458471a87abe",
+  "protocol": {
+    "name": "BelugaDex",
+    "slug": "belugadex"
+  },
+  "name": "BelugaDex",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0x57c96e320a3b885fabd95dd476d43c0d0fb10500d940d9594d4a458471a87abe",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1697161745
+    },
+    "attackerAddresses": [
+      "0x4843e00ef4c9f9f6e6ae8d7b0a787f1c60050b01"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Platypus-fork pool deposit/swap/withdraw coverage accounting manipulated to withdraw more than deposited"
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 175000,
+      "valuationTimestamp": 1697161745,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x15a024061c151045ba483e9243291dee6ee5fd8a",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1683517443,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1689220880,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x15a024061c151045ba483e9243291dee6ee5fd8a",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 7940865,
+      "failureModeId": "legacy:eip155:42161:0x57c96e320a3b885fabd95dd476d43c0d0fb10500d940d9594d4a458471a87abe:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/belugadex.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x57c96e320a3b885fabd95dd476d43c0d0fb10500d940d9594d4a458471a87abe"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-10/BelugaDex_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/belugadex.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/belugadex.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2023-10-13T01:49:05Z"
+    }
+  },
+  "notes": []
+}

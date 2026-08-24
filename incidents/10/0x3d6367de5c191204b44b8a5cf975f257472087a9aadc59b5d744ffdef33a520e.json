@@ -1,0 +1,112 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:10:0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e",
+  "protocol": {
+    "name": "Exactly Protocol",
+    "slug": "exactly-protocol"
+  },
+  "name": "Exactly Protocol",
+  "incident": {
+    "chainId": 10,
+    "exploit": {
+      "transactionHash": "0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1692349893
+    },
+    "attackerAddresses": []
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "DebtManager periphery: untrusted market parameter passed attacker contract through the permit path, bypassing the market check and moving user positions. Sources: neptunemutual/halborn analyses."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 7300000,
+      "valuationTimestamp": 1692349893,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x16748cb753a68329ca2117a7647aa590317ebf41",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1689870345,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1689870345,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x16748cb753a68329ca2117a7647aa590317ebf41"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 2479548,
+      "failureModeId": "legacy:eip155:10:0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e:failure-1",
+      "evidence": {
+        "identitySourceIds": [],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/exactly-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 10,
+      "transactionHash": "0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/exactly-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/exactly-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-08-18T09:11:33Z"
+    }
+  },
+  "notes": []
+}

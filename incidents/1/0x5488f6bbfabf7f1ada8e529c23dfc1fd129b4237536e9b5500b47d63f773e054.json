@@ -1,0 +1,144 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x5488f6bbfabf7f1ada8e529c23dfc1fd129b4237536e9b5500b47d63f773e054",
+  "protocol": {
+    "name": "ZKSwap",
+    "slug": "zkswap"
+  },
+  "name": "VerifierExit exit-proof verification always returning true",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x5488f6bbfabf7f1ada8e529c23dfc1fd129b4237536e9b5500b47d63f773e054",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1752070967
+    },
+    "attackerAddresses": [
+      "0x0a652decf9caca373e2b50607ecb7b069d71a7ba"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "ZKSwap 1.0's VerifierExit began verifyExitProof() with an unconditional `return true`, so once the rollup was pushed into Exodus Mode the attacker's forged exit proofs against the frozen state root were accepted and the L1 bridge released its balances."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 5000000,
+      "valuationTimestamp": 1752070967,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x961369d347ef7a6896bdd39cbe2b89e3911f521f",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1613135194,
+        "blockNumber": null,
+        "transactionHash": "0xfdb93e00f3b1d24303db7f43eaa5ef50d3fde957ddeec7c0feb8c5497ba11182",
+        "transactionIndex": null,
+        "creatorAddress": "0x7d1a14eed7af8e26f24bf08ba6ed7a339abcf037"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1613135194,
+        "blockNumber": null,
+        "transactionHash": "0xfdb93e00f3b1d24303db7f43eaa5ef50d3fde957ddeec7c0feb8c5497ba11182",
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x961369d347ef7a6896bdd39cbe2b89e3911f521f"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 138935773,
+      "failureModeId": "legacy:eip155:1:0x5488f6bbfabf7f1ada8e529c23dfc1fd129b4237536e9b5500b47d63f773e054:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/zkswap.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x5488f6bbfabf7f1ada8e529c23dfc1fd129b4237536e9b5500b47d63f773e054"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.blockaid.io/blog/how-zkswaps-5m-exploit-couldve-been-prevented-with-onchain-monitoring"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "callTracer review of the fake-exit tx: the attacker contract 0x2D3103c8Fdd9d9411E24f555fdad6B22F29F613A calls the ZKSwap bridge proxy 0x8ECa806Aecc86CE90Da803b080Ca4E3A9b8097ad (selector 0xd6973fc6) which STATICCALLs the VerifierExit proxy 0x961369d3...f521f 15 times with selector 0xc81a27ad, every one returning 0x...01 for a forged proof; bridge storage slot 6 holds the VerifierExit address, both proxies were created in the same 2021-02-12 deployment tx by 0x7d1a14eed7af8e26f24bf08ba6ed7a339abcf037 (not the attacker), and the VerifierExit proxy has emitted no logs at all in its lifetime, so it was never upgraded; the exodus trigger was tx 0xfdb93e00f3b1d24303db7f43eaa5ef50d3fde957ddeec7c0feb8c5497ba11182"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "deployment-basis recheck (storage, not events): the VerifierExit proxy's single DELEGATECALL in the exploit tx (selector 0xc81a27ad) goes to 0xd12f4d8329584f36aed67f807f42d9a02beb9534, and the EIP-1967 implementation slot holds that address at the creation block 11841962, at the incident block 22882195 and at all 41 evenly spaced samples in between; the proxy runtime is byte-identical at both blocks. The always-true verifier really was the 2021 deployment; 1607.6 days."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/zkswap.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/zkswap.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-07-09T14:22:47Z"
+    }
+  },
+  "notes": []
+}

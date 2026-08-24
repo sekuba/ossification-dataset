@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xdae0b85e01670e6b6b317657a72fb560fc388664cf8bfdd9e1b0ae88e0679103",
+  "protocol": {
+    "name": "BCT Token",
+    "slug": "bct-token"
+  },
+  "name": "BCT inviter contracts unprotected transfer helpers",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xdae0b85e01670e6b6b317657a72fb560fc388664cf8bfdd9e1b0ae88e0679103",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1702129049
+    },
+    "attackerAddresses": [
+      "0x9c66b0c68c144ffe33e7084fe8ce36ebc44ad21e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "BCT's inviter contracts expose unprotected transfer helpers (selectors 0x4e515153 and 0xf986351d) and buy(), letting the attacker shuffle BCT between attacker-created inviters, skim the pair and sell into the distorted reserves."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2465,
+      "valuationTimestamp": 1702129049,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x88b3eb62e363d9f153beab49c5c2ef2e785a375a",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1701941227,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x7c105b177bfa6ff732c503267d8021a9485d4843"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1701941227,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x88b3eb62e363d9f153beab49c5c2ef2e785a375a"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 187822,
+      "failureModeId": "legacy:eip155:56:0xdae0b85e01670e6b6b317657a72fb560fc388664cf8bfdd9e1b0ae88e0679103:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bct-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xdae0b85e01670e6b6b317657a72fb560fc388664cf8bfdd9e1b0ae88e0679103"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-12/BCT_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim 0x88b3eb62e363d9f153beab49c5c2ef2e785a375a created 2023-12-07T09:27:07Z by 0x7c105b177bfa6ff732c503267d8021a9485d4843, which is not the attack-tx sender 0x9c66b0c68c144ffe33e7084fe8ce36ebc44ad21e; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 10.2 BNB x $241.69/BNB at the incident timestamp 1702129049 (DefiLlama coingecko:binancecoin) = $2,465."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bct-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bct-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-12-09T13:37:29Z"
+    }
+  },
+  "notes": []
+}

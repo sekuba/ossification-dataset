@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x62dba55054fa628845fecded658ff5b1ec1c5823f1a5e0118601aa455a30eac9",
+  "protocol": {
+    "name": "Palmswap",
+    "slug": "palmswap"
+  },
+  "name": "Palmswap",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x62dba55054fa628845fecded658ff5b1ec1c5823f1a5e0118601aa455a30eac9",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1690219418
+    },
+    "attackerAddresses": [
+      "0xf84efa8a9f7e68855cf17eaac9c2f97a9d131366"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "PLP mint/redeem uses manipulable vault AUM; buyUSDP inflates the PLP redemption rate 1:1.9 in-tx."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 900000,
+      "valuationTimestamp": 1690219418,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xd990094a611c3de34664dd3664ebf979a1230fc1",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1689161260,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1689161260,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xd990094a611c3de34664dd3664ebf979a1230fc1"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 1058158,
+      "failureModeId": "legacy:eip155:56:0x62dba55054fa628845fecded658ff5b1ec1c5823f1a5e0118601aa455a30eac9:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/palmswap.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x62dba55054fa628845fecded658ff5b1ec1c5823f1a5e0118601aa455a30eac9"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-07/Palmswap_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/palmswap.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/palmswap.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2023-07-24T17:23:38Z"
+    }
+  },
+  "notes": []
+}

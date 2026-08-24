@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8",
+  "protocol": {
+    "name": "Spartan Protocol",
+    "slug": "spartan-protocol"
+  },
+  "name": "Spartan Protocol LP share calculation flaw",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1619887119
+    },
+    "attackerAddresses": [
+      "0x3b6e77722e2bbe97c1cfa337b42c0939aeb83671"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The SPARTA/WBNB pool computed the burn payout in removeLiquidity() from its live token balances rather than its recorded baseAmount/tokenAmount reserves, so donating assets to the pool before burning LP units inflated the redemption above the LP's true share."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 30500000,
+      "valuationTimestamp": 1619887119,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x3de669c4f1f167a8afbc9993e4753b84b576426f",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1601214475,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x4d523c380b76386c9e41d7f92456cce6c712db87"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1601214475,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x3de669c4f1f167a8afbc9993e4753b84b576426f"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 18672644,
+      "failureModeId": "legacy:eip155:56:0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/spartan-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/amber-group/exploiting-spartan-protocols-lp-share-calculation-flaws-391437855e74"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: pool 0x3de669c4 created 2020-09-27 by 0x4d523c380b76386c9e41d7f92456cce6c712db87, not by attack sender 0x3b6e7772; no EIP-1967 upgrade events between creation and the incident"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/spartan-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/spartan-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-05-01T16:38:39Z"
+    }
+  },
+  "notes": []
+}

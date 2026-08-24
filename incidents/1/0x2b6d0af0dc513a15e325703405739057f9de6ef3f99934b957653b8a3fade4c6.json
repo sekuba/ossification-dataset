@@ -1,0 +1,161 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x2b6d0af0dc513a15e325703405739057f9de6ef3f99934b957653b8a3fade4c6",
+  "protocol": {
+    "name": "Burnt Bubba (LevX FarmingLPToken)",
+    "slug": "burntbubba"
+  },
+  "name": "FarmingLPToken emergencyWithdraw accounting",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x2b6d0af0dc513a15e325703405739057f9de6ef3f99934b957653b8a3fade4c6",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1701296999
+    },
+    "attackerAddresses": [
+      "0x9d44f1a37044500064111010632a8a59003701c8"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "FarmingLPToken.emergencyWithdraw() returned the caller's full underlying LP position without checking that the caller still held the corresponding shares, so the attacker transferred the shares away first and then withdrew the LP tokens as well."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 3000,
+      "valuationTimestamp": 1701296999,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xa44e79a2c9a8965e7a6fa77bf0ca8faf50e6c73e",
+      "relationship": "minimal-proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1673364311,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x7e788c62c9ca849dce399e90f912beae14424616"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1673364311,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xa44e79a2c9a8965e7a6fa77bf0ca8faf50e6c73e"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 27932688,
+      "failureModeId": "legacy:eip155:1:0x2b6d0af0dc513a15e325703405739057f9de6ef3f99934b957653b8a3fade4c6:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4",
+          "source-5"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/burntbubba.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2b6d0af0dc513a15e325703405739057f9de6ef3f99934b957653b8a3fade4c6"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-11/Burntbubba_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/MetaSec_xyz/status/1730044259087315046"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: FarmingLPToken 0xa44e79a2c9a8965e7a6fa77bf0ca8faf50e6c73e created 2023-01-10T15:25:11Z by 0x7e788c62c9ca849dce399e90f912beae14424616, unrelated to the attack sender; no EIP-1967 events, age from deployment. Loss ~$3K taken in USDC/WETH per the PoC header; order-of-magnitude check on the tx receipt confirms it clears the $1,000 floor."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is an EIP-1167 minimal proxy whose runtime hardcodes the FarmingLPToken master 0x44d1c6b94b282c678c95b7f4b18de5a53ea4fa9f, so the delegate target cannot be repointed. The master's runtime is byte-identical at 13 sample points across [16377287, 18680255] and contains zero DELEGATECALL opcodes; callTracer on the exploit tx confirms the clone delegatecalls only the master."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/burntbubba.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/burntbubba.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-11-29T22:29:59Z"
+    }
+  },
+  "notes": []
+}

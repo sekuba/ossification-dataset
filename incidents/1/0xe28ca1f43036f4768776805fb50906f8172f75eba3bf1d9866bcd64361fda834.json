@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834",
+  "protocol": {
+    "name": "Heaven's Gate (HATE)",
+    "slug": "heavens-gate"
+  },
+  "name": "sHATE staking share inflation",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1693907855
+    },
+    "attackerAddresses": [
+      "0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The HATE staking contract credited sHATE on the pre-fee amount of the fee-on-transfer HATE token, so a flash-swapped stake/unstake cycle returned more HATE than went in and the surplus was sold into the HATE/ETH pair."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 13056,
+      "valuationTimestamp": 1693907855,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x8ebd6c7d2b79ca4dc5fbdec239a8bb0f214212b8",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1684548023,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x7d3047d0aaffeac7eb45f04070c248bc34d89f74"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1684548023,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x8ebd6c7d2b79ca4dc5fbdec239a8bb0f214212b8"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 9359832,
+      "failureModeId": "legacy:eip155:1:0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/heavens-gate.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-09/HeavensGate_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/hexagate_/status/1699003711937216905"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: staking 0x8EBd6c7D2B79CA4Dc5FBdEc239a8Bb0F214212b8 created 2023-05-20T02:00:23Z by 0x7d3047d0aaffeac7eb45f04070c248bc34d89f74, unrelated to the attack sender; no EIP-1967 events, age from deployment (108.3 days). ~8 ETH x $1,632.05 at incidentTimestamp 1693907855 (DefiLlama) = $13,056; a second tx 0x8e1b0ab098c4cc5f632e00b0842b5f825bbd15ded796d4a59880bb724f6c5372 repeated the attack and is not counted."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/heavens-gate.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/heavens-gate.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-09-05T09:57:35Z"
+    }
+  },
+  "notes": []
+}

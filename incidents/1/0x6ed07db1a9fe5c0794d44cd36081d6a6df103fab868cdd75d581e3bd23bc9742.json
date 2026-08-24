@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+  "protocol": {
+    "name": "Balancer",
+    "slug": "balancer"
+  },
+  "name": "Balancer V2 composable stable pool rounding",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1762156007
+    },
+    "attackerAddresses": [
+      "0x506d1f9efe24f0d47853adca907eb8d89ae03207"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "A precision-loss/rounding defect in the Balancer V2 composable stable pool maths let a sequence of crafted batchSwaps inside one transaction shift the pool's invariant in the attacker's favour and extract the osETH/wETH and wstETH/wETH pools' reserves."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 120000000,
+      "valuationTimestamp": 1762156007,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xdacf5fa19b1f720111609043ac67a9818262850c",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1701212579,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x854b004700885a61107b458f11ecc169a019b764"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1701212579,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xdacf5fa19b1f720111609043ac67a9818262850c"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 60943428,
+      "failureModeId": "legacy:eip155:1:0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/balancer.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/BlockSecTeam/status/1986057732810518640"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2025-11/BalancerV2_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: osETH/wETH composable stable pool 0xDACf5Fa19b1f720111609043ac67A9818262850c created 2023-11-28T23:02:59Z by 0x854b004700885a61107b458f11ecc169a019b764 (the ComposableStablePoolFactory deployer), not the attack-tx sender 0x506d1f9efe24f0d47853adca907eb8d89ae03207; pools of this factory are immutable and emit no EIP-1967 Upgraded event, so age runs from deployment (705.4 days). The same transaction also hits wstETH/wETH pool 0x93d199263632a4EF4Bb438F1feB99e57b4b5f0BD; a follow-up withdrawal transaction is 0xd155207261712c35fa3d472ed1e51bfcd816e616dd4f517fa5959836f5b48569. Loss recorded as the ~$120M reported across the campaign."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/balancer.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/balancer.json",
+      "originalIncidentIndex": 2,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-11-03T07:46:47Z"
+    }
+  },
+  "notes": []
+}

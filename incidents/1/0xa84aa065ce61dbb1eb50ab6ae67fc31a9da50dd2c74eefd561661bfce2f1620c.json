@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
+  "protocol": {
+    "name": "Curve",
+    "slug": "curve"
+  },
+  "name": "Curve pETH/ETH pool (Vyper reentrancy lock)",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1690722635
+    },
+    "attackerAddresses": [
+      "0x6ec21d1868743a44318c3c259a6d4953f9978538"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Vyper compiler reentrancy-lock bug lets remove_liquidity reenter add_liquidity, corrupting the pETH/ETH pool balances."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 11314640,
+      "valuationTimestamp": 1690722635,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x9848482da3ee3076165ce6497eda906e66bb85c5",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1664293031,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x7a271674b5fae043f42f183092f48fb06d6d551b"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1664293031,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x9848482da3ee3076165ce6497eda906e66bb85c5"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 26429604,
+      "failureModeId": "legacy:eip155:1:0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/curve.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-07/Curve_exp01.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim corrected from 0x6326debbaa15bcfe603d831e7d75f4fc10d9b43e, which emits no logs in the cited exploit tx and holds no ETH, to the pETH/ETH pool actually drained, 0x9848482da3ee3076165ce6497eda906e66bb85c5 (top emitter, ETH 6,185.5591 -> 156.7112). 6,028.8479 ETH x $1,876.75 = $11,314,640; created 2022-09-27 by 0x7a271674b5fae043f42f183092f48fb06d6d551b, no upgrade events. Age 305.90 d, previously 733.63 d against the wrong contract"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/curve.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/curve.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-07-30T13:10:35Z"
+    }
+  },
+  "notes": []
+}

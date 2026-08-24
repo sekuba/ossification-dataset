@@ -1,0 +1,161 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x2881e839d4d562fad5356183e4f6a9d427ba6f475614ce8ef64dbfe557a4a2cc",
+  "protocol": {
+    "name": "MahaLend",
+    "slug": "mahalend"
+  },
+  "name": "MahaLend",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x2881e839d4d562fad5356183e4f6a9d427ba6f475614ce8ef64dbfe557a4a2cc",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1699656239
+    },
+    "attackerAddresses": [
+      "0x0ec330df28ae6106a774d0add3e540ea8d226e3b"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Aave-fork empty-market donation inflated index plus rounding error to over-withdraw"
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 20000,
+      "valuationTimestamp": 1699656239,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x76f0c94ced5b48020bf0d7f3d0ceabc877744cb5",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1670829443,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1670829443,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x76f0c94ced5b48020bf0d7f3d0ceabc877744cb5"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 28826796,
+      "failureModeId": "legacy:eip155:1:0x2881e839d4d562fad5356183e4f6a9d427ba6f475614ce8ef64dbfe557a4a2cc:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3",
+          "source-4",
+          "source-5"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/mahalend.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2881e839d4d562fad5356183e4f6a9d427ba6f475614ce8ef64dbfe557a4a2cc"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-11/MahaLend_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: the victim's executing code is immutable - zero DELEGATECALL opcodes in the deployed runtime and an identical codehash at the creation block and the incident block - so the deployment basis is an exact measurement, not an upper bound; nonStandardUpgradeArchitecture removed accordingly"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis (correcting one detail of the earlier note: the runtime does contain 14 DELEGATECALL opcodes, but they are solc external-library calls to seven link-time-hardcoded addresses, not an upgrade hook). The recorded victim is the Aave-v3 `Pool` implementation, not the live pool - every storage slot 0..59 reads zero at both the creation and incident blocks. The live pool proxy is 0x76f0c94ced5b48020bf0d7f3d0ceabc877744cb5, created 13 blocks (168 s) after the implementation, and its EIP-1967 slot has held 0xfd11aba7... from its creation block 16167084 to the incident (25-point probe, single 0x0 -> impl transition). So the executing code is unchanged from the implementation's deployment either way."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim re-anchored from implementation 0xfd11aba71c06061f446ade4eec057179f19c23c4 to the proxy the protocol runs at, 0x76f0c94ced5b48020bf0d7f3d0ceabc877744cb5, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (28826964s -> 28826796s)"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/mahalend.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/mahalend.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-11-10T22:43:59Z"
+    }
+  },
+  "notes": []
+}

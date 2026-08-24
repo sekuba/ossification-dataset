@@ -1,0 +1,122 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303",
+  "protocol": {
+    "name": "DxSale",
+    "slug": "dxsale"
+  },
+  "name": "DxSale",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1780012999
+    },
+    "attackerAddresses": [
+      "0xc4574ddef299e7e563971e200433e592eeaafa69"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "unlockToken used an if instead of a maturity require and never cleared the locked amount, letting any valid locker repeatedly withdraw its recorded allocation from the contract's shared token balance."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 7300000,
+      "valuationTimestamp": 1780012999,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xeb3a9c56d963b971d320f889be2fb8b59853e449",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1613863101,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1613863101,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xeb3a9c56d963b971d320f889be2fb8b59853e449"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 166149898,
+      "failureModeId": "legacy:eip155:56:0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303:failure-1",
+      "evidence": {
+        "identitySourceIds": [],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/dxsale.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blocksec.com/blog/web3-security-dxsale-squidrouter-more"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/dxsale.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/dxsale.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-05-29T00:03:19Z"
+    }
+  },
+  "notes": []
+}

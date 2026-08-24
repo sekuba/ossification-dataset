@@ -1,0 +1,144 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x26a83db7e28838dd9fee6fb7314ae58dcc6aee9a20bf224c386ff5e80f7e4cf2",
+  "protocol": {
+    "name": "Abracadabra",
+    "slug": "abracadabra"
+  },
+  "name": "Abracadabra (CauldronV4)",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x26a83db7e28838dd9fee6fb7314ae58dcc6aee9a20bf224c386ff5e80f7e4cf2",
+      "blockNumber": 19118660,
+      "transactionIndex": null,
+      "timestamp": 1706609675
+    },
+    "attackerAddresses": [
+      "0x87f585809ce79ae39a5fa0c7c96d0d159eb678c9"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "CauldronV4 (yvcrvSTETH): rounding drift in userBorrowPart accounting exploited to zero out borrow shares."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 6500000,
+      "valuationTimestamp": 1706609675,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x7259e152103756e1616a77ae982353c3751a6a90",
+      "relationship": "minimal-proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1675092527,
+        "blockNumber": 16520538,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1675092527,
+        "blockNumber": 16520538,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x7259e152103756e1616a77ae982353c3751a6a90"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 31517148,
+      "failureModeId": "legacy:eip155:1:0x26a83db7e28838dd9fee6fb7314ae58dcc6aee9a20bf224c386ff5e80f7e4cf2:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-2",
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/abracadabra.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x26a83db7e28838dd9fee6fb7314ae58dcc6aee9a20bf224c386ff5e80f7e4cf2"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review (no exploit tx in this row; DeFiHackLabs src/test/2024-01/MIMSpell2_exp.sol names the same victim. Incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 19119184, 2024-01-30T12:00:00Z). The victim 0x7259e152103756e1616A77Ae982353c3751A6a90 is an EIP-1167 minimal proxy created at block 16520538, 2023-01-30T15:28:47Z; its 45-byte runtime (0x363d3d373d3d3d363d73c4113ae18e0d3213c6a06947a2ffc70ad3517c775af43d82803e903d91602b57fd5bf3) hardcodes the CauldronV4 master 0xc4113ae18e0d3213c6a06947a2ffc70ad3517c77 in the bytecode rather than in storage, so the delegate target cannot be repointed. The clone runtime is byte-identical at its creation block and the incident block, and the master (created 2023-01-26T02:59:11Z, block 16488159) itself contains zero DELEGATECALL opcodes and emits no EIP-1967 Upgraded event. The effective code therefore never changed after the clone was deployed and the deployment basis is exact."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis (re-check of the existing note). The clone's 45-byte runtime and the CauldronV4 master 0xc4113ae18e0d3213c6a06947a2ffc70ad3517c77's 22 kB runtime are each byte-identical at 13 sample points across [16520538, 19119184], so neither the hardcoded delegate target nor the master's code moved before the incident."
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "exploit tx backfilled and verified onchain (block 19118660): a contract-creation tx deploying and running the exploit, CauldronV4 victim in receipt logs, matching the DeFiHackLabs MIMSpell2 PoC"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/abracadabra.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/abracadabra.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-01-30T10:14:35Z"
+    }
+  },
+  "notes": []
+}

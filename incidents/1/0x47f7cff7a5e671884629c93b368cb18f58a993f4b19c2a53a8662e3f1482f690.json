@@ -1,0 +1,157 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x47f7cff7a5e671884629c93b368cb18f58a993f4b19c2a53a8662e3f1482f690",
+  "protocol": {
+    "name": "Parity Wallet Library",
+    "slug": "parity-second-hack"
+  },
+  "name": "Parity WalletLibrary unprotected initWallet + kill",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x47f7cff7a5e671884629c93b368cb18f58a993f4b19c2a53a8662e3f1482f690",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1509981921
+    },
+    "attackerAddresses": [
+      "0xae7168deb525862f4fee37d987a971b385b96952"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "WalletLibrary was deployed uninitialised and its initWallet() was reachable on the library itself, so anyone could take ownership and call kill(), selfdestructing the shared delegatecall target and bricking every Parity multisig pointing at it."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 151684125,
+      "valuationTimestamp": 1509981921,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [
+      {
+        "description": "513,774 ETH permanently frozen across 587 Parity multisig wallets",
+        "sourceIds": [
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x863df6bfa4469f3ead0be8f9f2aae51c91a907b4",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1500568786,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x00caa64684700d2825da7cac6ba0c6ed9fd2a1bb"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1500568786,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x863df6bfa4469f3ead0be8f9f2aae51c91a907b4"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 9413135,
+      "failureModeId": "legacy:eip155:1:0x47f7cff7a5e671884629c93b368cb18f58a993f4b19c2a53a8662e3f1482f690:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/parity-second-hack.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x47f7cff7a5e671884629c93b368cb18f58a993f4b19c2a53a8662e3f1482f690"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2017-11/Parity_kill_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.parity.io/blog/a-postmortem-on-the-parity-multi-sig-library-self-destruct/"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: WalletLibrary 0x863DF6BFa4469f3ead0bE8f9F2AAE51c91A907b4 created 2017-07-20T16:39:46Z by 0x00caa64684700d2825da7cac6ba0c6ed9fd2a1bb, unrelated to the attack sender; no delegatecall proxy and no upgrade events, so the age is measured from deployment. Two txs from 0xae7168de hit the library: initWallet (0x05f71e1b..., 14:33:47Z) then kill (0x47f7cff7..., 15:25:21Z); the kill is the incident. Loss is frozen, not stolen, so no USD figure is asserted. 513,774 ETH x $295.24 (DefiLlama coingecko:ethereum, nearest print to incidentTimestamp 1509981921) = $151,684,169 of value frozen, not stolen."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/parity-second-hack.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/parity-second-hack.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2017-11-06T15:25:21Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2",
+  "protocol": {
+    "name": "XSURGE",
+    "slug": "xsurge"
+  },
+  "name": "XSURGE SurgeBNB sell() reentrancy",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1629142811
+    },
+    "attackerAddresses": [
+      "0x59c686272e6f11dc8701a162f938fb085d940ad3"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "SurgeToken.sell() sent BNB to the seller before updating the token supply and reserve, so the attacker's receive() hook re-entered purchase()/sell() repeatedly and drained the contract's BNB backing at a stale price."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 5154999,
+      "valuationTimestamp": 1629142811,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe1e1aa58983f6b8ee8e4ecd206cea6578f036c21",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1627631263,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xf5f91867eba4f7439997c6d90377557aa612fcf5"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1627631263,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xe1e1aa58983f6b8ee8e4ecd206cea6578f036c21"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1511548,
+      "failureModeId": "legacy:eip155:56:0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/xsurge.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2021-08/XSURGE_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://beosin.medium.com/a-sweet-blow-fb0a5e08657d"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: SurgeToken 0xE1E1Aa58983F6b8eE8E4eCD206ceA6578F036c21 created 2021-07-30T07:47:43Z by 0xf5f91867eba4f7439997c6d90377557aa612fcf5, unrelated to attack sender 0x59c686272e6f11dc8701a162f938fb085d940ad3; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the SurgeToken BNB balance fell from 13,610.25 BNB at block 10087723 to 1,418.91 BNB at block 10087725 while the attacker EOA went from 9.88 BNB to 12,171.03 BNB in the same block. Loss converted: 12,161.15 BNB x $423.89 at incidentTimestamp 1629142811 (DefiLlama coingecko:binancecoin) = $5,154,999, matching the ~$5M reported."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/xsurge.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/xsurge.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-08-16T19:40:11Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xef386a69ca6a147c374258a1bf40221b0b6bd9bc449a7016dbe5240644581877",
+  "protocol": {
+    "name": "StepHero NFTs",
+    "slug": "stephero-nfts"
+  },
+  "name": "StepHeroNFTs self-referral claimReferral()",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xef386a69ca6a147c374258a1bf40221b0b6bd9bc449a7016dbe5240644581877",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1740111790
+    },
+    "attackerAddresses": [
+      "0xfb1cc1548d039f14b02cff9ae86757edd2cdb8a5"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "claimReferral(address) pays out referral commission accrued from the caller's own buyAsset() purchases with no check that the referral was independent, so a flash-loaned 1000 BNB self-referred purchase could be claimed back repeatedly."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 89898,
+      "valuationTimestamp": 1740111790,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x9823e10a0bf6f64f59964be1a7f83090bf5728ab",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1630397030,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x7c1620dabfac63ba40ae2bb453dd5d5f65d19102"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1630397030,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x9823e10a0bf6f64f59964be1a7f83090bf5728ab"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 109714760,
+      "failureModeId": "legacy:eip155:56:0xef386a69ca6a147c374258a1bf40221b0b6bd9bc449a7016dbe5240644581877:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/stephero-nfts.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xef386a69ca6a147c374258a1bf40221b0b6bd9bc449a7016dbe5240644581877"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2025-02/StepHeroNFTs_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim 0x9823E10A0bF6F64F59964bE1A7f83090bf5728aB created 2021-08-31T08:03:50Z by 0x7c1620dabfac63ba40ae2bb453dd5d5f65d19102, which is not the attack-tx sender 0xfb1cc1548d039f14b02cff9ae86757edd2cdb8a5; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 137.9 BNB x $651.91/BNB at the incident timestamp 1740111790 (DefiLlama coingecko:binancecoin) = $89,898."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/stephero-nfts.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/stephero-nfts.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-02-21T04:23:10Z"
+    }
+  },
+  "notes": []
+}

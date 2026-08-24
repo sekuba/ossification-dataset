@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xe31c681eee764fb94b1b6bda3bbb0e4f25acb129c19040b9f58ad30541980979",
+  "protocol": {
+    "name": "BYToken",
+    "slug": "bytoken"
+  },
+  "name": "BYToken permissionless triggerAutoBurn",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xe31c681eee764fb94b1b6bda3bbb0e4f25acb129c19040b9f58ad30541980979",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1780605489
+    },
+    "attackerAddresses": [
+      "0x047547a4fa4a67c1032d249b49ec1a79c0460bad"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "BYToken.triggerAutoBurn() has no access control, so after cornering the BY supply and donating WBNB to satisfy the trading threshold the attacker burned the pair's BY reserve on demand and sold a dust amount of BY back for the pair's WBNB."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 87402,
+      "valuationTimestamp": 1780605489,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x6f50cffecd4e00ecf7e442774c08c089450b62ca",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1780519089,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xa1819e27da8e69b1126aa9766f8ae649bc0ddba6"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1780519089,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x6f50cffecd4e00ecf7e442774c08c089450b62ca"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 86400,
+      "failureModeId": "legacy:eip155:56:0xe31c681eee764fb94b1b6bda3bbb0e4f25acb129c19040b9f58ad30541980979:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bytoken.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xe31c681eee764fb94b1b6bda3bbb0e4f25acb129c19040b9f58ad30541980979"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://hacked.slowmist.io/?c=BSC"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-06/BYToken_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: BY 0x6f50cffEcd4e00EcF7E442774C08c089450B62Ca created 2026-06-03 by 0xa1819e27da8e69b1126aa9766f8ae649bc0ddba6, unrelated to attack sender 0x047547a4fa4a67c1032d249b49ec1a79c0460bad; no EIP-1967 upgrade events; 146.60 WBNB drained from pair 0x1F358e18e0DB68FF33C2319C8DaD328eDF9B7059 exactly one day after deployment"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bytoken.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bytoken.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-06-04T20:38:09Z"
+    }
+  },
+  "notes": []
+}

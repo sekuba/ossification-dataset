@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:5000:0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd",
+  "protocol": {
+    "name": "Minterest",
+    "slug": "minterest"
+  },
+  "name": "mUSDY flashLoan exchange-rate reentrancy",
+  "incident": {
+    "chainId": 5000,
+    "exploit": {
+      "transactionHash": "0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1720963466
+    },
+    "attackerAddresses": [
+      "0x618f768af6291705eb13e0b2e96600b3851911d1"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The mUSDY market's ERC-3156 flashLoan() ran the borrower callback while the market's cash balance was still reduced, so lending USDY back inside the callback minted mTokens at an inflated exchange rate; 24 repetitions built collateral used to borrow WETH and mETH."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1400000,
+      "valuationTimestamp": 1720963466,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x5edbd8808f48ffc9e6d4c0d6845e0a0b4711fd5c",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1706027145,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x66f850099e6d5dbd712d15244b65bd822f36be7e"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1708620479,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x5edbd8808f48ffc9e6d4c0d6845e0a0b4711fd5c",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 12342987,
+      "failureModeId": "legacy:eip155:5000:0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/minterest.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 5000,
+      "transactionHash": "0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://minterest.com/blog/minterest-security-incident-post-mortem-report/"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-07/Minterest_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: mUSDY proxy 0x5edbd880... (symbol mUSDY, comptroller 0x8...) created by 0x66f850099e6d5dbd712d15244b65bd822f36be7e on 2024-01-23; two EIP-1967 Upgraded events, the last 2024-02-22 to impl 0x4b351368459ccc0024197d24ab7ba278e4c6f510"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/minterest.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/minterest.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 2,
+      "date": "2024-07-14T13:24:26Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://l2beat.com/schemas/ossification-dataset/release-manifest.schema.json",
+  "title": "Ossification release manifest",
+  "type": "object",
+  "required": [
+    "$schema",
+    "formatVersion",
+    "schemaVersion",
+    "description",
+    "cohortRules",
+    "counts",
+    "sources",
+    "artifacts"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "const": "../../schema/release-manifest.schema.json" },
+    "formatVersion": { "const": 1 },
+    "schemaVersion": { "const": "2.0.0" },
+    "description": { "type": "string", "minLength": 1 },
+    "cohortRules": { "$ref": "#/$defs/cohortRules" },
+    "counts": { "$ref": "#/$defs/counts" },
+    "sources": { "$ref": "#/$defs/sources" },
+    "artifacts": {
+      "type": "object",
+      "required": ["incidents.json", "curve.json"],
+      "additionalProperties": false,
+      "properties": {
+        "incidents.json": { "$ref": "#/$defs/artifact" },
+        "curve.json": { "$ref": "#/$defs/artifact" }
+      }
+    }
+  },
+  "$defs": {
+    "cohortRules": {
+      "type": "object",
+      "required": [
+        "unit",
+        "datasetAdmission",
+        "curveUsdComparability",
+        "curveInclusion",
+        "codeChangeKinds",
+        "deduplication",
+        "deduplicationSelectionOrder",
+        "incidentReference",
+        "ordering",
+        "excludedTargetTiers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "unit": { "type": "string", "minLength": 1 },
+        "datasetAdmission": { "type": "string", "minLength": 1 },
+        "curveUsdComparability": { "type": "string", "minLength": 1 },
+        "curveInclusion": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "codeChangeKinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["deployment", "implementation-change", "module-change"] }
+        },
+        "deduplication": { "type": "string", "minLength": 1 },
+        "deduplicationSelectionOrder": { "type": "string", "minLength": 1 },
+        "incidentReference": { "type": "string", "minLength": 1 },
+        "ordering": { "type": "string", "minLength": 1 },
+        "excludedTargetTiers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["mechanical", "provisional"] }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "required": [
+        "incidentFiles",
+        "incidents",
+        "targets",
+        "evidenceSources",
+        "evidenceSourcesByType",
+        "curveObservations",
+        "provisionalObservations",
+        "otherExcludedObservations",
+        "deduplicatedObservations",
+        "researchCandidates",
+        "researchCandidatesBySource",
+        "researchCandidatesByDisposition",
+        "pendingOrUnresolvedResearchCandidates"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "incidentFiles": { "type": "integer", "minimum": 0 },
+        "incidents": { "type": "integer", "minimum": 0 },
+        "targets": { "type": "integer", "minimum": 0 },
+        "evidenceSources": { "type": "integer", "minimum": 0 },
+        "evidenceSourcesByType": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "onchain-transaction": { "type": "integer", "minimum": 0 },
+            "post-mortem": { "type": "integer", "minimum": 0 },
+            "price-data": { "type": "integer", "minimum": 0 },
+            "review-note": { "type": "integer", "minimum": 0 },
+            "source-code": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "curveObservations": { "type": "integer", "minimum": 0 },
+        "provisionalObservations": { "type": "integer", "minimum": 0 },
+        "otherExcludedObservations": { "type": "integer", "minimum": 0 },
+        "deduplicatedObservations": { "type": "integer", "minimum": 0 },
+        "researchCandidates": { "type": "integer", "minimum": 0 },
+        "researchCandidatesBySource": {
+          "type": "object",
+          "required": ["defihacklabs", "exclusion", "legacy", "web-list"],
+          "additionalProperties": false,
+          "properties": {
+            "defihacklabs": { "type": "integer", "minimum": 0 },
+            "exclusion": { "type": "integer", "minimum": 0 },
+            "legacy": { "type": "integer", "minimum": 0 },
+            "web-list": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "researchCandidatesByDisposition": {
+          "type": "object",
+          "required": ["excluded", "included", "out-of-scope", "pending", "unresolved"],
+          "additionalProperties": false,
+          "properties": {
+            "excluded": { "type": "integer", "minimum": 0 },
+            "included": { "type": "integer", "minimum": 0 },
+            "out-of-scope": { "type": "integer", "minimum": 0 },
+            "pending": { "type": "integer", "minimum": 0 },
+            "unresolved": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "pendingOrUnresolvedResearchCandidates": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "required": [
+        "incidentFiles",
+        "incidentFilesSha256",
+        "allInputsSha256",
+        "schema",
+        "releaseSchemas",
+        "research"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "incidentFiles": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/fileHash" }
+        },
+        "incidentFilesSha256": { "$ref": "#/$defs/sha256" },
+        "allInputsSha256": { "$ref": "#/$defs/sha256" },
+        "schema": { "$ref": "#/$defs/fileHash" },
+        "releaseSchemas": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/fileHash" }
+        },
+        "research": {
+          "type": "object",
+          "required": ["candidates", "rawInputs", "schema"],
+          "additionalProperties": false,
+          "properties": {
+            "candidates": { "$ref": "#/$defs/fileHash" },
+            "rawInputs": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/fileHash" }
+            },
+            "schema": { "$ref": "#/$defs/fileHash" }
+          }
+        }
+      }
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "fileHash": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["bytes", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x25e2af0a55581d5629a933af9fedd3c70e6d0c320f0b72700ca80e5cdd36c80b",
+  "protocol": {
+    "name": "MARS Token",
+    "slug": "mars-token"
+  },
+  "name": "MARS reflections accrue to its own pair",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x25e2af0a55581d5629a933af9fedd3c70e6d0c320f0b72700ca80e5cdd36c80b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1713250270
+    },
+    "attackerAddresses": [
+      "0x306174b707ebf6d7301a0bcd898ae1666ec176ae"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "MARS distributes transfer-tax reflections to the MARS/WBNB pair itself, so the attacker used a PancakeV3 flash loan to repeatedly swap and sync the pair and monetise the reflected balance."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 100000,
+      "valuationTimestamp": 1713250270,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x436d3629888b50127ec4947d54bb0ab1120962a0",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1713151214,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xb61caff7e185eb0815a6c738a999ab47a2fe7c52"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1713151214,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x436d3629888b50127ec4947d54bb0ab1120962a0"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 99056,
+      "failureModeId": "legacy:eip155:56:0x25e2af0a55581d5629a933af9fedd3c70e6d0c320f0b72700ca80e5cdd36c80b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/mars-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x25e2af0a55581d5629a933af9fedd3c70e6d0c320f0b72700ca80e5cdd36c80b"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/Phalcon_xyz/status/1780150315603701933"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-04/MARS_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0x436D3629888B50127EC4947D54Bb0aB1120962A0 created 2024-04-15T03:20:14Z by 0xb61caff7e185eb0815a6c738a999ab47a2fe7c52, which is not the attack-tx sender 0x306174b707ebf6d7301a0bcd898ae1666ec176ae; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/mars-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/mars-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-04-16T06:51:10Z"
+    }
+  },
+  "notes": []
+}

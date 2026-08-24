@@ -1,0 +1,141 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392",
+  "protocol": {
+    "name": "Hopelend",
+    "slug": "hopelend"
+  },
+  "name": "Hopelend",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1697629739
+    },
+    "attackerAddresses": [
+      "0xa8bbb3742f299b183190a9b079f1c0db8924145b"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Aave-fork empty-market donation inflated liquidity index plus rounding error to over-withdraw shares"
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 825000,
+      "valuationTimestamp": 1697629739,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x53fbcada1201a465740f2d64ecdf6fac425f9030",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1691388719,
+        "blockNumber": 17861190,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x17002566cc3508dfa3c0fa52fcbca990e42fd510"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1691388719,
+        "blockNumber": 17861190,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x53fbcada1201a465740f2d64ecdf6fac425f9030"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 6241020,
+      "failureModeId": "legacy:eip155:1:0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/hopelend.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-10/Hopelend_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "Onchain review: the victim is an Aave-v3-style InitializableImmutableAdminUpgradeabilityProxy created 2023-08-07T05:31:59Z (block 17861190) by 0x17002566cc3508dfa3c0fa52fcbca990e42fd510, unrelated to the attack sender 0xA8Bbb3742f299B183190a9B079f1C0db8924145b. Its EIP-1967 implementation slot was binary-searched with eth_getStorageAt over [17861190, 18377041] and held 0x3a6d9bf8286a4ada77c15ecf82d4c0c0af95be74 throughout - the implementation the exploit delegatecalls for supply/withdraw/borrow - and the three further addresses running in the victim's context (0x03b89eb02817cc36285da0f175257cbb6bd6105b, 0x51ab0f9684d265a1defffc9701a6a3ce4ac50d98, 0xd8ed919c591a071b1fce031ac30167ed0be8277c) are PUSH20 link-time library constants inside that implementation's immutable bytecode. keccak(eth_getCode) on the proxy is identical at the creation and incident blocks. Deployment basis confirmed."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/hopelend.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/hopelend.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-10-18T11:48:59Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true."
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d",
+  "protocol": {
+    "name": "Yearn",
+    "slug": "yearn"
+  },
+  "name": "Yearn (yUSDT misconfiguration)",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d",
+      "blockNumber": 17036779,
+      "transactionIndex": null,
+      "timestamp": 1681365155
+    },
+    "attackerAddresses": [
+      "0x5bac20beef31d0eccb369a33514831ed8e9cdfe0"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Legacy iearn yUSDT (deployed Feb 2020) was misconfigured to use the Fulcrum iUSDC pool instead of iUSDT since deployment; exploited >3 years later. Deliberately included as an aged-code counterexample."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 11500000,
+      "valuationTimestamp": 1681365155,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x83f798e925bcd4017eb265844fddabb448f1707d",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1581470508,
+        "blockNumber": 9465216,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1581470508,
+        "blockNumber": 9465216,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x83f798e925bcd4017eb265844fddabb448f1707d"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 99894647,
+      "failureModeId": "legacy:eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/yearn.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 17038416, 2023-04-13T12:00:00Z). Legacy iearn yUSDT 0x83f798e925BcD4017Eb265844FDDABb448f1707D was created at block 9465216, 2020-02-12T01:21:48Z. Etherscan verifies it as `yUSDT`; the runtime bytecode contains zero DELEGATECALL opcodes, it emits no EIP-1967 Upgraded event, and eth_getCode is byte-identical at the creation block and the incident block, so the contract provably never changed and the deployment basis is exact. The iUSDC/iUSDT misconfiguration was baked into the constructor arguments at deployment. Aged-code counterexample: ~1156 days."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "exploit tx backfilled and verified onchain (block 17036779; yUSDT victim in receipt logs): the value-extracting tx SlowMist labels attack transaction 1; a small prep tx 0x055cec4fa4614836e54ea2e5cd3d14247ff3d61b85aa2a41f8cc876d131e0328 ran 4 blocks earlier"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/yearn.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/yearn.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-04-13T05:52:35Z"
+    }
+  },
+  "notes": []
+}

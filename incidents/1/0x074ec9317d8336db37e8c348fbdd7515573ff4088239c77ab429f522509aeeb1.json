@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1",
+  "protocol": {
+    "name": "Aztec",
+    "slug": "aztec"
+  },
+  "name": "Aztec Connect RollupProcessorV3 numRealTxs settlement gap",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1781439983
+    },
+    "attackerAddresses": [
+      "0x0f18d8b44a740272f0be4d08338d2b165b7edd17"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Decoder.decodeProof() proves whole 32-tx inner-rollup chunks while processDepositsAndWithdrawals() settles only numRealTxs txs, and numRealTxs sits outside the hashed header, so a deposit in a later slot of the deprecated permissionless RollupProcessorV3 was minted on L2 without its L1 deposit ever being debited."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2190000,
+      "valuationTimestamp": 1781439983,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xff1f2b4adb9df6fc8eafecdcbf96a2b351680455",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1654638194,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xa173bddf4953c1e8be2ca0695cfc07502ff3b1e7"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1712688155,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xff1f2b4adb9df6fc8eafecdcbf96a2b351680455",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 3 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 68751828,
+      "failureModeId": "legacy:eip155:1:0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/aztec.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.cryptotimes.io/2026/06/15/aztec-exploit-drains-2-19m-from-dormant-privacy-protocol/"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-06/AztecConnect_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: proxy 0xFF1F2B4ADb9dF6FC8eAFecDcbF96A2B351680455 created 2022-06-07 by 0xa173bddf4953c1e8be2ca0695cfc07502ff3b1e7, three EIP-1967 Upgraded events, last 2024-04-09 to impl 0x7d657ddcf7e2a5fd118dc8a6ddc3dc308adc2728; 14 chained rollups ids 13277-13290"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/aztec.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/aztec.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 3,
+      "date": "2026-06-14T12:26:23Z"
+    }
+  },
+  "notes": []
+}

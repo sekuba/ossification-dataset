@@ -1,0 +1,161 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:100:0x534b84f657883ddc1b66a314e8b392feb35024afdec61dfe8e7c510cfac1a098",
+  "protocol": {
+    "name": "Hundred Finance",
+    "slug": "hundred-finance"
+  },
+  "name": "Hundred Finance Gnosis ERC-677 transfer-hook reentrancy",
+  "incident": {
+    "chainId": 100,
+    "exploit": {
+      "transactionHash": "0x534b84f657883ddc1b66a314e8b392feb35024afdec61dfe8e7c510cfac1a098",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1647340120
+    },
+    "attackerAddresses": [
+      "0xd041ad9aae5cf96b21c3ffcb303a0cb80779e358"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Hundred's Compound-fork markets for Gnosis ERC-677 tokens transferred the underlying before updating borrow accounting, so the token's transferAndCall hook re-entered borrow() and drained several markets (compound-finance/compound-protocol issue 141)."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1700000,
+      "valuationTimestamp": 1647340120,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x243e33aa7f6787154a8e59d3c27a66db3f8818ee",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1619347920,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xb16a11442878d6f1ef202ae63233a7c13e98fd7f"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1619347920,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x243e33aa7f6787154a8e59d3c27a66db3f8818ee"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 27992200,
+      "failureModeId": "legacy:eip155:100:0x534b84f657883ddc1b66a314e8b392feb35024afdec61dfe8e7c510cfac1a098:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/hundred-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 100,
+      "transactionHash": "0x534b84f657883ddc1b66a314e8b392feb35024afdec61dfe8e7c510cfac1a098"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://github.com/compound-finance/compound-protocol/issues/141"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-03/HundredFinance_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: market 0x243E33aa7f6787154a8E59d3C27a66db3F8818ee created 2021-04-25T10:52:00Z by 0xb16a11442878d6f1ef202ae63233a7c13e98fd7f, not the attack-tx sender 0xd041ad9aae5cf96b21c3ffcb303a0cb80779e358. This is a Compound-fork delegator, so besides checking for EIP-1967 Upgraded events (none) the NewImplementation(address,address) log was also queried: the only one is at the creation block 15722098, so the executing code was 324.0 days old. The PoC also names markets 0xe4e43864ea18d5e5211352a4b810383460ab7fcc, 0x8e15a22853a0a60a0fbb0d875055a8e66cff0235 and 0x090a00a2de0ea83def700b5e216f87a5d4f394fe. Loss $1.7 million per the DeFiHackLabs 2022 index entry for this PoC. Distinct from the 2023-04 Hundred Finance row on optimism already in this file."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. CErc20Delegator: `implementation` is storage slot 18 (slot 17 is `underlying` = 0xddafbb505ad214d7b80b1f830fccc89b60fb7a83). Slot 18 held 0xfcd8570ad81e6c77b8d252bebeba62ed980bd64d continuously over a 25-point probe of [15722098, 21120320] and the only NewImplementation(address,address) on the delegator is the 0x0 -> 0xfcd8570a write in its creation block. callTracer on the exploit tx confirms the delegator delegatecalls only that implementation, which itself has zero DELEGATECALL opcodes."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/hundred-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/hundred-finance.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-03-15T10:28:40Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true."
+  ]
+}

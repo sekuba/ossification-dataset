@@ -1,0 +1,161 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1",
+  "protocol": {
+    "name": "MEV bot 0xa47b",
+    "slug": "mevbot-0xa47b"
+  },
+  "name": "MEV bot 0x0000...a47b unguarded callback",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1665689975
+    },
+    "attackerAddresses": [
+      "0x1dc90b5b7fe74715c2056e5158641c0af7d28865"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The arbitrage bot's callback entry point performed no caller check and read the target address out of attacker-supplied calldata, so the attacker made it move its own USDC balance to a contract they controlled."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 242365,
+      "valuationTimestamp": 1665689975,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x00000000000a47b1298f18cf67de547bbe0d723f",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1648810784,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x4239dff29d9b526688b0062e8ee79bb8b439b123"
+      },
+      "lastCodeChange": {
+        "kind": "unknown",
+        "timestamp": 1663148791,
+        "blockNumber": 15532252,
+        "transactionHash": "0x51819d7c8ed4df00e5869c63e80955b7f1d13bf2f7435bb0474a08864d73096e",
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2022-09-14T09:46:31Z (block 15532252, tx 0x51819d7c8ed4df00e5869c63e80955b7f1d13bf2f7435bb0474a08864d73096e): last CREATE2 redeployment of 0x00000000000a47b1298f18cf67de547bbe0d723f by 0xdc3c2c78ef0e11952af23dccd8e24a0a64c9d20e before the incident; the address had been self-destructed and recreated 17 times since 2022-04-01"
+      },
+      "codeAgeSeconds": 2541184,
+      "failureModeId": "legacy:eip155:1:0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/mevbot-0xa47b.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-10/MEVa47b_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BlockSecTeam/status/1580779311862190080"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: bot 0x00000000000a47b1298f18cf67de547bbe0d723f created 2022-04-01T10:59:44Z by 0x4239dff29d9b526688b0062e8ee79bb8b439b123, unrelated to the attack sender 0x1dc90b5b...; unverified but non-upgradeable, no EIP-1967 events, age from deployment. 187.75 WETH x $1,290.89 at incidentTimestamp 1665689975 (DefiLlama) = $242,364."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CORRECTION - the earlier note that the bot is 'non-upgradeable' is wrong. The address is a CREATE2 slot that its operator 0xdc3c2c78ef0e11952af23dccd8e24a0a64c9d20e self-destructs and redeploys: bisecting eth_getCode over [14499949, 15741333] finds 9 distinct runtimes and Etherscan txlistinternal lists 17 create/create2 records for the address in that window, the last at block 15532252, 2022-09-14T09:46:31Z (tx 0x51819d7c8ed4df00e5869c63e80955b7f1d13bf2f7435bb0474a08864d73096e). The code running at the incident is the one deployed then (byte-identical from block 15532252 through 15741333), not the 2022-04-01 original. Age 1665689975 - 1663148791 = 2,541,184 s (29.4 d), was 16,879,191 s (195.4 d). Separately, callTracer on the exploit tx shows the bot delegatecalling two caller-supplied targets (0x770200a211315a0688c289f437317ea117cb4d23, 0xfbc83fa919e6c83d9d9ccc1171df44d624da4c25), which is the unguarded entry point itself rather than an upgrade mechanism."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/mevbot-0xa47b.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/mevbot-0xa47b.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2022-10-13T19:39:35Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2022-09-14T09:46:31Z (block 15532252, tx 0x51819d7c8ed4df00e5869c63e80955b7f1d13bf2f7435bb0474a08864d73096e): last CREATE2 redeployment of 0x00000000000a47b1298f18cf67de547bbe0d723f by 0xdc3c2c78ef0e11952af23dccd8e24a0a64c9d20e before the incident; the address had been self-destructed and recreated 17 times since 2022-04-01"
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x3d5b4a0d560e8dd750239b578e2b85921b523835b644714dc239a2db70cf067c",
+  "protocol": {
+    "name": "Pesto the Baby King Penguin",
+    "slug": "pesto-token"
+  },
+  "name": "Pesto self-balance-triggered swapback sandwich",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x3d5b4a0d560e8dd750239b578e2b85921b523835b644714dc239a2db70cf067c",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1727078363
+    },
+    "attackerAddresses": [
+      "0x7248939f65bdd23aab9eaab1bc4a4f909567486e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The PESTO token repeated the DOGGO pattern: its transfer hook sold the token's own accumulated balance on Uniswap with no slippage bound once that self-balance passed a hard-coded threshold, and the attacker topped the balance up by direct transfer to trigger and sandwich the sale inside a Uniswap V3 flash loan."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1400,
+      "valuationTimestamp": 1727078363,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe81c4a73bfddb1ddadf7d64734061be58d4c0b4c",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1726775351,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x72fdf486b7c62fae3a52d390509ecbb33dfb0b2b"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1726775351,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xe81c4a73bfddb1ddadf7d64734061be58d4c0b4c"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 303012,
+      "failureModeId": "legacy:eip155:1:0x3d5b4a0d560e8dd750239b578e2b85921b523835b644714dc239a2db70cf067c:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/pesto-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3d5b4a0d560e8dd750239b578e2b85921b523835b644714dc239a2db70cf067c"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/TenArmorAlert/status/1838225968009527652"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-09/PestoToken_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: PESTO 0xE81C4A73bfDdb1dDADF7d64734061bE58d4c0b4C created 2024-09-19T19:49:11Z by 0x72fdf486b7c62fae3a52d390509ecbb33dfb0b2b, not the attack-tx sender 0x7248939f65bdd23aab9eaab1bc4a4f909567486e; no EIP-1967 events, 3.5 days old. The PoC reads balanceOf(PESTO) and tops it up by direct transfer exactly as in the DOGGO PoC by the same attacker. Reported loss 1.4k USD, above the $1,000 floor."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/pesto-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/pesto-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-09-23T07:59:23Z"
+    }
+  },
+  "notes": []
+}

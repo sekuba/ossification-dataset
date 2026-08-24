@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92",
+  "protocol": {
+    "name": "Maestro Bot",
+    "slug": "maestro-bot"
+  },
+  "name": "Maestro Router 2 unvalidated external call",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1698188027
+    },
+    "attackerAddresses": [
+      "0xce6397e53c13ff2903ffe8735e478d31e648a2c6"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Maestro's Router 2 forwarded a caller-supplied target and calldata during its taxed-token swap path without validating them, so the attacker made the router call transferFrom on liquidity pairs and drain tokens from users who had approved it."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 500654,
+      "valuationTimestamp": 1698188027,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x80a64c6d7f12c47b7c66c5b4e20e72bc1fcd5d9e",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1697204147,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x707d9f893ec2799ddef1524db15eba99d67fc431"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1697204147,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x80a64c6d7f12c47b7c66c5b4e20e72bc1fcd5d9e"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 983880,
+      "failureModeId": "legacy:eip155:1:0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/maestro-bot.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-10/MaestroRouter2_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/Phalcon_xyz/status/1717014871836098663"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: router proxy 0x80a64c6D7f12C47B7c66c5B4E20E72bc1FCd5d9e created 2023-10-13T13:35:47Z by 0x707d9f893ec2799ddef1524db15eba99d67fc431, unrelated to the attack sender; a single EIP-1967 Upgraded event in the creation block installs logic 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a and no later upgrade precedes the incident, so age runs from that install (11.4 days). The recorded tx is the first of 12 drain txs listed in the PoC; the ~280 ETH figure is their sum, converted at $1,788.05 per ETH at incidentTimestamp 1698188027 (DefiLlama) = $500,654."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/maestro-bot.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/maestro-bot.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2023-10-24T22:53:47Z"
+    }
+  },
+  "notes": []
+}

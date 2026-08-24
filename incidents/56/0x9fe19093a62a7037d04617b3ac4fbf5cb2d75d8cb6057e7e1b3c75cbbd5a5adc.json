@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x9fe19093a62a7037d04617b3ac4fbf5cb2d75d8cb6057e7e1b3c75cbbd5a5adc",
+  "protocol": {
+    "name": "BIGFI",
+    "slug": "bigfi"
+  },
+  "name": "BIGFI reflection-token pair drain",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x9fe19093a62a7037d04617b3ac4fbf5cb2d75d8cb6057e7e1b3c75cbbd5a5adc",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1679488643
+    },
+    "attackerAddresses": [
+      "0x76a88c2baebf251701435abbe8af11ad52b0ab04"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "BIGFI is a reflective deflationary token: deliver() cuts the reflected supply and inflates the liquidity pair's balance without a sync(), so the attacker swapped the inflated balance out for the pair's USDT."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 30306,
+      "valuationTimestamp": 1679488643,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xd3d4b46db01c006fb165879f343fc13174a1ceeb",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1678223804,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x602546d439ea254f3372c3985840750c6b9c6ddb"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1678223804,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xd3d4b46db01c006fb165879f343fc13174a1ceeb"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1264839,
+      "failureModeId": "legacy:eip155:56:0x9fe19093a62a7037d04617b3ac4fbf5cb2d75d8cb6057e7e1b3c75cbbd5a5adc:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bigfi.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x9fe19093a62a7037d04617b3ac4fbf5cb2d75d8cb6057e7e1b3c75cbbd5a5adc"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-03/BIGFI_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/HypernativeLabs/status/1638522680654675970"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: BIGFI 0xd3d4B46Db01C006Fb165879f343fc13174a1cEeB created 2023-03-07T21:16:44Z by 0x602546d439ea254f3372c3985840750c6b9c6ddb, unrelated to attack sender 0x76a88c2baebf251701435abbe8af11ad52b0ab04; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 30,466.10 USDT left the BIGFI/USDT pair and 30,306.10 USDT reached the attack contract."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bigfi.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bigfi.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-03-22T12:37:23Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,125 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x92cdcc732eebf47200ea56123716e337f6ef7d5ad714a2295794fdc6031ebb2e",
+  "protocol": {
+    "name": "Dough Finance",
+    "slug": "dough-finance"
+  },
+  "name": "Dough Finance",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x92cdcc732eebf47200ea56123716e337f6ef7d5ad714a2295794fdc6031ebb2e",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1720765571
+    },
+    "attackerAddresses": []
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "ConnectorDeleverageParaswap: unvalidated flash-loan calldata executed arbitrary calls with user approvals. Source: certik analysis."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1800000,
+      "valuationTimestamp": 1720765571,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x9f54e8eaa9658316bb8006e03fff1cb191aafbe6",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0x9f54e8eaa9658316bb8006e03fff1cb191aafbe6",
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1718295743,
+        "blockNumber": 20084065,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x7f7d0fceb73e34933d109598ae2cb1a064280d4b"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1718295743,
+        "blockNumber": 20084065,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x9f54e8eaa9658316bb8006e03fff1cb191aafbe6"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 2469828,
+      "failureModeId": "legacy:eip155:1:0x92cdcc732eebf47200ea56123716e337f6ef7d5ad714a2295794fdc6031ebb2e:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/dough-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x92cdcc732eebf47200ea56123716e337f6ef7d5ad714a2295794fdc6031ebb2e"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "Onchain review: ConnectorDeleverageParaswap 0x9f54e8eaa9658316bb8006e03fff1cb191aafbe6 created 2024-06-13T16:22:23Z (block 20084065) by 0x7f7d0fceb73e34933d109598ae2cb1a064280d4b, not the attack-tx sender. keccak(eth_getCode) is identical at the creation and incident blocks, no EIP-1967 or beacon slot is set (storage slot 1 holds doughIndex 0x5390724ca3b0880242c7b1ef08eb9b1abe698c0e, not an implementation), the exploit trace contains no DELEGATECALL out of the victim, and the four DELEGATECALL sites in the runtime are solc external-library calls whose targets are PUSH20 link-time constants (e.g. the DoughCore library at 0x5f2fe377c6fdfcda60befe91c8e0ff4d8142cc77). Deployment basis is exact."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/dough-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/dough-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-07-12T06:26:11Z"
+    }
+  },
+  "notes": []
+}

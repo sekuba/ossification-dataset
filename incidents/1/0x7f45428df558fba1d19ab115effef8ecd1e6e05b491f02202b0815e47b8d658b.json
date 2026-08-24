@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x7f45428df558fba1d19ab115effef8ecd1e6e05b491f02202b0815e47b8d658b",
+  "protocol": {
+    "name": "ExchangeIssuance",
+    "slug": "exchange-issuance"
+  },
+  "name": "ExchangeIssuance",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x7f45428df558fba1d19ab115effef8ecd1e6e05b491f02202b0815e47b8d658b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1785401843
+    },
+    "attackerAddresses": [
+      "0x0736930ae35eafefa789f11edf41d7b799e7c99d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "ExchangeIssuance quoted attacker-supplied SetToken units without locking them, then settlement re-read units after the attacker inflated positionMultiplier, transferring the victim's own component inventory."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 9600,
+      "valuationTimestamp": 1785401843,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xc8c85a3b4d03fb3451e7248ff94f780c92f884fd",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1616561540,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1616561540,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xc8c85a3b4d03fb3451e7248ff94f780c92f884fd"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 168840303,
+      "failureModeId": "legacy:eip155:1:0x7f45428df558fba1d19ab115effef8ecd1e6e05b491f02202b0815e47b8d658b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/exchange-issuance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7f45428df558fba1d19ab115effef8ecd1e6e05b491f02202b0815e47b8d658b"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
+      "path": "src/test/2026-07/ExchangeIssuance_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/exchange-issuance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/exchange-issuance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-07-30T08:57:23Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581",
+  "protocol": {
+    "name": "Poly Network",
+    "slug": "poly-network"
+  },
+  "name": "Poly Network",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581",
+      "blockNumber": 12996659,
+      "transactionIndex": null,
+      "timestamp": 1628588920
+    },
+    "attackerAddresses": [
+      "0xc8a65fadf0e0ddaf421f28feab69bf6e2e589963"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "EthCrossChainManager: crafted cross-chain message called EthCrossChainData.putCurEpochConPubKeyBytes via hash-collided function selector, replacing the keepers. Bug present since deployment."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 611000000,
+      "valuationTimestamp": 1628588920,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1597301471,
+        "blockNumber": 10650091,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1597301471,
+        "blockNumber": 10650091,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 31287449,
+      "failureModeId": "legacy:eip155:1:0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/poly-network.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "root-cause"
+      ],
+      "note": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 12997265, 2021-08-10T12:00:00Z). EthCrossChainManager 0x838bF9E95CB12Dd76a54C9f9D2E3082EAF928270 was created at block 10650091, 2020-08-13T06:51:11Z. It is unverified on Etherscan but is provably not a proxy: zero DELEGATECALL opcodes in the runtime, no EIP-1967 Upgraded event, and byte-identical eth_getCode at the creation block and the incident block, so the deployment basis is exact. Storage was checked too: slot 1 (EthCrossChainDataAddress) is unchanged since creation at 0xcf2afe102057ba5c16f899271045a0a37fcb10f2, and the single pre-incident write to slot 0 (the packed owner + paused pair, block 12996855, 2021-08-10T10:31:52Z, owner -> 0x5a51e2ebf8d136926b9ca7b59b60464e7c44d2eb with paused set) is the response to the attack, not a code change. The selector-collision flaw was present in the deployed bytecode from day one."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "exploit tx backfilled and verified onchain (block 12996659; tx to-address is the victim EthCrossChainManager): the Ethereum-leg attack tx cited by rekt.news and SlowMist"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/poly-network.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/poly-network.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-08-10T09:48:40Z"
+    }
+  },
+  "notes": []
+}

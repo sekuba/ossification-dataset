@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xfc872bf5ca8f04b18b82041ec563e4abf2e31e1fc27d1ea5dee39bc8a79d2d06",
+  "protocol": {
+    "name": "USDTStakingContract28",
+    "slug": "usdt-staking-28"
+  },
+  "name": "USDTStakingContract28 public tokenAllowAll()",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xfc872bf5ca8f04b18b82041ec563e4abf2e31e1fc27d1ea5dee39bc8a79d2d06",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1689396899
+    },
+    "attackerAddresses": [
+      "0x000000915f1b10b0ef5c4efe696ab65f13f36e74"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "tokenAllowAll(token, spender) was public with no owner check, so the attacker had the staking contract approve them for unlimited USDT and then transferred out the whole deposit balance."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 20999,
+      "valuationTimestamp": 1689396899,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x800cfd4a2ba8ce93ea2cc814fce26c3635169017",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1689080039,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xdcbeefb14ba39092711d62cf3ea19af643f2c155"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1689080039,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x800cfd4a2ba8ce93ea2cc814fce26c3635169017"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 316860,
+      "failureModeId": "legacy:eip155:1:0xfc872bf5ca8f04b18b82041ec563e4abf2e31e1fc27d1ea5dee39bc8a79d2d06:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/usdt-staking-28.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xfc872bf5ca8f04b18b82041ec563e4abf2e31e1fc27d1ea5dee39bc8a79d2d06"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-07/USDTStakingContract28_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/DecurityHQ/status/1680117291013267456"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: USDTStakingContract28 0x800cfD4A2ba8CE93eA2cc814Fce26c3635169017 created 2023-07-11T12:53:59Z by 0xdcbeefb14ba39092711d62cf3ea19af643f2c155, unrelated to the attack sender; no EIP-1967 events, age from deployment - 316,860 seconds (3.7 days). Loss read from the tx receipt: 20,999.92 USDT (USD-pegged at 1:1)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/usdt-staking-28.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/usdt-staking-28.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-07-15T04:54:59Z"
+    }
+  },
+  "notes": []
+}

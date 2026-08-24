@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f",
+  "protocol": {
+    "name": "Visor Finance",
+    "slug": "visor-finance"
+  },
+  "name": "Visor Finance RewardsHypervisor unvalidated depositor",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1640096295
+    },
+    "attackerAddresses": [
+      "0x8efab89b497b887cdaa2fb08ff71e4b3827774b2"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "RewardsHypervisor.deposit() took the caller-supplied `from` contract at face value, reading IVisor(from).owner() as authorization and calling IVisor(from).delegatedTransferERC20() for payment, so an attacker contract that returned itself as owner and no-opped the transfer minted vVISR shares without depositing any VISR."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 8200000,
+      "valuationTimestamp": 1640096295,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xc9f27a50f82571c1c8423a42970613b8dbda14ef",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1630617135,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x79a5e766e84076d00af6d05ebfcca9a274e47815"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1630617135,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xc9f27a50f82571c1c8423a42970613b8dbda14ef"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 9479160,
+      "failureModeId": "legacy:eip155:1:0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/visor-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://beosin.medium.com/two-vulnerabilities-in-one-function-the-analysis-of-visor-finance-exploit-a15735e2492"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: RewardsHypervisor 0xc9f27a50 created 2021-09-02 by 0x79a5e766e84076d00af6d05ebfcca9a274e47815, not by attack sender 0x8efab89b; no EIP-1967 upgrade events before the incident"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/visor-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/visor-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-12-21T14:18:15Z"
+    }
+  },
+  "notes": []
+}

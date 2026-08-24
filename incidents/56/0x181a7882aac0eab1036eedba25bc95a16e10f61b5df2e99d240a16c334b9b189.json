@@ -1,0 +1,136 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189",
+  "protocol": {
+    "name": "Transit Swap",
+    "slug": "transit-swap"
+  },
+  "name": "Transit Swap",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1664649354
+    },
+    "attackerAddresses": [
+      "0x5f0b31aa37bce387a8b21554a8360c6b8698fbef"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Router with arbitrary-call: attacker-controlled call target/data drained user approvals."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 21000000,
+      "valuationTimestamp": 1664649354,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xed1afc8c4604958c2f38a3408fa63b32e737c428",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1634885536,
+        "blockNumber": 11986161,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1634885536,
+        "blockNumber": 11986161,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xed1afc8c4604958c2f38a3408fa63b32e737c428"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 29763818,
+      "failureModeId": "legacy:eip155:56:0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/transit-swap.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review (no exploit tx in this row; DeFiHackLabs src/test/2022-10/TransitSwap_exp.sol documents the attack. Incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> bsc block 21808649, 2022-10-01T12:00:00Z). The victim 0xed1afc8c4604958c2f38a3408fa63b32e737c428 (unverified, 2820-byte runtime) was created at bsc block 11986161, 2021-10-22T06:52:16Z. It is not a proxy: disassembly shows no DELEGATECALL in the executable region - the single 0xf4 byte a naive opcode scan reports falls inside the trailing CBOR metadata blob - there is no EIP-1967 Upgraded event, and eth_getCode is byte-identical at the creation block and the incident block, so the deployment basis is exact. Its storage slot 0 holds 0xfab745c5ee6c59c09605a40464232930892ba48c (the deploying EOA) unchanged since creation; the remaining slots are an owner/flag pair and a mapping(address => bool) of authorised callers, i.e. configuration, not code. The measurement does not depend on which half of the pair is taken as the victim: the TransitSwap router DeFiHackLabs labels vulnerable, 0x8785bb8deAE13783b24D7aFE250d42eA7D7e9d72, was deployed by the same EOA two minutes later at 2021-10-22T06:54:44Z (block 11986204), giving the same ~344 day age."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "exploit tx backfilled and verified onchain (bsc block 21816546, victim in receipt logs), matching the DeFiHackLabs PoC"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/transit-swap.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/transit-swap.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-10-01T18:35:54Z"
+    }
+  },
+  "notes": []
+}

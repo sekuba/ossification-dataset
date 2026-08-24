@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:137:0x7320accea0ef1d7abca8100c82223533b624c82d3e8d445954731495d4388483",
+  "protocol": {
+    "name": "Libertify",
+    "slug": "libertify"
+  },
+  "name": "Libertify",
+  "incident": {
+    "chainId": 137,
+    "exploit": {
+      "transactionHash": "0x7320accea0ef1d7abca8100c82223533b624c82d3e8d445954731495d4388483",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1689060728
+    },
+    "attackerAddresses": [
+      "0xfd2d3ffb05ad00e61e3c8d8701cb9036b7a16d02"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "LibertiVault.deposit calls an external swap that reenters deposit to mint excess shares against stale totalSupply."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 452000,
+      "valuationTimestamp": 1689060728,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x9c80a455ecaca7025a45f5fa3b85fd6a462a447b",
+      "relationship": "minimal-proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1679824184,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1679824184,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x9c80a455ecaca7025a45f5fa3b85fd6a462a447b"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 9236544,
+      "failureModeId": "legacy:eip155:137:0x7320accea0ef1d7abca8100c82223533b624c82d3e8d445954731495d4388483:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/libertify.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 137,
+      "transactionHash": "0x7320accea0ef1d7abca8100c82223533b624c82d3e8d445954731495d4388483"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-07/Libertify_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The vault is an EIP-1167 minimal proxy whose runtime hardcodes the LibertiVault master 0x089d9868b58ef37d5804281e106d9b7e71a4d05f, so the delegate target cannot be repointed; the master's runtime is byte-identical at 13 sample points across [40785922, 44941585] and contains zero DELEGATECALL opcodes, and callTracer on the exploit tx confirms the clone delegatecalls only the master."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/libertify.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/libertify.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-07-11T07:32:08Z"
+    }
+  },
+  "notes": []
+}

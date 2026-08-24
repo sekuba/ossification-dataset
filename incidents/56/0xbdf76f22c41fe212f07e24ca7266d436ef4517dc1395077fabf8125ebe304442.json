@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xbdf76f22c41fe212f07e24ca7266d436ef4517dc1395077fabf8125ebe304442",
+  "protocol": {
+    "name": "XSD Stablecoin",
+    "slug": "xsd-stablecoin"
+  },
+  "name": "XSD/WETH pool burnpoolXSD reentrancy",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xbdf76f22c41fe212f07e24ca7266d436ef4517dc1395077fabf8125ebe304442",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1695753432
+    },
+    "attackerAddresses": [
+      "0x506eebd8d6061202a8e8fc600bb3d5d41f475ee1"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "swapXSDForETH() sends ETH with TransferHelper.safeTransferETH() before it updates the pool's accounting, letting the attacker re-enter burnpoolXSD() from the receive hook and drain the pool."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 12053,
+      "valuationTimestamp": 1695753432,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xfadda925e10d07430f5d7461689fd90d3d81bb48",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1687611825,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x03e33bab8414bdb433e883785f91ede95f0f4dfe"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1687611825,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xfadda925e10d07430f5d7461689fd90d3d81bb48"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 8141607,
+      "failureModeId": "legacy:eip155:56:0xbdf76f22c41fe212f07e24ca7266d436ef4517dc1395077fabf8125ebe304442:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/xsd-stablecoin.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xbdf76f22c41fe212f07e24ca7266d436ef4517dc1395077fabf8125ebe304442"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/CertiKAlert/status/1706765042916450781"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-09/XSDWETHpool_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim 0xfadda925e10d07430f5d7461689fd90d3d81bb48 created 2023-06-24T13:03:45Z by 0x03e33bab8414bdb433e883785f91ede95f0f4dfe, which is not the attack-tx sender 0x506eebd8d6061202a8e8fc600bb3d5d41f475ee1; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 56.9 BNB x $211.832899/BNB at the incident timestamp 1695753432 (DefiLlama coingecko:binancecoin) = $12,053."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/xsd-stablecoin.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/xsd-stablecoin.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-09-26T18:37:12Z"
+    }
+  },
+  "notes": []
+}

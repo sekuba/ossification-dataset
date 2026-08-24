@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x1106418384414ed56cd7cbb9fedc66a02d39b663d580abc618f2d387348354ab",
+  "protocol": {
+    "name": "GoodDollar",
+    "slug": "gooddollar"
+  },
+  "name": "GoodDollar GoodFundManager collectInterest double-count",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x1106418384414ed56cd7cbb9fedc66a02d39b663d580abc618f2d387348354ab",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1702256351
+    },
+    "attackerAddresses": [
+      "0xdfab184bc668f16c1cb949228068588106924569"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "GoodFundManager.collectInterest accepted duplicated staking-contract entries and double-counted them to over-claim COMP rewards routed through Compound."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 13000,
+      "valuationTimestamp": 1702256351,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x0c6c80d2061afa35e160f3799411d83bdeea0a5a",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1646641575,
+        "blockNumber": 14338654,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x3de7216149f12d8f51540d9a870149560fc11bfb"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1695374711,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x0c6c80d2061afa35e160f3799411d83bdeea0a5a",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 3 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 6881640,
+      "failureModeId": "legacy:eip155:1:0x1106418384414ed56cd7cbb9fedc66a02d39b663d580abc618f2d387348354ab:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/gooddollar.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1106418384414ed56cd7cbb9fedc66a02d39b663d580abc618f2d387348354ab"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-12/GoodCompound_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "root-cause"
+      ],
+      "note": "victim correction: the row previously aged Compound's Unitroller, but the exploited flaw is in GoodDollar's code - the exploit tx's logs include GoodCompoundStakingV2 0x7b7246c78e2f900d17646ff0cb2ec47d6ba10754 and the GoodFundManager ERC1967 proxy 0x0c6c80d2061afa35e160f3799411d83bdeea0a5a (impl 0xaacbaab8... verified GoodFundManager), whose collectInterest processed duplicated staking-contract entries. Measured against the GoodFundManager proxy: created 2022-03-07T08:26:15Z (block 14338654) by 0x3de7216149f12d8f51540d9a870149560fc11bfb, 3 Upgraded events before the incident - creation-block initialization, 2022-12-22 (block 16240765) and 2023-09-22T09:25:11Z (block 18190480), none sent by the attacker 0xdfab184bc668f16c1cb949228068588106924569; age 79.6 days"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/gooddollar.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/gooddollar.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 3,
+      "date": "2023-12-11T00:59:11Z"
+    }
+  },
+  "notes": []
+}

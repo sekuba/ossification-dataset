@@ -1,0 +1,155 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017",
+  "protocol": {
+    "name": "Kinto",
+    "slug": "kinto"
+  },
+  "name": "Kinto K token clandestine proxy initialization",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1752136391
+    },
+    "attackerAddresses": [
+      "0x6eb3731b52c8556073baa13d9e35d5a6713fc8ab"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The K token's UUPS/ERC-1967 proxy was deployed with its implementation slot left uninitialized in a separate transaction, so two seconds after creation an attacker wrote a clandestine implementation into the slot and masked it with a spoofed Upgraded event, and 113 days later that hidden implementation was used to write 1,000,000 K directly into the attacker's balance slot (no Transfer log, totalSupply untouched), which was dumped into the Uniswap v4/v3 pools and posted as Morpho Blue collateral to borrow USDC that was never repaid."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1579000,
+      "valuationTimestamp": 1752136391,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [
+      {
+        "description": "790,148 USDC borrowed from Morpho Blue and never repaid + ~282.84 ETH taken out of the Uniswap v4/v3 K pools",
+        "sourceIds": [
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x010700ab046dd8e92b0e3587842080df36364ed3",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1742415880,
+        "blockNumber": 317434592,
+        "transactionHash": "0x35d5fc347c0ae0bd2cee08b2007455e118e89f297cc1faf8f5caf53808e3737a",
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1744136122,
+        "blockNumber": 324296892,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2025-04-08T18:15:22Z (block 324296892): last pre-incident write to the K proxy's EIP-1967 implementation slot (-> 0xe343c368c483da30a84d845eb3d2a209fbf6a683), performed with no Upgraded event by attacker infrastructure; the last team-emitted Upgraded event, 2025-03-25T01:20:51Z block 319226261 -> 0x96b7f2fa54a306bac6fde57f47f932a681dd9def, never reached the slot"
+      },
+      "codeAgeSeconds": 8000269,
+      "failureModeId": "legacy:eip155:42161:0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/kinto.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/mamori-finance/%EF%B8%8F-post-mortem-k-proxy-hack-our-path-forward-c2c3809882c6"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://rekt.news/just-bad-luck"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review (Arbitrum). Victim: K token proxy 0x010700AB046Dd8e92b0e3587842080Df36364ed3 (Etherscan contract name UUPSProxy), created 2025-03-19T20:24:40Z block 317434592 by the Kinto deployer 0x660ad4b5a74130a4796b4d54bc6750ae93c86e6c in tx 0x35d5fc347c0ae0bd2cee08b2007455e118e89f297cc1faf8f5caf53808e3737a — neither the attacker nor the exploit-tx sender, so rule 2 holds. Exploit tx 0x579f0d9a... was sent by 0x905505e91cf4a929e9ff8a5544159195ba6e2ec3 through Multicall3 (0xca11bde05977b3631167028862be2a173976ca11) into attacker contract 0x0eb036e22ec6f795a9c2b85e07a1869af23e7bb4 and emitted zero logs; it wrote three K-token storage slots, of which 0xfc8bcaa1123599bcc5778aecceabd8c5757044f6c0ab074233eac11079e321e2 went 0 -> 0xd3c21bcecceda0000000 (999999999999999983222784 = ~1,000,000 K). balanceOf(0x6eb3731b52c8556073baa13d9e35d5a6713fc8ab) is 0 at block 356168983 and 999999999999999983222784 at block 356168984, that address never received a single K Transfer, and totalSupply is 1553019704644939833276904 at both blocks — an off-books mint by direct storage write. Implementation-slot (0x360894a1...) history recovered by binary-searching eth_getStorageAt, because only four Upgraded events exist and two of them are spoofed: creation 2025-03-19T20:24:40Z -> 0x1a16bcddd1bf92049e2a44e136081061eeace7c0; 2025-03-19T20:24:42Z block 317434602 tx 0xd17330df683adeec26a67ff6972a74ab60a1e5577c73d0e074d8e890fab5279c -> 0x7382bcbd6b361e218e1c1c3180201c2da6f3d210 (clandestine implementation) immediately followed in the same tx by an Upgraded event claiming 0x1a16bcdd... again; 2025-03-25T01:20:51Z block 319226261 the team emits Upgraded -> 0x96b7f2fa54a306bac6fde57f47f932a681dd9def but the slot is NOT changed and still reads 0x7382bcbd...; 2025-04-01T16:27:51Z block 321860388 slot -> 0x95fa23bb5e88ebc4a5fcf1210ccc526938e7dc58 with no event; 2025-04-08T18:15:22Z block 324296892 slot -> 0xe343c368c483da30a84d845eb3d2a209fbf6a683 with no event, and that is the executing code through the incident. Age is measured from 2025-04-08T18:15:22Z, the last actual change to the victim's executing code before the exploit (the exploit itself changed no code, only storage); the last team-emitted Upgraded event (2025-03-25T01:20:51Z, which would give 9,270,740 s) never reached the slot, and measuring from deployment as verify.mjs does would give 9,720,511 s. Loss: 791,182 USDC borrowed from Morpho Blue 0x6c247b1F6182318877311737BaC0844bAa518F5e by the attacker's ERC-4337 wallet 0xde86b457b2b5209bce1992434b82c7d54d3c2786 over 980 transfers with zero repayments, of which 790,148 USDC was forwarded to the attacker EOA; the EOA also received 566.14 ETH of internal transfers on 2025-07-10, of which 208.45 ETH (via 0x2ad5004c60...) and 74.85 ETH (via 1inch 0x1111111254421ca6dc452d289314280a0f8842a65) are the borrowed USDC swapped to ETH (581,696 and 208,452 USDC at the day's rate) and are therefore not double-counted, leaving ~282.84 ETH of genuine Uniswap pool proceeds. ETH/USD 2789.49 at the incident timestamp (curl https://coins.llama.fi/prices/historical/1752136391/coingecko:ethereum), giving 790,148 + 282.84*2789.49 = ~$1.579m, consistent with the ~$1.55m the team reported."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/kinto.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/kinto.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 4,
+      "date": "2025-07-10T08:33:11Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2025-04-08T18:15:22Z (block 324296892): last pre-incident write to the K proxy's EIP-1967 implementation slot (-> 0xe343c368c483da30a84d845eb3d2a209fbf6a683), performed with no Upgraded event by attacker infrastructure; the last team-emitted Upgraded event, 2025-03-25T01:20:51Z block 319226261 -> 0x96b7f2fa54a306bac6fde57f47f932a681dd9def, never reached the slot"
+  ]
+}

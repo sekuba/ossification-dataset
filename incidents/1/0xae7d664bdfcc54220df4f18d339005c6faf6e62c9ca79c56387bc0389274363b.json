@@ -1,0 +1,132 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b",
+  "protocol": {
+    "name": "dForce",
+    "slug": "dforce"
+  },
+  "name": "Lendf.Me (imBTC ERC-777 reentrancy)",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1587257935
+    },
+    "attackerAddresses": [
+      "0xa9bf70a420d364e923c74448d9d817d3f2a77822"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "MoneyMarket.supply() credited the supplier only after doTransferIn(), so imBTC's ERC-777 tokensToSend hook re-entered withdraw() while the deposit was still counted, letting the attacker keep both the collateral credit and the withdrawn tokens."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 25000000,
+      "valuationTimestamp": 1587257935,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x0eee3e3828a45f7601d5f54bf49bb01d1a9df5ea",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1565072217,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xd30076b706fa0425bc52d0739224fe8ef1ae7c81"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1565072217,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x0eee3e3828a45f7601d5f54bf49bb01d1a9df5ea"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 22185718,
+      "failureModeId": "legacy:eip155:1:0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/dforce.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://peckshield.medium.com/uniswap-lendf-me-hacks-root-cause-and-loss-analysis-50f3263dcc09"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "onchain review: victim 0x0eee3e38 is the verified non-proxy MoneyMarket contract (EIP-1967 impl slot empty), created 2019-08-06 by 0xd30076b706fa0425bc52d0739224fe8ef1ae7c81, not by attack sender 0xa9bf70a4; DeFiHackLabs PoC src/test/2020-04/LendfMe_exp.sol reproduces the reentrant withdraw"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/dforce.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/dforce.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2020-04-19T00:58:55Z"
+    }
+  },
+  "notes": []
+}

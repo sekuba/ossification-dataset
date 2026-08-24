@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:60808:0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92",
+  "protocol": {
+    "name": "Shoebill Finance",
+    "slug": "shoebill-finance"
+  },
+  "name": "Shoebill BTC market oracle misconfiguration",
+  "incident": {
+    "chainId": 60808,
+    "exploit": {
+      "transactionHash": "0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92",
+      "blockNumber": 8751267,
+      "transactionIndex": null,
+      "timestamp": 1730364521
+    },
+    "attackerAddresses": [
+      "0x58491274790b6dfc9233b09d8212e1957cc37a03"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The price oracle the Shoebill comptroller reads was upgraded to integrate solvBTC and solvBTC.BBN and returned a grossly overstated price for the sb Solv BTC market, so 0.005 sbSolvBTC of collateral supported borrowing 19.51 WBTC and 1.597 tBTC - a defect in the victim's freshly deployed oracle code and its onchain feed configuration, not manipulation of a market price by the attacker."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1520241,
+      "valuationTimestamp": 1730364521,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3",
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe103f874b2d144c5b327fa3d57069bb19c0779e2",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1714556853,
+        "blockNumber": 847433,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xcff0e961d0dec9dadf8587f66f158738e1366264"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1730356123,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xe103f874b2d144c5b327fa3d57069bb19c0779e2",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 8398,
+      "failureModeId": "legacy:eip155:60808:0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/shoebill-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 60808,
+      "transactionHash": "0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://quadrigainitiative.com/casestudy/shoebillfinancebtcmarketcollateraloracleexploit.php"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss",
+        "root-cause"
+      ],
+      "note": "onchain review on BOB (chainid 60808, 0xed88; Etherscan does not serve it, but https://rpc.gobob.xyz answers eth_getCode, eth_getStorageAt and eth_getLogs at historical blocks and https://explorer.gobob.xyz/api/v2 resolves names and creators). The exploit transaction at block 8751267 enters two markets on Unitroller 0xb7ed6c062caaacb1a13f317e0a751289280fc306 and emits two Compound Borrow events: 19.51269875 WBTC from sb Wrapped BTC 0x5c46d274ed8abcae2964b63c0360ad3ccc384daa and 1.5973028815 tBTC from sb tBTC v2 0x2925df9eb2092b53b06a06353a7249af3a8b139e, against getAssetsIn collateral of only 500029 units (0.00500029) of sb Solv BTC 0x0f1f734c1d69774be2c1a8eba3d1a43f4576faf7. The comptroller's oracle() at the incident block is 0xE103F874B2D144C5B327FA3d57069Bb19c0779e2, recorded here as the victim because it is the contract holding the mispricing; it is an EIP-1967 TransparentUpgradeableProxy created 2024-05-01T09:47:33Z at block 847433 by 0xcFf0E961d0DEC9dadF8587F66f158738e1366264 (Shoebill deployer), unrelated to attack sender 0x58491274790b6dfc9233b09d8212e1957cc37a03 or its attack contract 0x06ca861fc14a58a4fd5fdda45e904304785ae238. A full eth_getLogs scan of the Upgraded topic over blocks 847433-8751267 returns exactly two events: the creation-block install of 0x037d45ca2b024a25a6091212761e0757227b60c8 and a replacement with 0x8a34c9ada41318e6d4b8652ca6349540ec5eb772 at block 8747068, 2024-10-31T06:28:43Z, in tx 0x490b9b66d79e6a1282711cc20d0e8faf903bcb971f2bc5c1f0a4b789468f036e sent by the same Shoebill deployer - 2 hours 20 minutes (8,398 s) before the exploit, and still the live implementation today. That upgrade is the solvBTC/solvBTC.BBN integration the post-mortem blames. Classified code-bug rather than oracle-manipulation: no market price was moved by the attacker, the oracle's own deployed code and configuration returned the wrong value. Loss not recorded in USD: the amounts are the two Borrow event values, matching the 19.512 wBTC and 1.597 tBTC the post-mortem reports the attacker bridged out; the $1.52m headline from SlowMist and Shoebill's own announcement is consistent as an order-of-magnitude sanity check (BTC ~ $72k on 2024-10-31) and is far above the $1,000 floor, but is not recorded as a high-confidence figure."
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "loss"
+      ],
+      "note": "loss converted at the incident timestamp (1730364521) via DefiLlama coins: 19.51 WBTC x $72,037.00 + 1.597 tBTC x $71,884.00 = $1,520,241"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/shoebill-finance.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/shoebill-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 2,
+      "date": "2024-10-31T08:48:41Z"
+    }
+  },
+  "notes": []
+}

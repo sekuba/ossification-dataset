@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xab19752a450a205ccaca9afb8505e2d8b79593ee2edab1f67bdec27a4f14871f",
+  "protocol": {
+    "name": "xLOOT",
+    "slug": "xloot"
+  },
+  "name": "xLOOT staking redeem counts the same NFT id repeatedly",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xab19752a450a205ccaca9afb8505e2d8b79593ee2edab1f67bdec27a4f14871f",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1776262763
+    },
+    "attackerAddresses": [
+      "0xacdcd2e9787e889305200900d6cf6c0548578630"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Staking.redeem(uint256[]) totals the reward for every supplied token id, checking only ownerOf(id), before it advances nextRedeem[id], so seven owned xLOOT ids repeated 155 times each collected the freshly opened epoch reward 1,085 times."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 14535,
+      "valuationTimestamp": 1776262763,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x9d87ff196646a99bddb16876066aa863900118b4",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1703159951,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x50de00357b4c96defe9780bc285dc939bbb5ea2e"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1703159951,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x9d87ff196646a99bddb16876066aa863900118b4"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 73102812,
+      "failureModeId": "legacy:eip155:1:0xab19752a450a205ccaca9afb8505e2d8b79593ee2edab1f67bdec27a4f14871f:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/xloot.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xab19752a450a205ccaca9afb8505e2d8b79593ee2edab1f67bdec27a4f14871f"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/DefimonAlerts/status/2044709964091187660"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-04/XLootStaking_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: staking proxy 0x9d87Ff196646A99BDdb16876066aA863900118b4 created 2023-12-21T11:59:11Z by 0x50de00357b4c96defe9780bc285dc939bbb5ea2e, not the attack-tx sender 0xacdcd2e9787e889305200900d6cf6c0548578630; a single EIP-1967 Upgraded event at deployment installs implementation 0xf3A3648bB1Da9D3aeA107da77E6f5bA9Cf313127 (the address the PoC header names as the vulnerable contract), so the executing code was 846.1 days old. 6.21 ETH x $2,340.58 at the incident timestamp (DefiLlama) = $14,535."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/xloot.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/xloot.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2026-04-15T14:19:23Z"
+    }
+  },
+  "notes": []
+}

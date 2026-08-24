@@ -1,0 +1,139 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x729c502a7dfd5332a9bdbcacec97137899ecc82c17d0797b9686a7f9f6005cb7",
+  "protocol": {
+    "name": "H2O",
+    "slug": "h2o-token"
+  },
+  "name": "H2O transfer-to-pair plus skim multiplies balance",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x729c502a7dfd5332a9bdbcacec97137899ecc82c17d0797b9686a7f9f6005cb7",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1741946347
+    },
+    "attackerAddresses": [
+      "0x8842dd26fd301c74afc4df12e9cdabd9db107d1e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "H2O's _transfer credits extra H2O when tokens are sent to the H2O/BUSD pair, so a 50-round transfer-then-skim() loop multiplied the attacker's balance before it sold into the pool."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 22470,
+      "valuationTimestamp": 1741946347,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe9c4d4f095c7943a9ef5ec01afd1385d011855a1",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1741937353,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x09aeaec5c8b405370cd04adcc982cb8748d7d447"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1741937353,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xe9c4d4f095c7943a9ef5ec01afd1385d011855a1"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 8994,
+      "failureModeId": "legacy:eip155:56:0x729c502a7dfd5332a9bdbcacec97137899ecc82c17d0797b9686a7f9f6005cb7:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/h2o-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x729c502a7dfd5332a9bdbcacec97137899ecc82c17d0797b9686a7f9f6005cb7"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2025-03/H2O_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0xe9c4d4f095c7943a9ef5ec01afd1385d011855a1 created 2025-03-14T07:29:13Z by 0x09aeaec5c8b405370cd04adcc982cb8748d7d447, which is not the attack-tx sender 0x8842dd26fd301c74afc4df12e9cdabd9db107d1e; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/h2o-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/h2o-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-03-14T09:59:07Z"
+    }
+  },
+  "notes": []
+}

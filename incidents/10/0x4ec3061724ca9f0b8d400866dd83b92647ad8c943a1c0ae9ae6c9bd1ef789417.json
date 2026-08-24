@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:10:0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417",
+  "protocol": {
+    "name": "MO",
+    "slug": "mo-protocol"
+  },
+  "name": "MO Loan borrow/redeem double accounting",
+  "incident": {
+    "chainId": 10,
+    "exploit": {
+      "transactionHash": "0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1710389801
+    },
+    "attackerAddresses": [
+      "0x4e2c6096985e0b2825d06c16f1c8cdc559c1d6f8"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The MO Loan contract let the same collateral back a new borrow after redeem() returned it, so an 80-iteration borrow/redeem loop against one small MO position drew out the entire MO/USDT pair balance, which was then sold for USDT."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 413000,
+      "valuationTimestamp": 1710389801,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xae7b6514af26bcb2332fea53b8dd57bc13a7838e",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1710138785,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x9747fa1bfab2690562406d150f173e3c4a2d5aa6"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1710138785,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xae7b6514af26bcb2332fea53b8dd57bc13a7838e"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 251016,
+      "failureModeId": "legacy:eip155:10:0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/mo-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 10,
+      "transactionHash": "0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-03/MO_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: Loan 0xAe7b6514Af26BcB2332FEA53B8Dd57bc13A7838E created 2024-03-11T06:33:05Z by 0x9747fa1bfab2690562406d150f173e3c4a2d5aa6, not the attack-tx sender 0x4e2c6096985e0b2825d06c16f1c8cdc559c1d6f8; no EIP-1967 events, 2.9 days old. The PoC loops borrow(mo_balance,0) then redeem(i) until it reverts, confirming the position is reusable. PoC header reports ~413K USD profit."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/mo-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/mo-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-03-14T04:16:41Z"
+    }
+  },
+  "notes": []
+}

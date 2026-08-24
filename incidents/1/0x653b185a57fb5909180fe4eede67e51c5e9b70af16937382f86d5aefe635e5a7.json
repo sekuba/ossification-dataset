@@ -1,0 +1,141 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x653b185a57fb5909180fe4eede67e51c5e9b70af16937382f86d5aefe635e5a7",
+  "protocol": {
+    "name": "unverified_6f7a",
+    "slug": "unverified-6f7a"
+  },
+  "name": "unverified_6f7a",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x653b185a57fb5909180fe4eede67e51c5e9b70af16937382f86d5aefe635e5a7",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1755858827
+    },
+    "attackerAddresses": [
+      "0xe4b97db5faf476db464bc271097fac97d6ce3783"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Proxy selector 0xbfd479c4 processed arbitrary token amounts with no caller authorization or ownership check, letting anyone route the victim's live balances into a liquidity path."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 7630,
+      "valuationTimestamp": 1755858827,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x6f7a14bd931554683ed15dc92e25d046ed68ea68",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1639531414,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1640029784,
+        "blockNumber": 13844065,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2021-12-20T19:49:44Z (block 13844065): the EIP-1967 implementation slot was rewritten from 0x078a27f9de51359764ad48e663e8d8debd26656c to 0x338ffeaccf929c88fb9574dc202dc1714b1903e7"
+      },
+      "codeAgeSeconds": 115829043,
+      "failureModeId": "legacy:eip155:1:0x653b185a57fb5909180fe4eede67e51c5e9b70af16937382f86d5aefe635e5a7:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/unverified-6f7a.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x653b185a57fb5909180fe4eede67e51c5e9b70af16937382f86d5aefe635e5a7"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2025-08/unverified_6f7a_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "delegatecall-target review (callTracer + prestateTracer on the exploit tx, then eth_getStorageAt over [creation block, incident block]): the victim is an EIP173ProxyWithReceive, which stores its implementation in the EIP-1967 slot but announces changes with ProxyImplementationUpdated rather than Upgraded, so the standard event scan finds nothing. The exploit tx DELEGATECALLs 0x6f7a14bd...ea68 -> 0x338ffeaccf929c88fb9574dc202dc1714b1903e7 (selector 0xbfd479c4). eth_getStorageAt on slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc held 0x078a27f9de51359764ad48e663e8d8debd26656c at the creation block 13806773 and was rewritten once, at block 13844065 / 2021-12-20T19:49:44Z, to the implementation that was live at the incident (constant across 60 samples afterwards). Age 1340.6 days rather than 1346.4 from deployment"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/unverified-6f7a.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/unverified-6f7a.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2025-08-22T10:33:47Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2021-12-20T19:49:44Z (block 13844065): the EIP-1967 implementation slot was rewritten from 0x078a27f9de51359764ad48e663e8d8debd26656c to 0x338ffeaccf929c88fb9574dc202dc1714b1903e7"
+  ]
+}

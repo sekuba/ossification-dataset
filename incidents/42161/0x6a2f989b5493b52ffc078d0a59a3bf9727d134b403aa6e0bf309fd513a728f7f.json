@@ -1,0 +1,141 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f",
+  "protocol": {
+    "name": "DeltaPrime",
+    "slug": "deltaprime"
+  },
+  "name": "DeltaPrime",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1731310565
+    },
+    "attackerAddresses": [
+      "0xb87881637b5c8e6885c51ab7d895e53fa7d7c567"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "reentrancy via claimReward with fake pair double-counted collateral/reward in SmartLoan"
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 4750000,
+      "valuationTimestamp": 1731310565,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x62cf82fb0484af382714cd09296260edc1dc0c6c",
+      "relationship": "diamond",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1691424383,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "module-change",
+        "timestamp": 1730982588,
+        "blockNumber": 271974869,
+        "transactionHash": "0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a",
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2024-11-07T12:29:48Z (block 271974869, tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a): last DiamondCut on the SmartLoanDiamondBeacon before the incident, a Replace of PenpieFacet 0x130c975a189024cdfe4a4b38706a431463ad0acf that reinstalled claimRewards(address) (0xef5cfb8c), the exploited selector"
+      },
+      "codeAgeSeconds": 327977,
+      "failureModeId": "legacy:eip155:42161:0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/deltaprime.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2024-11/DeltaPrime_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0x62cf82fb0484af382714cd09296260edc1dc0c6c is the DeltaPrime SmartLoanDiamondBeacon, an EIP-2535 diamond that changes facet code with DiamondCut rather than an EIP-1967 Upgraded event; eth_getLogs over creation block 119095598 (2023-08-07) to incident block 273278742 returns 150 DiamondCut logs, the last four of them on 2024-11-07 (12:28:11, 12:28:47, 12:29:18 and 12:29:48 UTC) replacing Penpie/Pendle facets; the final cut, block 271974869 / tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a, Replaces facet 0x130c975a189024cdfe4a4b38706a431463ad0acf (PenpieFacet) carrying claimRewards(address) 0xef5cfb8c, the selector the exploit reentered, so the age is measured from that cut rather than the beacon deployment"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/deltaprime.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/deltaprime.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2024-11-11T07:36:05Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2024-11-07T12:29:48Z (block 271974869, tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a): last DiamondCut on the SmartLoanDiamondBeacon before the incident, a Replace of PenpieFacet 0x130c975a189024cdfe4a4b38706a431463ad0acf that reinstalled claimRewards(address) (0xef5cfb8c), the exploited selector"
+  ]
+}

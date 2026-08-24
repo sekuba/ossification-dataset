@@ -1,0 +1,125 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:10:0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451",
+  "protocol": {
+    "name": "Hundred Finance",
+    "slug": "hundred-finance"
+  },
+  "name": "Hundred Finance",
+  "incident": {
+    "chainId": 10,
+    "exploit": {
+      "transactionHash": "0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1681567920
+    },
+    "attackerAddresses": []
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "hWBTC market on Optimism (per Hundred's protocol docs): Compound-v2 fork empty-market exchange-rate inflation via direct donation, then rounding-truncated redeem."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 7400000,
+      "valuationTimestamp": 1681567920,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x35594e4992dfefcb0c20ec487d7af22a30bdec60",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1672760507,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1672760507,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x35594e4992dfefcb0c20ec487d7af22a30bdec60"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 8807413,
+      "failureModeId": "legacy:eip155:10:0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/hundred-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 10,
+      "transactionHash": "0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "Recheck (deployment basis confirmed): the hWBTC market is a Compound CErc20Delegator whose fallback delegatecalls `implementation`, held in the low 20 bytes of storage slot 19. Reading the slot rather than trusting events: it held 0x7100cbca885905f922a19006cf7fd5d0e1bbb26c at both the creation block 59641454 and the incident block 90761918, and a binary search of eth_getStorageAt over that whole range found no change; the only NewImplementation(address,address) log on the market is at the creation block itself; keccak(eth_getCode) on the delegator is identical at the two blocks; and 0x7100cbca... is the sole address the victim delegatecalls in the exploit trace. Deployment is the correct basis."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/hundred-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/hundred-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-04-15T14:12:00Z"
+    }
+  },
+  "notes": []
+}

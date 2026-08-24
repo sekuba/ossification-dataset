@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c",
+  "protocol": {
+    "name": "DAO Maker",
+    "slug": "dao-maker"
+  },
+  "name": "DAO Maker vesting unprotected init()",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1630706304
+    },
+    "attackerAddresses": [
+      "0x2708cace7b42302af26f1ab896111d87faeff92f"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The vesting contract's init() carried no access control or initialized guard, so the attacker re-initialized it with themselves as the sole beneficiary and then called emergencyExit() to sweep the deposited sale tokens."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 4000000,
+      "valuationTimestamp": 1630706304,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x2fd602ed1f8cb6deaba9bedd560ffe772eb85940",
+      "relationship": "minimal-proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1627982213,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xcf28556ee95be8c52ad2f3480149128cca51dac1"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1627982213,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x2fd602ed1f8cb6deaba9bedd560ffe772eb85940"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 2724091,
+      "failureModeId": "legacy:eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/dao-maker.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/Mudit__Gupta/status/1434059922774237185"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: attack tx calls 0x2fd602ed directly with selector 0x84304ad7 (init); contract created 2021-08-03 by 0xcf28556ee95be8c52ad2f3480149128cca51dac1, not by attack sender 0x2708cace; note this is the 2021-09-03 DAO Maker incident, distinct from the 2021-08-12 one. Recheck (deployment basis confirmed): the vesting contract's 45-byte runtime is an EIP-1167 minimal proxy (363d3d373d3d3d363d73) whose master 0xf17ca0e0f24a5fa27944275fa0cedec24fbf8ee2 is baked into the bytecode and is the only address delegatecalled in the exploit (selector 0x84304ad7, init); keccak(eth_getCode) is identical at the creation block 12951447 and the incident block 13155321, so the delegatecall target cannot be repointed."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/dao-maker.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/dao-maker.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-09-03T21:58:24Z"
+    }
+  },
+  "notes": []
+}

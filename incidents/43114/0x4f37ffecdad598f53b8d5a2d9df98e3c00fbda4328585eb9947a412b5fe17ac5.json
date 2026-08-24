@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:43114:0x4f37ffecdad598f53b8d5a2d9df98e3c00fbda4328585eb9947a412b5fe17ac5",
+  "protocol": {
+    "name": "Stars Arena",
+    "slug": "stars-arena"
+  },
+  "name": "Stars Arena share-buy reentrancy",
+  "incident": {
+    "chainId": 43114,
+    "exploit": {
+      "transactionHash": "0x4f37ffecdad598f53b8d5a2d9df98e3c00fbda4328585eb9947a412b5fe17ac5",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1696656215
+    },
+    "attackerAddresses": [
+      "0xa2ebf3fcd757e9be1e58b643b6b5077d11b4ad7a"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The share-buy entry point (selector 0xe9ccf3a3) sent AVAX back to the caller before finalising share accounting, letting the attacker re-enter the weight-setting function (selector 0x5632b2e4) mid-call so that a single share could then be sold via sellShares() for ~266,000 AVAX."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2880000,
+      "valuationTimestamp": 1696656215,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xa481b139a1a654ca19d2074f174f17d7534e8cec",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1695226965,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xb7461cf331a3a940e69b9deea98fa43fd357f571"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1696511764,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xa481b139a1a654ca19d2074f174f17d7534e8cec",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 144451,
+      "failureModeId": "legacy:eip155:43114:0x4f37ffecdad598f53b8d5a2d9df98e3c00fbda4328585eb9947a412b5fe17ac5:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/stars-arena.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 43114,
+      "transactionHash": "0x4f37ffecdad598f53b8d5a2d9df98e3c00fbda4328585eb9947a412b5fe17ac5"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://slowmist.medium.com/a-deep-dive-into-the-stars-arena-attack-765649d7fc6a"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-10/StarsArena_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: proxy 0xa481b139a1a654ca19d2074f174f17d7534e8cec created 2023-09-20 by 0xb7461cf331a3a940e69b9deea98fa43fd357f571 (Stars Arena deployer), unrelated to attack sender 0xa2ebf3fcd757e9be1e58b643b6b5077d11b4ad7a; 2 EIP-1967 Upgraded events, the last on 2023-10-05 to implementation 0x8af92c23a169b58c2e5ac656d8d8a23fc725080f - 1.7 days before the incident, an upgrade shipped after a smaller 2023-10-05 exploit of the same contract; 266,103 AVAX ~= $2.88M"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/stars-arena.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/stars-arena.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 2,
+      "date": "2023-10-07T05:23:35Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xf2a0c957fef493af44f55b201fbc6d82db2e4a045c5c856bfe3d8cb80fa30c12",
+  "protocol": {
+    "name": "SVT",
+    "slug": "svt"
+  },
+  "name": "SVT pool flawed price calculation",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xf2a0c957fef493af44f55b201fbc6d82db2e4a045c5c856bfe3d8cb80fa30c12",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1693017649
+    },
+    "attackerAddresses": [
+      "0x4b44b52ef15f7aab9a0a6cfdfa8d2c5eeeb6d8c3"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The SVT pool derives the redemption price from its own token balance instead of a tracked accounting figure, so a direct SVT transfer into the pool inflated the redemption rate and let the attacker take out its USDT."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 397782,
+      "valuationTimestamp": 1693017649,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x2120f8f305347b6aa5e5dbb347230a8234eb3379",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1692927482,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xc1deb2d5a76dbe0cb1ff0cdaf34b86d4e4c6bd25"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1692927482,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x2120f8f305347b6aa5e5dbb347230a8234eb3379"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 90167,
+      "failureModeId": "legacy:eip155:56:0xf2a0c957fef493af44f55b201fbc6d82db2e4a045c5c856bfe3d8cb80fa30c12:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/svt.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xf2a0c957fef493af44f55b201fbc6d82db2e4a045c5c856bfe3d8cb80fa30c12"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-08/SVT_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/Phalcon_xyz/status/1695285435671392504"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: SVT pool 0x2120F8F305347b6aA5E5dBB347230a8234EB3379 created 2023-08-25T01:38:02Z by 0xc1deb2d5a76dbe0cb1ff0cdaf34b86d4e4c6bd25, unrelated to attack sender 0x4b44b52ef15f7aab9a0a6cfdfa8d2c5eeeb6d8c3; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 517,684.52 USDT left the pool, of which 397,782.46 USDT went to the attack contract 0x1c651b04bdd1c1718eeeafede0a3c13e87024fa2 (the remainder repaid the flash loan)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/svt.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/svt.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-08-26T02:40:49Z"
+    }
+  },
+  "notes": []
+}

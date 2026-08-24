@@ -1,0 +1,141 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0x5d2a94785d95a740ec5f778e79ff014c880bcefec70d1a7c2440e611f84713d6",
+  "protocol": {
+    "name": "Rico",
+    "slug": "rico"
+  },
+  "name": "Rico",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0x5d2a94785d95a740ec5f778e79ff014c880bcefec70d1a7c2440e611f84713d6",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1713616643
+    },
+    "attackerAddresses": [
+      "0xc91cb089084f0126458a1938b794aa73b9f9189d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "BankDiamond.flash executed arbitrary transfer/transferFrom calldata to drain funds"
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 36000,
+      "valuationTimestamp": 1713616643,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x598c6c1cd9459f882530fc9d7da438cb74c6cb3b",
+      "relationship": "diamond",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1706771012,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "module-change",
+        "timestamp": 1711142320,
+        "blockNumber": 193149212,
+        "transactionHash": "0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc",
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2024-03-22T21:18:40Z (block 193149212, tx 0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc): last DiamondCut on BankDiamond before the incident; it Replaced facet 0xc6d7b37fe18a3dd007f9b1c3b339b8c6043b3ccf, which serves flash(address,bytes) (0xa0a7930a), the function the exploit abused"
+      },
+      "codeAgeSeconds": 2474323,
+      "failureModeId": "legacy:eip155:42161:0x5d2a94785d95a740ec5f778e79ff014c880bcefec70d1a7c2440e611f84713d6:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/rico.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x5d2a94785d95a740ec5f778e79ff014c880bcefec70d1a7c2440e611f84713d6"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2024-04/Rico_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0x598c6c1cd9459f882530fc9d7da438cb74c6cb3b is the Rico BankDiamond, an EIP-2535 diamond whose facet code changes via DiamondCut and never emits an EIP-1967 Upgraded event; eth_getLogs over creation block 176310105 (2024-02-01) to incident block 202973713 finds five DiamondCut logs: two at deployment (2024-02-01T07:03:32Z and 07:03:51Z) and three in one tx 0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc at block 193149212, 2024-03-22T21:18:40Z, which removed seven selectors, added facet 0x254834c73e3070a674ea8059be3c813694070f06 and Replaced facets 0xc6d7b37fe18a3dd007f9b1c3b339b8c6043b3ccf (21 selectors, including flash(address,bytes) 0xa0a7930a, the exploited entry point) and 0x8dfb233ef877dd5a260a52eced01a0f7e160b7b2 (5 selectors); the age is therefore measured from that cut rather than the diamond deployment"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/rico.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/rico.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2024-04-20T12:37:23Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2024-03-22T21:18:40Z (block 193149212, tx 0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc): last DiamondCut on BankDiamond before the incident; it Replaced facet 0xc6d7b37fe18a3dd007f9b1c3b339b8c6043b3ccf, which serves flash(address,bytes) (0xa0a7930a), the function the exploit abused"
+  ]
+}

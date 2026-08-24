@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0x9099383a0731fcd40550f6443c935f579085251d34b7c7285603f68b7c12f678",
+  "protocol": {
+    "name": "BaseBebopSettlement",
+    "slug": "basebebopsettlement"
+  },
+  "name": "BaseBebopSettlement",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0x9099383a0731fcd40550f6443c935f579085251d34b7c7285603f68b7c12f678",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1754989859
+    },
+    "attackerAddresses": [
+      "0x473993e254be8d46ed85b149335b2be02b2891f1"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Bebop settle() executed caller-supplied interaction transferFrom calldata against accounts that had approved the settlement contract, with no maker-signature/auth check."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 3875,
+      "valuationTimestamp": 1754989859,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xbeb0b0623f66be8ce162ebdfa2ec543a522f4ea6",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1734626991,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1734626991,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xbeb0b0623f66be8ce162ebdfa2ec543a522f4ea6"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 20362868,
+      "failureModeId": "legacy:eip155:8453:0x9099383a0731fcd40550f6443c935f579085251d34b7c7285603f68b7c12f678:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/basebebopsettlement.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0x9099383a0731fcd40550f6443c935f579085251d34b7c7285603f68b7c12f678"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2025-08/BaseBebopSettlement_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/basebebopsettlement.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/basebebopsettlement.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-08-12T09:10:59Z"
+    }
+  },
+  "notes": []
+}

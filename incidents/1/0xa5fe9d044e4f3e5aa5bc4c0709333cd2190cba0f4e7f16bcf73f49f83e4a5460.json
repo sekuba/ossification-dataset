@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460",
+  "protocol": {
+    "name": "Nomad Bridge",
+    "slug": "nomad-bridge"
+  },
+  "name": "Nomad Bridge",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460",
+      "blockNumber": 15259101,
+      "transactionIndex": null,
+      "timestamp": 1659389551
+    },
+    "attackerAddresses": [
+      "0xa8c83b1b30291a3a1a118058b5445cc83041cd9d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Replica proxy: a beacon upgrade + re-initialization on 2022-06-21T18:39:29Z set committedRoot to 0x00, making every unproven message 'proven'. Nomad's UpgradeBeaconProxy emits no EIP-1967 Upgraded event; the change is the Upgrade(address) event on the hard-coded UpgradeBeacon."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 190000000,
+      "valuationTimestamp": 1659389551,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x5d94309e5a0090b165fa4181519701637b6daeba",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1650564005,
+        "blockNumber": 14629758,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1655836769,
+        "blockNumber": 15003660,
+        "transactionHash": "0x7bccd64f4c4d5f6f545c2edf904857e6ddb460532fc0ac7eb5ac175cd21e56b1",
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2022-06-21T18:39:29Z (block 15003660, tx 0x7bccd64f4c4d5f6f545c2edf904857e6ddb460532fc0ac7eb5ac175cd21e56b1): Upgrade(address) on the Nomad UpgradeBeacon 0x0876dfe4acae0e1c0a43302716483f5752298b71 (hard-coded as an immutable in the Replica proxy runtime) pointed the Replica at implementation 0xb92336759618f55bd0f8313bd843604592e27bd8; the same upgrade re-initialized committedRoot to 0x00"
+      },
+      "codeAgeSeconds": 3552782,
+      "failureModeId": "legacy:eip155:1:0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/nomad-bridge.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review (RPC only): Replica proxy 0x5D94309E5a0090b165FA4181519701637B6DAEBA created 2022-04-21T18:00:05Z at block 14629758; 0 EIP-1967 Upgraded logs over [14629758, 15256533] and its EIP-1967 beacon slot is zero - it is a Nomad UpgradeBeaconProxy whose beacon 0x0876dfe4acae0e1c0a43302716483f5752298b71 is a PUSH32 immutable in the proxy runtime. Scanning the beacon for Upgrade(address) (topic 0xf78721226efe9a1bb678189a16d1554928b9f2192e2cb93eeda83b79fa40007d) over [beacon creation 13983756, the first exploit tx block 15259101 - 2022-08-01T21:32:31Z, tx 0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460] returns exactly two events: 2022-01-11T10:52:17Z -> implementation 0x7f58bb8311db968ab110889f2dfa04ab7e8e831b (beacon deployment) and 2022-06-21T18:39:29Z -> 0xb92336759618f55bd0f8313bd843604592e27bd8 (block 15003660, tx 0x7bccd64f4c4d5f6f545c2edf904857e6ddb460532fc0ac7eb5ac175cd21e56b1). The previously recorded day-level date 2022-06-21 is confirmed and refined to the exact block timestamp; age 3542400s -> 3518431s."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "exploit tx backfilled and verified onchain (block 15259101; tx to-address is the victim): the documented first successful exploit tx (100 WBTC) that began the free-for-all; subsequent copycats replayed the calldata"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/nomad-bridge.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/nomad-bridge.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2022-08-01T21:32:31Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2022-06-21T18:39:29Z (block 15003660, tx 0x7bccd64f4c4d5f6f545c2edf904857e6ddb460532fc0ac7eb5ac175cd21e56b1): Upgrade(address) on the Nomad UpgradeBeacon 0x0876dfe4acae0e1c0a43302716483f5752298b71 (hard-coded as an immutable in the Replica proxy runtime) pointed the Replica at implementation 0xb92336759618f55bd0f8313bd843604592e27bd8; the same upgrade re-initialized committedRoot to 0x00"
+  ]
+}

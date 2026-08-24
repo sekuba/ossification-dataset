@@ -1,0 +1,132 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b",
+  "protocol": {
+    "name": "Cover Protocol",
+    "slug": "cover-protocol"
+  },
+  "name": "Cover Protocol Blacksmith stale-cache infinite mint",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1609143076
+    },
+    "attackerAddresses": [
+      "0xf05ca010d0bd620cc7c8e96e00855dde2c2943df"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Blacksmith cached the Pool struct in memory, then called updatePool() which wrote the new accRewardsPerToken to storage, and afterwards computed the miner's rewardWriteoff from the stale in-memory value, leaving the writeoff far too low so subsequent claims minted effectively unbounded COVER."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 9400000,
+      "valuationTimestamp": 1609143076,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe0b94a7bb45dd905c79bb1992c9879f40f1caed5",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1605829775,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xdd79dc5b781b14ff091686961adc5d47e434f4b0"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1605829775,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xe0b94a7bb45dd905c79bb1992c9879f40f1caed5"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 3313301,
+      "failureModeId": "legacy:eip155:1:0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/cover-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://mudit.blog/cover-protocol-hack-analysis-tokens-minted-exploit/"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "onchain review: I scanned COVER (0x5d8d9f5b96f4438195be9b99eee6118ed4304286) Transfer-from-zero logs over blocks 11538000-11545000 - the abnormal mints start at block 11541219 (704 COVER to 0xf05ca010 via withdraw() on the Blacksmith) and escalate to 4.08e19 COVER to Grap Finance 0x00007569643bc1709561ec2e86f385df3759e5dd via claimRewards() at block 11542321 (tx 0xca135d1c4268d6354a019b66946d4fbe4de6f7ddf0ff56389a5cc2ba695b035f); Grap returned 4350 ETH, so realized attacker profit was well below the $9.4m protocol-level figure. Blacksmith created 2020-11-19 by 0xdd79dc5b781b14ff091686961adc5d47e434f4b0, not by attack sender"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/cover-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/cover-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2020-12-28T08:11:16Z"
+    }
+  },
+  "notes": []
+}

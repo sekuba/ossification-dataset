@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://l2beat.com/schemas/ossification-dataset/release-incidents.schema.json",
+  "title": "Ossification incident release",
+  "type": "object",
+  "required": ["$schema", "formatVersion", "schemaVersion", "incidents"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "const": "../../schema/release-incidents.schema.json" },
+    "formatVersion": { "const": 1 },
+    "schemaVersion": { "const": "2.0.0" },
+    "incidents": {
+      "type": "array",
+      "items": { "$ref": "incident.schema.json" }
+    }
+  }
+}

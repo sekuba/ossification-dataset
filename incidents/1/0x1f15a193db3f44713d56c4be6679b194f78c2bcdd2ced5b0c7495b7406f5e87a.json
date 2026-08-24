@@ -1,0 +1,152 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a",
+  "protocol": {
+    "name": "Silo Finance",
+    "slug": "silo-finance"
+  },
+  "name": "LeverageUsingSiloFlashloanWithGeneralSwap unvalidated swap target",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1750860683
+    },
+    "attackerAddresses": [
+      "0x04377cfaf4b4a44bb84042218cdda4cebcf8fd62"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "openLeveragePosition() on the unreleased leverage helper accepted a caller-supplied flashloan target and swap calldata without constraining them to the selected Silo market, so a fake flash lender's onFlashLoan callback made the helper call the real WETH Silo's borrow() on behalf of a third party that had granted it debt-receive approval."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 545000,
+      "valuationTimestamp": 1750860683,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xcbee4617abf667830fe3ee7dc8d6f46380829df9",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1750245935,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1750245935,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xcbee4617abf667830fe3ee7dc8d6f46380829df9"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 614748,
+      "failureModeId": "legacy:eip155:1:0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4",
+          "source-5"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/silo-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://silofinance.medium.com/post-mortem-unreleased-leverage-contract-exploitd-0ab8f37afcbb"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.quillaudits.com/blog/hack-analysis/how-silo-finance-lost-500k"
+    },
+    {
+      "id": "source-4",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2025-06/SiloFinance_exp.sol"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "onchain review: victim is the verified LeverageUsingSiloFlashloanWithGeneralSwap at 0xCbEe4617ABF667830fe3ee7DC8d6f46380829DF9, deployed by Silo 0x6d228fa4dad2163056a48fc2186d716f5c65e89a seven days before the incident and unrelated to the attack sender; 224 WETH was borrowed out of Silo 0x160287E2D3fdCDE9E91317982fc1Cc01C1f94085 against borrower 0x60BAF994f44dd10c19C0c47cbFE6048a4fFe4860"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/silo-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/silo-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-06-25T14:11:23Z"
+    }
+  },
+  "notes": []
+}

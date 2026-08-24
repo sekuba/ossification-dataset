@@ -1,0 +1,140 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:59144:0x7ffb4569827ed3acd595270c755195da5c630a1ad999afe6eb9b884ff09d6e5d",
+  "protocol": {
+    "name": "Malda",
+    "slug": "malda"
+  },
+  "name": "Migrator accepted an attacker-supplied Comptroller",
+  "incident": {
+    "chainId": 59144,
+    "exploit": {
+      "transactionHash": "0x7ffb4569827ed3acd595270c755195da5c630a1ad999afe6eb9b884ff09d6e5d",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1748631114
+    },
+    "attackerAddresses": [
+      "0x370a8db1f020ce70e8eab2502c739844ca2c2910"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Migrator.migrateAllPositions() took the source Mendi Comptroller as an unvalidated caller-supplied address, so the attacker passed a fake Comptroller and fake cToken markets deployed in the same transaction and had Malda credit real positions against fabricated balances."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 285000,
+      "valuationTimestamp": 1748631114,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xa0dc62a8ee34bcd7c9a08852c980ed78e0cf99c0",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1748505881,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xb819a871d20913839c37f316dc914b0570bfc0ee"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1748505881,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xa0dc62a8ee34bcd7c9a08852c980ed78e0cf99c0"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 125233,
+      "failureModeId": "legacy:eip155:59144:0x7ffb4569827ed3acd595270c755195da5c630a1ad999afe6eb9b884ff09d6e5d:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/malda.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 59144,
+      "transactionHash": "0x7ffb4569827ed3acd595270c755195da5c630a1ad999afe6eb9b884ff09d6e5d"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://mirror.xyz/0x4Da818DD3aAfb9D042a76B5037cdBa61533C7692/gok1E5z0NeqQGtbnPHPfa7ZsASmU03Jvpa42N6mQkIA"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://coinsbench.com/malda-hack-no-validation-and-full-access-75ac787aae28"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "onchain review on Linea: the Migrator 0xa0dc62A8eE34bcd7c9a08852C980Ed78E0Cf99c0 was created 2025-05-29 by 0xb819a871d20913839c37f316dc914b0570bfc0ee (Malda deployer), 34.8 hours before the attack tx sent by 0x370a8db1f020ce70e8eab2502c739844ca2c2910; the attack tx is itself a contract-creation deploying the exploit contract 0xb1e2c543035dc0ca845f91aec68f8a891ea5d74f and the fake Comptroller"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/malda.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/malda.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-05-30T18:51:54Z"
+    }
+  },
+  "notes": []
+}

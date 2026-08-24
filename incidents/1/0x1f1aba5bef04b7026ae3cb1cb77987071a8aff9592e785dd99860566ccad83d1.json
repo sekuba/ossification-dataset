@@ -1,0 +1,159 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1",
+  "protocol": {
+    "name": "EFLeverVault",
+    "slug": "ef-lever-vault"
+  },
+  "name": "EFLeverVault flash-loan balance inflation",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1665748727
+    },
+    "attackerAddresses": [
+      "0x26bce6ecb5b10138e4bf14ac0ffcc8727fef3b2e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "EFLeverVault priced shares off its own ETH balance and exposed an unguarded receiveFlashLoan() callback, so anyone could have Balancer flash-loan WETH into the vault and then withdraw far more ETH than they had deposited."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 993853,
+      "valuationTimestamp": 1665748727,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe39fd820b58f83205db1d9225f28105971c3d309",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1653628352,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xbf58e21b232ceea012122dd1fd60daad5791aa2e"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1653628352,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xe39fd820b58f83205db1d9225f28105971c3d309"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 12120375,
+      "failureModeId": "legacy:eip155:1:0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/ef-lever-vault.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1f1aba5bef04b7026ae3cb1cb77987071a8aff9592e785dd99860566ccad83d1"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-10/EFLeverVault_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/danielvf/status/1580936010556661761"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: EFLeverVault 0xe39fd820b58f83205db1d9225f28105971c3d309 created 2022-05-27T05:12:32Z by 0xbf58e21b232ceea012122dd1fd60daad5791aa2e, unrelated to the attack sender; plain contract, no EIP-1967 events, age from deployment. The recorded tx is the generalised front-runner 0x26bce6ec... that landed first and took the ~750 ETH; the original exploiter 0xdf31F4C8dC9548eb4c416Af26dC396A25FDE4D5F ran the same call in 0x160c5950a01b88953648ba90ec0a29b0c5383e055d35a7835d905c53a3dda01e in the same block. 750 ETH x $1,325.14 at incidentTimestamp 1665748727 (DefiLlama) = $993,853."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The vault's runtime is byte-identical at the creation block 14852275 and the incident block 15746200, and its 61 DELEGATECALL sites are solc external-library calls to the link-time SafeMath at 0x071108ad85d7a766b41e0f5e5195537a8fc8e74d (the address Etherscan reports as the linked library; its runtime begins 73<self>3014 and is constant across the window). callTracer on the exploit tx confirms that library is the only delegatecall target. The vault does expose an owner-only arbitrary `to.delegatecall(data)`, which can write storage but cannot change the vault's own runtime code, so it is not an upgrade mechanism."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/ef-lever-vault.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/ef-lever-vault.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-10-14T11:58:47Z"
+    }
+  },
+  "notes": []
+}

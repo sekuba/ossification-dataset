@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744",
+  "protocol": {
+    "name": "Spectra Finance",
+    "slug": "spectra-finance"
+  },
+  "name": "Spectra Router arbitrary call",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1721746439
+    },
+    "attackerAddresses": [
+      "0x53635bf7b92b9512f6de0eb7450b26d5d1ad9a4c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The Router's command executor did not validate the target/parameters of the commands it dispatched, so the attacker crafted a transferFrom-style call and pulled 188,013 asdCRV out of wallets that had approved the router."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 73325,
+      "valuationTimestamp": 1721746439,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x3d20601ac0ba9cae4564ddf7870825c505b69f1a",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1719593783,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x020d5ca8bd6451d4c44f784e594f02f352903e61"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1719593783,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x3d20601ac0ba9cae4564ddf7870825c505b69f1a"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 2152656,
+      "failureModeId": "legacy:eip155:1:0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/spectra-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blog.verichains.io/p/spectra-protocol-exploit-arbitrary"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-07/Spectra_finance_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: router proxy 0x3d20601a... created by 0x020d5ca8bd6451d4c44f784e594f02f352903e61 on 2024-06-28 with a single Upgraded event to impl 0x51bdbfcd7656e2c25ad1bc8037f70572b7142ecc in the creation block; loss is the 188,013 asdCRV (~$73,325) figure from Verichains, not the larger at-risk approval total"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/spectra-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/spectra-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2024-07-23T14:53:59Z"
+    }
+  },
+  "notes": []
+}

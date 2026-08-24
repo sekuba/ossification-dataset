@@ -1,0 +1,167 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d",
+  "protocol": {
+    "name": "Euler Finance",
+    "slug": "euler-finance"
+  },
+  "name": "Euler Finance",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d",
+      "blockNumber": 16817996,
+      "transactionIndex": 0,
+      "timestamp": 1678697459
+    },
+    "attackerAddresses": [
+      "0x5f259d0b76665c337c6104145894f4d1d2758b8c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Euler's EToken donateToReserves path skipped the liquidity check, enabling discounted self-liquidation. The implicated EToken module was activated in Euler's module router on 2022-08-18. Later installs of unrelated modules do not reset the age of this defect-bearing artifact."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 197000000,
+      "valuationTimestamp": 1678697459,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x27182842e098f60e3d576794a5bffb0777e025d3",
+      "relationship": "module-router",
+      "codeArtifact": {
+        "address": "0xbb0d4bb654a21054af95456a3b29c63e8d1f4c0a",
+        "codeHash": "0x0b9652d55f2b9b616fab3b715f87b4609ffff782e05ee6c8f065705420083ab9"
+      },
+      "deployment": {
+        "timestamp": 1637899985,
+        "blockNumber": 13687582,
+        "transactionHash": "0xf682db192d879c022952eeab136a5d81b07e6ca207ee887f823f5d2b738b1257",
+        "transactionIndex": 191,
+        "creatorAddress": "0xacc706d8878bf63028b89b629e84591656fc1c7d"
+      },
+      "lastCodeChange": {
+        "kind": "module-change",
+        "timestamp": 1660838493,
+        "blockNumber": 15365947,
+        "transactionHash": "0x10adc8d4e5e95cd1a850da80f2b272534ad3fbbdbe2ccb2b8296833bc7115556",
+        "transactionIndex": 80,
+        "logIndex": 161,
+        "mechanism": {
+          "type": "event",
+          "address": "0x27182842e098f60e3d576794a5bffb0777e025d3",
+          "eventTopic": "0x15fc136599039b272cb44c0ace0b099754f2656d1d52691b99c9e348662c805a",
+          "codeAddressLocation": "topic2-address"
+        },
+        "description": "InstallerInstallModule activated moduleId 500000 at the EToken implementation containing donateToReserves."
+      },
+      "codeAgeSeconds": 17858966,
+      "failureModeId": "legacy:eip155:1:0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-1",
+          "source-2",
+          "source-4",
+          "source-5"
+        ],
+        "codeHistorySourceIds": [
+          "source-2",
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "mechanical",
+        "curveEligible": false,
+        "limitations": [
+          "Exploit, deployment, module activation, call relationship, and pre-exploit runtime hash were mechanically reproduced onchain.",
+          "Failure identity and complete relevant-module history still require semantic review."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor",
+        "target-identity"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "root-cause"
+      ],
+      "note": "Independent RPC revalidation: the execution context delegates to the EToken module containing selector 0x36f022aa. InstallerInstallModule activated that artifact as moduleId 500000 at block 15365947, transaction index 80, log index 161. Later installs affected other module IDs and do not reset this target's age."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "loss"
+      ],
+      "note": "exploit tx backfilled and verified onchain (block 16817996; victim in receipt logs): the first donateToReserves drain tx of the series, canonically cited by rekt.news and the DeFiHackLabs PoC"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xf682db192d879c022952eeab136a5d81b07e6ca207ee887f823f5d2b738b1257"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x10adc8d4e5e95cd1a850da80f2b272534ad3fbbdbe2ccb2b8296833bc7115556"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/euler-finance.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/euler-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2023-03-13T08:50:59Z"
+    }
+  },
+  "notes": [
+    "Revalidation corrected the age basis from an unrelated January 2023 module install to activation of the defect-bearing EToken module."
+  ]
+}

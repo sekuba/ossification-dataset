@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x04a1f0d1694242515ecb14faa71053901f11a1286cd21c27fe5542f9eeb62356",
+  "protocol": {
+    "name": "YYDS",
+    "slug": "yyds"
+  },
+  "name": "YYDS withdrawReturnAmount access control",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x04a1f0d1694242515ecb14faa71053901f11a1286cd21c27fe5542f9eeb62356",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1662652827
+    },
+    "attackerAddresses": [
+      "0xed850799cf22b66cb4911539425f8a41423d0933"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The YYDS distribution contract's withdrawReturnAmountByReferral/ByMerchant/ByConsumer paid out YYDS to any caller without checking entitlement, and the attacker dumped the resulting YYDS into the YYDS/USDT pair inside a flash swap."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 742286,
+      "valuationTimestamp": 1662652827,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x970a76aea6a0d531096b566340c0de9b027dd39d",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1653379353,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x17304f0e5a5b42242f0118715b8c28cfe987373b"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1653379353,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x970a76aea6a0d531096b566340c0de9b027dd39d"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 9273474,
+      "failureModeId": "legacy:eip155:56:0x04a1f0d1694242515ecb14faa71053901f11a1286cd21c27fe5542f9eeb62356:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/yyds.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x04a1f0d1694242515ecb14faa71053901f11a1286cd21c27fe5542f9eeb62356"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-09/Yyds_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BlockSecTeam/status/1567928377432051713"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: distribution contract 0x970A76aEa6a0D531096b566340C0de9B027dd39D created 2022-05-24T08:02:33Z by 0x17304f0e5a5b42242f0118715b8c28cfe987373b, unrelated to attack sender 0xed850799cf22b66cb4911539425f8a41423d0933; no EIP-1967 Upgraded events, age measured from deployment. Note that the PoC's other target 0xe70cdd37667cdDF52CabF3EdabE377C58FaE99e9 was deployed by the attacker themselves and is therefore not the victim. Loss verified onchain: 742,286.27 USDT left the YYDS/USDT pair 0xd5cA448b06F8eb5acC6921502e33912FA3D63b12 to the attacker in the exploit transaction."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/yyds.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/yyds.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-09-08T16:00:27Z"
+    }
+  },
+  "notes": []
+}

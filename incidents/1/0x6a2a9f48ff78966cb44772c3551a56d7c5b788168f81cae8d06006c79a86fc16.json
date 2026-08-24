@@ -1,0 +1,129 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x6a2a9f48ff78966cb44772c3551a56d7c5b788168f81cae8d06006c79a86fc16",
+  "protocol": {
+    "name": "Unverified670471",
+    "slug": "unverified670471"
+  },
+  "name": "Unverified670471",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x6a2a9f48ff78966cb44772c3551a56d7c5b788168f81cae8d06006c79a86fc16",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1753567343
+    },
+    "attackerAddresses": [
+      "0xe4b97db5faf476db464bc271097fac97d6ce3783"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "victim accepts an externally forwarded Balancer receiveFlashLoan callback without caller validation, so the attacker keeps borrowed assets while the victim repays."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1818,
+      "valuationTimestamp": 1753567343,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x6704713b32cb1b3e89b0cf7d77417807061bdeb8",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1740052511,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1749381851,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x6704713b32cb1b3e89b0cf7d77417807061bdeb8",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 9 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 4185492,
+      "failureModeId": "legacy:eip155:1:0x6a2a9f48ff78966cb44772c3551a56d7c5b788168f81cae8d06006c79a86fc16:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/unverified670471.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x6a2a9f48ff78966cb44772c3551a56d7c5b788168f81cae8d06006c79a86fc16"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2025-07/Unverified670471_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/unverified670471.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/unverified670471.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 9,
+      "date": "2025-07-26T22:02:23Z"
+    }
+  },
+  "notes": []
+}

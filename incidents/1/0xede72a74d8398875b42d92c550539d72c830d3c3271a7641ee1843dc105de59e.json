@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xede72a74d8398875b42d92c550539d72c830d3c3271a7641ee1843dc105de59e",
+  "protocol": {
+    "name": "CEXISWAP",
+    "slug": "cexiswap"
+  },
+  "name": "CEXISWAP",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xede72a74d8398875b42d92c550539d72c830d3c3271a7641ee1843dc105de59e",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1695279371
+    },
+    "attackerAddresses": [
+      "0x060c169c4517d52c4be9a1dd53e41a3328d16f04"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Uninitialized UUPS proxy: attacker calls initialize to seize admin then upgradeToAndCall a malicious implementation."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 30000,
+      "valuationTimestamp": 1695279371,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb8a5890d53df78dee6182a6c0968696e827e3305",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1633699334,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1633699334,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb8a5890d53df78dee6182a6c0968696e827e3305"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 61580037,
+      "failureModeId": "legacy:eip155:1:0xede72a74d8398875b42d92c550539d72c830d3c3271a7641ee1843dc105de59e:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/cexiswap.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xede72a74d8398875b42d92c550539d72c830d3c3271a7641ee1843dc105de59e"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2023-09/CEXISWAP_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "attacker-event correction: the single Upgraded event on the proxy (block 18182606) is emitted by the exploit tx itself - the attacker's own initialize+upgradeToAndCall is part of the attack, not a protocol code change. The uninitialized proxy was deployed 2021-10-08T13:22:14Z and sat vulnerable until the 2023-09-21 exploit; age measured from deployment: 712.7 days (previously misrecorded as 0s)"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/cexiswap.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/cexiswap.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-09-21T06:56:11Z"
+    }
+  },
+  "notes": []
+}

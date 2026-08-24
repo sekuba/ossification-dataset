@@ -1,39 +1,71 @@
 # Ossification Dataset
 
-The exploit dataset behind L2BEAT's **ossification score**: a protocol's score
-is the percentile of its critical perimeter's age within this dataset's
-exploited-code ages — *"ossification N = the unchanged perimeter has outlived
-the code age of N% of recorded code-bug exploits."*
+An auditable dataset of EVM code-bug exploits, the age of the executing code at
+failure, and the resulting loss.
 
-**Only `code-bug` incidents feed the curve.** Everything is verifiable from
-public onchain data; `scripts/verify.mjs` re-derives any measured row.
+## Interface
 
-## Layout
+Each file under `incidents/<chainId>/` represents one exploit transaction and
+uses the stable ID `eip155:<chainId>:<exploitTx>`. The incident owns its
+classification and loss. Its targets own independently measured code ages.
 
+A target identifies:
+
+- the `executionAddress` whose storage and authority were used;
+- the implementation, facet, module, library, or direct runtime containing the
+  defect;
+- the last onchain change that made that artifact active;
+- evidence for artifact identity and code history.
+
+Code age is:
+
+```text
+incident timestamp - last pre-exploit executable-code change timestamp
 ```
-protocols/<slug>.json   one file per protocol: its incidents
-exclusions.json         rejected candidates, each with its reason (append-only)
-curve/v<version>.json   released curve knots; changes only at versioned releases
-schema/                 JSON Schema for protocol files
-SOURCES.md              candidate lists and verification tooling behind the rows
-list-to-check.md        the raw web-research candidate list referenced by SOURCES.md
-scripts/lint.mjs        offline validation: schema shape + cross-field invariants
-scripts/build-curve.mjs deterministic curve rebuild (--check verifies a release, --stats prints dataset stats)
-scripts/verify.mjs      re-derive measurements from RPC (single file or --all)
+
+Transaction and log positions provide exact ordering. `METHODOLOGY.md` defines
+cohort admission, measurements, verification, loss valuation, and
+deduplication.
+
+## Repository layout
+
+```text
+incidents/                    source incident records
+schema/incident.schema.json   source schema
+schema/release-*.schema.json  generated-interface schemas
+research/candidates.json      candidate disposition and coverage ledger
+research/raw/                 hashed discovery and migration inputs
+dist/latest/incidents.json    generated incident interface
+dist/latest/curve.json        curve observations and revalidation queue
+dist/latest/manifest.json     cohort, counts, and source hashes
+scripts/check.mjs             schema and cross-record validation
+scripts/verify.mjs            fail-closed onchain anchor verification
+scripts/build.mjs             deterministic distribution builder
+scripts/build-candidates.mjs  deterministic research-ledger builder
 ```
 
-`npm test` = lint + rebuild-matches-release.
+Consumers join each curve observation to its incident-level loss through
+`incidentId`. Every source target appears in the curve release as selected,
+deduplicated, provisional, or otherwise excluded.
 
-## Curve
+Current cohort counts, verification tiers, exclusions, and source hashes are
+published in `dist/latest/manifest.json` and `dist/latest/curve.json`.
 
-`build-curve.mjs` takes every measured `code-bug` row and emits **one
-observation per `(chain, victimContract, lastChange)`**.
-Knots = sorted `codeAgeSeconds`.
+## Commands
 
-Score = interpolated percentile with Weibull plotting positions
-`p_i = (i+1)/(n+1)`.
+Use Node 22.
 
-## Updating
+```bash
+npm test
+npm run build
+npm run candidates
+npm run verify -- incidents/1/<file>.json
+npm run verify -- --all --quiet
+npm run verify -- incidents/1/<file>.json --curve-ready
+```
 
-See `CONTRIBUTING.md` for the full inclusion rule, classification precedents,
-and measurement procedure. Rejected candidates go to `exclusions.json`.
+The verifier exits successfully when every declared anchor reaches
+`PASS_ANCHORS`. Exploratory sweeps can retain incomplete results with
+`--allow-incomplete`.
+
+Interpret `ageKnots` as the empirical ages of reviewed exploit observations.

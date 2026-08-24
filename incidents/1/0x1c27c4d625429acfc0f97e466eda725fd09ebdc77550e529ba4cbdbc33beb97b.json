@@ -1,0 +1,138 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x1c27c4d625429acfc0f97e466eda725fd09ebdc77550e529ba4cbdbc33beb97b",
+  "protocol": {
+    "name": "Bunni",
+    "slug": "bunni"
+  },
+  "name": "BunniHub withdraw rounding",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x1c27c4d625429acfc0f97e466eda725fd09ebdc77550e529ba4cbdbc33beb97b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1756787903
+    },
+    "attackerAddresses": [
+      "0x0c3d8fa7762ca5225260039ab2d3990c035b458d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "BunniHubLogic.withdraw() rounded the idle-balance update in the wrong direction, so a sequence of precisely sized swaps against the Liquidity Distribution Function shrank a pool's active reserves while burning almost no shares, letting the attacker withdraw more than deposited (Ethereum USDC/USDT leg; the same BunniHub address on Unichain lost a further ~$5.9m in tx 0x4776f31156501dd456664cd3c91662ac8acc78358b9d4fd79337211eb6a1d451)."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2400000,
+      "valuationTimestamp": 1756787903,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x000000000049c7bcbca294e63567b4d21eb765f1",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1749683423,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1749683423,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x000000000049c7bcbca294e63567b4d21eb765f1"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 7104480,
+      "failureModeId": "legacy:eip155:1:0x1c27c4d625429acfc0f97e466eda725fd09ebdc77550e529ba4cbdbc33beb97b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bunni.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1c27c4d625429acfc0f97e466eda725fd09ebdc77550e529ba4cbdbc33beb97b"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blog.verichains.io/p/bunnixyz-vulnerability-exposed-how"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: BunniHub 0x0000...65f1 (creator 0xfbe09b7a6c6cc3a72b4ca41cdd9c88ac62bb7937, unrelated to attack sender 0x0c3d8fa7...) is reached through Uniswap v4 PoolManager and BunniHook 0x000052423c1db6b7ff8641b85a7eefc7b2791888 in the attack tx; no EIP-1967 Upgraded events before the incident; the identical Unichain deployment (same address, deployed 2025-06-11) was drained 171 seconds earlier and is omitted here only because scripts/verify.mjs has no chain id for unichain. Recheck (deployment basis confirmed): all 44 DELEGATECALLs the hub makes during the exploit go to 0x000000000dbb048f2e744e4b15b5aeef65e09528 (BunniHubLogic), which appears as a PUSH20 link-time constant in the hub's runtime and so cannot be repointed; keccak(eth_getCode) on the hub is identical at the creation block 22684511 and the incident block 23273098, and neither the EIP-1967 implementation nor the beacon slot is set."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bunni.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bunni.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-09-02T04:38:23Z"
+    }
+  },
+  "notes": []
+}

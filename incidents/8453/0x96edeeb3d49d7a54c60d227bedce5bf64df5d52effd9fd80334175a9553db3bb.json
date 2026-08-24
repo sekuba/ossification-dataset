@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0x96edeeb3d49d7a54c60d227bedce5bf64df5d52effd9fd80334175a9553db3bb",
+  "protocol": {
+    "name": "Kipseli",
+    "slug": "kipseli"
+  },
+  "name": "Kipseli PropAMMWrapper quote-unit mismatch",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0x96edeeb3d49d7a54c60d227bedce5bf64df5d52effd9fd80334175a9553db3bb",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1776806657
+    },
+    "attackerAddresses": [
+      "0x2352a1fca90182509dca9c12b2cad582a38e8b82"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "PropAMMWrapper paid out the integer returned by a USDC-denominated (6-decimal) quoter as raw units of tokenOut without asserting tokenOut was the quote token, so a WETH -> cbBTC route worth about 92 USDC transferred ~0.926 cbBTC (8 decimals) instead."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 72350,
+      "valuationTimestamp": 1776806657,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xd35c6717cca1e04696b694dcb1643ac3620d2152",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1776158735,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xaee25670e53e86e1e6247c77fdaaf422a3c55b8d"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1776158735,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xd35c6717cca1e04696b694dcb1643ac3620d2152"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 647922,
+      "failureModeId": "legacy:eip155:8453:0x96edeeb3d49d7a54c60d227bedce5bf64df5d52effd9fd80334175a9553db3bb:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/kipseli.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0x96edeeb3d49d7a54c60d227bedce5bf64df5d52effd9fd80334175a9553db3bb"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blocksec.com/blog/weekly-web3-security-roundup-2026-04-26"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-04/KipseliPropAMM_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim is the verified PropAMMWrapper created 2026-04-14 by 0xaee25670e53e86e1e6247c77fdaaf422a3c55b8d (not the attacker), no Upgraded events - the exploited code was 7.5 days old. DefiLlama records $72,350 (Input Validation / Missing Input Validation, Base)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/kipseli.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/kipseli.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-04-21T21:24:17Z"
+    }
+  },
+  "notes": []
+}

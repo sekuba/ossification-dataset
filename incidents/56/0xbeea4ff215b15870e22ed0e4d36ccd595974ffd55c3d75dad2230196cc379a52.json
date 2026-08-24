@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xbeea4ff215b15870e22ed0e4d36ccd595974ffd55c3d75dad2230196cc379a52",
+  "protocol": {
+    "name": "MetaWin (unverified BSC staking)",
+    "slug": "metawin-0x431abb"
+  },
+  "name": "MetaWin buy/bindParent referral farming",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xbeea4ff215b15870e22ed0e4d36ccd595974ffd55c3d75dad2230196cc379a52",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1701429640
+    },
+    "attackerAddresses": [
+      "0xa9edec4496bd013dac805fb221edefc53cbfaf05"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The unverified staking contract lets any address call buy() and bindParent() to register itself as its own referral chain, so the attacker minted referral rewards for stakes it fully controlled and claimed them out."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 500000,
+      "valuationTimestamp": 1701429640,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x431abb27dab05f4e7cdeaa18390fe39364197500",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1701321645,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x1abeab1ab075a7188d23dded842b2c7f41cf3e11"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1701321645,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x431abb27dab05f4e7cdeaa18390fe39364197500"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 107995,
+      "failureModeId": "legacy:eip155:56:0xbeea4ff215b15870e22ed0e4d36ccd595974ffd55c3d75dad2230196cc379a52:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/metawin-0x431abb.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xbeea4ff215b15870e22ed0e4d36ccd595974ffd55c3d75dad2230196cc379a52"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/Phalcon_xyz/status/1730625352953901123"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-12/UnverifiedContr_0x431abb_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0x431abb27dab05f4e7cdeaa18390fe39364197500 created 2023-11-30T05:20:45Z by 0x1abeab1ab075a7188d23dded842b2c7f41cf3e11, which is not the attack-tx sender 0xa9edec4496bd013dac805fb221edefc53cbfaf05; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/metawin-0x431abb.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/metawin-0x431abb.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-12-01T11:20:40Z"
+    }
+  },
+  "notes": []
+}

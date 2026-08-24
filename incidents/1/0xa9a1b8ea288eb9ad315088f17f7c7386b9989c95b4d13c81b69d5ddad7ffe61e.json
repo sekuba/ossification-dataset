@@ -1,0 +1,137 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e",
+  "protocol": {
+    "name": "Cream Finance",
+    "slug": "cream-finance"
+  },
+  "name": "Cream Finance (AMP reentrancy)",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e",
+      "blockNumber": 13125071,
+      "transactionIndex": null,
+      "timestamp": 1630302287
+    },
+    "attackerAddresses": [
+      "0xce1f4b4f17224ec6df16eeb1e3e5321c54ff6ede"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "crAMP market: ERC777-style reentrancy through AMP token transfer hooks during borrow. Market listed ~2 months before."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 18800000,
+      "valuationTimestamp": 1630302287,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x2db6c82ce72c8d7d770ba1b5f5ed0b6e075066d6",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1612850081,
+        "blockNumber": 11820452,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1630060754,
+        "blockNumber": 13107006,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2021-08-27T10:39:14Z (block 13107006): NewImplementation(0x8dc840cead11a46f59c65b1697698a2b60fa0789 -> 0x3c710b981f5ef28da1807ce7ed3f2a28580e0754, CCollateralCapErc20Delegate) emitted by the victim CErc20Delegator itself; corroborated by binary-searching eth_getStorageAt on slot 18 (`implementation` in the verified named layout), which last changes in that same block"
+      },
+      "codeAgeSeconds": 241533,
+      "failureModeId": "legacy:eip155:1:0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/cream-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 13126750, 2021-08-30T12:00:00Z). The crAMP market 0x2Db6c82CE72C8d7D770ba1b5F5Ed0b6E075066d6 is a Compound-fork CErc20Delegator created at block 11820452, 2021-02-09T05:54:41Z: it emits no EIP-1967 Upgraded event, so the previous deployment basis (202.3d) was wrong. Its implementation pointer lives at storage slot 18 (`implementation`, per the verified named layout from cast storage) and every change emits Compound's NewImplementation(address,address). eth_getLogs over [creation, incident] returns SIX of them: block 11820452 2021-02-09T05:54:41Z -> 0xc9d8a3b9c39b71969280fc249c87b5d0cb77f3c9 (CErc20Delegate, set at construction); 12199012 2021-04-08T12:00:38Z -> 0xe9ea58efb13733d413365f02ea52b21d25f0ceb6; 12199804 2021-04-08T14:52:48Z -> 0x852dc31074d42beb1ee8fba7829cb5bd4d68aaf3; 12200860 2021-04-08T18:43:33Z -> 0xcc44572b57372dac502bcd784705e083779b2afc; 12471013 2021-05-20T11:29:39Z -> 0x8dc840cead11a46f59c65b1697698a2b60fa0789; and last, 13107006 2021-08-27T10:39:14Z -> 0x3c710b981f5ef28da1807ce7ed3f2a28580e0754 (CCollateralCapErc20Delegate). A binary search of eth_getStorageAt on slot 18 independently puts the last change at block 13107006. Age measured from that last implementation swap: 264046s (~3.1 days), not the 202.3 days implied by the delegator's deployment."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "exploit tx backfilled and verified onchain (block 13125071; crAMP victim in receipt logs), cited by PeckShield and the DeFiHackLabs 2021-08 index"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/cream-finance.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/cream-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2021-08-30T05:44:47Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2021-08-27T10:39:14Z (block 13107006): NewImplementation(0x8dc840cead11a46f59c65b1697698a2b60fa0789 -> 0x3c710b981f5ef28da1807ce7ed3f2a28580e0754, CCollateralCapErc20Delegate) emitted by the victim CErc20Delegator itself; corroborated by binary-searching eth_getStorageAt on slot 18 (`implementation` in the verified named layout), which last changes in that same block"
+  ]
+}

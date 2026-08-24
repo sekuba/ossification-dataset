@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xe30dc75253eecec3377e03c532aa41bae1c26909bc8618f21fb83d4330a01018",
+  "protocol": {
+    "name": "ShadowFi",
+    "slug": "shadowfi"
+  },
+  "name": "ShadowFi SDF public burn",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xe30dc75253eecec3377e03c532aa41bae1c26909bc8618f21fb83d4330a01018",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1662087762
+    },
+    "attackerAddresses": [
+      "0x4daa3135b016ac37c46ed03423d314caea89ff5e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "SDF.burn(address,uint256) had no access control, so the attacker burned almost the entire SDF balance of the SDF/WBNB pair, synced it and swapped a small SDF holding for the pair's WBNB."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 298347,
+      "valuationTimestamp": 1662087762,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x10bc28d2810dd462e16facff18f78783e859351b",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1661494816,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x5671e238bee4cd57a5722038f846f35d8ca35ed7"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1661494816,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x10bc28d2810dd462e16facff18f78783e859351b"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 592946,
+      "failureModeId": "legacy:eip155:56:0xe30dc75253eecec3377e03c532aa41bae1c26909bc8618f21fb83d4330a01018:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/shadowfi.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xe30dc75253eecec3377e03c532aa41bae1c26909bc8618f21fb83d4330a01018"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-09/Shadowfi_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/PeckShieldAlert/status/1565549688509861888"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: SDF 0x10bc28d2810dD462E16facfF18f78783e859351b created 2022-08-26T06:20:16Z by 0x5671e238bee4cd57a5722038f846f35d8ca35ed7, unrelated to attack sender 0x4daa3135b016ac37c46ed03423d314caea89ff5e; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 1,078.62 WBNB left the SDF/WBNB pair to the attacker; 1,078.6167 WBNB x $276.60 at incidentTimestamp 1662087762 (DefiLlama coingecko:binancecoin) = $298,347."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/shadowfi.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/shadowfi.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-09-02T03:02:42Z"
+    }
+  },
+  "notes": []
+}

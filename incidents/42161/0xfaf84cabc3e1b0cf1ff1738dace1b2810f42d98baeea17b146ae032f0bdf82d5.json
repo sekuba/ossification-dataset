@@ -1,0 +1,144 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0xfaf84cabc3e1b0cf1ff1738dace1b2810f42d98baeea17b146ae032f0bdf82d5",
+  "protocol": {
+    "name": "Sperax USDs",
+    "slug": "sperax"
+  },
+  "name": "Sperax USDs balance recalculation bug",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0xfaf84cabc3e1b0cf1ff1738dace1b2810f42d98baeea17b146ae032f0bdf82d5",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1675466814
+    },
+    "attackerAddresses": [
+      "0x26c1fd9fd5a1338aabbdbe3f64f3e73369a0f4a0"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "A rebasing-balance recalculation in the USDs token let an account's credited balance be inflated by toggling its rebase opt-in state, minting USDs out of nothing."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 309000,
+      "valuationTimestamp": 1675466814,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xd74f5255d557944cf7dd0e45ff521520002d5748",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1640227331,
+        "blockNumber": 48326486,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x42d2f9f84eeb86574aa4e9fcccfd74066d809600"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1671814445,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xd74f5255d557944cf7dd0e45ff521520002d5748",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 5 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 3652369,
+      "failureModeId": "legacy:eip155:42161:0xfaf84cabc3e1b0cf1ff1738dace1b2810f42d98baeea17b146ae032f0bdf82d5:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/sperax.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0xfaf84cabc3e1b0cf1ff1738dace1b2810f42d98baeea17b146ae032f0bdf82d5"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-02/USDs_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: USDs proxy 0xD74f5255D557944cf7Dd0E45FF521520002D5748 created 2021-12-23T02:42:11Z by 0x42d2f9f84eeb86574aa4e9fcccfd74066d809600, not the attack-tx sender 0x26c1fd9fd5a1338aabbdbe3f64f3e73369a0f4a0; five EIP-1967 Upgraded events, the last at block 48326486 on 2022-12-23T16:54:05Z installing 0x97a7e6cf949114fe4711018485d757b9c4962307 (the address the PoC labels USDsImpl), so the executing code was 42.3 days old. Loss ~309k USDs per the DeFiHackLabs 2023 index entry for this PoC; USDs is USD-pegged and taken at 1:1."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/sperax.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/sperax.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 5,
+      "date": "2023-02-03T23:26:54Z"
+    }
+  },
+  "notes": []
+}

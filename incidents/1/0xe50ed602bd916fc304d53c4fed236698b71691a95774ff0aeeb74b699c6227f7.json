@@ -1,0 +1,136 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7",
+  "protocol": {
+    "name": "Multichain",
+    "slug": "multichain"
+  },
+  "name": "Multichain (AnyswapV4 permit)",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7",
+      "blockNumber": 14037237,
+      "transactionIndex": null,
+      "timestamp": 1642612358
+    },
+    "attackerAddresses": [
+      "0xfa2731d0bede684993ab1109db7ecf5bf33e8051"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "AnyswapV4Router: anySwapOutUnderlyingWithPermit did not validate the token, letting attackers pull WETH from accounts with stale approvals (WETH has no permit; fallback executed)."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 3000000,
+      "valuationTimestamp": 1642612358,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x6b7a87899490ece95443e979ca9485cbe7e71522",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1624013046,
+        "blockNumber": 12657964,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1624013046,
+        "blockNumber": 12657964,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x6b7a87899490ece95443e979ca9485cbe7e71522"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 18599312,
+      "failureModeId": "legacy:eip155:1:0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/multichain.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review (no exploit tx: incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 14029360, 2022-01-18T12:00:00Z). AnyswapV4Router 0x6b7a87899490EcE95443e979cA9485CBE7E71522 was created at block 12657964, 2021-06-18T10:44:06Z. It is not a proxy: zero DELEGATECALL opcodes in the runtime, no EIP-1967 Upgraded event, and byte-identical eth_getCode at the creation block and the incident block, so the deployment basis is exact. Storage was checked against the verified named layout (cast storage): slot 0 `_oldMPC`, slot 1 `_newMPC`, slot 2 `_newMPCEffectiveTime`; the only pre-incident storage change (slot 0 at block 12806663, 2021-07-11T14:56:16Z -> 0x8b44a687224496276811555efa3f2d0acd667a72) is an MPC key rotation, not a code change."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "note": "exploit tx backfilled and verified onchain (block 14037237; AnyswapV4Router victim in receipt logs): the canonical DeFiHackLabs-referenced attack tx of the Jan 2022 permit flaw - many copycat txs followed public disclosure"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/multichain.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/multichain.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-01-19T17:12:38Z"
+    }
+  },
+  "notes": []
+}

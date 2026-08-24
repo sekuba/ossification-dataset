@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:137:0x55dad44a7ed31d1637e70879af66e02290d39aea54554f8411e6ec19c03a074b",
+  "protocol": {
+    "name": "SafeDollar",
+    "slug": "safedollar"
+  },
+  "name": "SafeDollar reward pool deflationary-token accounting",
+  "incident": {
+    "chainId": 137,
+    "exploit": {
+      "transactionHash": "0x55dad44a7ed31d1637e70879af66e02290d39aea54554f8411e6ec19c03a074b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1624832766
+    },
+    "attackerAddresses": [
+      "0xfedc2487ed4bb740a268c565dacdd39c17be7ebd"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The SDO reward pool credited deposits and computed pending rewards from the amount passed in rather than the amount actually received, and SDO burns a fee on every transfer, so a deposit/withdraw/harvest loop kept minting rewards the pool could not back."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 200000,
+      "valuationTimestamp": 1624832766,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x17684f4d5385fac79e75ceafc93f22d90066ed5c",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1623395332,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x82d733c32bb3b760ca50b83b75642b668e9b2ebd"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1623395332,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x17684f4d5385fac79e75ceafc93f22d90066ed5c"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1437434,
+      "failureModeId": "legacy:eip155:137:0x55dad44a7ed31d1637e70879af66e02290d39aea54554f8411e6ec19c03a074b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/safedollar.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 137,
+      "transactionHash": "0x55dad44a7ed31d1637e70879af66e02290d39aea54554f8411e6ec19c03a074b"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2021-06/SafeDollar_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: the PoC carries no transaction hash, so the exploit tx was recovered by querying eth_getLogs on the reward pool 0x17684f4d5385FAc79e75CeafC93f22D90066eD5C across the PoC's fork block window (16225170-16225176), which yields exactly one transaction, 0x55dad44a...074b at block 16225172. The pool was created 2021-06-11T07:08:52Z by 0x82d733c32bb3b760ca50b83b75642b668e9b2ebd, not the attack-tx sender 0xfedc2487ed4bb740a268c565dacdd39c17be7ebd; no EIP-1967 events, 16.6 days old. Loss $0.2 million per the DeFiHackLabs 2021 index entry for this PoC."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/safedollar.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/safedollar.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-06-27T22:26:06Z"
+    }
+  },
+  "notes": []
+}

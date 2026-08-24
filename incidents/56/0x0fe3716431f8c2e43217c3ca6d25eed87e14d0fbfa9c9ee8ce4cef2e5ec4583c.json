@@ -1,0 +1,156 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x0fe3716431f8c2e43217c3ca6d25eed87e14d0fbfa9c9ee8ce4cef2e5ec4583c",
+  "protocol": {
+    "name": "MARA (0xc6a8)",
+    "slug": "mara-c6a8"
+  },
+  "name": "MARA proxy unauthenticated swap entry point",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x0fe3716431f8c2e43217c3ca6d25eed87e14d0fbfa9c9ee8ce4cef2e5ec4583c",
+      "blockNumber": 42538916,
+      "transactionIndex": 25,
+      "timestamp": 1727196179
+    },
+    "attackerAddresses": [
+      "0x3026c464d3bd6ef0ced0d49e80f171b58176ce32"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The MARA proxy exposes an unauthenticated payable entry point (selector 0x5fc985ea) that runs caller-supplied swap paths with the contract's own funds, letting the attacker skew the MARA pair inside a DODO flash loan and sell into it."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 5337,
+      "valuationTimestamp": 1727196179,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xc6a8c02dd5a3dd1616ec072bfc7c9d3df9682a63",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": "0xa3f6af29001874ed06c1bf41427e33256b1d97d4",
+        "codeHash": "0xd0efe2e412de40e9f9afc234f964876cc2bc323dbac46e09c33079202df408c0"
+      },
+      "deployment": {
+        "timestamp": 1720859071,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x1e28945e3be54673b632e9300ec9c8dfee0be26e"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1724165653,
+        "blockNumber": 41531421,
+        "transactionHash": "0xb1ecf5569d739d5aebfba26b53d00edd95004f22bc7f1fa597fbcd7c96adc46b",
+        "transactionIndex": 21,
+        "logIndex": 78,
+        "mechanism": {
+          "type": "event",
+          "address": "0xc6a8c02dd5a3dd1616ec072bfc7c9d3df9682a63",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Fourth and final Upgraded event before the exploit; it selected the implementation executed during the exploit."
+      },
+      "codeAgeSeconds": 3030526,
+      "failureModeId": "legacy:eip155:56:0x0fe3716431f8c2e43217c3ca6d25eed87e14d0fbfa9c9ee8ce4cef2e5ec4583c:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-1",
+          "source-2",
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Exploit, implementation upgrade, call relationship, runtime hash, and absence of later Upgraded events were mechanically reproduced onchain.",
+          "The execution proxy's deployment transaction remains unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor",
+        "target-identity"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x0fe3716431f8c2e43217c3ca6d25eed87e14d0fbfa9c9ee8ce4cef2e5ec4583c"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-09/MARA_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim 0xc6a8c02dd5a3dd1616ec072bfc7c9d3df9682a63 created 2024-07-13T08:24:31Z by 0x1e28945e3be54673b632e9300ec9c8dfee0be26e, which is not the attack-tx sender 0x3026c464d3bd6ef0ced0d49e80f171b58176ce32; 4 EIP-1967 Upgraded events on the victim before the incident; code age measured from last of 4 upgrade events (onchain). 8.8 WBNB x $606.53/BNB at the incident timestamp 1727196179 (DefiLlama coingecko:binancecoin) = $5,337."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xb1ecf5569d739d5aebfba26b53d00edd95004f22bc7f1fa597fbcd7c96adc46b"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/mara-c6a8.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/mara-c6a8.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 4,
+      "date": "2024-09-24T16:42:59Z"
+    }
+  },
+  "notes": []
+}

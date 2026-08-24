@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xd48758ef48d113b78a09f7b8c7cd663ad79e9965852e872fdfc92234c3e598d2",
+  "protocol": {
+    "name": "MEV bot 0x64dD59D6",
+    "slug": "mevbot-0x64dd"
+  },
+  "name": "BNB48 private-tx MEV bot pancakeCall access control",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xd48758ef48d113b78a09f7b8c7cd663ad79e9965852e872fdfc92234c3e598d2",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1663074440
+    },
+    "attackerAddresses": [
+      "0xee286554f8b315f0560a15b6f085ddad616d0601"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The MEV bot's pancakeCall() callback never checked that msg.sender was a genuine PancakeSwap pair, so anyone could invoke it with crafted token0()/token1() and calldata and transfer the bot's whole balance out."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 147449,
+      "valuationTimestamp": 1663074440,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x64dd59d6c7f09dc05b472ce5cb961b6e10106e1d",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1661843800,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x7c58b98bc9860778f0b1e72f945b8ff6fd22e48c"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1661843800,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x64dd59d6c7f09dc05b472ce5cb961b6e10106e1d"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1230640,
+      "failureModeId": "legacy:eip155:56:0xd48758ef48d113b78a09f7b8c7cd663ad79e9965852e872fdfc92234c3e598d2:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/mevbot-0x64dd.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xd48758ef48d113b78a09f7b8c7cd663ad79e9965852e872fdfc92234c3e598d2"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-09/BNB48MEVBot_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blocksecteam.medium.com/the-two-sides-of-the-private-tx-service-on-binance-smart-chain-a76917c3ce51"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: bot 0x64dD59D6C7f09dc05B472ce5CB961b6E10106E1d created 2022-08-30T07:16:40Z by 0x7c58b98bc9860778f0b1e72f945b8ff6fd22e48c, unrelated to attack sender 0xee286554f8b315f0560a15b6f085ddad616d0601; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the exploit transaction moved 25,912.95 USDT, 22,307.55 BUSD, 5,160.33 USDC, 327.93 WBNB, 0.015 BTCB and 0.0975 ETH out of the bot; 327.93 WBNB x $285.39, 0.015 BTCB x $21,396.15 and 0.0975 ETH x $1,636.59 at incidentTimestamp 1663074440 (DefiLlama) give a total of $147,449, close to the ~$140k reported."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/mevbot-0x64dd.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/mevbot-0x64dd.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-09-13T13:07:20Z"
+    }
+  },
+  "notes": []
+}

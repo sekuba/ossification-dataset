@@ -1,0 +1,176 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f",
+  "protocol": {
+    "name": "ElasticSwap",
+    "slug": "elasticswap"
+  },
+  "name": "ElasticSwap exchange decay accounting",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1670898767
+    },
+    "attackerAddresses": [
+      "0xbeadedbabed6a353c9caa4894aa7e5f883e32967"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The ElasticSwap ELP exchange tracked internal x*y=k reserves separately from real ERC-20 balances to support rebasing tokens, and the 'decay' correction let an attacker donate into the pool and then redeem liquidity for more than was contributed."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 845000,
+      "valuationTimestamp": 1670898767,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4",
+        "source-5",
+        "source-6"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xa0c5aa50ce3cc69b1c478d8235597bc0c51dfdab",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1652151110,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x1806c8c7993086f971bb6f605a5cd3e369e64ed6"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1652151110,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xa0c5aa50ce3cc69b1c478d8235597bc0c51dfdab"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 18747657,
+      "failureModeId": "legacy:eip155:1:0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4",
+          "source-5",
+          "source-6"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5",
+          "source-6"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/elasticswap.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://quillaudits.medium.com/decoding-elastic-swaps-850k-exploit-quillaudits-9ceb7fcd8d1a"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-12/ElasticSwap_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: the exploit transaction the PoC cites resolves on Ethereum mainnet, not Avalanche as the PoC's fork suggests; ELP exchange 0x4ae1Da57f2d6b2E9a23d07e264Aa2B3bBCaeD19A created 2022-05-07T15:57:56Z by 0x1806c8c7993086f971bb6f605a5cd3e369e64ed6, not the attack-tx sender 0xbeadedbabed6a353c9caa4894aa7e5f883e32967; no EIP-1967 events, 219.4 days old. Loss $845k per the DeFiHackLabs 2022 index entry for this PoC."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The Exchange's runtime is byte-identical at the creation block 14730695 and the incident block 16172820, and its five DELEGATECALL sites are solc external-library calls to the link-time-hardcoded MathLib 0xe3c08c95aa81474f44bee23f8c45d470ddad37be (runtime begins 73<self>3014, constant across the window), so nothing about the executing code can be repointed. Flagged separately for a curator, not changed here: callTracer on the cited exploit tx never reaches 0x4ae1Da57...; the ELP exchange actually drained is 0xa0c5aa50ce3cc69b1c478d8235597bc0c51dfdab, another ElasticSwap `Exchange` created 2022-05-10T02:51:50Z (block 14746111), which would give 18,747,657 s (217.0 d) instead of 18,959,691 s (219.4 d)."
+    },
+    {
+      "id": "source-6",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim corrected from ELP exchange 0x4ae1Da57f2d6b2E9a23d07e264Aa2B3bBCaeD19A, which emits no logs at all in the cited exploit transaction, to the ElasticSwap Exchange actually drained, 0xa0c5aa50ce3cc69b1c478d8235597bc0c51dfdab, which emits 14 of that transaction's logs and is its top emitter. Created 2022-05-10T00:11:50Z (block 14746111) by 0x72c6d5b5e7f921e84166dc2061bef4533a5a98db, unrelated to attack sender 0xbeadedbabed6a353c9caa4894aa7e5f883e32967; no EIP-1967 Upgraded events in range. Age 216.99 d, previously 219.44 d against the wrong pool"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/elasticswap.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/elasticswap.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-12-13T02:32:47Z"
+    }
+  },
+  "notes": []
+}

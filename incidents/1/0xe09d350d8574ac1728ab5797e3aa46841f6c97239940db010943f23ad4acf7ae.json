@@ -1,0 +1,152 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae",
+  "protocol": {
+    "name": "XBridge",
+    "slug": "xbridge"
+  },
+  "name": "XBridge permissionless listToken then withdrawTokens",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1713943115
+    },
+    "attackerAddresses": [
+      "0x0cfc28d16d07219249c6d6d6ae24e7132ee4caa7"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "XBridge.listToken() carried no access control, so the attacker listed the tokens already held by the bridge against a corresponding token of their choosing and then called withdrawTokens() to move the bridge's real deposits out."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1600000,
+      "valuationTimestamp": 1713943115,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x47ddb6a433b76117a98fbeab5320d8b67d468e31",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1697802095,
+        "blockNumber": 19720066,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xfe6fb9ded2651fd325512657d34911d2fb5d646b"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1713899123,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x47ddb6a433b76117a98fbeab5320d8b67d468e31",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 5 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 43992,
+      "failureModeId": "legacy:eip155:1:0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/xbridge.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/CyversAlerts/status/1783045506471432610"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-04/XBridge_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: bridge proxy 0x47Ddb6A433B76117a98FBeAb5320D8b67D468e31 created 2023-10-20 by 0xfe6fb9ded2651fd325512657d34911d2fb5d646b, not the attacker; five EIP-1967 Upgraded events, the last at block 19720066 on 2024-04-23T19:05:23Z installing 0x354cca2f55dde182d36fe34d673430e226a3cb8c (the address the PoC header calls the vulnerable contract) — 12.2 hours before the exploit. The drain completes in a second transaction 0x903d88a92cbc0165a7f662305ac1bff97430dbcccaa0fe71e101e18aa9109c92; the deposit transaction recorded here is the one the PoC replays."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/xbridge.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/xbridge.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 5,
+      "date": "2024-04-24T07:18:35Z"
+    }
+  },
+  "notes": []
+}

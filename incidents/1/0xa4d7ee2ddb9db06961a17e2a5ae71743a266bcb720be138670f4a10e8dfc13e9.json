@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xa4d7ee2ddb9db06961a17e2a5ae71743a266bcb720be138670f4a10e8dfc13e9",
+  "protocol": {
+    "name": "Swarm Markets",
+    "slug": "swarm-markets"
+  },
+  "name": "Swarm Markets xToken permissionless mint",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xa4d7ee2ddb9db06961a17e2a5ae71743a266bcb720be138670f4a10e8dfc13e9",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1708644899
+    },
+    "attackerAddresses": [
+      "0x38f68f119243adbca187e1ef64344ed475a8c69c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The xToken contracts registered in Swarm's XTokenWrapper exposed mint(address,uint256) with no MINTER_ROLE check, so anyone could mint xDAI/xUSDC and redeem them through XTokenWrapper.unwrap() for the wrapper's real DAI and USDC."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 7729,
+      "valuationTimestamp": 1708644899,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xd08e245fdb3f1504aea4056e2c71615da7001440",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1706159471,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1706159471,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xd08e245fdb3f1504aea4056e2c71615da7001440"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 2485428,
+      "failureModeId": "legacy:eip155:1:0xa4d7ee2ddb9db06961a17e2a5ae71743a266bcb720be138670f4a10e8dfc13e9:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/swarm-markets.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xa4d7ee2ddb9db06961a17e2a5ae71743a266bcb720be138670f4a10e8dfc13e9"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-02/SwarmMarkets_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: xToken 0xD08E245Fdb3f1504aea4056e2C71615DA7001440 created 2024-01-25T05:11:11Z by Swarm deployer 0x959e2cc532115d0a86e24eb2977d93df6202560e (also the creator of the second drained xToken 0x0a3fbF5B4cF80DB51fCAe21efe63f6a36D45d2B2), neither the attacker nor the attack-tx sender; its verified source has an unguarded `function mint(address account, uint256 amount) external { _mint(account, amount); }` and hasRole(MINTER_ROLE, attacker) is false, confirming no role was needed. No EIP-1967 events, code immutable since deployment. The cited transaction was submitted by MEV searcher 0xc0ffeebabe5d496b2dde509f9fa189c25cf29671, who front-ran the original exploiter 0x38f68f119243adbca187e1ef64344ed475a8c69c; ~7,729 in DAI+USDC drained from XTokenWrapper 0x2b9dc65253c035Eb21778cB3898eab5A0AdA0cCe."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/swarm-markets.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/swarm-markets.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-02-22T23:34:59Z"
+    }
+  },
+  "notes": []
+}

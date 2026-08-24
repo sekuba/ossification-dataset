@@ -1,0 +1,139 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0x00b949bc3ed3edb58b04faedfbd8eb1db2edceae761382e80fe012919f8d3732",
+  "protocol": {
+    "name": "SingularityDynaVault",
+    "slug": "singularitydynavault"
+  },
+  "name": "SingularityDynaVault",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0x00b949bc3ed3edb58b04faedfbd8eb1db2edceae761382e80fe012919f8d3732",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1777157281
+    },
+    "attackerAddresses": [
+      "0x5c2cbe53f2ce1b58532d4985a9b9d3db87d3af4c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "dynBaseUSDCv3 oracle path (Uni V3 fee tier 42 / zero-liquidity fallbacks) made totalAssets() count only idle USDC, so a flashloan deposit minted inflated shares redeemable for the real reserves."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 413130,
+      "valuationTimestamp": 1777157281,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x67b93f6676bd1911c5fae7ffa90fff5f35e14dcd",
+      "relationship": "minimal-proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1768654911,
+        "blockNumber": 40932782,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xcd231d4ba7b15a4722ac057419d9cd7689e7b8db"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1768654911,
+        "blockNumber": 40932782,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x67b93f6676bd1911c5fae7ffa90fff5f35e14dcd"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 8502370,
+      "failureModeId": "legacy:eip155:8453:0x00b949bc3ed3edb58b04faedfbd8eb1db2edceae761382e80fe012919f8d3732:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/singularitydynavault.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0x00b949bc3ed3edb58b04faedfbd8eb1db2edceae761382e80fe012919f8d3732"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2026-04/SingularityDynaVault_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "Onchain review: dynBaseUSDCv3 0x67b93f6676bd1911c5fae7ffa90fff5f35e14dcd created 2026-01-17T12:21:51Z (Base block 40932782) by 0xcd231d4ba7b15a4722ac057419d9cd7689e7b8db, not the attack-tx sender 0x5c2cbe53f2ce1b58532d4985a9b9d3db87d3af4c. The vault's 45-byte runtime is an EIP-1167 minimal proxy (363d3d373d3d3d363d73) whose master 0xea7975c2fec1ae9e3058bb5f99d8e26dbc816811 is baked into the bytecode and cannot be repointed; the master's own delegatecall targets 0x3ce426bb2fcb9e1300bbe03e2d34d7b3b7347db5 and 0x4c3df500989df0f6670b99018811b94d591cc5a0 - the other two addresses executed in the victim's context in the exploit trace - are PUSH20 link-time constants in the master's bytecode. keccak(eth_getCode) on the clone is identical at the creation and incident blocks and no EIP-1967 or beacon slot is set, so the deployment basis is exact."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/singularitydynavault.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/singularitydynavault.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-04-25T22:48:01Z"
+    }
+  },
+  "notes": []
+}

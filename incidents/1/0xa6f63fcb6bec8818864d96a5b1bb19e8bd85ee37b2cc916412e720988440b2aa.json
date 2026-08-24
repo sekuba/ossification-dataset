@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xa6f63fcb6bec8818864d96a5b1bb19e8bd85ee37b2cc916412e720988440b2aa",
+  "protocol": {
+    "name": "Orion Protocol",
+    "slug": "orion-protocol"
+  },
+  "name": "Orion ExchangeWithOrionPool depositAsset reentrancy",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xa6f63fcb6bec8818864d96a5b1bb19e8bd85ee37b2cc916412e720988440b2aa",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1675353395
+    },
+    "attackerAddresses": [
+      "0x837962b686fd5a407fb4e5f92e8be86a230484bd"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "swapThroughOrionPool() executed a caller-supplied token path with no reentrancy guard, so the attacker's fake ATK token re-entered depositAsset() from its transfer hook and credited the exchange balance repeatedly for funds that were only paid once, after which the inflated balance was withdrawn."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2900000,
+      "valuationTimestamp": 1675353395,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb5599f568d3f3e6113b286d010d2bca40a7745aa",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1607274731,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x33459acd9ca8493c0e0163eac92a928e293b2218"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1670958143,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xb5599f568d3f3e6113b286d010d2bca40a7745aa",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 11 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 4395252,
+      "failureModeId": "legacy:eip155:1:0xa6f63fcb6bec8818864d96a5b1bb19e8bd85ee37b2cc916412e720988440b2aa:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/orion-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xa6f63fcb6bec8818864d96a5b1bb19e8bd85ee37b2cc916412e720988440b2aa"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.numencyber.com/analysis-of-orionprotocol-reentrancy-attack-with-poc/"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-02/Orion_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "root-cause"
+      ],
+      "note": "onchain review: exchange proxy 0xb5599f568d3f3e6113b286d010d2bca40a7745aa created 2020-12-06 by 0x33459acd9ca8493c0e0163eac92a928e293b2218 (Orion deployer), unrelated to attack sender 0x837962b686fd5a407fb4e5f92e8be86a230484bd; 11 EIP-1967 Upgraded events before the incident, the last on 2022-12-13 to implementation 0x98a877bb507f19eb43130b688f522a13885cf604, so the exploited code was ~51 days old; a parallel BSC tx (0xfb153c572e304093023b4f9694ef39135b6ed5b2515453173e81ec02df2e2104) hit the same flaw"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/orion-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/orion-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 11,
+      "date": "2023-02-02T15:56:35Z"
+    }
+  },
+  "notes": []
+}

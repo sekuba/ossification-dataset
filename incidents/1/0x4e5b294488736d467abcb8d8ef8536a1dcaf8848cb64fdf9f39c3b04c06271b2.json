@@ -1,0 +1,143 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x4e5b294488736d467abcb8d8ef8536a1dcaf8848cb64fdf9f39c3b04c06271b2",
+  "protocol": {
+    "name": "Dolomite (legacy Ethereum exchange)",
+    "slug": "dolomite-legacy"
+  },
+  "name": "DolomiteMarginProtocol callFunction approval drain",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x4e5b294488736d467abcb8d8ef8536a1dcaf8848cb64fdf9f39c3b04c06271b2",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1710950987
+    },
+    "attackerAddresses": [
+      "0x52522d35725836d48e12e64731fa170bcd9423bf"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The retired Ethereum DolomiteMarginProtocol exposed callFunction(), which performs an arbitrary external call and is protected only by a noEntry reentrancy modifier that can be bypassed by entering through the unguarded SoloMargin operate path, letting the attacker make the contract transferFrom USDC out of every wallet that still held a stale approval to it."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1800000,
+      "valuationTimestamp": 1710950987,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x7f49ac8fdb38d24b686130e22579c7efe69b19c0",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1591864812,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1591864812,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x7f49ac8fdb38d24b686130e22579c7efe69b19c0"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 119086175,
+      "failureModeId": "legacy:eip155:1:0x4e5b294488736d467abcb8d8ef8536a1dcaf8848cb64fdf9f39c3b04c06271b2:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/dolomite-legacy.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x4e5b294488736d467abcb8d8ef8536a1dcaf8848cb64fdf9f39c3b04c06271b2"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/dolomite-official/legacy-smart-contract-vulnerability-post-mortem-analysis-931d7b555269"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://cointelegraph.com/news/old-dolomite-exchange-contract-suffers-1-8-million-loss-from-approval-exploit"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: attack tx calls 0x7f49ac8fdb38d24b686130e22579c7efe69b19c0 (verified DolomiteMarginProtocol) with selector 0xd595b2fe from EOA 0x52522d35725836d48e12e64731fa170bcd9423bf; the contract was created 2020-06-11 by Dolomite deployer 0x52256ef863a713ef349ae6e97a7e8f35785145de and has no upgrade events; press reports quoting an address prefix 0xe2466 could not be resolved onchain"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/dolomite-legacy.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/dolomite-legacy.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-03-20T16:09:47Z"
+    }
+  },
+  "notes": []
+}

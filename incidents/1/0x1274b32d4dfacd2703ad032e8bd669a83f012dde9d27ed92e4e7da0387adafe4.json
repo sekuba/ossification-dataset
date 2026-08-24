@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x1274b32d4dfacd2703ad032e8bd669a83f012dde9d27ed92e4e7da0387adafe4",
+  "protocol": {
+    "name": "FloorDAO",
+    "slug": "floor-dao"
+  },
+  "name": "FloorStaking stake/unstake supply accounting",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x1274b32d4dfacd2703ad032e8bd669a83f012dde9d27ed92e4e7da0387adafe4",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1693898711
+    },
+    "attackerAddresses": [
+      "0x4453aed57c23a50d887a42ad0cd14ff1b819c750"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "FloorStaking's stake()/unstake() converted between FLOOR and gFLOOR using sFLOOR's rebase index while the index was computed from a circulating supply the staker had just changed, so repeating the round trip with flash-loaned FLOOR minted more FLOOR each pass."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 64878,
+      "valuationTimestamp": 1693898711,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x759c6de5bca9ade8a1a2719a31553c4b7de02539",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1645997651,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x93db3662e5e77a3ef6be5d32192f070554f212d1"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1645997651,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x759c6de5bca9ade8a1a2719a31553c4b7de02539"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 47901060,
+      "failureModeId": "legacy:eip155:1:0x1274b32d4dfacd2703ad032e8bd669a83f012dde9d27ed92e4e7da0387adafe4:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/floor-dao.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1274b32d4dfacd2703ad032e8bd669a83f012dde9d27ed92e4e7da0387adafe4"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-09/FloorDAO_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/floordao/floor-post-mortem-incident-summary-september-5-2023-e054a2d5afa4"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: FloorStaking 0x759c6De5bcA9ADE8A1a2719a31553c4B7DE02539 created 2022-02-27T21:34:11Z by 0x93db3662e5e77a3ef6be5d32192f070554f212d1, unrelated to the attack sender; no EIP-1967 events, age from deployment (554.4 days). ~40 ETH x $1,621.94 at incidentTimestamp 1693898711 (DefiLlama) = $64,878."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/floor-dao.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/floor-dao.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-09-05T07:25:11Z"
+    }
+  },
+  "notes": []
+}

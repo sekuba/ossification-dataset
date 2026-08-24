@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x2f1c33eaaaace728f6101ff527793387341021ef465a4a33f53a0037f5bd1626",
+  "protocol": {
+    "name": "EST",
+    "slug": "est-token"
+  },
+  "name": "EST/BNBDeposit skim desync",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x2f1c33eaaaace728f6101ff527793387341021ef465a4a33f53a0037f5bd1626",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1774626034
+    },
+    "attackerAddresses": [
+      "0xcf300de6f177ec10db0d7f756ced3ae2d2203bfd"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "A 1-EST transfer into EST's BNBDeposit contract desyncs its internal accounting, after which a loop of EST transfers to the pair plus skim() into BNBDeposit let the attacker withdraw far more than the 30 max-size deposits it had made."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 92063,
+      "valuationTimestamp": 1774626034,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xd4524be41cd452576ab9ff7b68a0b89af8498a91",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1774011421,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x5499e285ea95b602d8967e3646682cf5084511f2"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1774011421,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xd4524be41cd452576ab9ff7b68a0b89af8498a91"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 614613,
+      "failureModeId": "legacy:eip155:56:0x2f1c33eaaaace728f6101ff527793387341021ef465a4a33f53a0037f5bd1626:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/est-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x2f1c33eaaaace728f6101ff527793387341021ef465a4a33f53a0037f5bd1626"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-03/EST_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim 0xD4524Be41cd452576aB9FF7b68a0b89aF8498a91 created 2026-03-20T12:57:01Z by 0x5499e285ea95b602d8967e3646682cf5084511f2, which is not the attack-tx sender 0xcf300de6f177ec10db0d7f756ced3ae2d2203bfd; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 150.2 WBNB x $612.937738/BNB at the incident timestamp 1774626034 (DefiLlama coingecko:binancecoin) = $92,063."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/est-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/est-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-03-27T15:40:34Z"
+    }
+  },
+  "notes": []
+}

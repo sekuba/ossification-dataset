@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646",
+  "protocol": {
+    "name": "DPC",
+    "slug": "dpc"
+  },
+  "name": "DPC staking reward miscalculation",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1662720592
+    },
+    "attackerAddresses": [
+      "0xf211fa86cbc60d693d687075b03dff3c225b25c9"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "DPC.claimStakeLp() recomputed the LP staking reward from the caller's current stake on every call instead of accruing it over elapsed time, so repeated claims in the same day paid the reward many times over."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 103755,
+      "valuationTimestamp": 1662720592,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb75ca3c3e99747d0e2f6e75a9fbd17f5ac03cebe",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1662542095,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x8e59424663e6ba2327564b28437b6e0294a4725c"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1662542095,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb75ca3c3e99747d0e2f6e75a9fbd17f5ac03cebe"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 178497,
+      "failureModeId": "legacy:eip155:56:0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/dpc.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-09/DPC_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BeosinAlert/status/1568429355919089664"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: DPC 0xB75cA3C3e99747d0e2F6e75A9fBD17F5Ac03cebE created 2022-09-07T09:14:55Z by 0x8e59424663e6ba2327564b28437b6e0294a4725c, unrelated to attack sender 0xf211fa86cbc60d693d687075b03dff3c225b25c9; no EIP-1967 Upgraded events, age measured from deployment. The attack ran as a long series of small claims from 0x2109bbecB0a563e204985524Dd3DB2F6254AB419 and 0xf211fa86cbc60d693d687075b03dff3c225b25c9 (this transaction alone drained 547.75 USDT from the DPC pair); lossUsd uses the ~$103,755 total reported by Beosin. Recheck of the deployment basis (DELEGATECALL audit): the victim sets no EIP-1967 implementation or beacon slot and its runtime is byte-identical at the creation block 21120156 and the incident block 21179552; all ten DELEGATECALL sites are solc external-library calls to the PUSH20 constant 0xff7a90fa8193b51482c37e84f3e9a0798921380b (with the usual EXTCODESIZE guard), a library deployed five blocks before the victim by the same creator 0x8e59424663e6ba2327564b28437b6e0294a4725c and byte-identical over the window, so the target is fixed."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/dpc.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/dpc.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-09-09T10:49:52Z"
+    }
+  },
+  "notes": []
+}

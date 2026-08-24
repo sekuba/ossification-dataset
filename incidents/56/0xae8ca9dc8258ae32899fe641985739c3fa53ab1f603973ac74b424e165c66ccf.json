@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xae8ca9dc8258ae32899fe641985739c3fa53ab1f603973ac74b424e165c66ccf",
+  "protocol": {
+    "name": "HEALTH Token",
+    "slug": "health-token"
+  },
+  "name": "HEALTH transfer logic flaw",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xae8ca9dc8258ae32899fe641985739c3fa53ab1f603973ac74b424e165c66ccf",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1666264107
+    },
+    "attackerAddresses": [
+      "0xde78112ff006f166e4ccfe1dfe4181c9619d3b5d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "HEALTH's _transfer() lets a transfer to the liquidity pair reduce the pair's own token balance without a sync(), so the attacker repeatedly shrank the reserve and swapped a small holding out for the pair's WBNB."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 4537,
+      "valuationTimestamp": 1666264107,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x32b166e082993af6598a89397e82e123ca44e74e",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1662216784,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xd8d2879af8b0c2851972a5bf0b1fc13d1ef28509"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1662216784,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x32b166e082993af6598a89397e82e123ca44e74e"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 4047323,
+      "failureModeId": "legacy:eip155:56:0xae8ca9dc8258ae32899fe641985739c3fa53ab1f603973ac74b424e165c66ccf:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/health-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xae8ca9dc8258ae32899fe641985739c3fa53ab1f603973ac74b424e165c66ccf"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-10/HEALTH_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BlockSecTeam/status/1583073442433495040"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: HEALTH 0x32B166e082993Af6598a89397E82e123ca44e74E created 2022-09-03T14:53:04Z by 0xd8d2879af8b0c2851972a5bf0b1fc13d1ef28509, unrelated to attack sender 0xde78112ff006f166e4ccfe1dfe4181c9619d3b5d; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 16.6752 WBNB left the pair and 16.6419 WBNB reached the attacker; 16.6419 WBNB x $272.65 at incidentTimestamp 1666264107 (DefiLlama coingecko:binancecoin) = $4,537."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/health-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/health-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-10-20T11:08:27Z"
+    }
+  },
+  "notes": []
+}

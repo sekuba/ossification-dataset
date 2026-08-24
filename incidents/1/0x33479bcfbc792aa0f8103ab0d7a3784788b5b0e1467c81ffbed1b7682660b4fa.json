@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x33479bcfbc792aa0f8103ab0d7a3784788b5b0e1467c81ffbed1b7682660b4fa",
+  "protocol": {
+    "name": "Umbrella Network",
+    "slug": "umbrella-network"
+  },
+  "name": "Umbrella StakingRewards unchecked stake accounting",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x33479bcfbc792aa0f8103ab0d7a3784788b5b0e1467c81ffbed1b7682660b4fa",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1647762534
+    },
+    "attackerAddresses": [
+      "0x1751e3e1aaf1a3e7b973c889b7531f43fc59f7d0"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The rewards pool dropped SafeMath on the assumption that stake amounts could not overflow, so a crafted stake wrapped the reward accounting and let the attacker claim rewards far beyond the pool's intended emissions."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 700000,
+      "valuationTimestamp": 1647762534,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb3fb1d01b07a706736ca175f827e4f56021b85de",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1647277530,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xa6e4ffa19b213abea258ae72e8e1a209b9e543e7"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1647277530,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb3fb1d01b07a706736ca175f827e4f56021b85de"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 485004,
+      "failureModeId": "legacy:eip155:1:0x33479bcfbc792aa0f8103ab0d7a3784788b5b0e1467c81ffbed1b7682660b4fa:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/umbrella-network.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x33479bcfbc792aa0f8103ab0d7a3784788b5b0e1467c81ffbed1b7682660b4fa"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-03/Umbrella_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/umbrella-network/umbrella-network-rewards-pool-exploit-post-mortem-2c9b2b8ff1e5"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: StakingRewards 0xB3FB1D01B07A706736Ca175f827e4F56021b85dE created 2022-03-14T17:05:30Z by 0xa6e4ffa19b213abea258ae72e8e1a209b9e543e7, unrelated to the attack sender; no EIP-1967 events, age from deployment - the pool was only 5.6 days old. Loss ~700K reported (UMB rewards, drained on both Ethereum and BNB Chain); the Ethereum leg is recorded here."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/umbrella-network.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/umbrella-network.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-03-20T07:48:54Z"
+    }
+  },
+  "notes": []
+}

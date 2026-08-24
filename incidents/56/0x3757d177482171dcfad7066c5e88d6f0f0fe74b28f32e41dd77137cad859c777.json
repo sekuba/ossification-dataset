@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x3757d177482171dcfad7066c5e88d6f0f0fe74b28f32e41dd77137cad859c777",
+  "protocol": {
+    "name": "Annex Finance",
+    "slug": "annex-finance"
+  },
+  "name": "Annex Liquidator unvalidated flash-swap callback",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x3757d177482171dcfad7066c5e88d6f0f0fe74b28f32e41dd77137cad859c777",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1668786559
+    },
+    "attackerAddresses": [
+      "0x40fb8d322cc4887d6c2bf886755300ea79f6a874"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The Annex Liquidator's PancakeSwap flash-swap callback never verified that msg.sender was a legitimate factory pair, so the attacker created a pair for a worthless self-minted token and had it call the liquidator, draining its WBNB."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1968,
+      "valuationTimestamp": 1668786559,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xe65e970f065643ba80e5822edff483a1d75263e3",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1668670304,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x50086caf6a8b4aef941d6512ad0d2a25c48469a9"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1668670304,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xe65e970f065643ba80e5822edff483a1d75263e3"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 116255,
+      "failureModeId": "legacy:eip155:56:0x3757d177482171dcfad7066c5e88d6f0f0fe74b28f32e41dd77137cad859c777:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/annex-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x3757d177482171dcfad7066c5e88d6f0f0fe74b28f32e41dd77137cad859c777"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-11/Annex_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/AnciliaInc/status/1593690338526273536"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: Liquidator 0xe65E970F065643bA80E5822edfF483A1d75263E3 created 2022-11-17T07:31:44Z by 0x50086caf6a8b4aef941d6512ad0d2a25c48469a9, unrelated to attack sender 0x40fb8d322cc4887d6c2bf886755300ea79f6a874; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 7.2259 WBNB left the liquidator; 7.2259 WBNB x $272.38 at incidentTimestamp 1668786559 (DefiLlama coingecko:binancecoin) = $1,968."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/annex-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/annex-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-11-18T15:49:19Z"
+    }
+  },
+  "notes": []
+}

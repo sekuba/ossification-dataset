@@ -1,0 +1,161 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x0fc5c0d41e5506fdb9434fab4815a4ff671afc834e47a533b3bed7182ece73b0",
+  "protocol": {
+    "name": "bZx",
+    "slug": "bzx"
+  },
+  "name": "bZx iToken empty-pool donation rounding",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x0fc5c0d41e5506fdb9434fab4815a4ff671afc834e47a533b3bed7182ece73b0",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1701484019
+    },
+    "attackerAddresses": [
+      "0x5a7c7eb8d13a53d42a15d2b1d1b694ccc5141ea5"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "After the iYFI pool was emptied the attacker minted 5 wei of iYFI, donated YFI straight to the pool to inflate its price per share, and used the rounded-up collateral value to borrow out the iETH and iWBTC pools while still redeeming the 5 wei."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 208000,
+      "valuationTimestamp": 1701484019,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x7f3fe9d492a9a60aebb06d82cba23c6f32cad10b",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1599093390,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xb7f72028d9b502dc871c444363a7ac5a52546608"
+      },
+      "lastCodeChange": {
+        "kind": "module-change",
+        "timestamp": 1672138067,
+        "blockNumber": 16275583,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2022-12-27T10:47:47Z (block 16275583): the iYFI setTarget proxy target_ pointer, storage slot 20, was last written to 0x624f7f89414011b276c60ea2337bfba936d1cbbe"
+      },
+      "codeAgeSeconds": 29345952,
+      "failureModeId": "legacy:eip155:1:0x0fc5c0d41e5506fdb9434fab4815a4ff671afc834e47a533b3bed7182ece73b0:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bzx.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x0fc5c0d41e5506fdb9434fab4815a4ff671afc834e47a533b3bed7182ece73b0"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-12/bZx_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/MetaSec_xyz/status/1730811240942088263"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: iYFI 0x7f3fe9d492a9a60aebb06d82cba23c6f32cad10b created 2020-09-03T00:36:30Z by 0xb7f72028d9b502dc871c444363a7ac5a52546608, unrelated to the attack sender; no EIP-1967 Upgraded events between creation and the incident, age from deployment (1185 days). Loss ~$208K per the PoC header, taken as ETH and WBTC across two txs; only the first is recorded."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "delegatecall-target review (callTracer + prestateTracer on the exploit tx, then eth_getStorageAt over [creation block, incident block]): like the other bZx iTokens this is a setTarget proxy that emits no EIP-1967 Upgraded event; the exploit tx DELEGATECALLs 0x7f3fe9d4...d10b -> 0x624f7f89414011b276c60ea2337bfba936d1cbbe for every selector (mint, burn, transferFrom, borrow), and prestateTracer confirms that address is read from storage slot 20 (target_ in the verified LoanTokenLogic layout). Binary-searching slot 20 between the creation block 10785097 and the incident block 18695729 gives eight logic swaps: 0x11ba2b39 at deployment, then 0xbab2cb0d (2020-09-03), 0x1e9682d8 (2020-09-04), 0x7f5f0f68 (2020-09-13), 0xd172991b (2020-09-13), 0xfb772316 (2020-11-16), 0xd154ee49 (2021-11-15), 0x528d205b (2022-05-13) and 0x624f7f89414011b276c60ea2337bfba936d1cbbe at block 16275583, 2022-12-27T10:47:47Z, unchanged across 60 samples to the incident. The exploited donation-rounding code was 339.6 days old, not the 1185 days measured from deployment - the same setTarget mechanism already corrected on the iETH row in this file"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bzx.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bzx.json",
+      "originalIncidentIndex": 3,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2023-12-02T02:26:59Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2022-12-27T10:47:47Z (block 16275583): the iYFI setTarget proxy target_ pointer, storage slot 20, was last written to 0x624f7f89414011b276c60ea2337bfba936d1cbbe"
+  ]
+}

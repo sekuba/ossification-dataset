@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x13d19809b19ac512da6d110764caee75e2157ea62cb70937c8d9471afcb061bf",
+  "protocol": {
+    "name": "Fortress Loans",
+    "slug": "fortress-loans"
+  },
+  "name": "Fortress Loans Chain price-feed submit() without signature verification",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x13d19809b19ac512da6d110764caee75e2157ea62cb70937c8d9471afcb061bf",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1652042082
+    },
+    "attackerAddresses": [
+      "0xa6af2872176320015f8ddb2ba013b38cb35d22ad"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The Chain price-feed contract read by FortressPriceOracle had the validator-signature require in submit() commented out, so the attacker pushed an arbitrary FTS price and, with a governance proposal that had already made fFTS collateral, borrowed the protocol dry."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2980000,
+      "valuationTimestamp": 1652042082,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xc11b687cd6061a6516e23769e4657b6efa25d78e",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1639404340,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xa6e4ffa19b213abea258ae72e8e1a209b9e543e7"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1639404340,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xc11b687cd6061a6516e23769e4657b6efa25d78e"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 12637742,
+      "failureModeId": "legacy:eip155:56:0x13d19809b19ac512da6d110764caee75e2157ea62cb70937c8d9471afcb061bf:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/fortress-loans.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x13d19809b19ac512da6d110764caee75e2157ea62cb70937c8d9471afcb061bf"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-05/FortressLoans_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.certik.com/resources/blog/k6eZOpnK5Kdde7RfHBZgw-fortress-loans-exploit"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: Chain contract 0xc11B687cd6061A6516E23769E4657b6EfA25d78E created 2021-12-13T14:05:40Z by 0xa6e4ffa19b213abea258ae72e8e1a209b9e543e7, unrelated to attack sender 0xa6af2872176320015f8ddb2ba013b38cb35d22ad; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the exploit transaction moved 418,909.95 BUSD, 40,989.35 USDT, 25,362.50 USDC, 22.73 BTCB and 161.21 ETH into the attack contract 0xcd337b920678cf35143322ab31ab8977c3463a45, matching the reported ~$3.0M."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/fortress-loans.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/fortress-loans.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-05-08T20:34:42Z"
+    }
+  },
+  "notes": []
+}

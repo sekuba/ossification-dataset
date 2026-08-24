@@ -1,0 +1,154 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x3a8bde0a17e04f6a119ae2f28e6b56ac736feb70761e2fa97cac25f816f751c2",
+  "protocol": {
+    "name": "Goldfinch",
+    "slug": "goldfinch"
+  },
+  "name": "Legacy Pool collectInterestRepayment missing access control",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x3a8bde0a17e04f6a119ae2f28e6b56ac736feb70761e2fa97cac25f816f751c2",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1764663203
+    },
+    "attackerAddresses": [
+      "0x2c2ec35549bfb2f983c2025dfb2ab1c0f69c1ee9"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The deprecated 2020 Pool's collectInterestRepayment(address,uint256) had no access control and executed USDC.transferFrom(from, pool, amount) for any address still holding a standing approval, so the attacker deposited 1,000 USDC, pulled a legacy depositor's USDC into the pool to inflate the share price, and withdrew the inflated balance."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 330000,
+      "valuationTimestamp": 1764663203,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x0689aa2234d06ac0d04cdac874331d287afa4b43",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1601004714,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xc840b3e21ff0eba77468ad450d868d4362cf67fe"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1601004714,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x0689aa2234d06ac0d04cdac874331d287afa4b43"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 163658489,
+      "failureModeId": "legacy:eip155:1:0x3a8bde0a17e04f6a119ae2f28e6b56ac736feb70761e2fa97cac25f816f751c2:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/goldfinch.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3a8bde0a17e04f6a119ae2f28e6b56ac736feb70761e2fa97cac25f816f751c2"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/PeckShieldAlert/status/1995774198564966434"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.cryptopolitan.com/goldfinch-finance-user-deltatiger-eth-hacked/"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "callTracer review: the attack tx calls the legacy Pool 0x0689aa22...4B43 with deposit(uint256) 0xb6b55f25, collectInterestRepayment(address,uint256) 0x64de8a07 against victim 0x526C7665C5dd9cD7102C6d42D407a0d9DC1e431d, then withdraw(uint256) 0x2e1a7d4d four times; the Pool is Goldfinch's own 'TransparentProxy' created 2020-09-25 by 0xc840b3e21ff0eba77468ad450d868d4362cf67fe (not the attacker). It stores its implementation outside the EIP-1967 slot and signals changes with a custom event 0x5570d70a...8296, which fired only three times (blocks 10929405, 10948041, 10953821, all in Sep 2020) and always resolves to the same implementation 0x7dbe30fde1eca6856806ff14fc456ec6791c73fe, with none after — so the deployment-based age is not overstated in practice"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "deployment-basis recheck (storage, not events): contrary to the earlier note, this TransparentProxy does keep its implementation in the EIP-1967 slot 0x360894a1...2bbc, and the exploit tx's three DELEGATECALLs from the Pool all go to 0x7dbe30fde1eca6856806ff14fc456ec6791c73fe, exactly the value that slot holds. eth_getStorageAt returns 0x7dbe30fde1eca6856806ff14fc456ec6791c73fe at the creation block 10929405, at the incident block 23924517 and at all 41 evenly spaced samples in between, and the proxy runtime is byte-identical at both ends, so the Sep-2020 custom events did not move the implementation. Deployment remains the correct basis; 1894.2 days."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/goldfinch.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/goldfinch.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-12-02T08:13:23Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true."
+  ]
+}

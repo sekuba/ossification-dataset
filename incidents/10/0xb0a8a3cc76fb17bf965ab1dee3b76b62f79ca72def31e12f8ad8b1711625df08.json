@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:10:0xb0a8a3cc76fb17bf965ab1dee3b76b62f79ca72def31e12f8ad8b1711625df08",
+  "protocol": {
+    "name": "Perpetual Protocol",
+    "slug": "perpetual-protocol"
+  },
+  "name": "Perpetual Protocol OrderBook funding-growth poisoning",
+  "incident": {
+    "chainId": 10,
+    "exploit": {
+      "transactionHash": "0xb0a8a3cc76fb17bf965ab1dee3b76b62f79ca72def31e12f8ad8b1711625df08",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1784221641
+    },
+    "attackerAddresses": [
+      "0x957c6cf5e0f69597db7a8065c94af1a48abca47d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "OrderBook.updateFundingGrowthAndLiquidityCoefficientInFundingPayment omitted its clearing-house-only guard, so a direct call poisoned cached funding growth and converted fabricated PnL into withdrawals from two deployments."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 3062.213107,
+      "valuationTimestamp": 1784221641,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x4e26b6815d82baa6b8c15fe4ffb646dfb4b474c7",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1637816357,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1637816357,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x4e26b6815d82baa6b8c15fe4ffb646dfb4b474c7"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 146405284,
+      "failureModeId": "legacy:eip155:10:0xb0a8a3cc76fb17bf965ab1dee3b76b62f79ca72def31e12f8ad8b1711625df08:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/perpetual-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 10,
+      "transactionHash": "0xb0a8a3cc76fb17bf965ab1dee3b76b62f79ca72def31e12f8ad8b1711625df08"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2026-07/PerpetualProtocol_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "loss"
+      ],
+      "note": "trace shows the same unguarded OrderBook selector hit 0x772f48f073c1f328c264619fc3bba28e3efdefb0 and 0x4e26b6815d82baa6b8c15fe4ffb646dfb4b474c7; the latter caused 2,990.435495 of the total 3,062.213107 USDC.e loss and was deployed by 0x849a19c0746fb0d335e02dec0d0b3e057e585176"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "deployment-basis recheck (storage, not events): all seven DELEGATECALLs the OrderBook proxy makes in the attack tx go to 0x6ba44773cc1388605f57e7c3730f8aff70773e5a, which is the value of the EIP-1967 implementation slot at the creation block 438459, at the incident block 154311432 and at all 41 evenly spaced samples in between; the proxy runtime is byte-identical at both ends. Deployment is the correct basis; 1694.5 days."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/perpetual-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/perpetual-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-07-16T17:07:21Z"
+    }
+  },
+  "notes": []
+}

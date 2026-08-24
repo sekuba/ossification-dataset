@@ -1,0 +1,159 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d",
+  "protocol": {
+    "name": "Cork Protocol",
+    "slug": "cork-protocol"
+  },
+  "name": "CorkHook beforeSwap missing pool-manager restriction",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1748432387
+    },
+    "attackerAddresses": [
+      "0xea6f30e360192bae715599e15e2f765b49e4da98"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "CorkHook.beforeSwap() was callable by anyone rather than only by the Uniswap v4 PoolManager, so the attacker forced a CorkCall callback into ModuleCore's PSM for a market they had created with an existing market's DS token as its redemption asset, double-counting the FlashSwapRouter's DS balance and minting redeemable CT/DS against the real wstETH reserves."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 12000000,
+      "valuationTimestamp": 1748432387,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-5"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x5287e8915445aee78e10190559d8dd21e0e9ea88",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1739483279,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1739483279,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x5287e8915445aee78e10190559d8dd21e0e9ea88"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 8949108,
+      "failureModeId": "legacy:eip155:1:0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4",
+          "source-5"
+        ],
+        "codeHistorySourceIds": [
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/cork-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://dedaub.com/blog/the-11m-cork-protocol-hack-a-critical-lesson-in-uniswap-v4-hook-security/"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://slowmist.medium.com/exploit-analysis-cork-protocol-attacked-over-10-million-lost-75de9f229307"
+    },
+    {
+      "id": "source-4",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2025-05/Corkprotocol_exp.sol"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss",
+        "root-cause"
+      ],
+      "note": "onchain review: CorkHook 0x5287E8915445aee78e10190559D8Dd21E0E9Ea88 is a non-upgradeable contract created by Cork's CREATE3 deployer 0x777777727073e72fbb3c81f9a8b88cc49feae2f5 (not the attacker) and emits 5 logs inside the attack tx; the drained ModuleCore proxy 0xCCd90F6435dd78C4ECCED1FA4db0D7242548a2a9 emitted PsmDeposited, InitializedModuleCore and Issued in the same tx and is recorded here as the funds-losing contract rather than the flaw site (its implementation had been upgraded 3h32m earlier, so measuring from it would understate the age of the exploited code)"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/cork-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/cork-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-05-28T11:39:47Z"
+    }
+  },
+  "notes": []
+}

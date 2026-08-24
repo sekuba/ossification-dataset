@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea",
+  "protocol": {
+    "name": "n00d (Xn00d bar)",
+    "slug": "n00d"
+  },
+  "name": "Xn00d ERC-777 reentrancy",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1666716419
+    },
+    "attackerAddresses": [
+      "0x8ca72f46056d85db271dd305f6944f32a9870ff0"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The Xn00d SushiBar-style staking contract accepted the ERC-777 n00d token and pulled it with transferFrom before minting shares, so the attacker's ERC-1820 tokensToSend hook re-entered enter() and minted shares against the same deposit repeatedly."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 29394,
+      "valuationTimestamp": 1666716419,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x3561081260186e69369e6c32f280836554292e08",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1664174543,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xee6209bd47c3d58eeba1f25437b76989074f0d19"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1664174543,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x3561081260186e69369e6c32f280836554292e08"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 2541876,
+      "failureModeId": "legacy:eip155:1:0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/n00d.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-10/N00d_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BlockSecTeam/status/1584959295829180416"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: Xn00d 0x3561081260186E69369E6C32F280836554292E08 created 2022-09-26T06:42:23Z by 0xee6209bd47c3d58eeba1f25437b76989074f0d19, unrelated to the attack sender; no EIP-1967 events, age from deployment (29.4 days). Loss read from the tx receipt: 20.8215 WETH unwrapped by the attack contract; 20.8215 x $1,411.70 at incidentTimestamp 1666716419 (DefiLlama) = $29,394."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/n00d.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/n00d.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-10-25T16:46:59Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286",
+  "protocol": {
+    "name": "Seneca Protocol",
+    "slug": "seneca-protocol"
+  },
+  "name": "Seneca Protocol",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286",
+      "blockNumber": 19325937,
+      "transactionIndex": null,
+      "timestamp": 1709122199
+    },
+    "attackerAddresses": [
+      "0x94641c01a4937f2c8ef930580cf396142a2942dc"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Chamber contract exposed an external performOperations with arbitrary call, draining user approvals."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 6400000,
+      "valuationTimestamp": 1709122199,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x65c210c59b43eb68112b7a4f75c8393c36491f06",
+      "relationship": "minimal-proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1708377527,
+        "blockNumber": 19264402,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1708377527,
+        "blockNumber": 19264402,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x65c210c59b43eb68112b7a4f75c8393c36491f06"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 744672,
+      "failureModeId": "legacy:eip155:1:0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/seneca-protocol.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286"
+    },
+    {
+      "id": "source-2",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review (RPC only): Chamber 0x65c210c59B43EB68112b7a4f75C8393C36491F06 created 2024-02-19T21:18:47Z at block 19264402. Its runtime is a 45-byte EIP-1167 minimal proxy - 0x363d3d373d3d3d363d73 45e15d1e4f92f28a916f4f2971ad9adc278e148b 5af43d82803e903d91602b57fd5bf3 - so the implementation 0x45e15d1e4f92f28a916f4f2971ad9adc278e148b is hard-coded in the bytecode (the single DELEGATECALL at offset 31 targets it) and cannot be repointed: there is no implementation storage slot to move. eth_getLogs for EIP-1967 Upgraded (0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) over [19264402, incident block 19325888] returns 0 logs and eth_getCode is byte-identical at the creation and incident blocks. The implementation was deployed 2024-02-13T00:24:59Z (block 19215501, tx 0xb09975c2cdba88b196b2e67401f79e009aae19617b9ca73ac163d82269bdf794), i.e. older than the clone, so the newest component of the victim's code is the clone deployment. CONFIRMED: deployment basis is exact, codeAgeSeconds 744073 (8.6d) unchanged. Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1167 minimal-proxy clone whose 45-byte runtime hardcodes the master 0x45e15d1e4f92f28a916f4f2971ad9adc278e148b (created at block 19215501 by the same deployer 0x61da869d8eb130cb3d2ba5bbd57c4a53ff534cb4), so the DELEGATECALL target cannot be repointed; the master's runtime is byte-identical at the clone's creation block 19264402 and the incident block 19325889 and contains no DELEGATECALL, so deployment is exact."
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "exploit tx backfilled and verified onchain (block 19325937; tx to-address is the victim itself), matching the DeFiHackLabs PoC"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/seneca-protocol.json; legacy measurement.status=OK is provenance only.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/seneca-protocol.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-02-28T12:09:59Z"
+    }
+  },
+  "notes": []
+}

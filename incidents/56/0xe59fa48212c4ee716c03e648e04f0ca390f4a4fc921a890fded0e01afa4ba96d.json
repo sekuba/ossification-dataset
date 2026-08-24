@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xe59fa48212c4ee716c03e648e04f0ca390f4a4fc921a890fded0e01afa4ba96d",
+  "protocol": {
+    "name": "RES Token",
+    "slug": "res-token"
+  },
+  "name": "RES token pair-balance manipulation",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xe59fa48212c4ee716c03e648e04f0ca390f4a4fc921a890fded0e01afa4ba96d",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1665051350
+    },
+    "attackerAddresses": [
+      "0x986b2e2a1cf303536138d8ac762447500fd781c6"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The RES token's transfer hook rewrites the RES/USDT pair's own RES balance without syncing the reserves, letting the attacker repeatedly swap the imbalance out of the pair for USDT."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 290671,
+      "valuationTimestamp": 1665051350,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xeccd8b08ac3b587b7175d40fb9c60a20990f8d21",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1658322363,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xf53ff2f90ab93a429b5c6ac0e62825e50ccee195"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1658322363,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xeccd8b08ac3b587b7175d40fb9c60a20990f8d21"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 6728987,
+      "failureModeId": "legacy:eip155:56:0xe59fa48212c4ee716c03e648e04f0ca390f4a4fc921a890fded0e01afa4ba96d:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/res-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xe59fa48212c4ee716c03e648e04f0ca390f4a4fc921a890fded0e01afa4ba96d"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-10/RES_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://quillaudits.medium.com/res-token-290k-flash-loan-exploit-quillaudits-9300657fff7b"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: RES 0xecCD8B08Ac3B587B7175D40Fb9C60a20990F8D21 created 2022-07-20T13:06:03Z by 0xf53ff2f90ab93a429b5c6ac0e62825e50ccee195, unrelated to attack sender 0x986b2e2a1cf303536138d8ac762447500fd781c6; no EIP-1967 Upgraded events, age measured from deployment. DeFiHackLabs carries two PoCs (RES_exp and RES_exp2) for this same incident; one row is recorded. lossUsd uses the 290,671 USDT stated in the PoC header and the QuillAudits write-up."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/res-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/res-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-10-06T10:15:50Z"
+    }
+  },
+  "notes": []
+}

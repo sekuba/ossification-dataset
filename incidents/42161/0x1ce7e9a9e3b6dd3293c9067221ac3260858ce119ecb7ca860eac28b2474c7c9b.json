@@ -1,0 +1,115 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b",
+  "protocol": {
+    "name": "Radiant Capital",
+    "slug": "radiant-capital"
+  },
+  "name": "Radiant Capital (flashloan rounding)",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1704221618
+    },
+    "attackerAddresses": []
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "LendingPool proxy: the newly activated native USDC reserve was exploited ~6-9 seconds after activation (2024-01-02 18:53:29 UTC) via the known Aave-v2 fresh-market index rounding window. Extreme young-code case; last change = reserve activation (quillaudits analysis), not a proxy upgrade."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 4500000,
+      "valuationTimestamp": 1704221618,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xf4b1486dd74d07706052a33d31d7c0aafd0659e1",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1679182789,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "configuration-change",
+        "timestamp": 1704221609,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "configuration",
+          "address": null
+        },
+        "description": "2024-01-02T18:53:29Z"
+      },
+      "codeAgeSeconds": 9,
+      "failureModeId": "legacy:eip155:42161:0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b:failure-1",
+      "evidence": {
+        "identitySourceIds": [],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/radiant-capital.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved.",
+          "The legacy age starts at a configuration change, not a change to executable bytecode; it is not a code-age observation."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/radiant-capital.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/radiant-capital.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2024-01-02T18:53:38Z"
+    }
+  },
+  "notes": [
+    "Legacy documentedLastChange: 2024-01-02T18:53:29Z"
+  ]
+}

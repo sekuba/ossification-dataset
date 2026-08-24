@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x83c71a83656b0fecfa860e76a9becf738930b3f1b2510c7d0339ab585090a82d",
+  "protocol": {
+    "name": "unverified_0xb3094734",
+    "slug": "unverified-a89f"
+  },
+  "name": "unverified_0xb3094734 unauthenticated withdrawal",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x83c71a83656b0fecfa860e76a9becf738930b3f1b2510c7d0339ab585090a82d",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1725528083
+    },
+    "attackerAddresses": [
+      "0xfe51ffcd2af4748d77130646988f966733583dc1"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The unverified contract exposed a WETH-withdrawal path with no caller check, letting an arbitrary address move its WETH balance out; the same attacker repeated it against the contract in 0xf93db4cdee0ed2af06067a9c953ebc62dd17f70be37961636c42d698cc23e932."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1500,
+      "valuationTimestamp": 1725528083,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb3094734fe249a7b0110dc12d66f6c404ada28cb",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1725356699,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x7ac8d212922c1ca49a7b7a78b1e652c511fbbdc7"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1725356699,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb3094734fe249a7b0110dc12d66f6c404ada28cb"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 171384,
+      "failureModeId": "legacy:eip155:1:0x83c71a83656b0fecfa860e76a9becf738930b3f1b2510c7d0339ab585090a82d:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/unverified-a89f.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x83c71a83656b0fecfa860e76a9becf738930b3f1b2510c7d0339ab585090a82d"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/TenArmorAlert/status/1831637553415610877"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-09/unverified_a89f_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim 0xb3094734FE249A7b0110dC12D66F6C404aDA28Cb created 2024-09-03T09:44:59Z by 0x7ac8d212922c1ca49a7b7a78b1e652c511fbbdc7, not the attack-tx sender 0xfe51ffcd2af4748d77130646988f966733583dc1; unverified, no EIP-1967 events, 1.98 days old. Reported loss $1.5k, above the $1,000 floor."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/unverified-a89f.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/unverified-a89f.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-09-05T09:21:23Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0xbe163f651d23f0c9e4d4a443c0cc163134a31a1c2761b60188adcfd33178f50f",
+  "protocol": {
+    "name": "PredyFinance",
+    "slug": "predyfinance"
+  },
+  "name": "PredyFinance",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0xbe163f651d23f0c9e4d4a443c0cc163134a31a1c2761b60188adcfd33178f50f",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1715672488
+    },
+    "attackerAddresses": [
+      "0x76b02ab483482740248e2ab38b5a879a31c6d008"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "attacker-registered pair with malicious priceFeed and take/supply bypassed solvency checks to withdraw pool"
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 464000,
+      "valuationTimestamp": 1715672488,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x9215748657319b17fecb2b5d086a3147bfbc8613",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1705461789,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1714022456,
+        "blockNumber": 204572392,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "legacy-documented"
+        },
+        "description": "2024-04-25T05:20:56Z (block 204572392): EIP-1967 implementation slot of proxy 0x9215748657319b17fecb2b5d086a3147bfbc8613 written to 0x7b8b944ab2f24c829504a7a6d70fce5298f2147c with no Upgraded event, found by binary-searching eth_getStorageAt"
+      },
+      "codeAgeSeconds": 1650032,
+      "failureModeId": "legacy:eip155:42161:0xbe163f651d23f0c9e4d4a443c0cc163134a31a1c2761b60188adcfd33178f50f:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/predyfinance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0xbe163f651d23f0c9e4d4a443c0cc163134a31a1c2761b60188adcfd33178f50f"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2024-05/PredyFinance_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "Recheck of the deployment basis (DELEGATECALL audit): PredyPool sets no EIP-1967 implementation or beacon slot and its runtime is byte-identical at the creation block 204572377 and the incident block 211107442; its ten DELEGATECALL sites are all solc external-library calls whose target is a PUSH20 constant baked into the runtime (0x0493a63109f37f08376fd0c321b012c34f946ca7, 0x2140f617e8cedb9e7f1b4f2c3f79cd064c7c088a, 0x2d756f7912b5c61f35ca3e5b310c7c133a90977c, 0x5e8d28bd2abe77e9d3e9dd8ccc1727eda616ace0, 0xde12aa19734dacbd34cedde14f8290a70a85537f, 0xe64ccc2549ed5e51417f30cc57b0830759a30e25), each deployed in the same batch by the same deployer 0x4f071924d66bbc71a5254217893cc7d49938b1c4 within 170 blocks of the pool and byte-identical over the window, so the library set cannot be repointed and deployment is exact."
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim re-anchored from implementation 0x7b8b944ab2f24c829504a7a6d70fce5298f2147c to the proxy the protocol runs at, 0x9215748657319b17fecb2b5d086a3147bfbc8613, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (1650036s -> 1650032s)"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/predyfinance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/predyfinance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "documented",
+      "upgradeEventCount": 0,
+      "date": "2024-05-14T07:41:28Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true.",
+    "Legacy documentedLastChange: 2024-04-25T05:20:56Z (block 204572392): EIP-1967 implementation slot of proxy 0x9215748657319b17fecb2b5d086a3147bfbc8613 written to 0x7b8b944ab2f24c829504a7a6d70fce5298f2147c with no Upgraded event, found by binary-searching eth_getStorageAt"
+  ]
+}

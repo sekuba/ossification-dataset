@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0x1a6002d8aee205dff67cb2cdaf60569721655857d49ffe2ce81e10fde8c45946",
+  "protocol": {
+    "name": "Unverified_6077",
+    "slug": "unverified-6077"
+  },
+  "name": "Unverified_6077",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0x1a6002d8aee205dff67cb2cdaf60569721655857d49ffe2ce81e10fde8c45946",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1744371527
+    },
+    "attackerAddresses": [
+      "0x780e5cb8de79846f35541b700637057c9ddded68"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Victim's uniswapV3SwapCallback has no caller validation, so directly invoking it with crafted deltas makes it transfer out its own tokens."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 62300,
+      "valuationTimestamp": 1744371527,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x607742a2adea4037020e11bb67cb98e289e3ec7d",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1744282845,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1744282845,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x607742a2adea4037020e11bb67cb98e289e3ec7d"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 88682,
+      "failureModeId": "legacy:eip155:8453:0x1a6002d8aee205dff67cb2cdaf60569721655857d49ffe2ce81e10fde8c45946:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/unverified-6077.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0x1a6002d8aee205dff67cb2cdaf60569721655857d49ffe2ce81e10fde8c45946"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2025-04/Unverified_6077_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/unverified-6077.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/unverified-6077.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-04-11T11:38:47Z"
+    }
+  },
+  "notes": []
+}

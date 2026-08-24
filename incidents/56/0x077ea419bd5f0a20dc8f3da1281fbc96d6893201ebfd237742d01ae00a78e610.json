@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x077ea419bd5f0a20dc8f3da1281fbc96d6893201ebfd237742d01ae00a78e610",
+  "protocol": {
+    "name": "TSAggregatorGeneric",
+    "slug": "tsaggregatorgeneric"
+  },
+  "name": "TSAggregatorGeneric",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x077ea419bd5f0a20dc8f3da1281fbc96d6893201ebfd237742d01ae00a78e610",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1749884443
+    },
+    "attackerAddresses": [
+      "0xd76bfdbfe0f47d63c99ea47f05262e0d43097e5a"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "swapIn executes attacker-supplied swapRouter/calldata, letting the aggregator spend the victim's USDT allowance via arbitrary transferFrom."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1300,
+      "valuationTimestamp": 1749884443,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb6fa6f1dcd686f4a573fd243a6fabb4ba36ba98c",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1685898477,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1685898477,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb6fa6f1dcd686f4a573fd243a6fabb4ba36ba98c"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 63985966,
+      "failureModeId": "legacy:eip155:56:0x077ea419bd5f0a20dc8f3da1281fbc96d6893201ebfd237742d01ae00a78e610:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/tsaggregatorgeneric.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x077ea419bd5f0a20dc8f3da1281fbc96d6893201ebfd237742d01ae00a78e610"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2025-06/TSAggregatorGeneric_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/tsaggregatorgeneric.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/tsaggregatorgeneric.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-06-14T07:00:43Z"
+    }
+  },
+  "notes": []
+}

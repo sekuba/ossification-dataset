@@ -1,0 +1,135 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a",
+  "protocol": {
+    "name": "Opyn",
+    "slug": "opyn"
+  },
+  "name": "Opyn ETH put double exercise",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1596534116
+    },
+    "attackerAddresses": [
+      "0x915c2d6f571d3d47a182dd59d5f41e87d4c3fb8e"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "oToken.exercise() looped over the supplied vault array while re-using the same msg.value for each vault instead of tracking the cumulative ETH paid, so one ETH payment exercised the put against several vaults and removeUnderlying() returned the attacker's own collateral."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 371260,
+      "valuationTimestamp": 1596534116,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x951d51baefb72319d9fbe941e1615938d89abfe2",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1596146843,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xde99ea535749f02da84d13e6f8253291e32d3a7f"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1596146843,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x951d51baefb72319d9fbe941e1615938d89abfe2"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 387273,
+      "failureModeId": "legacy:eip155:1:0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/opyn.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/opyn/opyn-eth-put-exploit-post-mortem-1a009e3347a8"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "loss"
+      ],
+      "note": "onchain review: oToken 0x951d51ba created 2020-07-30 by 0xde99ea535749f02da84d13e6f8253291e32d3a7f, not by attack sender 0x915c2d6f; loss denominated in USDC (USD-pegged 1:1) per the Opyn post-mortem"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/opyn.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/opyn.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2020-08-04T09:41:56Z"
+    }
+  },
+  "notes": []
+}

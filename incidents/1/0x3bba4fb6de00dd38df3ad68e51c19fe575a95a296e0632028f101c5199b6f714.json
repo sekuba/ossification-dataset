@@ -1,0 +1,142 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714",
+  "protocol": {
+    "name": "pNetwork",
+    "slug": "pnetwork"
+  },
+  "name": "pNetwork Burner convertAndBurn slippage sandwich",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1716282527
+    },
+    "attackerAddresses": [
+      "0xe6dcf87256866e293b825708bf1f5df8f07519b3"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Burner.convertAndBurn() is permissionless and swaps the contract's accumulated USDT/WBTC into PNT through Uniswap V2 with a zero minimum-output, so the whole conversion could be sandwiched by pre-buying and re-selling PNT in the same transaction."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 6225,
+      "valuationTimestamp": 1716282527,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x4d4d05e1205e3a412ae1469c99e0d954113aa76f",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1595842745,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x2a24a7a4beb9e6d0431c9bc1800045b8fc27a966"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1595842745,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x4d4d05e1205e3a412ae1469c99e0d954113aa76f"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 120439782,
+      "failureModeId": "legacy:eip155:1:0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/pnetwork.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-05/Burner_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: Burner 0x4d4d05e1205e3A412ae1469C99e0d954113aa76F (verified, ContractName Burner) created 2020-07-27T09:39:05Z by 0x2a24a7a4beb9e6d0431c9bc1800045b8fc27a966, not the attack-tx sender 0xe6dcf87256866e293b825708bf1f5df8f07519b3; no EIP-1967 events, immutable since deployment (1394 days). 1.7 ETH at a May 2024 ETH price near $3,700 is roughly $6.3k, above the $1,000 floor. Same failure mode as the recorded CurveBurner row: a permissionless fee-conversion call with no slippage bound. Loss converted at the incident timestamp: 1.7 ETH x $3,661.59 (DefiLlama historical ETH price) = $6,225."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/pnetwork.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/pnetwork.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-05-21T09:08:47Z"
+    }
+  },
+  "notes": []
+}

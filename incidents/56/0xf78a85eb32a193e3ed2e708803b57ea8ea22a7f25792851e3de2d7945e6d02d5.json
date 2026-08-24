@@ -1,0 +1,158 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xf78a85eb32a193e3ed2e708803b57ea8ea22a7f25792851e3de2d7945e6d02d5",
+  "protocol": {
+    "name": "OpenLeverage",
+    "slug": "openleverage"
+  },
+  "name": "OpBorrowing liquidation clears shared LToken debt",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xf78a85eb32a193e3ed2e708803b57ea8ea22a7f25792851e3de2d7945e6d02d5",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1711948733
+    },
+    "attackerAddresses": [
+      "0x5bb5b6d41c3e5e41d9b9ed33d12f1537a1293d5f"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "OpBorrowing.liquidate() settled positions through LToken.repayBorrowEndByOpenLev(), which zeroes the borrower's entire LToken debt shared with OpenLevV1 margin trades, so the attacker reentered OpBorrowing.borrow() from the untrusted dexData swap callback of marginTrade() to open a dust position, liquidated it, and then withdrew the now debt-free margin collateral with payoffTrade()."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 234000,
+      "valuationTimestamp": 1711948733,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xf436f8fe7b26d87eb74e5446acec2e8ad4075e47",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1679476244,
+        "blockNumber": 37968060,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xe9547cf7e592f83c5141bb50648317e35d27d29b"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1679476244,
+        "blockNumber": 37968060,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xf436f8fe7b26d87eb74e5446acec2e8ad4075e47"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 32472489,
+      "failureModeId": "legacy:eip155:56:0xf78a85eb32a193e3ed2e708803b57ea8ea22a7f25792851e3de2d7945e6d02d5:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/openleverage.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xf78a85eb32a193e3ed2e708803b57ea8ea22a7f25792851e3de2d7945e6d02d5"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://neptunemutual.com/blog/how-was-open-leverage-exploited/"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-04/OpenLeverage2_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim 0xf436f8fe7b26d87eb74e5446acec2e8ad4075e47 is the OPBorrowingDelegator created 2023-03-22 by 0xe9547cf7e592f83c5141bb50648317e35d27d29b (OpenLeverage deployer), not by attack sender 0x5bb5b6d41c3e5e41d9b9ed33d12f1537a1293d5f; it is a custom delegator that emits NewImplementation rather than EIP-1967 Upgraded, and its only NewImplementation event (block 37968060, 2024-04-18) is the post-incident patch, so the exploited code dates from the constructor-set implementation"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. OPBorrowingDelegator declares DelegatorInterface before Adminable, so `implementation` is storage slot 0; it held 0xd3150b1242315e16845fe21b536f53a82b6b85a5 continuously over a 25-point probe of [26681424, 37470329] and callTracer on the exploit tx shows the delegator delegatecalling only that address (a leaf - its single 0xf4 byte is inside the trailing metadata)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/openleverage.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/openleverage.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-04-01T05:18:53Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true."
+  ]
+}

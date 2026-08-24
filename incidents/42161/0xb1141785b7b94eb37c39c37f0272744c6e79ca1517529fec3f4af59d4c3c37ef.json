@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef",
+  "protocol": {
+    "name": "Deus Finance",
+    "slug": "deus-finance"
+  },
+  "name": "DEI token burnFrom reversed allowance lookup",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1683309165
+    },
+    "attackerAddresses": [
+      "0x189cf534de3097c08b6beaf6eb2b9179dab122d1"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The DEI implementation deployed on 2023-04-16 wrote the allowance update inside burnFrom() with the owner and spender arguments transposed, so calling burnFrom(victim, 0) granted the caller an unlimited allowance over the victim and let the attacker transferFrom every DEI holder that had ever approved the token."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 5000000,
+      "valuationTimestamp": 1683309165,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xde1e704dae0b4051e80dabb26ab6ad6c12262da0",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1668517364,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x18b4287fa4155efd149aece678a75bbd69ede0b8"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1681644777,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0xde1e704dae0b4051e80dabb26ab6ad6c12262da0",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 4 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 1664388,
+      "failureModeId": "legacy:eip155:42161:0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/deus-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.halborn.com/blog/post/explained-the-deus-dao-hack-may-2023"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-05/DEI_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "root-cause"
+      ],
+      "note": "onchain review: DEI proxy 0xde1e704dae0b4051e80dabb26ab6ad6c12262da0 created 2022-11-15 by 0x18b4287fa4155efd149aece678a75bbd69ede0b8 (Deus deployer), unrelated to attack sender 0x189cf534de3097c08b6beaf6eb2b9179dab122d1; 4 EIP-1967 Upgraded events, the last on 2023-04-16 to implementation 0xbc1b62db243b51dabcd9540473324f36e094ec55 - that upgrade introduced the flaw, giving a 19.3-day code age; lossUsd is the Arbitrum share (~$5M) of the ~$6.5M taken across Arbitrum, BSC and Ethereum"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/deus-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/deus-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 4,
+      "date": "2023-05-05T17:52:45Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:43114:0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b",
+  "protocol": {
+    "name": "Aave Rebalancer",
+    "slug": "aave-rebalancer"
+  },
+  "name": "Rebalancer arbitrary call abuses delegated Aave credit",
+  "incident": {
+    "chainId": 43114,
+    "exploit": {
+      "transactionHash": "0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1776583426
+    },
+    "attackerAddresses": [
+      "0xf59dc5521f191bcb53a9bcbd1654be81b72ee96f"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The rebalancer executed caller-supplied target/calldata from its own address with no whitelist, so an attacker had it call Aave Pool.borrow(WAVAX, 7000e18, 2, 0, victim) against the WAVAX borrowing power the victim had delegated to it, then transferred the received WAVAX out with a second arbitrary call."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 64357,
+      "valuationTimestamp": 1776583426,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x7a7bab45363efb0394ff27bfa29bb7c0534ca8c9",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1767205883,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x6fdae9edacc6461b21f71a1a6a420197d2b0c3aa"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1767205883,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x7a7bab45363efb0394ff27bfa29bb7c0534ca8c9"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 9377543,
+      "failureModeId": "legacy:eip155:43114:0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/aave-rebalancer.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 43114,
+      "transactionHash": "0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/DefimonAlerts/status/2046504796463808991"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-04/AaveRebalancerCreditDelegation_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: rebalancer 0x7A7bAB45363Efb0394Ff27bfA29bb7C0534cA8C9 created 2025-12-31T18:31:23Z by 0x6fdae9edacc6461b21f71a1a6a420197d2b0c3aa (the delegating victim), not the attack-tx sender 0xf59dc5521f191bcb53a9bcbd1654be81b72ee96f; no EIP-1967 events, 108.5 days old. 6,999.91 WAVAX x $9.194 at the incident timestamp (DefiLlama coingecko:avalanche-2) = $64,357."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/aave-rebalancer.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/aave-rebalancer.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-04-19T07:23:46Z"
+    }
+  },
+  "notes": []
+}

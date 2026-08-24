@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x85ac5d15f16d49ae08f90ab0e554ebfcb145712342c5b7704e305d602146d452",
+  "protocol": {
+    "name": "BCE",
+    "slug": "bce"
+  },
+  "name": "BCE deferred burn against the PancakeSwap pair",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x85ac5d15f16d49ae08f90ab0e554ebfcb145712342c5b7704e305d602146d452",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1774245553
+    },
+    "attackerAddresses": [
+      "0x9f7eabd7c3538ba6b9d10eede63712c0ecce6d69"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "BCE accrued a scheduledDestruction amount on sells and settled it during a later ordinary transfer by burning that amount out of the PancakeSwap pair's own balance and calling sync(), collapsing the BCE reserve so the attacker's remaining BCE could be sold into the distorted pair for its USDT side."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 679000,
+      "valuationTimestamp": 1774245553,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xcdb189d377ac1cf9d7b1d1a988f2025b99999999",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1774156513,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1774156513,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xcdb189d377ac1cf9d7b1d1a988f2025b99999999"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 89040,
+      "failureModeId": "legacy:eip155:56:0x85ac5d15f16d49ae08f90ab0e554ebfcb145712342c5b7704e305d602146d452:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/bce.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x85ac5d15f16d49ae08f90ab0e554ebfcb145712342c5b7704e305d602146d452"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://blocksec.com/blog/weekly-web3-security-incident-roundup-mar-23-mar-29-2026"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-03/bce_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: BCE token (verified source) created 2026-03-22 by EOA 0x1fe979226d796c65a2b1a044c69c2e91628bcfce, one day before the incident and unrelated to the attack sender 0x9f7EABD7...; the attacker flash-borrowed from Moolah and levered through Venus and paid a 15% builder tip, i.e. an external searcher rather than the deployer. DefiLlama and BlockSec both record $679,000; the DeFiHackLabs header says ~800,000 USDT. Recheck of the deployment basis (DELEGATECALL audit): the victim sets no EIP-1967 implementation or beacon slot and its runtime is byte-identical at the creation block 88017532 and the incident block 88215293; its four DELEGATECALL sites are solc external-library calls to the PUSH20 constant 0xc70934c9cd57aa01959aa493845085b29d17d520 (library created at block 87898821), whose code is likewise byte-identical over the window, so the executing code is fixed at deployment."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/bce.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/bce.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-03-23T05:59:13Z"
+    }
+  },
+  "notes": []
+}

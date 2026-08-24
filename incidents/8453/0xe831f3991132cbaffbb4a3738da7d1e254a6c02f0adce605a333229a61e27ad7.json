@@ -1,0 +1,127 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0xe831f3991132cbaffbb4a3738da7d1e254a6c02f0adce605a333229a61e27ad7",
+  "protocol": {
+    "name": "UnprotectedArbBot",
+    "slug": "unprotected-arb-bot"
+  },
+  "name": "UnprotectedArbBot",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0xe831f3991132cbaffbb4a3738da7d1e254a6c02f0adce605a333229a61e27ad7",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1785397379
+    },
+    "attackerAddresses": [
+      "0xbdce6bdd52baceadd1fc91bf01f3bc6ab24df17a"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Selector 0x42be3129 exposed an unauthenticated arbitrary call and token sweep, letting anyone spend the owner's pre-granted WETH allowance through the victim and receive the proceeds."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 31700,
+      "valuationTimestamp": 1785397379,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xa31722ca2a32695280d0e7e325b3dd6d699fc170",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1744560111,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1744560111,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xa31722ca2a32695280d0e7e325b3dd6d699fc170"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 40837268,
+      "failureModeId": "legacy:eip155:8453:0xe831f3991132cbaffbb4a3738da7d1e254a6c02f0adce605a333229a61e27ad7:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/unprotected-arb-bot.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0xe831f3991132cbaffbb4a3738da7d1e254a6c02f0adce605a333229a61e27ad7"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
+      "path": "src/test/2026-07/UnprotectedArbBot_exp.sol"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/unprotected-arb-bot.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/unprotected-arb-bot.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-07-30T07:42:59Z"
+    }
+  },
+  "notes": []
+}

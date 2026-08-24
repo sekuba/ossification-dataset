@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5",
+  "protocol": {
+    "name": "Aztec",
+    "slug": "aztec"
+  },
+  "name": "Aztec V1 rollup escape hatch",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1781721287
+    },
+    "attackerAddresses": [
+      "0x6952d9246e9afe8b887b2877225163436f78e97f"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The permissionless escapeHatch() path accepted Turbo-PLONK proofs whose published inner proof_id was left unconstrained by the circuit, so a proof authorising a withdrawal with no matching deposit passed TurboVerifier and drained the rollup's pooled ETH, DAI and renBTC."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2160000,
+      "valuationTimestamp": 1781721287,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1614799636,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xfcf75295f242c4e87203abb5d7c9bbeda90a8895"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1614799636,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 166921651,
+      "failureModeId": "legacy:eip155:1:0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/aztec.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/ivanbogatyy/status/2069159603942596830"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-06/AztecEscapeHatch_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: rollup 0x737901bea3eeb88459df9ef1BE8fF3Ae1B42A2ba created 2021-03-03 by 0xfcf75295f242c4e87203abb5d7c9bbeda90a8895, no EIP-1967 upgrade events; ETH leg measured here, DAI leg 0x5c196c37a109d74c9797254287a0331f30e0daa637af241bd28fdc43774705c3 and renBTC leg 0x9e1d6ab7c20ae235409d7dd3a9cd47c04f07293585b3498b8beed82d6f6b03ca same victim"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/aztec.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/aztec.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-06-17T18:34:47Z"
+    }
+  },
+  "notes": []
+}

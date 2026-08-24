@@ -1,0 +1,138 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991",
+  "protocol": {
+    "name": "Uranium Finance",
+    "slug": "uranium-finance"
+  },
+  "name": "Uranium Finance v2 pair k-check miscalculation",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1619578972
+    },
+    "attackerAddresses": [
+      "0xc47bdd0a852a88a019385ea3ff57cf8de79f019d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The v2 UraniumPair.swap() scaled its balance adjustment by 10000 for the new fee but kept Uniswap's 1000**2 factor on the reserve side of the constant-product require, making the post-swap invariant check 100x too weak and letting the attacker take ~99% of each pair's reserves for a token dust input."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 50000000,
+      "valuationTimestamp": 1619578972,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x9b9bad4c6513e0ff3fb77c739359d59601c7caff",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1618554862,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x659aab4b03053fe60002778efe104562a3909762"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1618554862,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x9b9bad4c6513e0ff3fb77c739359d59601c7caff"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1024110,
+      "failureModeId": "legacy:eip155:56:0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/uranium-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/immunefi/building-a-poc-for-the-uranium-heist-ec83fbd83e9f"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim is the v2 WBNB/BUSD pair 0x9b9bad4c returned by UraniumFactory 0xa943ea143cd7e79806d670f4a7cf08f8922a454f at the attack block, created 2021-04-16 by 0x659aab4b03053fe60002778efe104562a3909762 (the v2 migration), not by attack sender 0xc47bdd0a; the single tx drained several sibling pairs sharing the same pair code"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/uranium-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/uranium-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-04-28T03:02:52Z"
+    }
+  },
+  "notes": []
+}

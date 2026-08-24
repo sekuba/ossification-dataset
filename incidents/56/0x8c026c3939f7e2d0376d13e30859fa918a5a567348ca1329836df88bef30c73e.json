@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x8c026c3939f7e2d0376d13e30859fa918a5a567348ca1329836df88bef30c73e",
+  "protocol": {
+    "name": "Unverified BSC executor 0xb5cb",
+    "slug": "unverified-b5cb"
+  },
+  "name": "Executor 0x94655f2b arbitrary transfer of a whitelisted holder's tokens",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x8c026c3939f7e2d0376d13e30859fa918a5a567348ca1329836df88bef30c73e",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1750823338
+    },
+    "attackerAddresses": [
+      "0xd5c6f3b71bcceb2ef8332bd8225f5f39e56a122c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The unverified executor's function 0x94655f2b runs caller-supplied token/amount/recipient instructions against the balances of the associated holder 0xB5CB0555A1D28C9DfdbC14017dae131d5c1cc19c with no caller check, so the attacker swept its WBNB, ETH, USDT, USDC and BTCB."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2000000,
+      "valuationTimestamp": 1750823338,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb5cb0555c4a333543dbe0b219923c7b3e9d84a87",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1750790821,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xb6f90981027b95d74b58cb728672bc0143400ad0"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1750790821,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb5cb0555c4a333543dbe0b219923c7b3e9d84a87"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 32517,
+      "failureModeId": "legacy:eip155:56:0x8c026c3939f7e2d0376d13e30859fa918a5a567348ca1329836df88bef30c73e:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/unverified-b5cb.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x8c026c3939f7e2d0376d13e30859fa918a5a567348ca1329836df88bef30c73e"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://x.com/TenArmorAlert/status/1937761064713941187"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2025-06/unverified_b5cb_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim 0xB5CB0555c4A333543DbE0b219923C7B3e9D84a87 created 2025-06-24T18:47:01Z by 0xb6f90981027b95d74b58cb728672bc0143400ad0, which is not the attack-tx sender 0xd5c6f3b71bcceb2ef8332bd8225f5f39e56a122c; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). The PoC header names the funded holder 0xb5cb0555a1d28c9dfdbc14017dae131d5c1cc19c as the victim, but the exploited entry point is the executor 0xB5CB0555c4A333543DbE0b219923C7B3e9D84a87 that the attack contract calls; it was deployed only 32,517 seconds before the incident. Recheck of the deployment basis (DELEGATECALL audit): the unverified executor sets no EIP-1967 implementation or beacon slot and its runtime is byte-identical at the creation block 52031002 and the incident block 52052680; its single DELEGATECALL takes its target from a calldata-decoded array element rather than from storage, so there is no installed implementation that could have been swapped between deployment and the drain, and the 9-hour age stands."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/unverified-b5cb.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/unverified-b5cb.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2025-06-25T03:48:58Z"
+    }
+  },
+  "notes": []
+}

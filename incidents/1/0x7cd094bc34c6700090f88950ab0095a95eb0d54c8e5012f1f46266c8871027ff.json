@@ -1,0 +1,157 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x7cd094bc34c6700090f88950ab0095a95eb0d54c8e5012f1f46266c8871027ff",
+  "protocol": {
+    "name": "XCarnival",
+    "slug": "xcarnival"
+  },
+  "name": "XCarnival XNFT pledged-NFT withdrawal",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x7cd094bc34c6700090f88950ab0095a95eb0d54c8e5012f1f46266c8871027ff",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1656244424
+    },
+    "attackerAddresses": [
+      "0xb7cbb4d43f1e08327a90b32a8417688c9d0b800a"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "XNFT.withdrawNFT() let a borrower pull the pledged BAYC back out while the pledge order was still open, so the same NFT could be re-pledged and borrowed against repeatedly through pledgeAndBorrow()."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 3898162,
+      "valuationTimestamp": 1656244424,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [
+      {
+        "description": "3,087 ETH",
+        "sourceIds": [
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb14b3b9682990ccc16f52eb04146c3ceab01169a",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1654433072,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xc087629431256745e6e3d87b3ec14e8b42d47e48"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1654433072,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xb14b3b9682990ccc16f52eb04146c3ceab01169a"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 1811352,
+      "failureModeId": "legacy:eip155:1:0x7cd094bc34c6700090f88950ab0095a95eb0d54c8e5012f1f46266c8871027ff:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/xcarnival.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7cd094bc34c6700090f88950ab0095a95eb0d54c8e5012f1f46266c8871027ff"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-06/XCarnival_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BlockSecTeam/status/1541070850505723905"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: XNFT proxy 0xb14B3b9682990ccC16F52eB04146C3ceAB01169A created 2022-06-05T12:44:32Z by 0xc087629431256745e6e3d87b3ec14e8b42d47e48, unrelated to the attack sender; a single EIP-1967 Upgraded event in the creation block installs implementation 0x39360ac1239a0b98cb8076d4135d0f72b7fd9909 (the XNFT logic named as the vulnerable contract in the PoC) and no later upgrade precedes the incident, so age runs from that install. 3,087 ETH x $1,262.77 at incidentTimestamp 1656244424 (DefiLlama) = $3,898,162, consistent with the ~$3.87M reported in the PoC header."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/xcarnival.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/xcarnival.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2022-06-26T11:53:44Z"
+    }
+  },
+  "notes": []
+}

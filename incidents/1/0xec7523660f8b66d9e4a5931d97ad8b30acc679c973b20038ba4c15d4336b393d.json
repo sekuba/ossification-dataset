@@ -1,0 +1,151 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xec7523660f8b66d9e4a5931d97ad8b30acc679c973b20038ba4c15d4336b393d",
+  "protocol": {
+    "name": "NFT Trader",
+    "slug": "nft-trader"
+  },
+  "name": "NFT Trader swap contract reentrancy",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xec7523660f8b66d9e4a5931d97ad8b30acc679c973b20038ba4c15d4336b393d",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1702740179
+    },
+    "attackerAddresses": [
+      "0xb1edf2a0ba8bc789cbc3dfbe519737cada034d2d"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The legacy NFT Trader v1 swap contract had no reentrancy guard on its ERC721 receive path, so the attacker re-entered a swap mid-settlement and moved counterparty NFTs out of wallets that still held approvals to the contract."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 3000000,
+      "valuationTimestamp": 1702740179,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xc310e760778ecbca4c65b6c559874757a4c4ece0",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1621972089,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x4bc2f1e9bf517cd944e8ffe0047c80c5b574d532"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1621972089,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xc310e760778ecbca4c65b6c559874757a4c4ece0"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 80768090,
+      "failureModeId": "legacy:eip155:1:0xec7523660f8b66d9e4a5931d97ad8b30acc679c973b20038ba4c15d4336b393d:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/nft-trader.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xec7523660f8b66d9e4a5931d97ad8b30acc679c973b20038ba4c15d4336b393d"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-12/NFTTrader_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/SlowMist_Team/status/1736005523550646535"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss",
+        "root-cause"
+      ],
+      "note": "onchain review: swap contract 0xc310e760778ecbca4c65b6c559874757a4c4ece0 created 2021-05-25T19:48:09Z by 0x4bc2f1e9bf517cd944e8ffe0047c80c5b574d532, unrelated to the attack sender; no EIP-1967 events, age from deployment (934.8 days). Loss is in NFTs (CloneX, BAYC), reported ~$3M; the same transaction also swept NFTs pledged in Pine Protocol loans, which is recorded here rather than as a separate row because the flaw is in this contract."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/nft-trader.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/nft-trader.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-12-16T15:22:59Z"
+    }
+  },
+  "notes": []
+}

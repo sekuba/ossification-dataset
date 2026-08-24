@@ -1,0 +1,149 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934",
+  "protocol": {
+    "name": "SafeMoon",
+    "slug": "safemoon"
+  },
+  "name": "SafeMoon public burn() after upgrade",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1680031587
+    },
+    "attackerAddresses": [
+      "0x286e09932b8d096cba3423d12965042736b8f850"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "An upgrade pushed hours before the incident made burn(address,uint256) callable by anyone, so the attacker burned nearly all SFM held by the SafeMoon/WBNB PancakeSwap pair, sync()'d the pool to the inflated SFM price and sold its own SFM back into the drained reserve."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 8900000,
+      "valuationTimestamp": 1680031587,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x42981d0bfbaf196529376ee702f2a9eb9092fcb5",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1638538413,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x678ee23173dce625a90ed651e91ca5138149f590"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1680009056,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x42981d0bfbaf196529376ee702f2a9eb9092fcb5",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 23 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 22531,
+      "failureModeId": "legacy:eip155:56:0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/safemoon.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.zellic.io/blog/safemoon-exploit-explained/"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-03/safeMoon_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: SFM proxy 0x42981d0bfbaf196529376ee702f2a9eb9092fcb5 created 2021-12-03 by 0x678ee23173dce625a90ed651e91ca5138149f590 (SafeMoon deployer), unrelated to attack sender 0x286e09932b8d096cba3423d12965042736b8f850; 23 EIP-1967 Upgraded events, the last on 2023-03-28T13:10:56Z to implementation 0xeb11a0a0bef1ac028b8c2d4cd64138dd5938ca7a, i.e. 6h15m before the exploit - that upgrade introduced the public burn; ~80% of the funds were later returned"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/safemoon.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/safemoon.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 23,
+      "date": "2023-03-28T19:26:27Z"
+    }
+  },
+  "notes": []
+}

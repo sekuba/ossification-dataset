@@ -1,0 +1,140 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:8453:0x6b378c84aa57097fb5845f285476e33d6832b8090d36d02fe0e1aed909228edd",
+  "protocol": {
+    "name": "KiloEx",
+    "slug": "kiloex"
+  },
+  "name": "MinimalForwarder spoofed keeper on Base",
+  "incident": {
+    "chainId": 8453,
+    "exploit": {
+      "transactionHash": "0x6b378c84aa57097fb5845f285476e33d6832b8090d36d02fe0e1aed909228edd",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1744656807
+    },
+    "attackerAddresses": [
+      "0x00fac92881556a90fdb19eae9f23640b95b4bcbd"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "KiloEx's MinimalForwarder.execute() let any caller supply both the forwarded `from` address and a signature that its verification accepted, so the attacker impersonated the privileged price keeper and called setPrices() on the KiloEx price feed, opening and closing a position across a self-set price."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 3310000,
+      "valuationTimestamp": 1744656807,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x3274b668aed85479e2a8511e74d7db7240ebe7c8",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1741664735,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1741664735,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x3274b668aed85479e2a8511e74d7db7240ebe7c8"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 2992072,
+      "failureModeId": "legacy:eip155:8453:0x6b378c84aa57097fb5845f285476e33d6832b8090d36d02fe0e1aed909228edd:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4"
+        ],
+        "codeHistorySourceIds": []
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/kiloex.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 8453,
+      "transactionHash": "0x6b378c84aa57097fb5845f285476e33d6832b8090d36d02fe0e1aed909228edd"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.halborn.com/blog/post/explained-the-kiloex-hack-april-2025"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://quillaudits.medium.com/kiloex-exploit-breakdown-7-4m-drained-across-chains-ff6e2293d5cb"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity"
+      ],
+      "note": "callTracer review of the Base attack tx: the attacker contract 0xd649a087... calls 0x3274b668... with selector 0x47153f82 (MinimalForwarder.execute), which delegatecalls impl 0xbed75e25a63d2be11605038921aa5eef78bb4e61 and then calls the price feed 0xfdc7bc3a... with 0xac9fd279 (setPrices); the forwarder proxy was created by KiloEx deployer 0x1d568fc08a1d3978985bc3e896a22abd1222abcf, not by the attacker (public writeups often point at the attacker-deployed 0xd649a087... instead)"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/kiloex.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/kiloex.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2025-04-14T18:53:27Z"
+    }
+  },
+  "notes": []
+}

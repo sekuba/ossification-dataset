@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xe8b0131fa14d0a96327f6b5690159ffa7650d66376db87366ba78d91f17cd677",
+  "protocol": {
+    "name": "ARK Token",
+    "slug": "ark-token"
+  },
+  "name": "ARK public autoBurnLiquidityPairTokens()",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xe8b0131fa14d0a96327f6b5690159ffa7650d66376db87366ba78d91f17cd677",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1711199895
+    },
+    "attackerAddresses": [
+      "0xdd309ea4e99b772c1e6a798a6b159211bb95b22c"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "ARK.autoBurnLiquidityPairTokens() can be called by anyone to burn ARK held by the ARK/WBNB pair and sync it, so the attacker repeatedly shrank the pool and sold into the inflated price."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 194776,
+      "valuationTimestamp": 1711199895,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xde698b5bbb4a12ddf2261bbdf8e034af34399999",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1710173567,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x3b7b478d9fe6c76629d317e5708fc39a3ab9d097"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1710173567,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xde698b5bbb4a12ddf2261bbdf8e034af34399999"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1026328,
+      "failureModeId": "legacy:eip155:56:0xe8b0131fa14d0a96327f6b5690159ffa7650d66376db87366ba78d91f17cd677:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/ark-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xe8b0131fa14d0a96327f6b5690159ffa7650d66376db87366ba78d91f17cd677"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/Phalcon_xyz/status/1771728823534375249"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2024-03/ARK_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: victim 0xde698B5BBb4A12DDf2261BbdF8e034af34399999 created 2024-03-11T16:12:47Z by 0x3b7b478d9fe6c76629d317e5708fc39a3ab9d097, which is not the attack-tx sender 0xdd309ea4e99b772c1e6a798a6b159211bb95b22c; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). ~348 BNB x $559.7/BNB at the incident timestamp 1711199895 (DefiLlama coingecko:binancecoin) = $194,776."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/ark-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/ark-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2024-03-23T13:18:15Z"
+    }
+  },
+  "notes": []
+}

@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048",
+  "protocol": {
+    "name": "landNFT",
+    "slug": "landnft"
+  },
+  "name": "landNFT miner mint without permission check",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1684082390
+    },
+    "attackerAddresses": [
+      "0x96b89c2560bcc43c342c12ba9c33dab7eb571a90"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The miner contract's mint(address[],uint256[]) has no permission check, so the attacker minted 200 land NFTs to themselves and redeemed them for XQJ and then BUSD."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 149616,
+      "valuationTimestamp": 1684082390,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x2e599883715d2f92468fa5ae3f9aab4e930e3ac7",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1678096138,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xdd9e4fe7a975a637c29f3da23b2477ae1a9f8ad8"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1678096138,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x2e599883715d2f92468fa5ae3f9aab4e930e3ac7"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 5986252,
+      "failureModeId": "legacy:eip155:56:0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/landnft.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-05/landNFT_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BeosinAlert/status/1658000784943124480"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: miner 0x2e599883715D2f92468Fa5ae3F9aab4E930E3aC7 created 2023-03-06T09:48:58Z by 0xdd9e4fe7a975a637c29f3da23b2477ae1a9f8ad8, unrelated to attack sender 0x96b89c2560bcc43c342c12ba9c33dab7eb571a90; no EIP-1967 Upgraded events, age measured from deployment. lossUsd uses the 149,616 BUSD reported by Beosin (BUSD taken at 1:1)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/landnft.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/landnft.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-05-14T16:39:50Z"
+    }
+  },
+  "notes": []
+}

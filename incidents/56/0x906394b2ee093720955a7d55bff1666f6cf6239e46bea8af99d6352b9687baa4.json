@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x906394b2ee093720955a7d55bff1666f6cf6239e46bea8af99d6352b9687baa4",
+  "protocol": {
+    "name": "CS Token",
+    "slug": "cs-token"
+  },
+  "name": "CS token outdated sellAmount global",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x906394b2ee093720955a7d55bff1666f6cf6239e46bea8af99d6352b9687baa4",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1684860210
+    },
+    "attackerAddresses": [
+      "0x2cdeee9698ffc9fcabc116b820c24e89184027ba"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "CS computes the burn amount from a stale global sellAmount variable rather than the current transfer, so the attacker repeatedly burned CS out of the liquidity pool and swapped the imbalance for USDT."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 714285,
+      "valuationTimestamp": 1684860210,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x8bc6ce23e5e2c4f0a96429e3c9d482d74171215e",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1684753996,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x0ea934e6653ab74e92be3ba1ea29b814c1a7fb46"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1684753996,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x8bc6ce23e5e2c4f0a96429e3c9d482d74171215e"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 106214,
+      "failureModeId": "legacy:eip155:56:0x906394b2ee093720955a7d55bff1666f6cf6239e46bea8af99d6352b9687baa4:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/cs-token.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x906394b2ee093720955a7d55bff1666f6cf6239e46bea8af99d6352b9687baa4"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-05/CS_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BlockSecTeam/status/1661098394130198528"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: CS 0x8BC6Ce23E5e2c4f0A96429E3C9d482d74171215e created 2023-05-22T11:13:16Z by 0x0ea934e6653ab74e92be3ba1ea29b814c1a7fb46, unrelated to attack sender 0x2cdeee9698ffc9fcabc116b820c24e89184027ba; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 954,285.00 USDT left 0x6bc2823de2c3718d3669c2e7036e1d888c4107a1 and the attacker netted 714,285.00 USDT after repaying the 240,000 USDT flash loan."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/cs-token.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/cs-token.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-05-23T16:43:30Z"
+    }
+  },
+  "notes": []
+}

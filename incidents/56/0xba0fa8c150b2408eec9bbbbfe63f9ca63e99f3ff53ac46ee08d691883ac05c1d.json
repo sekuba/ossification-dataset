@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xba0fa8c150b2408eec9bbbbfe63f9ca63e99f3ff53ac46ee08d691883ac05c1d",
+  "protocol": {
+    "name": "xWin Finance",
+    "slug": "xwin-finance"
+  },
+  "name": "xWin Finance Subscribe price-impact validation bypass",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xba0fa8c150b2408eec9bbbbfe63f9ca63e99f3ff53ac46ee08d691883ac05c1d",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1624579645
+    },
+    "attackerAddresses": [
+      "0xb63f0d8b9aa0c4e68d5630f54bfefc6cf2c2ad19"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "xWinDefi.Subscribe() accepted an attacker-supplied priceImpactTolerance of 100% and paid a subscription/referral xWIN reward on every call, so a flash-loaned subscribe-redeem loop farmed xWIN rewards without any effective slippage check."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 300000,
+      "valuationTimestamp": 1624579645,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x1bf7fe7568211ecff68b6bc7ccad31ecd8fe8092",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1613391744,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x79cc34069c59f9cd5445daf65ebbf44976a462b3"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1613391744,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x1bf7fe7568211ecff68b6bc7ccad31ecd8fe8092"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 11187901,
+      "failureModeId": "legacy:eip155:56:0xba0fa8c150b2408eec9bbbbfe63f9ca63e99f3ff53ac46ee08d691883ac05c1d:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/xwin-finance.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xba0fa8c150b2408eec9bbbbfe63f9ca63e99f3ff53ac46ee08d691883ac05c1d"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2021-06/xWin_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://peckshield.medium.com/xwin-finance-incident-root-cause-analysis-71d0820e6bc1"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: xWinDefi 0x1Bf7fe7568211ecfF68B6bC7CCAd31eCd8fe8092 created 2021-02-15T12:22:24Z by 0x79cc34069c59f9cd5445daf65ebbf44976a462b3, unrelated to attack sender 0xb63f0d8b9aa0c4e68d5630f54bfefc6cf2c2ad19; no EIP-1967 Upgraded events before the incident, age measured from deployment."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/xwin-finance.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/xwin-finance.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2021-06-25T00:07:25Z"
+    }
+  },
+  "notes": []
+}

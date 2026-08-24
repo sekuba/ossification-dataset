@@ -1,0 +1,144 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:42161:0x0e29dcf4e9b211a811caf00fc8294024867bffe4ab2819cc1625d2e9d62390af",
+  "protocol": {
+    "name": "Paribus",
+    "slug": "paribus"
+  },
+  "name": "Paribus pETH redeem reentrancy",
+  "incident": {
+    "chainId": 42161,
+    "exploit": {
+      "transactionHash": "0x0e29dcf4e9b211a811caf00fc8294024867bffe4ab2819cc1625d2e9d62390af",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1681208132
+    },
+    "attackerAddresses": [
+      "0x014abff04e5c441b2ceaa62d843bbc5ae49e5504"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The Paribus native-ETH market sent ether to the redeemer before the comptroller's collateral bookkeeping was updated, so the receive hook re-entered the protocol and borrowed against collateral that had already been withdrawn."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 86000,
+      "valuationTimestamp": 1681208132,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-3"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x375ae76f0450293e50876d0e5bdc3022cab23198",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0x375ae76f0450293e50876d0e5bdc3022cab23198",
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1679930500,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x8acd5764d8edef0558dbdf40ae64c7ffb6531160"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1679930500,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x375ae76f0450293e50876d0e5bdc3022cab23198"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1277632,
+      "failureModeId": "legacy:eip155:42161:0x0e29dcf4e9b211a811caf00fc8294024867bffe4ab2819cc1625d2e9d62390af:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/paribus.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x0e29dcf4e9b211a811caf00fc8294024867bffe4ab2819cc1625d2e9d62390af"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-04/Paribus_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: pETH 0x375Ae76F0450293e50876D0e5bDC3022CAb23198 created 2023-03-27T15:21:40Z by 0x8acd5764d8edef0558dbdf40ae64c7ffb6531160, not the attack-tx sender 0x014abff04e5c441b2ceaa62d843bbc5ae49e5504. Compound-fork delegator, so NewImplementation(address,address) logs were queried in addition to EIP-1967: the only one is at the creation block 74259357, so the executing code was 14.8 days old. Loss ~86k per the DeFiHackLabs 2023 index entry for this PoC. Distinct from the 2025-01 Paribus row already in this file. Recheck of the deployment basis (DELEGATECALL audit): the victim is a Compound-fork PEtherDelegator keeping its implementation in plain storage slot 18; a binary search of eth_getStorageAt on slot 18 over [74259357, 79308098] finds 0x5b0ec471565e36e5a33c35b861dd752e16f3a8e7 unchanged from creation to the incident, the delegator runtime is byte-identical at both blocks, and that implementation contains no DELEGATECALL, so deployment is the right basis."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/paribus.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/paribus.json",
+      "originalIncidentIndex": 1,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-04-11T10:15:32Z"
+    }
+  },
+  "notes": [
+    "Legacy flag: nonStandardUpgradeArchitecture=true."
+  ]
+}

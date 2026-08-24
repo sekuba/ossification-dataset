@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xbc08860cd0a08289c41033bdc84b2bb2b0c54a51ceae59620ed9904384287a38",
+  "protocol": {
+    "name": "Unverified router 0x05f0",
+    "slug": "unverified-05f0"
+  },
+  "name": "Unverified router 0x05f0 unprotected swap entry point",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xbc08860cd0a08289c41033bdc84b2bb2b0c54a51ceae59620ed9904384287a38",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1699399463
+    },
+    "attackerAddresses": [
+      "0x46d9b3dfbc163465ca9e306487cba60bc438f5a2"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The unverified router exposed selector 0xf6ebebbb with no caller or slippage validation, letting a flash-loan-funded attacker drive its internal swap accounting and walk away with the contract's USDC, WBTC, WETH and USDT balances."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 2000000,
+      "valuationTimestamp": 1699399463,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x05f016765c6c601fd05a10dba1abe21a04f924a5",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1697550239,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x1bda91e3a2e332428cf1a407821abecec0395427"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1697550239,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x05f016765c6c601fd05a10dba1abe21a04f924a5"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 1849224,
+      "failureModeId": "legacy:eip155:1:0xbc08860cd0a08289c41033bdc84b2bb2b0c54a51ceae59620ed9904384287a38:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/unverified-05f0.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xbc08860cd0a08289c41033bdc84b2bb2b0c54a51ceae59620ed9904384287a38"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-11/bot_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BlockSecTeam/status/1722101942061601052"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: router 0x05f016765c6c601fd05a10dba1abe21a04f924a5 created 2023-10-17T13:43:59Z by 0x1bda91e3a2e332428cf1a407821abecec0395427, unrelated to the attack sender; unverified, no EIP-1967 events, age from deployment (21.4 days). Loss ~$2M per BlockSec's alert."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/unverified-05f0.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/unverified-05f0.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-11-07T23:24:23Z"
+    }
+  },
+  "notes": []
+}

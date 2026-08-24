@@ -1,0 +1,152 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xcdd93e37ba2991ce02d8ca07bf6563bf5cd5ae801cbbce3dd0babb22e30b2dbe",
+  "protocol": {
+    "name": "BTC20",
+    "slug": "btc20"
+  },
+  "name": "BTC20 presale proxy claim exploit",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xcdd93e37ba2991ce02d8ca07bf6563bf5cd5ae801cbbce3dd0babb22e30b2dbe",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1692452891
+    },
+    "attackerAddresses": [
+      "0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The BTC20 presale proxy's claim path did not bound the claimable amount against what the caller had actually purchased, so the attacker claimed presale BTC20 it never paid for and sold it into the Uniswap pools."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 29912,
+      "valuationTimestamp": 1692452891,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x1f006f43f57c45ceb3659e543352b4fae4662df7",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1686824351,
+        "blockNumber": 17942136,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x6de493de7f89c77a249cf44631c60ef67f06d091"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1692367295,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x1f006f43f57c45ceb3659e543352b4fae4662df7",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 6 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 85596,
+      "failureModeId": "legacy:eip155:1:0xcdd93e37ba2991ce02d8ca07bf6563bf5cd5ae801cbbce3dd0babb22e30b2dbe:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/btc20.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xcdd93e37ba2991ce02d8ca07bf6563bf5cd5ae801cbbce3dd0babb22e30b2dbe"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-08/BTC20_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/DecurityHQ/status/1692924369662513472"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: presale proxy 0x1F006F43f57C45Ceb3659E543352b4FAe4662dF7 (TransparentUpgradeableProxy) created 2023-06-15T10:19:11Z by 0x6de493de7f89c77a249cf44631c60ef67f06d091, unrelated to the attack sender; six EIP-1967 Upgraded events, the last on 2023-08-18T14:01:35Z (block 17942136, implementation 0xdb0618e0b850cab3f756d030398be22929226d5c) - only 85,596 seconds (23.8 hours) before the incident - so age runs from that upgrade rather than the 65-day-old deployment. ~18 ETH x $1,661.79 at incidentTimestamp 1692452891 (DefiLlama) = $29,912."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/btc20.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/btc20.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 6,
+      "date": "2023-08-19T13:48:11Z"
+    }
+  },
+  "notes": []
+}

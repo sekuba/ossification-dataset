@@ -1,0 +1,156 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014",
+  "protocol": {
+    "name": "Truebit",
+    "slug": "truebit"
+  },
+  "name": "Truebit TRU bonding-curve pool overflow",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1767888155
+    },
+    "attackerAddresses": [
+      "0x6c8ec8f14be7c01672d31cfa5f2cefeab2562b50"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The pre-0.8 bonding-curve pool's getPurchasePrice() overflowed an unchecked intermediate addition, returning 0 wei as the cost of minting ~240M TRU, which the attacker sold back into the pool's ETH reserve (8,535 ETH)."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 26440000,
+      "valuationTimestamp": 1767888155,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x764c64b2a09b09acb100b80d8c505aa6a0302ef2",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1618138494,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x749b6d893b99b161bccd32b224940cde2ecd4c94"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1618138494,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x764c64b2a09b09acb100b80d8c505aa6a0302ef2"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 149749661,
+      "failureModeId": "legacy:eip155:1:0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-3",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/truebit.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://slowmist.medium.com/26-44-million-stolen-truebit-protocol-smart-contract-vulnerability-analysis-e44fe7becd8a"
+    },
+    {
+      "id": "source-3",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2026-01/Truebit_exp.sol"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: victim is an AdminUpgradeabilityProxy created 2021-04-11 by 0x749b6d893b99b161bccd32b224940cde2ecd4c94 (not the attacker); EIP-1967 impl slot holds 0xc186e6f0163e21be057e95aa135edd52508d14d3 and the proxy emitted no Upgraded event between creation and the incident, so the exploited code is the 2021 deployment. CertiK reports $26.6M / 8,535.36 ETH."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "deployment-basis recheck (storage, not events): callTracer shows the exploit's three DELEGATECALLs from the proxy all go to 0xc186e6f0163e21be057e95aa135edd52508d14d3. eth_getStorageAt on the EIP-1967 implementation slot 0x360894a1...2bbc returns that same address at the creation block 12218203, at the incident block 24191019 and at all 201 evenly spaced samples in between; the proxy runtime is byte-identical at both blocks and it emitted no Upgraded event. The 2021 implementation is what executed; deployment is the correct basis, 1733.2 days."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/truebit.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/truebit.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2026-01-08T16:02:35Z"
+    }
+  },
+  "notes": []
+}

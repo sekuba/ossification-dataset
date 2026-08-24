@@ -1,0 +1,145 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x2bb6d2ca3b52a01ff9ec01c931f68762ded9a05693ea65d911a20602eea02763",
+  "protocol": {
+    "name": "GemPad",
+    "slug": "gempad"
+  },
+  "name": "GemPadLock collectFees reentrancy",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x2bb6d2ca3b52a01ff9ec01c931f68762ded9a05693ea65d911a20602eea02763",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1734426335
+    },
+    "attackerAddresses": [
+      "0xfdd9b0a7e7e16b5fd48a3d1e242af362bc81bcaa"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "collectFees() has no nonReentrant guard and pays out fee tokens before updating lock accounting, so a malicious token that re-enters during the fee transfer created free locks and let the attacker withdraw other projects' locked LP and tokens."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 1900000,
+      "valuationTimestamp": 1734426335,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x10b5f02956d242ab770605d59b7d27e51e45774c",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1706759987,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x05f887ae82af3612f89f55fe70f4297028c6c813"
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1707279791,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x10b5f02956d242ab770605d59b7d27e51e45774c",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 27146544,
+      "failureModeId": "legacy:eip155:1:0x2bb6d2ca3b52a01ff9ec01c931f68762ded9a05693ea65d911a20602eea02763:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/gempad.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2bb6d2ca3b52a01ff9ec01c931f68762ded9a05693ea65d911a20602eea02763"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://www.decurity.io/research/gempad-incident-deep-dive"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://rekt.news/gempad-rekt"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "note": "onchain review: GemPadLock proxy 0x10b5f029... created by 0x05f887ae82af3612f89f55fe70f4297028c6c813 on 2024-02-01, last of two Upgraded events 2024-02-07 to impl 0xc25c516eb7d86b5ec38c07182f4a2f73ac81eead; the exploit tx emits 11 events on the lock contract; lossUsd is the reported ~$1.9M aggregate across the identical deployments on ethereum, bsc, base and polygon"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/gempad.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/gempad.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 2,
+      "date": "2024-12-17T09:05:35Z"
+    }
+  },
+  "notes": []
+}

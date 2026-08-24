@@ -1,0 +1,139 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0x79dbf5d676c1f1d89cabc046743746b828fc0fa4ed70854c8b77335cd1c194df",
+  "protocol": {
+    "name": "NFT Auction Marketplace",
+    "slug": "nft-auction-marketplace"
+  },
+  "name": "NFT Auction Marketplace settle-then-cancel double payout",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x79dbf5d676c1f1d89cabc046743746b828fc0fa4ed70854c8b77335cd1c194df",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1784464605
+    },
+    "attackerAddresses": [
+      "0xeaaf475db34fb66f098e51cbf0eeeff76f496974"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "completeAuction paid a seller without clearing the listing's paid state, so the same self-traded listing could then be delisted for a second payout from other users' pooled escrow."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 4150,
+      "valuationTimestamp": 1784464605,
+      "method": "legacy-unspecified",
+      "sourceIds": []
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x46c958a169b9f2688e126080c4ec422956621e09",
+      "relationship": "proxy",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1623763430,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": null
+      },
+      "lastCodeChange": {
+        "kind": "implementation-change",
+        "timestamp": 1624255084,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "event",
+          "address": "0x46c958a169b9f2688e126080c4ec422956621e09",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+      },
+      "codeAgeSeconds": 160209521,
+      "failureModeId": "legacy:eip155:56:0x79dbf5d676c1f1d89cabc046743746b828fc0fa4ed70854c8b77335cd1c194df:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/nft-auction-marketplace.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x79dbf5d676c1f1d89cabc046743746b828fc0fa4ed70854c8b77335cd1c194df"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2026-07/NFTAuctionMarketplace_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "code-history"
+      ],
+      "note": "the marketplace proxy was deployed by 0x528bcd3abd898afe33f94d99cd8a13cf528b5ff9, not by the attack sender; its sole EIP-1967 Upgraded event was tx 0x46b77b476edcb54883921ade72cf4b1f5c449538db0328c37cecf11091c4cfb3"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/nft-auction-marketplace.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/nft-auction-marketplace.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "upgrade-events",
+      "upgradeEventCount": 1,
+      "date": "2026-07-19T12:36:45Z"
+    }
+  },
+  "notes": []
+}

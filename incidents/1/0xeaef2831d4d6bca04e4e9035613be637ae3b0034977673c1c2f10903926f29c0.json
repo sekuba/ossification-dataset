@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0xeaef2831d4d6bca04e4e9035613be637ae3b0034977673c1c2f10903926f29c0",
+  "protocol": {
+    "name": "Brahma",
+    "slug": "brahma"
+  },
+  "name": "Brahma TOPG zapper unvalidated call",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0xeaef2831d4d6bca04e4e9035613be637ae3b0034977673c1c2f10903926f29c0",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1668012947
+    },
+    "attackerAddresses": [
+      "0x6fa00a7324dc293ea8ecf56fe3143104494c4213"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The Brahma TOPG zapper executed a caller-supplied swap target and calldata without validation, so the attacker made it transferFrom USDC out of every address that had approved the zapper."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 89344,
+      "valuationTimestamp": 1668012947,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xd248b30a3207a766d318c7a87f5cf334a439446d",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1667835935,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0x5262691ccf2c816e6c3d819fb99d8f1a3dad04d8"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1667835935,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xd248b30a3207a766d318c7a87f5cf334a439446d"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 177012,
+      "failureModeId": "legacy:eip155:1:0xeaef2831d4d6bca04e4e9035613be637ae3b0034977673c1c2f10903926f29c0:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/brahma.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xeaef2831d4d6bca04e4e9035613be637ae3b0034977673c1c2f10903926f29c0"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-11/BrahTOPG_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://medium.com/neptune-mutual/decoding-brahma-brahtopg-smart-contract-vulnerability-7b7c364b79d8"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: zapper 0xD248B30A3207A766d318C7A87F5Cf334A439446D created 2022-11-07T15:45:35Z by 0x5262691ccf2c816e6c3d819fb99d8f1a3dad04d8, unrelated to the attack sender; no EIP-1967 events, age from deployment - only 177,012 seconds (2.05 days). Loss read from the tx receipt: 89,343.76 USDC reached the attacker EOA, 79,679.66 of it from the single largest victim 0xa19789f57d0e0225a82eeff0fecb9f3776f276a3 (USDC at 1:1)."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/brahma.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/brahma.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2022-11-09T16:55:47Z"
+    }
+  },
+  "notes": []
+}

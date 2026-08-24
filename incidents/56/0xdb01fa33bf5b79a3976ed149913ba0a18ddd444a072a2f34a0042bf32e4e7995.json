@@ -1,0 +1,150 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:56:0xdb01fa33bf5b79a3976ed149913ba0a18ddd444a072a2f34a0042bf32e4e7995",
+  "protocol": {
+    "name": "MetaPoint",
+    "slug": "metapoint"
+  },
+  "name": "MetaPoint user contract unrestricted approve",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0xdb01fa33bf5b79a3976ed149913ba0a18ddd444a072a2f34a0042bf32e4e7995",
+      "blockNumber": null,
+      "transactionIndex": null,
+      "timestamp": 1681245179
+    },
+    "attackerAddresses": [
+      "0x0d1969a30bb4ba02e731862edbced5f5abba8373"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "Each MetaPoint per-user contract exposes an approve() that grants an unlimited POT allowance to whoever calls it, so the attacker called it on every user contract and transferFrom-ed their POT away."
+  },
+  "loss": {
+    "kind": "legacy-unspecified",
+    "usd": {
+      "amount": 811775,
+      "valuationTimestamp": 1681245179,
+      "method": "legacy-unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x724dbea8a0ec7070de448ef4af3b95210bdc8df6",
+      "relationship": "unknown",
+      "codeArtifact": {
+        "address": null,
+        "codeHash": null
+      },
+      "deployment": {
+        "timestamp": 1681041224,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "creatorAddress": "0xe56d3acbcdbe499400798e3e4bd129a82479a8bc"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1681041224,
+        "blockNumber": null,
+        "transactionHash": null,
+        "transactionIndex": null,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x724dbea8a0ec7070de448ef4af3b95210bdc8df6"
+        },
+        "description": "Legacy basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 203955,
+      "failureModeId": "legacy:eip155:56:0xdb01fa33bf5b79a3976ed149913ba0a18ddd444a072a2f34a0042bf32e4e7995:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4"
+        ],
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Target identity and code history came from the v1 snapshot row originally at protocols/metapoint.json; no semantic revalidation was inherited.",
+          "The executing code artifact and its code hash have not been established in structured evidence.",
+          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xdb01fa33bf5b79a3976ed149913ba0a18ddd444a072a2f34a0042bf32e4e7995"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2023-04/MetaPoint_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/PeckShieldAlert/status/1645980197987192833"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "target-identity",
+        "code-history",
+        "loss"
+      ],
+      "note": "onchain review: MetaPoint user contract 0x724DbEA8A0ec7070de448ef4AF3b95210BDC8DF6 (the first of eleven drained in the PoC) created 2023-04-09T11:53:44Z by 0xe56d3acbcdbe499400798e3e4bd129a82479a8bc, unrelated to attack sender 0x0d1969a30bb4ba02e731862edbced5f5abba8373; no EIP-1967 Upgraded events, age measured from deployment. The paired withdraw transaction 0x41853747231dcf01017cf419e6e4aa86757e59479964bafdce0921d3e616cc67 moved 27,392.56 USDT out of the POT/USDT pool for 83.86 WBNB; lossUsd converts the 2,500 BNB reported for the whole incident: 2,500 BNB x $324.71 at incidentTimestamp 1681245179 (DefiLlama coingecko:binancecoin) = $811,775."
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Classification and loss came from the v1 snapshot row originally at protocols/metapoint.json; legacy measurement.status=OK is provenance only.",
+      "The exploit block or transaction index remains unresolved.",
+      "The legacy USD loss lacks uniformly structured valuation provenance."
+    ],
+    "legacy": {
+      "snapshot": "research/raw/legacy-v1.json",
+      "originalFile": "protocols/metapoint.json",
+      "originalIncidentIndex": 0,
+      "status": "OK",
+      "basis": "deployment",
+      "upgradeEventCount": 0,
+      "date": "2023-04-11T20:32:59Z"
+    }
+  },
+  "notes": []
+}
