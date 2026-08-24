@@ -12,7 +12,7 @@
     "exploit": {
       "transactionHash": "0xf7c21600452939a81b599017ee24ee0dfd92aaaccd0a55d02819a7658a6ef635",
       "blockNumber": 18476513,
-      "transactionIndex": null,
+      "transactionIndex": 2,
       "timestamp": 1698832727
     },
     "attackerAddresses": [
@@ -43,21 +43,21 @@
       "relationship": "direct",
       "codeArtifact": {
         "address": "0x5fdbcd61bc9bd4b6d3fd1f49a5d253165ea11750",
-        "codeHash": null
+        "codeHash": "0xdff4e52f36277f3a361495871fe6ddffe01e8a8aade3f7fa56ed1ccc2b7b8f47"
       },
       "deployment": {
         "timestamp": 1698335891,
         "blockNumber": 18435429,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionHash": "0x37688007f4377a3c489c03977dc07b023f7edc74060f1e2a42cc7e92592e2574",
+        "transactionIndex": 75,
+        "creatorAddress": "0xb112e904ae10df48d87762d26e7e61c9e3e35200"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1698335891,
         "blockNumber": 18435429,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x37688007f4377a3c489c03977dc07b023f7edc74060f1e2a42cc7e92592e2574",
+        "transactionIndex": 75,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,19 +70,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-2"
+          "source-2",
+          "source-4"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/onyx-protocol.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/onyx-protocol.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -113,6 +113,16 @@
         "target-identity"
       ],
       "note": "exploit tx backfilled and verified onchain (block 18476513; victim in receipt logs), matching the DeFiHackLabs PoC"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x37688007f4377a3c489c03977dc07b023f7edc74060f1e2a42cc7e92592e2574"
     }
   ],
   "verification": {

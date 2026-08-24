@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x59d17fd31e31959b2d562508bf91c4fc1271682ba7d61a6209865e1151b69aea",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25170513,
+      "transactionIndex": 81,
       "timestamp": 1779690347
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1772050175,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 24536219,
+        "transactionHash": "0x3391aa6c3e1ba896f342b110d236950bbacf819225f456bd386b5c82d22cdb39",
+        "transactionIndex": 55,
+        "creatorAddress": "0x311df7369ecbca483eab798129aa1687b767d137"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1772050175,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 24536219,
+        "transactionHash": "0x3391aa6c3e1ba896f342b110d236950bbacf819225f456bd386b5c82d22cdb39",
+        "transactionIndex": 55,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:1:0x59d17fd31e31959b2d562508bf91c4fc1271682ba7d61a6209865e1151b69aea:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/newmarkettrading.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,13 +106,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-05/NewMarketTrading_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3391aa6c3e1ba896f342b110d236950bbacf819225f456bd386b5c82d22cdb39"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/newmarkettrading.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

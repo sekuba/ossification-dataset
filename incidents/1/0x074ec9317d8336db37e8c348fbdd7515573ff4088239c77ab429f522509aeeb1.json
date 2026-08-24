@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25315715,
+      "transactionIndex": 867,
       "timestamp": 1781439983
     },
     "attackerAddresses": [
@@ -42,15 +42,15 @@
       "executionAddress": "0xff1f2b4adb9df6fc8eafecdcbf96a2b351680455",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x7d657ddcf7e2a5fd118dc8a6ddc3dc308adc2728",
+        "codeHash": "0x5ee6af94fefbaeef36025b7d06ef186edb226b6285894e907d937191119def1b"
       },
       "deployment": {
         "timestamp": 1654638194,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0xa173bddf4953c1e8be2ca0695cfc07502ff3b1e7"
+        "blockNumber": 14923081,
+        "transactionHash": "0x837765f53d9ae32bf1b507fec696052d3ee2a245515dccebc13b3717bc987921",
+        "transactionIndex": 97,
+        "creatorAddress": "0x61acf20ae64bdd2c54bcd622ed3dfbae8a82517f"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,7 +85,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/aztec.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -126,13 +127,22 @@
         "code-history"
       ],
       "note": "onchain review: proxy 0xFF1F2B4ADb9dF6FC8eAFecDcbF96A2B351680455 created 2022-06-07 by 0xa173bddf4953c1e8be2ca0695cfc07502ff3b1e7, three EIP-1967 Upgraded events, last 2024-04-09 to impl 0x7d657ddcf7e2a5fd118dc8a6ddc3dc308adc2728; 14 chained rollups ids 13277-13290"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x837765f53d9ae32bf1b507fec696052d3ee2a245515dccebc13b3717bc987921"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/aztec.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

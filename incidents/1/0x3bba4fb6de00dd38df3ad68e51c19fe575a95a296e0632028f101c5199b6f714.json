@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x3bba4fb6de00dd38df3ad68e51c19fe575a95a296e0632028f101c5199b6f714",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19917291,
+      "transactionIndex": 0,
       "timestamp": 1716282527
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1595842745,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10540795,
+        "transactionHash": "0x0f30caf7f1d11b5795d869edf87182693d3c42f23872ca06f6089d16db0a4e18",
+        "transactionIndex": 61,
         "creatorAddress": "0x2a24a7a4beb9e6d0431c9bc1800045b8fc27a966"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1595842745,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10540795,
+        "transactionHash": "0x0f30caf7f1d11b5795d869edf87182693d3c42f23872ca06f6089d16db0a4e18",
+        "transactionIndex": 61,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/pnetwork.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -119,13 +120,22 @@
         "loss"
       ],
       "note": "onchain review: Burner 0x4d4d05e1205e3A412ae1469C99e0d954113aa76F (verified, ContractName Burner) created 2020-07-27T09:39:05Z by 0x2a24a7a4beb9e6d0431c9bc1800045b8fc27a966, not the attack-tx sender 0xe6dcf87256866e293b825708bf1f5df8f07519b3; no EIP-1967 events, immutable since deployment (1394 days). 1.7 ETH at a May 2024 ETH price near $3,700 is roughly $6.3k, above the $1,000 floor. Same failure mode as the recorded CurveBurner row: a permissionless fee-conversion call with no slippage bound. Loss converted at the incident timestamp: 1.7 ETH x $3,661.59 (DefiLlama historical ETH price) = $6,225."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x0f30caf7f1d11b5795d869edf87182693d3c42f23872ca06f6089d16db0a4e18"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/pnetwork.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

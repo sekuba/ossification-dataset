@@ -12,7 +12,7 @@
     "exploit": {
       "transactionHash": "0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e",
       "blockNumber": 13125071,
-      "transactionIndex": null,
+      "transactionIndex": 1,
       "timestamp": 1630302287
     },
     "attackerAddresses": [
@@ -48,9 +48,9 @@
       "deployment": {
         "timestamp": 1612850081,
         "blockNumber": 11820452,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionHash": "0x099330597c35d299ea45b1afbf1937852414e1e5e1c3d9be988c14987d1a8003",
+        "transactionIndex": 77,
+        "creatorAddress": "0x197939c1ca20c2b506d6811d8b6cdb3394471074"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -69,10 +69,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-2"
+          "source-2",
+          "source-4"
         ]
       },
       "verification": {
@@ -112,6 +114,16 @@
         "target-identity"
       ],
       "note": "exploit tx backfilled and verified onchain (block 13125071; crAMP victim in receipt logs), cited by PeckShield and the DeFiHackLabs 2021-08 index"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x099330597c35d299ea45b1afbf1937852414e1e5e1c3d9be988c14987d1a8003"
     }
   ],
   "verification": {

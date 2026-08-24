@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x1c27c4d625429acfc0f97e466eda725fd09ebdc77550e529ba4cbdbc33beb97b",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 23273098,
+      "transactionIndex": 84,
       "timestamp": 1756787903
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1749683423,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 22684511,
+        "transactionHash": "0x198d1987676a77195f382bf987d1f4060453b559ed7a05ff1d169b786ab9c0c9",
+        "transactionIndex": 37,
+        "creatorAddress": "0xfbd5f5da1959d1b24bd1a91c05956f9a93833975"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1749683423,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 22684511,
+        "transactionHash": "0x198d1987676a77195f382bf987d1f4060453b559ed7a05ff1d169b786ab9c0c9",
+        "transactionIndex": 37,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -71,10 +71,12 @@
       "failureModeId": "legacy:eip155:1:0x1c27c4d625429acfc0f97e466eda725fd09ebdc77550e529ba4cbdbc33beb97b:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -82,8 +84,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/bunni.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -115,13 +116,22 @@
         "loss"
       ],
       "note": "onchain review: BunniHub 0x0000...65f1 (creator 0xfbe09b7a6c6cc3a72b4ca41cdd9c88ac62bb7937, unrelated to attack sender 0x0c3d8fa7...) is reached through Uniswap v4 PoolManager and BunniHook 0x000052423c1db6b7ff8641b85a7eefc7b2791888 in the attack tx; no EIP-1967 Upgraded events before the incident; the identical Unichain deployment (same address, deployed 2025-06-11) was drained 171 seconds earlier and is omitted here only because scripts/verify.mjs has no chain id for unichain. Recheck (deployment basis confirmed): all 44 DELEGATECALLs the hub makes during the exploit go to 0x000000000dbb048f2e744e4b15b5aeef65e09528 (BunniHubLogic), which appears as a PUSH20 link-time constant in the hub's runtime and so cannot be repointed; keccak(eth_getCode) on the hub is identical at the creation block 22684511 and the incident block 23273098, and neither the EIP-1967 implementation nor the beacon slot is set."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x198d1987676a77195f382bf987d1f4060453b559ed7a05ff1d169b786ab9c0c9"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/bunni.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

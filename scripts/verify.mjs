@@ -148,7 +148,7 @@ function eventCodeAddress(log, location) {
     const value = log.topics?.[Number(topicIndex)]
     return value?.length === 66 ? `0x${value.slice(-40)}`.toLowerCase() : null
   }
-  const wordIndex = /^data-word-([0-2])-address$/.exec(location ?? '')?.[1]
+  const wordIndex = /^data-word-(0|[1-9][0-9]*)-address$/.exec(location ?? '')?.[1]
   if (wordIndex) {
     const data = log.data?.replace(/^0x/, '') ?? ''
     const word = data.slice(Number(wordIndex) * 64, Number(wordIndex) * 64 + 64)
@@ -174,7 +174,9 @@ async function transactionAnchor(chainId, anchor, label, report, { requireSucces
   }
   const actualBlock = hexInt(tx.blockNumber)
   const actualIndex = hexInt(tx.transactionIndex)
-  const block = await rpc(chainId, 'eth_getBlockByNumber', [tx.blockNumber, false])
+  let block = await rpc(chainId, 'eth_getBlockByNumber', [tx.blockNumber, false])
+  if (!block && receipt.blockHash)
+    block = await rpc(chainId, 'eth_getBlockByHash', [receipt.blockHash, false])
   if (!block) {
     inconclusive(report, label, `block ${actualBlock} is unavailable`)
     return null
@@ -186,7 +188,8 @@ async function transactionAnchor(chainId, anchor, label, report, { requireSucces
     diffs.push(`transactionIndex ${anchor.transactionIndex} != ${actualIndex}`)
   if (anchor.timestamp !== actualTimestamp)
     diffs.push(`timestamp ${anchor.timestamp} != ${actualTimestamp}`)
-  if (requireSuccess && receipt.status !== '0x1') diffs.push(`receipt status is ${receipt.status}`)
+  if (requireSuccess && receipt.status !== undefined && receipt.status !== '0x1')
+    diffs.push(`receipt status is ${receipt.status}`)
   if (diffs.length > 0) fail(report, label, diffs.join(', '))
   else pass(report, label, `${anchor.transactionHash} at ${actualBlock}:${actualIndex}`)
   return { tx, receipt, block, blockNumber: actualBlock, transactionIndex: actualIndex, timestamp: actualTimestamp }

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x9879031462b16dbf063377c4a8e5b043662576a9a3fb282c5a656953ad00684e",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 22364244,
+      "transactionIndex": 89,
       "timestamp": 1745803283
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1590245440,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10122755,
+        "transactionHash": "0x12bb00c927e2c40c319ed10d5e4a592e1170c1f406403a95753bdcd24df44aa2",
+        "transactionIndex": 34,
         "creatorAddress": "0x1d075f1f543bb09df4530f44ed21ca50303a65b2"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1590245440,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10122755,
+        "transactionHash": "0x12bb00c927e2c40c319ed10d5e4a592e1170c1f406403a95753bdcd24df44aa2",
+        "transactionIndex": 34,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/tcdp.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: tCDP 0xdA4c9Ee8373fd1095379a3Dd457A0c78968AaF03 created 2020-05-23T14:50:40Z by 0x1d075f1f543bb09df4530f44ed21ca50303a65b2 (one of the drained holders), not the attack-tx sender 0xd49cb0924f871bcfd78ea4187d9e6bd943f85d98; no EIP-1967 events, 1800.4 days old. 2.02 ETH x $1,775.02 at the incident timestamp (DefiLlama) = $3,586."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x12bb00c927e2c40c319ed10d5e4a592e1170c1f406403a95753bdcd24df44aa2"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/tcdp.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

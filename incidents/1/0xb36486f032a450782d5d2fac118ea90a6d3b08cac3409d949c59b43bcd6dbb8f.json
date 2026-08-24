@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 16172820,
+      "transactionIndex": 0,
       "timestamp": 1670898767
     },
     "attackerAddresses": [
@@ -51,17 +51,17 @@
       },
       "deployment": {
         "timestamp": 1652151110,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x1806c8c7993086f971bb6f605a5cd3e369e64ed6"
+        "blockNumber": 14746111,
+        "transactionHash": "0x540b5182c4eb3803549661fc205eee409dff402293162680d3c24eaf18cc0f74",
+        "transactionIndex": 210,
+        "creatorAddress": "0x8b3d780db8842593d8b61632a2f76c4d4f31d7c3"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1652151110,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14746111,
+        "transactionHash": "0x540b5182c4eb3803549661fc205eee409dff402293162680d3c24eaf18cc0f74",
+        "transactionIndex": 210,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -76,12 +76,14 @@
           "source-3",
           "source-4",
           "source-5",
-          "source-6"
+          "source-6",
+          "source-7"
         ],
         "codeHistorySourceIds": [
           "source-4",
           "source-5",
-          "source-6"
+          "source-6",
+          "source-7"
         ]
       },
       "verification": {
@@ -89,8 +91,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/elasticswap.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -153,13 +154,22 @@
         "loss"
       ],
       "note": "onchain review: victim corrected from ELP exchange 0x4ae1Da57f2d6b2E9a23d07e264Aa2B3bBCaeD19A, which emits no logs at all in the cited exploit transaction, to the ElasticSwap Exchange actually drained, 0xa0c5aa50ce3cc69b1c478d8235597bc0c51dfdab, which emits 14 of that transaction's logs and is its top emitter. Created 2022-05-10T00:11:50Z (block 14746111) by 0x72c6d5b5e7f921e84166dc2061bef4533a5a98db, unrelated to attack sender 0xbeadedbabed6a353c9caa4894aa7e5f883e32967; no EIP-1967 Upgraded events in range. Age 216.99 d, previously 219.44 d against the wrong pool"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x540b5182c4eb3803549661fc205eee409dff402293162680d3c24eaf18cc0f74"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/elasticswap.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

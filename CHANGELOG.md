@@ -16,7 +16,10 @@ V2 defines a new incident-and-target interface for audited code age and loss.
 - Grouped repeated failures by
   `(codeArtifact.codeHash, failureModeId)`.
 - Added a reproducible candidate ledger and deterministic release manifest.
+- Added named, timestamped review attestations for reviewed claims.
+- Added deterministic target blockers and RPC-backed mechanical enrichment.
+- Pinned the production discovery cohort to complete source inventories through
+  July 2026.
 - Located analytical scoring and model policy in downstream consumers.
 
-Git history and tags retain v1, while `research/raw/legacy-v1.json` preserves its
-complete migration input.
+`research/raw/legacy-v1.json` is the hashed migration input.

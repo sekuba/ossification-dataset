@@ -169,17 +169,19 @@
         },
         "research": {
           "type": "object",
-          "required": ["candidates", "rawInputs", "schema"],
+          "required": ["candidates", "candidateSchema", "rawInputs", "revalidation", "revalidationSchema"],
           "additionalProperties": false,
           "properties": {
             "candidates": { "$ref": "#/$defs/fileHash" },
+            "candidateSchema": { "$ref": "#/$defs/fileHash" },
             "rawInputs": {
               "type": "array",
               "minItems": 1,
               "uniqueItems": true,
               "items": { "$ref": "#/$defs/fileHash" }
             },
-            "schema": { "$ref": "#/$defs/fileHash" }
+            "revalidation": { "$ref": "#/$defs/fileHash" },
+            "revalidationSchema": { "$ref": "#/$defs/fileHash" }
           }
         }
       }

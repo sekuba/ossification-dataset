@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 18385886,
+      "transactionIndex": 110,
       "timestamp": 1697736719
     },
     "attackerAddresses": [
@@ -21,22 +21,43 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "Repeatedly liquidating tiny slices of an underwater kDAI loan against the low-value kTAF market let liquidateCalculateSeizeTokens round the seized kTAF collateral up each time, so the attacker seized more collateral than the DAI it repaid was worth."
+    "summary": "Repeated tiny liquidations rounded the seized kTAF collateral up, allowing more collateral to be redeemed than the DAI repaid was worth."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 8000,
+      "amount": 8187.514103413431,
       "valuationTimestamp": 1697736719,
-      "method": "legacy-unspecified",
+      "method": "stablecoin-par",
       "sourceIds": [
-        "source-4"
+        "source-1"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "symbol": "DAI"
+        },
+        "amount": "8187.514103413431539366",
+        "usdValue": 8187.514103413431,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1697736719,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exploit receipt records an exact 8,187.514103413431539366 DAI transfer from the attack contract to the attacker after the 4,000 DAI Balancer flash loan was repaid."
   },
   "targets": [
     {
@@ -45,46 +66,48 @@
       "relationship": "direct",
       "codeArtifact": {
         "address": "0xf5140fc35c6f94d02d7466f793feb0216082d7e5",
-        "codeHash": null
+        "codeHash": "0x99d334b97cbc99d6b743a08d40f02b2c14b425110fb646afa658fdd414b60d6a"
       },
       "deployment": {
         "timestamp": 1595548921,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10518850,
+        "transactionHash": "0x8e5861f2ba6d0554684ca372efdc029259437ea95e51da5858255d0d8ee02bd2",
+        "transactionIndex": 22,
         "creatorAddress": "0xa13b3e79f2ed49bc05af2274dc509d73a75cafe2"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1595548921,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10518850,
+        "transactionHash": "0x8e5861f2ba6d0554684ca372efdc029259437ea95e51da5858255d0d8ee02bd2",
+        "transactionIndex": 22,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0xf5140fc35c6f94d02d7466f793feb0216082d7e5"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The direct kTAF runtime was created by this transaction and its code hash remained unchanged through the exploit."
       },
       "codeAgeSeconds": 102187798,
-      "failureModeId": "legacy:eip155:1:0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4:failure-1",
+      "failureModeId": "failure:liquidation-seize-rounding",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
+          "source-3",
           "source-4"
         ],
         "codeHistorySourceIds": [
+          "source-3",
           "source-4"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/ktaf.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -94,7 +117,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4"
@@ -104,7 +130,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -112,39 +139,35 @@
     },
     {
       "id": "source-3",
-      "type": "post-mortem",
+      "type": "onchain-transaction",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "code-history"
       ],
-      "url": "https://defimon.xyz/attack/mainnet/0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4"
+      "chainId": 1,
+      "transactionHash": "0x8e5861f2ba6d0554684ca372efdc029259437ea95e51da5858255d0d8ee02bd2"
     },
     {
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: kTAF 0xf5140fc35c6f94d02d7466f793feb0216082d7e5 (CErc20Immutable, symbol kTAF) created 2020-07-24T00:02:01Z by 0xa13b3e79f2ed49bc05af2274dc509d73a75cafe2, unrelated to the attack sender; CErc20Immutable has no delegatecall implementation slot and emitted no EIP-1967 events, so age runs from deployment (1182.7 days). Loss ~$8K per the PoC header, realised in DAI."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T00:00:00Z",
+      "note": "Reviewed the exploit receipt and call trace, DAI transfers, the creation transaction, the pre-exploit runtime, and the commit-pinned reproduction. The kTAF address is a top-level direct deployment with no DELEGATECALL or SELFDESTRUCT opcode. Its runtime hash is 0x99d334b97cbc99d6b743a08d40f02b2c14b425110fb646afa658fdd414b60d6a both at deployment block 10518850 and immediately before exploit block 18385886. After the flash loan was repaid, the attack contract transferred exactly 8,187.514103413431539366 DAI to the attacker."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/ktaf.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/ktaf.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-10-19T17:31:59Z"
-    }
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
+    ]
   },
   "notes": []
 }

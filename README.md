@@ -33,15 +33,19 @@ deduplication.
 incidents/                    source incident records
 schema/incident.schema.json   source schema
 schema/release-*.schema.json  generated-interface schemas
+schema/revalidation.schema.json research-queue schema
 research/candidates.json      candidate disposition and coverage ledger
+research/revalidation.json    deterministic target review queue
 research/raw/                 hashed discovery and migration inputs
 dist/latest/incidents.json    generated incident interface
-dist/latest/curve.json        curve observations and revalidation queue
+dist/latest/curve.json        curve observations and deduplication
 dist/latest/manifest.json     cohort, counts, and source hashes
 scripts/check.mjs             schema and cross-record validation
 scripts/verify.mjs            fail-closed onchain anchor verification
+scripts/enrich.mjs            mechanical anchor and code-hash enrichment
 scripts/build.mjs             deterministic distribution builder
 scripts/build-candidates.mjs  deterministic research-ledger builder
+scripts/build-revalidation.mjs deterministic target blocker queue
 ```
 
 Consumers join each curve observation to its incident-level loss through
@@ -59,9 +63,11 @@ Use Node 22.
 npm test
 npm run build
 npm run candidates
+npm run revalidation
 npm run verify -- incidents/1/<file>.json
 npm run verify -- --all --quiet
 npm run verify -- incidents/1/<file>.json --curve-ready
+npm run enrich -- --all
 ```
 
 The verifier exits successfully when every declared anchor reaches
@@ -69,3 +75,5 @@ The verifier exits successfully when every declared anchor reaches
 `--allow-incomplete`.
 
 Interpret `ageKnots` as the empirical ages of reviewed exploit observations.
+Use `research/revalidation.json` to select work by explicit missing claim rather
+than by file order.

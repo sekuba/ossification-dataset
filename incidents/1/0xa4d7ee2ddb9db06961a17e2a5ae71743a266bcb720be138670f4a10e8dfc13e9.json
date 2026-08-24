@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xa4d7ee2ddb9db06961a17e2a5ae71743a266bcb720be138670f4a10e8dfc13e9",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19286457,
+      "transactionIndex": 0,
       "timestamp": 1708644899
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1706159471,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 19081459,
+        "transactionHash": "0xd4a097bced65d028ca4694ba7453020a39503378fb74f831acd42cde6217af35",
+        "transactionIndex": 8,
+        "creatorAddress": "0x959e2cc532115d0a86e24eb2977d93df6202560e"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1706159471,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19081459,
+        "transactionHash": "0xd4a097bced65d028ca4694ba7453020a39503378fb74f831acd42cde6217af35",
+        "transactionIndex": 8,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/swarm-markets.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -119,13 +120,22 @@
         "loss"
       ],
       "note": "onchain review: xToken 0xD08E245Fdb3f1504aea4056e2C71615DA7001440 created 2024-01-25T05:11:11Z by Swarm deployer 0x959e2cc532115d0a86e24eb2977d93df6202560e (also the creator of the second drained xToken 0x0a3fbF5B4cF80DB51fCAe21efe63f6a36D45d2B2), neither the attacker nor the attack-tx sender; its verified source has an unguarded `function mint(address account, uint256 amount) external { _mint(account, amount); }` and hasRole(MINTER_ROLE, attacker) is false, confirming no role was needed. No EIP-1967 events, code immutable since deployment. The cited transaction was submitted by MEV searcher 0xc0ffeebabe5d496b2dde509f9fa189c25cf29671, who front-ran the original exploiter 0x38f68f119243adbca187e1ef64344ed475a8c69c; ~7,729 in DAI+USDC drained from XTokenWrapper 0x2b9dc65253c035Eb21778cB3898eab5A0AdA0cCe."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xd4a097bced65d028ca4694ba7453020a39503378fb74f831acd42cde6217af35"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/swarm-markets.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x2bb6d2ca3b52a01ff9ec01c931f68762ded9a05693ea65d911a20602eea02763",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 21421247,
+      "transactionIndex": 0,
       "timestamp": 1734426335
     },
     "attackerAddresses": [
@@ -42,14 +42,14 @@
       "executionAddress": "0x10b5f02956d242ab770605d59b7d27e51e45774c",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xc25c516eb7d86b5ec38c07182f4a2f73ac81eead",
+        "codeHash": "0xad84559dc70fb5ad9826778ef5b838f01922fb246ca220d6def3bb42afded3ce"
       },
       "deployment": {
         "timestamp": 1706759987,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19131071,
+        "transactionHash": "0x3ff683e4b6193539ad41aa240aeac0f5839874f53a352d8e7f847a5a0d36c257",
+        "transactionIndex": 54,
         "creatorAddress": "0x05f887ae82af3612f89f55fe70f4297028c6c813"
       },
       "lastCodeChange": {
@@ -71,10 +71,12 @@
       "failureModeId": "legacy:eip155:1:0x2bb6d2ca3b52a01ff9ec01c931f68762ded9a05693ea65d911a20602eea02763:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -82,7 +84,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/gempad.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -122,13 +123,22 @@
         "code-history"
       ],
       "note": "onchain review: GemPadLock proxy 0x10b5f029... created by 0x05f887ae82af3612f89f55fe70f4297028c6c813 on 2024-02-01, last of two Upgraded events 2024-02-07 to impl 0xc25c516eb7d86b5ec38c07182f4a2f73ac81eead; the exploit tx emits 11 events on the lock contract; lossUsd is the reported ~$1.9M aggregate across the identical deployments on ethereum, bsc, base and polygon"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3ff683e4b6193539ad41aa240aeac0f5839874f53a352d8e7f847a5a0d36c257"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/gempad.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

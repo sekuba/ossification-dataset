@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 11303123,
+      "transactionIndex": 0,
       "timestamp": 1605983844
     },
     "attackerAddresses": [
@@ -44,22 +44,22 @@
       "executionAddress": "0x6847259b2b3a4c17e7c43c54409810af48ba5210",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x6186e99d9cfb05e1fdf1b442178806e81da21dd8",
+        "codeHash": "0x412124aa1dd7aad9f690db266f0d4e09980997d74ff39f74308970d2cd406432"
       },
       "deployment": {
         "timestamp": 1603411456,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 11109198,
+        "transactionHash": "0xf19481611fd790f4d15c78618c274d8557447ee8a5e8bb67e1d39b93b3465f32",
+        "transactionIndex": 4,
         "creatorAddress": "0xf00d98806a785bb0e1854a0ccc8a39c9c4f4316a"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1603411456,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 11109198,
+        "transactionHash": "0xf19481611fd790f4d15c78618c274d8557447ee8a5e8bb67e1d39b93b3465f32",
+        "transactionIndex": 4,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -71,19 +71,19 @@
       "failureModeId": "legacy:eip155:1:0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/pickle-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/pickle-finance.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -115,13 +115,22 @@
         "loss"
       ],
       "note": "onchain review: I read the verified ControllerV4 source at 0x6847259b - swapExactJarForJar only requires approvedJarConverters[_targets[i]], with no jar whitelist; contract created 2020-10-23 by 0xf00d98806a785bb0e1854a0ccc8a39c9c4f4316a, not by attack sender 0xbac8a476; loss of 19,759,355 DAI counted 1:1 in USD. Recheck (deployment basis confirmed): ControllerV4's runtime is unchanged - identical keccak(eth_getCode) at the creation block 11109198 and the incident block 11303123 - and it holds no implementation slot. The single DELEGATECALL taken in the exploit goes to the jar converter 0x6186e99d9cfb05e1fdf1b442178806e81da21dd8, which the same Pickle deployer 0xf00d98806a785bb0e1854a0ccc8a39c9c4f4316a created 278 s after the controller (block 11109222) and whitelisted in approvedJarConverters (mapping at slot 11) 288 s after it (block 11109224, 2020-10-23T00:09:04Z), verified by binary-searching eth_getStorageAt on keccak(converter . 11) - the same deployment session, and worth 288 s out of a 2.57 M-second age, so deployment remains the basis."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xf19481611fd790f4d15c78618c274d8557447ee8a5e8bb67e1d39b93b3465f32"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/pickle-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

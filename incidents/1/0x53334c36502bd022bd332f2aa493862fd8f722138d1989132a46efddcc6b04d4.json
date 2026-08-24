@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x53334c36502bd022bd332f2aa493862fd8f722138d1989132a46efddcc6b04d4",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20367789,
+      "transactionIndex": 315,
       "timestamp": 1721720351
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1721559683,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20354479,
+        "transactionHash": "0x8d06bb6c94ff8dde8b0cc5c7aa4caed6be5df70fbf5de12e9d4cf253d25ce6af",
+        "transactionIndex": 43,
         "creatorAddress": "0x0000000000e715268e0fe41ced1dd101fc696355"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1721559683,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20354479,
+        "transactionHash": "0x8d06bb6c94ff8dde8b0cc5c7aa4caed6be5df70fbf5de12e9d4cf253d25ce6af",
+        "transactionIndex": 43,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/mevbot-0xdd7c.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: bot 0xDd7c2987686B21f656F036458C874D154A923685 created 2024-07-21T11:01:23Z by 0x0000000000e715268e0fe41ced1dd101fc696355 (the operator address whose balances were drained), not the attack-tx sender 0x98250d30aed204e5cbb8fef7f099bc68dbc4b896; no EIP-1967 events, 1.86 days old. Loss reported ~18k USD across WETH, USDT and USDC."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x8d06bb6c94ff8dde8b0cc5c7aa4caed6be5df70fbf5de12e9d4cf253d25ce6af"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/mevbot-0xdd7c.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x9f14d093a2349de08f02fc0fb018dadb449351d0cdb7d0738ff69cc6fef5f299",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 13715026,
+      "transactionIndex": 12,
       "timestamp": 1638278871
     },
     "attackerAddresses": [
@@ -42,14 +42,14 @@
       "executionAddress": "0xc36a7887786389405ea8da0b87602ae3902b88a1",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x66e7d7839333f502df355f5bd87aea24bac2ee63",
+        "codeHash": "0xb242e55adf15eb48caa08bce8668c866bfef4426d207c3334a452852219dd096"
       },
       "deployment": {
         "timestamp": 1634355385,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13426664,
+        "transactionHash": "0xe79481adb26b52e6e2893a996d451166a0ebd0d14183eb641ae80a8738cd4d1d",
+        "transactionIndex": 111,
         "creatorAddress": "0xab5167e8cc36a3a91fd2d75c6147140cd1837355"
       },
       "lastCodeChange": {
@@ -71,10 +71,12 @@
       "failureModeId": "legacy:eip155:1:0x9f14d093a2349de08f02fc0fb018dadb449351d0cdb7d0738ff69cc6fef5f299:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -82,7 +84,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/monox-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -114,13 +115,22 @@
         "code-history"
       ],
       "note": "onchain review: Monoswap proxy 0xc36a7887 created 2021-10-16 by 0xab5167e8cc36a3a91fd2d75c6147140cd1837355, not by attack sender 0xecbe385f; four EIP-1967 upgrades before the incident, the last on 2021-11-25 (impl 0x66e7d783). lossUsd is the reported combined Ethereum + Polygon figure; this row anchors the Ethereum leg (Polygon tx 0x5a03b9c03eedcb9ec6e70c6841eaa4976a732d050a6218969e39483bb3004d5d) and no separate Polygon row is added"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xe79481adb26b52e6e2893a996d451166a0ebd0d14183eb641ae80a8738cd4d1d"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/monox-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

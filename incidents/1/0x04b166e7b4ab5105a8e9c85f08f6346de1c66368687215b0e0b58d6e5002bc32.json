@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 17007842,
+      "transactionIndex": 0,
       "timestamp": 1681007759
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1680677219,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 16980905,
+        "transactionHash": "0x9a89d2f5528bf07661e92f3f78a3311396f11f15da19e3ec4d880be1ad1a4bec",
+        "transactionIndex": 131,
         "creatorAddress": "0xf87bc5535602077d340806d71f805ea9907a843d"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1680677219,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 16980905,
+        "transactionHash": "0x9a89d2f5528bf07661e92f3f78a3311396f11f15da19e3ec4d880be1ad1a4bec",
+        "transactionIndex": 131,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/sushiswap.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -128,13 +129,22 @@
         "root-cause"
       ],
       "note": "onchain review: RouteProcessor2 0x044b75f554b886a065b9567891e45c79542d7357 created 2023-04-05 by 0xf87bc5535602077d340806d71f805ea9907a843d (Sushi deployer), unrelated to the attack senders; no EIP-1967 Upgraded events, so the exploited code was 3.8 days old. The flaw was exploited by many independent senders in blocks 17007838-17007844 draining approvals from 0x31d3243cfb54b34fc9c73e1cb1137124bd6b13e1; the tx recorded here is the 800 WETH drain named in Sushi's own post-mortem, sent by the MEV searcher c0ffeebabe.eth which returned funds, while other replays (e.g. 0x8ac0b9656b7c39be0d3d73828d2041e8c0e27712) kept them"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x9a89d2f5528bf07661e92f3f78a3311396f11f15da19e3ec4d880be1ad1a4bec"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/sushiswap.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

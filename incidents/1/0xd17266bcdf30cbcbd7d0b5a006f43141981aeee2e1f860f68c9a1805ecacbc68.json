@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xd17266bcdf30cbcbd7d0b5a006f43141981aeee2e1f860f68c9a1805ecacbc68",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19380955,
+      "transactionIndex": 22,
       "timestamp": 1709786267
     },
     "attackerAddresses": [
@@ -47,9 +47,9 @@
       },
       "deployment": {
         "timestamp": 1709647907,
-        "blockNumber": 19376972,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19369481,
+        "transactionHash": "0xa62dc6386a9ba01744a6abe6da6194965e7a7204a7fd47b1059d5bbe8e63db16",
+        "transactionIndex": 13,
         "creatorAddress": "0x2aa1eccb2dcb0c1ffd44abc6c92fcdd4d26fdc10"
       },
       "lastCodeChange": {
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -118,13 +120,22 @@
         "code-history"
       ],
       "note": "onchain review: ERC1967Proxy 0x528e046ACfb52bD3f9c400e7A5c79A8a2c2863d0 created 2024-03-05T14:11:47Z by 0x2aa1eccb2dcb0c1ffd44abc6c92fcdd4d26fdc10, not the attack-tx sender 0x096f0f03e4be68d7e6dd39b22a3846b8ce9849a3; two EIP-1967 Upgraded events, the last at block 19376972 on 2024-03-06T15:17:11Z installing 0x17dfb09194ab77dcf318839cfdd01f587a73a77e — 13.3 hours before the exploit."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xa62dc6386a9ba01744a6abe6da6194965e7a7204a7fd47b1059d5bbe8e63db16"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/ght.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

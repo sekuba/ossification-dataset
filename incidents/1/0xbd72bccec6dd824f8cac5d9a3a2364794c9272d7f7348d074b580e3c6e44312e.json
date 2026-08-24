@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xbd72bccec6dd824f8cac5d9a3a2364794c9272d7f7348d074b580e3c6e44312e",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 18048983,
+      "transactionIndex": 10,
       "timestamp": 1693659539
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1688601179,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 17631072,
+        "transactionHash": "0xf94a094f823ef1594f3baa9462057f695baffb3e2c3e0d71746053e7aea4c25f",
+        "transactionIndex": 29,
+        "creatorAddress": "0x0fbc7aeae574c5095b9b3622ecd57e20de5b712f"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1688601179,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 17631072,
+        "transactionHash": "0xf94a094f823ef1594f3baa9462057f695baffb3e2c3e0d71746053e7aea4c25f",
+        "transactionIndex": 29,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:1:0xbd72bccec6dd824f8cac5d9a3a2364794c9272d7f7348d074b580e3c6e44312e:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/dappsocial.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,13 +106,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-09/DAppSocial_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xf94a094f823ef1594f3baa9462057f695baffb3e2c3e0d71746053e7aea4c25f"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/dappsocial.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 10,
     "exploit": {
       "transactionHash": "0x45c0ccfd3ca1b4a937feebcb0f5a166c409c9e403070808835d41da40732db96",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 120062493,
+      "transactionIndex": 8,
       "timestamp": 1715723763
     },
     "attackerAddresses": [
@@ -50,16 +50,16 @@
       "deployment": {
         "timestamp": 1715348413,
         "blockNumber": 119874818,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionHash": "0x307b85a2fe776aad28ecc347e73170706850fea560479c78e7705c9332fb0feb",
+        "transactionIndex": 12,
+        "creatorAddress": "0xfb59ce8986943163f14c590755b29db2998f2322"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1715348413,
         "blockNumber": 119874818,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x307b85a2fe776aad28ecc347e73170706850fea560479c78e7705c9332fb0feb",
+        "transactionIndex": 12,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-2"
+          "source-2",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/sonne-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -116,13 +117,22 @@
         "loss"
       ],
       "note": "exploit tx backfilled and verified onchain (optimism block 120062493; victim in receipt logs): the first of two attack txs (DeFiHackLabs Attack Tx1); the second drain 0x9312ae377d7ebdf3c7c3a86f80514878deb5df51aad38b6191d55db53e42b7f0 followed 22 minutes later"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 10,
+      "transactionHash": "0x307b85a2fe776aad28ecc347e73170706850fea560479c78e7705c9332fb0feb"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/sonne-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

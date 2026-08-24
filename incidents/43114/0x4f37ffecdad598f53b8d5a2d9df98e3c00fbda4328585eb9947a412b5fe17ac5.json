@@ -11,8 +11,8 @@
     "chainId": 43114,
     "exploit": {
       "transactionHash": "0x4f37ffecdad598f53b8d5a2d9df98e3c00fbda4328585eb9947a412b5fe17ac5",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 36136406,
+      "transactionIndex": 0,
       "timestamp": 1696656215
     },
     "attackerAddresses": [
@@ -42,14 +42,14 @@
       "executionAddress": "0xa481b139a1a654ca19d2074f174f17d7534e8cec",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x8af92c23a169b58c2e5ac656d8d8a23fc725080f",
+        "codeHash": "0xac4a94e281c58208afd8fcad2cce3dfb7decc7520d981ccbf24b4db84f881414"
       },
       "deployment": {
         "timestamp": 1695226965,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 35435212,
+        "transactionHash": "0xa800c9e1a32501b6e4a31c78e8fc4e70cb6a166beb3411bcafc9d6f9387a5143",
+        "transactionIndex": 0,
         "creatorAddress": "0xb7461cf331a3a940e69b9deea98fa43fd357f571"
       },
       "lastCodeChange": {
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,7 +85,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/stars-arena.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -126,13 +127,22 @@
         "code-history"
       ],
       "note": "onchain review: proxy 0xa481b139a1a654ca19d2074f174f17d7534e8cec created 2023-09-20 by 0xb7461cf331a3a940e69b9deea98fa43fd357f571 (Stars Arena deployer), unrelated to attack sender 0xa2ebf3fcd757e9be1e58b643b6b5077d11b4ad7a; 2 EIP-1967 Upgraded events, the last on 2023-10-05 to implementation 0x8af92c23a169b58c2e5ac656d8d8a23fc725080f - 1.7 days before the incident, an upgrade shipped after a smaller 2023-10-05 exploit of the same contract; 266,103 AVAX ~= $2.88M"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 43114,
+      "transactionHash": "0xa800c9e1a32501b6e4a31c78e8fc4e70cb6a166beb3411bcafc9d6f9387a5143"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/stars-arena.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

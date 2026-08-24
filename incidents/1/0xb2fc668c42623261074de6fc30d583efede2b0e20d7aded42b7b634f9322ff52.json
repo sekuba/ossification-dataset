@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25266405,
+      "transactionIndex": 1,
       "timestamp": 1780845995
     },
     "attackerAddresses": [
@@ -47,10 +47,10 @@
       },
       "deployment": {
         "timestamp": 1685327111,
-        "blockNumber": 19314934,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x8023901399d7927181892642a0913b06fda30847"
+        "blockNumber": 17361664,
+        "transactionHash": "0x11f2acc5882e7a6903bcbb39d1af7cd6cad99afd7e421197f48a537ae73a7f3a",
+        "transactionIndex": 88,
+        "creatorAddress": "0x25662c94d28da775c4e4fdca987b14d704b4b349"
       },
       "lastCodeChange": {
         "kind": "module-change",
@@ -69,10 +69,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -123,13 +125,22 @@
         "code-history"
       ],
       "note": "onchain review: CrocSwapDex 0xAaAaAAAaA24eEeb8d57D431224f73832bC34f688 created 2023-05-29 by 0x8023901399d7927181892642a0913b06fda30847, unrelated to attack sender; the dex declares only CrocKnockoutCross and emits no EIP-1967 Upgraded event, so code changes were recovered by binary-searching eth_getStorageAt over proxyPaths_ (address[65536] at slot 1, callpath k at slot 1+k) between the creation and incident blocks: callpaths 0/2/3/4/7 installed 2023-05-29, callpath 1 reinstalled 2024-02-26T23:12:47Z (block 19314934, WarmPath 0xa9dd587ad17aed82cac5596b16dcc9defec885cb) and callpath 5 2024-02-26T23:33:35Z (block 19315038); callpaths 6/8-12/128-133 unset. The exploit drives callpaths 1, 2 and 3. Age measured from the latest install rather than deployment; ~67.85 ETH extracted"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x11f2acc5882e7a6903bcbb39d1af7cd6cad99afd7e421197f48a537ae73a7f3a"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/ambient-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 56,
     "exploit": {
       "transactionHash": "0xd692f71de2768017390395db815d34033013136c378177c05d0d46ef3b6f0897",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 21572419,
+      "transactionIndex": 0,
       "timestamp": 1663905803
     },
     "attackerAddresses": [
@@ -44,8 +44,8 @@
       "executionAddress": "0x01112ea0679110cbc0ddea567b51ec36825aef9b",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62",
+        "codeHash": "0x44eb68668e4395c791f8bff2761ffed1dde7641876d0d956f5a7c86f86212701"
       },
       "deployment": {
         "timestamp": 1660918174,
@@ -59,7 +59,7 @@
         "timestamp": 1661062876,
         "blockNumber": 20627998,
         "transactionHash": "0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b",
-        "transactionIndex": null,
+        "transactionIndex": 53,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -71,10 +71,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -82,7 +84,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/radt-dao.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -126,13 +127,22 @@
         "loss"
       ],
       "note": "onchain review: wrapper 0x01112eA0679110cbc0ddeA567b51ec36825aeF9b created 2022-08-19T14:09:34Z by 0xffa253745772f1c3b659583cd47a9858286b8e61, unrelated to attack sender 0xa957910cb426cb52dfc6dff5e582860a22db70d2; no EIP-1967 Upgraded events (this proxy emits none - see the recheck below). Loss verified onchain: 94,304.58 USDT left the RADT/USDT pair 0xaF8fb60f310DCd8E488e4fa10C48907B7abf115e to the attack contract. Recheck (deployment basis was wrong): the wrapper's runtime is a 98-byte proxy that SLOADs 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb - the raw keccak(\"eip1967.proxy.implementation\"), one less than the standard EIP-1967 slot - and delegatecalls it, which is why an EIP-1967 event/slot scan sees nothing. Reading that slot instead: it held 0xe0d971450997bef4508abeae8082291c2658f2b8 at the creation block 20579790 and 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 at the incident block; a binary search over [20579790, 21572418] puts the single change at block 20627998 (2022-08-21T06:21:16Z), written silently by the deployer, with no Upgraded log anywhere on the proxy. 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 is the address the victim delegatecalls in the exploit (selector d9caed12, the withdraw path). Age measured from that swap: 32.9 days rather than 34.6."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/radt-dao.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 9484688,
+      "transactionIndex": 28,
       "timestamp": 1581730737
     },
     "attackerAddresses": [
@@ -50,9 +50,9 @@
       },
       "deployment": {
         "timestamp": 1548659959,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 7137983,
+        "transactionHash": "0x2f2d16075c45ef0299a725d78f29726aa21c1a44cfac35ac205b48267c0e47cd",
+        "transactionIndex": 9,
         "creatorAddress": "0xadff3ada12ed0f8a87e31e5a04dfd2ee054e1118"
       },
       "lastCodeChange": {
@@ -60,7 +60,7 @@
         "timestamp": 1581179052,
         "blockNumber": 9443140,
         "transactionHash": "0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f",
-        "transactionIndex": null,
+        "transactionIndex": 36,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -71,10 +71,14 @@
       "failureModeId": "legacy:eip155:1:0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-3",
+          "source-5",
+          "source-6"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
@@ -82,8 +86,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/bzx.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -123,13 +126,32 @@
         "loss"
       ],
       "note": "loss converted at the incident timestamp (1581730737) via DefiLlama coins: 1,271 ETH x $279.72 = $355,522"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2f2d16075c45ef0299a725d78f29726aa21c1a44cfac35ac205b48267c0e47cd"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/bzx.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

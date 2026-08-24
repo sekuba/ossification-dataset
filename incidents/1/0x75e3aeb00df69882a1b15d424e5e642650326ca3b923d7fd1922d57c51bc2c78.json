@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x75e3aeb00df69882a1b15d424e5e642650326ca3b923d7fd1922d57c51bc2c78",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19226600,
+      "transactionIndex": 22,
       "timestamp": 1707918503
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1707680423,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19206955,
+        "transactionHash": "0x160b3291d1e5e14a1abf91f2495e8523cec389b29a8a8500f5942a9d19ce77bc",
+        "transactionIndex": 74,
         "creatorAddress": "0x2bb152c4a84f91bb5eb740a36ce6bae45c97a1d7"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1707680423,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19206955,
+        "transactionHash": "0x160b3291d1e5e14a1abf91f2495e8523cec389b29a8a8500f5942a9d19ce77bc",
+        "transactionIndex": 74,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,10 +70,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -81,8 +83,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/miner-ercx.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -125,13 +126,22 @@
         "root-cause"
       ],
       "note": "onchain review: the DeFiHackLabs PoC header names 0x732276168b421d4792e743711e1a48172ea574a2 as the victim but that address is the MINER/WETH UniswapV3Pool; the contract holding the flaw is the MINER ERC-X token 0xe77ec1bf3a5c95bfe3be7bdbacfe3ac1c7e454cd, created 2024-02-11 by 0x2bb152c4a84f91bb5eb740a36ce6bae45c97a1d7, not by attack sender 0xea75aec151f968b8de3789ca201a2a3a7faeefba; no upgrade events"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x160b3291d1e5e14a1abf91f2495e8523cec389b29a8a8500f5942a9d19ce77bc"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/miner-ercx.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

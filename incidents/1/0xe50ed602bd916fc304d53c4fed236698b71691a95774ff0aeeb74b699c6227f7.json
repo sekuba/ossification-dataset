@@ -12,7 +12,7 @@
     "exploit": {
       "transactionHash": "0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7",
       "blockNumber": 14037237,
-      "transactionIndex": null,
+      "transactionIndex": 0,
       "timestamp": 1642612358
     },
     "attackerAddresses": [
@@ -48,16 +48,16 @@
       "deployment": {
         "timestamp": 1624013046,
         "blockNumber": 12657964,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionHash": "0xf1080c8a90d86e428a736b1d63e097b33b7ea941b1657656f485a94d4a192839",
+        "transactionIndex": 141,
+        "creatorAddress": "0xfa9da51631268a30ec3ddd1ccbf46c65fad99251"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1624013046,
         "blockNumber": 12657964,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0xf1080c8a90d86e428a736b1d63e097b33b7ea941b1657656f485a94d4a192839",
+        "transactionIndex": 141,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,10 +70,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-2"
+          "source-2",
+          "source-4"
         ]
       },
       "verification": {
@@ -81,8 +83,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/multichain.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -114,6 +115,16 @@
         "root-cause"
       ],
       "note": "exploit tx backfilled and verified onchain (block 14037237; AnyswapV4Router victim in receipt logs): the canonical DeFiHackLabs-referenced attack tx of the Jan 2022 permit flaw - many copycat txs followed public disclosure"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xf1080c8a90d86e428a736b1d63e097b33b7ea941b1657656f485a94d4a192839"
     }
   ],
   "verification": {

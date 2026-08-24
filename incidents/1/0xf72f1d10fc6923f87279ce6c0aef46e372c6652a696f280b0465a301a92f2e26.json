@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xf72f1d10fc6923f87279ce6c0aef46e372c6652a696f280b0465a301a92f2e26",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 17221446,
+      "transactionIndex": 83,
       "timestamp": 1683617735
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1637338987,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13646567,
+        "transactionHash": "0x15d5355a1fb35f671b8033cf40bbec88e75cbaa595014998bb2ed787f71e5cb8",
+        "transactionIndex": 163,
         "creatorAddress": "0xfa21382cdf68cca1b3a7107a8cc80688eefbeebc"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1637338987,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13646567,
+        "transactionHash": "0x15d5355a1fb35f671b8033cf40bbec88e75cbaa595014998bb2ed787f71e5cb8",
+        "transactionIndex": 163,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/multichain-capital.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: MCC 0x1a7981D87E3b6a95c1516EB820E223fE979896b3 created 2021-11-19T16:23:07Z by 0xfa21382cdf68cca1b3a7107a8cc80688eefbeebc (the fee-excluded address), unrelated to the attack sender; no EIP-1967 events, age from deployment (535.6 days). ~10 ETH x $1,842.04 at incidentTimestamp 1683617735 (DefiLlama) = $18,420."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x15d5355a1fb35f671b8033cf40bbec88e75cbaa595014998bb2ed787f71e5cb8"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/multichain-capital.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

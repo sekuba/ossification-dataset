@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x1ea0a2e88efceccb2dd93e6e5cb89e5421666caeefb1e6fc41b68168373da342",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19063677,
+      "transactionIndex": 0,
       "timestamp": 1705943675
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1690243895,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 17766455,
+        "transactionHash": "0xc828ccaca9f38a68e9d9cea6cd3b66b55e37c195f28ae99cc76da221a769fc4b",
+        "transactionIndex": 120,
         "creatorAddress": "0x76136c44421b9dce602b2f5af32f2203b8a1aaf5"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1690243895,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 17766455,
+        "transactionHash": "0xc828ccaca9f38a68e9d9cea6cd3b66b55e37c195f28ae99cc76da221a769fc4b",
+        "transactionIndex": 120,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/dao-soulmate.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: vault 0x82c063afefb226859abd427ae40167cb77174b68 created 2023-07-25T00:11:35Z by 0x76136c44421b9dce602b2f5af32f2203b8a1aaf5, unrelated to the attack sender; unverified, no EIP-1967 events, age from deployment. Loss ~$319K per the PoC header, taken in a basket of blue-chip ERC20s."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc828ccaca9f38a68e9d9cea6cd3b66b55e37c195f28ae99cc76da221a769fc4b"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/dao-soulmate.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

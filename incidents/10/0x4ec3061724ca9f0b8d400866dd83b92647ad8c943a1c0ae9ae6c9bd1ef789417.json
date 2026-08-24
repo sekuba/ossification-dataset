@@ -11,8 +11,8 @@
     "chainId": 10,
     "exploit": {
       "transactionHash": "0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 117395512,
+      "transactionIndex": 10,
       "timestamp": 1710389801
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1710138785,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 117270004,
+        "transactionHash": "0xabd36d08e716df33eb83837cb296c1bb06c83e1fd46e71eacb9275b9e4b2d54d",
+        "transactionIndex": 13,
         "creatorAddress": "0x9747fa1bfab2690562406d150f173e3c4a2d5aa6"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1710138785,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 117270004,
+        "transactionHash": "0xabd36d08e716df33eb83837cb296c1bb06c83e1fd46e71eacb9275b9e4b2d54d",
+        "transactionIndex": 13,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/mo-protocol.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -119,13 +120,22 @@
         "loss"
       ],
       "note": "onchain review: Loan 0xAe7b6514Af26BcB2332FEA53B8Dd57bc13A7838E created 2024-03-11T06:33:05Z by 0x9747fa1bfab2690562406d150f173e3c4a2d5aa6, not the attack-tx sender 0x4e2c6096985e0b2825d06c16f1c8cdc559c1d6f8; no EIP-1967 events, 2.9 days old. The PoC loops borrow(mo_balance,0) then redeem(i) until it reverts, confirming the position is reusable. PoC header reports ~413K USD profit."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 10,
+      "transactionHash": "0xabd36d08e716df33eb83837cb296c1bb06c83e1fd46e71eacb9275b9e4b2d54d"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/mo-protocol.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x8c3f442fc6d640a6ff3ea0b12be64f1d4609ea94edd2966f42c01cd9bdcf04b5",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 15725067,
+      "transactionIndex": 5,
       "timestamp": 1665493715
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1654130135,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 14887950,
+        "transactionHash": "0x601bf705db76812a867ac34da18920d70b1e866b7d18cd26174e78b8e076ab92",
+        "transactionIndex": 91,
+        "creatorAddress": "0xb1e8ab0a81aadf632a653e46caeda1593d71d143"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1654130135,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14887950,
+        "transactionHash": "0x601bf705db76812a867ac34da18920d70b1e866b7d18cd26174e78b8e076ab92",
+        "transactionIndex": 91,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:1:0x8c3f442fc6d640a6ff3ea0b12be64f1d4609ea94edd2966f42c01cd9bdcf04b5:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/templedao.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,13 +106,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2022-10/Templedao_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x601bf705db76812a867ac34da18920d70b1e866b7d18cd26174e78b8e076ab92"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/templedao.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

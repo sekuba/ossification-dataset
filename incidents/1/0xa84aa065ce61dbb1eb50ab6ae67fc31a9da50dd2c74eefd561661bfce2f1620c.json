@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 17806056,
+      "transactionIndex": 0,
       "timestamp": 1690722635
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1664293031,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x7a271674b5fae043f42f183092f48fb06d6d551b"
+        "blockNumber": 15625628,
+        "transactionHash": "0x659f0eb12c4edf042be41885ed1a8bc78b0a2e87ca47339031b9253cd7ae61ce",
+        "transactionIndex": 116,
+        "creatorAddress": "0xb9fc157394af804a3578134a6585c0dc9cc990d4"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1664293031,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 15625628,
+        "transactionHash": "0x659f0eb12c4edf042be41885ed1a8bc78b0a2e87ca47339031b9253cd7ae61ce",
+        "transactionIndex": 116,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/curve.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -119,13 +120,22 @@
         "loss"
       ],
       "note": "onchain review: victim corrected from 0x6326debbaa15bcfe603d831e7d75f4fc10d9b43e, which emits no logs in the cited exploit tx and holds no ETH, to the pETH/ETH pool actually drained, 0x9848482da3ee3076165ce6497eda906e66bb85c5 (top emitter, ETH 6,185.5591 -> 156.7112). 6,028.8479 ETH x $1,876.75 = $11,314,640; created 2022-09-27 by 0x7a271674b5fae043f42f183092f48fb06d6d551b, no upgrade events. Age 305.90 d, previously 733.63 d against the wrong contract"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x659f0eb12c4edf042be41885ed1a8bc78b0a2e87ca47339031b9253cd7ae61ce"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/curve.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

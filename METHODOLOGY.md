@@ -53,9 +53,9 @@ metamorphic redeployment. Event anchors identify the event topic and the exact
 topic or data word containing the selected code address.
 
 The age basis is the victim code state immediately before exploit execution.
-Attacker-installed exploit machinery receives explicit attribution. Changes to
-parameters, markets, or exposure are recorded as `configuration-change`
-measurements and remain outside the executable-code curve.
+Attacker-installed exploit machinery receives explicit attribution. The
+executable-code curve uses deployment, implementation, and module changes;
+parameter, market, and exposure changes are retained as configuration context.
 
 A deployment basis requires positive evidence that the relevant code state
 continued through the exploit. Suitable evidence depends on architecture and
@@ -77,6 +77,10 @@ Verification follows the ownership of each claim:
 
 A curve observation requires a reviewed incident and a reviewed target with
 `curveEligible: true`. Each target is promoted independently.
+
+Every reviewed claim links to a `review-note` attestation with a reviewer and
+review time. Incident attestations cover anchor, root cause, and loss; target
+attestations cover artifact identity and complete code history.
 
 The verifier reports `PASS_ANCHORS`, `FAIL`, `INCOMPLETE`, or
 `INCONCLUSIVE`. `PASS_ANCHORS` certifies the bounded mechanical checks.
@@ -109,8 +113,9 @@ ID, and target ID. A distinct defect in identical bytecode receives a distinct
 reviewed `failure:<namespace>` identifier.
 
 `dist/latest/curve.json` publishes selected observations, deduplicated
-observations, the revalidation queue, and sorted `ageKnots`. Each observation
-references its incident-level loss through `incidentId`.
+observations, exclusions, and sorted `ageKnots`. Each observation references
+its incident-level loss through `incidentId`. `research/revalidation.json`
+publishes the deterministic blocker list for every target.
 
 ## Provenance and releases
 
@@ -122,4 +127,3 @@ transaction coordinates.
 `research/candidates.json` assigns every discovery entry an included, excluded,
 out-of-scope, pending, or unresolved disposition. Generated releases include
 source hashes and a manifest; incident files remain authoritative.
-

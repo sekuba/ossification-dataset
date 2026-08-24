@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xeaef2831d4d6bca04e4e9035613be637ae3b0034977673c1c2f10903926f29c0",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 15933795,
+      "transactionIndex": 3,
       "timestamp": 1668012947
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1667835935,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 15919128,
+        "transactionHash": "0x8b24f31f2c3b48e6463b57c5fa871c3ed508b12c2ea2ede077454f2f6f3a48a7",
+        "transactionIndex": 38,
         "creatorAddress": "0x5262691ccf2c816e6c3d819fb99d8f1a3dad04d8"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1667835935,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 15919128,
+        "transactionHash": "0x8b24f31f2c3b48e6463b57c5fa871c3ed508b12c2ea2ede077454f2f6f3a48a7",
+        "transactionIndex": 38,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/brahma.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: zapper 0xD248B30A3207A766d318C7A87F5Cf334A439446D created 2022-11-07T15:45:35Z by 0x5262691ccf2c816e6c3d819fb99d8f1a3dad04d8, unrelated to the attack sender; no EIP-1967 events, age from deployment - only 177,012 seconds (2.05 days). Loss read from the tx receipt: 89,343.76 USDC reached the attacker EOA, 79,679.66 of it from the single largest victim 0xa19789f57d0e0225a82eeff0fecb9f3776f276a3 (USDC at 1:1)."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x8b24f31f2c3b48e6463b57c5fa871c3ed508b12c2ea2ede077454f2f6f3a48a7"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/brahma.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

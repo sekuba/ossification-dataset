@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20369957,
+      "transactionIndex": 9,
       "timestamp": 1721746439
     },
     "attackerAddresses": [
@@ -44,22 +44,22 @@
       "executionAddress": "0x3d20601ac0ba9cae4564ddf7870825c505b69f1a",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x51bdbfcd7656e2c25ad1bc8037f70572b7142ecc",
+        "codeHash": "0x7390dc449d438cea7ad879fe6255801b8c9395a750649c5fc2d2492a7806561f"
       },
       "deployment": {
         "timestamp": 1719593783,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20191518,
+        "transactionHash": "0xeda25ed9cdbfa5a1fa3ef994eaca81f3905c4441f4bf56c820054774d7d30c52",
+        "transactionIndex": 23,
         "creatorAddress": "0x020d5ca8bd6451d4c44f784e594f02f352903e61"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1719593783,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20191518,
+        "transactionHash": "0xeda25ed9cdbfa5a1fa3ef994eaca81f3905c4441f4bf56c820054774d7d30c52",
+        "transactionIndex": 23,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,19 +72,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/spectra-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/spectra-finance.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -127,13 +127,22 @@
         "loss"
       ],
       "note": "onchain review: router proxy 0x3d20601a... created by 0x020d5ca8bd6451d4c44f784e594f02f352903e61 on 2024-06-28 with a single Upgraded event to impl 0x51bdbfcd7656e2c25ad1bc8037f70572b7142ecc in the creation block; loss is the 188,013 asdCRV (~$73,325) figure from Verichains, not the larger at-risk approval total"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xeda25ed9cdbfa5a1fa3ef994eaca81f3905c4441f4bf56c820054774d7d30c52"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/spectra-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xbf5b2d22fa88965ddfc6e6d685fc7cfc683340c49e126386759ed9e4027b1415",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 18523441,
+      "transactionIndex": 69,
       "timestamp": 1699400627
     },
     "attackerAddresses": [
@@ -45,21 +45,21 @@
       "relationship": "direct",
       "codeArtifact": {
         "address": "0xa62f9c5af106feee069f38de51098d9d81b90572",
-        "codeHash": null
+        "codeHash": "0xe001dc7517aedabacb179b8de2cb2c7aece40d83078ff51843b4344b79d73e51"
       },
       "deployment": {
         "timestamp": 1695536423,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 18203833,
+        "transactionHash": "0x26e9a20751d32c256272516621605f35058aff7687042bc037b652877ef694b3",
+        "transactionIndex": 0,
         "creatorAddress": "0xc1364ad857462e1b60609d9e56b5e24c5c21a312"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1695536423,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 18203833,
+        "transactionHash": "0x26e9a20751d32c256272516621605f35058aff7687042bc037b652877ef694b3",
+        "transactionIndex": 0,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,19 +72,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/stakestone.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/stakestone.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -127,13 +127,22 @@
         "loss"
       ],
       "note": "onchain review: StoneVault 0xA62F9C5af106FeEE069F38dE51098D9d81B90572 (holding STONE 0x7122985656e38BDC0302Db86685bb972b145bD3C, StakeStone Ether) created 2023-09-24T06:20:23Z by 0xc1364ad857462e1b60609d9e56b5e24c5c21a312, unrelated to the attack sender; no EIP-1967 events, age from deployment (44.7 days). ~17 ETH x $1,886.72 at incidentTimestamp 1699400627 (DefiLlama) = $32,074. Recheck (deployment basis confirmed): keccak(eth_getCode) on StoneVault is identical at the creation block 18203833 and the incident block 18523441, no EIP-1967 or beacon slot is set, the exploit trace contains no DELEGATECALL out of the vault, and the single 0xf4 byte in the runtime lies inside trailing constant data rather than reachable code, so the vault's executing code is immutable."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x26e9a20751d32c256272516621605f35058aff7687042bc037b652877ef694b3"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/stakestone.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x5a63da39b5b83fccdd825fed0226f330f802e995b8e49e19fbdd246876c67e1f",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19262234,
+      "transactionIndex": 129,
       "timestamp": 1708351223
     },
     "attackerAddresses": [
@@ -44,14 +44,14 @@
       "executionAddress": "0x2648f5592c09a260c601acde44e7f8f2944944fb",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xfe380fe1db07e531e3519b9ae3ea9f7888ce20c6",
+        "codeHash": "0x58b0197cb87bc61c29ec05b53751c4e3336a409bb5de42a612bafded12a8f0dc"
       },
       "deployment": {
         "timestamp": 1707976739,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19231397,
+        "transactionHash": "0x6f079d20776b9e96ebb754f03cd2eeb9df8ba4a3c22cf3b23f288593602efe6c",
+        "transactionIndex": 140,
         "creatorAddress": "0xe2b2a4b7ef40ccc1392a680a0e1e74f7efdd87ea"
       },
       "lastCodeChange": {
@@ -74,10 +74,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -85,7 +87,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/rugged-art.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -121,13 +122,22 @@
         "loss"
       ],
       "note": "onchain review: proxy 0x2648f5592c09a260C601ACde44e7f8f2944944Fb created 2024-02-15 by 0xe2b2a4b7ef40ccc1392a680a0e1e74f7efdd87ea (not the attacker or the attack-tx sender 0x9733303117504c146a4e22261f2685ddb79780ef); two EIP-1967 Upgraded events, the last on 2024-02-17T00:23:47Z installing implementation 0xfe380fe1db07e531e3519b9ae3ea9f7888ce20c6 (the address the PoC labels RuggedMarket), so the executing code was 2.57 days old at the incident. ~5 ETH at a February 2024 ETH price of roughly $2,900 is well above the $1,000 floor. Loss converted at the incident timestamp: 5 ETH x $2,897.20 (DefiLlama historical ETH price) = $14,486."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x6f079d20776b9e96ebb754f03cd2eeb9df8ba4a3c22cf3b23f288593602efe6c"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/rugged-art.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x62d280abc60f8b604175ab24896c989e6092e496ac01f2f5399b2a62e9feaacf",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 14637977,
+      "transactionIndex": 21,
       "timestamp": 1650674809
     },
     "attackerAddresses": [
@@ -56,17 +56,17 @@
       },
       "deployment": {
         "timestamp": 1650659547,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14636831,
+        "transactionHash": "0x40917b4bad2f8c2f30803c604494a3a3d574fdb4c5fde9c21aafac160b4c48bb",
+        "transactionIndex": 436,
         "creatorAddress": "0xcc0ecd808ce4fed81f0552b3889656b28aa2bae9"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1650659547,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14636831,
+        "transactionHash": "0x40917b4bad2f8c2f30803c604494a3a3d574fdb4c5fde9c21aafac160b4c48bb",
+        "transactionIndex": 436,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -79,10 +79,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -90,8 +92,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/akutar.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -135,13 +136,22 @@
         "root-cause"
       ],
       "note": "onchain review: AkuAuction 0xF42c318dbfBaab0EEE040279C6a2588Fa01a961d created 2022-04-22T20:32:27Z by 0xcc0ecd808ce4fed81f0552b3889656b28aa2bae9 (the project owner), unrelated to the tx sender; no EIP-1967 events, age from deployment - 15,262 seconds (4.2 hours) old when the auction closed. This is a griefing/denial-of-service bug with no attacker profit: 11,539.5 ETH x $2,960.64 at incidentTimestamp 1650674809 (DefiLlama) = $34,164,388 of bids frozen, not stolen."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x40917b4bad2f8c2f30803c604494a3a3d574fdb4c5fde9c21aafac160b4c48bb"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/akutar.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

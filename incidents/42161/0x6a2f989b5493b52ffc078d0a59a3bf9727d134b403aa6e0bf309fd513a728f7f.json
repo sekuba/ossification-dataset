@@ -11,8 +11,8 @@
     "chainId": 42161,
     "exploit": {
       "transactionHash": "0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 273278742,
+      "transactionIndex": 1,
       "timestamp": 1731310565
     },
     "attackerAddresses": [
@@ -42,8 +42,8 @@
       "executionAddress": "0x62cf82fb0484af382714cd09296260edc1dc0c6c",
       "relationship": "diamond",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xc7144ee9b57ff6a84127ed7a57e0919e84538467",
+        "codeHash": "0xf2d2fe8873075b006361c88f28c59b6377a9eb85093ad81244f430976ea559d3"
       },
       "deployment": {
         "timestamp": 1691424383,
@@ -57,7 +57,7 @@
         "timestamp": 1730982588,
         "blockNumber": 271974869,
         "transactionHash": "0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a",
-        "transactionIndex": null,
+        "transactionIndex": 9,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -69,10 +69,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -80,7 +82,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/deltaprime.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -115,13 +116,22 @@
         "code-history"
       ],
       "note": "onchain review: victim 0x62cf82fb0484af382714cd09296260edc1dc0c6c is the DeltaPrime SmartLoanDiamondBeacon, an EIP-2535 diamond that changes facet code with DiamondCut rather than an EIP-1967 Upgraded event; eth_getLogs over creation block 119095598 (2023-08-07) to incident block 273278742 returns 150 DiamondCut logs, the last four of them on 2024-11-07 (12:28:11, 12:28:47, 12:29:18 and 12:29:48 UTC) replacing Penpie/Pendle facets; the final cut, block 271974869 / tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a, Replaces facet 0x130c975a189024cdfe4a4b38706a431463ad0acf (PenpieFacet) carrying claimRewards(address) 0xef5cfb8c, the selector the exploit reentered, so the age is measured from that cut rather than the beacon deployment"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/deltaprime.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

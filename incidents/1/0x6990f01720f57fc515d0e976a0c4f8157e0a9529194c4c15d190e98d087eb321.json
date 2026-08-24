@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25118335,
+      "transactionIndex": 184,
       "timestamp": 1779062123
     },
     "attackerAddresses": [
@@ -42,8 +42,8 @@
       "executionAddress": "0x71518580f36feceffe0721f06ba4703218cd7f63",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xa045cf963b79833faf445f555ee1a6812d6fc87f",
+        "codeHash": "0x0878fa6d5df85f452a7485a7fb1ff06ddd010e58f8ca18d6f40592817b6cb552"
       },
       "deployment": {
         "timestamp": 1696372199,
@@ -57,7 +57,7 @@
         "timestamp": 1772296187,
         "blockNumber": 24556629,
         "transactionHash": "0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba",
-        "transactionIndex": null,
+        "transactionIndex": 98,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -69,10 +69,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -80,7 +82,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/verusbridge.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -115,13 +116,22 @@
         "code-history"
       ],
       "note": "onchain review: 0x71518580f36feceffe0721f06ba4703218cd7f63 is the Verus Delegator, an unverified module-registry proxy that delegatecalls an address[] of 11 module contracts and emits no upgrade event at all, so the code history was recovered in Tier 2 by binary-searching eth_getStorageAt over the array (length slot 13 = 11, data at keccak256(13)+i) between creation block 18272987 (2023-10-03) and each incident block. Last change per module before incident 1 (block 25118335): contracts[7] 2023-11-03T17:11:11Z (block 18492941), contracts[2] 2024-03-21T22:05:59Z (block 19485889), contracts[9] 2024-12-07T20:40:35Z (block 21353057), contracts[10] 2024-12-07T20:43:47Z (block 21353072), contracts[5] 2026-01-09T20:55:35Z (block 24199650) and contracts[0]/[1]/[6]/[8] 2026-02-28T16:29:47Z (block 24556629, tx 0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba from the Verus upgrade signer 0x896e59efcbec700bc9f447af7018bdc5ca1fa5ab, selector 0x60cd61a5); contracts[3] and [4] were untouched since deployment. Age measured from the latest of those, 2026-02-28, rather than the 2023 Delegator deployment"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/verusbridge.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

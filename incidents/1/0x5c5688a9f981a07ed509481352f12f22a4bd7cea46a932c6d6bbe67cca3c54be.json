@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 12751488,
+      "transactionIndex": 158,
       "timestamp": 1625272990
     },
     "attackerAddresses": [
@@ -42,22 +42,22 @@
       "executionAddress": "0x7fe68fc06e1a870dcbee0acae8720396dc12fc86",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xec2c74c9e2457d328bc6216858280ea13e740e8a",
+        "codeHash": "0xbb2e5ca0cbda8dcde380e595cd41881ca8f80d56fdd28d6414b35855819baa20"
       },
       "deployment": {
         "timestamp": 1615676877,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0xc96ecc8456cd0e5b20c1c40989adad9c1809da9c"
+        "blockNumber": 12033100,
+        "transactionHash": "0xbafd1efd63125272785f8f463ba057a2610963453bc1a4454ed99f30d92f2481",
+        "transactionIndex": 305,
+        "creatorAddress": "0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1620158967,
         "blockNumber": 12369818,
         "transactionHash": "0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595",
-        "transactionIndex": null,
+        "transactionIndex": 33,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -70,20 +70,22 @@
         "identitySourceIds": [
           "source-2",
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6",
+          "source-7"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6",
+          "source-7"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/chainswap.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/chainswap.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -134,13 +136,32 @@
         "code-history"
       ],
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CORRECTION, by the same method already recorded for this file's BSC row. The victim is a ChainSwap InitializableProductProxy: its EIP-1967 implementation slot is empty and the delegate target is resolved as IProxyFactory(factory).productImplementations(name), with FACTORY_SLOT 0x7a45a402e4cb6e08ebc196f20f66d5d30e67285a2a8aa80503fa409e727a4af1 = 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 and NAME_SLOT 0x4cd9b827ca535ceb0880425d70eff88561ecdf04dc32fcf7ff3b15c587f8a870 = 'TokenMapped', both constant over [12033100, 12751488] (25-point probe each). Binary-searching eth_call of productImplementations('TokenMapped') over the same range: 0x3c894caf21f18f42d8d06daf26983c4b6a32fc1c at creation, changed to 0xec2c74c9e2457d328bc6216858280ea13e740e8a at block 12369818 (2021-05-04T20:09:27Z) by tx 0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595 from the deployer 0xc96ecc8456cd0e5b20c1c40989adad9c1809da9c, then constant to the incident (51-point dense re-probe). callTracer on the exploit tx confirms the proxy delegatecalled only 0xec2c74c9e2457d328bc6216858280ea13e740e8a, which has zero DELEGATECALL opcodes. Age 1625272990 - 1620158967 = 5,114,023 s (59.2 d), was 9,596,113 s (111.1 d) from deployment."
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xbafd1efd63125272785f8f463ba057a2610963453bc1a4454ed99f30d92f2481"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/chainswap.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

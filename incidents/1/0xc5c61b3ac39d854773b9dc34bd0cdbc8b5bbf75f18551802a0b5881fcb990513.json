@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xc5c61b3ac39d854773b9dc34bd0cdbc8b5bbf75f18551802a0b5881fcb990513",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25039670,
+      "transactionIndex": 8,
       "timestamp": 1778114855
     },
     "attackerAddresses": []
@@ -40,15 +40,15 @@
       "executionAddress": "0xeeeeee53033f7227d488ae83a27bc9a9d5051756",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x88eb28009351fb414a5746f5d8ca91cdc02760d8",
+        "codeHash": "0x80813a5be8ae42e8d46f185d760bbf65f162f742395b9d96be27db5d3d3a1531"
       },
       "deployment": {
         "timestamp": 1724183471,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 20572034,
+        "transactionHash": "0xeaecec6ba7a407c7fbd0ac36d87bf46eeae5e696b3f97263acdf53be3f47043f",
+        "transactionIndex": 84,
+        "creatorAddress": "0xba5b79edbbaff849f8e754b8d3c107a06fa2921a"
       },
       "lastCodeChange": {
         "kind": "module-change",
@@ -67,10 +67,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -78,7 +80,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/trustedvolumes.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -113,13 +114,22 @@
         "code-history"
       ],
       "note": "delegatecall-target review (callTracer + prestateTracer on the exploit tx, then eth_getStorageAt over [creation block, incident block]): the victim holds no EIP-1967 slot and no low storage slot - it is a selector-to-module router. The exploit tx DELEGATECALLs 0xeeeeee53...1756 -> 0x88eb28009351fb414a5746f5d8ca91cdc02760d8 twice (selectors 0xea7faa61 and 0x4112e1c2), and prestateTracer shows that address read from the keccak slots 0x5955181dc8ce5ace66c1381b7c1d9e383dc48785bde6e1b360d80ddb0ed66fe5 and 0x7b810de52829a346e3111da05d9f909e0b9f42c113f6778a31f5262c8f9d2ba9. Binary-searching both between the creation block 20572034 and the incident block 25039670 gives the same two-step history: installed as 0x626784d4af1e8d37b13b42f5fd2c9959c1711952 on 2024-08-20 (blocks 20572604 / 20572606, hours after deployment) and replaced by 0x88eb28009351fb414a5746f5d8ca91cdc02760d8 on 2024-09-24 at blocks 20820498 (12:36:47Z) and 20820500 (12:37:11Z), constant across 60 samples to the incident. Age from the later of the two installs: 589.5 days rather than 624.2 from deployment"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xeaecec6ba7a407c7fbd0ac36d87bf46eeae5e696b3f97263acdf53be3f47043f"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/trustedvolumes.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

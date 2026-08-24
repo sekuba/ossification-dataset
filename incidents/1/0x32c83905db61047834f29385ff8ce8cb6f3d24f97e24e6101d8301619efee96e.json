@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 9894154,
+      "transactionIndex": 46,
       "timestamp": 1587182364
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1575626101,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 9059910,
+        "transactionHash": "0x95fad6ac213a300c76c873f52598c32b61fedefa62e01acab8f06311a76d435f",
+        "transactionIndex": 41,
+        "creatorAddress": "0xc0a47dfe034b400b47bdad5fecda2621de6c4d95"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1575626101,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 9059910,
+        "transactionHash": "0x95fad6ac213a300c76c873f52598c32b61fedefa62e01acab8f06311a76d435f",
+        "transactionIndex": 41,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,11 +72,13 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-6"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
@@ -84,8 +86,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/uniswap-v1.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -136,13 +137,22 @@
         "code-history"
       ],
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The exchange is a 46-byte Vyper forwarder whose runtime hardcodes the Uniswap V1 exchange template 0x2157a7894439191e520825fe9399ab8655e0f708 as a PUSH20 immediate, so the delegate target cannot be repointed; the template's runtime is byte-identical at 13 sample points across [9059910, 9894154] and callTracer on the exploit tx confirms the forwarder delegatecalls only the template."
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x95fad6ac213a300c76c873f52598c32b61fedefa62e01acab8f06311a76d435f"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/uniswap-v1.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

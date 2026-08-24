@@ -11,8 +11,8 @@
     "chainId": 137,
     "exploit": {
       "transactionHash": "0xb469a24ec737be16fe41367a7b5b315c7f03b4e0ff3af50b3a2db03b3066b982",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 86711192,
+      "transactionIndex": 138,
       "timestamp": 1778484294
     },
     "attackerAddresses": [
@@ -24,17 +24,41 @@
     "summary": "INK payroll claimPayroll scaled the payout to the instantaneous treasury balance, so seeding the treasury with a flashloan before claiming drained excess USDT."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 140000,
+      "amount": 140180.175562,
       "valuationTimestamp": 1778484294,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "stablecoin-par",
+      "sourceIds": [
+        "source-1"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 137,
+          "tokenAddress": "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+          "symbol": "USDT"
+        },
+        "amount": "140180.175562",
+        "usdValue": 140180.175562,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1778484294,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-2"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Exact USDT transferred to the attacker after subtracting the repaid flash loan."
   },
   "targets": [
     {
@@ -42,22 +66,22 @@
       "executionAddress": "0xef2c77f3b9b8aaa067239bc6b4588bae26433494",
       "relationship": "beacon-proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xc04813a6683f803c9cf6c441357a11182b7e1153",
+        "codeHash": "0xedd62313105db0182e842f52a3307bceaee6e829c29d218e68165f17f8fc516b"
       },
       "deployment": {
         "timestamp": 1703832474,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 51688376,
+        "transactionHash": "0xa78f09327ae7582f64e93c64f5d566530ededa3b261a4bf3eeba640f64099514",
+        "transactionIndex": 86,
+        "creatorAddress": "0x61975463da832017125112574bd3b587fa9db5ad"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1703832474,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 51688376,
+        "transactionHash": "0xa78f09327ae7582f64e93c64f5d566530ededa3b261a4bf3eeba640f64099514",
+        "transactionIndex": 86,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -66,23 +90,24 @@
         "description": "Legacy basis: execution-address deployment."
       },
       "codeAgeSeconds": 74651820,
-      "failureModeId": "legacy:eip155:137:0xb469a24ec737be16fe41367a7b5b315c7f03b4e0ff3af50b3a2db03b3066b982:failure-1",
+      "failureModeId": "failure:inkfinance-payroll-balance-scaled-claim",
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/inkfinance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -92,7 +117,9 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "loss"
       ],
       "chainId": 137,
       "transactionHash": "0xb469a24ec737be16fe41367a7b5b315c7f03b4e0ff3af50b3a2db03b3066b982"
@@ -102,7 +129,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
@@ -112,28 +140,33 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T10:45:16Z",
+      "note": "Reviewed the exploit and deployment traces, receipt transfers, victim and beacon storage, beacon runtime, complete upgrade-event interval, and commit-pinned reproduction. The deployment transaction creates the beacon before the victim proxy and immediately delegates through it to implementation 0xc04813a6683f803c9cf6c441357a11182b7e1153. The beacon's upgradeTo selector emits its embedded upgrade topic; a complete scan through the exploit returned no upgrade. The exploit receipt shows 165,162.829883 USDT leaving the treasury after a 24,982.654321 USDT seed, with exactly 140,180.175562 USDT paid to the attacker."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
         "target-identity",
         "code-history"
       ],
-      "note": "deployment-basis recheck: the victim is a beacon proxy - its EIP-1967 beacon slot 0xa3f0ad74...3d50 holds 0xfc6f5c4d4bcea3135797c2f0437903192e5a8508, and callTracer shows the exploit DELEGATECALLing to 0xc04813a6683f803c9cf6c441357a11182b7e1153 (selector 0xcbdcb9ac), the beacon's implementation. Both links were checked in storage: the victim's beacon slot is unchanged between the creation block 51688376 and the incident block 86711192, and the beacon's own implementation slot 1 was written once, in block 51688376 - the same block the victim was created - and never again. The beacon's runtime is also byte-identical at both blocks. Deployment is the correct basis; 864.0 days."
+      "chainId": 137,
+      "transactionHash": "0xa78f09327ae7582f64e93c64f5d566530ededa3b261a4bf3eeba640f64099514"
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/inkfinance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/inkfinance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-05-11T07:24:54Z"
-    }
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-3"
+    ]
   },
   "notes": []
 }

@@ -268,6 +268,30 @@ function compareTransactionOrder(a, b) {
   return a.blockNumber - b.blockNumber || a.transactionIndex - b.transactionIndex
 }
 
+function verifyReviewSources(label, reviewSourceIds, requiredClaims, sourceById, errors) {
+  const supported = new Set()
+  for (const sourceId of reviewSourceIds ?? []) {
+    const source = sourceById.get(sourceId)
+    if (!source) {
+      errors.push(`${label}: reviewSourceIds cites unknown source id ${sourceId}`)
+      continue
+    }
+    if (source.type !== 'review-note') {
+      errors.push(`${label}: reviewSourceIds source ${sourceId} is not a review-note`)
+      continue
+    }
+    if (!source.reviewer)
+      errors.push(`${label}: linked review note ${sourceId} has no reviewer`)
+    if (!source.reviewedAt)
+      errors.push(`${label}: linked review note ${sourceId} has no reviewedAt`)
+    for (const claim of source.supports ?? []) supported.add(claim)
+  }
+  for (const claim of requiredClaims) {
+    if (!supported.has(claim))
+      errors.push(`${label}: linked review notes do not attest ${claim}`)
+  }
+}
+
 function verifyIncident(record, state, errors) {
   const incident = record.incident
   const label = record.path
@@ -299,10 +323,12 @@ function verifyIncident(record, state, errors) {
   else state.exploitTransactions.set(txKey, label)
 
   const sourceIds = new Set()
+  const sourceById = new Map()
   for (const [index, source] of (incident.sources ?? []).entries()) {
     const sourceLabel = `${label}: sources[${index}]`
     if (sourceIds.has(source.id)) errors.push(`${sourceLabel}: duplicate source id ${source.id}`)
     sourceIds.add(source.id)
+    sourceById.set(source.id, source)
     if (source.type === 'onchain-transaction' && source.chainId !== chainId)
       errors.push(`${sourceLabel}: chainId ${source.chainId} does not equal incident chainId ${chainId}`)
     if (source.type === 'source-code' && !/^[0-9a-f]{40}$/.test(source.commit ?? ''))
@@ -360,12 +386,13 @@ function verifyIncident(record, state, errors) {
       errors.push(`${label}: reviewed incident cannot rely on the legacy inclusion rule`)
     if (!['high', 'medium'].includes(incident.loss.confidence))
       errors.push(`${label}: reviewed incident requires high or medium loss confidence`)
-    if (!(incident.sources ?? []).some((source) => source.type === 'review-note'))
-      errors.push(`${label}: reviewed incident requires an explicit semantic review note source`)
-    const supportClaims = new Set((incident.sources ?? []).flatMap((source) => source.supports ?? []))
-    for (const claim of ['incident-anchor', 'root-cause', 'loss']) {
-      if (!supportClaims.has(claim)) errors.push(`${label}: reviewed incident has no source supporting ${claim}`)
-    }
+    verifyReviewSources(
+      `${label}: verification`,
+      incident.verification.reviewSourceIds,
+      ['incident-anchor', 'root-cause', 'loss'],
+      sourceById,
+      errors,
+    )
   }
 
   const localPairs = new Set()
@@ -427,7 +454,6 @@ function verifyIncident(record, state, errors) {
       localPairs.add(pair)
     }
 
-    const sourceById = new Map((incident.sources ?? []).map((source) => [source.id, source]))
     for (const [field, claim] of [
       ['identitySourceIds', 'target-identity'],
       ['codeHistorySourceIds', 'code-history'],
@@ -438,6 +464,16 @@ function verifyIncident(record, state, errors) {
         else if (!source.supports.includes(claim))
           errors.push(`${targetLabel}: evidence.${field} source ${sourceId} does not declare ${claim} support`)
       }
+    }
+
+    if (targetTier === 'reviewed') {
+      verifyReviewSources(
+        `${targetLabel}: verification`,
+        target.verification.reviewSourceIds,
+        ['target-identity', 'code-history'],
+        sourceById,
+        errors,
+      )
     }
 
     if (targetEligible && !incidentReviewed)
@@ -664,6 +700,53 @@ function validateCandidates(root, incidentIds, errors, notes) {
     errors.push('research/candidates.json: generatedFrom.primaryIncidents is stale')
 }
 
+function validateRevalidation(root, targetKeys, errors) {
+  const documentPath = path.join(root, 'research', 'revalidation.json')
+  const schemaPath = path.join(root, 'schema', 'revalidation.schema.json')
+  const document = parseJson(documentPath, 'research/revalidation.json', errors)
+  const schema = parseJson(schemaPath, 'schema/revalidation.schema.json', errors)
+  if (!document || !schema) return
+  try {
+    assertSupportedSchema(schema)
+    for (const error of validateSchema(document, schema))
+      errors.push(`research/revalidation.json: schema ${error}`)
+  } catch (error) {
+    errors.push(`schema/revalidation.schema.json: ${error.message}`)
+    return
+  }
+
+  const queueKeys = new Set()
+  const blockerCounts = {}
+  let ready = 0
+  for (const [index, item] of (document.items ?? []).entries()) {
+    const key = `${item.incidentId}#${item.targetId}`
+    if (queueKeys.has(key))
+      errors.push(`research/revalidation.json: duplicate item ${key}`)
+    queueKeys.add(key)
+    if (!targetKeys.has(key))
+      errors.push(`research/revalidation.json: items[${index}] references unknown target ${key}`)
+    if (item.blockers.length === 0) ready++
+    for (const blocker of item.blockers)
+      blockerCounts[blocker] = (blockerCounts[blocker] ?? 0) + 1
+  }
+  for (const key of targetKeys) {
+    if (!queueKeys.has(key)) errors.push(`research/revalidation.json: missing target ${key}`)
+  }
+  if (document.input?.incidents !== new Set([...targetKeys].map((key) => key.split('#')[0])).size)
+    errors.push('research/revalidation.json: input.incidents is stale')
+  if (document.input?.targets !== targetKeys.size)
+    errors.push('research/revalidation.json: input.targets is stale')
+  const incidentFiles = walkJsonFiles(path.join(root, 'incidents')).map((file) => file.absolute)
+  if (document.input?.incidentsSha256 !== `sha256:${digestFiles(root, incidentFiles)}`)
+    errors.push('research/revalidation.json: input.incidentsSha256 is stale')
+  if (document.counts?.ready !== ready || document.counts?.blocked !== targetKeys.size - ready)
+    errors.push('research/revalidation.json: ready/blocked counts are stale')
+  for (const [blocker, expected] of Object.entries(document.counts?.byBlocker ?? {})) {
+    if ((blockerCounts[blocker] ?? 0) !== expected)
+      errors.push(`research/revalidation.json: count for ${blocker} is stale`)
+  }
+}
+
 function validateDistribution(root, errors) {
   const directory = path.join(root, 'dist', 'latest')
   if (!existsSync(directory)) return
@@ -745,6 +828,7 @@ export function checkDataset(root = ROOT) {
     incidentIds: new Map(),
     exploitTransactions: new Map(),
     legacyRows,
+    targetKeys: new Set(),
   }
   for (const file of files) {
     const record = {
@@ -758,11 +842,15 @@ export function checkDataset(root = ROOT) {
     // useful on their own, so avoid a cascade of misleading runtime errors.
     if (record.incident.id && record.incident.incident?.exploit &&
         Array.isArray(record.incident.targets) && Array.isArray(record.incident.sources) &&
-        record.incident.loss && record.incident.verification)
+        record.incident.loss && record.incident.verification) {
       verifyIncident(record, state, errors)
+      for (const target of record.incident.targets)
+        state.targetKeys.add(`${record.incident.id}#${target.id}`)
+    }
   }
 
   validateCandidates(root, state.incidentIds, errors, notes)
+  validateRevalidation(root, state.targetKeys, errors)
   validateDistribution(root, errors)
   return { errors, notes, incidentCount: files.length }
 }

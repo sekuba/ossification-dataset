@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x1106418384414ed56cd7cbb9fedc66a02d39b663d580abc618f2d387348354ab",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 18759541,
+      "transactionIndex": 12,
       "timestamp": 1702256351
     },
     "attackerAddresses": [
@@ -42,15 +42,15 @@
       "executionAddress": "0x0c6c80d2061afa35e160f3799411d83bdeea0a5a",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x4a37a8d7cdb43d89b4dbd7ecfaeaf9bd39e24929",
+        "codeHash": "0x1603edb57ff936d52c7ff4f3696a591f39bf8b46b8e93cf5591de63473bf48ba"
       },
       "deployment": {
         "timestamp": 1646641575,
         "blockNumber": 14338654,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x3de7216149f12d8f51540d9a870149560fc11bfb"
+        "transactionHash": "0x18e0a5bf500f92dd3ef0894c9ad3ff13856b3cff80f6592e2e2bcc66374c8d50",
+        "transactionIndex": 80,
+        "creatorAddress": "0xda85fced9bd193526b7667f2ad1fd4a0f900d3a7"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,7 +85,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/gooddollar.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -119,13 +120,22 @@
         "root-cause"
       ],
       "note": "victim correction: the row previously aged Compound's Unitroller, but the exploited flaw is in GoodDollar's code - the exploit tx's logs include GoodCompoundStakingV2 0x7b7246c78e2f900d17646ff0cb2ec47d6ba10754 and the GoodFundManager ERC1967 proxy 0x0c6c80d2061afa35e160f3799411d83bdeea0a5a (impl 0xaacbaab8... verified GoodFundManager), whose collectInterest processed duplicated staking-contract entries. Measured against the GoodFundManager proxy: created 2022-03-07T08:26:15Z (block 14338654) by 0x3de7216149f12d8f51540d9a870149560fc11bfb, 3 Upgraded events before the incident - creation-block initialization, 2022-12-22 (block 16240765) and 2023-09-22T09:25:11Z (block 18190480), none sent by the attacker 0xdfab184bc668f16c1cb949228068588106924569; age 79.6 days"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x18e0a5bf500f92dd3ef0894c9ad3ff13856b3cff80f6592e2e2bcc66374c8d50"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/gooddollar.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

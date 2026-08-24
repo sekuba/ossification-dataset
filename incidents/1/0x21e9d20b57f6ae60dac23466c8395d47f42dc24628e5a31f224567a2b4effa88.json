@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x21e9d20b57f6ae60dac23466c8395d47f42dc24628e5a31f224567a2b4effa88",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 6467248,
+      "transactionIndex": 16,
       "timestamp": 1538872770
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1535621759,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 6239908,
+        "transactionHash": "0xddcc9e6114bc7ea46ecb7b13cde4ca2144401b79da96cb6a50dd1b1feb2f2aca",
+        "transactionIndex": 9,
         "creatorAddress": "0x406fffca2a6d1997b9ef573d67efe74ba786dff1"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1535621759,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 6239908,
+        "transactionHash": "0xddcc9e6114bc7ea46ecb7b13cde4ca2144401b79da96cb6a50dd1b1feb2f2aca",
+        "transactionIndex": 9,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/spankchain.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: LedgerChannel 0xf91546835f756DA0c10cFa0CDA95b15577b84aA7 created 2018-08-30T09:35:59Z by 0x406fffca2a6d1997b9ef573d67efe74ba786dff1, unrelated to the attack sender; no proxy, no upgrade events, age measured from deployment. USD figure taken from SpankChain's own post-mortem (165.38 ETH, ~$38,000). Recheck (deployment basis confirmed): keccak(eth_getCode) is identical at the creation block 6239908 and the incident block 6467248; the six DELEGATECALLs in the runtime are calls into the ECTools library linked at deploy time (Etherscan's library map records ECTools:0xcb107c7d2a93e638b20342f46b10b9b6d81377bf, present as a PUSH20 constant in the bytecode), an address that cannot be repointed, and none of them is taken in the exploit trace."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xddcc9e6114bc7ea46ecb7b13cde4ca2144401b79da96cb6a50dd1b1feb2f2aca"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/spankchain.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

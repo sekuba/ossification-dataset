@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x3d5b4a0d560e8dd750239b578e2b85921b523835b644714dc239a2db70cf067c",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20811949,
+      "transactionIndex": 0,
       "timestamp": 1727078363
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1726775351,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20786834,
+        "transactionHash": "0x9c205b6cd045c014eeb98221e88cbbed737625425c19a1989e70fa5dbdc70e7b",
+        "transactionIndex": 1,
         "creatorAddress": "0x72fdf486b7c62fae3a52d390509ecbb33dfb0b2b"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1726775351,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20786834,
+        "transactionHash": "0x9c205b6cd045c014eeb98221e88cbbed737625425c19a1989e70fa5dbdc70e7b",
+        "transactionIndex": 1,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/pesto-token.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: PESTO 0xE81C4A73bfDdb1dDADF7d64734061bE58d4c0b4C created 2024-09-19T19:49:11Z by 0x72fdf486b7c62fae3a52d390509ecbb33dfb0b2b, not the attack-tx sender 0x7248939f65bdd23aab9eaab1bc4a4f909567486e; no EIP-1967 events, 3.5 days old. The PoC reads balanceOf(PESTO) and tops it up by direct transfer exactly as in the DOGGO PoC by the same attacker. Reported loss 1.4k USD, above the $1,000 floor."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x9c205b6cd045c014eeb98221e88cbbed737625425c19a1989e70fa5dbdc70e7b"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/pesto-token.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

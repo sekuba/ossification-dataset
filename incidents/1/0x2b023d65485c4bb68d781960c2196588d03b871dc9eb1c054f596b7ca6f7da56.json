@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x2b023d65485c4bb68d781960c2196588d03b871dc9eb1c054f596b7ca6f7da56",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 14684307,
+      "transactionIndex": 212,
       "timestamp": 1651304424
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1639529917,
-        "blockNumber": 14684307,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13806669,
+        "transactionHash": "0x71373819ed7f3c14fe51759f006360ddb30d6275c8894690c80145b08d56e5a9",
+        "transactionIndex": 115,
         "creatorAddress": "0x5bdb37d0ddea3a90f233c7b7f6b9394b6b2eef34"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1639529917,
-        "blockNumber": 14684307,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13806669,
+        "transactionHash": "0x71373819ed7f3c14fe51759f006360ddb30d6275c8894690c80145b08d56e5a9",
+        "transactionIndex": 115,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,11 +72,13 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-6"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
@@ -84,8 +86,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/saddle-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -136,13 +137,22 @@
         "code-history"
       ],
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The metapool's runtime is byte-identical at the creation block 13806669 and the incident block 14684307, and its 11 DELEGATECALL sites are solc external-library calls to three link-time-hardcoded addresses - 0x2069043d7556b1207a505eb459d18d908df29b55, 0x3661d0f70e7f3ec418321a57fd62d691a09b490b and 0x88cc4aa0dd6cf126b00c012dda9f6f4fd9388b17 - each of whose runtimes begins 73<self>3014 and is constant across the window. callTracer on the exploit tx shows the pool delegatecalling only 0x88cc4aa0..., i.e. the stale MetaSwapUtils this row names, so the link is fixed at deploy time and the deployment basis is exact."
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x71373819ed7f3c14fe51759f006360ddb30d6275c8894690c80145b08d56e5a9"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/saddle-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

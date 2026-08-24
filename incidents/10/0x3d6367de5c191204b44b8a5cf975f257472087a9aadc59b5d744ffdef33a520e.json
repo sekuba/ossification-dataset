@@ -11,8 +11,8 @@
     "chainId": 10,
     "exploit": {
       "transactionHash": "0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 108375558,
+      "transactionIndex": 1,
       "timestamp": 1692349893
     },
     "attackerAddresses": []
@@ -45,17 +45,17 @@
       },
       "deployment": {
         "timestamp": 1689870345,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 107135784,
+        "transactionHash": "0x18407a14c11704f387c039c538c2930b692fe462d6236b7f6ad9d856e84c1a7e",
+        "transactionIndex": 1,
+        "creatorAddress": "0xe61bdef3fff4c3cf7a07996dcb8802b5c85b665a"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1689870345,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 107135784,
+        "transactionHash": "0x18407a14c11704f387c039c538c2930b692fe462d6236b7f6ad9d856e84c1a7e",
+        "transactionIndex": 1,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -66,16 +66,19 @@
       "codeAgeSeconds": 2479548,
       "failureModeId": "legacy:eip155:10:0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e:failure-1",
       "evidence": {
-        "identitySourceIds": [],
-        "codeHistorySourceIds": []
+        "identitySourceIds": [
+          "source-2"
+        ],
+        "codeHistorySourceIds": [
+          "source-2"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/exactly-protocol.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -89,13 +92,22 @@
       ],
       "chainId": 10,
       "transactionHash": "0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e"
+    },
+    {
+      "id": "source-2",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 10,
+      "transactionHash": "0x18407a14c11704f387c039c538c2930b692fe462d6236b7f6ad9d856e84c1a7e"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/exactly-protocol.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

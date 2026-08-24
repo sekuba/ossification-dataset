@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19470561,
+      "transactionIndex": 0,
       "timestamp": 1710872735
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1710331595,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x91cee75acbdd7be57bacb40fdeaa4e27dc5154b3"
+        "blockNumber": 19426044,
+        "transactionHash": "0xc2106bf2138a03abfca84ae3cd5465fc64ad29caed5d27b7523059517572a0ef",
+        "transactionIndex": 0,
+        "creatorAddress": "0xca3dd3eb02f79471c57f6663d1f8f91480c6c659"
       },
       "lastCodeChange": {
         "kind": "module-change",
         "timestamp": 1710331679,
         "blockNumber": 19426051,
         "transactionHash": "0xb18ac879242944544f397d3f20d511085b507cf45bdbd5cd2cf52c57076df5f5",
-        "transactionIndex": null,
+        "transactionIndex": 15,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -69,10 +69,14 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5",
+          "source-6"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
@@ -80,8 +84,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/paraswap.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -123,13 +126,32 @@
         "code-history"
       ],
       "note": "onchain review: victim 0x00000000fdac7708d0d360bddc1bc7d097f47439 is the verified AugustusV6 contract created 2024-03-13 by 0x91cee75acbdd7be57bacb40fdeaa4e27dc5154b3 (ParaSwap deployer), not by the extractor 0xfde0d1575ed8e06fbf36256bcdfa1f359281455a; no EIP-1967 Upgraded events between creation and the incident block Recheck of the deployment basis (DELEGATECALL audit): AugustusV6 is a diamond: its fallback DELEGATECALLs a facet looked up in diamond storage, so the executing code can change without an EIP-1967 event. Exactly two DiamondCut(...) logs (topic 0x8faa70878671ccd212d20771b795c50af8fd3ff6cf27f4bde57e5d4de0aeb673) exist between the creation block 19426044 and the incident block 19470561: the first inside the creation tx 0xc2106bf2138a03abfca84ae3cd5465fc64ad29caed5d27b7523059517572a0ef (facet 0x45961104C01199eaa552046290ad3B12513600cB), the second in tx 0xb18ac879242944544f397d3f20d511085b507cf45bdbd5cd2cf52c57076df5f5 at block 19426051, 2024-03-13T12:07:59Z (timestamp 1710331679), 84 seconds later, adding four more facets plus an init contract 0xfc6dd98f962bb487289c8ad4f3a2732972a1ad34 - a ParaSwap deployer action, not the attacker's. Measuring from that last cut gives codeAgeSeconds 1710872735-1710331679 = 541056 instead of 541140, an 84-second correction. The exploited entry point itself did not move: facetAddress(0xfa461e33) for uniswapV3SwapCallback(int256,int256,bytes) returns the zero address at the incident block, i.e. the callback is served by the diamond's own runtime, which is byte-identical at the creation and incident blocks, and facetAddresses() returns the same five facets from the second cut through the incident."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xb18ac879242944544f397d3f20d511085b507cf45bdbd5cd2cf52c57076df5f5"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc2106bf2138a03abfca84ae3cd5465fc64ad29caed5d27b7523059517572a0ef"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/paraswap.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

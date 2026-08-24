@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xa7cab072bf0453301a0ab1b06c49a9405d115824fc617fb42cba9b70f3b893c2",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 23941343,
+      "transactionIndex": 214,
       "timestamp": 1764871703
     },
     "attackerAddresses": [
@@ -58,8 +58,8 @@
         "timestamp": 1758027719,
         "blockNumber": 23375794,
         "transactionHash": "0x3477bb4cb7cfcd12664ca224ad8468cfe2168fa1e779333c847a02bea1623d23",
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionIndex": 224,
+        "creatorAddress": "0xba5ed099633d3b313e4d5f7bdc1305d3c28ba5ed"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -77,10 +77,12 @@
       "failureModeId": "legacy:eip155:1:0xa7cab072bf0453301a0ab1b06c49a9405d115824fc617fb42cba9b70f3b893c2:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -129,13 +131,22 @@
         "loss"
       ],
       "note": "onchain review (Ethereum). Victim: StabilizerNFT ERC1967Proxy 0x1346b4d6867a382b02b19a8d131d9b96b18585f2, created 2025-09-16T13:01:59Z block 23375794 by the USPD deployer 0x555350445E1f1ca212edB8cF397a383695ff7a36 in tx 0x3477bb4cb7cfcd12664ca224ad8468cfe2168fa1e779333c847a02bea1623d23 — not the attacker and not the exploit-tx sender 0x083379bdac3e138cb0c7210e0282fbc466a3215a, so rule 2 holds. Note that public write-ups label 0x11a880b0c9d50b4aef7527d458497e60fa602429 the 'proxy contract'; onchain that address is the audited StabilizerNFT *implementation* (24 KB of runtime code, same deployer), so the row uses the proxy. Timeline from the proxy's Upgraded logs plus eth_getStorageAt on slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc: 2025-09-16T13:01:59Z block 23375794 creation -> 0x11a880b0... ; 2025-09-16T13:02:11Z block 23375795 tx 0xc0b7e490caac2b8cfa5e62d1b28a5e7dba7600e623c71352acbc9b23c2b65b7c, sent by 0x7C97313f349608f59A07C23b18Ce523A33219d83 through Multicall3, front-runs the team's initialize(): it emits Initialized(1) and RoleGranted for DEFAULT_ADMIN_ROLE and role 0x189ab7a9244df0848122154315af71fe140f3db0fe014031783b0946b8c9d2e3 to 0xc2a0ad4bd62676692f9dca88b750bec98e526c42, then Upgraded -> 0xac075b9bf166e5154cc98f62ee7b94e5345cc090 (clandestine implementation, itself deployed 2025-07-28 by unrelated CPIMP infrastructure 0xac82fa44b7e2c71db3931a47698de656ed6d2fca) followed by a second Upgraded in the same tx claiming 0x11a880b0... again — the slot really reads 0xac075b9b... at the end of that block, so the second event is spoofed; 2025-09-17T18:57:47Z block 23384737 the slot is silently restored to the audited 0x11a880b0... with no Upgraded event at all; 2025-12-04T12:35:23Z block 23939725 tx 0xe6715708c0e3b2b3a0a10ab1b25785b8d04db09ef71196c5ea313d8a0676f823 upgrades to 0x4c4eacbe5d5232698d12c379be14a0e561001c21, deployed 12 seconds earlier by the attacker; 2025-12-04T18:08:23Z the drain tx itself upgrades to 0xa3d2616ee942b36648eaa55976ee7b761bd2a21b (deployed by the attack sender ~6 minutes before). Age is measured from 2025-09-17T18:57:47Z, the last change to the victim's executing code that is not part of the attack's own execution: from that moment the audited implementation ran continuously for ~78 days. The two December implementation writes are the exploit machinery (contracts deployed by the attacker seconds before use) and are excluded; taking the December upgrade instead would give 19,980 s and measuring from deployment 6,843,984 s. verify.mjs, which takes the max Upgraded timestamp, would derive 0 s because the last Upgraded event is emitted inside the drain tx — hence the documented-change basis. Loss from the drain tx logs: 232.9651 + 3.7293 + 0.1485 = 236.8429 stETH to the attacker at stETH/USD 3153.719722543291 (curl https://coins.llama.fi/prices/historical/1764871703/coingecko:staked-ether; coingecko:ethereum reads 3153.449311643833 at the same timestamp) = $746,936, plus 302,908.86 USDC pulled out of the USPD/USDC pool 0x06cf5f9b93e9fcfdb33d6b3791eb152567cd8d36 = $1,049,845 total. The 3,121.95 WETH is a Balancer flash loan, repaid in the same tx; the 10 mint cycles issue 9,845,436.95 USPD each (98,454,369 USPD total) and the residual 1,621,355 USPD/USDC LP tokens the attacker keeps are backed by that unbacked USPD and are not counted."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3477bb4cb7cfcd12664ca224ad8468cfe2168fa1e779333c847a02bea1623d23"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/uspd.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

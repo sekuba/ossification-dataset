@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x93a033917fcdbd5fe8ae24e9fe22f002949cba2f621a1c43a54f6519479caceb",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 17649876,
+      "transactionIndex": 19,
       "timestamp": 1688829395
     },
     "attackerAddresses": [
@@ -47,10 +47,10 @@
       },
       "deployment": {
         "timestamp": 1639400776,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 13796999,
+        "transactionHash": "0xef4d9a4164b07646dba93725398eb618bdeec1b501f3db8e8b9c7a08d7bc6605",
+        "transactionIndex": 67,
+        "creatorAddress": "0xea729e930cbf56d9ff18aa1c77f2ff716d8369d8"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -71,9 +71,12 @@
       "failureModeId": "legacy:eip155:1:0x93a033917fcdbd5fe8ae24e9fe22f002949cba2f621a1c43a54f6519479caceb:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
@@ -106,13 +109,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-07/CIVNFT_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xef4d9a4164b07646dba93725398eb618bdeec1b501f3db8e8b9c7a08d7bc6605"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/civnft.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

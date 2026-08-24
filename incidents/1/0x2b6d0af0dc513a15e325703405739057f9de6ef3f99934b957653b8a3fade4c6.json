@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x2b6d0af0dc513a15e325703405739057f9de6ef3f99934b957653b8a3fade4c6",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 18680255,
+      "transactionIndex": 52,
       "timestamp": 1701296999
     },
     "attackerAddresses": [
@@ -44,22 +44,22 @@
       "executionAddress": "0xa44e79a2c9a8965e7a6fa77bf0ca8faf50e6c73e",
       "relationship": "minimal-proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x44d1c6b94b282c678c95b7f4b18de5a53ea4fa9f",
+        "codeHash": "0xff5d6fc8277f689b7d16c73dffcd1907d05e08a20130343441f2cee0b521664c"
       },
       "deployment": {
         "timestamp": 1673364311,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x7e788c62c9ca849dce399e90f912beae14424616"
+        "blockNumber": 16377287,
+        "transactionHash": "0x04093e5bad15cbb93163dd1266fe2a923bb770c64775c1ea0e4a32193690743d",
+        "transactionIndex": 5,
+        "creatorAddress": "0xee083e0f0f5de2ff34662f1ef6f76d897d5047ef"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1673364311,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 16377287,
+        "transactionHash": "0x04093e5bad15cbb93163dd1266fe2a923bb770c64775c1ea0e4a32193690743d",
+        "transactionIndex": 5,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -73,20 +73,20 @@
         "identitySourceIds": [
           "source-2",
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/burntbubba.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/burntbubba.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -138,13 +138,22 @@
         "code-history"
       ],
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is an EIP-1167 minimal proxy whose runtime hardcodes the FarmingLPToken master 0x44d1c6b94b282c678c95b7f4b18de5a53ea4fa9f, so the delegate target cannot be repointed. The master's runtime is byte-identical at 13 sample points across [16377287, 18680255] and contains zero DELEGATECALL opcodes; callTracer on the exploit tx confirms the clone delegatecalls only the master."
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x04093e5bad15cbb93163dd1266fe2a923bb770c64775c1ea0e4a32193690743d"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/burntbubba.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x1194e1d6085885ce054a7ff8cd3cd0c3fa308ec87e4ccde8dd0549842fef4f1b",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20223095,
+      "transactionIndex": 10,
       "timestamp": 1719974843
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1719390359,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20174655,
+        "transactionHash": "0xca5e3a4285eeda28c26d467c6a7e1b7f19096bd33b8263afc9a6358ab26a51fc",
+        "transactionIndex": 268,
         "creatorAddress": "0x0e36ea265ee9317c2ad274a987c2c0f337175955"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1719390359,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20174655,
+        "transactionHash": "0xca5e3a4285eeda28c26d467c6a7e1b7f19096bd33b8263afc9a6358ab26a51fc",
+        "transactionIndex": 268,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/unverified-452e.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: victim 0x452E253EeB3Bb16e40337D647c01b6c910Aa84B3 created 2024-06-26T08:25:59Z by 0x0e36ea265ee9317c2ad274a987c2c0f337175955, not the attack-tx sender 0xabee16e74dd268105f166c27a847edc2b8e7cc4e; unverified, no EIP-1967 events, 6.8 days old. ~27 ETH at a July 2024 ETH price near $3,300 is roughly $89k. Loss converted at the incident timestamp: 27 ETH x $3,370.47 (DefiLlama historical ETH price) = $91,003."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xca5e3a4285eeda28c26d467c6a7e1b7f19096bd33b8263afc9a6358ab26a51fc"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/unverified-452e.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

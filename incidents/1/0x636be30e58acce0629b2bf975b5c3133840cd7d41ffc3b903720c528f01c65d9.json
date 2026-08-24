@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x636be30e58acce0629b2bf975b5c3133840cd7d41ffc3b903720c528f01c65d9",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20434450,
+      "transactionIndex": 21,
       "timestamp": 1722524387
     },
     "attackerAddresses": [
@@ -42,22 +42,22 @@
       "executionAddress": "0x2b083beaac310cc5e190b1d2507038ccb03e7606",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x47c69e8c909ce626af73c955a5e34a20b7c71f19",
+        "codeHash": "0xf1b8713cb142b59fc2a050752e1b999516d71d5e611edb039e27606841e2ef22"
       },
       "deployment": {
         "timestamp": 1720974971,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20305978,
+        "transactionHash": "0xf52827a8730c83fb015e18063db9800dbd600f38b63872d67b9db08f78ee4c8f",
+        "transactionIndex": 39,
         "creatorAddress": "0xfffde9a2bb7c9a6dfd1f0235f5af4f599e3265ec"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1720974971,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20305978,
+        "transactionHash": "0xf52827a8730c83fb015e18063db9800dbd600f38b63872d67b9db08f78ee4c8f",
+        "transactionIndex": 39,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,19 +70,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/convergence-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/convergence-finance.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -124,13 +124,22 @@
         "code-history"
       ],
       "note": "onchain review: CvxRewardDistributor proxy 0x2b083bea... created by 0xfffde9a2bb7c9a6dfd1f0235f5af4f599e3265ec on 2024-07-14, single Upgraded event to impl 0x47c69e8c909ce626af73c955a5e34a20b7c71f19 in the creation block; exploited 17.9 days later"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xf52827a8730c83fb015e18063db9800dbd600f38b63872d67b9db08f78ee4c8f"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/convergence-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xa17001eb39f867b8bed850de9107018a2d2503f95f15e4dceb7d68fff5ef6d9d",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 24626979,
+      "transactionIndex": 3,
       "timestamp": 1773144611
     },
     "attackerAddresses": [
@@ -44,14 +44,14 @@
       "executionAddress": "0x4822d9172e5b76b9db37b75f5552f9988f98a888",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x85a948fd70b2b415bda93324581fb5fff1293df7",
+        "codeHash": "0x795d972cc9063001cc14c556ad9751d217213445174a15b593e8e9d2415f9f6c"
       },
       "deployment": {
         "timestamp": 1631040072,
-        "blockNumber": 13685518,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13180319,
+        "transactionHash": "0x7c007625f9a521b48722be2eb2672c6b66e3d666554c597b054a8eca7dc6b76b",
+        "transactionIndex": 13,
         "creatorAddress": "0x520da6e55eb070aa872cd08fe2665da44535cd33"
       },
       "lastCodeChange": {
@@ -74,10 +74,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -85,7 +87,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/alkemi.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -129,13 +130,22 @@
         "loss"
       ],
       "note": "onchain review: AlkemiEarn proxy 0x4822D9172e5b76b9Db37B75f5552F9988F98a888 created 2021-09-07T18:41:12Z by 0x520da6e55eb070aa872cd08fe2665da44535cd33, not the attack-tx sender 0x0ed1c01b8420a965d7bd2374db02896464c91cd7; two EIP-1967 Upgraded events, the last at block 13685518 on 2021-11-25T20:14:20Z installing 0x85a948fd70b2b415bda93324581fb5fff1293df7, so the executing code was 1565.7 days old. 43.45 ETH x $2,055.46 at the incident timestamp (DefiLlama) = $89,310."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7c007625f9a521b48722be2eb2672c6b66e3d666554c597b054a8eca7dc6b76b"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/alkemi.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

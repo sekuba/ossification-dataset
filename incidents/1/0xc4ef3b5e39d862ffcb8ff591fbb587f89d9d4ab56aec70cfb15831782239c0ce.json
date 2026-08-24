@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xc4ef3b5e39d862ffcb8ff591fbb587f89d9d4ab56aec70cfb15831782239c0ce",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 22685444,
+      "transactionIndex": 0,
       "timestamp": 1749694679
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1644922178,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14210257,
+        "transactionHash": "0xeb38c6a1c475909f806ca3d0fe2c3b39152f8cc207ae969f027b3bea698cf985",
+        "transactionIndex": 71,
         "creatorAddress": "0xcb7d8a80c3d7d3ebd7fbd0fa6b644c8a536c9269"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1644922178,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14210257,
+        "transactionHash": "0xeb38c6a1c475909f806ca3d0fe2c3b39152f8cc207ae969f027b3bea698cf985",
+        "transactionIndex": 71,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/aave-boost.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: AaveBoost 0xd2933c86216dC0c938FfAFEca3C8a2D6e633e2cA created 2022-02-15T10:49:38Z by 0xcb7d8a80c3d7d3ebd7fbd0fa6b644c8a536c9269, not the attack-tx sender 0x5d4430d14ae1d11526ddac1c1ef01da3b1dae455; no EIP-1967 events, 1212.6 days old. Reported loss 14.8k USD in AAVE."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xeb38c6a1c475909f806ca3d0fe2c3b39152f8cc207ae969f027b3bea698cf985"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/aave-boost.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x725f0d65340c859e0f64e72ca8260220c526c3e0ccde530004160809f6177940",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20836584,
+      "transactionIndex": 129,
       "timestamp": 1727375303
     },
     "attackerAddresses": [
@@ -47,10 +47,10 @@
       },
       "deployment": {
         "timestamp": 1712998547,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 19645601,
+        "transactionHash": "0x9f6813ffca82ead81b7c90fc2f6c777382348a3d98761eccfd6c7f6ae7c0315c",
+        "transactionIndex": 157,
+        "creatorAddress": "0x899c284a89e113056a72dc9ade5b60e80dd3c94f"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -71,9 +71,12 @@
       "failureModeId": "legacy:eip155:1:0x725f0d65340c859e0f64e72ca8260220c526c3e0ccde530004160809f6177940:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
@@ -106,13 +109,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-09/Bedrock_DeFi_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x9f6813ffca82ead81b7c90fc2f6c777382348a3d98761eccfd6c7f6ae7c0315c"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/bedrock-defi.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 15741333,
+      "transactionIndex": 1,
       "timestamp": 1665689975
     },
     "attackerAddresses": [
@@ -59,7 +59,7 @@
         "timestamp": 1663148791,
         "blockNumber": 15532252,
         "transactionHash": "0x51819d7c8ed4df00e5869c63e80955b7f1d13bf2f7435bb0474a08864d73096e",
-        "transactionIndex": null,
+        "transactionIndex": 51,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -71,11 +71,13 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-6"
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
@@ -135,13 +137,22 @@
         "code-history"
       ],
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CORRECTION - the earlier note that the bot is 'non-upgradeable' is wrong. The address is a CREATE2 slot that its operator 0xdc3c2c78ef0e11952af23dccd8e24a0a64c9d20e self-destructs and redeploys: bisecting eth_getCode over [14499949, 15741333] finds 9 distinct runtimes and Etherscan txlistinternal lists 17 create/create2 records for the address in that window, the last at block 15532252, 2022-09-14T09:46:31Z (tx 0x51819d7c8ed4df00e5869c63e80955b7f1d13bf2f7435bb0474a08864d73096e). The code running at the incident is the one deployed then (byte-identical from block 15532252 through 15741333), not the 2022-04-01 original. Age 1665689975 - 1663148791 = 2,541,184 s (29.4 d), was 16,879,191 s (195.4 d). Separately, callTracer on the exploit tx shows the bot delegatecalling two caller-supplied targets (0x770200a211315a0688c289f437317ea117cb4d23, 0xfbc83fa919e6c83d9d9ccc1171df44d624da4c25), which is the unguarded entry point itself rather than an upgrade mechanism."
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x51819d7c8ed4df00e5869c63e80955b7f1d13bf2f7435bb0474a08864d73096e"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/mevbot-0xa47b.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

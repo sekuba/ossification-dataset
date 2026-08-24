@@ -11,8 +11,8 @@
     "chainId": 10,
     "exploit": {
       "transactionHash": "0x18e34ce214211afedb6008c0cd00d476ce71222643521dbff5e2b65cdb2ccb80",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 149373833,
+      "transactionIndex": 39,
       "timestamp": 1774346443
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1704483949,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 114442586,
+        "transactionHash": "0xaadaddb9db7425944088586fd4bcefa1f1f08bd73c78d074b7df38d48ed2dbff",
+        "transactionIndex": 10,
+        "creatorAddress": "0x085909388fc0ce9e5761ac8608af8f2f52cb8b89"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1704483949,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 114442586,
+        "transactionHash": "0xaadaddb9db7425944088586fd4bcefa1f1f08bd73c78d074b7df38d48ed2dbff",
+        "transactionIndex": 10,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:10:0x18e34ce214211afedb6008c0cd00d476ce71222643521dbff5e2b65cdb2ccb80:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/univ3collateraltoken.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,13 +106,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-03/Univ3CollateralToken_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 10,
+      "transactionHash": "0xaadaddb9db7425944088586fd4bcefa1f1f08bd73c78d074b7df38d48ed2dbff"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/univ3collateraltoken.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25592836,
+      "transactionIndex": 113,
       "timestamp": 1784778359
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1696372199,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 18272987,
+        "transactionHash": "0x7bd34b417fd69a0df81dffb4b29c318ce1d3a337ef86a794f6a7e3b10692a428",
+        "transactionIndex": 1,
+        "creatorAddress": "0x8e171d1e671b5c492f15a2afac0cb32ac4212c9d"
       },
       "lastCodeChange": {
         "kind": "unknown",
         "timestamp": 1783875455,
         "blockNumber": 25517881,
         "transactionHash": "0xb29f45f3c788cc635fe746754dfe79b00f36758cbd9f418e69866e72c08e192d",
-        "transactionIndex": null,
+        "transactionIndex": 85,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -68,10 +68,14 @@
       "failureModeId": "legacy:eip155:1:0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -79,8 +83,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/verusbridge.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -111,13 +114,32 @@
         "code-history"
       ],
       "note": "onchain review: same Verus Delegator 0x71518580f36feceffe0721f06ba4703218cd7f63 as the 2026-05-17 incident; because it emits no upgrade event the code history was recovered in Tier 2 by binary-searching eth_getStorageAt over the contracts address[] (length slot 13, data at keccak256(13)+i) between creation block 18272987 and incident block 25592836. After the May incident every module was replaced twice: contracts[3], [4] and [7] on 2026-07-08T14:57:23Z (block 25488591, tx 0xdcd9821ff75561c03f85673d992ad988f7d067caf1f3df581ac54303537ff84a) and contracts[0], [1], [2], [5], [6], [8], [9], [10] on 2026-07-12T16:57:35Z (block 25517881, tx 0xb29f45f3c788cc635fe746754dfe79b00f36758cbd9f418e69866e72c08e192d), both from the Verus upgrade signer 0x896e59efcbec700bc9f447af7018bdc5ca1fa5ab with selector 0x60cd61a5. Age measured from the 2026-07-12 swap, 10.5 days before the exploit, rather than the 2023 Delegator deployment"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xb29f45f3c788cc635fe746754dfe79b00f36758cbd9f418e69866e72c08e192d"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7bd34b417fd69a0df81dffb4b29c318ce1d3a337ef86a794f6a7e3b10692a428"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/verusbridge.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x47f7cff7a5e671884629c93b368cb18f58a993f4b19c2a53a8662e3f1482f690",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 4501969,
+      "transactionIndex": 144,
       "timestamp": 1509981921
     },
     "attackerAddresses": [
@@ -56,17 +56,17 @@
       },
       "deployment": {
         "timestamp": 1500568786,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 4049249,
+        "transactionHash": "0x348ec4b5a396c95b4a5524ab0ff61b5f6e434098cf6e5c1a6887bed2bc35625d",
+        "transactionIndex": 97,
         "creatorAddress": "0x00caa64684700d2825da7cac6ba0c6ed9fd2a1bb"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1500568786,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 4049249,
+        "transactionHash": "0x348ec4b5a396c95b4a5524ab0ff61b5f6e434098cf6e5c1a6887bed2bc35625d",
+        "transactionIndex": 97,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -79,10 +79,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -90,8 +92,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/parity-second-hack.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -134,13 +135,22 @@
         "loss"
       ],
       "note": "onchain review: WalletLibrary 0x863DF6BFa4469f3ead0bE8f9F2AAE51c91A907b4 created 2017-07-20T16:39:46Z by 0x00caa64684700d2825da7cac6ba0c6ed9fd2a1bb, unrelated to the attack sender; no delegatecall proxy and no upgrade events, so the age is measured from deployment. Two txs from 0xae7168de hit the library: initWallet (0x05f71e1b..., 14:33:47Z) then kill (0x47f7cff7..., 15:25:21Z); the kill is the incident. Loss is frozen, not stolen, so no USD figure is asserted. 513,774 ETH x $295.24 (DefiLlama coingecko:ethereum, nearest print to incidentTimestamp 1509981921) = $151,684,169 of value frozen, not stolen."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x348ec4b5a396c95b4a5524ab0ff61b5f6e434098cf6e5c1a6887bed2bc35625d"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/parity-second-hack.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

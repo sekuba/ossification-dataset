@@ -8,6 +8,9 @@ import { fileURLToPath } from 'node:url'
 const root = fileURLToPath(new URL('..', import.meta.url))
 const outputPath = join(root, 'research', 'candidates.json')
 const checkOnly = process.argv.includes('--check')
+const COHORT_ID = 'evm-production-2026-07'
+const COHORT_CUTOFF = '2026-07-31T23:59:59Z'
+const COHORT_DFHL_MONTH = '2026-07'
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'))
@@ -182,6 +185,36 @@ const otherIdentifierByPoc = new Map(
   dfhl.coveredOtherIdentifier.map((entry) => [entry.poc, entry]),
 )
 const noDatasetRowByPoc = new Map(dfhl.noDatasetRow.map((entry) => [entry.poc, entry]))
+const dfhlAdjudications = [
+  ...(dfhl.adjudications?.lossBelowUsd1000 ?? []).map((poc) => ({
+    poc,
+    status: 'out-of-scope',
+    reason: 'The pinned PoC reports a loss below the USD 1,000 cohort threshold.',
+    evidence: { kind: 'source-hint' },
+  })),
+  ...(dfhl.adjudications?.sourceClassifications ?? []).map(({ poc, reason }) => ({
+    poc,
+    status: 'out-of-scope',
+    reason,
+    evidence: { kind: 'source-hint' },
+  })),
+  ...(dfhl.adjudications?.legacyMatches ?? []).map(({ poc, entryIndex }) => ({
+    poc,
+    status: 'out-of-scope',
+    reason: legacyDisposition(legacyRows[entryIndex]).reason,
+    evidence: { kind: 'legacy-v1', entryIndex },
+  })),
+]
+const dfhlAdjudicationByPoc = new Map()
+for (const adjudication of dfhlAdjudications) {
+  if (dfhlAdjudicationByPoc.has(adjudication.poc)) {
+    throw new Error(`Duplicate DFHL adjudication for ${adjudication.poc}`)
+  }
+  if (adjudication.status !== 'out-of-scope') {
+    throw new Error(`Unsupported DFHL adjudication status for ${adjudication.poc}`)
+  }
+  dfhlAdjudicationByPoc.set(adjudication.poc, adjudication)
+}
 const exclusionsByPoc = new Map()
 for (const [index, entry] of exclusions.entries()) {
   const path = entry.defihacklabs?.match(/^(src\/test\/[^@]+)/)?.[1]
@@ -256,6 +289,44 @@ function dfhlDisposition(rows, poc) {
   }
 }
 
+function legacyDisposition(row) {
+  if (row.category !== 'code-bug') {
+    return {
+      status: 'out-of-scope',
+      reason: `The legacy category ${row.category} is outside the EVM code-bug cohort.`,
+    }
+  }
+
+  if (row.incident.chain === 'sui' || row.incident.chain === 'starknet') {
+    return {
+      status: 'out-of-scope',
+      reason: `The cohort measures EVM chains; this legacy row records a ${row.incident.chain} incident.`,
+    }
+  }
+
+  if (row.incident.notes.includes('chain-level precompile code')) {
+    return {
+      status: 'out-of-scope',
+      reason:
+        'The measured unit is executable EVM contract code; this defect is in a chain-level precompile.',
+    }
+  }
+
+  return {
+    status: 'pending',
+    reason:
+      'The legacy row is classified as an EVM code bug, but its primary incident claims are incomplete.',
+  }
+}
+
+function legacyOpenReason(row) {
+  if (!row.exploitTx || row.victimAddresses.length === 0) return 'incident-anchors'
+  if (row.incident.lossUsd === null || row.incident.lossUsd === undefined) {
+    return 'loss-evidence'
+  }
+  return 'semantic-research'
+}
+
 const directPaths = new Set(directDfhlRows.keys())
 const otherPaths = new Set(otherIdentifierByPoc.keys())
 const noDatasetPaths = new Set(noDatasetRowByPoc.keys())
@@ -267,10 +338,38 @@ if (allDfhlPaths.length !== dfhl.totalPocs) {
   )
 }
 
+for (const adjudication of dfhlAdjudicationByPoc.values()) {
+  if (!allDfhlPaths.includes(adjudication.poc)) {
+    throw new Error(`DFHL adjudication references an unknown path: ${adjudication.poc}`)
+  }
+
+  if (adjudication.evidence.kind === 'source-hint') {
+    const source = noDatasetRowByPoc.get(adjudication.poc)
+    if (!source || source.hint === '(no header comment)') {
+      throw new Error(`DFHL source-hint evidence is unavailable for ${adjudication.poc}`)
+    }
+  } else if (adjudication.evidence.kind === 'legacy-v1') {
+    const row = legacyRows[adjudication.evidence.entryIndex]
+    if (!row || row.contextIndex !== adjudication.evidence.entryIndex) {
+      throw new Error(`DFHL legacy evidence is unavailable for ${adjudication.poc}`)
+    }
+  } else {
+    throw new Error(`Unsupported DFHL adjudication evidence for ${adjudication.poc}`)
+  }
+}
+
 const dfhlCandidates = allDfhlPaths.map((poc) => {
   const otherMatch = otherIdentifierByPoc.get(poc)
   const directRows = directDfhlRows.get(poc) ?? []
-  const rows = otherMatch ? rowsForOtherIdentifier(otherMatch) : directRows
+  const adjudication = dfhlAdjudicationByPoc.get(poc)
+  const adjudicationRows =
+    adjudication?.evidence.kind === 'legacy-v1'
+      ? [legacyRows[adjudication.evidence.entryIndex]]
+      : []
+  const rows = unique([
+    ...(otherMatch ? rowsForOtherIdentifier(otherMatch) : directRows),
+    ...adjudicationRows,
+  ])
   const relatedExclusionIds = (exclusionsByPoc.get(poc) ?? []).map(
     (index) => `exclusion:${index + 1}`,
   )
@@ -302,7 +401,9 @@ const dfhlCandidates = allDfhlPaths.map((poc) => {
     ...(rows.length > 0
       ? { matchedRows: rows.map(legacyCoordinates).sort((a, b) => compareStrings(a.file, b.file)) }
       : {}),
-    disposition: dfhlDisposition(rows, poc),
+    disposition: adjudication
+      ? { status: adjudication.status, reason: adjudication.reason }
+      : dfhlDisposition(rows, poc),
   }
 })
 
@@ -435,8 +536,6 @@ const legacyCandidates = legacyRows
     const ordinal = (legacyIdCounts.get(baseId) ?? 0) + 1
     legacyIdCounts.set(baseId, ordinal)
     const id = ordinal === 1 ? baseId : `${baseId}:${ordinal}`
-    const codeBugPending = row.category === 'code-bug'
-
     return {
       id,
       source: {
@@ -459,15 +558,7 @@ const legacyCandidates = legacyRows
         notes: row.incident.notes,
         sources: row.incident.sources ?? [],
       },
-      disposition: codeBugPending
-        ? {
-            status: 'pending',
-            reason: 'The legacy row is classified as a code bug but was scope-only and has no primary measurement.',
-          }
-        : {
-            status: 'out-of-scope',
-            reason: `The legacy category ${row.category} is outside the primary onchain code-bug dataset.`,
-          },
+      disposition: legacyDisposition(row),
     }
   })
 
@@ -495,11 +586,82 @@ const byDisposition = Object.fromEntries(
     ]),
 )
 
+const cohortDfhl = dfhlCandidates.filter((candidate) => {
+  const month = candidate.source.path.match(/^src\/test\/(\d{4}-\d{2})\//)?.[1]
+  if (!month) throw new Error(`DFHL path has no calendar month: ${candidate.source.path}`)
+  return month <= COHORT_DFHL_MONTH
+})
+const cohortLegacy = legacyRows.filter((row) => row.date <= COHORT_CUTOFF)
+const cohortRecords = [
+  ...cohortDfhl.map((candidate) => {
+    const matchedLegacy = candidate.matchedRows?.[0]
+    const row =
+      matchedLegacy?.file === relative(root, legacyV1Path)
+        ? legacyRows[matchedLegacy.entryIndex]
+        : undefined
+    return {
+      disposition: candidate.disposition.status,
+      ...(candidate.disposition.status === 'pending'
+        ? { openReason: row ? legacyOpenReason(row) : 'semantic-research' }
+        : candidate.disposition.status === 'unresolved'
+          ? { openReason: 'semantic-research' }
+          : {}),
+    }
+  }),
+  ...cohortLegacy.map((row) => {
+    const disposition = row.incidentIds.length > 0 ? 'included' : legacyDisposition(row).status
+    return {
+      disposition,
+      ...(disposition === 'pending' ? { openReason: legacyOpenReason(row) } : {}),
+    }
+  }),
+]
+const cohortByDisposition = Object.fromEntries(
+  [...new Set(cohortRecords.map((record) => record.disposition))]
+    .sort()
+    .map((status) => [
+      status,
+      cohortRecords.filter((record) => record.disposition === status).length,
+    ]),
+)
+const openReasons = cohortRecords.flatMap((record) =>
+  record.openReason ? [record.openReason] : [],
+)
+const cohortOpenByReason = Object.fromEntries(
+  ['incident-anchors', 'loss-evidence', 'semantic-research']
+    .map((reason) => [reason, openReasons.filter((value) => value === reason).length]),
+)
+
 const result = {
   $schema: '../schema/candidate.schema.json',
   schemaVersion: 1,
   description:
     'Deterministic provenance ledger for source candidates, explicit exclusions, and legacy rows outside the primary dataset. Entries from different source inventories may refer to the same real-world event; that overlap is retained rather than guessed away.',
+  cohort: {
+    id: COHORT_ID,
+    cutoff: COHORT_CUTOFF,
+    cutoffBasis: 'latest-complete-source-calendar-month',
+    sources: {
+      defihacklabs: {
+        generatedFrom: 'defihacklabs',
+        dateField: 'path-month',
+        through: COHORT_DFHL_MONTH,
+      },
+      legacyV1: {
+        generatedFrom: 'legacyV1',
+        dateField: 'incident.date',
+      },
+    },
+    counts: {
+      sourceRecords: cohortRecords.length,
+      bySource: {
+        defihacklabs: cohortDfhl.length,
+        legacyV1: cohortLegacy.length,
+      },
+      byDisposition: cohortByDisposition,
+      openByReason: cohortOpenByReason,
+    },
+  },
   generatedFrom: {
     defihacklabs: {
       file: relative(root, dfhlPath),

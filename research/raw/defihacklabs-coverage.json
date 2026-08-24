@@ -393,7 +393,7 @@
     },
     {
       "poc": "src/test/2021-07/Levyathan_exp.sol",
-      "hint": "Key Information | Schedule a transaction from the Deployer current owner of timelock. | Validate that transaction is in timelock"
+      "hint": "The Levyathan developers left the private keys to a wallet with minting capability available on Github."
     },
     {
       "poc": "src/test/2021-09/Nimbus_exp.sol",
@@ -449,7 +449,7 @@
     },
     {
       "poc": "src/test/2022-03/RedactedCartel_exp.sol",
-      "hint": "cheat.label(address(Alice), \"Alice\"); | cheat.label(address(AliceContract), \"AliceContract\"); | cheat.label(address(Bob), \"Bob\");"
+      "hint": "The vulnerability would have allowed a malicious attacker to assign a user's allowance to themselves."
     },
     {
       "poc": "src/test/2022-03/Revest_exp.sol",
@@ -915,5 +915,67 @@
       "poc": "src/test/2026-08/PantherBase_exp.sol",
       "hint": "Panther Protocol (ZKP) \u2014 governance-timeout capture on the BASE deployment. | IMPORTANT FRAMING: Panther's Base deployment was NOT yet in production at the time of this | incident. Per the team's own public (Telegram) statement, no live user funds were compromised;"
     }
-  ]
+  ],
+  "adjudications": {
+    "lossBelowUsd1000": [
+      "src/test/2023-05/FAPEN_exp.sol",
+      "src/test/2023-10/DePayRouter_exp.sol",
+      "src/test/2024-09/HANAToken_exp.sol",
+      "src/test/2024-09/unverified_16d0.sol",
+      "src/test/2024-09/unverified_766a_exp.sol",
+      "src/test/2025-03/PTM_exp.sol",
+      "src/test/2025-03/unverified_de7c_exp.sol",
+      "src/test/2025-03/wKeyDAO_exp.sol",
+      "src/test/2025-04/AmpKashi_exp.sol",
+      "src/test/2025-05/DogeAlliance_exp.sol",
+      "src/test/2025-05/Dumbo_exp.sol",
+      "src/test/2025-05/unverified_91a1_exp.sol",
+      "src/test/2025-06/BasePricePool_exp.sol",
+      "src/test/2025-06/SinstakeZombie_exp.sol",
+      "src/test/2025-06/TokenFactory_exp.sol",
+      "src/test/2025-07/unverified_8fd3_exp.sol",
+      "src/test/2025-08/BscInitcodeToken_exp.sol",
+      "src/test/2025-08/MyCoinMaster_exp.sol",
+      "src/test/2025-08/SizeFlashLoanLooping_exp.sol"
+    ],
+    "sourceClassifications": [
+      {
+        "poc": "src/test/2021-03/PAID_exp.sol",
+        "reason": "The pinned PoC attributes the incident to a compromised key or a rug."
+      },
+      {
+        "poc": "src/test/2021-07/Levyathan_exp.sol",
+        "reason": "The pinned PoC attributes the incident to private keys published by the project."
+      },
+      {
+        "poc": "src/test/2022-03/RedactedCartel_exp.sol",
+        "reason": "The pinned PoC reproduces a disclosed vulnerability without a historical exploit."
+      },
+      {
+        "poc": "src/test/2022-06/Harmony_multisig_exp.sol",
+        "reason": "The pinned PoC attributes the incident to compromised multisig keys."
+      },
+      {
+        "poc": "src/test/2023-04/silo_finance_exp.sol",
+        "reason": "The pinned PoC is a synthetic bug-fix review without a historical exploit."
+      },
+      {
+        "poc": "src/test/2025-05/IRYSAI_exp.sol",
+        "reason": "The pinned PoC identifies an intentional backdoor and rug pull."
+      },
+      {
+        "poc": "src/test/2026-04/SaturnProtocol_exp.sol",
+        "reason": "The pinned PoC identifies a vulnerability disclosure with no historical exploit."
+      },
+      {
+        "poc": "src/test/2026-08/PantherBase_exp.sol",
+        "reason": "The pinned PoC states that the deployment was not in production and no live user funds were lost."
+      }
+    ],
+    "legacyMatches": [
+      { "poc": "src/test/2022-03/Ronin_exp.sol", "entryIndex": 538 },
+      { "poc": "src/test/2024-01/OrbitChain_exp.sol", "entryIndex": 458 },
+      { "poc": "src/test/2025-02/Bybit_exp.sol", "entryIndex": 121 }
+    ]
+  }
 }

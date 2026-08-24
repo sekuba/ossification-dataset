@@ -11,8 +11,8 @@
     "chainId": 42161,
     "exploit": {
       "transactionHash": "0x5d2a94785d95a740ec5f778e79ff014c880bcefec70d1a7c2440e611f84713d6",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 202973713,
+      "transactionIndex": 5,
       "timestamp": 1713616643
     },
     "attackerAddresses": [
@@ -42,8 +42,8 @@
       "executionAddress": "0x598c6c1cd9459f882530fc9d7da438cb74c6cb3b",
       "relationship": "diamond",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xc6d7b37fe18a3dd007f9b1c3b339b8c6043b3ccf",
+        "codeHash": "0x5021527b906627a137f7aa94bf3c50c5b845be5bdc08107e4afacaf2b9815e18"
       },
       "deployment": {
         "timestamp": 1706771012,
@@ -57,7 +57,7 @@
         "timestamp": 1711142320,
         "blockNumber": 193149212,
         "transactionHash": "0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc",
-        "transactionIndex": null,
+        "transactionIndex": 2,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -69,10 +69,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -80,7 +82,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/rico.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -115,13 +116,22 @@
         "code-history"
       ],
       "note": "onchain review: victim 0x598c6c1cd9459f882530fc9d7da438cb74c6cb3b is the Rico BankDiamond, an EIP-2535 diamond whose facet code changes via DiamondCut and never emits an EIP-1967 Upgraded event; eth_getLogs over creation block 176310105 (2024-02-01) to incident block 202973713 finds five DiamondCut logs: two at deployment (2024-02-01T07:03:32Z and 07:03:51Z) and three in one tx 0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc at block 193149212, 2024-03-22T21:18:40Z, which removed seven selectors, added facet 0x254834c73e3070a674ea8059be3c813694070f06 and Replaced facets 0xc6d7b37fe18a3dd007f9b1c3b339b8c6043b3ccf (21 selectors, including flash(address,bytes) 0xa0a7930a, the exploited entry point) and 0x8dfb233ef877dd5a260a52eced01a0f7e160b7b2 (5 selectors); the age is therefore measured from that cut rather than the diamond deployment"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/rico.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

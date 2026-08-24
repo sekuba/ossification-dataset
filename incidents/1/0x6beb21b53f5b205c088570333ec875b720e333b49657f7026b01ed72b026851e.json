@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x6beb21b53f5b205c088570333ec875b720e333b49657f7026b01ed72b026851e",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20175377,
+      "transactionIndex": 6,
       "timestamp": 1719399047
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1719395771,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20175105,
+        "transactionHash": "0xd97cc9ab95dd9f12cf3da848bb1400dfba756c160380595ea2b61fa60a3f4fb2",
+        "transactionIndex": 197,
         "creatorAddress": "0xcfbc39b331f8cd762c6992cd0e18617ec698ca5d"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1719395771,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20175105,
+        "transactionHash": "0xd97cc9ab95dd9f12cf3da848bb1400dfba756c160380595ea2b61fa60a3f4fb2",
+        "transactionIndex": 197,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/apemaga.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: APEMAGA 0x56FF4AfD909AA66a1530fe69BF94c74e6D44500C created 2024-06-26T09:56:11Z by 0xcfbc39b331f8cd762c6992cd0e18617ec698ca5d, not the attack-tx sender 0xb297735e9fb3e695ccce3963bfe042f318901ea0; no EIP-1967 events, so the executing code was 55 minutes old at the incident. ~9 ETH at a June 2024 ETH price near $3,400 is roughly $30k. Loss converted at the incident timestamp: 9 ETH x $3,371.49 (DefiLlama historical ETH price) = $30,343."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xd97cc9ab95dd9f12cf3da848bb1400dfba756c160380595ea2b61fa60a3f4fb2"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/apemaga.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

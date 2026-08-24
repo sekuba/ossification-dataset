@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x6ed07db1a9fe5c0794d44cd36081d6a6df103fab868cdd75d581e3bd23bc9742",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 23717397,
+      "transactionIndex": 1,
       "timestamp": 1762156007
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1701212579,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x854b004700885a61107b458f11ecc169a019b764"
+        "blockNumber": 18673273,
+        "transactionHash": "0x6be23956c6110473a8adcaca8f9661ff3f3a19f00fb97d31f5f2a61255179dc6",
+        "transactionIndex": 186,
+        "creatorAddress": "0xdb8d758bcb971e482b2c45f7f8a7740283a1bd3a"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1701212579,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 18673273,
+        "transactionHash": "0x6be23956c6110473a8adcaca8f9661ff3f3a19f00fb97d31f5f2a61255179dc6",
+        "transactionIndex": 186,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/balancer.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: osETH/wETH composable stable pool 0xDACf5Fa19b1f720111609043ac67A9818262850c created 2023-11-28T23:02:59Z by 0x854b004700885a61107b458f11ecc169a019b764 (the ComposableStablePoolFactory deployer), not the attack-tx sender 0x506d1f9efe24f0d47853adca907eb8d89ae03207; pools of this factory are immutable and emit no EIP-1967 Upgraded event, so age runs from deployment (705.4 days). The same transaction also hits wstETH/wETH pool 0x93d199263632a4EF4Bb438F1feB99e57b4b5f0BD; a follow-up withdrawal transaction is 0xd155207261712c35fa3d472ed1e51bfcd816e616dd4f517fa5959836f5b48569. Loss recorded as the ~$120M reported across the campaign."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x6be23956c6110473a8adcaca8f9661ff3f3a19f00fb97d31f5f2a61255179dc6"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/balancer.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

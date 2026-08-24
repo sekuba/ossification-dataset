@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25391316,
+      "transactionIndex": 43,
       "timestamp": 1782350483
     },
     "attackerAddresses": [
@@ -42,22 +42,22 @@
       "executionAddress": "0xfd4c9a491dd777b8b3e13659e9e379252ec78390",
       "relationship": "minimal-proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x2ce186c52cf150000bf8ad2b4679d4ad619395cd",
+        "codeHash": "0x30e7cb5ad2965d611331599d23b943c4a1f23063cfe6495a90e3d3d6bb0e0dd8"
       },
       "deployment": {
         "timestamp": 1626784967,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 12863457,
+        "transactionHash": "0x2f50bb2c98768d5938a702b9fd2325cc7236ccabb9a23f0675a6cf687b4de645",
+        "transactionIndex": 39,
+        "creatorAddress": "0x6584af2d53eb57a628f6c3ee5312a7a6da855bbd"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1626784967,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 12863457,
+        "transactionHash": "0x2f50bb2c98768d5938a702b9fd2325cc7236ccabb9a23f0675a6cf687b4de645",
+        "transactionIndex": 39,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,19 +70,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/lixirpermitdrain.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/lixirpermitdrain.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -116,13 +116,22 @@
         "code-history"
       ],
       "note": "deployment-basis recheck: the victim's 45-byte runtime is an EIP-1167 minimal proxy (363d3d373d3d3d363d73...5af43d82803e903d91602b57fd5bf3) whose master 0x2ce186c52cf150000bf8ad2b4679d4ad619395cd is baked into the bytecode and cannot be repointed; callTracer confirms every DELEGATECALL in the attack, including the forged permit (0xd505accf), lands on that master. The clone's runtime is byte-identical at the creation and incident blocks. Deployment is exact; 1800.5 days."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2f50bb2c98768d5938a702b9fd2325cc7236ccabb9a23f0675a6cf687b4de645"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/lixirpermitdrain.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

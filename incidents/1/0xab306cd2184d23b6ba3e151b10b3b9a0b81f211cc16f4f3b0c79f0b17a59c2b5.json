@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25339094,
+      "transactionIndex": 173,
       "timestamp": 1781721287
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1614799636,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 11967192,
+        "transactionHash": "0x699eb365b1c797084d87ac685bd0276e1d5eed713fe95a0e1e2f2b0b99eb32bd",
+        "transactionIndex": 34,
         "creatorAddress": "0xfcf75295f242c4e87203abb5d7c9bbeda90a8895"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1614799636,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 11967192,
+        "transactionHash": "0x699eb365b1c797084d87ac685bd0276e1d5eed713fe95a0e1e2f2b0b99eb32bd",
+        "transactionIndex": 34,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,10 +70,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -81,8 +83,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/aztec.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -124,13 +125,22 @@
         "code-history"
       ],
       "note": "onchain review: rollup 0x737901bea3eeb88459df9ef1BE8fF3Ae1B42A2ba created 2021-03-03 by 0xfcf75295f242c4e87203abb5d7c9bbeda90a8895, no EIP-1967 upgrade events; ETH leg measured here, DAI leg 0x5c196c37a109d74c9797254287a0331f30e0daa637af241bd28fdc43774705c3 and renBTC leg 0x9e1d6ab7c20ae235409d7dd3a9cd47c04f07293585b3498b8beed82d6f6b03ca same victim"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x699eb365b1c797084d87ac685bd0276e1d5eed713fe95a0e1e2f2b0b99eb32bd"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/aztec.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

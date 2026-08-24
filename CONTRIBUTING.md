@@ -12,7 +12,8 @@ curve construction.
 3. Add one target for every independently aged code state.
 4. Link incident and target claims to evidence source IDs.
 5. Run the onchain verifier and promote each claim at its achieved tier.
-6. Regenerate and review `dist/latest/`.
+6. Link reviewed claims to an attestation naming the reviewer and review time.
+7. Regenerate and review `dist/latest/`.
 
 ## Incident evidence
 
@@ -49,6 +50,11 @@ to `mechanical`. Semantic review promotes the incident or target to
 `reviewed`. A reviewed target under a reviewed incident becomes
 `curveEligible` when every curve condition holds.
 
+Reviewed incident attestations cover the exploit anchor, root cause, and loss.
+Reviewed target attestations cover artifact identity and complete code history.
+Store the attestation as a `review-note` with `reviewer` and `reviewedAt`, then
+link it through `verification.reviewSourceIds`.
+
 ## Validation
 
 Use Node 22.
@@ -56,6 +62,7 @@ Use Node 22.
 ```bash
 npm test
 npm run verify -- incidents/<chainId>/<file>.json --curve-ready
+npm run revalidation
 npm run build
 ```
 

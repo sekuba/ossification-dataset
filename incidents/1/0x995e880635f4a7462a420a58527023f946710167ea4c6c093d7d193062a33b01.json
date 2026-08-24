@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x995e880635f4a7462a420a58527023f946710167ea4c6c093d7d193062a33b01",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19106655,
+      "transactionIndex": 5,
       "timestamp": 1706464499
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1706273675,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19090907,
+        "transactionHash": "0xa2ac13be8ce86b7f913e082563e9ac9c1bf78200748837f53a3edfb015daca58",
+        "transactionIndex": 89,
         "creatorAddress": "0x1aa354a9b333be75141ad8270313e34b6f51e3d4"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1706273675,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19090907,
+        "transactionHash": "0xa2ac13be8ce86b7f913e082563e9ac9c1bf78200748837f53a3edfb015daca58",
+        "transactionIndex": 89,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,10 +70,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -81,8 +83,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/barley-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -124,13 +125,22 @@
         "code-history"
       ],
       "note": "onchain review: victim 0x04c80bb477890f3021f03b068238836ee20aa0b8 is the verified WeightedIndex (wBARL) pod created 2024-01-26 by 0x1aa354a9b333be75141ad8270313e34b6f51e3d4, two days before the incident; attack sender 0x7b3a6eff1c9925e509c2b01a389238c1fcc462b6 is unrelated to the creator; no upgrade events"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xa2ac13be8ce86b7f913e082563e9ac9c1bf78200748837f53a3edfb015daca58"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/barley-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

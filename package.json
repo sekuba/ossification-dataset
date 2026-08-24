@@ -10,7 +10,9 @@
     "build": "node scripts/build.mjs",
     "candidates": "node scripts/build-candidates.mjs",
     "check": "node scripts/check.mjs",
+    "enrich": "node scripts/enrich.mjs",
+    "revalidation": "node scripts/build-revalidation.mjs",
     "verify": "node scripts/verify.mjs",
-    "test": "node scripts/build-candidates.mjs --check && node scripts/check.mjs && node scripts/build.mjs --check"
+    "test": "node scripts/build-candidates.mjs --check && node scripts/build-revalidation.mjs --check && node scripts/check.mjs && node scripts/build.mjs --check"
   }
 }

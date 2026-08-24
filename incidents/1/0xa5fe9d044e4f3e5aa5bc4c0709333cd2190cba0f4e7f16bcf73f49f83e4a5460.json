@@ -12,7 +12,7 @@
     "exploit": {
       "transactionHash": "0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460",
       "blockNumber": 15259101,
-      "transactionIndex": null,
+      "transactionIndex": 124,
       "timestamp": 1659389551
     },
     "attackerAddresses": [
@@ -42,8 +42,8 @@
       "executionAddress": "0x5d94309e5a0090b165fa4181519701637b6daeba",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xb92336759618f55bd0f8313bd843604592e27bd8",
+        "codeHash": "0x66029da6dc5ee737cbdd695184824e34fa2c3c899ef1ceb473ddf0d5c41d0c49"
       },
       "deployment": {
         "timestamp": 1650564005,
@@ -57,7 +57,7 @@
         "timestamp": 1655836769,
         "blockNumber": 15003660,
         "transactionHash": "0x7bccd64f4c4d5f6f545c2edf904857e6ddb460532fc0ac7eb5ac175cd21e56b1",
-        "transactionIndex": null,
+        "transactionIndex": 37,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -69,10 +69,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-2"
+          "source-2",
+          "source-4"
         ]
       },
       "verification": {
@@ -80,7 +82,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/nomad-bridge.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -112,6 +113,16 @@
         "target-identity"
       ],
       "note": "exploit tx backfilled and verified onchain (block 15259101; tx to-address is the victim): the documented first successful exploit tx (100 WBTC) that began the free-for-all; subsequent copycats replayed the calldata"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7bccd64f4c4d5f6f545c2edf904857e6ddb460532fc0ac7eb5ac175cd21e56b1"
     }
   ],
   "verification": {

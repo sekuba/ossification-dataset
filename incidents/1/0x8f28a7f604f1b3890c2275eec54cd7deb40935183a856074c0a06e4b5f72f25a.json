@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 24313234,
+      "transactionIndex": 5,
       "timestamp": 1769361035
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1765826879,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0xbeef63ae5a2102506e8a352a5bb32aa8b30b3112"
+        "blockNumber": 24020090,
+        "transactionHash": "0x239acc3db4cf951a671fab224129ba26250d96d3dce6ea0d934eee8d26b7c9f7",
+        "transactionIndex": 222,
+        "creatorAddress": "0x13b0d85ccb8bf860b6b79af3029fca081ae9bef2"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1765826879,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 24020090,
+        "transactionHash": "0x239acc3db4cf951a671fab224129ba26250d96d3dce6ea0d934eee8d26b7c9f7",
+        "transactionIndex": 222,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,10 +69,12 @@
       "failureModeId": "legacy:eip155:1:0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -80,8 +82,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/aperture-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -120,13 +121,22 @@
         "code-history"
       ],
       "note": "onchain review: victim created 2025-12-15 by 0xbeef63ae5a2102506e8a352a5bb32aa8b30b3112 (not the attacker), no EIP-1967 Upgraded event before the incident. The anchored tx is the attacker's contract-creation tx; its logs show 36.918 WBTC pulled from user 0x5240b03be5bc101a0082074666dd89ad883e1f9d to the attacker EOA plus a Uniswap V3 position mint. Reported incident total $3.67M across Ethereum/Arbitrum/Base."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x239acc3db4cf951a671fab224129ba26250d96d3dce6ea0d934eee8d26b7c9f7"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/aperture-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

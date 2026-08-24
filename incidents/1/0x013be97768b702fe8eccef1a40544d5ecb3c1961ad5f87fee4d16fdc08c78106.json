@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x013be97768b702fe8eccef1a40544d5ecb3c1961ad5f87fee4d16fdc08c78106",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 10355807,
+      "transactionIndex": 12,
       "timestamp": 1593367391
     },
     "attackerAddresses": [
@@ -51,16 +51,16 @@
       "deployment": {
         "timestamp": 1590755833,
         "blockNumber": 10160718,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x43189898d712df36d37c41d2897843482f729c65"
+        "transactionHash": "0x2b6b9111d9ef67921ea62e1aaaf9e8446863c3b7702d74d0e658a39f670661e6",
+        "transactionIndex": 39,
+        "creatorAddress": "0x9424b1412450d0f8fc2255faf6046b98213b76bd"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1590755833,
         "blockNumber": 10160718,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x2b6b9111d9ef67921ea62e1aaaf9e8446863c3b7702d74d0e658a39f670661e6",
+        "transactionIndex": 39,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -73,10 +73,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-5"
         ]
       },
       "verification": {
@@ -84,8 +86,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/balancer.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -129,13 +130,22 @@
         "loss"
       ],
       "note": "loss converted at the incident timestamp (1593367391) via DefiLlama coins: 455.85 WETH x $226.73 = $103,353"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2b6b9111d9ef67921ea62e1aaaf9e8446863c3b7702d74d0e658a39f670661e6"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/balancer.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

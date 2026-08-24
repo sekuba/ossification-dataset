@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x138daa4cbeaa3db42eefcec26e234fc2c89a4aa17d6b1870fc460b2856fd11a6",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 16646023,
+      "transactionIndex": 22,
       "timestamp": 1676607635
     },
     "attackerAddresses": [
@@ -44,22 +44,22 @@
       "executionAddress": "0xde62e1b0edaa55aac5ffbe21984d321706418024",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x33e690aea97e4ef25f0d140f1bf044d663091daf",
+        "codeHash": "0xf6cff9274069aef3fd5cc1f9f723f49458ffa92efac1aa14c4b0b12a80ab42f1"
       },
       "deployment": {
         "timestamp": 1676482307,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 16635649,
+        "transactionHash": "0x449a797e404d51d72aef9c72771e7a8ef1ee855628bb7371440c94f7c9d8b771",
+        "transactionIndex": 152,
         "creatorAddress": "0xb631e8650fb4befdae74ab9f86a9cb65bc134706"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1676482307,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 16635649,
+        "transactionHash": "0x449a797e404d51d72aef9c72771e7a8ef1ee855628bb7371440c94f7c9d8b771",
+        "transactionIndex": 152,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,19 +72,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/dexible.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/dexible.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -127,13 +127,22 @@
         "loss"
       ],
       "note": "onchain review: Dexible v2 0xDE62E1b0edAa55aAc5ffBE21984D321706418024 created 2023-02-15T17:31:47Z by 0xb631e8650fb4befdae74ab9f86a9cb65bc134706, unrelated to the attack sender; no EIP-1967 events, age from deployment - only 125,328 seconds (1.45 days) old at the incident. The recorded tx is the TRU leg the PoC replays; the ~$2M figure is PeckShield's total across all drained approvals. Recheck of the deployment basis (DELEGATECALL audit): DexibleProxy is a custom timelocked proxy that keeps its logic pointer in the diamond-style slot ProxyStorage.DATA_KEY 0x21b00fb42ba9970a2143fc9fb216ce19c58db008c8d83ff3a715bbc79598d7f0, not in an EIP-1967 slot; a binary search of eth_getStorageAt on that slot over [16635649, 16646023] shows it holds 0x33e690aea97e4ef25f0d140f1bf044d663091daf packed with the 604800-second timelock, unchanged from creation to the incident (the proposeUpgrade/upgradeLogic path was never used), and the logic contract - created one block before the proxy by the same deployer - is byte-identical over the window and contains no DELEGATECALL of its own, so the 1.45-day age is measured from the right point."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x449a797e404d51d72aef9c72771e7a8ef1ee855628bb7371440c94f7c9d8b771"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/dexible.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

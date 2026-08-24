@@ -11,8 +11,8 @@
     "chainId": 43114,
     "exploit": {
       "transactionHash": "0xab813aeecd174d51a9f6d7d0eb9b323bccedba6c5cce0e965781a08f3473dbd5",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 66181043,
+      "transactionIndex": 7,
       "timestamp": 1753684492
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1746823650,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 61744272,
+        "transactionHash": "0x99b306174e05a9bc80f304b58abf8d4621dbd1021384f45b656ac97b916509f6",
+        "transactionIndex": 10,
+        "creatorAddress": "0x5568938bf4188bb868dbf31614091062c4a44b1e"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1746823650,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 61744272,
+        "transactionHash": "0x99b306174e05a9bc80f304b58abf8d4621dbd1021384f45b656ac97b916509f6",
+        "transactionIndex": 10,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:43114:0xab813aeecd174d51a9f6d7d0eb9b323bccedba6c5cce0e965781a08f3473dbd5:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/avaxbifknpair.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,13 +106,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-07/AvaxBIFKNPair_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 43114,
+      "transactionHash": "0x99b306174e05a9bc80f304b58abf8d4621dbd1021384f45b656ac97b916509f6"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/avaxbifknpair.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

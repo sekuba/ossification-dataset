@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x33479bcfbc792aa0f8103ab0d7a3784788b5b0e1467c81ffbed1b7682660b4fa",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 14421984,
+      "transactionIndex": 77,
       "timestamp": 1647762534
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1647277530,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14385979,
+        "transactionHash": "0x55d1da69574b87f8129538939d932eb4895a7679cf5bda40e3f524e54f4307fc",
+        "transactionIndex": 221,
         "creatorAddress": "0xa6e4ffa19b213abea258ae72e8e1a209b9e543e7"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1647277530,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14385979,
+        "transactionHash": "0x55d1da69574b87f8129538939d932eb4895a7679cf5bda40e3f524e54f4307fc",
+        "transactionIndex": 221,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/umbrella-network.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: StakingRewards 0xB3FB1D01B07A706736Ca175f827e4F56021b85dE created 2022-03-14T17:05:30Z by 0xa6e4ffa19b213abea258ae72e8e1a209b9e543e7, unrelated to the attack sender; no EIP-1967 events, age from deployment - the pool was only 5.6 days old. Loss ~700K reported (UMB rewards, drained on both Ethereum and BNB Chain); the Ethereum leg is recorded here."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x55d1da69574b87f8129538939d932eb4895a7679cf5bda40e3f524e54f4307fc"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/umbrella-network.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

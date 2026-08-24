@@ -11,8 +11,8 @@
     "chainId": 43114,
     "exploit": {
       "transactionHash": "0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 26343614,
+      "transactionIndex": 0,
       "timestamp": 1676575014
     },
     "attackerAddresses": [
@@ -49,9 +49,9 @@
       },
       "deployment": {
         "timestamp": 1662368051,
-        "blockNumber": 22409704,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19558292,
+        "transactionHash": "0xed5192cef15d09b35c73f6f6f618945dbea31b3a68b0119da62b1aa5fc28df01",
+        "transactionIndex": 1,
         "creatorAddress": "0xcd7874f7430f9f62129c3fef1bc8cb8ef7bad224"
       },
       "lastCodeChange": {
@@ -74,10 +74,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -121,13 +123,22 @@
         "loss"
       ],
       "note": "onchain review: MasterPlatypusV4 0xfF6934aAC9C94E1C39358D4fDCF70aeca77D0AB0 created 2022-09-05T08:54:11Z by 0xcd7874f7430f9f62129c3fef1bc8cb8ef7bad224, not the attack-tx sender 0xeff003d64046a6f521ba31f39405cb720e953958; one EIP-1967 Upgraded event, at block 22409704 on 2022-11-15T13:28:38Z installing 0xc007f27b757a782c833c568f5851ae1dfe0e6ec7, so the executing code was 93.2 days old. Loss ~$8.5M as previously recorded."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 43114,
+      "transactionHash": "0xed5192cef15d09b35c73f6f6f618945dbea31b3a68b0119da62b1aa5fc28df01"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/platypus-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

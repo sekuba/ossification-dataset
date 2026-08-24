@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x00c503b595946bccaea3d58025b5f9b3726177bbdc9674e634244135282116c7",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19532297,
+      "transactionIndex": 62,
       "timestamp": 1711625111
     },
     "attackerAddresses": [
@@ -49,15 +49,15 @@
         "timestamp": 1710923435,
         "blockNumber": 19474738,
         "transactionHash": "0xc8d4059c4394812b142dc88a8a8534687bb8857c10f2093bffc9c44a90ee6f56",
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionIndex": 480,
+        "creatorAddress": "0xd8531a94100f15af7521a7b6e724ac4959e0a025"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1710923435,
         "blockNumber": 19474738,
         "transactionHash": "0xc8d4059c4394812b142dc88a8a8534687bb8857c10f2093bffc9c44a90ee6f56",
-        "transactionIndex": null,
+        "transactionIndex": 480,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,10 +69,12 @@
       "failureModeId": "legacy:eip155:1:0x00c503b595946bccaea3d58025b5f9b3726177bbdc9674e634244135282116c7:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
         "codeHistorySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ]
       },
       "verification": {
@@ -80,8 +82,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/prisma-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,13 +105,22 @@
         "code-history"
       ],
       "note": "onchain review (no exploit tx in this row; DeFiHackLabs src/test/2024-03/Prisma_exp.sol names the vulnerable contract and the attack tx 0x00c503b595946bccaea3d58025b5f9b3726177bbdc9674e634244135282116c7. Incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 19532470, 2024-03-28T12:00:00Z). VICTIM CORRECTED: this row previously pointed at 0xB8FA880840A64c25318989B907cCb58FD7A324Df, which is not the MigrateTroveZap described in the notes but a Prisma ConvexDepositToken - an EIP-1167 clone whose 45-byte runtime hardcodes the ConvexDepositToken master 0x838a35e3a63df3cd27d321f87980f17f51218fa1 (both verified under that name). The MigrateTroveZap is 0xcC7218100da61441905e0c327749972e3cBeE9EE (Etherscan-verified as `MigrateTroveZap`), created 2024-03-20T08:30:35Z at block 19474738 by tx 0xc8d4059c4394812b142dc88a8a8534687bb8857c10f2093bffc9c44a90ee6f56 from 0xd8531a94100f15af7521a7b6e724ac4959e0a025 (a Prisma deployer, also the deployer of the ConvexDepositToken master; not the attacker). The zap is immutable: zero DELEGATECALL opcodes in its runtime, no EIP-1967 Upgraded event, and byte-identical eth_getCode at the creation block and the incident block, so the deployment basis is exact. Code age falls from 122.0 days (measured against the wrong contract) to 703765s, ~8.1 days - the unvalidated onFlashLoan shipped eight days before it was exploited."
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xc8d4059c4394812b142dc88a8a8534687bb8857c10f2093bffc9c44a90ee6f56"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/prisma-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

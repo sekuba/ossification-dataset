@@ -11,8 +11,8 @@
     "chainId": 56,
     "exploit": {
       "transactionHash": "0x03d363462519029cf9a544d44046cad0c7e64c5fb1f2adf5dd5438a9a0d2ec8e",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 22832428,
+      "transactionIndex": 60,
       "timestamp": 1667770238
     },
     "attackerAddresses": [
@@ -49,7 +49,7 @@
         "timestamp": 1603824289,
         "blockNumber": 1717330,
         "transactionHash": "0x4d92d7691edbd013f3ac32cc4c300efe19fbb3f312bfc2d208351525ceb235bd",
-        "transactionIndex": null,
+        "transactionIndex": 4,
         "creatorAddress": "0xc362fa359031a081d21cb9d57c29e055fecbcb06"
       },
       "lastCodeChange": {
@@ -57,7 +57,7 @@
         "timestamp": 1603824289,
         "blockNumber": 1717330,
         "transactionHash": "0x4d92d7691edbd013f3ac32cc4c300efe19fbb3f312bfc2d208351525ceb235bd",
-        "transactionIndex": null,
+        "transactionIndex": 4,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,10 +70,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -81,8 +83,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/beefy-moocakectx.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -124,13 +125,22 @@
         "code-history"
       ],
       "note": "onchain review: vault 0x489afbAED0Ea796712c9A6d366C16CA3876D8184 created 2020-10-27T18:44:49Z (block 1717330, tx 0x4d92d7691edbd013f3ac32cc4c300efe19fbb3f312bfc2d208351525ceb235bd) by 0xc362fa359031a081d21cb9d57c29e055fecbcb06, unrelated to attack sender 0x35700c4a7bd65048f01d6675f09d15771c0facd5; no EIP-1967 Upgraded events, age measured from deployment. lossUsd uses the ~$140k reported by DeFiHackLabs; the exploit transaction moved ~53,786 CAKE out of the SmartChef and 37.5 WBNB to the attacker's addresses."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x4d92d7691edbd013f3ac32cc4c300efe19fbb3f312bfc2d208351525ceb235bd"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/beefy-moocakectx.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

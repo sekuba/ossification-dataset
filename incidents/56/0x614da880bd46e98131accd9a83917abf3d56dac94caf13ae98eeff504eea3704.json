@@ -11,8 +11,8 @@
     "chainId": 56,
     "exploit": {
       "transactionHash": "0x614da880bd46e98131accd9a83917abf3d56dac94caf13ae98eeff504eea3704",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 42284162,
+      "transactionIndex": 5,
       "timestamp": 1726430224
     },
     "attackerAddresses": [
@@ -42,8 +42,8 @@
       "executionAddress": "0x05c2dd9cf547c6cccf91245346e6e1bc9926cae7",
       "relationship": "diamond",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x7c83dc9221cfd48ac760710b7f1cd7b76ff6fcc2",
+        "codeHash": "0x430aec76de64371bed028a2da7aa84a9d45c05b6a92e03723188b0573f0f31f3"
       },
       "deployment": {
         "timestamp": 1710289315,
@@ -57,7 +57,7 @@
         "timestamp": 1710315693,
         "blockNumber": 36927327,
         "transactionHash": "0xe62285b2153aca90950043f507babe523ec3b0fc3dc3f8069a8e4de803285543",
-        "transactionIndex": null,
+        "transactionIndex": 10,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -69,10 +69,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -80,7 +82,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/wxeta.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -115,13 +116,22 @@
         "code-history"
       ],
       "note": "onchain review: victim 0x05c2dd9cf547c6cccf91245346e6e1bc9926cae7 is an EIP-2535 diamond that installs code with DiamondCut and emits no EIP-1967 Upgraded event; eth_getLogs over creation block 36918555 to incident block 42284162 finds exactly two DiamondCut logs, the deployment cut (2024-03-13T00:21:55Z) and a second cut at block 36927327, 2024-03-13T07:41:33Z, tx 0xe62285b2153aca90950043f507babe523ec3b0fc3dc3f8069a8e4de803285543, which Added facet 0x7c83dc9221cfd48ac760710b7f1cd7b76ff6fcc2 with the 15 ERC20/token selectors including initialize(uint256) 0xfe4b84df and mint(address,uint256) 0x40c10f19 - the exact pair the exploit used - so the flawed code dates from that cut, 7h20m after deployment"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xe62285b2153aca90950043f507babe523ec3b0fc3dc3f8069a8e4de803285543"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/wxeta.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

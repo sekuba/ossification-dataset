@@ -286,6 +286,8 @@ function sourceManifest(records, root) {
   })
   const researchPath = path.join(root, 'research', 'candidates.json')
   const candidateSchemaPath = path.join(root, 'schema', 'candidate.schema.json')
+  const revalidationPath = path.join(root, 'research', 'revalidation.json')
+  const revalidationSchemaPath = path.join(root, 'schema', 'revalidation.schema.json')
   const research = {}
   if (existsSync(researchPath)) {
     const raw = readFileSync(researchPath, 'utf8')
@@ -306,8 +308,18 @@ function sourceManifest(records, root) {
   }
   if (existsSync(candidateSchemaPath)) {
     const raw = readFileSync(candidateSchemaPath, 'utf8')
-    research.schema = { path: 'schema/candidate.schema.json', sha256: sha256(raw) }
-    inputs.push(research.schema)
+    research.candidateSchema = { path: 'schema/candidate.schema.json', sha256: sha256(raw) }
+    inputs.push(research.candidateSchema)
+  }
+  if (existsSync(revalidationPath)) {
+    const raw = readFileSync(revalidationPath, 'utf8')
+    research.revalidation = { path: 'research/revalidation.json', sha256: sha256(raw) }
+    inputs.push(research.revalidation)
+  }
+  if (existsSync(revalidationSchemaPath)) {
+    const raw = readFileSync(revalidationSchemaPath, 'utf8')
+    research.revalidationSchema = { path: 'schema/revalidation.schema.json', sha256: sha256(raw) }
+    inputs.push(research.revalidationSchema)
   }
   inputs.sort((a, b) => compareText(a.path, b.path))
   return {

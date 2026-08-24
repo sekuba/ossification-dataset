@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x1f15a193db3f44713d56c4be6679b194f78c2bcdd2ced5b0c7495b7406f5e87a",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 22781962,
+      "transactionIndex": 2,
       "timestamp": 1750860683
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1750245935,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 22731055,
+        "transactionHash": "0xff6a12947da09c007f501668cc12d7ea9bdecff91d7fd39a8129303c8c6fd53c",
+        "transactionIndex": 34,
+        "creatorAddress": "0x6d228fa4dad2163056a48fc2186d716f5c65e89a"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1750245935,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 22731055,
+        "transactionHash": "0xff6a12947da09c007f501668cc12d7ea9bdecff91d7fd39a8129303c8c6fd53c",
+        "transactionIndex": 34,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,17 +70,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-6"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/silo-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -129,13 +131,22 @@
         "target-identity"
       ],
       "note": "onchain review: victim is the verified LeverageUsingSiloFlashloanWithGeneralSwap at 0xCbEe4617ABF667830fe3ee7DC8d6f46380829DF9, deployed by Silo 0x6d228fa4dad2163056a48fc2186d716f5c65e89a seven days before the incident and unrelated to the attack sender; 224 WETH was borrowed out of Silo 0x160287E2D3fdCDE9E91317982fc1Cc01C1f94085 against borrower 0x60BAF994f44dd10c19C0c47cbFE6048a4fFe4860"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xff6a12947da09c007f501668cc12d7ea9bdecff91d7fd39a8129303c8c6fd53c"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/silo-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

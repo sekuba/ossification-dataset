@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19138641,
+      "transactionIndex": 0,
       "timestamp": 1706851727
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1589592695,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10074195,
+        "transactionHash": "0x5dd5960c7d5095b4ebacef00a18951dcd765635cf28b2f6241ddb1354af9a011",
+        "transactionIndex": 5,
         "creatorAddress": "0x25fd6a8ffad09b691777ce17e99f9b23956251a9"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1589592695,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10074195,
+        "transactionHash": "0x5dd5960c7d5095b4ebacef00a18951dcd765635cf28b2f6241ddb1354af9a011",
+        "transactionIndex": 5,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/adc.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: MainPool 0xdE46fcF6aB7559E4355b8eE3D7fBa0f2730CDdd8 created 2020-05-16T01:31:35Z by 0x25fd6a8ffad09b691777ce17e99f9b23956251a9, unrelated to the attack sender; no EIP-1967 events, age from deployment (1357.2 days). ~20 ETH x $2,297.54 at incidentTimestamp 1706851727 (DefiLlama) = $45,951."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x5dd5960c7d5095b4ebacef00a18951dcd765635cf28b2f6241ddb1354af9a011"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/adc.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

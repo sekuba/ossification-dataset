@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 10592517,
+      "transactionIndex": 30,
       "timestamp": 1596534116
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1596146843,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0xde99ea535749f02da84d13e6f8253291e32d3a7f"
+        "blockNumber": 10563480,
+        "transactionHash": "0x3ab040a20dba4893ff036e6c7becdf6ac29e5186f66618c4d86012192ac46237",
+        "transactionIndex": 86,
+        "creatorAddress": "0xcc5d905b9c2c8c9329eb4e25dc086369d6c7777c"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1596146843,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10563480,
+        "transactionHash": "0x3ab040a20dba4893ff036e6c7becdf6ac29e5186f66618c4d86012192ac46237",
+        "transactionIndex": 86,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -71,17 +71,19 @@
       "failureModeId": "legacy:eip155:1:0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/opyn.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -112,13 +114,22 @@
         "loss"
       ],
       "note": "onchain review: oToken 0x951d51ba created 2020-07-30 by 0xde99ea535749f02da84d13e6f8253291e32d3a7f, not by attack sender 0x915c2d6f; loss denominated in USDC (USD-pegged 1:1) per the Opyn post-mortem"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3ab040a20dba4893ff036e6c7becdf6ac29e5186f66618c4d86012192ac46237"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/opyn.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

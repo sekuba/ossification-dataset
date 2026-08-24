@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x6fb78c7737463ea39a23159dd8496c178106b4ee657f2fb6fcb628240c39cd2e",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 23002634,
+      "transactionIndex": 97,
       "timestamp": 1753524623
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1663145656,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 15532046,
+        "transactionHash": "0x5c20ac16361630106a25b8ca01e91596fe36708e822494bae0f4631d8deb1755",
+        "transactionIndex": 14,
+        "creatorAddress": "0xbc1bc260cdd7b5f9ef4e5957e3dd89f6c866ff20"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1663145656,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 15532046,
+        "transactionHash": "0x5c20ac16361630106a25b8ca01e91596fe36708e822494bae0f4631d8deb1755",
+        "transactionIndex": 14,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:1:0x6fb78c7737463ea39a23159dd8496c178106b4ee657f2fb6fcb628240c39cd2e:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/unverified6883.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,13 +106,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-07/Unverified6883_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x5c20ac16361630106a25b8ca01e91596fe36708e822494bae0f4631d8deb1755"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/unverified6883.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

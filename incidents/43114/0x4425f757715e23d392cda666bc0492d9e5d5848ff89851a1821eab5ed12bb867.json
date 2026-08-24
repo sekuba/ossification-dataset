@@ -11,8 +11,8 @@
     "chainId": 43114,
     "exploit": {
       "transactionHash": "0x4425f757715e23d392cda666bc0492d9e5d5848ff89851a1821eab5ed12bb867",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 36346398,
+      "transactionIndex": 0,
       "timestamp": 1697091429
     },
     "attackerAddresses": [
@@ -42,15 +42,15 @@
       "executionAddress": "0x4658ea7e9960d6158a261104aaa160cc953bb6ba",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xe5c84c7630a505b6adf69b5594d0ff7fedd5f447",
+        "codeHash": "0xf88f744a3091c3b26d03688fd238ce433935da7a1e2348cb114a6ea4e0cc339a"
       },
       "deployment": {
         "timestamp": 1650904940,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 13888114,
+        "transactionHash": "0x9d82ae049b90ac306dc4bd7d98d930c93b97e29d9ab403122b01d2de5df5422b",
+        "transactionIndex": 0,
+        "creatorAddress": "0x416a7989a964c9ed60257b064efc3a30fe6bf2ee"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,7 +85,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/platypus-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -118,13 +119,22 @@
         "code-history"
       ],
       "note": "onchain review: victim re-anchored from implementation 0xe5c84c7630a505b6adf69b5594d0ff7fedd5f447 to the proxy the protocol runs at, 0x4658ea7e9960d6158a261104aaa160cc953bb6ba, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (7913401s -> 7910954s)"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 43114,
+      "transactionHash": "0x9d82ae049b90ac306dc4bd7d98d930c93b97e29d9ab403122b01d2de5df5422b"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/platypus-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xc27c3ec61c61309c9af35af062a834e0d6914f9352113617400577c0f2b0e9de",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20624704,
+      "transactionIndex": 0,
       "timestamp": 1724819351
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1689173807,
-        "blockNumber": null,
+        "blockNumber": 17678215,
         "transactionHash": "0xfebcf4a63b149c5605b46bdfe8a255c7e4435a1990ad535603bd8d75c4a63a0b",
-        "transactionIndex": null,
-        "creatorAddress": "0x57dc6c401819ea097db8d4b66d8e35cda0277a73"
+        "transactionIndex": 89,
+        "creatorAddress": "0x2401ae9bbef67458362710f90302eb52b5ce835a"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1689173807,
-        "blockNumber": null,
+        "blockNumber": 17678215,
         "transactionHash": "0xfebcf4a63b149c5605b46bdfe8a255c7e4435a1990ad535603bd8d75c4a63a0b",
-        "transactionIndex": null,
+        "transactionIndex": 89,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,10 +70,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -81,8 +83,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/aave-paraswap-repay-adapter.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -124,13 +125,22 @@
         "code-history"
       ],
       "note": "onchain review: adapter 0x02e7b851... created by 0x57dc6c401819ea097db8d4b66d8e35cda0277a73 in tx 0xfebcf4a63b149c5605b46bdfe8a255c7e4435a1990ad535603bd8d75c4a63a0b (2023-07-12), unrelated to attack sender 0x6ea83f23...; no EIP-1967 Upgraded events before the incident"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xfebcf4a63b149c5605b46bdfe8a255c7e4435a1990ad535603bd8d75c4a63a0b"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/aave-paraswap-repay-adapter.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

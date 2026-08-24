@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 17426065,
+      "transactionIndex": 31,
       "timestamp": 1686111251
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1604800849,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 11213934,
+        "transactionHash": "0x847b85734c342b706454c9b79e126eaa0e54bcacf437b1180be92c04df109e5b",
+        "transactionIndex": 41,
+        "creatorAddress": "0x079667f4f7a0b440ad35ebd780efd216751f0758"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1604800849,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 11213934,
+        "transactionHash": "0x847b85734c342b706454c9b79e126eaa0e54bcacf437b1180be92c04df109e5b",
+        "transactionIndex": 41,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:1:0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/compounderfinance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,13 +106,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-06/CompounderFinance_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x847b85734c342b706454c9b79e126eaa0e54bcacf437b1180be92c04df109e5b"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/compounderfinance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

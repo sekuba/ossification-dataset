@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 15838225,
+      "transactionIndex": 6,
       "timestamp": 1666859363
     },
     "attackerAddresses": [
@@ -42,15 +42,15 @@
       "executionAddress": "0xe2fe530c047f2d85298b07d9333c05737f1435fb",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x48d118c9185e4dbafe7f3813f8f29ec8a6248359",
+        "codeHash": "0x2d49f76b37b39e8abb856d472f1df3bd5eaf178d91ee1accd885505a079d1e20"
       },
       "deployment": {
         "timestamp": 1627475806,
         "blockNumber": 12914481,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionHash": "0xef39e05e7cd26a551fc0014f67dc9088aa97a0184e22ab10c54d6f412cf30e56",
+        "transactionIndex": 137,
+        "creatorAddress": "0xbc37fa8a1e3ccb154ab5d177736a8166126319f0"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -72,11 +72,13 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -84,7 +86,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/team-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -117,13 +118,22 @@
         "code-history"
       ],
       "note": "onchain review: exploit tx 0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce adopted from the duplicate teamfinance row, whose victim was the implementation 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 behind this proxy; measured from the last of 7 EIP-1967 upgrades"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xef39e05e7cd26a551fc0014f67dc9088aa97a0184e22ab10c54d6f412cf30e56"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/team-finance.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

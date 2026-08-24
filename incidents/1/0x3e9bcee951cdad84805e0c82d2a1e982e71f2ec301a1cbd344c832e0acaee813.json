@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x3e9bcee951cdad84805e0c82d2a1e982e71f2ec301a1cbd344c832e0acaee813",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 18538679,
+      "transactionIndex": 158,
       "timestamp": 1699584695
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1699071551,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 18496252,
+        "transactionHash": "0x1934f3ed51f63b7121b037f7d6dd549b4ca1769c2d803d31089759ae309b414d",
+        "transactionIndex": 32,
         "creatorAddress": "0xf9387ac9f61cc22994a59a6008f827435ce744b6"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1699071551,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 18496252,
+        "transactionHash": "0x1934f3ed51f63b7121b037f7d6dd549b4ca1769c2d803d31089759ae309b414d",
+        "transactionIndex": 32,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/grok.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -127,13 +128,22 @@
         "loss"
       ],
       "note": "onchain review: GROK 0x8390a1DA07E376ef7aDd4Be859BA74Fb83aA02D5 created 2023-11-04T04:19:11Z by 0xf9387ac9f61cc22994a59a6008f827435ce744b6, unrelated to the attack sender; no EIP-1967 events, age from deployment (5.9 days). ~26 ETH x $2,120.46 at incidentTimestamp 1699584695 (DefiLlama) = $55,132."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x1934f3ed51f63b7121b037f7d6dd549b4ca1769c2d803d31089759ae309b414d"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/grok.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xcdd93e37ba2991ce02d8ca07bf6563bf5cd5ae801cbbce3dd0babb22e30b2dbe",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 17949215,
+      "transactionIndex": 42,
       "timestamp": 1692452891
     },
     "attackerAddresses": [
@@ -44,14 +44,14 @@
       "executionAddress": "0x1f006f43f57c45ceb3659e543352b4fae4662df7",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xdb0618e0b850cab3f756d030398be22929226d5c",
+        "codeHash": "0x8ea40a2a7df4c25679971b4a45a77135f9ce8bf6ffeab6408f35509cb6bac5f6"
       },
       "deployment": {
         "timestamp": 1686824351,
-        "blockNumber": 17942136,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 17484647,
+        "transactionHash": "0xd40229d809f9b15d7dc1ae048f7a3450c7cade17537f951b83fc3f7a5d6074ee",
+        "transactionIndex": 15,
         "creatorAddress": "0x6de493de7f89c77a249cf44631c60ef67f06d091"
       },
       "lastCodeChange": {
@@ -74,10 +74,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -85,7 +87,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/btc20.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -129,13 +130,22 @@
         "loss"
       ],
       "note": "onchain review: presale proxy 0x1F006F43f57C45Ceb3659E543352b4FAe4662dF7 (TransparentUpgradeableProxy) created 2023-06-15T10:19:11Z by 0x6de493de7f89c77a249cf44631c60ef67f06d091, unrelated to the attack sender; six EIP-1967 Upgraded events, the last on 2023-08-18T14:01:35Z (block 17942136, implementation 0xdb0618e0b850cab3f756d030398be22929226d5c) - only 85,596 seconds (23.8 hours) before the incident - so age runs from that upgrade rather than the 65-day-old deployment. ~18 ETH x $1,661.79 at incidentTimestamp 1692452891 (DefiLlama) = $29,912."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xd40229d809f9b15d7dc1ae048f7a3450c7cade17537f951b83fc3f7a5d6074ee"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/btc20.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

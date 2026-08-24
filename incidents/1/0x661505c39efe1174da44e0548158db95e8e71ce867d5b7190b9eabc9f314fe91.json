@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x661505c39efe1174da44e0548158db95e8e71ce867d5b7190b9eabc9f314fe91",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19971611,
+      "transactionIndex": 4,
       "timestamp": 1716938495
     },
     "attackerAddresses": [
@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1716751811,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19956149,
+        "transactionHash": "0xca4c50dcbdcbcaaaef88c3f90ff74224778f034631e0526da67a0ced215ac41e",
+        "transactionIndex": 7,
         "creatorAddress": "0x72c509b05a44c4bb53373efc2e76fb75fa8108a6"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1716751811,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 19956149,
+        "transactionHash": "0xca4c50dcbdcbcaaaef88c3f90ff74224778f034631e0526da67a0ced215ac41e",
+        "transactionIndex": 7,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,8 +85,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/scroll-network-token.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -119,13 +120,22 @@
         "loss"
       ],
       "note": "onchain review: SCROLL 'Scroll Network' 0xe51D3dE9b81916D383eF97855C271250852eC7B7 created 2024-05-26T19:30:11Z by 0x72c509b05a44c4bb53373efc2e76fb75fa8108a6, not the attack-tx sender 0x55db954f0121e09ec838a20c216eabf35ca32cdd; no EIP-1967 events, unverified source, so age runs from deployment (2.16 days). Verified at block 19971610 that UniversalRouter 0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD held 0 SCROLL and the WETH pair held 1.363e23, confirming the router's balance was created by the exploit's first TRANSFER rather than pre-existing. ~76 ETH at a May 2024 ETH price near $3,800 is roughly $290k. Loss converted at the incident timestamp: 76 ETH x $3,849.77 (DefiLlama historical ETH price) = $292,583."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xca4c50dcbdcbcaaaef88c3f90ff74224778f034631e0526da67a0ced215ac41e"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/scroll-network-token.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

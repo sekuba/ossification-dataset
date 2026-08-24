@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xbf7252af56be8867a12e27cc332f85e8f39e906756e559d6a076dc8bd9d50008",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 25448306,
+      "transactionIndex": 78,
       "timestamp": 1783037243
     },
     "attackerAddresses": [
@@ -55,9 +55,9 @@
       "lastCodeChange": {
         "kind": "unknown",
         "timestamp": 1781078423,
-        "blockNumber": null,
+        "blockNumber": 25285711,
         "transactionHash": "0x58d7dedee260a91c976ebd5425b0f7c0e0feb7b0f060356f4bf1a7bca5b9e856",
-        "transactionIndex": null,
+        "transactionIndex": 68,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -68,9 +68,12 @@
       "failureModeId": "legacy:eip155:1:0xbf7252af56be8867a12e27cc332f85e8f39e906756e559d6a076dc8bd9d50008:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-5"
+        ]
       },
       "verification": {
         "tier": "provisional",
@@ -116,13 +119,22 @@
         "target-identity"
       ],
       "note": "onchain review: creator 0xc2212d2033f3bf0fdb9f11fa13fe6a260aa76d5d; latest pre-incident verifier registration is documentedLastChange"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x58d7dedee260a91c976ebd5425b0f7c0e0feb7b0f060356f4bf1a7bca5b9e856"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/hinkal.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

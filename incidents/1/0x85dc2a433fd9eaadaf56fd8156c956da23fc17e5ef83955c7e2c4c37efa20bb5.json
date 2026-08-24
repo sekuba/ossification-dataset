@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 10852722,
+      "transactionIndex": 99,
       "timestamp": 1599988201
     },
     "attackerAddresses": [
@@ -42,8 +42,8 @@
       "executionAddress": "0xb983e01458529665007ff7e0cddecdb74b967eb6",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xde744d544a9d768e96c21b5f087fc54b776e9b25",
+        "codeHash": "0x153147d85fddfac599aed6d58a1488595e6b12f736ad4aca8e72e1a1929ed35c"
       },
       "deployment": {
         "timestamp": 1599093312,
@@ -57,7 +57,7 @@
         "timestamp": 1599249195,
         "blockNumber": 10796875,
         "transactionHash": "0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c",
-        "transactionIndex": null,
+        "transactionIndex": 90,
         "logIndex": null,
         "mechanism": {
           "type": "legacy-documented"
@@ -68,10 +68,12 @@
       "failureModeId": "legacy:eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -79,7 +81,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/bzx.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -111,13 +112,22 @@
         "code-history"
       ],
       "note": "onchain review: iETH token 0xb983e014 created 2020-09-03 by 0xb7f72028d9b502dc871c444363a7ac5a52546608 (bZx deployer), not by attack sender 0xd1c0f131; it is a bZx setTarget proxy that emits no EIP-1967 Upgraded event, so the logic pointer was recovered by binary-searching eth_getStorageAt on target_ (storage slot 20, from the verified LoanTokenLogicWeth layout) between the creation and incident blocks: it held 0x11ba2b39bc80464c14b7eea54d2ec93d8f60e7b8 at deployment, then 0xe8279915fe5fb202041c3b3bf97d0f95949d503f, and was last written to 0xde744d544a9d768e96c21b5f087fc54b776e9b25 at block 10796875, 2020-09-04T19:53:15Z by setTarget(address) tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c from the deployer, and stayed there through the incident; 0xde744d54 is the LoanTokenLogicWeth carrying the flawed _internalTransferFrom, so the real code age is 8.55d rather than the 10.36d deployment figure"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/bzx.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

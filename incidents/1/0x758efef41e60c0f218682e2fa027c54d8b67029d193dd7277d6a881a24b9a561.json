@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 20519309,
+      "transactionIndex": 1,
       "timestamp": 1723547363
     },
     "attackerAddresses": [
@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1597991844,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 10701987,
+        "transactionHash": "0x73a2c631abd87857b165b2f2b76b87cba29a65d2a4161d0fbbf5df05783102f4",
+        "transactionIndex": 35,
+        "creatorAddress": "0xcba20d1624005491a015ee41c56aaf9918ef8159"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1597991844,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10701987,
+        "transactionHash": "0x73a2c631abd87857b165b2f2b76b87cba29a65d2a4161d0fbbf5df05783102f4",
+        "transactionIndex": 35,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,10 +69,12 @@
       "failureModeId": "legacy:eip155:1:0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -80,8 +82,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/vow.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -114,13 +115,22 @@
         "code-history"
       ],
       "note": "deployment-basis recheck: VOWToken's nine DELEGATECALL sites all target 0x60ca4ec4412a3b319f4bd6366bb836395336b397, which Etherscan's verified metadata records as the link-time library LToken and which appears as a PUSH20 constant in the runtime - a linked Solidity library address, fixed at deployment and not repointable. callTracer confirms all three delegatecalls in the exploit tx go there, and the token runtime is byte-identical at the creation and incident blocks. Deployment is exact; 1453.2 days."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x73a2c631abd87857b165b2f2b76b87cba29a65d2a4161d0fbbf5df05783102f4"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/vow.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

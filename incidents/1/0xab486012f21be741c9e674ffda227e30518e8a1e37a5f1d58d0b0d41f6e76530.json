@@ -12,7 +12,7 @@
     "exploit": {
       "transactionHash": "0xab486012f21be741c9e674ffda227e30518e8a1e37a5f1d58d0b0d41f6e76530",
       "blockNumber": 14684814,
-      "transactionIndex": null,
+      "transactionIndex": 4,
       "timestamp": 1651311149
     },
     "attackerAddresses": [
@@ -50,16 +50,16 @@
       "deployment": {
         "timestamp": 1637706844,
         "blockNumber": 13673508,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "transactionHash": "0x3c6b1afd5e81a4dc2483e3c4a0ed785ee57ea855e5fa67ea9d7aa7a4703290d9",
+        "transactionIndex": 106,
+        "creatorAddress": "0xa731585ab05fc9f83555cf9bff8f58ee94e18f85"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1637706844,
         "blockNumber": 13673508,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x3c6b1afd5e81a4dc2483e3c4a0ed785ee57ea855e5fa67ea9d7aa7a4703290d9",
+        "transactionIndex": 106,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,11 +72,13 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-5"
         ]
       },
       "verification": {
@@ -84,8 +86,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/rari-fuse.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -125,6 +126,16 @@
         "loss"
       ],
       "note": "exploit tx backfilled and verified onchain (block 14684814): the exit-fee reentrancy drain of Fuse pool 127 fETH 0x26267e41ceca7c8e0f143554af707336f27fa051 (this row's victim), the tx DeFiHackLabs reproduces and CertiK's analysis cites; the wider incident drained ~7 pools across sequential txs from the same attacker"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3c6b1afd5e81a4dc2483e3c4a0ed785ee57ea855e5fa67ea9d7aa7a4703290d9"
     }
   ],
   "verification": {

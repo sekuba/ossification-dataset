@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xbeef09ee9d694d2b24f3f367568cc6ba1dad591ea9f969c36e5b181fd301be82",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 19196686,
+      "transactionIndex": 0,
       "timestamp": 1707555647
     },
     "attackerAddresses": [
@@ -42,15 +42,15 @@
       "executionAddress": "0x2c7112245fc4af701ebf90399264a7e89205dad4",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xe58acb560fc33e283ab70c700a0f2eed0e333e0a",
+        "codeHash": "0x72b2ab9bc576b7f9fc24ea16860e8d3db456b5a7ac521384a76aea1f41d97178"
       },
       "deployment": {
         "timestamp": 1698376319,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 18438781,
+        "transactionHash": "0x53f32bb64e4e3737c83c7ebe34653cc529d685fb04a1ef7e17fdaac32b6feae1",
+        "transactionIndex": 9,
+        "creatorAddress": "0x59527cc4774d81ea8c225120e52fc698b5e5e21c"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -71,16 +71,18 @@
       "failureModeId": "legacy:eip155:1:0xbeef09ee9d694d2b24f3f367568cc6ba1dad591ea9f969c36e5b181fd301be82:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/dn404.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -106,13 +108,22 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-02/DN404_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x53f32bb64e4e3737c83c7ebe34653cc529d685fb04a1ef7e17fdaac32b6feae1"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/dn404.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

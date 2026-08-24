@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0xa05f047ddfdad9126624c4496b5d4a59f961ee7c091e7b4e38cee86f1335736f",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 22157900,
+      "transactionIndex": 33,
       "timestamp": 1743315671
     },
     "attackerAddresses": [
@@ -48,16 +48,16 @@
       "deployment": {
         "timestamp": 1740065579,
         "blockNumber": 21888482,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x07584364bd4e6e303640f2532e2185284c1fbabfce03fb0caa0283be0bb3bc39",
+        "transactionIndex": 6,
         "creatorAddress": "0x5000ff6cc1864690d947b864b9fb0d603e8d1f1a"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1740065579,
         "blockNumber": 21888482,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x07584364bd4e6e303640f2532e2185284c1fbabfce03fb0caa0283be0bb3bc39",
+        "transactionIndex": 6,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,10 +70,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -81,8 +83,7 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/leveragesir.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -116,13 +117,22 @@
         "code-history"
       ],
       "note": "Onchain review: SIR Vault 0xb91ae2c8365fd45030aba84a4666c4db074e53e7 created 2025-02-20T15:32:59Z (block 21888482) by 0x5000ff6cc1864690d947b864b9fb0d603e8d1f1a, not the attack-tx sender 0x27defcfa6498f957918f407ed8a58eba2884768c. keccak(eth_getCode) is identical at the creation and incident blocks, no EIP-1967 or beacon slot is set, and both DELEGATECALLs taken in the exploit go to 0x80f18b12a6dbd515c5ad01a2006abf30c5972158, a PUSH20 link-time constant in the vault's runtime that cannot be repointed. Deployment basis is exact."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x07584364bd4e6e303640f2532e2185284c1fbabfce03fb0caa0283be0bb3bc39"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/leveragesir.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {

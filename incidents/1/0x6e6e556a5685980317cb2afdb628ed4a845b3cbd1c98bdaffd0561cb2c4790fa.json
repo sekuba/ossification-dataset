@@ -11,8 +11,8 @@
     "chainId": 1,
     "exploit": {
       "transactionHash": "0x6e6e556a5685980317cb2afdb628ed4a845b3cbd1c98bdaffd0561cb2c4790fa",
-      "blockNumber": null,
-      "transactionIndex": null,
+      "blockNumber": 17875886,
+      "transactionIndex": 1,
       "timestamp": 1691566463
     },
     "attackerAddresses": [
@@ -42,15 +42,15 @@
       "executionAddress": "0x5655c442227371267c165101048e4838a762675d",
       "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x863e572b215fd67c855d973f870266cf827aea5e",
+        "codeHash": "0x3e39655c28a5471e239b05d5b1d4ce8e8dacee06c9f03b7a2501eb0ddd8e3e07"
       },
       "deployment": {
         "timestamp": 1668065171,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 15938118,
+        "transactionHash": "0x743a4dd4b4647a1098875bace2e28d5a4a16a109ec04a00e7f5dcb15e8b40c49",
+        "transactionIndex": 5,
+        "creatorAddress": "0x86b94c96c3e6354e2d6bfc124bbae4425d3132f6"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
@@ -72,10 +72,12 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
@@ -83,7 +85,6 @@
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/earningfram.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -118,13 +119,22 @@
         "code-history"
       ],
       "note": "onchain review: victim re-anchored from implementation 0x863e572b215fd67c855d973f870266cf827aea5e to the proxy the protocol runs at, 0x5655c442227371267c165101048e4838a762675d, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (23501340s -> 14174508s)"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x743a4dd4b4647a1098875bace2e28d5a4a16a109ec04a00e7f5dcb15e8b40c49"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
       "Classification and loss came from the v1 snapshot row originally at protocols/earningfram.json; legacy measurement.status=OK is provenance only.",
-      "The exploit block or transaction index remains unresolved.",
       "The legacy USD loss lacks uniformly structured valuation provenance."
     ],
     "legacy": {
