@@ -14,6 +14,11 @@
       "notes": "LevelReferralControllerV2: claimMultiple allowed repeated claims for the same epoch after an upgrade ~2 weeks earlier.",
       "sources": [
         {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x6aef8bb501a53e290837d4398b34d5d4d881267512cfe78eb9ba7e59f41dad04"
+        },
+        {
           "type": "curated-review",
           "ref": "onchain review (RPC only, BSC): LevelReferralControllerV2 0x9f00fbd6c095d2c542687ed5afb68d9c3fb2f464 created 2023-04-17T14:20:34Z at block 27429090 (ts 1681741234). Immutability check rather than an upgrade scan: eth_getLogs for EIP-1967 Upgraded (topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) over [27429090, incident block 27828716] returns 0 logs; eth_getCode is byte-identical at the creation block and the incident block (9421 bytes both); and disassembling the runtime (skipping PUSH immediates) finds zero DELEGATECALL, CALLCODE, CREATE2 and SELFDESTRUCT opcodes, so the contract cannot execute foreign code and its own code provably never changed. There is therefore no non-standard upgrade channel to recover and the deployment basis is exact. The 'upgrade ~2 weeks earlier' in the notes is this deployment itself - V2 was a fresh contract replacing an earlier referral controller. CONFIRMED: codeAgeSeconds 1201166 (13.9d) unchanged."
         },
@@ -33,7 +38,7 @@
         "upgradeEventCount": 2,
         "lastChangeTimestamp": 1681805771,
         "codeAgeSeconds": 1140904,
-        "basis": "last of 2 upgrade events (onchain)"
+        "basis": "upgrade-events"
       },
       "attacker": "0x61bbd8c1bc09c4f4549f3f77be5ad61a9929412e"
     }

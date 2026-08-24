@@ -31,7 +31,38 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1621617676,
         "codeAgeSeconds": 63622237,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
+      }
+    },
+    {
+      "name": "BabyDogeCoin swapAndLiquify sandwich (second exploit, unchanged code)",
+      "date": "2023-06-21T12:23:34Z",
+      "chain": "bsc",
+      "category": "code-bug",
+      "lossUsd": 100000,
+      "victimContract": "0xc748673057861a797275cd8a068abb95a902e8de",
+      "exploitTx": "0xbaf3e4841614eca5480c63662b41cd058ee5c85dc69198b29e7ab63b84bc866c",
+      "notes": "BabyDoge's unprotected swapAndLiquify internal swap is sandwiched, combined with Venus over-borrow.",
+      "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0xbaf3e4841614eca5480c63662b41cd058ee5c85dc69198b29e7ab63b84bc866c"
+        },
+        {
+          "type": "defihacklabs",
+          "ref": "src/test/2023-06/BabyDogeCoin02_exp.sol@ad353ba25fbb"
+        }
+      ],
+      "attacker": "0xee6764ac7aa45ed52482e4320906fd75615ba1d1",
+      "measurement": {
+        "status": "OK",
+        "incidentTimestamp": 1687350214,
+        "deployTimestamp": 1621617676,
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1621617676,
+        "codeAgeSeconds": 65732538,
+        "basis": "deployment"
       }
     }
   ]

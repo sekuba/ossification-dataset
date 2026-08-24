@@ -9,7 +9,7 @@
       "chain": "base",
       "category": "oracle-manipulation",
       "lossUsd": 1000000,
-      "victimContract": "0xfC41B49d064Ac646015b459C522820DB9472F4B5",
+      "victimContract": "0xfc41b49d064ac646015b459c522820db9472f4b5",
       "exploitTx": "0x190a491c0ef095d5447d6d813dc8e2ec11a5710e189771c24527393a2beb05ac",
       "attacker": "0x6997a8c804642ae2de16d7b8ff09565a5d5658ff",
       "notes": "Moonwell's code worked as written: the Chainlink RSETH/ETH aggregator behind the ChainlinkCompositeOracle returned an absurd rate, so a dust deposit into the mwrsETH market was valued in the millions and Comptroller.borrowAllowed let the attacker borrow wstETH and other assets against it.",
@@ -47,7 +47,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1728685527,
         "codeAgeSeconds": 33549584,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       }
     },
     {
@@ -56,7 +56,7 @@
       "chain": "base",
       "category": "oracle-manipulation",
       "lossUsd": 1780000,
-      "victimContract": "0xEC942bE8A8114bFD0396A5052c36027f2cA6a9d0",
+      "victimContract": "0xec942be8a8114bfd0396a5052c36027f2ca6a9d0",
       "exploitTx": "0x2f4ff77c77ce2a52c80fcd59a4cac4b05f4285afe1f3b92118b0a004a325953c",
       "notes": "Moonwell's cbETH Chainlink oracle reported a faulty cbETH price, letting the attacker liquidate a borrow and arbitrage the difference against Aerodrome's real price.",
       "sources": [
@@ -70,7 +70,7 @@
           "ref": "src/test/2026-02/Moonwell_exp.sol@ad353ba25fbb"
         }
       ],
-      "attacker": "0x0100ab3021dE6e00c39BE16424472164c281C308",
+      "attacker": "0x0100ab3021de6e00c39be16424472164c281c308",
       "measurement": {
         "status": "OK",
         "incidentTimestamp": 1771178675,
@@ -78,7 +78,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1691114329,
         "codeAgeSeconds": 80064346,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       }
     }
   ]

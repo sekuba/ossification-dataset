@@ -19,12 +19,21 @@ An incident row qualifies only if ALL of these hold:
    citing the rate in a `curated-review` source. Keep `lossOther` (e.g.
    `"5.12M ZKP"`) for project tokens and other illiquid assets, whose price at
    the incident is itself a product of the attack; set `lossUsd` null there.
-2. **Identifiable victim contract** — the contract the protocol runs at, which
-   for a proxy is the proxy rather than the implementation behind it. Verify
-   onchain that its creator is neither the attacker nor the attack-tx sender;
-   public analyses sometimes mislabel attacker infrastructure, or an
-   implementation, as the victim.
-3. **Attack transaction** hash. Its block timestamp is the incident time.
+2. **Identifiable victim contract** — the contract containing the exploited
+   flaw, which for a proxy is the proxy rather than the implementation behind
+   it. Verify onchain that its creator is neither the attacker nor the
+   attack-tx sender; public analyses sometimes mislabel attacker
+   infrastructure, an implementation, or a mere asset contract (an LP pair
+   holding the loot) as the victim. A private single-user contract is not a
+   protocol victim.
+3. **Attack transaction** hash. Its block timestamp is the incident time. For
+   an incident with many attack transactions (copycat waves, multi-pool
+   drains), record the earliest well-documented exploit-scale tx and note the
+   alternatives in a `curated-review` source.
+
+A candidate that fails these rules goes into `exclusions.json` with its reason
+(attacker-deployed "victim", no creation info, victim misattributed, …) so it
+is not re-proposed. Rejections never live in `protocols/`.
 
 ## Classify the root cause
 
@@ -43,8 +52,8 @@ One category per row, with a one-sentence evidence `notes`:
 - `governance-design` — legitimately acquired governance power (e.g.
   flash-loaned votes) executed a hostile proposal.
 - `key-compromise` / `offchain-infra` — stolen keys or frontend/infra
-  compromise; contracts behaved as designed. Context rows only: no
-  measurement, never curve input.
+  compromise; contracts behaved as designed. Context rows only: never curve
+  input.
 - `insider-rug` — the deployer/owner drained via openly granted powers or a
   deliberate backdoor. Not a bug.
 
@@ -78,24 +87,33 @@ code before the incident.
    not when it was compiled: measure a proxy from the upgrade that pointed it at
    an implementation, not from that implementation's own deployment.
 
-   Record the basis: `deployment (onchain)`, `last of N upgrade events
-   (onchain)`, or `documented change` — the last with the timestamp, block and
-   method in `documentedLastChange` and the change history in a
+   Record the basis: `deployment`, `upgrade-events` (count in
+   `upgradeEventCount`), or `documented` — the last with the timestamp, block
+   and method in `documentedLastChange` and the change history in a
    `curated-review` source. Set `nonStandardUpgradeArchitecture: true` where
    the victim can change without an EIP-1967 event.
 
 `scripts/verify.mjs protocols/<slug>.json` re-derives steps 1–3 for standard
-EIP-1967 victims; your row must reproduce. `documented change` rows report
-MANUAL and stand on their cited evidence.
+EIP-1967 victims; your row must reproduce. `documented` rows report MANUAL 
+and stand on their cited evidence.
+
+## Curve dedup
+
+The curve counts one observation per `(chain, victimContract, lastChange)`.
+A second exploit of byte-identical code does not add a knot — unless it
+exploited a *different* root-cause flaw discovered independently of the first
+incident, in which case set `independentFlaw: true` on the later row with the
+evidence in `notes`/`sources`. A re-exploit after a code change does count.
 
 ## Add the row
 
 1. Find or create `protocols/<slug>.json` (kebab-case protocol name; see
-   `schema/protocol.schema.json` for the exact shape).
+   `schema/protocol.schema.json` for the exact shape). One file per protocol —
+   append repeat incidents to the existing file.
 2. Fill every required field; cite provenance in `sources` (the attack tx,
    plus a post-mortem or PoC reference).
 3. Validate:
-   - the file parses and matches the schema,
+   - `node scripts/lint.mjs` — schema shape and cross-field invariants,
    - `node scripts/verify.mjs protocols/<slug>.json` returns OK for the row,
    - `node scripts/build-curve.mjs` — review the knot diff it implies.
 

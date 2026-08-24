@@ -5,28 +5,38 @@
   "incidents": [
     {
       "name": "Transit Swap",
-      "date": "2022-10-01T12:00:00Z",
+      "date": "2022-10-01T18:35:54Z",
       "chain": "bsc",
       "category": "code-bug",
       "lossUsd": 21000000,
       "victimContract": "0xed1afc8c4604958c2f38a3408fa63b32e737c428",
-      "exploitTx": null,
+      "exploitTx": "0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189",
       "notes": "Router with arbitrary-call: attacker-controlled call target/data drained user approvals.",
       "sources": [
         {
+          "type": "onchain-tx",
+          "chain": "bsc",
+          "ref": "0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189"
+        },
+        {
           "type": "curated-review",
           "ref": "onchain review (no exploit tx in this row; DeFiHackLabs src/test/2022-10/TransitSwap_exp.sol documents the attack. Incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> bsc block 21808649, 2022-10-01T12:00:00Z). The victim 0xed1afc8c4604958c2f38a3408fa63b32e737c428 (unverified, 2820-byte runtime) was created at bsc block 11986161, 2021-10-22T06:52:16Z. It is not a proxy: disassembly shows no DELEGATECALL in the executable region - the single 0xf4 byte a naive opcode scan reports falls inside the trailing CBOR metadata blob - there is no EIP-1967 Upgraded event, and eth_getCode is byte-identical at the creation block and the incident block, so the deployment basis is exact. Its storage slot 0 holds 0xfab745c5ee6c59c09605a40464232930892ba48c (the deploying EOA) unchanged since creation; the remaining slots are an owner/flag pair and a mapping(address => bool) of authorised callers, i.e. configuration, not code. The measurement does not depend on which half of the pair is taken as the victim: the TransitSwap router DeFiHackLabs labels vulnerable, 0x8785bb8deAE13783b24D7aFE250d42eA7D7e9d72, was deployed by the same EOA two minutes later at 2021-10-22T06:54:44Z (block 11986204), giving the same ~344 day age."
+        },
+        {
+          "type": "curated-review",
+          "ref": "exploit tx backfilled and verified onchain (bsc block 21816546, victim in receipt logs), matching the DeFiHackLabs PoC"
         }
       ],
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1664625600,
+        "incidentTimestamp": 1664649354,
         "deployTimestamp": 1634885536,
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1634885536,
-        "codeAgeSeconds": 29740064,
-        "basis": "deployment (onchain)"
-      }
+        "codeAgeSeconds": 29763818,
+        "basis": "deployment"
+      },
+      "attacker": "0x5f0b31aa37bce387a8b21554a8360c6b8698fbef"
     },
     {
       "name": "Transit router exactInputV3Swap arbitrary pool call",
@@ -34,7 +44,7 @@
       "chain": "bsc",
       "category": "code-bug",
       "lossUsd": 43845,
-      "victimContract": "0x00000047bB99ea4D791bb749D970DE71EE0b1A34",
+      "victimContract": "0x00000047bb99ea4d791bb749d970de71ee0b1a34",
       "exploitTx": "0x93ae5f0a121d5e1aadae052c36bc5ecf2d406d35222f4c6a5d63fef1d6de1081",
       "attacker": "0xf7552ba0ee5bed0f306658f4a1201f421d703898",
       "notes": "The Transit router's exactInputV3Swap path treats the caller-supplied pools array as trusted call targets, so the attacker pointed the first hop at its own contract and drained the router's held balances.",
@@ -64,7 +74,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1693464230,
         "codeAgeSeconds": 9573482,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       }
     }
   ]

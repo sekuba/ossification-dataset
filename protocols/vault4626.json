@@ -9,9 +9,9 @@
       "chain": "base",
       "category": "code-bug",
       "lossUsd": 21346,
-      "victimContract": "0x72dbAA8A09d71D09c6De0de439968e1E7c122020",
+      "victimContract": "0x72dbaa8a09d71d09c6de0de439968e1e7c122020",
       "exploitTx": "0x2f2e12fbdf541c28f3667153e5338f73a313096338dc5ca592453566debcd790",
-      "attacker": "0xA27eAE743Cd8C03E9b7c25ebF43DADbBC6Df9bFA",
+      "attacker": "0xa27eae743cd8c03e9b7c25ebf43dadbbc6df9bfa",
       "notes": "totalAssets() quotes idle non-asset WETH sitting in the vault into USDC asset terms while redeem() pays the redeemer both the USDC asset value and the underlying WETH itself, so the attacker deposited flash-loaned USDC for nearly all the shares, donated WETH to inflate totalAssets, and redeemed to take the donated WETH back plus the vault's share of it - a double-count in the vault's own accounting.",
       "sources": [
         {
@@ -43,7 +43,7 @@
         "upgradeEventCount": 8,
         "lastChangeTimestamp": 1781169473,
         "codeAgeSeconds": 1537024,
-        "basis": "last of 8 upgrade events (onchain)"
+        "basis": "upgrade-events"
       }
     }
   ]

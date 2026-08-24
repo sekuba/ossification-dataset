@@ -9,10 +9,15 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 14500000,
-      "victimContract": "0xE2fE530C047f2d85298b07D9333C05737f1435fB",
+      "victimContract": "0xe2fe530c047f2d85298b07d9333c05737f1435fb",
       "exploitTx": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce",
       "notes": "LockToken proxy: migrate() to Uniswap v3 (added in a recent upgrade) had insufficient validation of lock ownership/params. Age measured via Upgraded events on the proxy.",
       "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce"
+        },
         {
           "type": "curated-review",
           "ref": "onchain re-verification (RPC only): LockToken proxy 0xE2fE530C047f2d85298b07D9333C05737f1435fB created 2021-07-28T12:36:46Z at block 12914481. Standard EIP-1967 proxy: eth_getLogs for Upgraded (topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) over [12914481, 15839275] returns exactly 7 events - 2021-08-05T06:44:50Z 0x3ef7442df454ba6b7c1deec8ddf29cfb2d6e56c7, 2021-08-06T06:54:04Z 0x767a2180335caaf060ea4ca4e858efc6d7f1f5e8, 2022-05-17T08:47:08Z 0x62bec667dc3c9eba0e16578d11604cf01a7c8b91, 2022-07-15T12:49:20Z 0xb8a00e3f653c4ea6a38eee379f827361e0a9a5aa, 2022-08-15T15:13:03Z 0x2a20a12216cc43d4469fc94ae051f245a02c7d3a, 2022-08-27T09:21:17Z 0x13f23dbea59e4d9009f99258d45eed9527d204a6, and 2022-09-06T06:31:27Z 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 (block 15482466, tx 0x027468bdcc23f7e17e9c79a6a1b89e749b0ca9675422869900ec1257315284ac, ts 1662445887) - the upgrade that shipped the Uniswap-v3 migrate() path. The stored upgradeEventCount 7, lastChangeTimestamp 1662445887 and codeAgeSeconds 4426113 reproduce exactly. CONFIRMED unchanged."
@@ -29,7 +34,7 @@
         "upgradeEventCount": 7,
         "lastChangeTimestamp": 1662445887,
         "codeAgeSeconds": 4413476,
-        "basis": "last of 7 upgrade events (onchain)"
+        "basis": "upgrade-events"
       },
       "attacker": "0x161cebb807ac181d5303a4ccec2fc580cc5899fd"
     }

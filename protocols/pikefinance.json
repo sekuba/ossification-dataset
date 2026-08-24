@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2024-04/PikeFinance_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "attacker-event correction: of the 4 Upgraded events before the incident, the last (block 19771059) is emitted by the exploit tx itself (attacker initialize+upgradeToAndCall); the last legitimate change is the operator 0xb1ea97c9f68978905fb1bf5089e71a073bc4f5c8 upgrade at block 19756154, 2024-04-28T20:19:35Z - the post-first-hack fix whose new implementation was left uninitialized. Age 2.1 days (previously misrecorded as 0s)"
         }
       ],
       "attacker": "0x19066f7431df29a0910d287c8822936bb7d89e23",
@@ -28,10 +32,10 @@
         "status": "OK",
         "incidentTimestamp": 1714515551,
         "deployTimestamp": 1706635211,
-        "upgradeEventCount": 4,
-        "lastChangeTimestamp": 1714515551,
-        "codeAgeSeconds": 0,
-        "basis": "last of 4 upgrade events (onchain)"
+        "upgradeEventCount": 3,
+        "lastChangeTimestamp": 1714335575,
+        "codeAgeSeconds": 179976,
+        "basis": "upgrade-events"
       }
     }
   ]

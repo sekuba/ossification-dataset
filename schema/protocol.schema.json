@@ -2,21 +2,19 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Ossification dataset protocol file",
   "type": "object",
-  "required": [
-    "slug",
-    "name",
-    "incidents"
-  ],
+  "required": ["slug", "name", "incidents"],
+  "additionalProperties": false,
   "properties": {
+    "$schema": { "type": "string" },
     "slug": {
       "type": "string",
-      "pattern": "^[a-z0-9-]+$"
+      "pattern": "^[a-z0-9-]+$",
+      "description": "must equal the filename without .json"
     },
-    "name": {
-      "type": "string"
-    },
+    "name": { "type": "string" },
     "incidents": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "required": [
@@ -24,22 +22,24 @@
           "date",
           "chain",
           "category",
+          "lossUsd",
+          "victimContract",
+          "exploitTx",
+          "notes",
           "sources",
           "measurement"
         ],
+        "additionalProperties": false,
         "properties": {
-          "name": {
-            "type": "string"
-          },
+          "name": { "type": "string" },
           "date": {
             "type": "string",
-            "description": "UTC; exact block timestamp when the exploit tx is known, else the documented date"
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "description": "UTC block timestamp of exploitTx; the documented time for rows without one"
           },
-          "chain": {
-            "type": "string"
-          },
+          "chain": { "type": "string" },
           "category": {
-            "description": "Root cause. Only code-bug rows feed the score curve. oracle-manipulation / economic-design / governance-design / insider-rug are measured boundary rows (they document why they are NOT code bugs). key-compromise / offchain-infra are a non-exhaustive context sample with no measurable code. not-classified marks rows excluded before classification (see measurement.status).",
+            "description": "Root cause. Only code-bug rows feed the score curve. oracle-manipulation / economic-design / governance-design / insider-rug are measured boundary rows (they document why they are NOT code bugs). key-compromise / offchain-infra are a non-exhaustive context sample; they never feed the curve.",
             "enum": [
               "code-bug",
               "oracle-manipulation",
@@ -47,109 +47,132 @@
               "governance-design",
               "key-compromise",
               "insider-rug",
-              "offchain-infra",
-              "not-classified"
+              "offchain-infra"
             ]
           },
           "lossUsd": {
-            "type": [
-              "number",
-              "null"
-            ],
-            "description": "high-confidence USD loss, at least 1000 (USD-pegged stables at 1:1); null when no such figure exists, in which case use lossOther"
+            "type": ["number", "null"],
+            "minimum": 1000,
+            "description": "high-confidence USD loss (USD-pegged stables at 1:1); null when no such figure exists, in which case lossOther is required"
           },
           "lossOther": {
             "type": "string",
-            "description": "the loss in its reported non-USD units, e.g. \"513,774 ETH permanently frozen\"; the primary figure when no high-confidence USD conversion exists (lossUsd null), and useful context alongside lossUsd otherwise"
+            "description": "the loss in its reported non-USD units, e.g. \"513,774 ETH permanently frozen\"; the primary figure when lossUsd is null, useful context otherwise"
           },
           "victimContract": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "the contract containing the exploited flaw"
+            "type": ["string", "null"],
+            "pattern": "^0x[0-9a-f]{40}$",
+            "description": "the contract containing the exploited flaw (the proxy, for proxied protocols); lowercase"
           },
           "exploitTx": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "onchain anchor: the attack transaction; its block timestamp is the incident time"
+            "type": ["string", "null"],
+            "pattern": "^0x[0-9a-f]{64}$",
+            "description": "onchain anchor: the attack transaction; its block timestamp is the incident time; lowercase"
           },
           "attacker": {
-            "type": "string"
-          },
-          "notes": {
             "type": "string",
-            "description": "one-sentence root-cause evidence"
+            "pattern": "^0x[0-9a-f]{40}$",
+            "description": "attack-tx sender (or documented attacker EOA); lowercase; used to check the victim is not attacker-deployed and to exclude attacker-caused upgrade events"
           },
+          "notes": { "type": "string", "description": "one-sentence root-cause evidence" },
           "documentedLastChange": {
             "type": "string",
             "description": "for architectures emitting no standard upgrade event: the documented change date/tx the age is measured from"
           },
           "nonStandardUpgradeArchitecture": {
             "type": "boolean",
-            "description": "diamond/module-registry/beacon victims whose changes emit no EIP-1967 event; age may be overstated"
+            "description": "diamond/module-registry/beacon victims whose changes emit no EIP-1967 event; age may be overstated unless documentedLastChange pins it"
+          },
+          "independentFlaw": {
+            "type": "boolean",
+            "description": "curve-dedup override: set true (with evidence in notes/sources) only when this incident exploited a DIFFERENT root-cause flaw than an earlier incident on the same (chain, victimContract, lastChange) key and was discovered independently of it; both then count as curve knots"
           },
           "sources": {
             "type": "array",
+            "minItems": 1,
             "items": {
               "type": "object",
-              "required": [
-                "type",
-                "ref"
-              ],
+              "required": ["type", "ref"],
+              "additionalProperties": false,
               "properties": {
-                "type": {
-                  "enum": [
-                    "onchain-tx",
-                    "post-mortem",
-                    "defihacklabs",
-                    "curated-review"
-                  ]
-                },
-                "chain": {
-                  "type": "string"
-                },
-                "ref": {
-                  "type": "string"
-                }
+                "type": { "enum": ["onchain-tx", "post-mortem", "defihacklabs", "curated-review"] },
+                "chain": { "type": "string" },
+                "ref": { "type": "string" }
               }
             }
           },
           "measurement": {
             "type": "object",
-            "required": [
-              "status"
-            ],
+            "required": ["status"],
+            "additionalProperties": false,
             "properties": {
               "status": {
-                "type": "string",
-                "description": "OK, or the exclusion reason (ATTACKER_DEPLOYED, NO_CREATION_INFO, DEPLOY_AFTER_INCIDENT, NOT_MEASURED, ...)"
+                "enum": ["OK", "SCOPE_ONLY"],
+                "description": "OK = measured from onchain evidence. SCOPE_ONLY = context row with no measurable victim code (non-EVM, no pinned address, or category without a code victim); never a curve input. Rejected candidates live in exclusions.json, not here."
               },
-              "incidentTimestamp": {
-                "type": "integer"
-              },
-              "deployTimestamp": {
-                "type": "integer"
-              },
+              "incidentTimestamp": { "type": "integer" },
+              "deployTimestamp": { "type": "integer" },
               "upgradeEventCount": {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0,
+                "description": "pre-incident upgrade events on the victim, excluding events caused by the attacker (an attacker's own initialize/upgrade is part of the exploit, not a code change)"
               },
-              "lastChangeTimestamp": {
-                "type": "integer"
-              },
+              "lastChangeTimestamp": { "type": "integer" },
               "codeAgeSeconds": {
                 "type": "integer",
-                "description": "incident - last change; the curve knot"
+                "minimum": 0,
+                "description": "incidentTimestamp - lastChangeTimestamp; the curve knot"
               },
               "basis": {
-                "type": "string",
-                "description": "deployment (onchain) | last of N upgrade events (onchain) | documented change"
+                "enum": ["deployment", "upgrade-events", "documented"],
+                "description": "deployment = immutable or never-upgraded victim, measured from creation; upgrade-events = measured from the last standard pre-incident upgrade event (count in upgradeEventCount); documented = non-standard architecture, measured from documentedLastChange"
               }
             }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "measurement": { "properties": { "status": { "const": "OK" } }, "required": ["status"] } } },
+            "then": {
+              "properties": {
+                "measurement": {
+                  "required": [
+                    "status",
+                    "incidentTimestamp",
+                    "deployTimestamp",
+                    "upgradeEventCount",
+                    "lastChangeTimestamp",
+                    "codeAgeSeconds",
+                    "basis"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "category": { "const": "code-bug" },
+                "measurement": { "properties": { "status": { "const": "OK" } }, "required": ["status"] }
+              },
+              "required": ["category"]
+            },
+            "then": {
+              "properties": {
+                "victimContract": { "type": "string" },
+                "exploitTx": { "type": "string" }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "lossUsd": { "const": null } } },
+            "then": { "required": ["lossOther"] }
+          },
+          {
+            "if": { "properties": { "measurement": { "properties": { "basis": { "const": "documented" } }, "required": ["basis"] } } },
+            "then": { "required": ["documentedLastChange"] }
+          }
+        ]
       }
     }
   }

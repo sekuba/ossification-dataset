@@ -10,7 +10,7 @@
       "category": "code-bug",
       "lossUsd": 1579000,
       "lossOther": "790,148 USDC borrowed from Morpho Blue and never repaid + ~282.84 ETH taken out of the Uniswap v4/v3 K pools",
-      "victimContract": "0x010700AB046Dd8e92b0e3587842080Df36364ed3",
+      "victimContract": "0x010700ab046dd8e92b0e3587842080df36364ed3",
       "exploitTx": "0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017",
       "attacker": "0x6eb3731b52c8556073baa13d9e35d5a6713fc8ab",
       "notes": "The K token's UUPS/ERC-1967 proxy was deployed with its implementation slot left uninitialized in a separate transaction, so two seconds after creation an attacker wrote a clandestine implementation into the slot and masked it with a spoofed Upgraded event, and 113 days later that hidden implementation was used to write 1,000,000 K directly into the attacker's balance slot (no Transfer log, totalSupply untouched), which was dumped into the Uniswap v4/v3 pools and posted as Morpho Blue collateral to borrow USDC that was never repaid.",
@@ -42,7 +42,7 @@
         "upgradeEventCount": 4,
         "lastChangeTimestamp": 1744136122,
         "codeAgeSeconds": 8000269,
-        "basis": "documented change"
+        "basis": "documented"
       }
     }
   ]

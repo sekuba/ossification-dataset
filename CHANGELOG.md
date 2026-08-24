@@ -1,5 +1,14 @@
 # Changelog
 
+## curve v2026-08.2 (2026-08-24)
+
+757 incidents across 721 protocol files, 742 measured; 624 curve knots (from
+629). $7.10bn in recorded losses. A correctness and auditability release: no
+new candidate sweeps, every change re-verified onchain.
+
+Quantiles moved within noise: median 42.3d -> 41.3d, under-1-day
+12.4% -> 12.2%, over-1-year 22.6% -> 22.1%.
+
 ## curve v2026-08.1 (2026-08-23)
 
 767 incidents across 736 protocols, 744 measured; 629 curve knots (up from

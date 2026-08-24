@@ -5,11 +5,11 @@
   "incidents": [
     {
       "name": "Velocore ConstantProductPool fee underflow",
-      "date": "2024-06-02T02:37:29Z",
+      "date": "2024-06-01T22:37:29Z",
       "chain": "linea",
       "category": "code-bug",
       "lossUsd": 6800000,
-      "victimContract": "0xe2c67A9B15e9E7FF8A9Cb0dFb8feE5609923E5DB",
+      "victimContract": "0xe2c67a9b15e9e7ff8a9cb0dfb8fee5609923e5db",
       "exploitTx": "0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
       "notes": "Velocore's ConstantProductPool computed its swap fee with an unchecked multiplier that overflows once a single withdrawal takes effectively the whole LP supply, so a flash-loaned burn of the USDC/ETH VLP returned far more than the pool held and drained it through the vault's execute path.",
       "sources": [
@@ -38,7 +38,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1691213069,
         "codeAgeSeconds": 26068380,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       },
       "attacker": "0x8cdc37ed79c5ef116b9dc2a53cb86acaca3716bf"
     }

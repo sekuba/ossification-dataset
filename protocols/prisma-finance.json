@@ -9,10 +9,15 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 11600000,
-      "victimContract": "0xcC7218100da61441905e0c327749972e3cBeE9EE",
+      "victimContract": "0xcc7218100da61441905e0c327749972e3cbee9ee",
       "exploitTx": "0x00c503b595946bccaea3d58025b5f9b3726177bbdc9674e634244135282116c7",
       "notes": "MigrateTroveZap: onFlashLoan did not validate initiator/params, letting anyone migrate (and re-open with attacker params) other users' troves.",
       "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x00c503b595946bccaea3d58025b5f9b3726177bbdc9674e634244135282116c7"
+        },
         {
           "type": "curated-review",
           "ref": "onchain review (no exploit tx in this row; DeFiHackLabs src/test/2024-03/Prisma_exp.sol names the vulnerable contract and the attack tx 0x00c503b595946bccaea3d58025b5f9b3726177bbdc9674e634244135282116c7. Incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 19532470, 2024-03-28T12:00:00Z). VICTIM CORRECTED: this row previously pointed at 0xB8FA880840A64c25318989B907cCb58FD7A324Df, which is not the MigrateTroveZap described in the notes but a Prisma ConvexDepositToken - an EIP-1167 clone whose 45-byte runtime hardcodes the ConvexDepositToken master 0x838a35e3a63df3cd27d321f87980f17f51218fa1 (both verified under that name). The MigrateTroveZap is 0xcC7218100da61441905e0c327749972e3cBeE9EE (Etherscan-verified as `MigrateTroveZap`), created 2024-03-20T08:30:35Z at block 19474738 by tx 0xc8d4059c4394812b142dc88a8a8534687bb8857c10f2093bffc9c44a90ee6f56 from 0xd8531a94100f15af7521a7b6e724ac4959e0a025 (a Prisma deployer, also the deployer of the ConvexDepositToken master; not the attacker). The zap is immutable: zero DELEGATECALL opcodes in its runtime, no EIP-1967 Upgraded event, and byte-identical eth_getCode at the creation block and the incident block, so the deployment basis is exact. Code age falls from 122.0 days (measured against the wrong contract) to 703765s, ~8.1 days - the unvalidated onFlashLoan shipped eight days before it was exploited."
@@ -29,7 +34,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1710923435,
         "codeAgeSeconds": 701676,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       },
       "attacker": "0x7e39e3b3ff7adef2613d5cc49558eab74b9a4202"
     }

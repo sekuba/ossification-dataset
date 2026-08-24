@@ -9,7 +9,7 @@
       "chain": "bsc",
       "category": "code-bug",
       "lossUsd": 230000,
-      "victimContract": "0x564D4126AF2B195fFAa7fB470ED658b1D9D07A54",
+      "victimContract": "0x564d4126af2b195ffaa7fb470ed658b1d9d07a54",
       "exploitTx": "0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0",
       "attacker": "0x4645863205b47a0a3344684489e8c446a437d66c",
       "notes": "buyFor() accepts an arbitrary beneficiary and was called ~2810 times with the pool contract itself as the buyer, inflating the Solidity 0.6.8 unchecked dividend accounting so a single flash-loaned buy/sell/withdraw round trip drained the WBNB reserve.",
@@ -39,7 +39,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1615344835,
         "codeAgeSeconds": 111679023,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       }
     },
     {
@@ -48,7 +48,7 @@
       "chain": "bsc",
       "category": "code-bug",
       "lossUsd": 15813,
-      "victimContract": "0xAdEfb902CaB716B8043c5231ae9A50b8b4eE7c4e",
+      "victimContract": "0xadefb902cab716b8043c5231ae9a50b8b4ee7c4e",
       "exploitTx": "0x7226b3947c7e8651982e5bd777bca52d03ea31d19b515dec123595a4435ae22c",
       "attacker": "0x2dea406bb3bea68d6be8d9ef0071fdf63082fb52",
       "notes": "donatePool() credits the donated WBNB to shareholders immediately and the same transaction can buy in and sell out, so a flash-loaned donate -> buy -> sell -> withdraw cycle returned more WBNB than it consumed.",
@@ -78,7 +78,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1625698289,
         "codeAgeSeconds": 124619001,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       }
     }
   ]

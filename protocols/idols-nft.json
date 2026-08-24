@@ -9,9 +9,9 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 310658,
-      "victimContract": "0x439cac149B935AE1D726569800972E1669d17094",
+      "victimContract": "0x439cac149b935ae1d726569800972e1669d17094",
       "exploitTx": "0x5e989304b1fb61ea0652db4d0f9476b8882f27191c1f1d2841f8977cb8c5284c",
-      "attacker": "0xE546480138D50Bb841B204691C39cC514858d101",
+      "attacker": "0xe546480138d50bb841b204691c39cc514858d101",
       "notes": "IdolMain paid out accrued stETH rewards to both the sender and the receiver on every NFT transfer, so safeTransferFrom(self, self, tokenId) called in a loop from a constructor (which also bypasses the Address.isContract() guard) collected rewardPerGod repeatedly without ever giving up the token.",
       "sources": [
         {
@@ -39,7 +39,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1646180663,
         "codeAgeSeconds": 90695256,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       }
     }
   ]

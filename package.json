@@ -1,0 +1,12 @@
+{
+  "name": "ossification-dataset",
+  "private": true,
+  "type": "module",
+  "description": "Onchain-verified exploited-code-age dataset behind L2BEAT's ossification score",
+  "scripts": {
+    "lint": "node scripts/lint.mjs",
+    "curve": "node scripts/build-curve.mjs",
+    "verify": "node scripts/verify.mjs --all",
+    "test": "node scripts/lint.mjs && node scripts/build-curve.mjs --check-latest"
+  }
+}

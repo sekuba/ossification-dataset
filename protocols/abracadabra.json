@@ -5,14 +5,19 @@
   "incidents": [
     {
       "name": "Abracadabra (CauldronV4)",
-      "date": "2024-01-30T12:00:00Z",
+      "date": "2024-01-30T10:14:35Z",
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 6500000,
-      "victimContract": "0x7259e152103756e1616A77Ae982353c3751A6a90",
-      "exploitTx": null,
+      "victimContract": "0x7259e152103756e1616a77ae982353c3751a6a90",
+      "exploitTx": "0x26a83db7e28838dd9fee6fb7314ae58dcc6aee9a20bf224c386ff5e80f7e4cf2",
       "notes": "CauldronV4 (yvcrvSTETH): rounding drift in userBorrowPart accounting exploited to zero out borrow shares.",
       "sources": [
+        {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0x26a83db7e28838dd9fee6fb7314ae58dcc6aee9a20bf224c386ff5e80f7e4cf2"
+        },
         {
           "type": "curated-review",
           "ref": "onchain review (no exploit tx in this row; DeFiHackLabs src/test/2024-01/MIMSpell2_exp.sol names the same victim. Incident block located by binary-searching eth_getBlockByNumber to measurement.incidentTimestamp -> ethereum block 19119184, 2024-01-30T12:00:00Z). The victim 0x7259e152103756e1616A77Ae982353c3751A6a90 is an EIP-1167 minimal proxy created at block 16520538, 2023-01-30T15:28:47Z; its 45-byte runtime (0x363d3d373d3d3d363d73c4113ae18e0d3213c6a06947a2ffc70ad3517c775af43d82803e903d91602b57fd5bf3) hardcodes the CauldronV4 master 0xc4113ae18e0d3213c6a06947a2ffc70ad3517c77 in the bytecode rather than in storage, so the delegate target cannot be repointed. The clone runtime is byte-identical at its creation block and the incident block, and the master (created 2023-01-26T02:59:11Z, block 16488159) itself contains zero DELEGATECALL opcodes and emits no EIP-1967 Upgraded event. The effective code therefore never changed after the clone was deployed and the deployment basis is exact."
@@ -20,17 +25,22 @@
         {
           "type": "curated-review",
           "ref": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis (re-check of the existing note). The clone's 45-byte runtime and the CauldronV4 master 0xc4113ae18e0d3213c6a06947a2ffc70ad3517c77's 22 kB runtime are each byte-identical at 13 sample points across [16520538, 19119184], so neither the hardcoded delegate target nor the master's code moved before the incident."
+        },
+        {
+          "type": "curated-review",
+          "ref": "exploit tx backfilled and verified onchain (block 19118660): a contract-creation tx deploying and running the exploit, CauldronV4 victim in receipt logs, matching the DeFiHackLabs MIMSpell2 PoC"
         }
       ],
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1706616000,
+        "incidentTimestamp": 1706609675,
         "deployTimestamp": 1675092527,
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1675092527,
-        "codeAgeSeconds": 31523473,
-        "basis": "deployment (onchain)"
-      }
+        "codeAgeSeconds": 31517148,
+        "basis": "deployment"
+      },
+      "attacker": "0x87f585809ce79ae39a5fa0c7c96d0d159eb678c9"
     }
   ]
 }

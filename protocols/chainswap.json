@@ -9,9 +9,9 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 800000,
-      "victimContract": "0x7fe68FC06e1A870DcbeE0acAe8720396DC12FC86",
+      "victimContract": "0x7fe68fc06e1a870dcbee0acae8720396dc12fc86",
       "exploitTx": "0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be",
-      "attacker": "0x941a9E3B91E1cc015702B897C512D265fAE88A9c",
+      "attacker": "0x941a9e3b91e1cc015702b897c512d265fae88a9c",
       "notes": "The bridge's receive() recovered a signer with ecrecover but never required it to equal the caller-supplied signatures[i].signatory, so any garbage signature passed the quota/duplicate checks and released bridged tokens.",
       "sources": [
         {
@@ -43,7 +43,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1620158967,
         "codeAgeSeconds": 5114023,
-        "basis": "documented change"
+        "basis": "documented"
       },
       "documentedLastChange": "2021-05-04T20:09:27Z (block 12369818, tx 0x2c3d078fcaea7ffe95abd2869ceac68db1b525c5278082d14f88d315ea6d2595): ProxyFactory 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 productImplementations('TokenMapped') changed from 0x3c894caf21f18f42d8d06daf26983c4b6a32fc1c to 0xec2c74c9e2457d328bc6216858280ea13e740e8a, the implementation the proxy executed at the incident",
       "nonStandardUpgradeArchitecture": true
@@ -54,9 +54,9 @@
       "chain": "bsc",
       "category": "code-bug",
       "lossUsd": 4400000,
-      "victimContract": "0x089165ac9a7Bf61833Da86268F34A01652543466",
+      "victimContract": "0x089165ac9a7bf61833da86268f34a01652543466",
       "exploitTx": "0x83b4adaf73ad34c5c53aa9b805579ed74bc1391c5297201e6457cde709dff723",
-      "attacker": "0xEda5066780dE29D00dfb54581A707ef6F52D8113",
+      "attacker": "0xeda5066780de29d00dfb54581a707ef6f52d8113",
       "notes": "The bridge's receive(fromChainId,to,nonce,volume,Signature[]) counted the supplied signature entries towards its threshold without checking that each signatory was an authorised bridge signer, so anyone could mint bridged tokens to themselves.",
       "nonStandardUpgradeArchitecture": true,
       "documentedLastChange": "2021-07-07T02:36:25Z (block 8935896): ProxyFactory 0xbf515ff38d55737c56d62e8b6a8eea322ec38aa5 productImplementations('MappingToken') changed from 0xdcb4d17894bd508c0d00b6ddf00ea60e413ef98b to 0xe92998f47118335ba33d1eba87282584f53519b5, the implementation the proxy executed at the incident",
@@ -86,7 +86,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1625625385,
         "codeAgeSeconds": 319265,
-        "basis": "documented change"
+        "basis": "documented"
       }
     }
   ]

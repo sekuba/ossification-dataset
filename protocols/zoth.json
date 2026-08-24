@@ -9,9 +9,9 @@
       "chain": "ethereum",
       "category": "key-compromise",
       "lossUsd": 8290000,
-      "victimContract": "0x82f3a0392F58C50fa90542519832471BaE93e43e",
+      "victimContract": "0x82f3a0392f58c50fa90542519832471bae93e43e",
       "exploitTx": "0x33bf669d125d11c432ac9b52b9d56161101c072fd8b0ac2aa390f5760fb50ca4",
-      "attacker": "0x3b33c5Cd948Be5863b72cB3D6e9C0b36E67d01E5",
+      "attacker": "0x3b33c5cd948be5863b72cb3d6e9c0b36e67d01e5",
       "notes": "No contract flaw: Zoth's deployer key held the UUPS upgrade authority for the USD0PPSubVaultUpgradeable proxy, and whoever obtained it called upgradeToAndCall() to install a self-authored implementation with an unrestricted withdraw(), emptying the vault 36 seconds later.",
       "sources": [
         {
@@ -39,7 +39,7 @@
         "upgradeEventCount": 7,
         "lastChangeTimestamp": 1742546819,
         "codeAgeSeconds": 36,
-        "basis": "last of 7 upgrade events (onchain)"
+        "basis": "upgrade-events"
       }
     }
   ]

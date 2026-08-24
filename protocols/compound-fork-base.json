@@ -1,15 +1,15 @@
 {
   "$schema": "../schema/protocol.schema.json",
-  "slug": "compoundfork-exploit-sol",
-  "name": "CompoundFork_exploit.sol",
+  "slug": "compound-fork-base",
+  "name": "Unnamed Compound fork (Base)",
   "incidents": [
     {
-      "name": "CompoundFork_exploit.sol",
+      "name": "Unnamed Base Compound fork uSUI oracle manipulation",
       "date": "2024-10-24T23:44:33Z",
       "chain": "base",
       "category": "oracle-manipulation",
       "lossUsd": 1000000,
-      "victimContract": "0x93D619623abc60A22Ee71a15dB62EedE3EF4dD5a",
+      "victimContract": "0x93d619623abc60a22ee71a15db62eede3ef4dd5a",
       "exploitTx": "0x6ab5b7b51f780e8c6c5ddaf65e9badb868811a95c1fd64e86435283074d3149e",
       "notes": "uSUI spot price manipulated via UniV3 swap, consumed by lending oracle to mint overvalued collateral and over-borrow",
       "sources": [
@@ -25,6 +25,10 @@
         {
           "type": "curated-review",
           "ref": "onchain review: victim 0x93D619623abc60A22Ee71a15dB62EedE3EF4dD5a is an immutable oracle (zero DELEGATECALL, identical codehash at creation and incident, empty EIP-1967 slot) that emits only FeedSet(address,address,address) x18; measured from the FeedSet that configured the exploited cSUI/uSUI market rather than from deployment, per CONTRIBUTING's treatment of onchain configuration as part of the victim's code. Last FeedSet of any kind was 2024-10-21T12:11:17Z"
+        },
+        {
+          "type": "curated-review",
+          "ref": "protocol identity: no public name exists - the victim and its markets are unverified on Basescan, the DeFiHackLabs PoC calls it an unknown attack, and BlockSec Phalcon describes it as an unknown Compound fork on Base with non-open-source contracts"
         }
       ],
       "attacker": "0x81d5187c8346073b648f2d44b9e269509513aae2",
@@ -36,7 +40,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1729264741,
         "codeAgeSeconds": 548732,
-        "basis": "documented change"
+        "basis": "documented"
       },
       "documentedLastChange": "2024-10-18T15:19:01Z (block 21237697): FeedSet(cToken=0xA2092F9A2a5dD84D6DF7d175673eC8A7357C551B cSUI, underlying=0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4 uSUI, feed=0xc112e41c1094ff7fbf9e5dc0d1026103542e7e0c) on the victim oracle - the install of the manipulable price source for the exploited market"
     }

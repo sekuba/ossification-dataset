@@ -9,9 +9,9 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 1900000,
-      "victimContract": "0x10B5F02956d242aB770605D59B7D27E51E45774C",
+      "victimContract": "0x10b5f02956d242ab770605d59b7d27e51e45774c",
       "exploitTx": "0x2bb6d2ca3b52a01ff9ec01c931f68762ded9a05693ea65d911a20602eea02763",
-      "attacker": "0xFDd9b0A7e7e16b5Fd48a3D1e242aF362bC81bCaa",
+      "attacker": "0xfdd9b0a7e7e16b5fd48a3d1e242af362bc81bcaa",
       "notes": "collectFees() has no nonReentrant guard and pays out fee tokens before updating lock accounting, so a malicious token that re-enters during the fee transfer created free locks and let the attacker withdraw other projects' locked LP and tokens.",
       "sources": [
         {
@@ -39,7 +39,7 @@
         "upgradeEventCount": 2,
         "lastChangeTimestamp": 1707279791,
         "codeAgeSeconds": 27146544,
-        "basis": "last of 2 upgrade events (onchain)"
+        "basis": "upgrade-events"
       }
     }
   ]

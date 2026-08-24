@@ -9,7 +9,7 @@
       "chain": "base",
       "category": "code-bug",
       "lossUsd": 53000,
-      "victimContract": "0x26fe408BbD7A490fEB056DA8e2D1e007938E5685",
+      "victimContract": "0x26fe408bbd7a490feb056da8e2d1e007938e5685",
       "exploitTx": "0xd962d397a7f8b3aadce1622e705b9e33b430e86e0d306d6fb8ccbc5957b4185c",
       "attacker": "0x5aa27d556f898846b9bad32f0cdba5b1f8bc3144",
       "notes": "CAROLProtocol.sell() routed the payout through swapExactTokensForETH, which calls the seller's receive() before the contract's ethReserved bookkeeping is finalised, so re-entering from that callback let a bond position funded by chained flash loans be sold against a manipulated reserve figure.",
@@ -39,7 +39,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1694093523,
         "codeAgeSeconds": 7255424,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       }
     }
   ]

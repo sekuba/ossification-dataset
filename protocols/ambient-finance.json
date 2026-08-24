@@ -9,9 +9,9 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 110600,
-      "victimContract": "0xAaAaAAAaA24eEeb8d57D431224f73832bC34f688",
+      "victimContract": "0xaaaaaaaaa24eeeb8d57d431224f73832bc34f688",
       "exploitTx": "0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52",
-      "attacker": "0x0000000000037E625B2502C26029Aea237f102aF",
+      "attacker": "0x0000000000037e625b2502c26029aea237f102af",
       "notes": "Flash-loaned WETH deposited as CrocSwapDex native surplus collateral, then a tick-by-tick walk of the ETH/USDC curve with a narrow mint-and-harvest let the attacker disburse more surplus than was deposited, exposing a surplus-collateral accounting flaw in the dex.",
       "nonStandardUpgradeArchitecture": true,
       "sources": [
@@ -40,7 +40,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1708990415,
         "codeAgeSeconds": 71855580,
-        "basis": "documented change"
+        "basis": "documented"
       },
       "documentedLastChange": "2024-02-26T23:33:35Z (block 19315038): last CrocSwapDex callpath sidecar install before the incident; the WarmPath sidecar carrying surplus-collateral accounting (callpath 1) was reinstalled 21 minutes earlier at 2024-02-26T23:12:47Z, block 19314934"
     }

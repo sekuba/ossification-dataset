@@ -9,7 +9,7 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 825000,
-      "victimContract": "0x53FbcADa1201A465740F2d64eCdF6FAC425f9030",
+      "victimContract": "0x53fbcada1201a465740f2d64ecdf6fac425f9030",
       "exploitTx": "0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392",
       "notes": "Aave-fork empty-market donation inflated liquidity index plus rounding error to over-withdraw shares",
       "sources": [
@@ -27,7 +27,7 @@
           "ref": "Onchain review: the victim is an Aave-v3-style InitializableImmutableAdminUpgradeabilityProxy created 2023-08-07T05:31:59Z (block 17861190) by 0x17002566cc3508dfa3c0fa52fcbca990e42fd510, unrelated to the attack sender 0xA8Bbb3742f299B183190a9B079f1C0db8924145b. Its EIP-1967 implementation slot was binary-searched with eth_getStorageAt over [17861190, 18377041] and held 0x3a6d9bf8286a4ada77c15ecf82d4c0c0af95be74 throughout - the implementation the exploit delegatecalls for supply/withdraw/borrow - and the three further addresses running in the victim's context (0x03b89eb02817cc36285da0f175257cbb6bd6105b, 0x51ab0f9684d265a1defffc9701a6a3ce4ac50d98, 0xd8ed919c591a071b1fce031ac30167ed0be8277c) are PUSH20 link-time library constants inside that implementation's immutable bytecode. keccak(eth_getCode) on the proxy is identical at the creation and incident blocks. Deployment basis confirmed."
         }
       ],
-      "attacker": "0xA8Bbb3742f299B183190a9B079f1C0db8924145b",
+      "attacker": "0xa8bbb3742f299b183190a9b079f1c0db8924145b",
       "nonStandardUpgradeArchitecture": true,
       "measurement": {
         "status": "OK",
@@ -36,7 +36,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1691388719,
         "codeAgeSeconds": 6241020,
-        "basis": "deployment (onchain)"
+        "basis": "deployment"
       }
     }
   ]

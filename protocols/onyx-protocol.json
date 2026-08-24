@@ -5,28 +5,38 @@
   "incidents": [
     {
       "name": "Onyx Protocol",
-      "date": "2023-11-01T12:00:00Z",
+      "date": "2023-11-01T09:58:47Z",
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 2100000,
-      "victimContract": "0x5FdBcD61bC9bd4B6D3FD1F49a5D253165Ea11750",
-      "exploitTx": null,
+      "victimContract": "0x5fdbcd61bc9bd4b6d3fd1f49a5d253165ea11750",
+      "exploitTx": "0xf7c21600452939a81b599017ee24ee0dfd92aaaccd0a55d02819a7658a6ef635",
       "notes": "Compound-v2 fork empty-market donation/rounding on the freshly listed oPEPE market.",
       "sources": [
         {
+          "type": "onchain-tx",
+          "chain": "ethereum",
+          "ref": "0xf7c21600452939a81b599017ee24ee0dfd92aaaccd0a55d02819a7658a6ef635"
+        },
+        {
           "type": "curated-review",
           "ref": "onchain review (RPC only): oPEPE market 0x5FdBcD61bC9bd4B6D3FD1F49a5D253165Ea11750 (storage slot 1 name 'Onyx PEPE', slot 2 symbol 'oPEPE', slot 17 underlying 0x6982508145454ce325ddbe47a25d4ec3d2311933 PEPE) created 2023-10-26T15:58:11Z at block 18435429. It is a Compound-v2-fork CErc20Delegator (runtime carries 2 DELEGATECALLs), so both change channels were checked over [18435429, incident block 18477110]: eth_getLogs for EIP-1967 Upgraded (0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) returns 0 logs, and the fork's own NewImplementation(address,address) (0xd604de94d45953f9138079ec1b82d533cb2160c906d1076d1f7ed54befbca97a) fires exactly once - inside the creation tx 0x37688007f4377a3c489c03977dc07b023f7edc74060f1e2a42cc7e92592e2574, setting implementation 0x9dcb6bc351ab416f35aeab1351776e2ad295abc4. Cross-checked with storage: the delegator's implementation pointer is slot 18 and a binary search of eth_getStorageAt over [18435429, 18477110] shows it UNCHANGED since the creation block. The implementation contract itself was deployed 2023-03-01T03:14:11Z (block 16731031), older than the delegator, and eth_getCode on the delegator is byte-identical at the creation and incident blocks, so the newest component of the victim's code is its own deployment. CONFIRMED: deployment basis is exact, codeAgeSeconds 504109 (5.8d) unchanged. Recheck of the deployment basis (DELEGATECALL audit): the victim is a Compound-fork OErc20Delegator holding its implementation in plain storage slot 18; binary-searching eth_getStorageAt on slot 18 over [18435429, 18477111] shows 0x9dcb6bc351ab416f35aeab1351776e2ad295abc4 unchanged from creation to the incident, the delegator runtime is byte-identical at both blocks, and that implementation contains no DELEGATECALL, so deployment is the correct basis."
+        },
+        {
+          "type": "curated-review",
+          "ref": "exploit tx backfilled and verified onchain (block 18476513; victim in receipt logs), matching the DeFiHackLabs PoC"
         }
       ],
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1698840000,
+        "incidentTimestamp": 1698832727,
         "deployTimestamp": 1698335891,
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1698335891,
-        "codeAgeSeconds": 504109,
-        "basis": "deployment (onchain)"
-      }
+        "codeAgeSeconds": 496836,
+        "basis": "deployment"
+      },
+      "attacker": "0x085bdff2c522e8637d4154039db8746bb8642bff"
     }
   ]
 }

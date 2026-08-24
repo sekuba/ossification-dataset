@@ -1,0 +1,95 @@
+{
+  "description": "Candidates worked through and rejected: they do not meet the inclusion rule (CONTRIBUTING.md) and must not be re-proposed without new evidence. Each entry records why. This file is append-only across releases.",
+  "entries": [
+    {
+      "name": "ArcadiaFi",
+      "chain": "optimism",
+      "date": "2023-07-10T01:16:07Z",
+      "candidateVictim": "0x13c0ef5f1996b4f119e9d6c32f5e23e8dc313109",
+      "exploitTx": "0xca7c1a0fde444e1a68a8c2b8ae3fb76ec384d1f7ae9a50d26f8bfdd37c7a0afe",
+      "defihacklabs": "src/test/2023-07/ArcadiaFi_exp.sol@ad353ba25fbb",
+      "reason": "ATTACKER_DEPLOYED: the address the PoC targets was deployed by the attacker (0xd3641c912a6a4c30338787e3c464420b561a9467), so it is attack infrastructure, not the protocol's code. The real Arcadia victim contract was never pinned; the incident can re-enter with a verified victim."
+    },
+    {
+      "name": "coinbase (DeFiHackLabs label)",
+      "chain": "ethereum",
+      "date": "2025-08-13T19:35:35Z",
+      "candidateVictim": "0x33b2cb5bc3c0ccb97f0cc21e231ecb6457df2427",
+      "exploitTx": "0x33b2cb5bc3c0ccb97f0cc21e231ecb6457df242710dfce8d1b68935f0e05773b",
+      "defihacklabs": "src/test/2025-08/coinbase_exp.sol@ad353ba25fbb",
+      "reason": "NO_CREATION_INFO: the recorded victim address is a truncation artifact (the first 20 bytes of the exploit tx hash); no contract exists there. No verified victim contract was ever identified."
+    },
+    {
+      "name": "GFOX",
+      "chain": "ethereum",
+      "date": "2024-05-10T00:00:35Z",
+      "candidateVictim": "0x47c4b3144de2c87a458d510c0c0911d1903d1686",
+      "exploitTx": "0x12fe79f1de8aed0ba947cec4dce5d33368d649903cb45a5d3e915cc459e751fc",
+      "defihacklabs": "src/test/2024-05/GFOX_exp.sol@ad353ba25fbb",
+      "reason": "ATTACKER_DEPLOYED: the candidate victim was deployed by the attacker (0xfce19f8f823759b5867ef9a5055a376f20c5e454); attack infrastructure, not protocol code."
+    },
+    {
+      "name": "MainnetSettler",
+      "chain": "ethereum",
+      "date": "2024-11-20T18:34:47Z",
+      "candidateVictim": "0xfab5912f858b3768b7b7d312abcc02b64af7b1e1",
+      "exploitTx": "0xfab5912f858b3768b7b7d312abcc02b64af7b1e1b62c4f29a2c1a2d1568e9fa2",
+      "defihacklabs": "src/test/2024-11/MainnetSettler_exp.sol@ad353ba25fbb",
+      "reason": "NO_CREATION_INFO: the recorded victim address is a truncation artifact (the first 20 bytes of the exploit tx hash); no contract exists there. No verified victim contract was ever identified."
+    },
+    {
+      "name": "Platypus (2023-07 repeat candidate)",
+      "chain": "avalanche",
+      "date": "2023-07-11T16:54:55Z",
+      "candidateVictim": "0x9c80a455ecaca7025a45f5fa3b85fd6a462a447b",
+      "exploitTx": "0x4b544e5ffb0420977dacb589a6fb83e25347e0685275a3327ee202449b3bfac6",
+      "defihacklabs": "src/test/2023-07/Platypus02_exp.sol@ad353ba25fbb",
+      "reason": "NO_CREATION_INFO: no creation transaction could be recovered for the candidate victim on avalanche; the row cannot be measured or its victim verified."
+    },
+    {
+      "name": "unverified_8490",
+      "chain": "bsc",
+      "date": "2025-06-10T04:38:29Z",
+      "candidateVictim": "0x9191153c8523d97f3441a08fef1da5e4169d9c29",
+      "exploitTx": "0x9191153c8523d97f3441a08fef1da5e4169d9c2983db9398364071daa33f59d1",
+      "defihacklabs": "src/test/2025-06/unverified_8490_exp.sol@ad353ba25fbb",
+      "reason": "NO_CREATION_INFO: the recorded victim address is a truncation artifact (the first 20 bytes of the exploit tx hash); no contract exists there. No verified victim contract was ever identified."
+    },
+    {
+      "name": "VRug",
+      "chain": "ethereum",
+      "date": "2024-11-07T22:09:47Z",
+      "candidateVictim": "0x5e151627dc06ec4f2db5be2f48248f320ad3450a",
+      "exploitTx": "0x5e151627dc06ec4f2db5be2f48248f320ad3450aba42b1bbd00131bcbaa4f0ae",
+      "defihacklabs": "src/test/2024-11/VRug_exp.sol@ad353ba25fbb",
+      "reason": "NO_CREATION_INFO: the recorded victim address is a truncation artifact (the first 20 bytes of the exploit tx hash); no contract exists there. No verified victim contract was ever identified."
+    },
+    {
+      "name": "WETC_Token",
+      "chain": "bsc",
+      "date": "2025-07-17T10:24:46Z",
+      "candidateVictim": "0xaf68efb3c1e81aad5cdb3d4962c8815fb754c688",
+      "exploitTx": "0x2b6b411adf6c452825e48b97857375ff82b9487064b2f3d5bc2ca7a5ed08d615",
+      "defihacklabs": "src/test/2025-07/WETC_Token_exp.sol@ad353ba25fbb",
+      "reason": "ATTACKER_DEPLOYED: the candidate victim was deployed by the attacker (0x7e7c1f0d567c0483f85e1d016718e44414cdbafe); attack infrastructure, not protocol code."
+    },
+    {
+      "name": "Maker CDP 28311 collateral drain (DeFiHackLabs \"Circle_exp1.sol\")",
+      "chain": "ethereum",
+      "date": "2022-08-13T03:27:08Z",
+      "candidateVictim": "0xae461ca67b15dc8dc81ce7615e0320da1a9ab8d5",
+      "exploitTx": "0xa4e650772f6e6b7ecc0964fe4c3854850669d1467570a2fa2b6edfa0f112c4b7",
+      "defihacklabs": "src/test/2022-08/Circle_exp1.sol@ad353ba25fbb",
+      "reason": "VICTIM_MISATTRIBUTED: the recorded victim is the UniswapV2 DAI/USDC pair, which contains no exploited flaw - it is only the CDP collateral token. The abused cdpAllow authority sits on a private, unverified, single-user CDP-management contract (0xbee1dee31365272bc6e5021c8ac66bede8bed641, deployed 2022-04-15, only ever called by its deployer), so there is no identifiable protocol victim contract (inclusion rule 2). Same attacker in both txs three days apart. Can re-enter only if a protocol-level victim is verifiably pinned."
+    },
+    {
+      "name": "Maker CDP 28311 collateral drain (DeFiHackLabs \"Circle_exp2.sol\")",
+      "chain": "ethereum",
+      "date": "2022-08-16T20:20:02Z",
+      "candidateVictim": "0xae461ca67b15dc8dc81ce7615e0320da1a9ab8d5",
+      "exploitTx": "0xf1818f62c635e5c80ef16b7857da812c74ce330ebed46682b4d173bffe84c666",
+      "defihacklabs": "src/test/2022-08/Circle_exp2.sol@ad353ba25fbb",
+      "reason": "VICTIM_MISATTRIBUTED: the recorded victim is the UniswapV2 DAI/USDC pair, which contains no exploited flaw - it is only the CDP collateral token. The abused cdpAllow authority sits on a private, unverified, single-user CDP-management contract (0xbee1dee31365272bc6e5021c8ac66bede8bed641, deployed 2022-04-15, only ever called by its deployer), so there is no identifiable protocol victim contract (inclusion rule 2). Same attacker in both txs three days apart. Can re-enter only if a protocol-level victim is verifiably pinned."
+    }
+  ]
+}

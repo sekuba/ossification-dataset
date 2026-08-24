@@ -12,23 +12,28 @@ public onchain data; `scripts/verify.mjs` re-derives any measured row.
 
 ```
 protocols/<slug>.json   one file per protocol: its incidents
+exclusions.json         rejected candidates, each with its reason (append-only)
 curve/v<version>.json   released curve knots; changes only at versioned releases
 schema/                 JSON Schema for protocol files
 SOURCES.md              candidate lists and verification tooling behind the rows
-scripts/build-curve.mjs deterministic curve rebuild (--check verifies a release)
-scripts/verify.mjs      re-derive a protocol's measurements (RPC; Etherscan optional)
+list-to-check.md        the raw web-research candidate list referenced by SOURCES.md
+scripts/lint.mjs        offline validation: schema shape + cross-field invariants
+scripts/build-curve.mjs deterministic curve rebuild (--check verifies a release, --stats prints dataset stats)
+scripts/verify.mjs      re-derive measurements from RPC (single file or --all)
 ```
+
+`npm test` = lint + rebuild-matches-release.
 
 ## Curve
 
-`build-curve.mjs`: measured `code-bug` rows, one observation per
-`(chain, victimContract, lastChange)` — re-exploiting the same code is not
-independent, but a contract exploited again after its code changed is a fresh
-observation (curated wins, then earliest incident), knots = sorted
-`codeAgeSeconds`. Score = interpolated percentile with Weibull plotting
-positions `p_i = (i+1)/(n+1)`.
+`build-curve.mjs` takes every measured `code-bug` row and emits **one
+observation per `(chain, victimContract, lastChange)`**.
+Knots = sorted `codeAgeSeconds`.
+
+Score = interpolated percentile with Weibull plotting positions
+`p_i = (i+1)/(n+1)`.
 
 ## Updating
 
 See `CONTRIBUTING.md` for the full inclusion rule, classification precedents,
-and measurement procedure.
+and measurement procedure. Rejected candidates go to `exclusions.json`.

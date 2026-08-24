@@ -21,6 +21,10 @@
         {
           "type": "defihacklabs",
           "ref": "src/test/2023-09/CEXISWAP_exp.sol@ad353ba25fbb"
+        },
+        {
+          "type": "curated-review",
+          "ref": "attacker-event correction: the single Upgraded event on the proxy (block 18182606) is emitted by the exploit tx itself - the attacker's own initialize+upgradeToAndCall is part of the attack, not a protocol code change. The uninitialized proxy was deployed 2021-10-08T13:22:14Z and sat vulnerable until the 2023-09-21 exploit; age measured from deployment: 712.7 days (previously misrecorded as 0s)"
         }
       ],
       "attacker": "0x060c169c4517d52c4be9a1dd53e41a3328d16f04",
@@ -28,10 +32,10 @@
         "status": "OK",
         "incidentTimestamp": 1695279371,
         "deployTimestamp": 1633699334,
-        "upgradeEventCount": 1,
-        "lastChangeTimestamp": 1695279371,
-        "codeAgeSeconds": 0,
-        "basis": "last of 1 upgrade events (onchain)"
+        "upgradeEventCount": 0,
+        "lastChangeTimestamp": 1633699334,
+        "codeAgeSeconds": 61580037,
+        "basis": "deployment"
       }
     }
   ]

@@ -9,7 +9,7 @@
       "chain": "ethereum",
       "category": "code-bug",
       "lossUsd": 7630,
-      "victimContract": "0x6f7a14bd931554683ED15Dc92e25D046eD68EA68",
+      "victimContract": "0x6f7a14bd931554683ed15dc92e25d046ed68ea68",
       "exploitTx": "0x653b185a57fb5909180fe4eede67e51c5e9b70af16937382f86d5aefe635e5a7",
       "notes": "Proxy selector 0xbfd479c4 processed arbitrary token amounts with no caller authorization or ownership check, letting anyone route the victim's live balances into a liquidity path.",
       "sources": [
@@ -27,7 +27,7 @@
           "ref": "delegatecall-target review (callTracer + prestateTracer on the exploit tx, then eth_getStorageAt over [creation block, incident block]): the victim is an EIP173ProxyWithReceive, which stores its implementation in the EIP-1967 slot but announces changes with ProxyImplementationUpdated rather than Upgraded, so the standard event scan finds nothing. The exploit tx DELEGATECALLs 0x6f7a14bd...ea68 -> 0x338ffeaccf929c88fb9574dc202dc1714b1903e7 (selector 0xbfd479c4). eth_getStorageAt on slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc held 0x078a27f9de51359764ad48e663e8d8debd26656c at the creation block 13806773 and was rewritten once, at block 13844065 / 2021-12-20T19:49:44Z, to the implementation that was live at the incident (constant across 60 samples afterwards). Age 1340.6 days rather than 1346.4 from deployment"
         }
       ],
-      "attacker": "0xe4B97Db5FAF476DB464Bc271097Fac97d6CE3783",
+      "attacker": "0xe4b97db5faf476db464bc271097fac97d6ce3783",
       "measurement": {
         "status": "OK",
         "incidentTimestamp": 1755858827,
@@ -35,7 +35,7 @@
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1640029784,
         "codeAgeSeconds": 115829043,
-        "basis": "documented change"
+        "basis": "documented"
       },
       "documentedLastChange": "2021-12-20T19:49:44Z (block 13844065): the EIP-1967 implementation slot was rewritten from 0x078a27f9de51359764ad48e663e8d8debd26656c to 0x338ffeaccf929c88fb9574dc202dc1714b1903e7",
       "nonStandardUpgradeArchitecture": true

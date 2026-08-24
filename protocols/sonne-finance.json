@@ -5,28 +5,38 @@
   "incidents": [
     {
       "name": "Sonne Finance",
-      "date": "2024-05-14T12:00:00Z",
+      "date": "2024-05-14T21:56:03Z",
       "chain": "optimism",
       "category": "code-bug",
       "lossUsd": 20000000,
-      "victimContract": "0xE3B81318B1b6776F0877c3770AfDdFf97b9f5fE5",
-      "exploitTx": null,
+      "victimContract": "0xe3b81318b1b6776f0877c3770afddff97b9f5fe5",
+      "exploitTx": "0x45c0ccfd3ca1b4a937feebcb0f5a166c409c9e403070808835d41da40732db96",
       "notes": "Compound-v2 fork empty-market donation attack on the soVELO market, executed in the window between market creation (timelocked proposal execution) and collateral-factor guard.",
       "sources": [
         {
+          "type": "onchain-tx",
+          "chain": "optimism",
+          "ref": "0x45c0ccfd3ca1b4a937feebcb0f5a166c409c9e403070808835d41da40732db96"
+        },
+        {
           "type": "curated-review",
           "ref": "onchain review (RPC only, Optimism): soVELO market 0xE3B81318B1b6776F0877c3770AfDdFf97b9f5fE5 (storage slot 1 name 'Sonne VelodromeV2', slot 2 symbol 'soVELO', slot 17 underlying 0x9560e827af36c94d2ac33a39bce1fe78631088db VELO) created 2024-05-10T13:40:13Z at block 119874818. Compound-v2 fork, but a non-delegating CErc20, not a CErc20Delegator: over [119874818, incident block 120044611] the market emits only the two constructor events of CToken.initialize (NewComptroller -> 0x60cf091cd3f50420d50fd7f707414d0df4751c58 and NewMarketInterestRateModel -> 0x7320bd5fa56f8a7ea959a425f0c0b8cac56f741e, both in the creation tx 0x307b85a2fe776aad28ecc347e73170706850fea560479c78e7705c9332fb0feb); there is no NewImplementation (0xd604de94d45953f9138079ec1b82d533cb2160c906d1076d1f7ed54befbca97a) and no EIP-1967 Upgraded (0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b) log at all. Cross-checked with storage: slot 18, which holds the implementation pointer on a delegator, is zero for the whole window. eth_getCode is byte-identical at the creation and incident blocks (14896 bytes) and the disassembled runtime contains zero DELEGATECALL opcodes (the only 0xf2/0xf5 bytes sit at offsets 14812-14839, past the last executable instruction, inside an embedded event-topic constant and the CBOR metadata trailer), so the code provably never changed. CONFIRMED: deployment basis is exact, codeAgeSeconds 339587 (3.9d) unchanged; the exploit window was opened by market configuration, not by a code change."
+        },
+        {
+          "type": "curated-review",
+          "ref": "exploit tx backfilled and verified onchain (optimism block 120062493; victim in receipt logs): the first of two attack txs (DeFiHackLabs Attack Tx1); the second drain 0x9312ae377d7ebdf3c7c3a86f80514878deb5df51aad38b6191d55db53e42b7f0 followed 22 minutes later"
         }
       ],
       "measurement": {
         "status": "OK",
-        "incidentTimestamp": 1715688000,
+        "incidentTimestamp": 1715723763,
         "deployTimestamp": 1715348413,
         "upgradeEventCount": 0,
         "lastChangeTimestamp": 1715348413,
-        "codeAgeSeconds": 339587,
-        "basis": "deployment (onchain)"
-      }
+        "codeAgeSeconds": 375350,
+        "basis": "deployment"
+      },
+      "attacker": "0x5d0d99e9886581ff8fcb01f35804317f5ed80bbb"
     }
   ]
 }
