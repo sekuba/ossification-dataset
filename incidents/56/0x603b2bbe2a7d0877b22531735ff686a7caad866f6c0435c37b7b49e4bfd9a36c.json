@@ -6,7 +6,7 @@
     "name": "bEarn",
     "slug": "bearn"
   },
-  "name": "bEarn",
+  "name": "bEarn BUSD/ibBUSD withdrawal-unit mismatch",
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -21,67 +21,95 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "bVault deposit/emergencyWithdraw accounting flaw returns more BUSD than deposited when looped."
+    "summary": "The BUSD Alpaca strategy's withdraw(address,uint256) passed a BUSD-denominated request to FairLaunch as an ibBUSD amount. Because each ibBUSD was worth more than one BUSD, repeated deposit/emergencyWithdraw cycles withdrew excess BUSD and compounded the attacker's credit."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 11000000,
+      "amount": 10859319,
       "valuationTimestamp": 1621161380,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "stablecoin-par",
+      "sourceIds": [
+        "source-3"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+          "symbol": "BUSD"
+        },
+        "amount": "10859319",
+        "usdValue": 10859319,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1621161380,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-3"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-3",
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "bEarn reports that 26 attack transactions beginning with the anchored transaction drained 10,859,319 BUSD from the affected single-stake BUSD vault. The campaign-wide amount is valued at stablecoin par; it is not narrowed to the first transaction's proceeds."
   },
   "targets": [
     {
       "id": "target-1",
-      "executionAddress": "0xb390b07fcf76678089cb12d8e615d5fe494b01fb",
-      "relationship": "unknown",
+      "executionAddress": "0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e",
+        "codeHash": "0xada77033047849187832a245e0e1f814d255430597cfce06d3a321ebd117e1cd"
       },
       "deployment": {
-        "timestamp": 1613184728,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "timestamp": 1614674002,
+        "blockNumber": 5324911,
+        "transactionHash": "0xdd4031277401d5eca44cc73e153effaee20a983b5b513cbf517e08cc9a9911db",
+        "transactionIndex": 68,
+        "creatorAddress": "0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36"
       },
       "lastCodeChange": {
-        "kind": "implementation-change",
-        "timestamp": 1620832612,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "kind": "deployment",
+        "timestamp": 1614674002,
+        "blockNumber": 5324911,
+        "transactionHash": "0xdd4031277401d5eca44cc73e153effaee20a983b5b513cbf517e08cc9a9911db",
+        "transactionIndex": 68,
         "logIndex": null,
         "mechanism": {
-          "type": "event",
-          "address": "0xb390b07fcf76678089cb12d8e615d5fe494b01fb",
-          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
-          "codeAddressLocation": "topic1-address"
+          "type": "deployment",
+          "address": "0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e"
         },
-        "description": "Legacy basis: latest of 10 pre-incident Upgraded event(s)."
+        "description": "The direct BUSD Alpaca strategy was deployed with the flawed withdrawal-unit handling and its runtime remained byte-identical immediately before the incident."
       },
-      "codeAgeSeconds": 328768,
-      "failureModeId": "legacy:eip155:56:0x603b2bbe2a7d0877b22531735ff686a7caad866f6c0435c37b7b49e4bfd9a36c:failure-1",
+      "codeAgeSeconds": 6487378,
+      "failureModeId": "failure:bearn-busd-ibbusd-withdrawal-unit-mismatch",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-1",
+          "source-3",
+          "source-4",
+          "source-5"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/bearn.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -91,7 +119,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 56,
       "transactionHash": "0x603b2bbe2a7d0877b22531735ff686a7caad866f6c0435c37b7b49e4bfd9a36c"
@@ -100,29 +131,60 @@
       "id": "source-2",
       "type": "source-code",
       "supports": [
-        "target-identity",
-        "root-cause"
+        "incident-anchor",
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2021-05/bEarn_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://bearndao.medium.com/bvaults-busd-alpaca-strategy-exploit-post-mortem-and-bearn-s-compensation-plan-b0b38c3b5540"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:05:29Z",
+      "note": "Reviewed the first exploit receipt and 1,000-plus-frame call trace, the strategy creation transaction and receipt, historical runtime and EIP-1967 slot, runtime disassembly, the bank proxy's upgrade history, the commit-pinned reproduction, and bEarn's post-mortem. Each of the 33 deposit/emergencyWithdraw iterations in the anchor causes bVault 0xb390b07fcf76678089cb12d8e615d5fe494b01fb to call BUSD Alpaca strategy 0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e directly, including 33 calls to selector 0xf3fef3a3, withdraw(address,uint256). The post-mortem locates the defect in that strategy function: its BUSD-denominated wantAmount was used as an ibBUSD withdrawal amount. The strategy is a direct 23,127-byte contract created in transaction 0xdd4031277401d5eca44cc73e153effaee20a983b5b513cbf517e08cc9a9911db. Its runtime contains no DELEGATECALL or SELFDESTRUCT, is byte-identical at deployment and block 7457124, and hashes to 0xada77033047849187832a245e0e1f814d255430597cfce06d3a321ebd117e1cd. The bank's implementation upgrade 328,768 seconds before exploitation does not install or change this defect-executing strategy and is excluded from its age. The anchored helper gains 452,868.889740007548480164 BUSD in the first transaction; bEarn's 10,859,319-BUSD loss is the broader 26-transaction campaign total."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xdd4031277401d5eca44cc73e153effaee20a983b5b513cbf517e08cc9a9911db"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/bearn.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The campaign-wide BUSD amount follows bEarn's primary post-mortem rather than a complete structured set of all 26 attack transaction hashes."
     ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/bearn.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 10,
-      "date": "2021-05-16T10:36:20Z"
-    }
+    "reviewSourceIds": [
+      "source-4"
+    ]
   },
-  "notes": []
+  "notes": [
+    "The defect-executing target is the direct BUSD Alpaca strategy, not the bVault bank proxy through which users entered and exited the strategy."
+  ]
 }

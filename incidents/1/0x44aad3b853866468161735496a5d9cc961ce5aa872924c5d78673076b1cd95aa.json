@@ -24,17 +24,19 @@
     "summary": "The DEFI5 index pool's extrapolatePoolValueFromToken() estimated total pool value from the balance/denorm of a single initialized token, so flash-loaned deposits that skewed that token set an absurd minimum balance for the freshly reindexed SUSHI record and let the attacker mint index tokens against the pool's real assets."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 16000000,
       "valuationTimestamp": 1634236663,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-6"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "Indexed Finance reported approximately $16 million stolen across the DEFI5 and CC10 pools. The anchored DEFI5 leg accounted for about $11 million; CC10 repeated the same defect, so the reported campaign total is used."
   },
   "targets": [
     {
@@ -47,40 +49,46 @@
       },
       "deployment": {
         "timestamp": 1607251313,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x236eccab8cdcfedb099de85c4060024ba3ce4d46"
+        "blockNumber": 11398665,
+        "transactionHash": "0x5b69a20015f5c86884b878215da291525dc38e5333f5c2002def03d72646f0a3",
+        "transactionIndex": 98,
+        "creatorAddress": "0xd23dedc599bd56767e42d48484d6ca96ab01c115"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1619863642,
         "blockNumber": 12347624,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "transactionHash": "0x0fa9b03e750e413b76143313aeb3a1b4d2b89548f0031f3c32962ed3941c5a0b",
+        "transactionIndex": 168,
+        "logIndex": 393,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "event",
+          "address": "0xd23dedc599bd56767e42d48484d6ca96ab01c115",
+          "eventTopic": "0x43440a819e0e769fd70fc34ea1c8462915e7170e4396fb7595b450a09d0cdf38",
+          "codeAddressLocation": "data-word-1-address"
         },
-        "description": "2021-05-01T10:07:22Z (block 12347624): ManyToOne_ImplementationUpdated on proxy manager 0xd23dedc599bd56767e42d48484d6ca96ab01c115 repointed the pool's implementation holder 0xffde4785e980a99fe10e6a87a67d243664b91b25 (storage slot 0) to 0x5bd628141c62a901e0a83e630ce5fafa95bbdee4"
+        "description": "The proxy manager's ManyToOne_ImplementationUpdated event selected 0x5bd628141c62a901e0a83e630ce5fafa95bbdee4 for the IndexPool implementation ID used by DEFI5."
       },
       "codeAgeSeconds": 14373021,
-      "failureModeId": "legacy:eip155:1:0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa:failure-1",
+      "failureModeId": "failure:indexed-single-token-pool-value-extrapolation",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-1",
+          "source-3",
+          "source-7"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/indexed-finance.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -90,7 +98,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity"
       ],
       "chainId": 1,
       "transactionHash": "0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa"
@@ -107,26 +116,63 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
+        "loss",
         "root-cause"
       ],
-      "note": "onchain review: the cited tx's logs touch DEFI5 0xfa6de269 (not CC10); pool created 2020-12-06 by 0x236eccab8cdcfedb099de85c4060024ba3ce4d46, not by attack sender 0xba5ed148; classified code-bug because the manipulated quantity is the pool's own internal value extrapolation, not an external price feed"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T00:00:00Z",
+      "note": "Reviewed the live Ethereum receipts and call traces, the DEFI5 creation trace, implementation-holder storage around both changes, every proxy-manager implementation event for the IndexPool ID from DEFI5 deployment through the exploit, the pre-exploit artifact hash, Indexed Finance's post-mortem, BlockSec's analysis, and the commit-pinned source and deployment artifact. The exploit calls DEFI5 at 0xfa6de2697d59e88ed7fc4dfe5a33dac43565ea41, which delegatecalls 0x5bd628141c62a901e0a83e630ce5fafa95bbdee4; the pinned deployment runtime hashes to the same declared value. The holder changed twice after DEFI5 deployment, at blocks 11800940 and 12347624; the latter event selected the traced artifact and no later event for that implementation ID occurred before the exploit. The flawed pool function extrapolated total value from one manipulable token balance. Indexed's approximately $16 million figure covers the coherent DEFI5 and CC10 campaign; its post-mortem reports about $11 million for the anchored DEFI5 leg and describes CC10 as the same exploit."
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "code-history"
       ],
-      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CORRECTION. The pool is a DelegateCallProxyManyToOne: its runtime hardcodes the implementation holder 0xffde4785e980a99fe10e6a87a67d243664b91b25 as an immutable and STATICCALLs it for the delegate target, so no EIP-1967 event is ever emitted and the deployment basis was wrong. Binary-searching eth_getStorageAt on slot 0 of that holder over [11398665, 13417949] shows the implementation moved twice after the pool was deployed: 0x71ed5fa0fde7b6dd8bc0dc25f7235d477e0faf77 -> 0x2483c55e414447cc78b0bfac77c1471d81baabdf at block 11800940 (2021-02-06T05:43:57Z) and -> 0x5bd628141c62a901e0a83e630ce5fafa95bbdee4 at block 12347624 (2021-05-01T10:07:22Z), then constant to the incident (61-point dense re-probe over [12347624, 13417949]). Corroborated by the proxy manager 0xd23dedc599bd56767e42d48484d6ca96ab01c115's own ManyToOne_ImplementationUpdated(bytes32,address) events for implementation id 0xe4105e36f4402bad908f77146a54b96b1aae362be2a9d940c0e19537431e1efb at exactly those two blocks, and by callTracer on the exploit tx, which shows the pool delegatecalling only 0x5bd628141c62a901e0a83e630ce5fafa95bbdee4 (a leaf: zero DELEGATECALL opcodes). Age 1634236663 - 1619863642 = 14,373,021 s (166.4 d), was 26,985,350 s (312.3 d) from deployment."
+      "chainId": 1,
+      "transactionHash": "0x0fa9b03e750e413b76143313aeb3a1b4d2b89548f0031f3c32962ed3941c5a0b"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x5b69a20015f5c86884b878215da291525dc38e5333f5c2002def03d72646f0a3"
+    },
+    {
+      "id": "source-6",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://ndxfi.medium.com/indexed-attack-post-mortem-b006094f0bdc"
+    },
+    {
+      "id": "source-7",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/indexed-finance/indexed-core",
+      "commit": "f74996cc6168d653a5d99f66c257a2c4a3afc34d",
+      "path": "contracts/balancer/IndexPool.sol"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/indexed-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The loss is the protocol's rounded campaign estimate across DEFI5 and CC10 rather than a per-asset valuation."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -138,8 +184,5 @@
       "date": "2021-10-14T18:37:43Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2021-05-01T10:07:22Z (block 12347624): ManyToOne_ImplementationUpdated on proxy manager 0xd23dedc599bd56767e42d48484d6ca96ab01c115 repointed the pool's implementation holder 0xffde4785e980a99fe10e6a87a67d243664b91b25 (storage slot 0) to 0x5bd628141c62a901e0a83e630ce5fafa95bbdee4"
-  ]
+  "notes": []
 }

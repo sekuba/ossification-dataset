@@ -99,6 +99,32 @@
       "exploitTx": "0x1abab4c8db9a30e703114528e31dee129a3a758f7f8abc3b6494aad3d304e43f",
       "defihacklabs": "src/test/2018-04/SmartMesh_exp.sol@ad353ba25fbb",
       "reason": "LOSS_NOT_ESTABLISHED: the selected transaction exploits transferProxy's unchecked _value + _feeSmt addition and creates artificial SMT ledger balances, but its receipt and call trace transfer no ETH or external reserve asset. Subsequent onchain activity only sends the artificial SMT to exchange deposit addresses; the attacker address records no onchain sale proceeds. The inherited $140M figure has no asset-flow or valuation provenance and does not establish at least $1,000 of stolen or permanently locked assets."
+    },
+    {
+      "name": "Yearn yUSDT fulcrum misconfiguration",
+      "chain": "ethereum",
+      "date": "2023-04-13T05:52:35Z",
+      "candidateVictim": "0x83f798e925bcd4017eb265844fddabb448f1707d",
+      "exploitTx": "0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d",
+      "defihacklabs": "src/test/2023-04/YearnFinance_exp.sol@b3719ce",
+      "reason": "CONFIGURATION_ERROR: verified source defines fulcrum as mutable owner-settable storage, the constructor selected iUSDC where iUSDT was intended, live pre-exploit state retains iUSDC, and the exploit trace follows that configured address. The loss arose from an address-selection error rather than a defect in the executed runtime, so there is no code-age observation."
+    },
+    {
+      "name": "Rho Markets oracle-feed misconfiguration",
+      "chain": "scroll",
+      "date": "2024-07-19T08:59:49Z",
+      "candidateVictim": "0x653c2d3a1e4ac5330de3c9927bb9bdc51008f9d5",
+      "exploitTx": "0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05",
+      "reason": "CONFIGURATION_ERROR: the protocol admin listed rWBTC without first setting its RTokenConfig, so its underlying remained the zero-address default, then configured the WBTC/USD feed under the zero-address key already used by native ETH. Transaction 0x9d2388a0c449c6265b968d86f0f54e75a5b82e2b04176e35eefdff5f135547ec changed only oracle configuration and made ETH read the WBTC price; no executable code changed. The exploiter, Rho Markets reporting, and independent analysis identify the event as an oracle or deployment-script misconfiguration, so there is no code-age observation."
+    },
+    {
+      "name": "SummerFi impaired-Ark offboarding exposure",
+      "chain": "ethereum",
+      "date": "2026-07-06T05:17:59Z",
+      "candidateVictim": "0x98c49e13bf99d7cad8069faa2a370933ec9ecf17",
+      "exploitTx": "0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12",
+      "defihacklabs": "src/test/2026-07/SummerFi_exp.sol@ad353ba25fbb",
+      "reason": "CONFIGURATION_ERROR: SummerFi's primary post-mortem states that FleetCommander and Ark accounting behaved as designed and identifies the failure as an operational offboarding state: the impaired Silo Varlamore Arks had deposit caps set to zero but remained in each FleetCommander's active set, so their stale reported value continued to count in NAV. The exploit donated the impaired asset into those still-active Arks and redeemed against liquid positions. Because governance/process state, rather than a defect in executed EVM code, created the exposure, there is no code-age observation."
     }
   ]
 }

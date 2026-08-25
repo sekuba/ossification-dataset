@@ -21,31 +21,31 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "MasterPlatypusV4: emergencyWithdraw did not check outstanding USP debt, releasing collateral while keeping the borrowed USP. V4 deployed shortly before the exploit."
+    "summary": "MasterPlatypusV4.emergencyWithdraw() checked solvency before zeroing the user's staked LP balance. The check therefore saw the collateral still present and passed, after which the function returned that collateral without requiring repayment of the USP debt it secured."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 8500000,
+      "amount": 9190000,
       "valuationTimestamp": 1676575014,
-      "method": "legacy-unspecified",
+      "method": "reported",
       "sourceIds": [
-        "source-3"
+        "source-7"
       ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "Platypus reports $9.19 million lost across three attacks by the same exploiter and defect. The anchored first attack accounted for approximately $8.5 million; the reported gross campaign amount precedes subsequent freezes and recoveries."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xff6934aac9c94e1c39358d4fdcf70aeca77d0ab0",
-      "relationship": "unknown",
+      "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xc007f27b757a782c833c568f5851ae1dfe0e6ec7",
+        "codeHash": "0x02a2003eaa6e03405612381eb404f39e509703c0d474fad1c4624ae128c250b9"
       },
       "deployment": {
         "timestamp": 1662368051,
@@ -57,38 +57,39 @@
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1668518918,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 22409704,
+        "transactionHash": "0x95787a8f852ba718fa839007692a3d6e6aa16460b88c2aeeda3aa4a94dad286c",
+        "transactionIndex": 4,
+        "logIndex": 3,
         "mechanism": {
           "type": "event",
           "address": "0xff6934aac9c94e1c39358d4fdcf70aeca77d0ab0",
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "The proxy's Upgraded event selected the MasterPlatypusV4 implementation containing the vulnerable emergencyWithdraw ordering; no later Upgraded event occurred before the exploit."
       },
       "codeAgeSeconds": 8056096,
-      "failureModeId": "legacy:eip155:43114:0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430:failure-1",
+      "failureModeId": "failure:platypus-emergency-withdraw-pre-update-solvency-check",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-3",
-          "source-4"
+          "source-5"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-6"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/platypus-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -98,7 +99,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity"
       ],
       "chainId": 43114,
       "transactionHash": "0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430"
@@ -118,11 +120,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "code-history",
-        "loss"
+        "loss",
+        "root-cause"
       ],
-      "note": "onchain review: MasterPlatypusV4 0xfF6934aAC9C94E1C39358D4fDCF70aeca77D0AB0 created 2022-09-05T08:54:11Z by 0xcd7874f7430f9f62129c3fef1bc8cb8ef7bad224, not the attack-tx sender 0xeff003d64046a6f521ba31f39405cb720e953958; one EIP-1967 Upgraded event, at block 22409704 on 2022-11-15T13:28:38Z installing 0xc007f27b757a782c833c568f5851ae1dfe0e6ec7, so the executing code was 93.2 days old. Loss ~$8.5M as previously recorded."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:10:16Z",
+      "note": "Reviewed the live Avalanche receipt and call trace, proxy creation trace, every proxy Upgraded event from deployment through the exploit, the implementation slot and pre-exploit runtime hash, the reproduction source, Omniscia's technical post-mortem, and Platypus's campaign report. The attack contract calls emergencyWithdraw(4) on proxy 0xff6934aac9c94e1c39358d4fdcf70aeca77d0ab0, which delegatecalls implementation 0xc007f27b757a782c833c568f5851ae1dfe0e6ec7. The implementation checks PlatypusTreasure.isSolvent while the user's LP amount still backs the debt, then transfers the LP and only afterwards zeros the amount. The proxy emitted one pre-exploit Upgraded event, at 22409704:4:3, selecting the traced implementation; no later event occurred before the exploit and its runtime hash matches the declaration. Platypus reports a $9.19 million gross campaign across three attacks by the same exploiter and bug, of which the anchored first attack was approximately $8.5 million."
     },
     {
       "id": "source-4",
@@ -133,13 +139,43 @@
       ],
       "chainId": 43114,
       "transactionHash": "0xed5192cef15d09b35c73f6f6f618945dbea31b3a68b0119da62b1aa5fc28df01"
+    },
+    {
+      "id": "source-5",
+      "type": "post-mortem",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "url": "https://medium.com/@omniscia.io/platypus-finance-incident-post-mortem-7b71a0a47a5e"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 43114,
+      "transactionHash": "0x95787a8f852ba718fa839007692a3d6e6aa16460b88c2aeeda3aa4a94dad286c"
+    },
+    {
+      "id": "source-7",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://medium.com/platypus-finance/update-on-recovery-efforts-after-the-exploitation-a8f64acd5aa5"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/platypus-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The loss is Platypus's rounded gross campaign estimate; the three-attack asset basket is not independently repriced here."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

@@ -21,65 +21,72 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "Blacksmith cached the Pool struct in memory, then called updatePool() which wrote the new accRewardsPerToken to storage, and afterwards computed the miner's rewardWriteoff from the stale in-memory value, leaving the writeoff far too low so subsequent claims minted effectively unbounded COVER."
+    "summary": "Blacksmith copied a Pool struct to memory before updatePool() advanced accRewardsPerToken in storage, then calculated the miner's rewardWriteoff from the stale copy. Leaving a tiny LP balance amplified the gap, and later reward claims minted unbounded COVER."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 9400000,
       "valuationTimestamp": 1609143076,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-6"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "Rekt reports $9.4 million taken across six exploiters using the same Blacksmith stale-cache defect. The anchored transaction is the campaign's first major loss-finalizing mint. The later $3.2 million recovery is separate from exploit-time gross loss."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xe0b94a7bb45dd905c79bb1992c9879f40f1caed5",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xe0b94a7bb45dd905c79bb1992c9879f40f1caed5",
+        "codeHash": "0xe4752276e63f1c0ee3d73b854b30f59db1c0840c66833b2b21af45d145d512a9"
       },
       "deployment": {
         "timestamp": 1605829775,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 11291560,
+        "transactionHash": "0x7b84af4cca5c45719990db1a03bd715d7208179443b9e56098d6a133b1f151ff",
+        "transactionIndex": 85,
         "creatorAddress": "0xdd79dc5b781b14ff091686961adc5d47e434f4b0"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1605829775,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 11291560,
+        "transactionHash": "0x7b84af4cca5c45719990db1a03bd715d7208179443b9e56098d6a133b1f151ff",
+        "transactionIndex": 85,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0xe0b94a7bb45dd905c79bb1992c9879f40f1caed5"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The vulnerable pool-accounting and reward-writeoff logic is part of Blacksmith's immutable direct runtime, deployed in this transaction and unchanged through the exploit."
       },
       "codeAgeSeconds": 3313301,
-      "failureModeId": "legacy:eip155:1:0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b:failure-1",
+      "failureModeId": "failure:cover-blacksmith-stale-pool-cache-reward-writeoff",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-1",
+          "source-3",
+          "source-7",
+          "source-8"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4"
+        ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/cover-protocol.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -89,7 +96,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity"
       ],
       "chainId": 1,
       "transactionHash": "0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b"
@@ -106,16 +114,73 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
-        "target-identity"
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "loss",
+        "root-cause"
       ],
-      "note": "onchain review: I scanned COVER (0x5d8d9f5b96f4438195be9b99eee6118ed4304286) Transfer-from-zero logs over blocks 11538000-11545000 - the abnormal mints start at block 11541219 (704 COVER to 0xf05ca010 via withdraw() on the Blacksmith) and escalate to 4.08e19 COVER to Grap Finance 0x00007569643bc1709561ec2e86f385df3759e5dd via claimRewards() at block 11542321 (tx 0xca135d1c4268d6354a019b66946d4fbe4de6f7ddf0ff56389a5cc2ba695b035f); Grap returned 4350 ETH, so realized attacker profit was well below the $9.4m protocol-level figure. Blacksmith created 2020-11-19 by 0xdd79dc5b781b14ff091686961adc5d47e434f4b0, not by attack sender"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:04:41Z",
+      "note": "Reviewed the live Ethereum receipts and call traces for the setup deposit and anchored withdrawal, the Blacksmith creation trace, pre-exploit runtime and code hash, verified and commit-pinned source, the project's post-mortem, Mudit Gupta's analysis, and Rekt's campaign accounting. In setup transaction 0xd721b0ef2886f14b75548b70d2d1fd82bea085ca24f5de29b833a64cfd8f7a50, Blacksmith copied the pool before updatePool() changed storage and then computed rewardWriteoff from the stale memory copy. The anchored withdraw(address,uint256) transaction finalizes the first major loss by making Blacksmith call COVER.mint for exactly 703.640959709919999589 COVER to the attacker. Later exploiters repeated the same defect, including Grap Finance's mint and subsequent return. Blacksmith is a full direct runtime with no DELEGATECALL or SELFDESTRUCT; its pre-exploit hash matches its creation runtime and the code remained unchanged. Rekt reports $9.4 million taken across the campaign; the later $3.2 million recovery is recorded separately from gross loss."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7b84af4cca5c45719990db1a03bd715d7208179443b9e56098d6a133b1f151ff"
+    },
+    {
+      "id": "source-5",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://coverprotocol.medium.com/12-28-post-mortem-34c5f9f718d4"
+    },
+    {
+      "id": "source-6",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://rekt.news/cover-rekt/"
+    },
+    {
+      "id": "source-7",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/CoverProtocol/cover-token-mining",
+      "commit": "f78cd9fb250df78e0ad68c275daeca315c727da0",
+      "path": "contracts/Blacksmith.sol"
+    },
+    {
+      "id": "source-8",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xd721b0ef2886f14b75548b70d2d1fd82bea085ca24f5de29b833a64cfd8f7a50"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/cover-protocol.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The gross campaign loss is a rounded published estimate across six exploiters rather than a per-asset onchain valuation; the later $3.2 million recovery is recorded separately."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

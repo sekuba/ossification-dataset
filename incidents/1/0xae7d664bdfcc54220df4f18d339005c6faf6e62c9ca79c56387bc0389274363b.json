@@ -24,62 +24,69 @@
     "summary": "MoneyMarket.supply() credited the supplier only after doTransferIn(), so imBTC's ERC-777 tokensToSend hook re-entered withdraw() while the deposit was still counted, letting the attacker keep both the collateral credit and the withdrawn tokens."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 25000000,
       "valuationTimestamp": 1587257935,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-4"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "dForce reports that approximately $25 million of cryptoassets were drained from Lendf.Me across the coherent exploit campaign. Nearly all assets were later recovered and redistributed; this measurement records gross assets lost at exploit time rather than the post-recovery net outcome."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x0eee3e3828a45f7601d5f54bf49bb01d1a9df5ea",
-      "relationship": "proxy",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x0eee3e3828a45f7601d5f54bf49bb01d1a9df5ea",
+        "codeHash": "0x01742f4a4c5582771d36e79e1aa009070116bd33c232e42321d03c6ab1314c89"
       },
       "deployment": {
         "timestamp": 1565072217,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 8295432,
+        "transactionHash": "0x00cfa6e44d4cf85240f2a1f24c5e9512f34421a4e352626b7cef93527a669210",
+        "transactionIndex": 31,
         "creatorAddress": "0xd30076b706fa0425bc52d0739224fe8ef1ae7c81"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1565072217,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 8295432,
+        "transactionHash": "0x00cfa6e44d4cf85240f2a1f24c5e9512f34421a4e352626b7cef93527a669210",
+        "transactionIndex": 31,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x0eee3e3828a45f7601d5f54bf49bb01d1a9df5ea"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The defect-bearing MoneyMarket runtime was created directly in this transaction and remained unchanged through the exploit."
       },
       "codeAgeSeconds": 22185718,
-      "failureModeId": "legacy:eip155:1:0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b:failure-1",
+      "failureModeId": "failure:lendfme-supply-transfer-hook-reentrancy",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-1",
+          "source-3",
+          "source-5",
+          "source-6"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-6"
+        ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/dforce.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -89,7 +96,9 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause"
       ],
       "chainId": 1,
       "transactionHash": "0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b"
@@ -98,7 +107,8 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "url": "https://peckshield.medium.com/uniswap-lendf-me-hacks-root-cause-and-loss-analysis-50f3263dcc09"
     },
@@ -106,16 +116,54 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
-        "target-identity"
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: victim 0x0eee3e38 is the verified non-proxy MoneyMarket contract (EIP-1967 impl slot empty), created 2019-08-06 by 0xd30076b706fa0425bc52d0739224fe8ef1ae7c81, not by attack sender 0xa9bf70a4; DeFiHackLabs PoC src/test/2020-04/LendfMe_exp.sol reproduces the reentrant withdraw"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T18:19:12Z",
+      "note": "Reviewed the selected exploit receipt and call trace, MoneyMarket creation transaction and bytecode, historical runtime, disassembly, commit-pinned reproduction, PeckShield's technical analysis, and dForce's official resolution report. The trace calls MoneyMarket 0x0eee3e3828a45f7601d5f54bf49bb01d1a9df5ea directly: supply() invokes imBTC.transferFrom(), imBTC's ERC-777 tokensToSend callback re-enters MoneyMarket.withdraw() before the outer supply updates accounting, and the outer call then credits the deposit again. MoneyMarket is a direct 19,206-byte deployment with no DELEGATECALL, SELFDESTRUCT, or CREATE2 opcode. Its runtime hash is 0x01742f4a4c5582771d36e79e1aa009070116bd33c232e42321d03c6ab1314c89 both at deployment block 8295432 and immediately before exploit block 9899738, establishing 22,185,718 seconds of unchanged code. dForce reports approximately $25 million drained across the campaign and later recovered nearly in full."
+    },
+    {
+      "id": "source-4",
+      "type": "post-mortem",
+      "supports": [
+        "loss"
+      ],
+      "url": "https://medium.com/dforcenet/lendf-me-hack-resolution-part-i-asset-redistribution-plan-9cefee49f209"
+    },
+    {
+      "id": "source-5",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2020-04/LendfMe_exp.sol"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x00cfa6e44d4cf85240f2a1f24c5e9512f34421a4e352626b7cef93527a669210"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/dforce.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The $25 million loss is dForce's rounded campaign-level report and is not expanded into exact per-asset components here.",
+      "Subsequent asset recovery is excluded from the exploit-time gross-loss measurement."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

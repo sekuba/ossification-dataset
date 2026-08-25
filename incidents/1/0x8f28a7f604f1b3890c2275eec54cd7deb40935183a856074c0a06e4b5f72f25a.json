@@ -24,26 +24,43 @@
     "summary": "The closed-source Aperture router forwarded caller-supplied call targets and calldata without validation, letting the attacker make the contract invoke ERC-20 transferFrom() and ERC-721 transfers against the standing token and Uniswap V3 position approvals users had granted it."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 3670000,
       "valuationTimestamp": 1769361035,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-2"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+          "symbol": "WBTC"
+        },
+        "amount": "36.91885364",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "BlockSec reports approximately $3.67 million of gross assets lost across the Aperture campaign on Ethereum, Arbitrum, and Base. The structured asset component is the exact WBTC amount transferred from a victim in the selected Ethereum transaction; it is only one component of the reported cross-chain total. No recovery is netted from the exploit-time loss."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xd83d960debec397fb149b51f8f37dd3b5cfa8913",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xd83d960debec397fb149b51f8f37dd3b5cfa8913",
+        "codeHash": "0xefc84c5b1d6be0359381d8700907c9373ac7417486f2038676c552668d818ecf"
       },
       "deployment": {
         "timestamp": 1765826879,
@@ -63,12 +80,14 @@
           "type": "deployment",
           "address": "0xd83d960debec397fb149b51f8f37dd3b5cfa8913"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The vulnerable arbitrary-call path is part of the target's immutable direct runtime, created by the factory in this transaction and unchanged through the exploit."
       },
       "codeAgeSeconds": 3534156,
-      "failureModeId": "legacy:eip155:1:0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a:failure-1",
+      "failureModeId": "failure:aperture-arbitrary-call-approval-drain",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
+          "source-2",
           "source-4",
           "source-5"
         ],
@@ -78,11 +97,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/aperture-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -92,7 +111,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a"
@@ -101,7 +123,9 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "url": "https://blocksec.com/blog/17m-closed-source-smart-contract-exploit-arbitrary-call-swapnet-aperture"
     },
@@ -117,10 +141,15 @@
       "id": "source-4",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: victim created 2025-12-15 by 0xbeef63ae5a2102506e8a352a5bb32aa8b30b3112 (not the attacker), no EIP-1967 Upgraded event before the incident. The anchored tx is the attacker's contract-creation tx; its logs show 36.918 WBTC pulled from user 0x5240b03be5bc101a0082074666dd89ad883e1f9d to the attacker EOA plus a Uniswap V3 position mint. Reported incident total $3.67M across Ethereum/Arbitrum/Base."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-25T05:53:54Z",
+      "note": "Reviewed the live Ethereum transaction, receipt, call trace, factory creation transaction, pre-exploit runtime and hash, runtime control flow, and BlockSec's campaign analysis. The selected transaction calls selector 0x67b34120 on 0xd83d960debec397fb149b51f8f37dd3b5cfa8913; its user-controlled target and calldata make that contract call WBTC.transferFrom(victim, attacker, 36.91885364 WBTC) against a standing approval. The target is a direct contract with no delegatecall path in its runtime. It was created internally by factory 0x13b0d85ccb8bf860b6b79af3029fca081ae9bef2 in transaction 0x239acc3db4cf951a671fab224129ba26250d96d3dce6ea0d934eee8d26b7c9f7 at 24020090:222; 0xbeef63ae5a2102506e8a352a5bb32aa8b30b3112 is the transaction sender, not the target's creatorAddress. The pre-exploit runtime hash matches the declared artifact and the deployment is its last code change. BlockSec reports approximately $3.67 million lost across the same arbitrary-call campaign on Ethereum, Arbitrum, and Base."
     },
     {
       "id": "source-5",
@@ -134,10 +163,12 @@
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/aperture-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The cross-chain $3.67 million campaign total is retained from BlockSec reporting; only the selected Ethereum transaction's WBTC component was independently quantified here."
+    ],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

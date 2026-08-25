@@ -21,20 +21,22 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "The vesting contract's init() carried no access control or initialized guard, so the attacker re-initialized it with themselves as the sole beneficiary and then called emergencyExit() to sweep the deposited sale tokens."
+    "summary": "The vesting implementation's init() had no caller authentication or one-time initialization guard, so calling it again made the attacker the proxy's owner. The attacker then used the owner-only emergencyExit() path to sweep the proxy's vested sale tokens."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 4000000,
       "valuationTimestamp": 1630706304,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-4"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "SlowMist reports nearly $4 million taken across the DeRace, Coinspaid, Capsule Coin, and Showcase vesting proxies. The reported figure is treated as the gross campaign loss."
   },
   "targets": [
     {
@@ -47,40 +49,46 @@
       },
       "deployment": {
         "timestamp": 1627982213,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0xcf28556ee95be8c52ad2f3480149128cca51dac1"
+        "blockNumber": 12951447,
+        "transactionHash": "0x6694dfda1b21cd87c058f5e0718369cc2e87c97d1ab16b68169511a11e055dc7",
+        "transactionIndex": 3,
+        "creatorAddress": "0x95626473b6782292d20f1b07a85a8b7f6ab63677"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1627982213,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 12951447,
+        "transactionHash": "0x6694dfda1b21cd87c058f5e0718369cc2e87c97d1ab16b68169511a11e055dc7",
+        "transactionIndex": 3,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x2fd602ed1f8cb6deaba9bedd560ffe772eb85940"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The EIP-1167 proxy deployment fixed the implementation address in its runtime. The proxy runtime and implementation runtime remained unchanged through the exploit."
       },
       "codeAgeSeconds": 2724091,
-      "failureModeId": "legacy:eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c:failure-1",
+      "failureModeId": "failure:dao-maker-vesting-unprotected-reinitialization",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-1",
+          "source-2",
+          "source-3",
+          "source-4",
+          "source-5",
+          "source-6"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/dao-maker.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -90,7 +98,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity"
       ],
       "chainId": 1,
       "transactionHash": "0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c"
@@ -99,6 +108,7 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
+        "target-identity",
         "root-cause"
       ],
       "url": "https://twitter.com/Mudit__Gupta/status/1434059922774237185"
@@ -107,17 +117,55 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:36:01Z",
+      "note": "Reviewed the live Ethereum receipt and call trace for the earliest campaign init, the corresponding emergencyExit transaction, the proxy creation receipt and trace, historical proxy and implementation code, and the cited SlowMist analysis. The successful anchor directly calls init(uint256,uint256[],uint256[],address) on vesting proxy 0x2fd602ed1f8cb6deaba9bedd560ffe772eb85940, which delegatecalls 0xf17ca0e0f24a5fa27944275fa0cedec24fbf8ee2. The later transaction 0x96bf6bd14a81cf19939c0b966389daed778c3a9528a6c5dd7a4d980dec966388 calls emergencyExit(attacker) through the same artifact and transfers the proxy's DERC balance. The proxy was created at 12951447:3 by factory 0x95626473b6782292d20f1b07a85a8b7f6ab63677; code was absent one block earlier. Its 45-byte EIP-1167 runtime immutably embeds the implementation, and both runtimes remained unchanged through the exploit. SlowMist reports nearly $4 million gross across four affected vesting proxies."
+    },
+    {
+      "id": "source-4",
+      "type": "post-mortem",
+      "supports": [
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://slowmist.medium.com/slowmist-an-analysis-of-the-attack-on-dao-maker-627fcccd8fcb"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
         "target-identity",
         "code-history"
       ],
-      "note": "onchain review: attack tx calls 0x2fd602ed directly with selector 0x84304ad7 (init); contract created 2021-08-03 by 0xcf28556ee95be8c52ad2f3480149128cca51dac1, not by attack sender 0x2708cace; note this is the 2021-09-03 DAO Maker incident, distinct from the 2021-08-12 one. Recheck (deployment basis confirmed): the vesting contract's 45-byte runtime is an EIP-1167 minimal proxy (363d3d373d3d3d363d73) whose master 0xf17ca0e0f24a5fa27944275fa0cedec24fbf8ee2 is baked into the bytecode and is the only address delegatecalled in the exploit (selector 0x84304ad7, init); keccak(eth_getCode) is identical at the creation block 12951447 and the incident block 13155321, so the delegatecall target cannot be repointed."
+      "chainId": 1,
+      "transactionHash": "0x6694dfda1b21cd87c058f5e0718369cc2e87c97d1ab16b68169511a11e055dc7"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x96bf6bd14a81cf19939c0b966389daed778c3a9528a6c5dd7a4d980dec966388"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/dao-maker.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The loss uses SlowMist's campaign estimate rather than a separately repriced ledger of all four volatile sale tokens."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

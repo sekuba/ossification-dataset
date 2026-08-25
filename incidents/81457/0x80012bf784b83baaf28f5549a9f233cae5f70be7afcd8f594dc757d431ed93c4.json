@@ -1,0 +1,193 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:81457:0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4",
+  "protocol": {
+    "name": "SSS",
+    "slug": "sss"
+  },
+  "name": "Super Sushi Samurai stale-balance self-transfer inflation",
+  "incident": {
+    "chainId": 81457,
+    "exploit": {
+      "transactionHash": "0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4",
+      "blockNumber": 1111415,
+      "transactionIndex": 12,
+      "timestamp": 1711032645
+    },
+    "attackerAddresses": [
+      "0x6a89a8c67b5066d59bf4d81d59f70c3976facd0a"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The token's custom _update() read the recipient balance before reducing the sender balance. When sender and recipient were equal, its final recipient write overwrote the reduction with the stale balance plus the transfer amount, doubling the account's balance on every self-transfer."
+  },
+  "loss": {
+    "kind": "gross-assets-lost",
+    "usd": {
+      "amount": 4600000,
+      "valuationTimestamp": 1711032645,
+      "method": "reported",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [
+      {
+        "asset": {
+          "chainId": 81457,
+          "tokenAddress": "0x4300000000000000000000000000000000000004",
+          "symbol": "WETH"
+        },
+        "amount": "1310.040494988573740722",
+        "usdValue": 4600000,
+        "valuation": {
+          "method": "reported",
+          "timestamp": 1711032645,
+          "unitPriceUsd": 3511.341838360593,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-5",
+          "source-6"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "The final cash-out transaction transferred exactly 1,310.040494988573740722 WETH from the SSS/WETH pool to the attack contract. Contemporary security analysis valued the drain at approximately $4.6 million. The apparent white hat later returned the funds for a bounty; recovery is not netted from the exploit-time gross loss."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xdfdcdbc789b56f99b0d0692d14dbc61906d9deed",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0xdfdcdbc789b56f99b0d0692d14dbc61906d9deed",
+        "codeHash": "0xa8fff26c4cd91901e875f739abd473d6374ebb996cd92e317131b892ecbb0e2e"
+      },
+      "deployment": {
+        "timestamp": 1709951669,
+        "blockNumber": 570927,
+        "transactionHash": "0xe798c6322f1bc3066b92293c5295877e87dbb833a7caba9c4cfd5fc458cfde33",
+        "transactionIndex": 3,
+        "creatorAddress": "0x555b28f3b8b3b8ebd1b06997c2078fd94529f555"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1709951669,
+        "blockNumber": 570927,
+        "transactionHash": "0xe798c6322f1bc3066b92293c5295877e87dbb833a7caba9c4cfd5fc458cfde33",
+        "transactionIndex": 3,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0xdfdcdbc789b56f99b0d0692d14dbc61906d9deed"
+        },
+        "description": "The stale-balance _update logic is part of the token's immutable direct runtime, deployed in this transaction and unchanged through the exploit."
+      },
+      "codeAgeSeconds": 1080976,
+      "failureModeId": "failure:sss-stale-balance-self-transfer-inflation",
+      "evidence": {
+        "identitySourceIds": [
+          "source-1",
+          "source-2",
+          "source-3",
+          "source-4",
+          "source-6"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-6"
+        ]
+      },
+      "verification": {
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-6"
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor",
+        "target-identity"
+      ],
+      "chainId": 81457,
+      "transactionHash": "0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "path": "src/test/2024-03/SSS_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 81457,
+      "transactionHash": "0xe798c6322f1bc3066b92293c5295877e87dbb833a7caba9c4cfd5fc458cfde33"
+    },
+    {
+      "id": "source-4",
+      "type": "post-mortem",
+      "supports": [
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://medium.com/neptune-mutual/how-was-super-sushi-samurai-exploited-e48a96c6dd6a"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "loss"
+      ],
+      "chainId": 81457,
+      "transactionHash": "0x62e6b906bb5aafdc57c72cd13e20a18d2de3a4a757cd2f24fde6003ce5c9f2c6"
+    },
+    {
+      "id": "source-6",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T20:40:00Z",
+      "note": "Reviewed the live Blast transactions, receipts and call traces for campaign setup, balance inflation and pool cash-out; the exact direct-contract creation transaction; pre-exploit runtime and hash; explorer-verified source; the commit-pinned reproduction; and published security analysis. The legacy anchor was the cash-out 48 seconds after the defect ran. Reanchoring to 0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4 captures 25 direct transfer(self,balance) calls whose values double each time. In _update(), _postCheck reads the recipient's old balance before the sender reduction, then the final recipient write overwrites that reduction when both addresses are equal. The target is an immutable direct runtime created at 570927:3; the creation and pre-exploit hashes match and no delegation is present. The later cash-out transferred exactly 1,310.040494988573740722 WETH from the pool to the attack contract, reported at approximately $4.6 million and later returned for a bounty."
+    }
+  ],
+  "verification": {
+    "tier": "reviewed",
+    "limitations": [
+      "The USD value is the rounded contemporaneous report for the exact onchain WETH amount rather than an independently reproduced timestamped market-price lookup."
+    ],
+    "reviewSourceIds": [
+      "source-6"
+    ]
+  },
+  "notes": []
+}

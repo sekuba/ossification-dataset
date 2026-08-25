@@ -24,16 +24,16 @@
         "legacyV1": 748
       },
       "byDisposition": {
-        "excluded": 10,
-        "included": 1217,
+        "excluded": 12,
+        "included": 1202,
         "out-of-scope": 261,
-        "pending": 23,
+        "pending": 36,
         "unresolved": 96
       },
       "openByReason": {
         "incident-anchors": 1,
         "loss-evidence": 18,
-        "semantic-research": 100
+        "semantic-research": 113
       }
     }
   },
@@ -50,7 +50,7 @@
     },
     "exclusions": {
       "file": "research/raw/exclusions.json",
-      "sha256": "0b51dcc72e6761b623ca3b3bdd0dacb50af691f3724a90681310bf461c2ddc14"
+      "sha256": "85fa6b3f4c0ff6a33d899c7a6178248d247d23ef51e6e1e1c645568909c026bd"
     },
     "legacyV1": {
       "file": "research/raw/legacy-v1.json",
@@ -65,24 +65,24 @@
     },
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
-      "files": 617,
-      "sha256": "c1d0c8ebd074faa99e2b554ce47915b71aacbc66df07c2a06fed0f0c0fd1772f"
+      "files": 614,
+      "sha256": "ca25b8f4eb7f95102c6b347ef2740e21019f01cdf12e1840a0c4551a9757631f"
     }
   },
   "counts": {
-    "total": 1490,
+    "total": 1493,
     "bySource": {
       "defihacklabs": 869,
-      "exclusion": 11,
+      "exclusion": 14,
       "legacy": 130,
       "web-list": 480
     },
     "byDisposition": {
-      "excluded": 21,
-      "included": 666,
+      "excluded": 26,
+      "included": 660,
       "out-of-scope": 270,
-      "pending": 10,
-      "unresolved": 523
+      "pending": 12,
+      "unresolved": 525
     },
     "defihacklabsCoverage": {
       "total": 869,
@@ -851,11 +851,8 @@
         }
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:56:0xeaaa8f4d33b1035a790f0d7c4eb6e38db7d6d3b580e0bbc9ba39a9d6b80dd250"
-        ],
-        "reason": "The source is linked to at least one incident admitted to the primary dataset."
+        "status": "pending",
+        "reason": "A linked legacy code-bug row exists, but no matching primary incident id was found."
       }
     },
     {
@@ -6310,6 +6307,9 @@
         "legacyDatasetFile": "yearn.json",
         "matchedBy": "tx 0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d"
       },
+      "relatedExclusionIds": [
+        "exclusion:12"
+      ],
       "matchedRows": [
         {
           "file": "research/raw/legacy-v1.json",
@@ -6320,11 +6320,11 @@
         }
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d"
+        "status": "excluded",
+        "exclusionIds": [
+          "exclusion:12"
         ],
-        "reason": "The source is linked to at least one incident admitted to the primary dataset."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -12387,7 +12387,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:81457:0x62e6b906bb5aafdc57c72cd13e20a18d2de3a4a757cd2f24fde6003ce5c9f2c6"
+          "eip155:81457:0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -12789,7 +12789,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:1:0x2606d459a50ca4920722a111745c2eeced1d8a01ff25ee762e22d5d4b1595739"
+          "eip155:1:0xa17fdb804728f226fcd10e78eae5247abd984e0f03301312315b89cae25aa517"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -15083,7 +15083,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:1:0x42b2ec27c732100dd9037c76da415e10329ea41598de453bb0c0c9ea7ce0d8e5"
+          "eip155:1:0x56e09abb35ff12271fdb38ff8a23e4d4a7396844426a94c4d3af2e8b7a0a2813"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -15170,7 +15170,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:1:0x39328ea4377a8887d3f6ce91b2f4c6b19a851e2fc5163e2f83bbc2fc136d0c71"
+          "eip155:1:0x871ce0518bef66595ad5885a07d5699cbc71bffa7f8be732fc2565d087cb78ad"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -21887,7 +21887,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:1:0x59d17fd31e31959b2d562508bf91c4fc1271682ba7d61a6209865e1151b69aea"
+          "eip155:8453:0xf0f94d7fc627793ec770c46d117c4934be95fa0b0c8433b820e363d17d8b4dad"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -22083,11 +22083,8 @@
         }
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:1:0x59d17fd31e31959b2d562508bf91c4fc1271682ba7d61a6209865e1151b69aea"
-        ],
-        "reason": "The source is linked to at least one incident admitted to the primary dataset."
+        "status": "pending",
+        "reason": "A linked legacy code-bug row exists, but no matching primary incident id was found."
       }
     },
     {
@@ -23350,6 +23347,9 @@
       "coverage": {
         "kind": "direct-reference"
       },
+      "relatedExclusionIds": [
+        "exclusion:14"
+      ],
       "matchedRows": [
         {
           "file": "research/raw/legacy-v1.json",
@@ -23360,11 +23360,11 @@
         }
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:1:0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12"
+        "status": "excluded",
+        "exclusionIds": [
+          "exclusion:14"
         ],
-        "reason": "The source is linked to at least one incident admitted to the primary dataset."
+        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -23751,6 +23751,75 @@
       "disposition": {
         "status": "excluded",
         "reason": "LOSS_NOT_ESTABLISHED: the selected transaction exploits transferProxy's unchecked _value + _feeSmt addition and creates artificial SMT ledger balances, but its receipt and call trace transfer no ETH or external reserve asset. Subsequent onchain activity only sends the artificial SMT to exchange deposit addresses; the attacker address records no onchain sale proceeds. The inherited $140M figure has no asset-flow or valuation provenance and does not establish at least $1,000 of stolen or permanently locked assets."
+      }
+    },
+    {
+      "id": "exclusion:12",
+      "source": {
+        "kind": "exclusion",
+        "file": "research/raw/exclusions.json",
+        "entryIndex": 11,
+        "defihacklabs": {
+          "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+          "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+          "path": "src/test/2023-04/YearnFinance_exp.sol",
+          "recordedRef": "src/test/2023-04/YearnFinance_exp.sol@b3719ce"
+        }
+      },
+      "candidate": {
+        "name": "Yearn yUSDT fulcrum misconfiguration",
+        "chain": "ethereum",
+        "date": "2023-04-13T05:52:35Z",
+        "candidateVictim": "0x83f798e925bcd4017eb265844fddabb448f1707d",
+        "exploitTx": "0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "CONFIGURATION_ERROR: verified source defines fulcrum as mutable owner-settable storage, the constructor selected iUSDC where iUSDT was intended, live pre-exploit state retains iUSDC, and the exploit trace follows that configured address. The loss arose from an address-selection error rather than a defect in the executed runtime, so there is no code-age observation."
+      }
+    },
+    {
+      "id": "exclusion:13",
+      "source": {
+        "kind": "exclusion",
+        "file": "research/raw/exclusions.json",
+        "entryIndex": 12
+      },
+      "candidate": {
+        "name": "Rho Markets oracle-feed misconfiguration",
+        "chain": "scroll",
+        "date": "2024-07-19T08:59:49Z",
+        "candidateVictim": "0x653c2d3a1e4ac5330de3c9927bb9bdc51008f9d5",
+        "exploitTx": "0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "CONFIGURATION_ERROR: the protocol admin listed rWBTC without first setting its RTokenConfig, so its underlying remained the zero-address default, then configured the WBTC/USD feed under the zero-address key already used by native ETH. Transaction 0x9d2388a0c449c6265b968d86f0f54e75a5b82e2b04176e35eefdff5f135547ec changed only oracle configuration and made ETH read the WBTC price; no executable code changed. The exploiter, Rho Markets reporting, and independent analysis identify the event as an oracle or deployment-script misconfiguration, so there is no code-age observation."
+      }
+    },
+    {
+      "id": "exclusion:14",
+      "source": {
+        "kind": "exclusion",
+        "file": "research/raw/exclusions.json",
+        "entryIndex": 13,
+        "defihacklabs": {
+          "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+          "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+          "path": "src/test/2026-07/SummerFi_exp.sol",
+          "recordedRef": "src/test/2026-07/SummerFi_exp.sol@ad353ba25fbb"
+        }
+      },
+      "candidate": {
+        "name": "SummerFi impaired-Ark offboarding exposure",
+        "chain": "ethereum",
+        "date": "2026-07-06T05:17:59Z",
+        "candidateVictim": "0x98c49e13bf99d7cad8069faa2a370933ec9ecf17",
+        "exploitTx": "0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "CONFIGURATION_ERROR: SummerFi's primary post-mortem states that FleetCommander and Ark accounting behaved as designed and identifies the failure as an operational offboarding state: the impaired Silo Varlamore Arks had deposit caps set to zero but remained in each FleetCommander's active set, so their stale reported value continued to count in NAV. The exploit donated the impaired asset into those still-active Arks and redeemed against liquid positions. Because governance/process state, rather than a defect in executed EVM code, created the exposure, there is no code-age observation."
       }
     },
     {
@@ -30772,11 +30841,8 @@
         }
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:1:0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281"
-        ],
-        "reason": "Exact normalized project name and UTC date match one primary incident."
+        "status": "unresolved",
+        "reason": "An exact legacy name/date match exists, but it is not admitted to the primary dataset."
       }
     },
     {
@@ -33949,11 +34015,8 @@
         }
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05"
-        ],
-        "reason": "Exact normalized project name and UTC date match one primary incident."
+        "status": "unresolved",
+        "reason": "An exact legacy name/date match exists, but it is not admitted to the primary dataset."
       }
     },
     {

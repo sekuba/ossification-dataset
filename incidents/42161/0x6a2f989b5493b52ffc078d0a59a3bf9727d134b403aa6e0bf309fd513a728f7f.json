@@ -6,7 +6,7 @@
     "name": "DeltaPrime",
     "slug": "deltaprime"
   },
-  "name": "DeltaPrime",
+  "name": "DeltaPrime unvalidated LFJ reward pair",
   "incident": {
     "chainId": 42161,
     "exploit": {
@@ -16,73 +16,83 @@
       "timestamp": 1731310565
     },
     "attackerAddresses": [
-      "0xb87881637b5c8e6885c51ab7d895e53fa7d7c567"
+      "0xb87881637b5c8e6885c51ab7d895e53fa7d7c567",
+      "0x0b2bcf06f740c322bc7276b6b90de08812ce9bfe",
+      "0x52ee5c0ea2e7b38d4b24c09d4d18cba6c293200e"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "reentrancy via claimReward with fake pair double-counted collateral/reward in SmartLoan"
+    "summary": "TraderJoeV2ArbitrumFacet.claimReward() accepted an arbitrary LFJ pair without checking that the factory created it, then trusted that pair's hook and rewarder. The malicious rewarder called back into the Prime Account to wrap its borrowed native ETH between the function's before/after WETH balance checks, causing collateral and debt proceeds to be misclassified and paid out as rewards without a solvency check."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 4750000,
       "valuationTimestamp": 1731310565,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-5",
+        "source-6"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "DeltaPrime and Verichains report approximately $4.75 million drained across the coherent November 11 campaign on Arbitrum and Avalanche. DeltaPrime's separate September 16 private-key compromise caused a $5.98 million loss and is not included in this incident."
   },
   "targets": [
     {
       "id": "target-1",
-      "executionAddress": "0x62cf82fb0484af382714cd09296260edc1dc0c6c",
+      "executionAddress": "0xf81b4381b70ef520ae635afd4b0e8aeb994131fb",
       "relationship": "diamond",
       "codeArtifact": {
-        "address": "0xc7144ee9b57ff6a84127ed7a57e0919e84538467",
-        "codeHash": "0xf2d2fe8873075b006361c88f28c59b6377a9eb85093ad81244f430976ea559d3"
+        "address": "0xd6002c3f5a53107cb11cc0b8de5f76f61f18cb5d",
+        "codeHash": "0x24783f83b2a34799fc181a436d356d3ed6e76782fc6444bd3f327bc7fe681a75"
       },
       "deployment": {
-        "timestamp": 1691424383,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "timestamp": 1731310557,
+        "blockNumber": 273278712,
+        "transactionHash": "0x4183bec6ed03429f1582850d2e04d6d8b3898ddca971f1665190c62ede981ecd",
+        "transactionIndex": 1,
+        "creatorAddress": "0xff5e3ddaeff411a1dc6cce00014e4bca39265c20"
       },
       "lastCodeChange": {
-        "kind": "module-change",
-        "timestamp": 1730982588,
-        "blockNumber": 271974869,
-        "transactionHash": "0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a",
-        "transactionIndex": 9,
+        "kind": "deployment",
+        "timestamp": 1731310557,
+        "blockNumber": 273278712,
+        "transactionHash": "0x4183bec6ed03429f1582850d2e04d6d8b3898ddca971f1665190c62ede981ecd",
+        "transactionIndex": 1,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "deployment",
+          "address": "0xf81b4381b70ef520ae635afd4b0e8aeb994131fb"
         },
-        "description": "2024-11-07T12:29:48Z (block 271974869, tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a): last DiamondCut on the SmartLoanDiamondBeacon before the incident, a Replace of PenpieFacet 0x130c975a189024cdfe4a4b38706a431463ad0acf that reinstalled claimRewards(address) (0xef5cfb8c), the exploited selector"
+        "description": "The attacker's Prime Account execution context was created through DeltaPrime's factory with the globally selected defect-bearing facet already active. The account runtime and global selector mapping did not change before exploitation."
       },
-      "codeAgeSeconds": 327977,
-      "failureModeId": "legacy:eip155:42161:0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f:failure-1",
+      "codeAgeSeconds": 8,
+      "failureModeId": "failure:deltaprime-unvalidated-lfj-reward-pair",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-3",
-          "source-4"
+          "source-5",
+          "source-6"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-7",
+          "source-8"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/deltaprime.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -92,7 +102,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 42161,
       "transactionHash": "0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f"
@@ -112,10 +125,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: victim 0x62cf82fb0484af382714cd09296260edc1dc0c6c is the DeltaPrime SmartLoanDiamondBeacon, an EIP-2535 diamond that changes facet code with DiamondCut rather than an EIP-1967 Upgraded event; eth_getLogs over creation block 119095598 (2023-08-07) to incident block 273278742 returns 150 DiamondCut logs, the last four of them on 2024-11-07 (12:28:11, 12:28:47, 12:29:18 and 12:29:48 UTC) replacing Penpie/Pendle facets; the final cut, block 271974869 / tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a, Replaces facet 0x130c975a189024cdfe4a4b38706a431463ad0acf (PenpieFacet) carrying claimRewards(address) 0xef5cfb8c, the selector the exploit reentered, so the age is measured from that cut rather than the beacon deployment"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:36:00Z",
+      "note": "Reviewed the successful Arbitrum receipt and full trace, the attacker's Prime Account creation trace, all 150 pre-incident DiamondCut events on SmartLoanDiamondBeacon 0x62cf82fb0484af382714cd09296260edc1dc0c6c, the defect-bearing facet deployment and historical runtime, the commit-pinned reproduction, DeltaPrime's project post-mortem, and Verichains' analysis. Orchestrator 0x0b2bcf06f740c322bc7276b6b90de08812ce9bfe calls claimReward(address,uint256[]) on Prime Account 0xf81b4381b70ef520ae635afd4b0e8aeb994131fb with malicious pair 0x52ee5c0ea2e7b38d4b24c09d4d18cba6c293200e; the account delegates selector 0xb2af870a to TraderJoeV2ArbitrumFacet 0xd6002c3f5a53107cb11cc0b8de5f76f61f18cb5d. The malicious rewarder calls back into the account to wrap borrowed native ETH between its WETH balance checks. The 843-byte Prime Account was internally created by factory 0xff5e3ddaeff411a1dc6cce00014e4bca39265c20 at block 273278712:1 and retained its runtime through the exploit eight seconds later. Six earlier DiamondCut events affected selector 0xb2af870a; the last is log 24 at block 271974750:7, which selected the same defect-bearing facet from data word 5, and a later cut changed only unrelated Penpie selectors. Because this target's storage and authority came from the newly created per-user account, its effective target code state begins at account deployment; the earlier global facet activation remains code-history context rather than the age anchor. The 20,095-byte facet runtime hashes to 0x24783f83b2a34799fc181a436d356d3ed6e76782fc6444bd3f327bc7fe681a75 at deployment, global activation, and immediately before the exploit. DeltaPrime and Verichains report a $4.75 million November campaign loss across Arbitrum and Avalanche; the separate September private-key incident was approximately $5.98 million."
     },
     {
       "id": "source-4",
@@ -125,14 +143,59 @@
         "code-history"
       ],
       "chainId": 42161,
-      "transactionHash": "0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a"
+      "transactionHash": "0xdf204ce6aac17e5a511cd0a169e55c8f2bb431e7b0f219eea2a7ef4285e26a24"
+    },
+    {
+      "id": "source-5",
+      "type": "post-mortem",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://medium.com/@DeltaPrimeDefi/deltaprime-post-mortem-reimbursement-plan-07-12-2024-2d654912715b"
+    },
+    {
+      "id": "source-6",
+      "type": "post-mortem",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://blog.verichains.io/p/deltaprime-exploit-analysis"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0x4183bec6ed03429f1582850d2e04d6d8b3898ddca971f1665190c62ede981ecd"
+    },
+    {
+      "id": "source-8",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 42161,
+      "transactionHash": "0xdfa19ad88a203fc454bf3bb8fad9d9451bfa05d28ccebf5238df7b9ec3c7f80d"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/deltaprime.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The $4.75 million gross loss is DeltaPrime's rounded project-reported campaign value across Arbitrum and Avalanche; individual cross-chain asset quantities are not structured in this record.",
+      "The defect-bearing facet was globally selected 328,007 seconds before the exploit, but the implicated per-user Prime Account execution context was deployed with that route active eight seconds before exploitation; the target age follows the execution context's effective code state."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -144,8 +207,5 @@
       "date": "2024-11-11T07:36:05Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2024-11-07T12:29:48Z (block 271974869, tx 0xdd4a56e87ca82cda4f184a4f57f27f3f1af2ea4ea521cd7fe03f691e9b50684a): last DiamondCut on the SmartLoanDiamondBeacon before the incident, a Replace of PenpieFacet 0x130c975a189024cdfe4a4b38706a431463ad0acf that reinstalled claimRewards(address) (0xef5cfb8c), the exploited selector"
-  ]
+  "notes": []
 }

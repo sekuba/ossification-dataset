@@ -1,0 +1,248 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "schemaVersion": "2.0.0",
+  "id": "eip155:1:0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+  "protocol": {
+    "name": "Punk Protocol",
+    "slug": "punk-protocol"
+  },
+  "name": "Punk Protocol pool re-initialization",
+  "incident": {
+    "chainId": 1,
+    "exploit": {
+      "transactionHash": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+      "blockNumber": 12995895,
+      "transactionIndex": 50,
+      "timestamp": 1628578498
+    },
+    "attackerAddresses": [
+      "0x3aa27ab297a3a753f79c5497569ba2dacc2bc35a",
+      "0x00000000b2ff98680adaf8a3e382176bbfc34c8f"
+    ]
+  },
+  "classification": {
+    "rootCause": "code-bug",
+    "summary": "The three Punk CompoundModel pools exposed initialize() without access control or a one-time initialization guard. The extraction contract reinitialized each pool with itself as forge_, invested the pool's stablecoins into Compound, and called withdrawToForge() to redeem and sweep the funds."
+  },
+  "loss": {
+    "kind": "gross-assets-lost",
+    "usd": {
+      "amount": 8950039.027094759,
+      "valuationTimestamp": 1628578498,
+      "method": "stablecoin-par",
+      "sourceIds": [
+        "source-1",
+        "source-2"
+      ]
+    },
+    "minimumUsd": null,
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "2995824.696852",
+        "usdValue": 2995824.696852,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1628578498,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-2"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT"
+        },
+        "amount": "3000022.7862",
+        "usdValue": 3000022.7862,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1628578498,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-2"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "symbol": "DAI"
+        },
+        "amount": "2954191.544042759328963399",
+        "usdValue": 2954191.5440427593,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1628578498,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-2"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The re-anchored transaction records the three exact pool outflows reported by Punk Protocol. The $8,950,039.027094759 gross amount values USDC, USDT, and DAI at par. Punk reports that approximately $4,954,250 was subsequently recovered; recovery is not subtracted from gross loss."
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb",
+        "codeHash": "0xad4296ca86f0d86547eee00e3723dbbd3a2c3462c846dd5dcd5b4ce9773625ce"
+      },
+      "deployment": {
+        "timestamp": 1627891400,
+        "blockNumber": 12944792,
+        "transactionHash": "0x39a78785a85250ee6f17459113efa2bdc2d5069a37f751171ee44efb3ac219f7",
+        "transactionIndex": 152,
+        "creatorAddress": "0xe36cc0432619247ab12f1cdd19bb3e7a24a7f47c"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1627891400,
+        "blockNumber": 12944792,
+        "transactionHash": "0x39a78785a85250ee6f17459113efa2bdc2d5069a37f751171ee44efb3ac219f7",
+        "transactionIndex": 152,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x3bc6aa2d25313ad794b2d67f83f21d341cc3f5fb"
+        },
+        "description": "Top-level deployment of the direct USDC CompoundModel runtime; its deployment-block and pre-exploit hashes match."
+      },
+      "codeAgeSeconds": 687098,
+      "failureModeId": "failure:punk-compound-model-reinitialization",
+      "evidence": {
+        "identitySourceIds": [
+          "source-1",
+          "source-2",
+          "source-3"
+        ],
+        "codeHistorySourceIds": [
+          "source-3",
+          "source-4"
+        ]
+      },
+      "verification": {
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b"
+    },
+    {
+      "id": "source-2",
+      "type": "post-mortem",
+      "supports": [
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://medium.com/punkprotocol/punk-finance-fair-launch-incident-report-984d9e340eb"
+    },
+    {
+      "id": "source-3",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T18:58:52Z",
+      "note": "Re-anchored from transaction 0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281 at index 52 to the frontrunning loss-bearing transaction at index 50 in the same block. The legacy transaction repeats the defect after the pools have been drained and receives only 0.028802 USDC, 0.036879 USDT, and 0.030390567272501362 DAI. The selected transaction calls initialize(address,address,address,address,address,address), invest(), and withdrawToForge(uint256) on each of the USDC, USDT, and DAI CompoundModel pools and transfers exactly 2,995,824.696852 USDC, 3,000,022.7862 USDT, and 2,954,191.544042759328963399 DAI to extraction contract 0x00000000b2ff98680adaf8a3e382176bbfc34c8f. All three pools are direct top-level deployments by 0xe36cc0432619247ab12f1cdd19bb3e7a24a7f47c, share the same 6,097-byte runtime and hash 0xad4296ca86f0d86547eee00e3723dbbd3a2c3462c846dd5dcd5b4ce9773625ce at deployment and immediately before the exploit, and execute without proxy delegation. The structured target uses the USDC pool as the representative execution context because the three pools contain the same code artifact and failure mode."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x39a78785a85250ee6f17459113efa2bdc2d5069a37f751171ee44efb3ac219f7"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xf1439835fb293178d3d4c009b43e6e0c8d1562dbb2120e0ecbaa32386d3bf32a"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xef09df5396fa5930af4dc78fc4bf70ba5eeb5e03e33381b03eb5d4621e04c5b8"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "root-cause"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281"
+    }
+  ],
+  "verification": {
+    "tier": "reviewed",
+    "limitations": [
+      "The gross stablecoin loss is valued at par. Punk Protocol reports approximately $4.95 million was recovered after the extraction; recovery is not subtracted from the gross incident amount."
+    ],
+    "reviewSourceIds": [
+      "source-3"
+    ]
+  },
+  "notes": [
+    "The legacy anchor was a copied exploit transaction two positions after the successful frontrun. This record uses the earlier transaction that executes the same defect and carries the reported loss."
+  ]
+}

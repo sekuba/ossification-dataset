@@ -21,67 +21,96 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "RewardsHypervisor.deposit() took the caller-supplied `from` contract at face value, reading IVisor(from).owner() as authorization and calling IVisor(from).delegatedTransferERC20() for payment, so an attacker contract that returned itself as owner and no-opped the transfer minted vVISR shares without depositing any VISR."
+    "summary": "RewardsHypervisor.deposit() trusted a caller-supplied `from` contract both to report its owner and to transfer VISR, without validating the contract or confirming receipt. The attacker hook no-opped the transfer and reentered deposit once, causing two vVISR share mints backed by zero VISR."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 8200000,
       "valuationTimestamp": 1640096295,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-2",
+        "source-6"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xf938424f7210f31df2aee3011291b658f872e91e",
+          "symbol": "VISR"
+        },
+        "amount": "8812958.138426966035592617",
+        "usdValue": 8200000,
+        "valuation": {
+          "method": "reported",
+          "timestamp": 1640096295,
+          "unitPriceUsd": null,
+          "sourceIds": [
+            "source-2",
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-2",
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "The follow-up withdrawal transferred exactly 8,812,958.138426966035592617 VISR from RewardsHypervisor to the attacker. Published analyses value the incident at approximately $8.2 million."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xc9f27a50f82571c1c8423a42970613b8dbda14ef",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xc9f27a50f82571c1c8423a42970613b8dbda14ef",
+        "codeHash": "0x8c37455c33d4dc5f9d0ac233d48e9334887e64405f67bcd4afc05e74717fdaf7"
       },
       "deployment": {
         "timestamp": 1630617135,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13148651,
+        "transactionHash": "0x9f311879c27111f826685a05223feb5f0be6c4c35e24b47360d200b4c610a3a2",
+        "transactionIndex": 13,
         "creatorAddress": "0x79a5e766e84076d00af6d05ebfcca9a274e47815"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1630617135,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13148651,
+        "transactionHash": "0x9f311879c27111f826685a05223feb5f0be6c4c35e24b47360d200b4c610a3a2",
+        "transactionIndex": 13,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0xc9f27a50f82571c1c8423a42970613b8dbda14ef"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The vulnerable deposit, external-hook and share-mint logic is part of RewardsHypervisor's immutable direct runtime, deployed in this transaction and unchanged through the exploit."
       },
       "codeAgeSeconds": 9479160,
-      "failureModeId": "legacy:eip155:1:0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f:failure-1",
+      "failureModeId": "failure:visor-unvalidated-visor-hook-free-share-mint",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-1",
+          "source-2",
+          "source-3",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-7"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/visor-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -91,7 +120,8 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity"
       ],
       "chainId": 1,
       "transactionHash": "0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f"
@@ -100,7 +130,9 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "url": "https://beosin.medium.com/two-vulnerabilities-in-one-function-the-analysis-of-visor-finance-exploit-a15735e2492"
     },
@@ -108,17 +140,63 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "loss",
+        "root-cause"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:10:16Z",
+      "note": "Reviewed the live Ethereum receipts and call traces for the anchored free-share mint and follow-up withdrawal, the RewardsHypervisor creation trace, pre-exploit runtime and code hash, verified source, the commit-pinned reproduction, Beosin's analysis, and Rekt's incident account. The attacker contract calls deposit(100,000,000e18, attackerContract, attacker) and, when RewardsHypervisor calls its owner() and delegatedTransferERC20() hooks, returns itself as owner, transfers no VISR, and reenters deposit once. RewardsHypervisor then calls vVISR.mint twice for 97,624,975.481815716136709737 vVISR each. The follow-up withdrawal burns the resulting 195,249,950.963631432273419474 vVISR and transfers exactly 8,812,958.138426966035592617 VISR to the attacker. RewardsHypervisor is a full direct runtime with no DELEGATECALL or SELFDESTRUCT; its creation and pre-exploit hashes match and the code remained unchanged. Published incident accounts value the withdrawn VISR at approximately $8.2 million."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "loss"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x6eabef1bf310a1361041d97897c192581cd9870f6a39040cd24d7de2335b4546"
+    },
+    {
+      "id": "source-5",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2021-12/Visor_exp.sol"
+    },
+    {
+      "id": "source-6",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://rekt.news/visor-finance-rekt"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
         "target-identity",
         "code-history"
       ],
-      "note": "onchain review: RewardsHypervisor 0xc9f27a50 created 2021-09-02 by 0x79a5e766e84076d00af6d05ebfcca9a274e47815, not by attack sender 0x8efab89b; no EIP-1967 upgrade events before the incident"
+      "chainId": 1,
+      "transactionHash": "0x9f311879c27111f826685a05223feb5f0be6c4c35e24b47360d200b4c610a3a2"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/visor-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The USD amount is the rounded published incident estimate rather than a separately reconstructed VISR price observation."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

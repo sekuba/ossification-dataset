@@ -24,17 +24,91 @@
     "summary": "LoanTokenLogic's _internalTransferFrom cached the sender and receiver balances before writing them and never rejected _from == _to, so each self-transfer of iETH credited the receiver without debiting the sender and doubled the attacker's iETH before burnToEther()."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 8000000,
+      "amount": 8100000,
       "valuationTimestamp": 1599988201,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-2",
+        "source-5"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x514910771af9ca656af840dff83e8264ecf986ca",
+          "symbol": "LINK"
+        },
+        "amount": "219199.66",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-2",
+          "source-5"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "4502.70",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-2",
+          "source-5"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT"
+        },
+        "amount": "1756351.27",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-2",
+          "source-5"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "1412048.48",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-2",
+          "source-5"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "symbol": "DAI"
+        },
+        "amount": "667988.62",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-2",
+          "source-5"
+        ]
+      }
+    ],
+    "confidence": "medium",
+    "notes": "The approximately $8.1 million gross campaign loss covers the reported LINK, ETH, USDT, USDC, and DAI drained through duplicated iToken balances. The attacker later returned the assets; recovery is separate from exploit-time gross loss."
   },
   "targets": [
     {
@@ -47,10 +121,10 @@
       },
       "deployment": {
         "timestamp": 1599093312,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0xb7f72028d9b502dc871c444363a7ac5a52546608"
+        "blockNumber": 10785086,
+        "transactionHash": "0x4a1941d5e02bb655f68cdb7b23572c478bc1e18c321fac90b1d13574da0f09ef",
+        "transactionIndex": 9,
+        "creatorAddress": "0x8cc1cfdc1c60c19a1d7c0fa3c042a4916aa79a51"
       },
       "lastCodeChange": {
         "kind": "module-change",
@@ -60,28 +134,39 @@
         "transactionIndex": 90,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "storage-write",
+          "address": "0xb983e01458529665007ff7e0cddecdb74b967eb6",
+          "storageSlot": "0x0000000000000000000000000000000000000000000000000000000000000014",
+          "valueBefore": "0x000000000000000000000000e8279915fe5fb202041c3b3bf97d0f95949d503f",
+          "valueAfter": "0x000000000000000000000000de744d544a9d768e96c21b5f087fc54b776e9b25"
         },
-        "description": "2020-09-04T19:53:15Z (block 10796875, tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c): setTarget(address) wrote target_ (storage slot 20) = 0xde744d544a9d768e96c21b5f087fc54b776e9b25, the LoanTokenLogicWeth implementation containing the flawed _internalTransferFrom; located by binary-searching eth_getStorageAt on slot 20"
+        "description": "setTarget(address) selected LoanTokenLogicWeth 0xde744d544a9d768e96c21b5f087fc54b776e9b25 in the iETH proxy's custom target_ slot."
       },
       "codeAgeSeconds": 739006,
-      "failureModeId": "legacy:eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5:failure-1",
+      "failureModeId": "failure:bzx-itoken-self-transfer-balance-overwrite",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
+          "source-2",
           "source-3",
-          "source-4"
+          "source-4",
+          "source-6",
+          "source-7",
+          "source-8"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-6",
+          "source-7"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/bzx.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -91,7 +176,9 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause"
       ],
       "chainId": 1,
       "transactionHash": "0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5"
@@ -100,7 +187,9 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "url": "https://bzx.network/blog/incident"
     },
@@ -108,10 +197,15 @@
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "onchain review: iETH token 0xb983e014 created 2020-09-03 by 0xb7f72028d9b502dc871c444363a7ac5a52546608 (bZx deployer), not by attack sender 0xd1c0f131; it is a bZx setTarget proxy that emits no EIP-1967 Upgraded event, so the logic pointer was recovered by binary-searching eth_getStorageAt on target_ (storage slot 20, from the verified LoanTokenLogicWeth layout) between the creation and incident blocks: it held 0x11ba2b39bc80464c14b7eea54d2ec93d8f60e7b8 at deployment, then 0xe8279915fe5fb202041c3b3bf97d0f95949d503f, and was last written to 0xde744d544a9d768e96c21b5f087fc54b776e9b25 at block 10796875, 2020-09-04T19:53:15Z by setTarget(address) tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c from the deployer, and stayed there through the incident; 0xde744d54 is the LoanTokenLogicWeth carrying the flawed _internalTransferFrom, so the real code age is 8.55d rather than the 10.36d deployment figure"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T18:58:30Z",
+      "note": "Reviewed the successful exploit receipt and trace, iETH proxy creation trace, LoanTokenLogicWeth deployment, target_ storage history, exploit-time bytecode, source reproduction, and campaign-loss reporting. The exploit calls iETH proxy 0xb983e01458529665007ff7e0cddecdb74b967eb6, which delegates to 0xde744d544a9d768e96c21b5f087fc54b776e9b25. Factory 0x8cc1cfdc1c60c19a1d7c0fa3c042a4916aa79a51 created the proxy in block 10785086. The custom target_ slot 0x14 changed from 0xe8279915fe5fb202041c3b3bf97d0f95949d503f to the exploited implementation in setTarget transaction 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c at 2020-09-04T19:53:15Z and remained unchanged through the incident. The implementation was deployed in block 10796762 and its 20,511-byte runtime hash is 0x153147d85fddfac599aed6d58a1488595e6b12f736ad4aca8e72e1a1929ed35c at selection and exploit time. LoanTokenLogic's _internalTransferFrom cached both balances before either write and permitted sender == receiver, duplicating iTokens. The reported gross campaign loss was approximately $8.1 million: 219,199.66 LINK, 4,502.70 ETH, 1,756,351.27 USDT, 1,412,048.48 USDC, and 667,988.62 DAI; later recovery does not reduce exploit-time gross loss."
     },
     {
       "id": "source-4",
@@ -122,13 +216,55 @@
       ],
       "chainId": 1,
       "transactionHash": "0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c"
+    },
+    {
+      "id": "source-5",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://cointelegraph.com/news/defi-platform-bzx-sees-new-8m-hack-from-one-misplaced-line-of-code"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x4a1941d5e02bb655f68cdb7b23572c478bc1e18c321fac90b1d13574da0f09ef"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x6b36dfd34d34d24de463996f598dd8cb8b76b6526f74df47bf727598d5293c0a"
+    },
+    {
+      "id": "source-8",
+      "type": "source-code",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2020-09/bzx_exp.sol"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/bzx.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The $8.1 million USD value is a reputable reported campaign total rather than a transaction-by-transaction incident-time valuation; the later full recovery is recorded separately from gross loss."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -140,8 +276,5 @@
       "date": "2020-09-13T09:10:01Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2020-09-04T19:53:15Z (block 10796875, tx 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c): setTarget(address) wrote target_ (storage slot 20) = 0xde744d544a9d768e96c21b5f087fc54b776e9b25, the LoanTokenLogicWeth implementation containing the flawed _internalTransferFrom; located by binary-searching eth_getStorageAt on slot 20"
-  ]
+  "notes": []
 }

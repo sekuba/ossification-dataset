@@ -6,7 +6,7 @@
     "name": "BabyDogeCoin",
     "slug": "babydogecoin"
   },
-  "name": "BabyDogeCoin",
+  "name": "BabyDoge FarmZAP arbitrary-farm and auto-liquidity manipulation",
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -21,65 +21,152 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "BabyDoge's internal swapAndLiquify sell executes with no slippage protection and is sandwiched via FarmZAP."
+    "summary": "FarmZAP trusted a caller-supplied farm contract, approved it for swap output and did not verify that depositOnBehalf settled the tokens. The attacker combined that access to fee-exempt swaps with BabyDoge's unbounded internal swapAndLiquify sell to manipulate the BABYDOGE/BNB price and extract BNB."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 7500000,
+      "amount": 134983.61127897454,
       "valuationTimestamp": 1685239913,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-4",
+        "source-6"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": null,
+          "symbol": "BNB"
+        },
+        "amount": "437.12309351999527629",
+        "usdValue": 134983.61127897454,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1685239913,
+          "unitPriceUsd": 308.8,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4",
+          "source-5"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The attack helper's native BNB balance rises from zero before the transaction to exactly 437.123093519995276290 BNB after the flash loan is repaid. This is the gross victim-pool loss and the attacker's proceeds; transaction gas paid separately by the attacker EOA is excluded."
   },
   "targets": [
     {
       "id": "target-1",
-      "executionAddress": "0xc748673057861a797275cd8a068abb95a902e8de",
-      "relationship": "unknown",
+      "executionAddress": "0x451583b6da479eaa04366443262848e27706f762",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x451583b6da479eaa04366443262848e27706f762",
+        "codeHash": "0x891aa451167773220a29584cba5e04143f6ebd0ce213cdc02df427d649698389"
+      },
+      "deployment": {
+        "timestamp": 1666332961,
+        "blockNumber": 22360184,
+        "transactionHash": "0x2e2792453a521f89de736a27086dacdbea78d0304eb8cb377953c02ede8c07c7",
+        "transactionIndex": 31,
+        "creatorAddress": "0x85d30747868a5081f53bc7b9450301e761620a4f"
+      },
+      "lastCodeChange": {
+        "kind": "deployment",
+        "timestamp": 1666332961,
+        "blockNumber": 22360184,
+        "transactionHash": "0x2e2792453a521f89de736a27086dacdbea78d0304eb8cb377953c02ede8c07c7",
+        "transactionIndex": 31,
+        "logIndex": null,
+        "mechanism": {
+          "type": "deployment",
+          "address": "0x451583b6da479eaa04366443262848e27706f762"
+        },
+        "description": "FarmZAP was deployed with the arbitrary-farm callback and approval behavior. The directly executed runtime remained byte-identical immediately before the incident."
+      },
+      "codeAgeSeconds": 18906952,
+      "failureModeId": "failure:babydoge-farmzap-untrusted-farm-callback",
+      "evidence": {
+        "identitySourceIds": [
+          "source-1",
+          "source-2",
+          "source-3",
+          "source-4",
+          "source-5",
+          "source-7"
+        ],
+        "codeHistorySourceIds": [
+          "source-5",
+          "source-7"
+        ]
+      },
+      "verification": {
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
+        ]
+      }
+    },
+    {
+      "id": "target-2",
+      "executionAddress": "0xc748673057861a797275cd8a068abb95a902e8de",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0xc748673057861a797275cd8a068abb95a902e8de",
+        "codeHash": "0xf267028176840847b59638fb29923b617f85eae9696c6182ee407a1cba3e0cd9"
       },
       "deployment": {
         "timestamp": 1621617676,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 7607365,
+        "transactionHash": "0xb3787e14ca6d6662e97148f37d8f1512eafc94496c237def9bbff3d073ef3937",
+        "transactionIndex": 174,
+        "creatorAddress": "0xf103d2aba493749a402b7de11cf31f5844062b74"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1621617676,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 7607365,
+        "transactionHash": "0xb3787e14ca6d6662e97148f37d8f1512eafc94496c237def9bbff3d073ef3937",
+        "transactionIndex": 174,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0xc748673057861a797275cd8a068abb95a902e8de"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The direct BabyDoge token was deployed with the internal swapAndLiquify path. Its runtime remained byte-identical immediately before the incident."
       },
       "codeAgeSeconds": 63622237,
-      "failureModeId": "legacy:eip155:56:0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375:failure-1",
+      "failureModeId": "failure:babydoge-unbounded-auto-liquidity-swap",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-1",
+          "source-2",
+          "source-3",
+          "source-4",
+          "source-5",
+          "source-8"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-5",
+          "source-8"
+        ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/babydogecoin.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -89,7 +176,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 56,
       "transactionHash": "0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375"
@@ -98,29 +188,88 @@
       "id": "source-2",
       "type": "source-code",
       "supports": [
+        "incident-anchor",
         "target-identity",
         "root-cause"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-05/BabyDogeCoin_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "target-identity",
+        "root-cause"
+      ],
+      "url": "https://crypto.training/hacks/2023-05-babydogecoin/"
+    },
+    {
+      "id": "source-4",
+      "type": "post-mortem",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://medium.com/@MetatrustL/cracking-the-code-delving-into-the-elaborate-scheme-behind-babydoge-coins-flash-loan-attack-9c94f59041ff"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:22:57Z",
+      "note": "Reviewed the exploit transaction, receipt and full call trace; adjacent-block native and token balances; both target creation transactions and receipts; historical runtimes; verified contract metadata; the commit-pinned reproduction; and two technical incident analyses. The attacker calls FarmZAP 0x451583b6da479eaa04366443262848e27706f762 three times through selector 0xb87785b5. FarmZAP queries the attacker helper as IFarm, swaps into its own balance, approves that helper and calls its no-op depositOnBehalf, after which the helper uses transferFrom to recover the output. The same trace repeatedly executes BabyDoge token 0xc748673057861a797275cd8a068abb95a902e8de and triggers its internal router calls during swapAndLiquify while the Pancake pair price is manipulated. FarmZAP is a direct 12,714-byte contract created in transaction 0x2e2792453a521f89de736a27086dacdbea78d0304eb8cb377953c02ede8c07c7:31; no DELEGATECALL is exercised by it in the exploit, and its deployment and pre-exploit runtimes hash to 0x891aa451167773220a29584cba5e04143f6ebd0ce213cdc02df427d649698389. BabyDoge is a direct 11,178-byte contract created by factory 0xf103d2aba493749a402b7de11cf31f5844062b74 in transaction 0xb3787e14ca6d6662e97148f37d8f1512eafc94496c237def9bbff3d073ef3937:174; its deployment and pre-exploit runtimes hash to 0xf267028176840847b59638fb29923b617f85eae9696c6182ee407a1cba3e0cd9. The attack helper's native balance changes from zero at block 28593354 to 437.123093519995276290 BNB after the anchor, following flash-loan repayment."
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1685239913/coingecko:binancecoin",
+      "observedAt": 1787599377
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x2e2792453a521f89de736a27086dacdbea78d0304eb8cb377953c02ede8c07c7"
+    },
+    {
+      "id": "source-8",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0xb3787e14ca6d6662e97148f37d8f1512eafc94496c237def9bbff3d073ef3937"
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/babydogecoin.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/babydogecoin.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-05-28T02:11:53Z"
-    }
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
+    ]
   },
-  "notes": []
+  "notes": [
+    "The legacy $7.5 million value belongs to the Jimbo Protocol exploit reported on the same date. This BabyDoge transaction's exact net proceeds are 437.123093519995276290 BNB, consistent with contemporary reporting of roughly $157,000.",
+    "Both independently aged defect-executing contracts are retained: FarmZAP supplies the untrusted-farm/approval path, and the BabyDoge token executes the manipulation-sensitive auto-liquidity sale."
+  ]
 }

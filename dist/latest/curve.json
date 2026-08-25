@@ -29,30 +29,81 @@
     ]
   },
   "counts": {
-    "sourceIncidents": 617,
-    "sourceTargets": 621,
-    "eligibleBeforeDeduplication": 84,
-    "curveObservations": 84,
+    "sourceIncidents": 614,
+    "sourceTargets": 637,
+    "eligibleBeforeDeduplication": 153,
+    "curveObservations": 153,
     "deduplicatedObservations": 0,
-    "provisionalObservations": 536,
+    "provisionalObservations": 483,
     "otherExcludedObservations": 1,
     "incidentsByVerificationTier": {
-      "provisional": 536,
-      "reviewed": 81
+      "provisional": 483,
+      "reviewed": 131
     },
     "targetsByVerificationTier": {
-      "provisional": 536,
-      "reviewed": 85
+      "provisional": 483,
+      "reviewed": 154
     },
     "exclusionReasons": {
-      "incident-verification-tier:provisional": 536,
-      "last-code-change:configuration-change": 2,
-      "last-code-change:unknown": 5,
-      "target-verification-tier:provisional": 536,
-      "target-verification:not-curve-eligible": 537
+      "incident-verification-tier:provisional": 483,
+      "last-code-change:configuration-change": 1,
+      "last-code-change:unknown": 4,
+      "target-verification-tier:provisional": 483,
+      "target-verification:not-curve-eligible": 484
     }
   },
   "observations": [
+    {
+      "observationId": "eip155:42161:0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f#target-1",
+      "incidentId": "eip155:42161:0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f",
+      "targetId": "target-1",
+      "chainId": 42161,
+      "exploit": {
+        "blockNumber": 273278742,
+        "transactionIndex": 1,
+        "timestamp": 1731310565
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:deltaprime-unvalidated-lfj-reward-pair",
+      "codeArtifactCodeHash": "0x24783f83b2a34799fc181a436d356d3ed6e76782fc6444bd3f327bc7fe681a75",
+      "codeAgeSeconds": 8
+    },
+    {
+      "observationId": "eip155:42161:0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b#target-1",
+      "incidentId": "eip155:42161:0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b",
+      "targetId": "target-1",
+      "chainId": 42161,
+      "exploit": {
+        "blockNumber": 166405687,
+        "transactionIndex": 2,
+        "timestamp": 1704221618
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:radiant-rusdc-index-rounding",
+      "codeArtifactCodeHash": "0xbe2214a5bae06adeb2e832d0394131e64370f3e7fe510187bafcff91445d1356",
+      "codeAgeSeconds": 15
+    },
+    {
+      "observationId": "eip155:1:0xffbbd492e0605a8bb6d490c3cd879e87ff60862b0684160d08fd5711e7a872d3#target-1",
+      "incidentId": "eip155:1:0xffbbd492e0605a8bb6d490c3cd879e87ff60862b0684160d08fd5711e7a872d3",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 22785461,
+        "transactionIndex": 0,
+        "timestamp": 1750902839
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:resupply-zero-exchange-rate-solvency-bypass",
+      "codeArtifactCodeHash": "0x07ff4715d4817fbc145fc665754eb8811704043ead8c05f8ba3edca26664d961",
+      "codeAgeSeconds": 5712
+    },
     {
       "observationId": "eip155:1:0xd82fe84e63b1aa52e1ce540582ee0895ba4a71ec5e7a632a3faa1aff3e763873#target-1",
       "incidentId": "eip155:1:0xd82fe84e63b1aa52e1ce540582ee0895ba4a71ec5e7a632a3faa1aff3e763873",
@@ -103,6 +154,23 @@
       "failureModeId": "failure:compound-uninitialized-reward-index-equality",
       "codeArtifactCodeHash": "0x7130fcf34cffc92265d6b7e78bd958b99b01bd73ae8e7ddf74c6a0cc72d2a6b1",
       "codeAgeSeconds": 18858
+    },
+    {
+      "observationId": "eip155:56:0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934#target-1",
+      "incidentId": "eip155:56:0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 26864890,
+        "transactionIndex": 0,
+        "timestamp": 1680031587
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:safemoon-unrestricted-burn-from-address",
+      "codeArtifactCodeHash": "0x5552c0f1e8b7e2d9f4f00c84f0de535190e11031b4a85da8dad14e39411edc4d",
+      "codeAgeSeconds": 22531
     },
     {
       "observationId": "eip155:1:0xcdd93e37ba2991ce02d8ca07bf6563bf5cd5ae801cbbce3dd0babb22e30b2dbe#target-1",
@@ -173,6 +241,23 @@
       "codeAgeSeconds": 221796
     },
     {
+      "observationId": "eip155:1:0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e#target-1",
+      "incidentId": "eip155:1:0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 13125071,
+        "transactionIndex": 1,
+        "timestamp": 1630302287
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:cream-cross-market-borrow-hook-reentrancy",
+      "codeArtifactCodeHash": "0x8baa1ca9740376827834cc920d50b79f894652e197a5dbbd25c11b928877e284",
+      "codeAgeSeconds": 241533
+    },
+    {
       "observationId": "eip155:10:0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417#target-1",
       "incidentId": "eip155:10:0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417",
       "targetId": "target-1",
@@ -224,6 +309,23 @@
       "codeAgeSeconds": 319265
     },
     {
+      "observationId": "eip155:1:0xe1c76241dda7c5fcf1988454c621142495640e708e3f8377982f55f8cf2a8401#target-1",
+      "incidentId": "eip155:1:0xe1c76241dda7c5fcf1988454c621142495640e708e3f8377982f55f8cf2a8401",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 11272255,
+        "transactionIndex": 2,
+        "timestamp": 1605574039
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:origin-dollar-mint-multiple-reentrancy",
+      "codeArtifactCodeHash": "0xbe4bcad9eaca1eff00cd54018ab0ba94901a5f078b0b24dfe560d9a7f012371d",
+      "codeAgeSeconds": 321807
+    },
+    {
       "observationId": "eip155:1:0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32#target-1",
       "incidentId": "eip155:1:0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32",
       "targetId": "target-1",
@@ -239,6 +341,23 @@
       "failureModeId": "failure:routeprocessor2-unvalidated-v3-pool-callback",
       "codeArtifactCodeHash": "0xf9b86791ebacf39275775bec89c170be417ccc86a6b0d41bf020058f117337b8",
       "codeAgeSeconds": 330540
+    },
+    {
+      "observationId": "eip155:10:0x45c0ccfd3ca1b4a937feebcb0f5a166c409c9e403070808835d41da40732db96#target-1",
+      "incidentId": "eip155:10:0x45c0ccfd3ca1b4a937feebcb0f5a166c409c9e403070808835d41da40732db96",
+      "targetId": "target-1",
+      "chainId": 10,
+      "exploit": {
+        "blockNumber": 120062493,
+        "transactionIndex": 8,
+        "timestamp": 1715723763
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:sonne-compound-v2-empty-market-donation",
+      "codeArtifactCodeHash": "0xd255c945df578ea7ffdf6cfcd06c3455b5fb9fb72e674a0959ae1b14898e0f08",
+      "codeAgeSeconds": 375350
     },
     {
       "observationId": "eip155:1:0x9f14d093a2349de08f02fc0fb018dadb449351d0cdb7d0738ff69cc6fef5f299#target-1",
@@ -377,6 +496,23 @@
       "codeAgeSeconds": 614748
     },
     {
+      "observationId": "eip155:1:0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b#target-1",
+      "incidentId": "eip155:1:0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12995895,
+        "transactionIndex": 50,
+        "timestamp": 1628578498
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:punk-compound-model-reinitialization",
+      "codeArtifactCodeHash": "0xad4296ca86f0d86547eee00e3723dbbd3a2c3462c846dd5dcd5b4ce9773625ce",
+      "codeAgeSeconds": 687098
+    },
+    {
       "observationId": "eip155:1:0x00c503b595946bccaea3d58025b5f9b3726177bbdc9674e634244135282116c7#target-1",
       "incidentId": "eip155:1:0x00c503b595946bccaea3d58025b5f9b3726177bbdc9674e634244135282116c7",
       "targetId": "target-1",
@@ -392,6 +528,40 @@
       "failureModeId": "failure:prisma-migrate-trove-flashloan-input-validation",
       "codeArtifactCodeHash": "0xe055a152b1a5722ee17e61f3b43ee5c9722a9f41ae6a5ec473491e09aa7c3a06",
       "codeAgeSeconds": 701676
+    },
+    {
+      "observationId": "eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5#target-1",
+      "incidentId": "eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 10852722,
+        "transactionIndex": 99,
+        "timestamp": 1599988201
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:bzx-itoken-self-transfer-balance-overwrite",
+      "codeArtifactCodeHash": "0x153147d85fddfac599aed6d58a1488595e6b12f736ad4aca8e72e1a1929ed35c",
+      "codeAgeSeconds": 739006
+    },
+    {
+      "observationId": "eip155:1:0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286#target-1",
+      "incidentId": "eip155:1:0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 19325937,
+        "transactionIndex": 119,
+        "timestamp": 1709122199
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:seneca-unrestricted-arbitrary-call-with-user-allowances",
+      "codeArtifactCodeHash": "0x4bcc3eb4a0d18e14d3658e127d3afd7796dac06af7f875272a7af9767f22c39e",
+      "codeAgeSeconds": 744672
     },
     {
       "observationId": "eip155:1:0xf0464b01d962f714eee9d4392b2494524d0e10ce3eb3723873afd1346b8b06e4#target-1",
@@ -411,6 +581,57 @@
       "codeAgeSeconds": 777372
     },
     {
+      "observationId": "eip155:1:0x51b1c8341da4092b7d1e0e4865f7b318de4e96245358b05b2bff2df50adaf0c9#target-1",
+      "incidentId": "eip155:1:0x51b1c8341da4092b7d1e0e4865f7b318de4e96245358b05b2bff2df50adaf0c9",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 25592815,
+        "transactionIndex": 622,
+        "timestamp": 1784778107
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:verus-duplicate-proof-root-last-entry-wins",
+      "codeArtifactCodeHash": "0x7af074381469f2eeb4d02cfbd6bfdf966b26d6d3cc220a9c79b6c47515dfb711",
+      "codeAgeSeconds": 902652
+    },
+    {
+      "observationId": "eip155:56:0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991#target-1",
+      "incidentId": "eip155:56:0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 6947154,
+        "transactionIndex": 101,
+        "timestamp": 1619578972
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:uranium-pair-invariant-scale-mismatch",
+      "codeArtifactCodeHash": "0xa7d2393c32120a10af3a0d5cadab96618196ffc29479c7f57f64248f409886ed",
+      "codeAgeSeconds": 1024110
+    },
+    {
+      "observationId": "eip155:81457:0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4#target-1",
+      "incidentId": "eip155:81457:0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4",
+      "targetId": "target-1",
+      "chainId": 81457,
+      "exploit": {
+        "blockNumber": 1111415,
+        "transactionIndex": 12,
+        "timestamp": 1711032645
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:sss-stale-balance-self-transfer-inflation",
+      "codeArtifactCodeHash": "0xa8fff26c4cd91901e875f739abd473d6374ebb996cd92e317131b892ecbb0e2e",
+      "codeAgeSeconds": 1080976
+    },
+    {
       "observationId": "eip155:1:0x8d3036371ccf27579d3cb3d4b4b71e99334cae8d7e8088247517ec640c7a59a5#target-1",
       "incidentId": "eip155:1:0x8d3036371ccf27579d3cb3d4b4b71e99334cae8d7e8088247517ec640c7a59a5",
       "targetId": "target-1",
@@ -426,6 +647,57 @@
       "failureModeId": "failure:nft-stake-ownership-accounting",
       "codeArtifactCodeHash": "0x4ec84833ccf762264e04dbef27e12734fa894354d0ebc7330c3c3b49dca9b18c",
       "codeAgeSeconds": 1113036
+    },
+    {
+      "observationId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3#target-5",
+      "incidentId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3",
+      "targetId": "target-5",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 18630392,
+        "transactionIndex": 41,
+        "timestamp": 1700693711
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:kyberswap-elastic:swap-rounding-tick-liquidity-mismatch",
+      "codeArtifactCodeHash": "0x44797394ceab197a7f92938055005769763b4ccc74d753b259a15ecaf34c74f4",
+      "codeAgeSeconds": 1435008
+    },
+    {
+      "observationId": "eip155:56:0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2#target-1",
+      "incidentId": "eip155:56:0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 10087724,
+        "transactionIndex": 110,
+        "timestamp": 1629142811
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:xsurge-surgebnb-sell-reentrancy",
+      "codeArtifactCodeHash": "0x325ffec9a0c9e9479c888615bd5b0e793d36697160cf561b572d7e58ccac591f",
+      "codeAgeSeconds": 1511548
+    },
+    {
+      "observationId": "eip155:1:0x871ce0518bef66595ad5885a07d5699cbc71bffa7f8be732fc2565d087cb78ad#target-1",
+      "incidentId": "eip155:1:0x871ce0518bef66595ad5885a07d5699cbc71bffa7f8be732fc2565d087cb78ad",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 20793904,
+        "transactionIndex": 0,
+        "timestamp": 1726860659
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:shezmu-permissionless-collateral-mint",
+      "codeArtifactCodeHash": "0x636790363efd966d1c8e3e2459ffcfa5c9729e00b719e5adacb9af494df81673",
+      "codeAgeSeconds": 1536624
     },
     {
       "observationId": "eip155:1:0x636be30e58acce0629b2bf975b5c3133840cd7d41ffc3b903720c528f01c65d9#target-1",
@@ -460,6 +732,23 @@
       "failureModeId": "failure:uninitialized-proxy-withdrawal",
       "codeArtifactCodeHash": "0x72b2ab9bc576b7f9fc24ea16860e8d3db456b5a7ac521384a76aea1f41d97178",
       "codeAgeSeconds": 1641696
+    },
+    {
+      "observationId": "eip155:42161:0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef#target-1",
+      "incidentId": "eip155:42161:0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef",
+      "targetId": "target-1",
+      "chainId": 42161,
+      "exploit": {
+        "blockNumber": 87626026,
+        "transactionIndex": 2,
+        "timestamp": 1683309165
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:deus-dei-burnfrom-reversed-allowance",
+      "codeArtifactCodeHash": "0x9851d598cf345f432c312880107abd1a7a2dcdc27dc822370a9400285ef475e8",
+      "codeAgeSeconds": 1664388
     },
     {
       "observationId": "eip155:1:0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744#target-1",
@@ -547,6 +836,23 @@
       "codeAgeSeconds": 2469828
     },
     {
+      "observationId": "eip155:10:0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e#target-1",
+      "incidentId": "eip155:10:0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e",
+      "targetId": "target-1",
+      "chainId": 10,
+      "exploit": {
+        "blockNumber": 108375558,
+        "transactionIndex": 1,
+        "timestamp": 1692349893
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:exactly-debt-manager-unvalidated-market-impersonation",
+      "codeArtifactCodeHash": "0x42ee231ba4472dbaa3372f1ae110b6209bc3652f030d9481b4f4df0a17e0d91d",
+      "codeAgeSeconds": 2479546
+    },
+    {
       "observationId": "eip155:1:0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0#target-1",
       "incidentId": "eip155:1:0xe72d4e7ba9b5af0cf2a8cfb1e30fd9f388df0ab3da79790be842bfbed11087b0",
       "targetId": "target-1",
@@ -579,6 +885,23 @@
       "failureModeId": "failure:fee-on-transfer-accounting-mismatch",
       "codeArtifactCodeHash": "0x974df1c33872ba8aab782be5117ff348802441590f84ed7701d734bb9c21683e",
       "codeAgeSeconds": 2611558
+    },
+    {
+      "observationId": "eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c#target-1",
+      "incidentId": "eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 13155321,
+        "transactionIndex": 93,
+        "timestamp": 1630706304
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:dao-maker-vesting-unprotected-reinitialization",
+      "codeArtifactCodeHash": "0x4787954b831b9837cbdda088091451d0b4178aca24d129ce8896d410659bf024",
+      "codeAgeSeconds": 2724091
     },
     {
       "observationId": "eip155:1:0x3ed75df83d907412af874b7998d911fdf990704da87c2b1a8cf95ca5d21504cf#target-1",
@@ -615,6 +938,57 @@
       "codeAgeSeconds": 3030526
     },
     {
+      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-5",
+      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
+      "targetId": "target-5",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12955063,
+        "transactionIndex": 37,
+        "timestamp": 1628031222
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:popsicle-fragola-transfer-fee-debt-not-synchronized",
+      "codeArtifactCodeHash": "0xa5769d67e9371e147815f0c0872a7d903cbdc9c98e5b5385d036f7ecc0a516c3",
+      "codeAgeSeconds": 3120203
+    },
+    {
+      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-6",
+      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
+      "targetId": "target-6",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12955063,
+        "transactionIndex": 37,
+        "timestamp": 1628031222
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:popsicle-fragola-transfer-fee-debt-not-synchronized",
+      "codeArtifactCodeHash": "0x66e2b13a977c2f50d355c5815826e7bb481247fe38cea4162e2a91e9cc5fe70d",
+      "codeAgeSeconds": 3219477
+    },
+    {
+      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-4",
+      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
+      "targetId": "target-4",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12955063,
+        "transactionIndex": 37,
+        "timestamp": 1628031222
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:popsicle-fragola-transfer-fee-debt-not-synchronized",
+      "codeArtifactCodeHash": "0x438784ad4ffcff55816829cdcf848693011ab067ca0b5adfdc9e5e4d1ff92b69",
+      "codeAgeSeconds": 3219480
+    },
+    {
       "observationId": "eip155:1:0x21e9d20b57f6ae60dac23466c8395d47f42dc24628e5a31f224567a2b4effa88#target-1",
       "incidentId": "eip155:1:0x21e9d20b57f6ae60dac23466c8395d47f42dc24628e5a31f224567a2b4effa88",
       "targetId": "target-1",
@@ -632,6 +1006,108 @@
       "codeAgeSeconds": 3251011
     },
     {
+      "observationId": "eip155:1:0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b#target-1",
+      "incidentId": "eip155:1:0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 11541219,
+        "transactionIndex": 23,
+        "timestamp": 1609143076
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:cover-blacksmith-stale-pool-cache-reward-writeoff",
+      "codeArtifactCodeHash": "0xe4752276e63f1c0ee3d73b854b30f59db1c0840c66833b2b21af45d145d512a9",
+      "codeAgeSeconds": 3313301
+    },
+    {
+      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-8",
+      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
+      "targetId": "target-8",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12955063,
+        "transactionIndex": 37,
+        "timestamp": 1628031222
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:popsicle-fragola-transfer-fee-debt-not-synchronized",
+      "codeArtifactCodeHash": "0xc22c00d729b43df85c47dec955617e6eb0188c7b72dfecc38c66ca9579567c59",
+      "codeAgeSeconds": 3372000
+    },
+    {
+      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-7",
+      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
+      "targetId": "target-7",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12955063,
+        "transactionIndex": 37,
+        "timestamp": 1628031222
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:popsicle-fragola-transfer-fee-debt-not-synchronized",
+      "codeArtifactCodeHash": "0x75318b7d250b66dfcce2b3a5f727596f5c8a40d4b11f70635b13d17a90f22454",
+      "codeAgeSeconds": 3372128
+    },
+    {
+      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-3",
+      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
+      "targetId": "target-3",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12955063,
+        "transactionIndex": 37,
+        "timestamp": 1628031222
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:popsicle-fragola-transfer-fee-debt-not-synchronized",
+      "codeArtifactCodeHash": "0x2d2a34f72a7251001f2cc15bba9dbc35b1dfb3b4b03db3571d072ca620c3434d",
+      "codeAgeSeconds": 3372263
+    },
+    {
+      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-2",
+      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
+      "targetId": "target-2",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12955063,
+        "transactionIndex": 37,
+        "timestamp": 1628031222
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:popsicle-fragola-transfer-fee-debt-not-synchronized",
+      "codeArtifactCodeHash": "0xaf7d9acc6c1e22430dc773821479a3830aca5c8ea3b7745c96897d9f4f2a0edd",
+      "codeAgeSeconds": 3372448
+    },
+    {
+      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-1",
+      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 12955063,
+        "transactionIndex": 37,
+        "timestamp": 1628031222
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:popsicle-fragola-transfer-fee-debt-not-synchronized",
+      "codeArtifactCodeHash": "0x569b6a8deb8a91662c904b14f073a8cdc967484c62590c491f3299c3d1140e24",
+      "codeAgeSeconds": 3377722
+    },
+    {
       "observationId": "eip155:1:0x04e16a79ff928db2fa88619cdd045cdfc7979a61d836c9c9e585b3d6f6d8bc31#target-1",
       "incidentId": "eip155:1:0x04e16a79ff928db2fa88619cdd045cdfc7979a61d836c9c9e585b3d6f6d8bc31",
       "targetId": "target-1",
@@ -647,6 +1123,23 @@
       "failureModeId": "failure:wise-empty-market-cleanup-rounding-share-inflation",
       "codeArtifactCodeHash": "0xfde0dd23524a100fc5f6652cf93ea15339137ad1b646ac9571d49ed9dded4f32",
       "codeAgeSeconds": 3452448
+    },
+    {
+      "observationId": "eip155:1:0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a#target-1",
+      "incidentId": "eip155:1:0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 24313234,
+        "transactionIndex": 5,
+        "timestamp": 1769361035
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:aperture-arbitrary-call-approval-drain",
+      "codeArtifactCodeHash": "0xefc84c5b1d6be0359381d8700907c9373ac7417486f2038676c552668d818ecf",
+      "codeAgeSeconds": 3534156
     },
     {
       "observationId": "eip155:1:0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460#target-1",
@@ -717,6 +1210,23 @@
       "codeAgeSeconds": 4279795
     },
     {
+      "observationId": "eip155:1:0x9dbf0326a03a2a3719c27be4fa69aacc9857fd231a8d9dcaede4bb083def75ec#target-1",
+      "incidentId": "eip155:1:0x9dbf0326a03a2a3719c27be4fa69aacc9857fd231a8d9dcaede4bb083def75ec",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 4043800,
+        "transactionIndex": 41,
+        "timestamp": 1500466695
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:parity-recallable-wallet-initializer",
+      "codeArtifactCodeHash": "0x5cfe6566cf144996cace4846443c17633ebeeaa575b675538c871983ac8540d7",
+      "codeAgeSeconds": 4407400
+    },
+    {
       "observationId": "eip155:1:0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce#target-1",
       "incidentId": "eip155:1:0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce",
       "targetId": "target-1",
@@ -734,6 +1244,23 @@
       "codeAgeSeconds": 4413476
     },
     {
+      "observationId": "eip155:56:0x6450d8f4db09972853e948bee44f2cb54b9df786dace774106cd28820e906789#target-1",
+      "incidentId": "eip155:56:0x6450d8f4db09972853e948bee44f2cb54b9df786dace774106cd28820e906789",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 8530974,
+        "transactionIndex": 28,
+        "timestamp": 1624402680
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:eleven-finance-emergency-burn-share-omission",
+      "codeArtifactCodeHash": "0xaea824d27f4e41f4cddbfc33076901e3af6fe5c9b403061ce0b3ec483be6fcba",
+      "codeAgeSeconds": 5083556
+    },
+    {
       "observationId": "eip155:1:0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be#target-1",
       "incidentId": "eip155:1:0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be",
       "targetId": "target-1",
@@ -749,6 +1276,57 @@
       "failureModeId": "failure:chainswap-unbound-recovered-signatory",
       "codeArtifactCodeHash": "0xbb2e5ca0cbda8dcde380e595cd41881ca8f80d56fdd28d6414b35855819baa20",
       "codeAgeSeconds": 5114023
+    },
+    {
+      "observationId": "eip155:8453:0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57#target-1",
+      "incidentId": "eip155:8453:0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57",
+      "targetId": "target-1",
+      "chainId": 8453,
+      "exploit": {
+        "blockNumber": 41289841,
+        "transactionIndex": 2,
+        "timestamp": 1769369029
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:swapnet-unvalidated-arbitrary-call-target",
+      "codeArtifactCodeHash": "0x770a3b9dcbcbddf1d3f177c07d920ab3c9ad08613b9de052e1d3eb994d407190",
+      "codeAgeSeconds": 5666844
+    },
+    {
+      "observationId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3#target-4",
+      "incidentId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3",
+      "targetId": "target-4",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 18630392,
+        "transactionIndex": 41,
+        "timestamp": 1700693711
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:kyberswap-elastic:swap-rounding-tick-liquidity-mismatch",
+      "codeArtifactCodeHash": "0x3aad635fdf9ef1e4b021ba5419f8b6c6f0237c8c4eea86238a40091c2a508ead",
+      "codeAgeSeconds": 6186924
+    },
+    {
+      "observationId": "eip155:56:0x603b2bbe2a7d0877b22531735ff686a7caad866f6c0435c37b7b49e4bfd9a36c#target-1",
+      "incidentId": "eip155:56:0x603b2bbe2a7d0877b22531735ff686a7caad866f6c0435c37b7b49e4bfd9a36c",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 7457125,
+        "transactionIndex": 86,
+        "timestamp": 1621161380
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:bearn-busd-ibbusd-withdrawal-unit-mismatch",
+      "codeArtifactCodeHash": "0xada77033047849187832a245e0e1f814d255430597cfce06d3a321ebd117e1cd",
+      "codeAgeSeconds": 6487378
     },
     {
       "observationId": "eip155:1:0x1106418384414ed56cd7cbb9fedc66a02d39b663d580abc618f2d387348354ab#target-1",
@@ -785,6 +1363,40 @@
       "codeAgeSeconds": 7104480
     },
     {
+      "observationId": "eip155:1:0x56e09abb35ff12271fdb38ff8a23e4d4a7396844426a94c4d3af2e8b7a0a2813#target-1",
+      "incidentId": "eip155:1:0x56e09abb35ff12271fdb38ff8a23e4d4a7396844426a94c4d3af2e8b7a0a2813",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 20671820,
+        "transactionIndex": 0,
+        "timestamp": 1725387815
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:penpie-harvest-reentrancy-inflated-rewards",
+      "codeArtifactCodeHash": "0xfadd1391fb10f9450ef4d67e74b2a7ae7deda058d36a548462c2f835ce9b9da4",
+      "codeAgeSeconds": 7200432
+    },
+    {
+      "observationId": "eip155:8453:0xf0f94d7fc627793ec770c46d117c4934be95fa0b0c8433b820e363d17d8b4dad#target-1",
+      "incidentId": "eip155:8453:0xf0f94d7fc627793ec770c46d117c4934be95fa0b0c8433b820e363d17d8b4dad",
+      "targetId": "target-1",
+      "chainId": 8453,
+      "exploit": {
+        "blockNumber": 46450075,
+        "transactionIndex": 90,
+        "timestamp": 1779689497
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:newmarkettrading-squid-module-unbound-delegate",
+      "codeArtifactCodeHash": "0xc09228d6a374378bd0c571ddf2cc3bfecb52ed37d63531acd648aa2f91d1fa97",
+      "codeAgeSeconds": 7810142
+    },
+    {
       "observationId": "eip155:43114:0x4425f757715e23d392cda666bc0492d9e5d5848ff89851a1821eab5ed12bb867#target-1",
       "incidentId": "eip155:43114:0x4425f757715e23d392cda666bc0492d9e5d5848ff89851a1821eab5ed12bb867",
       "targetId": "target-1",
@@ -819,6 +1431,108 @@
       "codeAgeSeconds": 8000269
     },
     {
+      "observationId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3#target-3",
+      "incidentId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3",
+      "targetId": "target-3",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 18630392,
+        "transactionIndex": 41,
+        "timestamp": 1700693711
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:kyberswap-elastic:swap-rounding-tick-liquidity-mismatch",
+      "codeArtifactCodeHash": "0xbbf084ec1e4d0ce214219e4f0de297bf6a8b79f4bfad72f50e710f044324881f",
+      "codeAgeSeconds": 8046504
+    },
+    {
+      "observationId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3#target-1",
+      "incidentId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 18630392,
+        "transactionIndex": 41,
+        "timestamp": 1700693711
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:kyberswap-elastic:swap-rounding-tick-liquidity-mismatch",
+      "codeArtifactCodeHash": "0xa20f1c80ceeb5a9cb0c937916a3abeceb345a97abdeaabeb3f40211608350618",
+      "codeAgeSeconds": 8055252
+    },
+    {
+      "observationId": "eip155:43114:0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430#target-1",
+      "incidentId": "eip155:43114:0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430",
+      "targetId": "target-1",
+      "chainId": 43114,
+      "exploit": {
+        "blockNumber": 26343614,
+        "transactionIndex": 0,
+        "timestamp": 1676575014
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:platypus-emergency-withdraw-pre-update-solvency-check",
+      "codeArtifactCodeHash": "0x02a2003eaa6e03405612381eb404f39e509703c0d474fad1c4624ae128c250b9",
+      "codeAgeSeconds": 8056096
+    },
+    {
+      "observationId": "eip155:10:0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451#target-1",
+      "incidentId": "eip155:10:0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451",
+      "targetId": "target-1",
+      "chainId": 10,
+      "exploit": {
+        "blockNumber": 90761918,
+        "transactionIndex": 0,
+        "timestamp": 1681567920
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:compound-empty-market-donation-rounding-inflation",
+      "codeArtifactCodeHash": "0x520130819cedc10fde00b96313ac79a2537d19639dbe3044421b79d3dc6af1e2",
+      "codeAgeSeconds": 8807413
+    },
+    {
+      "observationId": "eip155:1:0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d#target-1",
+      "incidentId": "eip155:1:0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 22581020,
+        "transactionIndex": 0,
+        "timestamp": 1748432387
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:cork-hook-missing-pool-manager-authorization",
+      "codeArtifactCodeHash": "0xbfdccbd992b2804786d327c814c2734071a3e552030b7ce0bb65edcf5eb0be99",
+      "codeAgeSeconds": 8949108
+    },
+    {
+      "observationId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3#target-2",
+      "incidentId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3",
+      "targetId": "target-2",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 18630392,
+        "transactionIndex": 41,
+        "timestamp": 1700693711
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:kyberswap-elastic:swap-rounding-tick-liquidity-mismatch",
+      "codeArtifactCodeHash": "0xf29ee35eaa6d8981d2ccccc0fe64d52080eac0df811f4b11ce408e273829ea30",
+      "codeAgeSeconds": 9297108
+    },
+    {
       "observationId": "eip155:1:0x47f7cff7a5e671884629c93b368cb18f58a993f4b19c2a53a8662e3f1482f690#target-1",
       "incidentId": "eip155:1:0x47f7cff7a5e671884629c93b368cb18f58a993f4b19c2a53a8662e3f1482f690",
       "targetId": "target-1",
@@ -834,6 +1548,40 @@
       "failureModeId": "failure:uninitialized-library-selfdestruct",
       "codeArtifactCodeHash": "0x15e25447f2cb376d8b0f5c72a2f8053c293dbe32dd1c3a354ce1fdb6dc76dfb4",
       "codeAgeSeconds": 9413135
+    },
+    {
+      "observationId": "eip155:1:0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f#target-1",
+      "incidentId": "eip155:1:0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 13849007,
+        "transactionIndex": 235,
+        "timestamp": 1640096295
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:visor-unvalidated-visor-hook-free-share-mint",
+      "codeArtifactCodeHash": "0x8c37455c33d4dc5f9d0ac233d48e9334887e64405f67bcd4afc05e74717fdaf7",
+      "codeAgeSeconds": 9479160
+    },
+    {
+      "observationId": "eip155:250:0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6#target-1",
+      "incidentId": "eip155:250:0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6",
+      "targetId": "target-1",
+      "chainId": 250,
+      "exploit": {
+        "blockNumber": 25345003,
+        "transactionIndex": 7,
+        "timestamp": 1639849155
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:grim-depositfor-reentrancy",
+      "codeArtifactCodeHash": "0x753e4cd9dd083db2dc40f090d11ad54008e2db79a6a1212ca3d096ae39556c89",
+      "codeAgeSeconds": 9483100
     },
     {
       "observationId": "eip155:1:0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e#target-1",
@@ -904,6 +1652,40 @@
       "codeAgeSeconds": 12120375
     },
     {
+      "observationId": "eip155:1:0xa17fdb804728f226fcd10e78eae5247abd984e0f03301312315b89cae25aa517#target-1",
+      "incidentId": "eip155:1:0xa17fdb804728f226fcd10e78eae5247abd984e0f03301312315b89cae25aa517",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 19687887,
+        "transactionIndex": 23,
+        "timestamp": 1713510359
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:hedgey-finance:unvalidated-claim-locker-approval",
+      "codeArtifactCodeHash": "0x725bc4ce48b9a71a4fd491b1f7bdcf29c772d92f8ee7a5cd6c3264f570f70db4",
+      "codeAgeSeconds": 12841308
+    },
+    {
+      "observationId": "eip155:1:0x53fe7ef190c34d810c50fb66f0fc65a1ceedc10309cf4b4013d64042a0331156#target-1",
+      "incidentId": "eip155:1:0x53fe7ef190c34d810c50fb66f0fc65a1ceedc10309cf4b4013d64042a0331156",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 23914086,
+        "transactionIndex": 0,
+        "timestamp": 1764537119
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:yeth-weighted-stableswap-solver-domain-collapse",
+      "codeArtifactCodeHash": "0x62b1a1586e4b27d6c6fac09e72d0c5d2a3b8f640fb5a636ad81be479c3fa38b6",
+      "codeAgeSeconds": 13169064
+    },
+    {
       "observationId": "eip155:1:0xab486012f21be741c9e674ffda227e30518e8a1e37a5f1d58d0b0d41f6e76530#target-1",
       "incidentId": "eip155:1:0xab486012f21be741c9e674ffda227e30518e8a1e37a5f1d58d0b0d41f6e76530",
       "targetId": "target-1",
@@ -938,6 +1720,57 @@
       "codeAgeSeconds": 14174508
     },
     {
+      "observationId": "eip155:1:0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa#target-1",
+      "incidentId": "eip155:1:0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 13417949,
+        "transactionIndex": 61,
+        "timestamp": 1634236663
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:indexed-single-token-pool-value-extrapolation",
+      "codeArtifactCodeHash": "0x69d16bf8d40204816003dc25fbf29fafc17cb33819b43904485692aa80c2480e",
+      "codeAgeSeconds": 14373021
+    },
+    {
+      "observationId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1#target-6",
+      "incidentId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+      "targetId": "target-6",
+      "chainId": 59144,
+      "exploit": {
+        "blockNumber": 5079177,
+        "transactionIndex": 4,
+        "timestamp": 1717281449
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:velocore-unauthorized-fee-multiplier-underflow",
+      "codeArtifactCodeHash": "0x5b686ee74a0fb45513bb194ad47c8bbb852b893fc1f877a3e3d0a985249c0bed",
+      "codeAgeSeconds": 15435562
+    },
+    {
+      "observationId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1#target-3",
+      "incidentId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+      "targetId": "target-3",
+      "chainId": 59144,
+      "exploit": {
+        "blockNumber": 5079177,
+        "transactionIndex": 4,
+        "timestamp": 1717281449
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:velocore-unauthorized-fee-multiplier-underflow",
+      "codeArtifactCodeHash": "0xe37842fa2ba5bc7732a13361edd10ca4192647a967c5658ed765e7e62169fa86",
+      "codeAgeSeconds": 15436654
+    },
+    {
       "observationId": "eip155:1:0x1ea0a2e88efceccb2dd93e6e5cb89e5421666caeefb1e6fc41b68168373da342#target-1",
       "incidentId": "eip155:1:0x1ea0a2e88efceccb2dd93e6e5cb89e5421666caeefb1e6fc41b68168373da342",
       "targetId": "target-1",
@@ -953,6 +1786,23 @@
       "failureModeId": "failure:soulmate-redeem-burns-unowned-vault-shares",
       "codeArtifactCodeHash": "0xe01b8e2859105e034f442f20907101b37636836921f0d137674e9298f2869187",
       "codeAgeSeconds": 15699780
+    },
+    {
+      "observationId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1#target-7",
+      "incidentId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+      "targetId": "target-7",
+      "chainId": 59144,
+      "exploit": {
+        "blockNumber": 5079177,
+        "transactionIndex": 4,
+        "timestamp": 1717281449
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:velocore-unauthorized-fee-multiplier-underflow",
+      "codeArtifactCodeHash": "0x73a62e729ccf2c5483f52c21a33847b677c87acba736dcd72859abbcd8d87fd4",
+      "codeAgeSeconds": 17127090
     },
     {
       "observationId": "eip155:1:0xc310a0affe2169d1f6feec1c63dbc7f7c62a887fa48795d327d4d2da2d6b111d#target-1",
@@ -987,6 +1837,176 @@
       "failureModeId": "failure:multichain-permit-success-without-authorization",
       "codeArtifactCodeHash": "0xd486e19e680b62428460944b53af4651a00108b45a6d9dd69040aa0044284434",
       "codeAgeSeconds": 18599312
+    },
+    {
+      "observationId": "eip155:56:0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8#target-1",
+      "incidentId": "eip155:56:0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 7048833,
+        "transactionIndex": 27,
+        "timestamp": 1619887119
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:spartan-live-balance-liquidity-share",
+      "codeArtifactCodeHash": "0xf1d7b704da0354f81734fda090fce75b3e0e8b2ac5d7c6e1bc1914fbce339d5c",
+      "codeAgeSeconds": 18673283
+    },
+    {
+      "observationId": "eip155:56:0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375#target-1",
+      "incidentId": "eip155:56:0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 28593355,
+        "transactionIndex": 3,
+        "timestamp": 1685239913
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:babydoge-farmzap-untrusted-farm-callback",
+      "codeArtifactCodeHash": "0x891aa451167773220a29584cba5e04143f6ebd0ce213cdc02df427d649698389",
+      "codeAgeSeconds": 18906952
+    },
+    {
+      "observationId": "eip155:1:0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729#target-2",
+      "incidentId": "eip155:1:0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729",
+      "targetId": "target-2",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 20834658,
+        "transactionIndex": 114,
+        "timestamp": 1727352119
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:empty-market-donation-rounding",
+      "codeArtifactCodeHash": "0x5eb4e0b8824c374c4c37e13dce601ea42da09f5445301010d93a393ebccd1b4b",
+      "codeAgeSeconds": 21410388
+    },
+    {
+      "observationId": "eip155:56:0xac8a739c1f668b13d065d56a03c37a686e0aa1c9339e79fcbc5a2d0a6311e333#target-1",
+      "incidentId": "eip155:56:0xac8a739c1f668b13d065d56a03c37a686e0aa1c9339e79fcbc5a2d0a6311e333",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 7781160,
+        "transactionIndex": 9,
+        "timestamp": 1622141686
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:demax-pair-missing-constant-product-invariant",
+      "codeArtifactCodeHash": "0x03a31f0ef997b7cd70dd46f543cbaf79e172eb943598e8cc4beeb2f3abbea01d",
+      "codeAgeSeconds": 21662877
+    },
+    {
+      "observationId": "eip155:1:0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b#target-1",
+      "incidentId": "eip155:1:0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 9899738,
+        "transactionIndex": 105,
+        "timestamp": 1587257935
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:lendfme-supply-transfer-hook-reentrancy",
+      "codeArtifactCodeHash": "0x01742f4a4c5582771d36e79e1aa009070116bd33c232e42321d03c6ab1314c89",
+      "codeAgeSeconds": 22185718
+    },
+    {
+      "observationId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1#target-5",
+      "incidentId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+      "targetId": "target-5",
+      "chainId": 59144,
+      "exploit": {
+        "blockNumber": 5079177,
+        "transactionIndex": 4,
+        "timestamp": 1717281449
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:velocore-unauthorized-fee-multiplier-underflow",
+      "codeArtifactCodeHash": "0x0ee292a13576b0de201f0c3e1c4a2b51416ca23c16a34d0b314c9e43e11bf370",
+      "codeAgeSeconds": 24327432
+    },
+    {
+      "observationId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1#target-2",
+      "incidentId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+      "targetId": "target-2",
+      "chainId": 59144,
+      "exploit": {
+        "blockNumber": 5079177,
+        "transactionIndex": 4,
+        "timestamp": 1717281449
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:velocore-unauthorized-fee-multiplier-underflow",
+      "codeArtifactCodeHash": "0x4c8174df0ce940be28a46decc2e39eaae439a90543b07afce3b17eaa5ca03a14",
+      "codeAgeSeconds": 25470711
+    },
+    {
+      "observationId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1#target-4",
+      "incidentId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+      "targetId": "target-4",
+      "chainId": 59144,
+      "exploit": {
+        "blockNumber": 5079177,
+        "transactionIndex": 4,
+        "timestamp": 1717281449
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:velocore-unauthorized-fee-multiplier-underflow",
+      "codeArtifactCodeHash": "0x23208b3707ef8ed43ae741ae1d7e4ebcef16bb0aee5381af5411b2a0eaa18601",
+      "codeAgeSeconds": 25612987
+    },
+    {
+      "observationId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1#target-1",
+      "incidentId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
+      "targetId": "target-1",
+      "chainId": 59144,
+      "exploit": {
+        "blockNumber": 5079177,
+        "transactionIndex": 4,
+        "timestamp": 1717281449
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:velocore-unauthorized-fee-multiplier-underflow",
+      "codeArtifactCodeHash": "0x5acd76d2160393ea6b82f9eb1fd09fcf02b9b040a5b55da5ec17f2c5499bbeb0",
+      "codeAgeSeconds": 26068380
+    },
+    {
+      "observationId": "eip155:1:0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c#target-1",
+      "incidentId": "eip155:1:0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 17806056,
+        "transactionIndex": 0,
+        "timestamp": 1690722635
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:vyper-cross-function-named-reentrancy-lock",
+      "codeArtifactCodeHash": "0xba0284a6a8a86734c1c777e3c6b5b56f2c8ba95dc0f7eba481c6d09da7885ebc",
+      "codeAgeSeconds": 26429604
     },
     {
       "observationId": "eip155:1:0x2bb6d2ca3b52a01ff9ec01c931f68762ded9a05693ea65d911a20602eea02763#target-1",
@@ -1038,6 +2058,23 @@
       "failureModeId": "failure:mahalend-empty-market-index-rounding",
       "codeArtifactCodeHash": "0x15efa7eb5624c2c2b003472536190622d77d89910bdbc6f79d6a386a9d93e535",
       "codeAgeSeconds": 28826796
+    },
+    {
+      "observationId": "eip155:56:0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189#target-1",
+      "incidentId": "eip155:56:0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 21816546,
+        "transactionIndex": 0,
+        "timestamp": 1664649354
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:transit-callbytes-unrestricted-transfer-proxy-call",
+      "codeArtifactCodeHash": "0xb2faed93c49352902817adb307af577c450ba7ebcae8583e765126adc9e2cabe",
+      "codeAgeSeconds": 29763628
     },
     {
       "observationId": "eip155:1:0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581#target-1",
@@ -1108,6 +2145,23 @@
       "codeAgeSeconds": 47901060
     },
     {
+      "observationId": "eip155:1:0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729#target-1",
+      "incidentId": "eip155:1:0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 20834658,
+        "transactionIndex": 114,
+        "timestamp": 1727352119
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:onyx-nft-liquidation-untrusted-otokens",
+      "codeArtifactCodeHash": "0xba0d723e523109b37a4342193652f0b53b9da3a8e2130df3f01e42185b367f3e",
+      "codeAgeSeconds": 49752756
+    },
+    {
       "observationId": "eip155:1:0xc5c61b3ac39d854773b9dc34bd0cdbc8b5bbf75f18551802a0b5881fcb990513#target-1",
       "incidentId": "eip155:1:0xc5c61b3ac39d854773b9dc34bd0cdbc8b5bbf75f18551802a0b5881fcb990513",
       "targetId": "target-1",
@@ -1123,6 +2177,23 @@
       "failureModeId": "failure:rfq-signer-authorization-wrong-party",
       "codeArtifactCodeHash": "0x80813a5be8ae42e8d46f185d760bbf65f162f742395b9d96be27db5d3d3a1531",
       "codeAgeSeconds": 50933424
+    },
+    {
+      "observationId": "eip155:1:0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c#target-1",
+      "incidentId": "eip155:1:0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 17807830,
+        "transactionIndex": 6,
+        "timestamp": 1690744103
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:vyper-cross-function-named-reentrancy-lock",
+      "codeArtifactCodeHash": "0x0a93dc0d31254f712e0129e5a67ac2863dbf2c8505cf6f014b388792f75aadc1",
+      "codeAgeSeconds": 52990345
     },
     {
       "observationId": "eip155:1:0x2a027c8b915c3737942f512fc5d26fd15752d0332353b3059de771a35a606c2d#target-1",
@@ -1176,6 +2247,40 @@
       "codeAgeSeconds": 60943428
     },
     {
+      "observationId": "eip155:56:0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375#target-2",
+      "incidentId": "eip155:56:0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375",
+      "targetId": "target-2",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 28593355,
+        "transactionIndex": 3,
+        "timestamp": 1685239913
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:babydoge-unbounded-auto-liquidity-swap",
+      "codeArtifactCodeHash": "0xf267028176840847b59638fb29923b617f85eae9696c6182ee407a1cba3e0cd9",
+      "codeAgeSeconds": 63622237
+    },
+    {
+      "observationId": "eip155:1:0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321#target-1",
+      "incidentId": "eip155:1:0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 25118335,
+        "transactionIndex": 184,
+        "timestamp": 1779062123
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:verus-supplemental-export-flag-not-rejected",
+      "codeArtifactCodeHash": "0x42928a45ef4c9b3b03550c972a98d1e49cb944d676f0f548e83c9920e8fb8dee",
+      "codeAgeSeconds": 68003364
+    },
+    {
       "observationId": "eip155:1:0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1#target-1",
       "incidentId": "eip155:1:0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1",
       "targetId": "target-1",
@@ -1191,6 +2296,23 @@
       "failureModeId": "failure:aztec-rollup-real-transaction-count-not-proof-bound",
       "codeArtifactCodeHash": "0x5ee6af94fefbaeef36025b7d06ef186edb226b6285894e907d937191119def1b",
       "codeAgeSeconds": 68751828
+    },
+    {
+      "observationId": "eip155:1:0x62734ce80311e64630a009dd101a967ea0a9c012fabbfce8eac90f0f4ca090d6#target-1",
+      "incidentId": "eip155:1:0x62734ce80311e64630a009dd101a967ea0a9c012fabbfce8eac90f0f4ca090d6",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 21982111,
+        "transactionIndex": 6,
+        "timestamp": 1741194923
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:oneinch-fusion-v1-yul-calldata-corruption",
+      "codeArtifactCodeHash": "0x665fffcd3ff12e50bbb854f4365a4a890285283a721eb7e92392d18496b74810",
+      "codeAgeSeconds": 69470844
     },
     {
       "observationId": "eip155:10:0x18e34ce214211afedb6008c0cd00d476ce71222643521dbff5e2b65cdb2ccb80#target-1",
@@ -1276,6 +2398,23 @@
       "failureModeId": "failure:inkfinance-payroll-balance-scaled-claim",
       "codeArtifactCodeHash": "0xedd62313105db0182e842f52a3307bceaee6e829c29d218e68165f17f8fc516b",
       "codeAgeSeconds": 74651820
+    },
+    {
+      "observationId": "eip155:1:0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1#target-1",
+      "incidentId": "eip155:1:0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 17426065,
+        "transactionIndex": 31,
+        "timestamp": 1686111251
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:compounder-permissionless-zero-slippage-deposit",
+      "codeArtifactCodeHash": "0x03badaa52c30aabf8e28b6822282781b5c5d0af40290eb2aff125796472f7772",
+      "codeAgeSeconds": 81310402
     },
     {
       "observationId": "eip155:42161:0x03182d3f0956a91c4e4c8f225bbc7975f9434fab042228c7acdc5ec9a32626ef#target-1",
@@ -1380,6 +2519,23 @@
       "codeAgeSeconds": 138935773
     },
     {
+      "observationId": "eip155:1:0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014#target-1",
+      "incidentId": "eip155:1:0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 24191019,
+        "transactionIndex": 3,
+        "timestamp": 1767888155
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:truebit-bonding-curve-purchase-price-overflow",
+      "codeArtifactCodeHash": "0xbd362f836bca3bcbddd40f9d0e753cfbe34f806e28dc930708812aa9ec01f304",
+      "codeAgeSeconds": 149749661
+    },
+    {
       "observationId": "eip155:1:0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da#target-2",
       "incidentId": "eip155:1:0x17026faca0b8e4cb7531e4fb277c390eb165e81229628e0192923ad1d90a41da",
       "targetId": "target-2",
@@ -1448,6 +2604,23 @@
       "codeAgeSeconds": 155566268
     },
     {
+      "observationId": "eip155:56:0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303#target-1",
+      "incidentId": "eip155:56:0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 101015197,
+        "transactionIndex": 77,
+        "timestamp": 1780012999
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:dxsale-locker-uncleared-repeat-withdrawal",
+      "codeArtifactCodeHash": "0x9235c7867cce162f46c25b8f8cca636e89671618d8579a0d615b09d5dac3257a",
+      "codeAgeSeconds": 166149898
+    },
+    {
       "observationId": "eip155:1:0xd927843e30c6b2bf43103d83bca6abead648eac3cad0d05b1b0eb84cd87de9b6#target-1",
       "incidentId": "eip155:1:0xd927843e30c6b2bf43103d83bca6abead648eac3cad0d05b1b0eb84cd87de9b6",
       "targetId": "target-1",
@@ -1483,17 +2656,24 @@
     }
   ],
   "ageKnots": [
+    8,
+    15,
+    5712,
     7392,
     16344,
     18858,
+    22531,
     85596,
     125328,
     144451,
     221796,
+    241533,
     251016,
     303012,
     319265,
+    321807,
     330540,
+    375350,
     438388,
     485004,
     496836,
@@ -1502,69 +2682,131 @@
     584484,
     591768,
     614748,
+    687098,
     701676,
+    739006,
+    744672,
     777372,
+    902652,
+    1024110,
+    1080976,
     1113036,
+    1435008,
+    1511548,
+    1536624,
     1549416,
     1641696,
+    1664388,
     2152656,
     2234256,
     2342592,
     2431668,
     2469828,
+    2479546,
     2572388,
     2611558,
+    2724091,
     2991756,
     3030526,
+    3120203,
+    3219477,
+    3219480,
     3251011,
+    3313301,
+    3372000,
+    3372128,
+    3372263,
+    3372448,
+    3377722,
     3452448,
+    3534156,
     3552782,
     3864204,
     3869980,
     4279795,
+    4407400,
     4413476,
+    5083556,
     5114023,
+    5666844,
+    6186924,
+    6487378,
     6881640,
     7104480,
+    7200432,
+    7810142,
     7910954,
     8000269,
+    8046504,
+    8055252,
+    8056096,
+    8807413,
+    8949108,
+    9297108,
     9413135,
+    9479160,
+    9483100,
     11556263,
     11685564,
     11774507,
     12120375,
+    12841308,
+    13169064,
     13604305,
     14174508,
+    14373021,
+    15435562,
+    15436654,
     15699780,
+    17127090,
     17858966,
     18599312,
+    18673283,
+    18906952,
+    21410388,
+    21662877,
+    22185718,
+    24327432,
+    25470711,
+    25612987,
+    26068380,
+    26429604,
     27146544,
     27932688,
     28826796,
+    29763628,
     31287449,
     31517148,
     43775580,
     47901060,
+    49752756,
     50933424,
+    52990345,
     53688032,
     55284343,
     60943428,
+    63622237,
+    68003364,
     68751828,
+    69470844,
     69593330,
     70116840,
     71856828,
     73102812,
     74651820,
+    81310402,
     86410930,
     102187798,
     115829043,
     120439782,
     135273351,
     138935773,
+    149749661,
     154604538,
     154604646,
     155565516,
     155566268,
+    166149898,
     199548948,
     262522555
   ],
@@ -1615,50 +2857,6 @@
       ]
     },
     {
-      "observationId": "eip155:10:0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e#target-1",
-      "incidentId": "eip155:10:0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e",
-      "targetId": "target-1",
-      "chainId": 10,
-      "exploit": {
-        "blockNumber": 108375558,
-        "transactionIndex": 1,
-        "timestamp": 1692349893
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:10:0x3d6367de5c191204b44b8a5cf975f257472087a9aadc59b5d744ffdef33a520e:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 2479548,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:10:0x45c0ccfd3ca1b4a937feebcb0f5a166c409c9e403070808835d41da40732db96#target-1",
-      "incidentId": "eip155:10:0x45c0ccfd3ca1b4a937feebcb0f5a166c409c9e403070808835d41da40732db96",
-      "targetId": "target-1",
-      "chainId": 10,
-      "exploit": {
-        "blockNumber": 120062493,
-        "transactionIndex": 8,
-        "timestamp": 1715723763
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:10:0x45c0ccfd3ca1b4a937feebcb0f5a166c409c9e403070808835d41da40732db96:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 375350,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:10:0x5dc519726e1236eb846271f6699e03cdd1a8fd593a2900c71cd2aabbdb7c92e6#target-1",
       "incidentId": "eip155:10:0x5dc519726e1236eb846271f6699e03cdd1a8fd593a2900c71cd2aabbdb7c92e6",
       "targetId": "target-1",
@@ -1674,28 +2872,6 @@
       "failureModeId": "legacy:eip155:10:0x5dc519726e1236eb846271f6699e03cdd1a8fd593a2900c71cd2aabbdb7c92e6:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 3141716,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:10:0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451#target-1",
-      "incidentId": "eip155:10:0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451",
-      "targetId": "target-1",
-      "chainId": 10,
-      "exploit": {
-        "blockNumber": 90761918,
-        "transactionIndex": 0,
-        "timestamp": 1681567920
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:10:0x6e9ebcdebbabda04fa9f2e3bc21ea8b2e4fb4bf4f4670cb8483e2f0b2604f451:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 8807413,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -2033,28 +3209,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12#target-1",
-      "incidentId": "eip155:1:0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 25471348,
-        "transactionIndex": 0,
-        "timestamp": 1783315079
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 44378736,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x0eb8f8d148508e752d9643ccf49ac4cb0c21cbad346b5bbcf2d06974d31bd5c4#target-1",
       "incidentId": "eip155:1:0x0eb8f8d148508e752d9643ccf49ac4cb0c21cbad346b5bbcf2d06974d31bd5c4",
       "targetId": "target-1",
@@ -2209,28 +3363,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286#target-1",
-      "incidentId": "eip155:1:0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 19325937,
-        "transactionIndex": 119,
-        "timestamp": 1709122199
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x23fcf9d4517f7cc39815b09b0a80c023ab2c8196c826c93b4100f2e26b701286:failure-1",
-      "codeArtifactCodeHash": "0x4bcc3eb4a0d18e14d3658e127d3afd7796dac06af7f875272a7af9767f22c39e",
-      "codeAgeSeconds": 744672,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b#target-1",
       "incidentId": "eip155:1:0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b",
       "targetId": "target-1",
@@ -2246,28 +3378,6 @@
       "failureModeId": "legacy:eip155:1:0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 25060692,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x2606d459a50ca4920722a111745c2eeced1d8a01ff25ee762e22d5d4b1595739#target-1",
-      "incidentId": "eip155:1:0x2606d459a50ca4920722a111745c2eeced1d8a01ff25ee762e22d5d4b1595739",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 19687890,
-        "transactionIndex": 27,
-        "timestamp": 1713510407
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x2606d459a50ca4920722a111745c2eeced1d8a01ff25ee762e22d5d4b1595739:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 12841356,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -2312,28 +3422,6 @@
       "failureModeId": "legacy:eip155:1:0x2c9f87e285026601a2c8903cf5f10e5b3655fbd0264490c41514ce073c42a9c3:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 12686004,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c#target-1",
-      "incidentId": "eip155:1:0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 17807830,
-        "transactionIndex": 6,
-        "timestamp": 1690744103
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x2e7dc8b2fb7e25fd00ed9565dcc0ad4546363171d5e00f196d48103983ae477c:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 52990345,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -2452,28 +3540,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x39328ea4377a8887d3f6ce91b2f4c6b19a851e2fc5163e2f83bbc2fc136d0c71#target-1",
-      "incidentId": "eip155:1:0x39328ea4377a8887d3f6ce91b2f4c6b19a851e2fc5163e2f83bbc2fc136d0c71",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 20794865,
-        "transactionIndex": 155,
-        "timestamp": 1726872275
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x39328ea4377a8887d3f6ce91b2f4c6b19a851e2fc5163e2f83bbc2fc136d0c71:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 1548240,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e#target-1",
       "incidentId": "eip155:1:0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e",
       "targetId": "target-1",
@@ -2562,28 +3628,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x42b2ec27c732100dd9037c76da415e10329ea41598de453bb0c0c9ea7ce0d8e5#target-1",
-      "incidentId": "eip155:1:0x42b2ec27c732100dd9037c76da415e10329ea41598de453bb0c0c9ea7ce0d8e5",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 20671892,
-        "transactionIndex": 6,
-        "timestamp": 1725388679
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x42b2ec27c732100dd9037c76da415e10329ea41598de453bb0c0c9ea7ce0d8e5:failure-1",
-      "codeArtifactCodeHash": "0xfadd1391fb10f9450ef4d67e74b2a7ae7deda058d36a548462c2f835ce9b9da4",
-      "codeAgeSeconds": 7201296,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x44037ffc0993327176975e08789b71c1058318f48ddeff25890a577d6555b6ba#target-1",
       "incidentId": "eip155:1:0x44037ffc0993327176975e08789b71c1058318f48ddeff25890a577d6555b6ba",
       "targetId": "target-1",
@@ -2599,72 +3643,6 @@
       "failureModeId": "legacy:eip155:1:0x44037ffc0993327176975e08789b71c1058318f48ddeff25890a577d6555b6ba:failure-1",
       "codeArtifactCodeHash": "0x2e00dffa57a73b8a55b02ecec52b55ddd004909c25e4b537680f9109c4ff37ae",
       "codeAgeSeconds": 28919148,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa#target-1",
-      "incidentId": "eip155:1:0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 13417949,
-        "transactionIndex": 61,
-        "timestamp": 1634236663
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa:failure-1",
-      "codeArtifactCodeHash": "0x69d16bf8d40204816003dc25fbf29fafc17cb33819b43904485692aa80c2480e",
-      "codeAgeSeconds": 14373021,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729#target-1",
-      "incidentId": "eip155:1:0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 20834658,
-        "transactionIndex": 114,
-        "timestamp": 1727352119
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 49753740,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3#target-1",
-      "incidentId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 18630392,
-        "transactionIndex": 41,
-        "timestamp": 1700693711
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 8055252,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -2804,28 +3782,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x53fe7ef190c34d810c50fb66f0fc65a1ceedc10309cf4b4013d64042a0331156#target-1",
-      "incidentId": "eip155:1:0x53fe7ef190c34d810c50fb66f0fc65a1ceedc10309cf4b4013d64042a0331156",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 23914086,
-        "transactionIndex": 0,
-        "timestamp": 1764537119
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x53fe7ef190c34d810c50fb66f0fc65a1ceedc10309cf4b4013d64042a0331156:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 13169064,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x54f659773dae6e01f83184d4b6d717c7f1bb71c0aa59e8c8f4a57c25271424b3#target-1",
       "incidentId": "eip155:1:0x54f659773dae6e01f83184d4b6d717c7f1bb71c0aa59e8c8f4a57c25271424b3",
       "targetId": "target-1",
@@ -2929,28 +3885,6 @@
       "failureModeId": "legacy:eip155:1:0x57ee419a001d85085478d04dd2a73daa91175b1d7c11d8a8fb5622c56fd1fa69:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 46777212,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x59d17fd31e31959b2d562508bf91c4fc1271682ba7d61a6209865e1151b69aea#target-1",
-      "incidentId": "eip155:1:0x59d17fd31e31959b2d562508bf91c4fc1271682ba7d61a6209865e1151b69aea",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 25170513,
-        "transactionIndex": 81,
-        "timestamp": 1779690347
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x59d17fd31e31959b2d562508bf91c4fc1271682ba7d61a6209865e1151b69aea:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 7640172,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -3090,28 +4024,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x62734ce80311e64630a009dd101a967ea0a9c012fabbfce8eac90f0f4ca090d6#target-1",
-      "incidentId": "eip155:1:0x62734ce80311e64630a009dd101a967ea0a9c012fabbfce8eac90f0f4ca090d6",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 21982111,
-        "transactionIndex": 6,
-        "timestamp": 1741194923
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x62734ce80311e64630a009dd101a967ea0a9c012fabbfce8eac90f0f4ca090d6:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 69470844,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x6439d63cc57fb68a32ea8ffd8f02496e8abad67292be94904c0b47a4d14ce90d#target-1",
       "incidentId": "eip155:1:0x6439d63cc57fb68a32ea8ffd8f02496e8abad67292be94904c0b47a4d14ce90d",
       "targetId": "target-1",
@@ -3171,50 +4083,6 @@
       "failureModeId": "legacy:eip155:1:0x674f74b30a3d7bdf15fa60a7c29d96a402ea894a055f624164a8009df98386a0:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 79094381,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f#target-1",
-      "incidentId": "eip155:1:0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 13849007,
-        "transactionIndex": 235,
-        "timestamp": 1640096295
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x69272d8c84d67d1da2f6425b339192fa472898dce936f24818fda415c1c1ff3f:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 9479160,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321#target-1",
-      "incidentId": "eip155:1:0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 25118335,
-        "transactionIndex": 184,
-        "timestamp": 1779062123
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321:failure-1",
-      "codeArtifactCodeHash": "0x0878fa6d5df85f452a7485a7fb1ff06ddd010e58f8ca18d6f40592817b6cb552",
-      "codeAgeSeconds": 6765936,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -3435,28 +4303,6 @@
       "failureModeId": "legacy:eip155:1:0x75e3aeb00df69882a1b15d424e5e642650326ca3b923d7fd1922d57c51bc2c78:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 238080,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281#target-1",
-      "incidentId": "eip155:1:0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 12995895,
-        "transactionIndex": 52,
-        "timestamp": 1628578498
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 687098,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -3750,28 +4596,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5#target-1",
-      "incidentId": "eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 10852722,
-        "transactionIndex": 99,
-        "timestamp": 1599988201
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5:failure-1",
-      "codeArtifactCodeHash": "0x153147d85fddfac599aed6d58a1488595e6b12f736ad4aca8e72e1a1929ed35c",
-      "codeAgeSeconds": 739006,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x873f7c77d5489c1990f701e9bb312c103c5ebcdcf0a472db726730814bfd55f3#target-1",
       "incidentId": "eip155:1:0x873f7c77d5489c1990f701e9bb312c103c5ebcdcf0a472db726730814bfd55f3",
       "targetId": "target-1",
@@ -3853,28 +4677,6 @@
       "failureModeId": "legacy:eip155:1:0x8c3f442fc6d640a6ff3ea0b12be64f1d4609ea94edd2966f42c01cd9bdcf04b5:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 11363580,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a#target-1",
-      "incidentId": "eip155:1:0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 24313234,
-        "transactionIndex": 5,
-        "timestamp": 1769361035
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x8f28a7f604f1b3890c2275eec54cd7deb40935183a856074c0a06e4b5f72f25a:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 3534156,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -4169,28 +4971,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x9dbf0326a03a2a3719c27be4fa69aacc9857fd231a8d9dcaede4bb083def75ec#target-1",
-      "incidentId": "eip155:1:0x9dbf0326a03a2a3719c27be4fa69aacc9857fd231a8d9dcaede4bb083def75ec",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 4043800,
-        "transactionIndex": 41,
-        "timestamp": 1500466695
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x9dbf0326a03a2a3719c27be4fa69aacc9857fd231a8d9dcaede4bb083def75ec:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 4407400,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x9e074d70e4f9022cba33c1417a6f6338d8248b67d6141c9a32913ca567d0efca#target-1",
       "incidentId": "eip155:1:0x9e074d70e4f9022cba33c1417a6f6338d8248b67d6141c9a32913ca567d0efca",
       "targetId": "target-1",
@@ -4232,29 +5012,6 @@
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
         "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099#target-1",
-      "incidentId": "eip155:1:0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 25592836,
-        "transactionIndex": 113,
-        "timestamp": 1784778359
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 902904,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible",
-        "last-code-change:unknown"
       ]
     },
     {
@@ -4324,50 +5081,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c#target-1",
-      "incidentId": "eip155:1:0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 17806056,
-        "transactionIndex": 0,
-        "timestamp": 1690722635
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661bfce2f1620c:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 26429604,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e#target-1",
-      "incidentId": "eip155:1:0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 13125071,
-        "transactionIndex": 1,
-        "timestamp": 1630302287
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 241533,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5#target-1",
       "incidentId": "eip155:1:0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5",
       "targetId": "target-1",
@@ -4405,50 +5118,6 @@
       "failureModeId": "legacy:eip155:1:0xad818ec910def08c70ac519ab0fffa084b4178014a91cd8aa2f882d972a511c1:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 29947693,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b#target-1",
-      "incidentId": "eip155:1:0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 11541219,
-        "transactionIndex": 23,
-        "timestamp": 1609143076
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xadf27f5dd052482d46fdf69a5208a27cc7352522c7c19bbde5aee18f6ea4373b:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 3313301,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b#target-1",
-      "incidentId": "eip155:1:0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 9899738,
-        "transactionIndex": 105,
-        "timestamp": 1587257935
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xae7d664bdfcc54220df4f18d339005c6faf6e62c9ca79c56387bc0389274363b:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 22185718,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -4920,50 +5589,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014#target-1",
-      "incidentId": "eip155:1:0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 24191019,
-        "transactionIndex": 3,
-        "timestamp": 1767888155
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xcd4755645595094a8ab984d0db7e3b4aabde72a5c87c4f176a030629c47fb014:failure-1",
-      "codeArtifactCodeHash": "0xbd362f836bca3bcbddd40f9d0e753cfbe34f806e28dc930708812aa9ec01f304",
-      "codeAgeSeconds": 149749661,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc#target-1",
-      "incidentId": "eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 12955063,
-        "transactionIndex": 37,
-        "timestamp": 1628031222
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xcd7dae143a4c0223349c16237ce4cd7696b1638d116a72755231ede872ab70fc:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 3377722,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db#target-1",
       "incidentId": "eip155:1:0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db",
       "targetId": "target-1",
@@ -4979,28 +5604,6 @@
       "failureModeId": "legacy:eip155:1:0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 117259032,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1#target-1",
-      "incidentId": "eip155:1:0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 17426065,
-        "transactionIndex": 31,
-        "timestamp": 1686111251
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xcff84cc137c92e427f720ca1f2b36fbad793f34ec5117eed127060686e6797b1:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 81310402,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -5096,28 +5699,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d#target-1",
-      "incidentId": "eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 17036779,
-        "transactionIndex": 0,
-        "timestamp": 1681365155
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 99894647,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0xd5b4d68432cbbd912130bbb5b93399031ddbb400d8f723c78050574de7533106#target-1",
       "incidentId": "eip155:1:0xd5b4d68432cbbd912130bbb5b93399031ddbb400d8f723c78050574de7533106",
       "targetId": "target-1",
@@ -5133,28 +5714,6 @@
       "failureModeId": "legacy:eip155:1:0xd5b4d68432cbbd912130bbb5b93399031ddbb400d8f723c78050574de7533106:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 58325528,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c#target-1",
-      "incidentId": "eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 13155321,
-        "transactionIndex": 93,
-        "timestamp": 1630706304
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c:failure-1",
-      "codeArtifactCodeHash": "0x4787954b831b9837cbdda088091451d0b4178aca24d129ce8896d410659bf024",
-      "codeAgeSeconds": 2724091,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -5265,28 +5824,6 @@
       "failureModeId": "legacy:eip155:1:0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae:failure-1",
       "codeArtifactCodeHash": "0x9eb65130a0818c0cc6cdeb10dfec4a21b7f197e1c18fec40f911a11d4049e2be",
       "codeAgeSeconds": 43992,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xe1c76241dda7c5fcf1988454c621142495640e708e3f8377982f55f8cf2a8401#target-1",
-      "incidentId": "eip155:1:0xe1c76241dda7c5fcf1988454c621142495640e708e3f8377982f55f8cf2a8401",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 11272255,
-        "transactionIndex": 2,
-        "timestamp": 1605574039
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xe1c76241dda7c5fcf1988454c621142495640e708e3f8377982f55f8cf2a8401:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 321807,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -5647,28 +6184,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d#target-1",
-      "incidentId": "eip155:1:0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 22581020,
-        "transactionIndex": 0,
-        "timestamp": 1748432387
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 8949108,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0xfe8bc757d87e97a5471378c90d390df47e1b29bb9fca918b94acd8ecfaadc598#target-1",
       "incidentId": "eip155:1:0xfe8bc757d87e97a5471378c90d390df47e1b29bb9fca918b94acd8ecfaadc598",
       "targetId": "target-1",
@@ -5706,50 +6221,6 @@
       "failureModeId": "legacy:eip155:1:0xfeedbf51b4e2338e38171f6e19501327294ab1907ab44cfd2d7e7336c975ace7:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 5032824,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0xffbbd492e0605a8bb6d490c3cd879e87ff60862b0684160d08fd5711e7a872d3#target-1",
-      "incidentId": "eip155:1:0xffbbd492e0605a8bb6d490c3cd879e87ff60862b0684160d08fd5711e7a872d3",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 22785461,
-        "transactionIndex": 0,
-        "timestamp": 1750902839
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0xffbbd492e0605a8bb6d490c3cd879e87ff60862b0684160d08fd5711e7a872d3:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 5712,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:250:0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6#target-1",
-      "incidentId": "eip155:250:0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6",
-      "targetId": "target-1",
-      "chainId": 250,
-      "exploit": {
-        "blockNumber": 25345003,
-        "transactionIndex": 7,
-        "timestamp": 1639849155
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:250:0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 9483100,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -5864,29 +6335,6 @@
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
         "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:42161:0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b#target-1",
-      "incidentId": "eip155:42161:0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b",
-      "targetId": "target-1",
-      "chainId": 42161,
-      "exploit": {
-        "blockNumber": 166405687,
-        "transactionIndex": 2,
-        "timestamp": 1704221618
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:42161:0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b:failure-1",
-      "codeArtifactCodeHash": "0x7319ebf752e48a8291051be2a81a458a2bdc91d55d193691e061dd7193c740ae",
-      "codeAgeSeconds": 9,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible",
-        "last-code-change:configuration-change"
       ]
     },
     {
@@ -6022,28 +6470,6 @@
       ]
     },
     {
-      "observationId": "eip155:42161:0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f#target-1",
-      "incidentId": "eip155:42161:0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f",
-      "targetId": "target-1",
-      "chainId": 42161,
-      "exploit": {
-        "blockNumber": 273278742,
-        "transactionIndex": 1,
-        "timestamp": 1731310565
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:42161:0x6a2f989b5493b52ffc078d0a59a3bf9727d134b403aa6e0bf309fd513a728f7f:failure-1",
-      "codeArtifactCodeHash": "0xf2d2fe8873075b006361c88f28c59b6377a9eb85093ad81244f430976ea559d3",
-      "codeAgeSeconds": 327977,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:42161:0x6caa65b3fc5c8d4c7104574c3a15cd6208f742f9ada7d81ba027b20473137705#target-1",
       "incidentId": "eip155:42161:0x6caa65b3fc5c8d4c7104574c3a15cd6208f742f9ada7d81ba027b20473137705",
       "targetId": "target-1",
@@ -6103,28 +6529,6 @@
       "failureModeId": "legacy:eip155:42161:0xa96584f8ab7c27daea33798bb8a66286c75a2ba57eee3b4192c771f4eb4ac609:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 2041956,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:42161:0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef#target-1",
-      "incidentId": "eip155:42161:0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef",
-      "targetId": "target-1",
-      "chainId": 42161,
-      "exploit": {
-        "blockNumber": 87626026,
-        "transactionIndex": 2,
-        "timestamp": 1683309165
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:42161:0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef:failure-1",
-      "codeArtifactCodeHash": "0x9851d598cf345f432c312880107abd1a7a2dcdc27dc822370a9400285ef475e8",
-      "codeAgeSeconds": 1664388,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -6374,28 +6778,6 @@
       ]
     },
     {
-      "observationId": "eip155:43114:0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430#target-1",
-      "incidentId": "eip155:43114:0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430",
-      "targetId": "target-1",
-      "chainId": 43114,
-      "exploit": {
-        "blockNumber": 26343614,
-        "transactionIndex": 0,
-        "timestamp": 1676575014
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:43114:0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 8056096,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:43114:0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b#target-1",
       "incidentId": "eip155:43114:0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b",
       "targetId": "target-1",
@@ -6477,28 +6859,6 @@
       "failureModeId": "legacy:eip155:5000:0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd:failure-1",
       "codeArtifactCodeHash": "0x20450c32b82b446cc96fd669e1e3fefb1d5391f3ea6581bb322290eb3bc5d5f0",
       "codeAgeSeconds": 12342987,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05#target-1",
-      "incidentId": "eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05",
-      "targetId": "target-1",
-      "chainId": 534352,
-      "exploit": {
-        "blockNumber": 7580143,
-        "transactionIndex": 0,
-        "timestamp": 1721379589
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05:failure-1",
-      "codeArtifactCodeHash": "0x382670aef0b31165479a3040b4b19e7a6e7c4954586c5206fdc15fa3d25b50ea",
-      "codeAgeSeconds": 2238210,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -6741,28 +7101,6 @@
       "failureModeId": "legacy:eip155:56:0x07ba2ccf2b5c1aaca4c017af4fe87762a73ef7177f6ea8bb569367e908a0671d:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 61409,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:56:0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375#target-1",
-      "incidentId": "eip155:56:0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 28593355,
-        "transactionIndex": 3,
-        "timestamp": 1685239913
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x098e7394a1733320e0887f0de22b18f5c71ee18d48a0f6d30c76890fb5c85375:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 63622237,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -7115,28 +7453,6 @@
       "failureModeId": "legacy:eip155:56:0x16be4fe1c8fcab578fcb999cbc40885ba0d4ba9f3782a67bd215fb56dc579062:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 12580,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:56:0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189#target-1",
-      "incidentId": "eip155:56:0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 21816546,
-        "transactionIndex": 0,
-        "timestamp": 1664649354
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x181a7882aac0eab1036eedba25bc95a16e10f61b5df2e99d240a16c334b9b189:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 29763818,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -8090,28 +8406,6 @@
       ]
     },
     {
-      "observationId": "eip155:56:0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303#target-1",
-      "incidentId": "eip155:56:0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 101015197,
-        "transactionIndex": 77,
-        "timestamp": 1780012999
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 166149898,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:56:0x442ce0af4d10b23968a66b0b53d7b95f5bb611d55f19dc5a1963c763f65128f0#target-1",
       "incidentId": "eip155:56:0x442ce0af4d10b23968a66b0b53d7b95f5bb611d55f19dc5a1963c763f65128f0",
       "targetId": "target-1",
@@ -8215,28 +8509,6 @@
       "failureModeId": "legacy:eip155:56:0x487fb71e3d2574e747c67a45971ec3966d275d0069d4f9da6d43901401f8f3c0:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 8649415,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:56:0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934#target-1",
-      "incidentId": "eip155:56:0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 26864890,
-        "transactionIndex": 0,
-        "timestamp": 1680031587
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934:failure-1",
-      "codeArtifactCodeHash": "0x5552c0f1e8b7e2d9f4f00c84f0de535190e11031b4a85da8dad14e39411edc4d",
-      "codeAgeSeconds": 22531,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -8640,28 +8912,6 @@
       ]
     },
     {
-      "observationId": "eip155:56:0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991#target-1",
-      "incidentId": "eip155:56:0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 6947154,
-        "transactionIndex": 101,
-        "timestamp": 1619578972
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x5a504fe72ef7fc76dfeb4d979e533af4e23fe37e90b5516186d5787893c37991:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 1024110,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:56:0x5cf050cba486ec48100d5e5ad716380660e8c984d80f73ba888415bb540851a4#target-1",
       "incidentId": "eip155:56:0x5cf050cba486ec48100d5e5ad716380660e8c984d80f73ba888415bb540851a4",
       "targetId": "target-1",
@@ -8743,28 +8993,6 @@
       "failureModeId": "legacy:eip155:56:0x5ef1edb9749af6cec511741225e6d47103e0b647d1e41e08649caaff66942a91:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 642918,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:56:0x603b2bbe2a7d0877b22531735ff686a7caad866f6c0435c37b7b49e4bfd9a36c#target-1",
-      "incidentId": "eip155:56:0x603b2bbe2a7d0877b22531735ff686a7caad866f6c0435c37b7b49e4bfd9a36c",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 7457125,
-        "transactionIndex": 86,
-        "timestamp": 1621161380
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x603b2bbe2a7d0877b22531735ff686a7caad866f6c0435c37b7b49e4bfd9a36c:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 328768,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -9469,28 +9697,6 @@
       "failureModeId": "legacy:eip155:56:0x7e02ee7242a672fb84458d12198fae4122d7029ba64f3673e7800d811a8de93f:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 7176650,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:56:0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2#target-1",
-      "incidentId": "eip155:56:0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 10087724,
-        "transactionIndex": 110,
-        "timestamp": 1629142811
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x7e2a6ec08464e8e0118368cb933dc64ed9ce36445ecf9c49cacb970ea78531d2:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 1511548,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -10554,28 +10760,6 @@
       ]
     },
     {
-      "observationId": "eip155:56:0xac8a739c1f668b13d065d56a03c37a686e0aa1c9339e79fcbc5a2d0a6311e333#target-1",
-      "incidentId": "eip155:56:0xac8a739c1f668b13d065d56a03c37a686e0aa1c9339e79fcbc5a2d0a6311e333",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 7781160,
-        "transactionIndex": 9,
-        "timestamp": 1622141686
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0xac8a739c1f668b13d065d56a03c37a686e0aa1c9339e79fcbc5a2d0a6311e333:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 21662877,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:56:0xae8ca9dc8258ae32899fe641985739c3fa53ab1f603973ac74b424e165c66ccf#target-1",
       "incidentId": "eip155:56:0xae8ca9dc8258ae32899fe641985739c3fa53ab1f603973ac74b424e165c66ccf",
       "targetId": "target-1",
@@ -10701,28 +10885,6 @@
       "failureModeId": "legacy:eip155:56:0xb3bc6ca257387eae1cea3b997eb489c1a9c208d09ec4d117198029277468e25d:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 13315777,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:56:0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8#target-1",
-      "incidentId": "eip155:56:0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 7048833,
-        "transactionIndex": 27,
-        "timestamp": 1619887119
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 18672644,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -12116,28 +12278,6 @@
       ]
     },
     {
-      "observationId": "eip155:56:0xeaaa8f4d33b1035a790f0d7c4eb6e38db7d6d3b580e0bbc9ba39a9d6b80dd250#target-1",
-      "incidentId": "eip155:56:0xeaaa8f4d33b1035a790f0d7c4eb6e38db7d6d3b580e0bbc9ba39a9d6b80dd250",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 8530987,
-        "transactionIndex": 39,
-        "timestamp": 1624402719
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0xeaaa8f4d33b1035a790f0d7c4eb6e38db7d6d3b580e0bbc9ba39a9d6b80dd250:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 5083595,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:56:0xeaef22325e02ac65a8e1f2e1a3a43f7b7ac8d2323ce6f698a90813e77017c834#target-1",
       "incidentId": "eip155:56:0xeaef22325e02ac65a8e1f2e1a3a43f7b7ac8d2323ce6f698a90813e77017c834",
       "targetId": "target-1",
@@ -12622,28 +12762,6 @@
       ]
     },
     {
-      "observationId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1#target-1",
-      "incidentId": "eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1",
-      "targetId": "target-1",
-      "chainId": 59144,
-      "exploit": {
-        "blockNumber": 5079177,
-        "transactionIndex": 4,
-        "timestamp": 1717281449
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:59144:0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 26068380,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:60808:0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92#target-1",
       "incidentId": "eip155:60808:0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92",
       "targetId": "target-1",
@@ -12659,28 +12777,6 @@
       "failureModeId": "legacy:eip155:60808:0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 8398,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:81457:0x62e6b906bb5aafdc57c72cd13e20a18d2de3a4a757cd2f24fde6003ce5c9f2c6#target-1",
-      "incidentId": "eip155:81457:0x62e6b906bb5aafdc57c72cd13e20a18d2de3a4a757cd2f24fde6003ce5c9f2c6",
-      "targetId": "target-1",
-      "chainId": 81457,
-      "exploit": {
-        "blockNumber": 1111439,
-        "transactionIndex": 7,
-        "timestamp": 1711032693
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:81457:0x62e6b906bb5aafdc57c72cd13e20a18d2de3a4a757cd2f24fde6003ce5c9f2c6:failure-1",
-      "codeArtifactCodeHash": null,
-      "codeAgeSeconds": 1081024,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
@@ -13121,28 +13217,6 @@
       "failureModeId": "legacy:eip155:8453:0xbb837d417b76dd237b4418e1695a50941a69259a1c4dee561ea57d982b9f10ec:failure-1",
       "codeArtifactCodeHash": null,
       "codeAgeSeconds": 89300,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:8453:0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57#target-1",
-      "incidentId": "eip155:8453:0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57",
-      "targetId": "target-1",
-      "chainId": 8453,
-      "exploit": {
-        "blockNumber": 41289841,
-        "transactionIndex": 2,
-        "timestamp": 1769369029
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:8453:0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57:failure-1",
-      "codeArtifactCodeHash": "0x770a3b9dcbcbddf1d3f177c07d920ab3c9ad08613b9de052e1d3eb994d407190",
-      "codeAgeSeconds": 5666844,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",

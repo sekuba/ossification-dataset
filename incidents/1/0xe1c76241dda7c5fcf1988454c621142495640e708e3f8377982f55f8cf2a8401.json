@@ -16,7 +16,8 @@
       "timestamp": 1605574039
     },
     "attackerAddresses": [
-      "0xb77f7bbac3264ae7abc8aedf2ec5f4e7ca079f83"
+      "0xb77f7bbac3264ae7abc8aedf2ec5f4e7ca079f83",
+      "0x47c3d84394043a4f42f6422accd27bb7240fdfe2"
     ]
   },
   "classification": {
@@ -24,66 +25,73 @@
     "summary": "VaultCore.mintMultiple() skipped the supported-asset check that mint() performed, so the attacker passed a self-controlled fake stablecoin whose transferFrom re-entered the vault and triggered a rebase between the first mint's asset transfer and its OUSD supply increase, minting more OUSD than the vault held in assets."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
       "amount": 7000000,
       "valuationTimestamp": 1605574039,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "reported",
+      "sourceIds": [
+        "source-2",
+        "source-7"
+      ]
     },
     "minimumUsd": null,
     "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "confidence": "medium",
+    "notes": "Origin's project post-mortem reports a $7 million loss. PeckShield independently estimated approximately $7.7 million, including 11,809 ETH and 2,249,821 DAI, so the record retains Origin's rounded first-party gross-loss figure without presenting the reported token quantities as exact structured components."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x277e80f3e14e7fb3fc40a9d6184088e0241034bd",
-      "relationship": "unknown",
+      "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x328d15f6b5eba1c30cde1a5f1f5a9e35b07f5424",
+        "codeHash": "0xbe4bcad9eaca1eff00cd54018ab0ba94901a5f078b0b24dfe560d9a7f012371d"
       },
       "deployment": {
         "timestamp": 1600410802,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 10884566,
+        "transactionHash": "0xe7b165249cc960cdf87aec7387df4d95d2b9bc690755c713ab31121f7006a75f",
+        "transactionIndex": 67,
         "creatorAddress": "0xaed9fdc9681d61edb5f8b8e421f5cee8d7f4b04f"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1605252232,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 11247976,
+        "transactionHash": "0x39585251b3dbb697a220b30dc2fdbe4b3f6d29dea33e7399ca2d3cbcfda5d7bf",
+        "transactionIndex": 82,
+        "logIndex": 206,
         "mechanism": {
           "type": "event",
           "address": "0x277e80f3e14e7fb3fc40a9d6184088e0241034bd",
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 11 pre-incident Upgraded event(s)."
+        "description": "The last of 11 pre-incident Upgraded events selected the defect-bearing Vault implementation from topic 1."
       },
       "codeAgeSeconds": 321807,
-      "failureModeId": "legacy:eip155:1:0xe1c76241dda7c5fcf1988454c621142495640e708e3f8377982f55f8cf2a8401:failure-1",
+      "failureModeId": "failure:origin-dollar-mint-multiple-reentrancy",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-1",
+          "source-3",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4",
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/origin-dollar.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ]
       }
     }
@@ -93,7 +101,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xe1c76241dda7c5fcf1988454c621142495640e708e3f8377982f55f8cf2a8401"
@@ -102,25 +113,72 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
-      "url": "https://blog.peckshield.com/2020/11/17/ousd/"
+      "url": "https://www.originprotocol.com/blog/what-weve-changed-since-the-ousd-attack?lang=en"
     },
     {
       "id": "source-3",
       "type": "review-note",
       "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:23:18Z",
+      "note": "Reviewed the successful Ethereum receipt and full call trace, the VaultProxy and implementation creation transactions, every pre-incident Upgraded event, historical runtimes, Origin's project post-mortem, and PeckShield's technical analysis. Attack contract 0x47c3d84394043a4f42f6422accd27bb7240fdfe2 calls mint(address,uint256), mintMultiple(address[],uint256[]), and redeem(uint256) on VaultProxy 0x277e80f3e14e7fb3fc40a9d6184088e0241034bd; each call delegates to 0x328d15f6b5eba1c30cde1a5f1f5a9e35b07f5424. This execution reproduces the missing supported-asset validation and reentrant fake-token path described by the post-mortems. The proxy was directly deployed by 0xaed9fdc9681d61edb5f8b8e421f5cee8d7f4b04f at block 10884566:67. Its 3,422-byte runtime is unchanged through the exploit. A complete scan finds 11 Upgraded events from deployment through the pre-exploit block; the final event is log 206 at block 11247976:82 and selects implementation 0x328d15f6b5eba1c30cde1a5f1f5a9e35b07f5424 from topic 1. That implementation was directly deployed at block 11246268:118, and its 13,075-byte runtime hashes to 0xbe4bcad9eaca1eff00cd54018ab0ba94901a5f078b0b24dfe560d9a7f012371d at deployment, activation, and immediately before the exploit. Origin reports a $7 million loss; PeckShield estimates approximately $7.7 million."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
         "target-identity",
         "code-history"
       ],
-      "note": "onchain review: the vault in force at the incident is 0x277e80f3 (OUSD token 0x2a8e1e67.vaultAddress() at block 11272254); the vault redeployed after the hack (0xe75d77b1) postdates the incident and would fail measurement. VaultProxy 0x277e80f3 created 2020-09-18 by 0xaed9fdc9681d61edb5f8b8e421f5cee8d7f4b04f, not by attack sender 0xb77f7bba; 11 EIP-1967 upgrades before the incident, the last on 2020-11-13 - only 3.7 days before - consistent with Origin's statement that the missing validation was introduced by a gas-saving refactor. lossUsd 7,000,000 per Origin's own disclosure and CoinDesk; rekt's leaderboard lists $8m"
+      "chainId": 1,
+      "transactionHash": "0xe7b165249cc960cdf87aec7387df4d95d2b9bc690755c713ab31121f7006a75f"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x39585251b3dbb697a220b30dc2fdbe4b3f6d29dea33e7399ca2d3cbcfda5d7bf"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x127a15cbd6fe2f08fec950f0aa6e250c41b7102b5044d634de7008fcc67bd7be"
+    },
+    {
+      "id": "source-7",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://peckshield.medium.com/origin-dollar-incident-root-cause-analysis-f27e11988c90"
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/origin-dollar.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The $7 million gross loss is Origin's rounded project-reported USD figure; PeckShield's independent estimate is approximately $7.7 million."
+    ],
+    "reviewSourceIds": [
+      "source-3"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

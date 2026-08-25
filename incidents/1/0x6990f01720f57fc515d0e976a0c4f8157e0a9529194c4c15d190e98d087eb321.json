@@ -6,7 +6,7 @@
     "name": "VerusBridge",
     "slug": "verusbridge"
   },
-  "name": "VerusBridge",
+  "name": "VerusBridge supplemental-export parser divergence",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -21,68 +21,147 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "Verus submitImports accepted a crafted partialtransactionproof/MMR proof that bypassed VerusProof validation, minting fake ETH/tBTC/USDC imports."
+    "summary": "VerusProof did not reject a cross-chain-export output carrying the supplemental flag. A crafted output that Verus treated as inactive supplemental data was therefore parsed on Ethereum as an active export whose attacker-chosen transfer hash authorized unbacked ETH, tBTC, and USDC payouts."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 11580000,
-      "valuationTimestamp": 1779062123,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "amount": 11624229.676052658,
+      "valuationTimestamp": 1779062105,
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-8",
+        "source-9"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "1625.36688649",
+        "usdValue": 3457790.019455225,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1779062104,
+          "unitPriceUsd": 2127.3904668516816,
+          "sourceIds": [
+            "source-8"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-5"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x18084fba666a33d37592fa2633fd49a74dd93a88",
+          "symbol": "tBTC"
+        },
+        "amount": "103.56766017",
+        "usdValue": 8018780.819799434,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1779062105,
+          "unitPriceUsd": 77425.52845779363,
+          "sourceIds": [
+            "source-9"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-5"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC"
+        },
+        "amount": "147658.836798",
+        "usdValue": 147658.836798,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1779062123,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-5"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exploit transaction itself transferred exactly 1,625.36688649 native ETH, 103.56766017 tBTC, and 147,658.836798 USDC from the bridge to the attacker-controlled receiver. The USD total values ETH and tBTC at the nearest pre-anchor DefiLlama prices and USDC at par. Subsequent recovery is separate from this exploit-time gross-loss measurement."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x71518580f36feceffe0721f06ba4703218cd7f63",
-      "relationship": "proxy",
+      "relationship": "module-router",
       "codeArtifact": {
-        "address": "0xa045cf963b79833faf445f555ee1a6812d6fc87f",
-        "codeHash": "0x0878fa6d5df85f452a7485a7fb1ff06ddd010e58f8ca18d6f40592817b6cb552"
+        "address": "0x5e8060ecbf415aa25f12c1d67fde832bd87dcfa1",
+        "codeHash": "0x42928a45ef4c9b3b03550c972a98d1e49cb944d676f0f548e83c9920e8fb8dee"
       },
       "deployment": {
         "timestamp": 1696372199,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 18272987,
+        "transactionHash": "0x7bd34b417fd69a0df81dffb4b29c318ce1d3a337ef86a794f6a7e3b10692a428",
+        "transactionIndex": 1,
+        "creatorAddress": "0x8e171d1e671b5c492f15a2afac0cb32ac4212c9d"
       },
       "lastCodeChange": {
-        "kind": "implementation-change",
-        "timestamp": 1772296187,
-        "blockNumber": 24556629,
-        "transactionHash": "0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba",
-        "transactionIndex": 98,
+        "kind": "module-change",
+        "timestamp": 1711058759,
+        "blockNumber": 19485889,
+        "transactionHash": "0x1de7078bb3ed60fe4d252f07af1a6d0003d1fc50772dbc86c7c05e4a83f91cb6",
+        "transactionIndex": 85,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "storage-write",
+          "address": "0x71518580f36feceffe0721f06ba4703218cd7f63",
+          "storageSlot": "0xd7b6990105719101dabeb77144f2a3385c8033acd3af97e9423a695e81ad1eb7",
+          "valueBefore": "0x000000000000000000000000dc7f7896f801d801c6695709bc7fa2e05e91ddde",
+          "valueAfter": "0x0000000000000000000000005e8060ecbf415aa25f12c1d67fde832bd87dcfa1"
         },
-        "description": "2026-02-28T16:29:47Z (block 24556629, tx 0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba): last delegate-contract swap on the Verus Delegator before the incident, recovered by binary-searching eth_getStorageAt over the contracts address[] (length slot 13, data at keccak256(13)+i); that upgrade replaced contracts[0], [1], [6] and [8]"
+        "description": "The Delegator's contracts[2] slot changed to VerusProof 0x5e8060ecbf415aa25f12c1d67fde832bd87dcfa1. Exhaustive pre-exploit upgrade-call review found no later write to this module slot."
       },
-      "codeAgeSeconds": 6765936,
-      "failureModeId": "legacy:eip155:1:0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321:failure-1",
+      "codeAgeSeconds": 68003364,
+      "failureModeId": "failure:verus-supplemental-export-flag-not-rejected",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
           "source-3",
-          "source-4"
+          "source-5",
+          "source-6",
+          "source-7",
+          "source-10"
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-5",
+          "source-6",
+          "source-7",
+          "source-10"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/verusbridge.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -92,7 +171,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321"
@@ -101,8 +183,10 @@
       "id": "source-2",
       "type": "source-code",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
@@ -110,42 +194,100 @@
     },
     {
       "id": "source-3",
-      "type": "review-note",
+      "type": "source-code",
       "supports": [
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause"
       ],
-      "note": "onchain review: 0x71518580f36feceffe0721f06ba4703218cd7f63 is the Verus Delegator, an unverified module-registry proxy that delegatecalls an address[] of 11 module contracts and emits no upgrade event at all, so the code history was recovered in Tier 2 by binary-searching eth_getStorageAt over the array (length slot 13 = 11, data at keccak256(13)+i) between creation block 18272987 (2023-10-03) and each incident block. Last change per module before incident 1 (block 25118335): contracts[7] 2023-11-03T17:11:11Z (block 18492941), contracts[2] 2024-03-21T22:05:59Z (block 19485889), contracts[9] 2024-12-07T20:40:35Z (block 21353057), contracts[10] 2024-12-07T20:43:47Z (block 21353072), contracts[5] 2026-01-09T20:55:35Z (block 24199650) and contracts[0]/[1]/[6]/[8] 2026-02-28T16:29:47Z (block 24556629, tx 0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba from the Verus upgrade signer 0x896e59efcbec700bc9f447af7018bdc5ca1fa5ab, selector 0x60cd61a5); contracts[3] and [4] were untouched since deployment. Age measured from the latest of those, 2026-02-28, rather than the 2023 Delegator deployment"
+      "repository": "https://github.com/monkins1010/Verus-Ethereum-contracts",
+      "commit": "3c88fd6bfa97b087a85491ac14d976ef5a941885",
+      "path": "contracts/MMR/VerusProof.sol"
     },
     {
       "id": "source-4",
+      "type": "post-mortem",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://x.com/VerusCoin/status/2056829444124213652"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-24T19:05:29Z",
+      "note": "Reviewed the exploit receipt and call trace, exact native/token payouts, Delegator creation, VerusProof creation and historical runtime, the contracts[] storage layout, every successful upgrade-selector transaction sent to the Delegator from the VerusProof installation through the pre-exploit block, each upgrade transaction's state diff, the commit-pinned reproduction, Verus's incident explanation, and the VerusProof patch. The anchor calls Delegator.submitImports and delegates first to SubmitImports, then to VerusProof 0x5e8060ecbf415aa25f12c1d67fde832bd87dcfa1, where the crafted supplemental output passes checkExportAndTransfers/proveImports. The May 22 patch adds an explicit FLAG_SUPPLEMENTAL rejection in VerusProof. The 19,397-byte VerusProof runtime was created in transaction 0x39828f2c49653f8281d24c0e05d119b1353a749aada1f5455f79ce6d14880f9c and hashes to 0x42928a45ef4c9b3b03550c972a98d1e49cb944d676f0f548e83c9920e8fb8dee from creation through the incident. Transaction 0x1de7078bb3ed60fe4d252f07af1a6d0003d1fc50772dbc86c7c05e4a83f91cb6 installed it in contracts[2]. The six later successful upgrade-selector calls changed other module slots; prestateTracer diffs show none wrote contracts[2], which still selected this artifact immediately before exploitation."
+    },
+    {
+      "id": "source-6",
       "type": "onchain-transaction",
       "supports": [
         "target-identity",
         "code-history"
       ],
       "chainId": 1,
-      "transactionHash": "0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba"
+      "transactionHash": "0x1de7078bb3ed60fe4d252f07af1a6d0003d1fc50772dbc86c7c05e4a83f91cb6"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x7bd34b417fd69a0df81dffb4b29c318ce1d3a337ef86a794f6a7e3b10692a428"
+    },
+    {
+      "id": "source-8",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1779062123/coingecko:ethereum",
+      "observedAt": 1787598329
+    },
+    {
+      "id": "source-9",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1779062123/coingecko:bitcoin",
+      "observedAt": 1787598329
+    },
+    {
+      "id": "source-10",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x39828f2c49653f8281d24c0e05d119b1353a749aada1f5455f79ce6d14880f9c"
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/verusbridge.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/verusbridge.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "documented",
-      "upgradeEventCount": 0,
-      "date": "2026-05-17T23:55:23Z"
-    }
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
+    ]
   },
   "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2026-02-28T16:29:47Z (block 24556629, tx 0xc17ab86af35ac0f37a3001e249ba8176e53189151601d50eddc427cacf11ddba): last delegate-contract swap on the Verus Delegator before the incident, recovered by binary-searching eth_getStorageAt over the contracts address[] (length slot 13, data at keccak256(13)+i); that upgrade replaced contracts[0], [1], [6] and [8]"
+    "The target is the defect-executing VerusProof module, so the age begins with its contracts[2] installation in March 2024. The February 2026 router update changed other modules and does not reset this code age."
   ]
 }
