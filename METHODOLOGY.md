@@ -57,10 +57,14 @@ in that incident. It distinguishes:
 
 An incident has at most one target for each exact
 `(codeArtifact.codeHash, failureModeId)` pair. If a same-chain campaign exploits
-many code-identical deployments through the same failure, use the execution
-context first reached by the anchored campaign as the representative target and
-cover the full campaign in the loss evidence. Add targets for distinct code or
-failure pairs and for distinct defect-bearing roles in the causal path.
+many sibling deployments of one template through the same failure, use the
+execution context first reached by the anchored campaign as the representative
+target and cover the full campaign in the loss evidence. Siblings need not be
+byte-identical: clones, beacon proxies and pools of one template differ only in
+their deployment arguments, and one defect exercised across them is one
+observation. Curve construction enforces this, so recording every instance as a
+target stays valid and auditable. Add targets for distinct failures and for
+distinct defect-bearing roles in the causal path.
 
 This representation covers direct contracts, proxies, beacons, clones,
 diamonds, routers, shared implementations, and libraries.
@@ -93,6 +97,13 @@ installed. Such an incident anchors on the earliest transaction that calls the
 initializer, so the age spans the interval the defect survived unexploited, and
 a later drain through attacker-installed implementations belongs to the loss
 rather than to the age.
+
+Shared code reached through a factory clone, beacon, diamond or router is aged
+from when the artifact became active in the configuration the execution context
+reads, not from when that context was instantiated. A per-user account created
+moments before the exploit does not reset the age of the template it delegates
+to, and `deployment` continues to anchor the execution context while
+`lastCodeChange` anchors the artifact.
 
 A deployment basis requires positive evidence that the relevant code state
 continued through the exploit. Suitable evidence depends on architecture and
@@ -157,9 +168,11 @@ which requires `loss.usd.amount >= 1,000`.
 
 ## Curve construction
 
-Eligible targets are grouped by exact
-`(codeArtifact.codeHash, failureModeId)`. The earliest reviewed exploit in
-each group supplies the curve observation.
+Eligible targets collapse in two passes, each keeping the earliest reviewed
+exploit in the group. First by `(incidentId, failureModeId)`, so sibling
+instances of one template contribute one observation to the campaign that owns
+their single loss. Then by `(codeArtifact.codeHash, failureModeId)`, so
+byte-identical artifacts collapse across incidents.
 
 For complete anchors on one chain, selection uses block number and transaction
 index. Cross-chain or incomplete comparisons use timestamp, chain ID, incident
@@ -167,9 +180,11 @@ ID, and target ID. A distinct defect in identical bytecode receives a distinct
 reviewed `failure:<namespace>` identifier.
 
 `dist/latest/curve.json` publishes selected observations, deduplicated
-observations, exclusions, and sorted `ageKnots`. Each observation references
-its incident-level loss through `incidentId`, and every non-selected target
-appears with its `exclusionReasons`.
+observations, exclusions, and sorted `ageKnots`. Each observation references its
+incident-level loss through `incidentId`, and every non-selected target appears
+with its `exclusionReasons`. An incident that still contributes several
+observations owns one loss, so a loss-weighted curve aggregates per `incidentId`
+instead of summing per observation.
 
 ## Provenance and releases
 

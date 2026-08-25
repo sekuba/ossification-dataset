@@ -426,7 +426,14 @@ function verifyIncident(record, state, errors) {
         `${targetLabel}: codeAgeSeconds ${target.codeAgeSeconds} != incident.timestamp - lastCodeChange.timestamp ` +
           `(${exploit.timestamp - change.timestamp})`,
       )
-    if (change.timestamp < deployment.timestamp)
+    // `deployment` anchors the execution context; `lastCodeChange` anchors the
+    // artifact. A change emitted by the execution address itself must postdate
+    // that address. Shared code reached through a factory clone, beacon,
+    // diamond or router is activated once for every context that reads it, so a
+    // context instantiated later does not reset the artifact's age.
+    const changeTargetsExecutionAddress =
+      change.mechanism?.address === undefined || change.mechanism.address === target.executionAddress
+    if (changeTargetsExecutionAddress && change.timestamp < deployment.timestamp)
       errors.push(`${targetLabel}: last code change precedes target deployment`)
     if (change.timestamp > exploit.timestamp)
       errors.push(`${targetLabel}: last code change occurs after exploit`)
@@ -435,7 +442,7 @@ function verifyIncident(record, state, errors) {
     if (change.blockNumber !== null && exploit.blockNumber !== null && change.blockNumber > exploit.blockNumber)
       errors.push(`${targetLabel}: last-code-change block is after exploit block`)
     const deploymentVsChange = compareTransactionOrder(deployment, change)
-    if (deploymentVsChange !== null && deploymentVsChange > 0)
+    if (changeTargetsExecutionAddress && deploymentVsChange !== null && deploymentVsChange > 0)
       errors.push(`${targetLabel}: deployment transaction is ordered after last code change`)
     const changeVsExploit = compareTransactionOrder(change, exploit)
     if (changeVsExploit !== null && changeVsExploit >= 0)

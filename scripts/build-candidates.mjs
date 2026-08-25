@@ -225,16 +225,21 @@ const otherIdentifierByPoc = new Map(
   dfhl.coveredOtherIdentifier.map((entry) => [entry.poc, entry]),
 )
 const noDatasetRowByPoc = new Map(dfhl.noDatasetRow.map((entry) => [entry.poc, entry]))
-// Legacy category labels that settle scope on their own. `oracle-manipulation`
-// is deliberately absent: METHODOLOGY admits a manipulable price read when the
-// deployed code itself fails to validate it, so those rows need the boundary
-// test, not a label.
-const CATEGORIES_OUTSIDE_COHORT = new Set([
+// A legacy category settles scope only when it names a cause outside executed
+// EVM code.
+const CATEGORIES_OUTSIDE_COHORT = new Set(['insider-rug', 'key-compromise', 'offchain-infra'])
+
+// These name a mechanism, not a cause. Each can be a defect in executed code or
+// a configuration the code applied as written, so the row awaits the
+// METHODOLOGY boundary test instead of a label.
+// The cohort is eip155-only, so a row on one of these chains yields no
+// measurable EVM code state whatever its category says.
+const NON_EVM_CHAINS = new Set(['solana', 'starknet', 'sui'])
+
+const UNDECIDED_CATEGORIES = new Set([
   'economic-design',
   'governance-design',
-  'insider-rug',
-  'key-compromise',
-  'offchain-infra',
+  'oracle-manipulation',
 ])
 
 function declaredIncidentIds(candidateId) {
@@ -305,12 +310,22 @@ function legacyCoordinates(row) {
   }
 }
 
-function dfhlDisposition(rows, poc) {
-  const incidentIds = unique([
-    ...rows.flatMap((row) => row.incidentIds),
+// A victim-address or transaction match that several PoCs share cannot prove
+// which campaign a legacy row describes. Those rows stay context: only a PoC
+// path an incident cites, or a lead it declares, resolves such a candidate.
+function ambiguousOtherIdentifier(otherMatch, rows) {
+  const frequency = Number(/freq=([0-9]+)/.exec(otherMatch?.matchedBy ?? '')?.[1] ?? 1)
+  return frequency > rows.length
+}
+
+function dfhlDisposition(rows, poc, ambiguous = false) {
+  const directIds = unique([
     ...(primaryByDfhlPath.get(poc) ?? []),
     ...declaredIncidentIds(`dfhl:${poc}`),
   ]).sort()
+  const incidentIds = ambiguous
+    ? directIds
+    : unique([...rows.flatMap((row) => row.incidentIds), ...directIds]).sort()
   if (incidentIds.length > 0) {
     return {
       status: 'included',
@@ -328,6 +343,14 @@ function dfhlDisposition(rows, poc) {
       status: 'excluded',
       exclusionIds,
       reason: 'The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident.',
+    }
+  }
+
+  if (ambiguous) {
+    return {
+      status: 'pending',
+      reason:
+        'The pinned PoC matches its legacy row only through an identifier several PoCs share, so the row cannot show which campaign this PoC reproduces. An incident must cite this PoC path or declare the lead.',
     }
   }
 
@@ -355,11 +378,15 @@ function dfhlDisposition(rows, poc) {
 
 function legacyDisposition(row, id) {
   const declared = declaredIncidentIds(id)
-  if (declared.length > 0) {
+  const incidentIds = unique([...declared, ...row.incidentIds]).sort()
+  if (incidentIds.length > 0) {
     return {
       status: 'included',
-      incidentIds: [...declared].sort(),
-      reason: 'An admitted incident declares this discovery lead.',
+      incidentIds,
+      reason:
+        declared.length > 0
+          ? 'An admitted incident declares this discovery lead.'
+          : 'An admitted primary incident anchors this row\'s exploit transaction.',
     }
   }
 
@@ -378,7 +405,7 @@ function legacyDisposition(row, id) {
     }
   }
 
-  if (row.incident.chain === 'sui' || row.incident.chain === 'starknet') {
+  if (NON_EVM_CHAINS.has(row.incident.chain)) {
     return {
       status: 'out-of-scope',
       reason: `The cohort measures EVM chains; this legacy row records a ${row.incident.chain} incident.`,
@@ -393,11 +420,10 @@ function legacyDisposition(row, id) {
     }
   }
 
-  if (row.category === 'oracle-manipulation') {
+  if (UNDECIDED_CATEGORIES.has(row.category)) {
     return {
       status: 'pending',
-      reason:
-        'Legacy labelled this row oracle manipulation. The cohort admits a manipulable price read when the deployed code itself fails to validate it, so the row awaits the METHODOLOGY boundary test.',
+      reason: `Legacy labelled this row ${row.category}, which names a mechanism rather than a cause. The row awaits the METHODOLOGY boundary test: is there a parameter value at which the deployed code is correct?`,
     }
   }
 
@@ -492,7 +518,7 @@ const dfhlCandidates = allDfhlPaths.map((poc) => {
       : {}),
     disposition: adjudication
       ? { status: adjudication.status, reason: adjudication.reason }
-      : dfhlDisposition(rows, poc),
+      : dfhlDisposition(rows, poc, Boolean(otherMatch) && ambiguousOtherIdentifier(otherMatch, rows)),
   }
 })
 

@@ -196,9 +196,14 @@
         },
         "deduplicationKey": {
           "type": "object",
-          "required": ["codeArtifactCodeHash", "failureModeId"],
+          "required": ["failureModeId"],
           "additionalProperties": false,
+          "description": "The grouping the observation collapsed into: incidentId for sibling instances of one template within a campaign, codeArtifactCodeHash for byte-identical artifacts across incidents.",
           "properties": {
+            "incidentId": {
+              "type": "string",
+              "pattern": "^eip155:[1-9][0-9]*:0x[0-9a-f]{64}$"
+            },
             "codeArtifactCodeHash": {
               "type": "string",
               "pattern": "^0x[0-9a-f]{64}$"
@@ -207,7 +212,11 @@
               "type": "string",
               "pattern": "^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$"
             }
-          }
+          },
+          "oneOf": [
+            { "required": ["incidentId"] },
+            { "required": ["codeArtifactCodeHash"] }
+          ]
         }
       }
     },

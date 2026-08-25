@@ -40,11 +40,11 @@ export const COHORT_RULES = {
   ],
   codeChangeKinds: ['deployment', 'implementation-change', 'module-change'],
   deduplication:
-    'group by exact (codeArtifact.codeHash, failureModeId), then keep the earliest exploit under the deterministic selection order',
+    'two passes, each keeping the earliest exploit under the deterministic selection order: first group by (incidentId, failureModeId) so sibling instances of one template collapse to one observation, then by (codeArtifact.codeHash, failureModeId) so byte-identical artifacts collapse across incidents',
   deduplicationSelectionOrder:
     'for observations on the same chain with complete exploit anchors: blockNumber, transactionIndex, timestamp, incidentId, target id; otherwise: timestamp, chainId, incidentId, target id',
   incidentReference:
-    'observation.incidentId resolves the incident-level classification and loss in incidents.json; loss is intentionally not copied onto each target observation',
+    'observation.incidentId resolves the incident-level classification and loss in incidents.json; loss is intentionally not copied onto each target observation, and an incident that contributes several observations owns one loss, so a loss-weighted curve must aggregate per incidentId rather than sum per observation',
   ordering: 'ascending codeAgeSeconds, then observationId',
   excludedTargetTiers: ['mechanical', 'provisional'],
 }
@@ -200,31 +200,48 @@ export function createCurve(records) {
     }
   }
 
-  const groups = new Map()
-  for (const observation of eligible) {
-    const key = JSON.stringify([observation.codeArtifactCodeHash, observation.failureModeId])
-    const group = groups.get(key) ?? []
-    group.push(observation)
-    groups.set(key, group)
+  const deduplicatedObservations = []
+
+  // Two collapse passes, narrowest first. Within one incident, sibling
+  // instances of one template - a factory's clones, a beacon's proxies, a
+  // router's pools - fail together through the same defect and carry one loss,
+  // so they contribute one observation even though their bytecode differs by
+  // deployment arguments. Across incidents, byte-identical artifacts failing
+  // the same way collapse too.
+  const collapse = (candidates, keyOf, keyFor) => {
+    const groups = new Map()
+    for (const observation of candidates) {
+      const key = JSON.stringify(keyOf(observation))
+      groups.set(key, [...(groups.get(key) ?? []), observation])
+    }
+    const kept = []
+    for (const group of groups.values()) {
+      group.sort(compareCandidates)
+      const selected = group[0]
+      kept.push(selected)
+      for (const duplicate of group.slice(1)) {
+        deduplicatedObservations.push({
+          ...duplicate,
+          duplicateOf: selected.observationId,
+          deduplicationKey: keyFor(selected),
+        })
+      }
+    }
+    return kept
   }
 
-  const observations = []
-  const deduplicatedObservations = []
-  for (const group of groups.values()) {
-    group.sort(compareCandidates)
-    const selected = group[0]
-    observations.push(selected)
-    for (const duplicate of group.slice(1)) {
-      deduplicatedObservations.push({
-        ...duplicate,
-        duplicateOf: selected.observationId,
-        deduplicationKey: {
-          codeArtifactCodeHash: selected.codeArtifactCodeHash,
-          failureModeId: selected.failureModeId,
-        },
-      })
-    }
-  }
+  const observations = collapse(
+    collapse(
+      eligible,
+      (observation) => [observation.incidentId, observation.failureModeId],
+      (selected) => ({ incidentId: selected.incidentId, failureModeId: selected.failureModeId }),
+    ),
+    (observation) => [observation.codeArtifactCodeHash, observation.failureModeId],
+    (selected) => ({
+      codeArtifactCodeHash: selected.codeArtifactCodeHash,
+      failureModeId: selected.failureModeId,
+    }),
+  )
 
   observations.sort(compareCurveObservations)
   deduplicatedObservations.sort((a, b) => compareText(a.observationId, b.observationId))

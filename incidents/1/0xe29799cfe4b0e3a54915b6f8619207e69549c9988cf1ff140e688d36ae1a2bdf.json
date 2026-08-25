@@ -217,6 +217,9 @@
       "note": "The legacy anchor 0xbf7252af is a later 25,000 USDC proofless deposit that transfers the declared amount into Hinkal and does not itself execute the nullifier defect. The campaign starts when 0x105ad144 proofless-deposits a 0.01 ETH legacy note in block 25447059. Transaction 0x6e58f3ab is its first transact spend; 0xe29799cf is the next successful transact with a fresh public nullifier and is therefore the earliest repeated spend in the published same-note exploit sequence. Its trace reaches verifier adapter 0x163fe0b0 and immutable generated verifier 0x2617f5b3. The campaign later moves to 0xbb3f01a1 and three funded receiver EOAs. The adapter was deployed in block 25281487 with 0x2617f5b3 encoded as its sole constructor argument, and Hinkal selected it in VerifierRegistered log 93 of transaction 0x58d7dede. Its runtime hash is unchanged at selection and immediately before the anchor. Complete transfer-log queries over blocks 25447059 through 25448366 show 27,900 USDC entering and 800,200 USDC leaving Hinkal in the campaign; internal traces show 0.02 ETH entering and 0.32 ETH leaving. Direct balance snapshots agree with the resulting 772,300 USDC and 0.3 ETH net loss."
     }
   ],
+  "discovery": [
+    "web:2026-07-02:hinkal"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [
