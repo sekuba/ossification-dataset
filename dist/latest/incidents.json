@@ -28995,7 +28995,7 @@
         "name": "Projekt Reward Vault",
         "slug": "projekt-reward-vault"
       },
-      "name": "Projekt Reward Vault",
+      "name": "Projekt Reward Vault unbacked purchase-delta allocations",
       "incident": {
         "chainId": 1,
         "exploit": {
@@ -29005,70 +29005,103 @@
           "timestamp": 1784941919
         },
         "attackerAddresses": [
-          "0x61e7ad696215688d274c729a4cd0fbbc88fc4f85"
+          "0x61e7ad696215688d274c729a4cd0fbbc88fc4f85",
+          "0x12d6fe4822325bba82faf6cf706e6b6885c922f9",
+          "0x7bd736631afbe1d3795a94f60574f7fa0ae89347"
         ]
       },
       "classification": {
         "rootCause": "code-bug",
-        "summary": "Permissionless trackPurchase credited ETH allocations from a buyer's token-balance delta without verifying that the buyer had spent ETH or made a genuine purchase, enabling fabricated allocations to be withdrawn."
+        "summary": "The reward vault's permissionless trackPurchase(buyer) treated a buyer's token-balance increase as purchase value and credited withdrawable ETH without authenticating ETH spent, a genuine purchase, or unique economic activity. Reversible balance movements could therefore create unbacked allocations that massWithdraw paid from the vault."
       },
       "loss": {
-        "kind": "legacy-unspecified",
+        "kind": "gross-assets-lost",
         "usd": {
-          "amount": 560000,
+          "amount": 560744.5429259837,
           "valuationTimestamp": 1784941919,
-          "method": "legacy-unspecified",
-          "sourceIds": []
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-5",
+            "source-6"
+          ]
         },
         "minimumUsd": null,
-        "assets": [],
-        "confidence": "unknown",
-        "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "301.704684684555317704",
+            "usdValue": 560744.5429259837,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1784941919,
+              "unitPriceUsd": 1858.5874578389964,
+              "sourceIds": [
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The single atomic transaction contains 13 successful native-ETH payments from vault 0x574fc478bc45ce144105fa44d98b4b2e4bd442cb to the attack contract. Their exact trace sum is 301.704684684555317704 ETH, reducing the vault from its transaction pre-state balance of 400.662319764705062341 ETH to 98.957635080149744637 ETH. The attack contract then paid a 1 ETH tip and swept exactly 300.704684684555317704 ETH to the profit wallet. The tip and transaction costs do not reduce gross victim depletion. No second campaign transaction or recovery was identified."
       },
       "targets": [
         {
           "id": "target-1",
           "executionAddress": "0x574fc478bc45ce144105fa44d98b4b2e4bd442cb",
-          "relationship": "unknown",
+          "relationship": "direct",
           "codeArtifact": {
-            "address": null,
-            "codeHash": null
+            "address": "0x574fc478bc45ce144105fa44d98b4b2e4bd442cb",
+            "codeHash": "0x7acf7a3a06af01c868b7c461e2e490a20e25a49de72d98266e41d940abf64a1c"
           },
           "deployment": {
             "timestamp": 1626296169,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
-            "creatorAddress": null
+            "blockNumber": 12827399,
+            "transactionHash": "0xe7094a0eb5078abee79e96cba177659f89bccf290f6af07b1f3792236cf24038",
+            "transactionIndex": 91,
+            "creatorAddress": "0xe31b79e9b326d65b2cc8dc0639d261eaf2cd2da2"
           },
           "lastCodeChange": {
             "kind": "deployment",
             "timestamp": 1626296169,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 12827399,
+            "transactionHash": "0xe7094a0eb5078abee79e96cba177659f89bccf290f6af07b1f3792236cf24038",
+            "transactionIndex": 91,
             "logIndex": null,
             "mechanism": {
               "type": "deployment",
               "address": "0x574fc478bc45ce144105fa44d98b4b2e4bd442cb"
             },
-            "description": "Legacy basis: execution-address deployment."
+            "description": "Direct non-upgradeable deployment. The address has no code at block 12827398 and runtime hash 0x7acf7a3a06af01c868b7c461e2e490a20e25a49de72d98266e41d940abf64a1c at both deployment block 12827399 and pre-incident block 25606411. Its runtime contains no DELEGATECALL, CREATE, CREATE2, or SELFDESTRUCT opcode and its EIP-1967 implementation slot is zero at deployment and pre-incident, so no executable-code change path exists after deployment."
           },
           "codeAgeSeconds": 158645750,
-          "failureModeId": "legacy:eip155:1:0x90f40d3c3b60370f7287d51d972ef54596c46e98f21af91b03a4e84c5e410f64:failure-1",
+          "failureModeId": "failure:projekt-reward-vault-unbacked-purchase-delta-allocation",
           "evidence": {
             "identitySourceIds": [
-              "source-2"
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-6"
             ],
-            "codeHistorySourceIds": []
+            "codeHistorySourceIds": [
+              "source-2",
+              "source-6"
+            ]
           },
           "verification": {
-            "tier": "provisional",
-            "curveEligible": false,
-            "limitations": [
-              "Target identity and code history came from the v1 snapshot row originally at protocols/projekt-reward-vault.json; no semantic revalidation was inherited.",
-              "The executing code artifact and its code hash have not been established in structured evidence.",
-              "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-6"
             ]
           }
         }
@@ -29078,36 +29111,75 @@
           "id": "source-1",
           "type": "onchain-transaction",
           "supports": [
-            "incident-anchor"
+            "incident-anchor",
+            "target-identity",
+            "root-cause",
+            "loss"
           ],
           "chainId": 1,
           "transactionHash": "0x90f40d3c3b60370f7287d51d972ef54596c46e98f21af91b03a4e84c5e410f64"
         },
         {
           "id": "source-2",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 1,
+          "transactionHash": "0xe7094a0eb5078abee79e96cba177659f89bccf290f6af07b1f3792236cf24038"
+        },
+        {
+          "id": "source-3",
           "type": "source-code",
           "supports": [
             "target-identity",
-            "root-cause"
+            "root-cause",
+            "loss"
           ],
           "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
           "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
           "path": "src/test/2026-07/ProjektRewardVault_exp.sol"
         },
         {
-          "id": "source-3",
+          "id": "source-4",
           "type": "post-mortem",
           "supports": [
-            "root-cause"
+            "root-cause",
+            "loss"
           ],
           "url": "https://softstack.io/blog/july-2026-protocol-recap"
+        },
+        {
+          "id": "source-5",
+          "type": "price-data",
+          "supports": [
+            "loss"
+          ],
+          "provider": "DefiLlama",
+          "url": "https://coins.llama.fi/prices/historical/1784941919/coingecko:ethereum",
+          "observedAt": 1787659438
+        },
+        {
+          "id": "source-6",
+          "type": "review-note",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T12:03:58Z",
+          "note": "Historical trace review confirms that the fresh attacker EOA's nonce-0 CREATE transaction is the sole campaign transaction and deploys attack contract 0x12d6fe4822325bba82faf6cf706e6b6885c922f9. The transaction trace shows the reward vault directly executing trackPurchase(address), selector 0x3627301e, during the accounting phase and massWithdraw(), selector 0xbf0a196d, before making 13 ETH payments whose exact sum is the recorded gross loss. The vault calls token balanceOf functions while tracking the purported buyers; no ETH enters the vault from those calls. The unverified vault is a direct runtime, not a proxy: its deployment receipt, unchanged deployment/pre-incident runtime hash, zero EIP-1967 implementation slot, and absence of runtime code-change opcodes establish deployment as the complete code history. The 301.704684684555317704 ETH trace outflow agrees exactly with the transaction pre-state and post-block balances after accounting for 0.010929982131153814 ETH received by the vault in the two preceding same-block transactions."
         }
       ],
       "verification": {
-        "tier": "provisional",
-        "limitations": [
-          "Classification and loss came from the v1 snapshot row originally at protocols/projekt-reward-vault.json; legacy measurement.status=OK is provenance only.",
-          "The legacy USD loss lacks uniformly structured valuation provenance."
+        "tier": "reviewed",
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-6"
         ],
         "legacy": {
           "snapshot": "research/raw/legacy-v1.json",
@@ -36371,65 +36443,301 @@
       },
       "classification": {
         "rootCause": "code-bug",
-        "summary": "GeneralizedDotc accepted permissionlessly registered attacker-crafted bond payoff functions and priced them without validating their economic domain, letting nearly worthless bonds pull 542,144.628604 USDC from an LP allowance."
+        "summary": "BondMakerCollateralizedEth validated only the aggregate number of exception matches when exchanging bond groups, so repeated exception IDs could bypass per-bond multiset integrity and mint unbacked bonds. GeneralizedDotc and DecentralizedOTC then priced permissionlessly registered, attacker-crafted bond structures without validating their backing or economic shape, letting those bonds pull 542,144.628604 USDC from an LP allowance."
       },
       "loss": {
-        "kind": "legacy-unspecified",
+        "kind": "gross-assets-lost",
         "usd": {
           "amount": 542144.628604,
           "valuationTimestamp": 1784856407,
-          "method": "legacy-unspecified",
-          "sourceIds": []
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-3"
+          ]
         },
         "minimumUsd": null,
-        "assets": [],
-        "confidence": "unknown",
-        "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "542144.628604",
+            "usdValue": 542144.628604,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1784856407,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-3"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Exact pre-recovery victim depletion in the anchor receipt. Three USDC Transfer logs move 532,070.026484, 74.602120, and 10,000 USDC from LP 0xa961684a3a654fb2cca8f8991226c0cefc514d80 to the attack orchestrator, totaling 542,144.628604 USDC; a final transfer sweeps that exact amount to the attacker EOA. Stablecoin-par valuation excludes later recoveries and does not count attacker-supplied inputs."
       },
       "targets": [
         {
           "id": "target-1",
-          "executionAddress": "0x656e5e976d523a427f05b0c212a22a89ccd9ef18",
-          "relationship": "unknown",
+          "executionAddress": "0xda6fc5625e617bb92f5359921d43321cebc6bef0",
+          "relationship": "direct",
           "codeArtifact": {
-            "address": null,
-            "codeHash": null
+            "address": "0xda6fc5625e617bb92f5359921d43321cebc6bef0",
+            "codeHash": "0xde6bae66cb8181fe2a17fb4a9c8800dff351fe95add2ca7a979bd662d246cd13"
+          },
+          "deployment": {
+            "timestamp": 1611651002,
+            "blockNumber": 11730308,
+            "transactionHash": "0xeb76a1730da7c14ceddd29a0565e500e892be1008f9790ff6170f99118bf7411",
+            "transactionIndex": 107,
+            "creatorAddress": "0x39a5bbc3f5536d7a9f40acfcb34738ff29540f49"
+          },
+          "lastCodeChange": {
+            "kind": "deployment",
+            "timestamp": 1611651002,
+            "blockNumber": 11730308,
+            "transactionHash": "0xeb76a1730da7c14ceddd29a0565e500e892be1008f9790ff6170f99118bf7411",
+            "transactionIndex": 107,
+            "logIndex": null,
+            "mechanism": {
+              "type": "deployment",
+              "address": "0xda6fc5625e617bb92f5359921d43321cebc6bef0"
+            },
+            "description": "Direct immutable BondMakerCollateralizedEth runtime deployed in this transaction and unchanged through the exploit; the prestate runtime contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction."
+          },
+          "codeAgeSeconds": 173205405,
+          "failureModeId": "failure:lien-bondmaker-exception-multiset-validation",
+          "evidence": {
+            "identitySourceIds": [
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-9"
+            ],
+            "codeHistorySourceIds": [
+              "source-3",
+              "source-4"
+            ]
+          },
+          "verification": {
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-3"
+            ]
+          }
+        },
+        {
+          "id": "target-2",
+          "executionAddress": "0x843225cf6e663e4454732d6b551a737ac7b47de0",
+          "relationship": "direct",
+          "codeArtifact": {
+            "address": "0x843225cf6e663e4454732d6b551a737ac7b47de0",
+            "codeHash": "0x854e76c6fa89651c245b564518ac489a6c529720c557c598b95cb9147536ce4d"
+          },
+          "deployment": {
+            "timestamp": 1604724236,
+            "blockNumber": 11208203,
+            "transactionHash": "0x991c11e55b1e1d8dff7c5ab380ac8dc453e9802c64dac57260437120328cc488",
+            "transactionIndex": 90,
+            "creatorAddress": "0x39a5bbc3f5536d7a9f40acfcb34738ff29540f49"
+          },
+          "lastCodeChange": {
+            "kind": "deployment",
+            "timestamp": 1604724236,
+            "blockNumber": 11208203,
+            "transactionHash": "0x991c11e55b1e1d8dff7c5ab380ac8dc453e9802c64dac57260437120328cc488",
+            "transactionIndex": 90,
+            "logIndex": null,
+            "mechanism": {
+              "type": "deployment",
+              "address": "0x843225cf6e663e4454732d6b551a737ac7b47de0"
+            },
+            "description": "Direct immutable BondMakerCollateralizedEth runtime deployed in this transaction and unchanged through the exploit; the prestate runtime contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction."
+          },
+          "codeAgeSeconds": 180132171,
+          "failureModeId": "failure:lien-bondmaker-exception-multiset-validation",
+          "evidence": {
+            "identitySourceIds": [
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-9"
+            ],
+            "codeHistorySourceIds": [
+              "source-3",
+              "source-5"
+            ]
+          },
+          "verification": {
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-3"
+            ]
+          }
+        },
+        {
+          "id": "target-3",
+          "executionAddress": "0x656e5e976d523a427f05b0c212a22a89ccd9ef18",
+          "relationship": "direct",
+          "codeArtifact": {
+            "address": "0x656e5e976d523a427f05b0c212a22a89ccd9ef18",
+            "codeHash": "0x0378b30c198c0098585c8fba352a66c62e0cff872fde2cd44e55f1144f46a54b"
           },
           "deployment": {
             "timestamp": 1611651186,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
-            "creatorAddress": null
+            "blockNumber": 11730316,
+            "transactionHash": "0x30ff9f54f95ba717833385c18bb939e2f06cbcb52bd98c010a57170dc88834a2",
+            "transactionIndex": 12,
+            "creatorAddress": "0x39a5bbc3f5536d7a9f40acfcb34738ff29540f49"
           },
           "lastCodeChange": {
             "kind": "deployment",
             "timestamp": 1611651186,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 11730316,
+            "transactionHash": "0x30ff9f54f95ba717833385c18bb939e2f06cbcb52bd98c010a57170dc88834a2",
+            "transactionIndex": 12,
             "logIndex": null,
             "mechanism": {
               "type": "deployment",
               "address": "0x656e5e976d523a427f05b0c212a22a89ccd9ef18"
             },
-            "description": "Legacy basis: execution-address deployment."
+            "description": "Direct immutable GeneralizedDotc runtime deployed in this transaction and unchanged through the exploit; the prestate runtime contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction."
           },
           "codeAgeSeconds": 173205221,
-          "failureModeId": "legacy:eip155:1:0xb96d572b557a12f5ef193e88cca86123a6ae1b6e98b0eeee265870c85848e0e7:failure-1",
+          "failureModeId": "failure:lien-generalized-dotc-untrusted-bond-payoff-pricing",
           "evidence": {
             "identitySourceIds": [
-              "source-2"
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-9"
             ],
-            "codeHistorySourceIds": []
+            "codeHistorySourceIds": [
+              "source-3",
+              "source-6"
+            ]
           },
           "verification": {
-            "tier": "provisional",
-            "curveEligible": false,
-            "limitations": [
-              "Target identity and code history came from the v1 snapshot row originally at protocols/lien-finance.json; no semantic revalidation was inherited.",
-              "The executing code artifact and its code hash have not been established in structured evidence.",
-              "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-3"
+            ]
+          }
+        },
+        {
+          "id": "target-4",
+          "executionAddress": "0x7db84492cfd27e47c39499d852decc2a01476a75",
+          "relationship": "direct",
+          "codeArtifact": {
+            "address": "0x7db84492cfd27e47c39499d852decc2a01476a75",
+            "codeHash": "0x4307c09a51f670e73bd137f90c655ee16ec8330be7f38fd185300ea8acccd39e"
+          },
+          "deployment": {
+            "timestamp": 1615551015,
+            "blockNumber": 12023596,
+            "transactionHash": "0x1b5ce1af97948af0c8e8269a6f514d5f559daa19ad3b438665c7ea647719c36c",
+            "transactionIndex": 32,
+            "creatorAddress": "0x39a5bbc3f5536d7a9f40acfcb34738ff29540f49"
+          },
+          "lastCodeChange": {
+            "kind": "deployment",
+            "timestamp": 1615551015,
+            "blockNumber": 12023596,
+            "transactionHash": "0x1b5ce1af97948af0c8e8269a6f514d5f559daa19ad3b438665c7ea647719c36c",
+            "transactionIndex": 32,
+            "logIndex": null,
+            "mechanism": {
+              "type": "deployment",
+              "address": "0x7db84492cfd27e47c39499d852decc2a01476a75"
+            },
+            "description": "Direct immutable GeneralizedDotc runtime deployed in this transaction and unchanged through the exploit; the prestate runtime contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction."
+          },
+          "codeAgeSeconds": 169305392,
+          "failureModeId": "failure:lien-generalized-dotc-untrusted-bond-payoff-pricing",
+          "evidence": {
+            "identitySourceIds": [
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-9"
+            ],
+            "codeHistorySourceIds": [
+              "source-3",
+              "source-7"
+            ]
+          },
+          "verification": {
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-3"
+            ]
+          }
+        },
+        {
+          "id": "target-5",
+          "executionAddress": "0x0949c77ad52602ac61b42d2de0eeb1b7cc79250f",
+          "relationship": "direct",
+          "codeArtifact": {
+            "address": "0x0949c77ad52602ac61b42d2de0eeb1b7cc79250f",
+            "codeHash": "0xa8bd422afc7d6a4ba4bd9eb398883031c06a40b56251d99c74e224aa7e28174a"
+          },
+          "deployment": {
+            "timestamp": 1604724377,
+            "blockNumber": 11208212,
+            "transactionHash": "0x1093b6896e13d9e0b41f9aab4a10850fb0176967400f45a763591f9d2a602545",
+            "transactionIndex": 35,
+            "creatorAddress": "0x39a5bbc3f5536d7a9f40acfcb34738ff29540f49"
+          },
+          "lastCodeChange": {
+            "kind": "deployment",
+            "timestamp": 1604724377,
+            "blockNumber": 11208212,
+            "transactionHash": "0x1093b6896e13d9e0b41f9aab4a10850fb0176967400f45a763591f9d2a602545",
+            "transactionIndex": 35,
+            "logIndex": null,
+            "mechanism": {
+              "type": "deployment",
+              "address": "0x0949c77ad52602ac61b42d2de0eeb1b7cc79250f"
+            },
+            "description": "Direct immutable DecentralizedOTC runtime deployed in this transaction and unchanged through the exploit; the prestate runtime contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction."
+          },
+          "codeAgeSeconds": 180132030,
+          "failureModeId": "failure:lien-decentralized-otc-untrusted-bond-group-pricing",
+          "evidence": {
+            "identitySourceIds": [
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-9"
+            ],
+            "codeHistorySourceIds": [
+              "source-3",
+              "source-8"
+            ]
+          },
+          "verification": {
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-3"
             ]
           }
         }
@@ -36439,7 +36747,10 @@
           "id": "source-1",
           "type": "onchain-transaction",
           "supports": [
-            "incident-anchor"
+            "incident-anchor",
+            "target-identity",
+            "root-cause",
+            "loss"
           ],
           "chainId": 1,
           "transactionHash": "0xb96d572b557a12f5ef193e88cca86123a6ae1b6e98b0eeee265870c85848e0e7"
@@ -36449,18 +36760,93 @@
           "type": "source-code",
           "supports": [
             "target-identity",
-            "root-cause"
+            "root-cause",
+            "loss"
           ],
           "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
           "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
           "path": "src/test/2026-07/LienFinance_exp.sol"
+        },
+        {
+          "id": "source-3",
+          "type": "review-note",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T12:04:09Z",
+          "note": "Reviewed Ethereum block 25599302 transactions 0 through 4, the successful anchor receipt and complete call trace, the five victim creation transactions, all five pre-exploit runtimes, explorer-verified source, the commit-pinned replay, exact USDC transfers, and published technical analysis. Transactions 0 through 3 only deploy the attacker orchestrator and register crafted bonds/groups; transaction index 4 is the earliest successful transaction that executes exchangeEquivalentBonds' defective exception validation, prices the unbacked output, and realizes the loss. The trace directly calls BondMakerCollateralizedEth deployments 0xda6fc5625e617bb92f5359921d43321cebc6bef0 and 0x843225cf6e663e4454732d6b551a737ac7b47de0, GeneralizedDotc deployments 0x656e5e976d523a427f05b0c212a22a89ccd9ef18 and 0x7db84492cfd27e47c39499d852decc2a01476a75, and DecentralizedOTC 0x0949c77ad52602ac61b42d2de0eeb1b7cc79250f. Their distinct prestate runtime hashes match the declared artifacts. Each direct runtime is unchanged at current state and contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction, so deployment is the complete executable-code history. Source inspection confirms that exchangeEquivalentBonds counts aggregate exception matches instead of preserving exception IDs as a multiset; the OTC pricing routines then trust permissionlessly registered payoff/group structure without proving backing. Receipt USDC transfers from LP 0xa961684a3a654fb2cca8f8991226c0cefc514d80 are exactly 532,070.026484, 74.602120, and 10,000 USDC, totaling 542,144.628604 USDC before the exact final sweep to the attacker."
+        },
+        {
+          "id": "source-4",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 1,
+          "transactionHash": "0xeb76a1730da7c14ceddd29a0565e500e892be1008f9790ff6170f99118bf7411"
+        },
+        {
+          "id": "source-5",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 1,
+          "transactionHash": "0x991c11e55b1e1d8dff7c5ab380ac8dc453e9802c64dac57260437120328cc488"
+        },
+        {
+          "id": "source-6",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 1,
+          "transactionHash": "0x30ff9f54f95ba717833385c18bb939e2f06cbcb52bd98c010a57170dc88834a2"
+        },
+        {
+          "id": "source-7",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 1,
+          "transactionHash": "0x1b5ce1af97948af0c8e8269a6f514d5f559daa19ad3b438665c7ea647719c36c"
+        },
+        {
+          "id": "source-8",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 1,
+          "transactionHash": "0x1093b6896e13d9e0b41f9aab4a10850fb0176967400f45a763591f9d2a602545"
+        },
+        {
+          "id": "source-9",
+          "type": "post-mortem",
+          "supports": [
+            "target-identity",
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://blog.verichains.io/p/lien-finance-hack-analysis"
         }
       ],
       "verification": {
-        "tier": "provisional",
-        "limitations": [
-          "Classification and loss came from the v1 snapshot row originally at protocols/lien-finance.json; legacy measurement.status=OK is provenance only.",
-          "The legacy USD loss lacks uniformly structured valuation provenance."
+        "tier": "reviewed",
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-3"
         ],
         "legacy": {
           "snapshot": "research/raw/legacy-v1.json",
@@ -37692,27 +38078,53 @@
           "timestamp": 1698188027
         },
         "attackerAddresses": [
-          "0xce6397e53c13ff2903ffe8735e478d31e648a2c6"
+          "0xce6397e53c13ff2903ffe8735e478d31e648a2c6",
+          "0xe6c6e86e04de96c4e3a29ad480c94e7a471969ab"
         ]
       },
       "classification": {
         "rootCause": "code-bug",
-        "summary": "Maestro's Router 2 forwarded a caller-supplied target and calldata during its taxed-token swap path without validating them, so the attacker made the router call transferFrom on liquidity pairs and drain tokens from users who had approved it."
+        "summary": "Maestro Router 2 implementation 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a exposed function 0x9239127f without caller authorization or target/calldata constraints. Through the proxy, an unprivileged caller could make the router execute token transferFrom calls as the spender and remove tokens from users who had approved the router."
       },
       "loss": {
-        "kind": "legacy-unspecified",
+        "kind": "net-loss",
         "usd": {
-          "amount": 500654,
-          "valuationTimestamp": 1698188027,
-          "method": "legacy-unspecified",
+          "amount": 482137.5766631149,
+          "valuationTimestamp": 1698190259,
+          "method": "incident-price",
           "sourceIds": [
-            "source-4"
+            "source-4",
+            "source-5"
           ]
         },
         "minimumUsd": null,
-        "assets": [],
-        "confidence": "unknown",
-        "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "symbol": "WETH"
+            },
+            "amount": "270.505159823556961290",
+            "usdValue": 482137.5766631149,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1698190259,
+              "unitPriceUsd": 1782.36,
+              "sourceIds": [
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-4",
+              "source-5",
+              "source-10"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The 12 successful campaign receipts show exactly 270.505159823556961290 WETH transferred from liquidation pools to the attack helper and immediately withdrawn to ETH. This is the exact common-asset value realized from the stolen tokens before any recovery, rather than the rounded 280-ETH public estimate. It is recorded as net loss because the gross victim depletion comprised 11 different volatile or illiquid tokens; separately adding those token quantities to their sale proceeds would double count the same loss. Receipt logs establish exact stolen quantities of 565463522794.182597666471533996 MOG, 48547556.581675106888722181 LMI, 36699014.396393139889031068 JOE, 9347.142332543648356945 BANANA, 4988293193.069537666 OGGY, 210000848.249795702514222702 jim, 240800.995682007751449462 ETF, 16597.430949033 LP, 6444188221.913920492320455870 APU, 102061241.618795802640566220 шайлушай, and 10685.567762358287885017 PROPHET. PROPHET_Dividends mirror-transfer logs are accounting shares and are not a twelfth asset. Later Maestro reimbursements do not reduce this pre-recovery measurement. DefiLlama's nearest WETH observation was $1,782.36 at 2023-10-24T23:30:00Z, 59 seconds before campaign end.",
+        "realizedAt": 1698190259
       },
       "targets": [
         {
@@ -37725,41 +38137,50 @@
           },
           "deployment": {
             "timestamp": 1697204147,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 18341808,
+            "transactionHash": "0xf9cfff6e357df268737245ccdefe235874c973bbc7db448f0cb0d8e9f0ec21c1",
+            "transactionIndex": 71,
             "creatorAddress": "0x707d9f893ec2799ddef1524db15eba99d67fc431"
           },
           "lastCodeChange": {
-            "kind": "deployment",
+            "kind": "implementation-change",
             "timestamp": 1697204147,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
-            "logIndex": null,
+            "blockNumber": 18341808,
+            "transactionHash": "0xf9cfff6e357df268737245ccdefe235874c973bbc7db448f0cb0d8e9f0ec21c1",
+            "transactionIndex": 71,
+            "logIndex": 212,
             "mechanism": {
-              "type": "deployment",
-              "address": "0x80a64c6d7f12c47b7c66c5b4e20e72bc1fcd5d9e"
+              "type": "event",
+              "address": "0x80a64c6d7f12c47b7c66c5b4e20e72bc1fcd5d9e",
+              "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+              "codeAddressLocation": "topic1-address"
             },
-            "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+            "description": "The proxy's creation transaction emitted its sole pre-incident Upgraded event at log 212, selecting implementation 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a in topic1. The implementation slot reads that address after deployment and immediately before the exploit. The implementation runtime was independently deployed 180 seconds earlier in transaction 0xb9f410053228bc6b25aa0fe513550d11c61e7d66d451f7e07ed193bb0d261805 and hashes to 0x037e8031318a63c3d7212fb95b4ba28d279dc57ec5c0423ad22f4c9acf509447 at deployment and pre-exploit. No later pre-incident Upgraded event exists."
           },
           "codeAgeSeconds": 983880,
-          "failureModeId": "legacy:eip155:1:0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92:failure-1",
+          "failureModeId": "failure:maestro-router2-unrestricted-external-call",
           "evidence": {
             "identitySourceIds": [
+              "source-1",
               "source-2",
-              "source-4"
+              "source-3",
+              "source-6",
+              "source-7",
+              "source-8",
+              "source-10"
             ],
             "codeHistorySourceIds": [
-              "source-4"
+              "source-6",
+              "source-7",
+              "source-10"
             ]
           },
           "verification": {
-            "tier": "provisional",
-            "curveEligible": false,
-            "limitations": [
-              "Target identity and code history came from the v1 snapshot row originally at protocols/maestro-bot.json; no semantic revalidation was inherited.",
-              "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-10"
             ]
           }
         }
@@ -37769,7 +38190,10 @@
           "id": "source-1",
           "type": "onchain-transaction",
           "supports": [
-            "incident-anchor"
+            "incident-anchor",
+            "target-identity",
+            "root-cause",
+            "loss"
           ],
           "chainId": 1,
           "transactionHash": "0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92"
@@ -37779,7 +38203,8 @@
           "type": "source-code",
           "supports": [
             "target-identity",
-            "root-cause"
+            "root-cause",
+            "loss"
           ],
           "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
           "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -37789,26 +38214,105 @@
           "id": "source-3",
           "type": "post-mortem",
           "supports": [
-            "root-cause"
+            "target-identity",
+            "root-cause",
+            "loss"
           ],
           "url": "https://twitter.com/Phalcon_xyz/status/1717014871836098663"
         },
         {
           "id": "source-4",
-          "type": "review-note",
+          "type": "onchain-transaction-set",
           "supports": [
-            "target-identity",
-            "code-history",
             "loss"
           ],
-          "note": "onchain review: router proxy 0x80a64c6D7f12C47B7c66c5B4E20E72bc1FCd5d9e created 2023-10-13T13:35:47Z by 0x707d9f893ec2799ddef1524db15eba99d67fc431, unrelated to the attack sender; a single EIP-1967 Upgraded event in the creation block installs logic 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a and no later upgrade precedes the incident, so age runs from that install (11.4 days). The recorded tx is the first of 12 drain txs listed in the PoC; the ~280 ETH figure is their sum, converted at $1,788.05 per ETH at incidentTimestamp 1698188027 (DefiLlama) = $500,654."
+          "chainId": 1,
+          "transactionHashes": [
+            "0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92",
+            "0xede874f9a4333a26e97d3be9d1951e6a3c2a8861e4e301787093cfb1293d4756",
+            "0xe60c5a3154094828065049121e244dfd362606c2a5390d40715ba54699ba9da6",
+            "0xf4ae22177c3abbb0f21defe51dd14eff68eb1b0c52ac4104186220138e8e5bb2",
+            "0x6cba3a67d6b8de664d860b096c8c558a1d65e5fa9735c657ddc98f67969561a2",
+            "0xddd1048fe3f2df1fb98e534a97173b32a9fca662dbd257a72725482431d3f25e",
+            "0xffb4bd29825bdd41adf344028f759692021cbadc2d4cb5b587e68fd8285c5eb1",
+            "0xa9948c8f0500a867091a090d12125f88868ac29e52af6391569094e82d416904",
+            "0xc49499325cb5ad3bf4391ae95855ce2ee2b0222f9282c524daa1c4586a8fcd8b",
+            "0xcfe1d2b333e1b9da5e2d5f1d7697b628c818cc41f9f3020187d4ce2c2610a05c",
+            "0x33f6adf410bbd0ae08b0cd44410de1e5b28e516434567113982fcac36ed9e1a4",
+            "0x4f4d6909a442b4d86f79a9044dcada6a128ddd9f62c26f410134a72d2fc31389"
+          ]
+        },
+        {
+          "id": "source-5",
+          "type": "price-data",
+          "supports": [
+            "loss"
+          ],
+          "provider": "DefiLlama",
+          "url": "https://coins.llama.fi/prices/historical/1698190259/ethereum:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2?searchWidth=4h",
+          "observedAt": 1787660110
+        },
+        {
+          "id": "source-6",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 1,
+          "transactionHash": "0xf9cfff6e357df268737245ccdefe235874c973bbc7db448f0cb0d8e9f0ec21c1"
+        },
+        {
+          "id": "source-7",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 1,
+          "transactionHash": "0xb9f410053228bc6b25aa0fe513550d11c61e7d66d451f7e07ed193bb0d261805"
+        },
+        {
+          "id": "source-8",
+          "type": "post-mortem",
+          "supports": [
+            "target-identity",
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://www.certik.com/blog/maestro-and-unibot"
+        },
+        {
+          "id": "source-9",
+          "type": "post-mortem",
+          "supports": [
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://twitter.com/MaestroBots/status/1717113987479785558"
+        },
+        {
+          "id": "source-10",
+          "type": "review-note",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T12:15:10Z",
+          "note": "Campaign and anchor: the attacker EOA deployed helper 0xe6c6e86e04de96c4e3a29ad480c94e7a471969ab in transaction 0xaf321e7b2c630b2a80c94de23958b1f49d4193b5878738d058c5a02576668374 at block 18423209. Enumerating that helper's successful calls shows 0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92 at block 18423220:7 is its first defect-executing call, followed by the other eleven declared transactions through block 18423404:0; two unrelated copycat calls reverted and do not enter the campaign. Trace and receipt evidence shows the helper repeatedly reaches proxy 0x80a64c6d7f12c47b7c66c5b4e20e72bc1fcd5d9e, which delegatecalls implementation 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a. Function 0x9239127f then causes the proxy execution context to call victim-selected tokens with transferFrom calldata, spending user approvals. CertiK and Phalcon independently identify the same unprotected arbitrary-call defect; the implementation is unverified, so the semantic boundary is supported by executed bytecode/decompiled analysis rather than verified Solidity source. Code history: creator 0x707d9f893ec2799ddef1524db15eba99d67fc431 directly deployed the EIP-1967 proxy in 0xf9cfff6e357df268737245ccdefe235874c973bbc7db448f0cb0d8e9f0ec21c1 at block 18341808:71. Creation log 212 is the only Upgraded event through the incident and selects 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a in topic1. The EIP-1967 slot holds that address at creation and pre-anchor. The implementation was deployed in 0xb9f410053228bc6b25aa0fe513550d11c61e7d66d451f7e07ed193bb0d261805 at block 18341793:97 by 0x40039e1f77ca0b4ae96a9f80c4941d3ee391ce71; its runtime hash is unchanged from deployment through the incident. Loss: exact receipt aggregation finds 270505159823556961290 wei-WETH transferred from liquidity pairs to the helper across the 12 transactions, then withdrawn to ETH. This provides a non-double-counted realized net measure for the exact stolen-token basket documented in loss.notes; Maestro's later 610-ETH reimbursement is recovery/compensation and does not reduce pre-recovery loss."
         }
       ],
       "verification": {
-        "tier": "provisional",
+        "tier": "reviewed",
         "limitations": [
-          "Classification and loss came from the v1 snapshot row originally at protocols/maestro-bot.json; legacy measurement.status=OK is provenance only.",
-          "The legacy USD loss lacks uniformly structured valuation provenance."
+          "The defect-bearing implementation was not source-verified; root-cause review relies on execution traces, bytecode/decompiled analysis, and independent incident reporting."
+        ],
+        "reviewSourceIds": [
+          "source-10"
         ],
         "legacy": {
           "snapshot": "research/raw/legacy-v1.json",
@@ -66725,68 +67229,98 @@
       },
       "classification": {
         "rootCause": "code-bug",
-        "summary": "MIC.swapManual() is public and sells the token contract's own MIC into the pair, so the attacker triggered it inside a flash loan and harvested the fee-claimer payouts."
+        "summary": "MIC's unrestricted swapManual() paid LP fees according only to msg.sender's current LP-token balance and reduced a global fee pool without recording which LP position had already claimed. Transferring the same LP position between addresses therefore allowed repeated claims against the remaining accrued fees."
       },
       "loss": {
-        "kind": "legacy-unspecified",
+        "kind": "gross-assets-lost",
         "usd": {
-          "amount": 500000,
+          "amount": 3572.8803705928563,
           "valuationTimestamp": 1704236954,
-          "method": "legacy-unspecified",
-          "sourceIds": []
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-6"
+          ]
         },
         "minimumUsd": null,
-        "assets": [],
-        "confidence": "unknown",
-        "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57",
+              "symbol": "MIC"
+            },
+            "amount": "178.988781874161943857",
+            "usdValue": 3572.8803705928563,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1704236948,
+              "unitPriceUsd": 19.961476541612367,
+              "sourceIds": [
+                "source-1",
+                "source-4",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-3",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Exact pre-recovery depletion of the accrued LP-fee allocation is the sum of eleven swapAndSendLPFeeEvent amounts: 178.988781874161943857 MIC. The pre-transaction PancakeSwap V2 MIC/BSC-USD pool held 1,774,999.9281271318376792 BSC-USD and 88,921.274156593938885675 MIC, implying $19.961476541612367 per MIC at stablecoin par and $3,572.8803705928563 gross loss. The fee swaps paid 2,445.239989071637839369 BSC-USD to attacker-controlled callers after execution slippage. Flash liquidity and the attacker's trading inputs are excluded. The migrated approximately $500,000 estimate is not retained because it does not reconcile with the exact fee events, pool state, or stablecoin payouts."
       },
       "targets": [
         {
           "id": "target-1",
           "executionAddress": "0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57",
-          "relationship": "unknown",
+          "relationship": "direct",
           "codeArtifact": {
-            "address": null,
-            "codeHash": null
+            "address": "0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57",
+            "codeHash": "0xb49ce47b1c2ff38f7e7e0ebc17d8ff8034bb99901e31336e2febcace7b4890f2"
           },
           "deployment": {
             "timestamp": 1703768054,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 34749171,
+            "transactionHash": "0x98147a14ad59bc5beaf5f4ae80d39ebd14a95911085df2e8ea757d013af7e7c9",
+            "transactionIndex": 288,
             "creatorAddress": "0x6095b5b5008c0ffd24220c423dca59a8bd9ba6ad"
           },
           "lastCodeChange": {
             "kind": "deployment",
             "timestamp": 1703768054,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 34749171,
+            "transactionHash": "0x98147a14ad59bc5beaf5f4ae80d39ebd14a95911085df2e8ea757d013af7e7c9",
+            "transactionIndex": 288,
             "logIndex": null,
             "mechanism": {
               "type": "deployment",
               "address": "0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57"
             },
-            "description": "Legacy basis: execution-address deployment."
+            "description": "Direct immutable MIC runtime deployed in this transaction and unchanged through the exploit. The pre-exploit and current runtime hashes match; executable bytecode before the Solidity metadata boundary contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction."
           },
           "codeAgeSeconds": 468900,
-          "failureModeId": "legacy:eip155:56:0x316c35d483b72700e6f4984650d217304146b3732bb148e32fa7f8017843eb24:failure-1",
+          "failureModeId": "failure:mic-lp-fee-claim-not-bound-to-position",
           "evidence": {
             "identitySourceIds": [
+              "source-1",
               "source-3",
               "source-4"
             ],
             "codeHistorySourceIds": [
-              "source-4"
+              "source-4",
+              "source-5"
             ]
           },
           "verification": {
-            "tier": "provisional",
-            "curveEligible": false,
-            "limitations": [
-              "Target identity and code history came from the v1 snapshot row originally at protocols/mic-token.json; no semantic revalidation was inherited.",
-              "The executing code artifact and its code hash have not been established in structured evidence.",
-              "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-4"
             ]
           }
         }
@@ -66796,7 +67330,10 @@
           "id": "source-1",
           "type": "onchain-transaction",
           "supports": [
-            "incident-anchor"
+            "incident-anchor",
+            "target-identity",
+            "root-cause",
+            "loss"
           ],
           "chainId": 56,
           "transactionHash": "0x316c35d483b72700e6f4984650d217304146b3732bb148e32fa7f8017843eb24"
@@ -66814,7 +67351,8 @@
           "type": "source-code",
           "supports": [
             "target-identity",
-            "root-cause"
+            "root-cause",
+            "loss"
           ],
           "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
           "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -66824,17 +67362,44 @@
           "id": "source-4",
           "type": "review-note",
           "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T12:26:24Z",
+          "note": "Reviewed BNB Smart Chain block 34905162, the successful transaction receipt and complete call trace, the MIC creation transaction, pre-exploit and current runtime, verified MICToken source, the commit-pinned reproduction, all LP-fee events and stablecoin transfers, and the pre-transaction PancakeSwap V2 pool state. The attacker EOA has only the anchored transaction in the block, and that transaction contains the complete repeated-claim campaign. The trace directly executes MIC 0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57, whose prestate runtime hash is 0xb49ce47b1c2ff38f7e7e0ebc17d8ff8034bb99901e31336e2febcace7b4890f2. It matches current state; executable bytecode before the Solidity metadata boundary contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction, establishing deployment as the complete code history. Verified source shows that unrestricted swapManual passes msg.sender to swapAndSendLPFee; that function calculates a share from the caller's current LP balance and decrements only global amountLPFee, without binding a claim to the LP position. Eleven events transfer claims to the main attack contract and ten transaction-created helpers, totaling exactly 178.988781874161943857 MIC. The exact prestate reserves of MIC/BSC-USD pair 0xb3611b1cbddb14bc847906bfb9c443ac724a54dc are 1,774,999.9281271318376792 BSC-USD and 88,921.274156593938885675 MIC at reserve timestamp 1704236948. The resulting spot valuation is $19.961476541612367 per MIC and $3,572.8803705928563 gross. Attacker-controlled claim recipients receive 2,445.239989071637839369 BSC-USD after fee-swap slippage. No reviewed onchain or primary evidence reconciles the migrated approximately $500,000 estimate, so it is superseded rather than preserved as loss."
+        },
+        {
+          "id": "source-5",
+          "type": "onchain-transaction",
+          "supports": [
             "target-identity",
             "code-history"
           ],
-          "note": "onchain review: victim 0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57 created 2023-12-28T12:54:14Z by 0x6095b5b5008c0ffd24220c423dca59a8bd9ba6ad, which is not the attack-tx sender 0x1703062d657c1ca439023f0993d870f4707a37ff; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+          "chainId": 56,
+          "transactionHash": "0x98147a14ad59bc5beaf5f4ae80d39ebd14a95911085df2e8ea757d013af7e7c9"
+        },
+        {
+          "id": "source-6",
+          "type": "price-data",
+          "supports": [
+            "loss"
+          ],
+          "provider": "PancakeSwap V2 MIC/BSC-USD pre-transaction pool state",
+          "url": "https://bscscan.com/address/0xb3611b1cbddb14bc847906bfb9c443ac724a54dc",
+          "observedAt": 1787660784
         }
       ],
       "verification": {
-        "tier": "provisional",
+        "tier": "reviewed",
         "limitations": [
-          "Classification and loss came from the v1 snapshot row originally at protocols/mic-token.json; legacy measurement.status=OK is provenance only.",
-          "The legacy USD loss lacks uniformly structured valuation provenance."
+          "The USD amount uses the exact pre-transaction MIC/BSC-USD reserve ratio at stablecoin par; MIC did not have an independently reviewed external price source, and the much larger migrated estimate could not be substantiated."
+        ],
+        "reviewSourceIds": [
+          "source-4"
         ],
         "legacy": {
           "snapshot": "research/raw/legacy-v1.json",
@@ -67005,7 +67570,7 @@
         "name": "BNO",
         "slug": "bno"
       },
-      "name": "BNO",
+      "name": "BNO pool stale NFT reward accounting",
       "incident": {
         "chainId": 56,
         "exploit": {
@@ -67020,65 +67585,94 @@
       },
       "classification": {
         "rootCause": "code-bug",
-        "summary": "Pool.emergencyWithdraw returns pledged BNO without clearing NFT stake, drained via repeated stake/pledge/withdraw/unstake."
+        "summary": "The pool's emergency withdrawal cleared ERC-20 stake and reward-debt accounting but left the NFT reward addition active, so a later NFT withdrawal could pay rewards that were no longer backed by stake."
       },
       "loss": {
-        "kind": "legacy-unspecified",
+        "kind": "gross-assets-lost",
         "usd": {
-          "amount": 505000,
-          "valuationTimestamp": 1689641737,
-          "method": "legacy-unspecified",
-          "sourceIds": []
+          "amount": 504557.8558008534,
+          "valuationTimestamp": 1689641833,
+          "method": "other",
+          "sourceIds": [
+            "source-5"
+          ]
         },
         "minimumUsd": null,
-        "assets": [],
-        "confidence": "unknown",
-        "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xa4dbc813f7e1bf5827859e278594b1e0ec1f710f",
+              "symbol": "BNO"
+            },
+            "amount": "1563370.168598147731548146",
+            "usdValue": 504557.8558008534,
+            "valuation": {
+              "method": "other",
+              "timestamp": 1689641833,
+              "unitPriceUsd": 0.3227372927636731,
+              "sourceIds": [
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-5"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Exact pre-recovery victim depletion is the BNO balance change of pool 0xdca503449899d5649d32175a255a8835a03e4006 across the two successful campaign transactions: 1,563,370.168598147731548146 BNO immediately before the anchor and zero after the second transaction. The second receipt records 504,557.855800853399893084 USDT paid to campaign funds-holder 0xdc109426972ae14d5b3d7e91b47d42ff1fd3c8cc after the depleted BNO was sold; that exact stablecoin realization at par is used instead of the legacy rounded USD 505,000 headline or a thin-market spot mark. The attacker's flash liquidity and amounts returned to the pool are not counted separately. No recovery is netted.",
+        "realizedAt": 1689641833
       },
       "targets": [
         {
           "id": "target-1",
           "executionAddress": "0xdca503449899d5649d32175a255a8835a03e4006",
-          "relationship": "unknown",
+          "relationship": "direct",
           "codeArtifact": {
-            "address": null,
-            "codeHash": null
+            "address": "0xdca503449899d5649d32175a255a8835a03e4006",
+            "codeHash": "0x541c5518ef3d2925449174422b64c0b7f93b043f76a507606b6dc845292666be"
           },
           "deployment": {
             "timestamp": 1685027552,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
-            "creatorAddress": null
+            "blockNumber": 28522657,
+            "transactionHash": "0x7a0d87d76a61e46c07cd2892f8e04ee08dfd7fdbf093e928f73aba29a46ed9f2",
+            "transactionIndex": 114,
+            "creatorAddress": "0x5afdb6c84786103cca788a39e47b9b2dcea78ad9"
           },
           "lastCodeChange": {
             "kind": "deployment",
             "timestamp": 1685027552,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 28522657,
+            "transactionHash": "0x7a0d87d76a61e46c07cd2892f8e04ee08dfd7fdbf093e928f73aba29a46ed9f2",
+            "transactionIndex": 114,
             "logIndex": null,
             "mechanism": {
               "type": "deployment",
               "address": "0xdca503449899d5649d32175a255a8835a03e4006"
             },
-            "description": "Legacy basis: execution-address deployment."
+            "description": "Direct contract deployment. Its 13,327-byte runtime hashes to 0x541c5518ef3d2925449174422b64c0b7f93b043f76a507606b6dc845292666be both at deployment block 28522657 and immediately before the campaign; the EIP-1967 implementation slot is zero, and the runtime contains neither DELEGATECALL nor SELFDESTRUCT."
           },
           "codeAgeSeconds": 4614185,
-          "failureModeId": "legacy:eip155:56:0x33fed54de490797b99b2fc7a159e43af57e9e6bdefc2c2d052dc814cfe0096b9:failure-1",
+          "failureModeId": "failure:bno-pool-emergency-withdraw-leaves-nft-reward-state",
           "evidence": {
             "identitySourceIds": [
-              "source-2"
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-6"
             ],
-            "codeHistorySourceIds": []
+            "codeHistorySourceIds": [
+              "source-4",
+              "source-6"
+            ]
           },
           "verification": {
-            "tier": "provisional",
-            "curveEligible": false,
-            "limitations": [
-              "Target identity and code history came from the v1 snapshot row originally at protocols/bno.json; no semantic revalidation was inherited.",
-              "The executing code artifact and its code hash have not been established in structured evidence.",
-              "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-6"
             ]
           }
         }
@@ -67088,7 +67682,9 @@
           "id": "source-1",
           "type": "onchain-transaction",
           "supports": [
-            "incident-anchor"
+            "incident-anchor",
+            "target-identity",
+            "root-cause"
           ],
           "chainId": 56,
           "transactionHash": "0x33fed54de490797b99b2fc7a159e43af57e9e6bdefc2c2d052dc814cfe0096b9"
@@ -67103,13 +67699,61 @@
           "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
           "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
           "path": "src/test/2023-07/BNO_exp.sol"
+        },
+        {
+          "id": "source-3",
+          "type": "post-mortem",
+          "supports": [
+            "target-identity",
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://medium.com/@sharkteam/sharkteam-analysis-of-bno-attack-incident-principles-31b3b7249201"
+        },
+        {
+          "id": "source-4",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 56,
+          "transactionHash": "0x7a0d87d76a61e46c07cd2892f8e04ee08dfd7fdbf093e928f73aba29a46ed9f2"
+        },
+        {
+          "id": "source-5",
+          "type": "onchain-transaction-set",
+          "supports": [
+            "loss"
+          ],
+          "chainId": 56,
+          "transactionHashes": [
+            "0x33fed54de490797b99b2fc7a159e43af57e9e6bdefc2c2d052dc814cfe0096b9",
+            "0x16d75e421ebf7a21737b6c5d7cea1c5274d315b95a1d5db5841fd7194876cc31"
+          ]
+        },
+        {
+          "id": "source-6",
+          "type": "review-note",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T12:17:54Z",
+          "note": "The selected anchor is the earliest of the two successful BNO pool-depletion transactions reported for this campaign. Transaction 0x33fed54d...0096b9 succeeded at block 30056630 index 68 and timestamp 1689641737; the same EOA's next nonce produced transaction 0x16d75e42...76cc31 at block 30056662 index 120 and timestamp 1689641833. The receipts and archive balanceOf calls establish a coherent loss boundary: pool 0xdca503449899d5649d32175a255a8835a03e4006 held 1563370.168598147731548146 BNO at block 30056629 and zero at the end of block 30056662. The second receipt then records exactly 504557.855800853399893084 USDT sent to campaign funds-holder 0xdc109426972ae14d5b3d7e91b47d42ff1fd3c8cc, which supplies the conservative realized valuation. Receipt calls and the pinned research source identify 0xdca503449899d5649d32175a255a8835a03e4006 as the pool whose inconsistent ERC-20/NFT reward state caused the loss. Archive eth_getCode binary search places its first code at block 28522657; creation receipt 0x7a0d87d...ed9f2, index 114, names creator 0x5afdb6c84786103cca788a39e47b9b2dcea78ad9. The 13,327-byte direct runtime has hash 0x541c5518ef3d2925449174422b64c0b7f93b043f76a507606b6dc845292666be at deployment and immediately before the anchor. A zero EIP-1967 implementation slot and no DELEGATECALL or SELFDESTRUCT in that runtime support deployment as its latest executable-code change. Deployment timestamp 1685027552 makes the code 4614185 seconds old at the earliest transaction."
         }
       ],
       "verification": {
-        "tier": "provisional",
+        "tier": "reviewed",
         "limitations": [
-          "Classification and loss came from the v1 snapshot row originally at protocols/bno.json; legacy measurement.status=OK is provenance only.",
-          "The legacy USD loss lacks uniformly structured valuation provenance."
+          "The USD value conservatively uses exact campaign-realized USDT proceeds at par rather than an external pre-exploit BNO mark."
+        ],
+        "reviewSourceIds": [
+          "source-6"
         ],
         "legacy": {
           "snapshot": "research/raw/legacy-v1.json",
@@ -69066,156 +69710,6 @@
           "basis": "deployment",
           "upgradeEventCount": 0,
           "date": "2023-05-06T01:56:19Z"
-        }
-      },
-      "notes": []
-    },
-    {
-      "$schema": "../../schema/incident.schema.json",
-      "schemaVersion": "2.0.0",
-      "id": "eip155:56:0x3fe3a1883f0ae263a260f7d3e9b462468f4f83c2c88bb89d1dee5d7d24262b51",
-      "protocol": {
-        "name": "Thoreum Finance",
-        "slug": "thoreum-finance"
-      },
-      "name": "Thoreum V2 transfer business-logic flaw",
-      "incident": {
-        "chainId": 56,
-        "exploit": {
-          "transactionHash": "0x3fe3a1883f0ae263a260f7d3e9b462468f4f83c2c88bb89d1dee5d7d24262b51",
-          "blockNumber": 24913172,
-          "transactionIndex": 28,
-          "timestamp": 1674106022
-        },
-        "attackerAddresses": [
-          "0x1ae2dc57399b2f4597366c5bf4fe39859c006f99"
-        ]
-      },
-      "classification": {
-        "rootCause": "code-bug",
-        "summary": "Thoreum's transfer() lets a self-transfer or a transfer to the pair inflate the sender's balance through the auto-compounding rebase accounting, so the attacker repeatedly grew a holding and sold it into the WBNB pair."
-      },
-      "loss": {
-        "kind": "legacy-unspecified",
-        "usd": {
-          "amount": 581560,
-          "valuationTimestamp": 1674106022,
-          "method": "legacy-unspecified",
-          "sourceIds": [
-            "source-4"
-          ]
-        },
-        "minimumUsd": null,
-        "assets": [],
-        "confidence": "unknown",
-        "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
-      },
-      "targets": [
-        {
-          "id": "target-1",
-          "executionAddress": "0xce1b3e5087e8215876af976032382dd338cf8401",
-          "relationship": "proxy",
-          "codeArtifact": {
-            "address": "0x79fe086a4c03c5e38ff8074dea9ee0a18dc1af4f",
-            "codeHash": "0x79f89e49910917df2c2f6e904235ca553b292e6de6b97311e01079b41e56252f"
-          },
-          "deployment": {
-            "timestamp": 1657872421,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
-            "creatorAddress": "0x6a963573b9a7aaef9cb9eee747e1b6b2c21b0520"
-          },
-          "lastCodeChange": {
-            "kind": "implementation-change",
-            "timestamp": 1674098373,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
-            "logIndex": null,
-            "mechanism": {
-              "type": "event",
-              "address": "0xce1b3e5087e8215876af976032382dd338cf8401",
-              "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
-              "codeAddressLocation": "topic1-address"
-            },
-            "description": "Legacy basis: latest of 9 pre-incident Upgraded event(s)."
-          },
-          "codeAgeSeconds": 7649,
-          "failureModeId": "legacy:eip155:56:0x3fe3a1883f0ae263a260f7d3e9b462468f4f83c2c88bb89d1dee5d7d24262b51:failure-1",
-          "evidence": {
-            "identitySourceIds": [
-              "source-2",
-              "source-4"
-            ],
-            "codeHistorySourceIds": [
-              "source-4"
-            ]
-          },
-          "verification": {
-            "tier": "provisional",
-            "curveEligible": false,
-            "limitations": [
-              "Target identity and code history came from the v1 snapshot row originally at protocols/thoreum-finance.json; no semantic revalidation was inherited.",
-              "One or more target block, transaction, ordering, or creator anchors remain unresolved."
-            ]
-          }
-        }
-      ],
-      "sources": [
-        {
-          "id": "source-1",
-          "type": "onchain-transaction",
-          "supports": [
-            "incident-anchor"
-          ],
-          "chainId": 56,
-          "transactionHash": "0x3fe3a1883f0ae263a260f7d3e9b462468f4f83c2c88bb89d1dee5d7d24262b51"
-        },
-        {
-          "id": "source-2",
-          "type": "source-code",
-          "supports": [
-            "target-identity",
-            "root-cause"
-          ],
-          "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
-          "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
-          "path": "src/test/2023-01/ThoreumFinance_exp.sol"
-        },
-        {
-          "id": "source-3",
-          "type": "post-mortem",
-          "supports": [
-            "root-cause"
-          ],
-          "url": "https://twitter.com/AnciliaInc/status/1615944396134043648"
-        },
-        {
-          "id": "source-4",
-          "type": "review-note",
-          "supports": [
-            "target-identity",
-            "code-history",
-            "loss"
-          ],
-          "note": "onchain review: Thoreum 0xce1b3e5087e8215876af976032382dd338cf8401 created 2022-07-15T08:07:01Z by 0x6a963573b9a7aaef9cb9eee747e1b6b2c21b0520, unrelated to attack sender 0x1ae2dc57399b2f4597366c5bf4fe39859c006f99; it is an EIP-1967 proxy with nine Upgraded events, the last at 1674098373 (2023-01-19T05:19:33Z), just over two hours before the incident, which is the basis for the age. lossUsd converts the ~2,000 BNB reported for the incident (this transaction alone moved 6.11 WBNB): 2,000 BNB x $290.78 at incidentTimestamp 1674106022 (DefiLlama coingecko:binancecoin) = $581,560."
-        }
-      ],
-      "verification": {
-        "tier": "provisional",
-        "limitations": [
-          "Classification and loss came from the v1 snapshot row originally at protocols/thoreum-finance.json; legacy measurement.status=OK is provenance only.",
-          "The legacy USD loss lacks uniformly structured valuation provenance."
-        ],
-        "legacy": {
-          "snapshot": "research/raw/legacy-v1.json",
-          "originalFile": "protocols/thoreum-finance.json",
-          "originalIncidentIndex": 0,
-          "status": "OK",
-          "basis": "upgrade-events",
-          "upgradeEventCount": 9,
-          "date": "2023-01-19T05:27:02Z"
         }
       },
       "notes": []
@@ -71894,6 +72388,297 @@
           "basis": "deployment",
           "upgradeEventCount": 0,
           "date": "2023-08-23T16:27:16Z"
+        }
+      },
+      "notes": []
+    },
+    {
+      "$schema": "../../schema/incident.schema.json",
+      "schemaVersion": "2.0.0",
+      "id": "eip155:56:0x5058c820fa0bb0daff2bd1b30151cf84c618dffe123546223b7089c8c2e18331",
+      "protocol": {
+        "name": "Thoreum Finance",
+        "slug": "thoreum-finance"
+      },
+      "name": "Thoreum V4 self-transfer balance doubling",
+      "incident": {
+        "chainId": 56,
+        "exploit": {
+          "transactionHash": "0x5058c820fa0bb0daff2bd1b30151cf84c618dffe123546223b7089c8c2e18331",
+          "blockNumber": 24912667,
+          "transactionIndex": 20,
+          "timestamp": 1674104507
+        },
+        "attackerAddresses": [
+          "0x1ae2dc57399b2f4597366c5bf4fe39859c006f99",
+          "0x7d1e1901226e0ba389bfb1281ede859e6e48cc3d",
+          "0x1285fe345523f00ab1a66acd18d9e23d18d2e35c"
+        ]
+      },
+      "classification": {
+        "rootCause": "code-bug",
+        "summary": "The V4 implementation's transfer accounting reused the sender's pre-transfer balance for both sides of a self-transfer, so transfer(account, balanceOf(account)) doubled that account's recorded THOREUM balance. The campaign repeatedly doubled small acquired balances and sold the unsupported tokens into the THOREUM/WBNB pair. Whether this implementation was an accidental project upgrade or attacker-installed through a compromised privileged key remains unresolved and blocks cohort admission."
+      },
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 928504.9554488137,
+          "valuationTimestamp": 1674104507,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-2",
+            "source-9",
+            "source-10"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "3194.414045570313325194",
+            "usdValue": 928504.9554488137,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1674104507,
+              "unitPriceUsd": 290.66518685527615,
+              "sourceIds": [
+                "source-9"
+              ]
+            },
+            "sourceIds": [
+              "source-2"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The coherent campaign is 36 successful calls from the same EOA to the same helper, from block 24912667 through block 24913336. Receipt Transfer-log netting gives the THOREUM/WBNB BiSwap pair 0xd822e1737b1180f72368b2a9eb2de22805b67e34 an exact aggregate delta of -3194.414045570313325194 WBNB after already subtracting 1.7735 WBNB of identifiable campaign inputs. Of the gross WBNB outputs, 2261.490132565026795779 WBNB went to attacker beneficiary 0x1285fe345523f00ab1a66acd18d9e23d18d2e35c and 934.697413005286529415 WBNB went through the BiSwap router as the token's transfer-fee machinery. The legacy ~2,000/2,260 BNB reports measure attacker proceeds rather than the pair's exact pre-recovery depletion. No recovery was identified.",
+        "realizedAt": 1674106514
+      },
+      "targets": [
+        {
+          "id": "target-1",
+          "executionAddress": "0xce1b3e5087e8215876af976032382dd338cf8401",
+          "relationship": "proxy",
+          "codeArtifact": {
+            "address": "0x79fe086a4c03c5e38ff8074dea9ee0a18dc1af4f",
+            "codeHash": "0x79f89e49910917df2c2f6e904235ca553b292e6de6b97311e01079b41e56252f"
+          },
+          "deployment": {
+            "timestamp": 1657872421,
+            "blockNumber": 19566917,
+            "transactionHash": "0x275e7f2af6f3d9e51bdf0703a13c0e8e5c43ed4c003e9d36ed3989e706b35c62",
+            "transactionIndex": 9,
+            "creatorAddress": "0x6a963573b9a7aaef9cb9eee747e1b6b2c21b0520"
+          },
+          "lastCodeChange": {
+            "kind": "implementation-change",
+            "timestamp": 1674098373,
+            "blockNumber": 24910634,
+            "transactionHash": "0x5a1788e1fbd582d1b89dc23fdf6cb7600c5ab07e4156b37cc3a6da27d5aa0349",
+            "transactionIndex": 0,
+            "logIndex": 0,
+            "mechanism": {
+              "type": "event",
+              "address": "0xce1b3e5087e8215876af976032382dd338cf8401",
+              "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+              "codeAddressLocation": "topic1-address"
+            },
+            "description": "upgradeTo(address) selected 0x79fe086a4c03c5e38ff8074dea9ee0a18dc1af4f in Upgraded log 0. The EIP-1967 implementation slot contains 0x0743931af9ce6a0dbd8d8d664c3d87d0bb797d2c at block 24910633 and 0x79fe086a4c03c5e38ff8074dea9ee0a18dc1af4f from block 24910634 through the pre-anchor block 24912666. Runtime hash 0x79f89e49910917df2c2f6e904235ca553b292e6de6b97311e01079b41e56252f is identical at implementation deployment block 24910631 and pre-anchor block 24912666."
+          },
+          "codeAgeSeconds": 6134,
+          "failureModeId": "failure:thoreum-v4-self-transfer-balance-doubling",
+          "evidence": {
+            "identitySourceIds": [
+              "source-1",
+              "source-4",
+              "source-5",
+              "source-6",
+              "source-10"
+            ],
+            "codeHistorySourceIds": [
+              "source-3",
+              "source-4",
+              "source-5",
+              "source-10"
+            ]
+          },
+          "verification": {
+            "tier": "reviewed",
+            "curveEligible": false,
+            "limitations": [
+              "The execution relationship, artifact hash and activation history are complete, but credible reporting attributes the privileged V4 installation to a compromised project key. The target is not curve-eligible unless central cohort review establishes that V4 was a genuine project-authored defect rather than attacker-installed machinery."
+            ],
+            "reviewSourceIds": [
+              "source-10"
+            ]
+          }
+        }
+      ],
+      "sources": [
+        {
+          "id": "source-1",
+          "type": "onchain-transaction",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "root-cause",
+            "loss"
+          ],
+          "chainId": 56,
+          "transactionHash": "0x5058c820fa0bb0daff2bd1b30151cf84c618dffe123546223b7089c8c2e18331"
+        },
+        {
+          "id": "source-2",
+          "type": "onchain-transaction-set",
+          "supports": [
+            "loss"
+          ],
+          "chainId": 56,
+          "transactionHashes": [
+            "0x5058c820fa0bb0daff2bd1b30151cf84c618dffe123546223b7089c8c2e18331",
+            "0x08114d50db7bf23f0ea1e57d496f61033b9516b60eaf2316092f023171b66536",
+            "0xe37e92f7bf7e0a5dbe06e937012820286370df5846d9019ed789cf688a76d50d",
+            "0x762ff716d9acc40ea99879922e6ca24b9353f4a330e9ab05c95d4041eac8a188",
+            "0x98a3b13e1737300e4604cf9bba601fc2bc91e1a19691643543c938b056139d00",
+            "0x76d401e3465d24ec38b3170dbe4e6e105b9e7925954d89d638766f7afde4556f",
+            "0x41d4df14e12cb208a88ad4c95b0e441507c9990dc494ed7c9faa9ab8305bdaed",
+            "0xa84a9ff7c60b53be7b8521f5b3d2e7b0ca65a80fd025e202573ec1eac5a72acb",
+            "0xbefac469ae24c443fdd0a7d94d39ec087890bec0b20c16da87c7deb6c70ba72c",
+            "0x4c19225f3f2c9cef479419fde287c48c8f4dfa8a67075a00200a725043b289a5",
+            "0xe7270564bb2e954ce7e1feb041064db2d27ea7685243355b83f652f3ce87ead8",
+            "0xd31d1ba69a7a41f271756a62b709a28704a05786141eacd4b6fc93f9ad6a5b96",
+            "0x7a380c15b0b7f94feb504cc1461244481e83a734218b6cde59e2b77695cb6e38",
+            "0x94915df783e8ee0c15dacd438ecf12ec2907eae0248ddfaf2d9ae1c0a9d1cc11",
+            "0xc1d79f413abe2bcc753e2e0c26caae348e35ab0448b3676b8eb81a4481a13b32",
+            "0xf61eadc027b1ac9b47e47229401374d7fbbb4865b31e2626d3c29ea33e627ee1",
+            "0x50cdd6ea71a94a5e7b2669bda34c47a1647e0cb2b0c6c83fb6ce21ba603e54b5",
+            "0x0d74aa7649f0a7f7df221ce35c4120b730657788daa7033d7f98347d03ab4643",
+            "0x5d4684ba266012d35ba3bbc3aa6118819429d97149ca14a30eaf2a3b51943a00",
+            "0x67f6fafee728be9f3739b61e26eb3683afc376f59ca7f2e10c7e775a53795277",
+            "0xe79f8b58dd695a806868d8b4691253277863d48cd334e5876e4b7dd7a09bbe92",
+            "0x5520f0d8529663c23ab9f1b4446f98c0ee44e47f93111cfbce85e04199ff2b2d",
+            "0xbf80dcdf8bc418ab1897f808afc706577d75ea97c206b1708d04f2663351fb64",
+            "0xee5b6137e09cd2ffd8ec34e2b34c942998fbd229b299abaf225c92a1c9921f3b",
+            "0x17b9eba5cfd4f520699b2c1461efcd807aab2de1dd3a5ff3f378e7608598764a",
+            "0x540e23645045cb2f8b0c671c8e4485f66132051e901deff591c486d6f4f2af6e",
+            "0x650b3f13b8f5817956a3dd6be8bbf09880f3d33ef1ee296bbb9b03ad06556c52",
+            "0x3fe3a1883f0ae263a260f7d3e9b462468f4f83c2c88bb89d1dee5d7d24262b51",
+            "0xcb3f26a8554fe73aedf0c826a935199b22a88fac0899a818dfdf8b33a357e91a",
+            "0xeb91f577e69aa2b82c290ea495ca8e218a584f80c11683d933f51832dfa6d904",
+            "0x0cb77bee58c87e4e746dde52b725ed6867b1df260fbead490a6bdc27a0fc29b1",
+            "0x077c68b47ec48a259b9a8256a3d1b972791d0b0295d9b3624b27b99f2d9aada1",
+            "0x908525966c7e2ee20e86f4a73b0130253072c3519af58080e49d6e9060eda34a",
+            "0x3ba407d118e35a09405001a47fa4314be47d9f0dfd741245cfbe42433eec9416",
+            "0x9f787efc07ffe6bbf252679881f18f036138b028c569fb233c005d6c4ffbafe1",
+            "0x885262f9bcccf8f80bb1a2173a5e3dd2f9c27a0dead0215139b983a7702ead34"
+          ]
+        },
+        {
+          "id": "source-3",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 56,
+          "transactionHash": "0x275e7f2af6f3d9e51bdf0703a13c0e8e5c43ed4c003e9d36ed3989e706b35c62"
+        },
+        {
+          "id": "source-4",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 56,
+          "transactionHash": "0x8fb6742e960874cf126d39517130a9a9d6f1d90b727ca968c6cffd3bf825a443"
+        },
+        {
+          "id": "source-5",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history",
+            "root-cause"
+          ],
+          "chainId": 56,
+          "transactionHash": "0x5a1788e1fbd582d1b89dc23fdf6cb7600c5ab07e4156b37cc3a6da27d5aa0349"
+        },
+        {
+          "id": "source-6",
+          "type": "source-code",
+          "supports": [
+            "target-identity",
+            "root-cause",
+            "loss"
+          ],
+          "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+          "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+          "path": "src/test/2023-01/ThoreumFinance_exp.sol"
+        },
+        {
+          "id": "source-7",
+          "type": "post-mortem",
+          "supports": [
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://www.certik.com/blog/post-mortem-thoreum-finance"
+        },
+        {
+          "id": "source-8",
+          "type": "post-mortem",
+          "supports": [
+            "incident-anchor",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://time.graphics/line/751827"
+        },
+        {
+          "id": "source-9",
+          "type": "price-data",
+          "supports": [
+            "loss"
+          ],
+          "provider": "DefiLlama",
+          "url": "https://coins.llama.fi/prices/historical/1674104507/coingecko:binancecoin",
+          "observedAt": 1787658847
+        },
+        {
+          "id": "source-10",
+          "type": "review-note",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T11:54:07Z",
+          "note": "The v1 anchor was transaction 0x3fe3a1883f0ae263a260f7d3e9b462468f4f83c2c88bb89d1dee5d7d24262b51, nonce 33, which yielded only 6.109951473560231892 WBNB to the beneficiary. Scanning the sender's onchain history and the pair's WBNB flows identifies 36 successful same-selector calls to helper 0x7d1e1901226e0ba389bfb1281ede859e6e48cc3d, nonces 5-41 except the unrelated nonce-11 native transfer. Transaction 0x5058c820fa0bb0daff2bd1b30151cf84c618dffe123546223b7089c8c2e18331 is the earliest successful defect execution at block 24912667, index 20; the final call is 0x885262f9bcccf8f80bb1a2173a5e3dd2f9c27a0dead0215139b983a7702ead34 at block 24913336. Exact receipt netting produces the recorded pair depletion. Proxy deployment, implementation deployment, Upgraded log 0, EIP-1967 slot transition, and stable runtime hashes establish the artifact and 6,134-second activation age. Cohort classification remains provisional: the privileged project address 0x6a963573b9a7aaef9cb9eee747e1b6b2c21b0520 deployed V4 implementation 0x79fe086a4c03c5e38ff8074dea9ee0a18dc1af4f at block 24910631 and activated it three blocks later; Hypernative's published timeline attributes this to a compromised key, while CertiK reports the team's statement that the vulnerability arose in its newly updated V4. If the privileged key was compromised and V4 was malicious attacker-installed machinery, the incident is excluded by METHODOLOGY.md rather than admitted as a code-age observation."
+        }
+      ],
+      "verification": {
+        "tier": "provisional",
+        "limitations": [
+          "Cohort admission is unresolved. Credible reporting attributes the V4 installation to a compromised privileged key, which would make the loss a malicious privileged action excluded by METHODOLOGY.md; other reporting describes an erroneous planned team upgrade. Central review must resolve whether V4 was project-authored defective code or attacker-installed machinery."
+        ],
+        "legacy": {
+          "snapshot": "research/raw/legacy-v1.json",
+          "originalFile": "protocols/thoreum-finance.json",
+          "originalIncidentIndex": 0,
+          "status": "OK",
+          "basis": "upgrade-events",
+          "upgradeEventCount": 9,
+          "date": "2023-01-19T05:27:02Z",
+          "reanchored": true
         }
       },
       "notes": []
@@ -85964,75 +86749,103 @@
           "timestamp": 1649518714
         },
         "attackerAddresses": [
-          "0x74298086c94dab3252c5dac979c9755c2eb08e49"
+          "0x74298086c94dab3252c5dac979c9755c2eb08e49",
+          "0x4e284686fbcc0f2900f638b04c4d4b433c40a345"
         ]
       },
       "classification": {
         "rootCause": "code-bug",
-        "summary": "LiquidityMigrationV2.migrate() converted GYM/WBNB LP into GYMNET/WBNB LP without validating the incoming LP's composition, so a flash loan minted LP against a skewed GYM pair and migrated it out for far more GYMNET-backed liquidity than it was worth."
+        "summary": "LiquidityMigrationV2.migrate() removed caller-supplied GYM/WBNB LP, then reused the raw GYM quantity as the desired quantity of a different asset, GYMNET, spending the contract's own GYMNET reserve and minting the resulting GYMNET/WBNB LP directly to the caller. The attacker skewed the GYM pair and constructed LP whose withdrawal outputs matched the GYMNET pair ratio, forcing the migration to deplete 1.166 million treasury GYMNET without any value-equivalence check."
       },
       "loss": {
-        "kind": "legacy-unspecified",
+        "kind": "gross-assets-lost",
         "usd": {
-          "amount": 561595,
+          "amount": 732336.0088284722,
           "valuationTimestamp": 1649518714,
-          "method": "legacy-unspecified",
+          "method": "incident-price",
           "sourceIds": [
-            "source-4"
+            "source-1",
+            "source-7"
           ]
         },
         "minimumUsd": null,
-        "assets": [],
-        "confidence": "unknown",
-        "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x3a0d9d7764fae860a659eb96a500f1323b411e68",
+              "symbol": "GYMNET"
+            },
+            "amount": "1166737.573465332474488629",
+            "usdValue": 732336.0088284722,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1649518714,
+              "unitPriceUsd": 0.6276784304231824,
+              "sourceIds": [
+                "source-1",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-1"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Exact pre-recovery victim depletion is the LiquidityMigrationV2 GYMNET balance change across the exploit: 1,450,998.605164940945782286 before to 284,261.031699608471293657 after, a loss of 1,166,737.573465332474488629 GYMNET also emitted from the victim in Transfer log 49. The 1,399,999.999999999999999838 GYM left in the migration contract was attacker-supplied campaign input and does not offset gross victim depletion. No earlier transaction in block 16798807 touched the GYMNET/WBNB pair, so its block-16798806 reserves are the exact pre-exploit price state: 7,677,163.643402146827976102 GYMNET and 11,387.586657604004961399 WBNB. Their ratio values the depleted GYMNET at about 1,730.629414932106 WBNB; DefiLlama's incident-time BNB price of $423.1616558171135 gives $732,336.0088284722. The legacy $561,595 figure instead values the attacker's lower 1,327.140409926955785497 WBNB retained proceeds after repayment and token-transfer fees, so it is not the preferred gross victim-loss boundary."
       },
       "targets": [
         {
           "id": "target-1",
           "executionAddress": "0x1befe6f3f0e8edd2d4d15cae97baee01e51ea4a4",
-          "relationship": "unknown",
+          "relationship": "direct",
           "codeArtifact": {
-            "address": null,
-            "codeHash": null
+            "address": "0x1befe6f3f0e8edd2d4d15cae97baee01e51ea4a4",
+            "codeHash": "0x7cb3f60f9ac8a23f133a2764e15f1c0e0d413ee248b7cf3a53732617a7965d11"
           },
           "deployment": {
             "timestamp": 1648120259,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 16336055,
+            "transactionHash": "0x73795968dfd5af9dc6ec1a11b41ab9b96f6257b9fbb33dc54aa8fd09b5e94ba8",
+            "transactionIndex": 193,
             "creatorAddress": "0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2"
           },
           "lastCodeChange": {
             "kind": "deployment",
             "timestamp": 1648120259,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 16336055,
+            "transactionHash": "0x73795968dfd5af9dc6ec1a11b41ab9b96f6257b9fbb33dc54aa8fd09b5e94ba8",
+            "transactionIndex": 193,
             "logIndex": null,
             "mechanism": {
               "type": "deployment",
               "address": "0x1befe6f3f0e8edd2d4d15cae97baee01e51ea4a4"
             },
-            "description": "Legacy basis: execution-address deployment."
+            "description": "Direct LiquidityMigrationV2 creation by 0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2. Archival code is absent at block 16336054 and the 2,399-byte runtime hashes to 0x7cb3f60f9ac8a23f133a2764e15f1c0e0d413ee248b7cf3a53732617a7965d11 in the deployment block and immediately before and during the exploit. The verified contract is not a proxy, contains no DELEGATECALL, and has zero EIP-1967 implementation and beacon slots, so deployment is its only executable-code change."
           },
           "codeAgeSeconds": 1398455,
-          "failureModeId": "legacy:eip155:56:0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5:failure-1",
+          "failureModeId": "failure:gym-migration-cross-token-quantity-reuse",
           "evidence": {
             "identitySourceIds": [
+              "source-1",
               "source-2",
-              "source-4"
+              "source-3",
+              "source-4",
+              "source-5",
+              "source-8"
             ],
             "codeHistorySourceIds": [
-              "source-4"
+              "source-5",
+              "source-8"
             ]
           },
           "verification": {
-            "tier": "provisional",
-            "curveEligible": false,
-            "limitations": [
-              "Target identity and code history came from the v1 snapshot row originally at protocols/gym-network.json; no semantic revalidation was inherited.",
-              "The executing code artifact and its code hash have not been established in structured evidence.",
-              "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-8"
             ]
           }
         }
@@ -86042,7 +86855,10 @@
           "id": "source-1",
           "type": "onchain-transaction",
           "supports": [
-            "incident-anchor"
+            "incident-anchor",
+            "target-identity",
+            "root-cause",
+            "loss"
           ],
           "chainId": 56,
           "transactionHash": "0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5"
@@ -86062,26 +86878,71 @@
           "id": "source-3",
           "type": "post-mortem",
           "supports": [
+            "target-identity",
             "root-cause"
           ],
           "url": "https://medium.com/@Beosin_com/beosin-analysis-of-the-attack-on-gymdefi-e5a23bfd93fe"
         },
         {
           "id": "source-4",
-          "type": "review-note",
+          "type": "source-code",
           "supports": [
             "target-identity",
-            "code-history",
+            "root-cause"
+          ],
+          "repository": "https://github.com/sanbir/evm-hack-registry",
+          "commit": "d6c70c964a670c7ac83c24b3ca91bd862b1bf9d6",
+          "path": "2022-04-Gym_1_exp/sources/LiquidityMigrationV2_1BEfe6/contracts_LpMigration.sol"
+        },
+        {
+          "id": "source-5",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 56,
+          "transactionHash": "0x73795968dfd5af9dc6ec1a11b41ab9b96f6257b9fbb33dc54aa8fd09b5e94ba8"
+        },
+        {
+          "id": "source-6",
+          "type": "onchain-transaction",
+          "supports": [
+            "incident-anchor"
+          ],
+          "chainId": 56,
+          "transactionHash": "0x8f79a7119292ecd0b5b2fa108b0830ead3d2a7098e649cd428f922ee16422584"
+        },
+        {
+          "id": "source-7",
+          "type": "price-data",
+          "supports": [
             "loss"
           ],
-          "note": "onchain review: LiquidityMigrationV2 0x1BEfe6f3f0E8edd2D4D15Cae97BAEe01E51ea4A4 created 2022-03-24T11:10:59Z by 0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2, unrelated to attack sender 0x74298086c94dab3252c5dac979c9755c2eb08e49; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the attack sender netted 1,327.14 WBNB in the exploit transaction. Loss converted: 1,327.14 WBNB x $423.16 at incidentTimestamp 1649518714 (DefiLlama coingecko:binancecoin) = $561,595."
+          "provider": "DefiLlama",
+          "url": "https://coins.llama.fi/prices/historical/1649518714/coingecko:binancecoin",
+          "observedAt": 1787658854
+        },
+        {
+          "id": "source-8",
+          "type": "review-note",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T11:54:14Z",
+          "note": "Canonical-anchor review: archive transaction-count searches recover the attacker's complete prefix. Nonce 0 deploys attack contract 0x4e284686... in 0xa6f4bf10; nonce 1 calls its attack entry point in 0x8f79a711 but reverts with no logs; nonce 2 is 0xa5b0246f, the first successful campaign transaction and the single coherent exploit. Its call trace reaches direct target 0x1befe6f3... with migrate(uint256), selector 0x454b0608. Defect review: verified source shows migrate() removes caller-provided GYM/WBNB LP, receives GYM plus BNB, then passes the raw GYM amount as amountTokenDesired for GYMNET and mints the resulting GYMNET/WBNB LP to msg.sender. The contract had given the router unlimited approval over its own GYMNET. There is no conversion-rate, oracle, caller-contribution, or minimum-output invariant connecting the distinct GYM and GYMNET assets. In the canonical transaction, the attacker manipulates and supplies the old LP, migrate() transfers 1,166,737.573465332474488629 treasury GYMNET to the new pair, and 44,760.251562411855105534 new LP is minted to the attack contract and immediately redeemed. Code-history review: LiquidityMigrationV2 is a direct creation in 0x73795968 at block 16336055 index 193 by 0x86dfe4dd...; code is empty in block 16336054, and runtime hash 0x7cb3f60f9ac8a23f133a2764e15f1c0e0d413ee248b7cf3a53732617a7965d11 matches at creation, in pre-exploit transaction state, and in the incident block. It has no DELEGATECALL and both EIP-1967 selection slots are zero. Loss review: victim GYMNET balance drops exactly from 1450998.605164940945782286 to 284261.031699608471293657. The GYMNET/WBNB pair has no earlier interaction in the exploit block, so block-16798806 reserves supply the exact pre-exploit price: 7677163.643402146827976102 GYMNET versus 11387.586657604004961399 WBNB. At DefiLlama's incident BNB price of 423.1616558171135 USD, the gross victim depletion is 732336.0088284722 USD. Attacker-supplied GYM is excluded; the later financing repayment and transfer fees explain why retained attacker proceeds are only 1327.140409926955785497 WBNB."
         }
       ],
       "verification": {
-        "tier": "provisional",
-        "limitations": [
-          "Classification and loss came from the v1 snapshot row originally at protocols/gym-network.json; legacy measurement.status=OK is provenance only.",
-          "The legacy USD loss lacks uniformly structured valuation provenance."
+        "tier": "reviewed",
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-8"
         ],
         "legacy": {
           "snapshot": "research/raw/legacy-v1.json",
@@ -102632,6 +103493,252 @@
     {
       "$schema": "../../schema/incident.schema.json",
       "schemaVersion": "2.0.0",
+      "id": "eip155:8453:0x149eb0eec5f1c793b094b46889059b510281a7eff3c1597bb262777a5cfaa237",
+      "protocol": {
+        "name": "The Sandbox",
+        "slug": "the-sandbox"
+      },
+      "name": "SAND Base OFT delegate-confused-deputy bridge drain",
+      "incident": {
+        "chainId": 8453,
+        "exploit": {
+          "transactionHash": "0x149eb0eec5f1c793b094b46889059b510281a7eff3c1597bb262777a5cfaa237",
+          "blockNumber": 50283177,
+          "transactionIndex": 138,
+          "timestamp": 1787355701
+        },
+        "attackerAddresses": [
+          "0x67624bfadee937c9281b4f98ce18af1bee01257e"
+        ]
+      },
+      "classification": {
+        "rootCause": "code-bug",
+        "summary": "OFTSand exposed an unrestricted approveAndCall callback whose first-argument check did not constrain the callback target, selector, or authority used by the callee. Calling the LayerZero Endpoint through OFTSand therefore made the Endpoint see the OFT itself as msg.sender and let an unprivileged caller replace the OFT's configuration delegate. This is an executed confused-deputy defect in the direct OFTSand runtime, not a compromised credential or an initially unsafe configured parameter."
+      },
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 685832.5177405792,
+          "valuationTimestamp": 1787361731,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-4",
+            "source-5"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x3845badade8e6dff049820680d1f14bd3903a5d0",
+              "symbol": "SAND"
+            },
+            "amount": "14753431.668978",
+            "usdValue": 685832.5177405792,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1787361731,
+              "unitPriceUsd": 0.04648630455127788,
+              "sourceIds": [
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-4",
+              "source-5",
+              "source-9"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Exact pre-recovery gross depletion is the sum of 15 SAND Transfer events from Ethereum OFT adapter 0xac531eb26ca1d21b85126de8fb87e80e09002dcf. Each receipt's OFTReceived event identifies LayerZero source EID 30184 (Base); the set starts 150 seconds after the Base takeover and ends at 2026-08-22T01:22:11Z. The exact raw sum is 14753431668978000000000000 wei-SAND. Nominal unbacked Base mint amounts, attacker swaps, and later unrelated withdrawals are excluded. DefiLlama's nearest high-confidence Ethereum SAND observation was $0.04648630455127788 at 2026-08-22T01:20:00Z, 131 seconds before campaign end.",
+        "realizedAt": 1787361731
+      },
+      "targets": [
+        {
+          "id": "target-1",
+          "executionAddress": "0xac531eb26ca1d21b85126de8fb87e80e09002dcf",
+          "relationship": "direct",
+          "codeArtifact": {
+            "address": "0xac531eb26ca1d21b85126de8fb87e80e09002dcf",
+            "codeHash": "0xda4a757532c7d0a1bc3aecbc814f4b09a1786d0f35fb40d08fd5bca38ddfbaeb"
+          },
+          "deployment": {
+            "timestamp": 1722260045,
+            "blockNumber": 17735349,
+            "transactionHash": "0xc55651bcf7dc996f8bced152804b12064ee3a0be1cc5d6b37b225860491da39b",
+            "transactionIndex": 69,
+            "creatorAddress": "0xcba49d154b4bb9a9ad7f5dad396cb9a0a3a62abc"
+          },
+          "lastCodeChange": {
+            "kind": "deployment",
+            "timestamp": 1722260045,
+            "blockNumber": 17735349,
+            "transactionHash": "0xc55651bcf7dc996f8bced152804b12064ee3a0be1cc5d6b37b225860491da39b",
+            "transactionIndex": 69,
+            "logIndex": null,
+            "mechanism": {
+              "type": "deployment",
+              "address": "0xac531eb26ca1d21b85126de8fb87e80e09002dcf"
+            },
+            "description": "Direct OFTSand creation. Archival Base code is empty in block 17735348, appears in creation transaction 0xc55651bcf7dc996f8bced152804b12064ee3a0be1cc5d6b37b225860491da39b at block 17735349:69, and hashes to 0xda4a757532c7d0a1bc3aecbc814f4b09a1786d0f35fb40d08fd5bca38ddfbaeb both at deployment and immediately before the incident. Verified source has no proxy, beacon, facet, or mutable code-selection path."
+          },
+          "codeAgeSeconds": 65095656,
+          "failureModeId": "failure:sandbox-oft-approveandcall-confused-deputy",
+          "evidence": {
+            "identitySourceIds": [
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-7",
+              "source-8",
+              "source-9"
+            ],
+            "codeHistorySourceIds": [
+              "source-2",
+              "source-9"
+            ]
+          },
+          "verification": {
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-9"
+            ]
+          }
+        }
+      ],
+      "sources": [
+        {
+          "id": "source-1",
+          "type": "onchain-transaction",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "root-cause"
+          ],
+          "chainId": 8453,
+          "transactionHash": "0x149eb0eec5f1c793b094b46889059b510281a7eff3c1597bb262777a5cfaa237"
+        },
+        {
+          "id": "source-2",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 8453,
+          "transactionHash": "0xc55651bcf7dc996f8bced152804b12064ee3a0be1cc5d6b37b225860491da39b"
+        },
+        {
+          "id": "source-3",
+          "type": "source-code",
+          "supports": [
+            "target-identity",
+            "root-cause"
+          ],
+          "repository": "https://github.com/thesandboxgame/sandbox-smart-contracts",
+          "commit": "29aeca619c7b005f74ab59520351f0480cefb685",
+          "path": "packages/oft-sand/contracts/sand/ERC20BasicApproveExtension.sol"
+        },
+        {
+          "id": "source-4",
+          "type": "onchain-transaction-set",
+          "supports": [
+            "loss"
+          ],
+          "chainId": 1,
+          "transactionHashes": [
+            "0xa7d48611455b840cb8c832550bab45ac437d744ebf5ff632dc82d8837c639085",
+            "0xd819a1bde7fa17d496d57e8e6baf71ab9e9af40a8cedea3f770c8db7a8dde510",
+            "0x6b3c636f271e438efd5eac9ffa50f152e7404ee7ae2370b996d74c9280aa12fb",
+            "0x468d7438c58cb28df28f48a548ca479fc56f1493903024d42d5f744409a6f338",
+            "0x3617940c8a28978a23a717e93305298a6decdee4cf66aa02d7428118012ab7f0",
+            "0x2fbde0f46a34d081b3962dbb434cc293156ff9d8e8d5cb742664ed8dd5793ae3",
+            "0x6abe08955b1d8cc63cdebe0710eff2889bb8e71588cfd1c1c2347100a437f6ef",
+            "0xa3ec04aeb988b99f55096ef5cb199441f68d21bde75264c7eb84c66c4022076e",
+            "0xb4a661df02b1c6c7655cf3ef4adc454c1cfdd067c7ca8f4ee725c8b89a3b89fc",
+            "0xb8ddeaf936543ef01860086678edc4a6104a227acc64317207cc5de022ea6faf",
+            "0x04ba30cfdcdd546035755b7a7d6aebc7f87ff276a10d596cfd75282aae97aae7",
+            "0xfab5158a0b5a89e19752813f4f55e6efd3abe05a594a7948ad0f9dd4f4171a95",
+            "0x55271cb029cddd8e1b3f360f7943d93808c19394753f094cdeb0d3c7996dfcb2",
+            "0xd819d74220cd0a9d639cc668902721f7ab757c113b20210380bd0c8a47bbf9df",
+            "0x41a0e4b1d0ad52bc9b2116286eed4d87df1997ccf0e9489616aa9984ab9d25d0"
+          ]
+        },
+        {
+          "id": "source-5",
+          "type": "price-data",
+          "supports": [
+            "loss"
+          ],
+          "provider": "DefiLlama",
+          "url": "https://coins.llama.fi/prices/historical/1787361731/ethereum:0x3845badade8e6dff049820680d1f14bd3903a5d0?searchWidth=6h",
+          "observedAt": 1787659536
+        },
+        {
+          "id": "source-6",
+          "type": "post-mortem",
+          "supports": [
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://x.com/TheSandboxGame/status/2091063415649251821"
+        },
+        {
+          "id": "source-7",
+          "type": "post-mortem",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://x.com/blockaid_/status/2091016046555582891"
+        },
+        {
+          "id": "source-8",
+          "type": "post-mortem",
+          "supports": [
+            "target-identity",
+            "root-cause"
+          ],
+          "url": "https://docs.layerzero.network/v2/developers/evm/oapp/overview"
+        },
+        {
+          "id": "source-9",
+          "type": "review-note",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T12:05:36Z",
+          "note": "Anchor and defect: enumeration of successful calls to Base OFTSand around the takeover makes 0x149eb0eec5f1c793b094b46889059b510281a7eff3c1597bb262777a5cfaa237 the earliest campaign call to approveAndCall. Its calldata names LayerZero Endpoint V2 0x1a44076050125825900e736c501f859c50fe728c as callback target, amount zero, and setDelegate with external caller 0x67624bfadee937c9281b4f98ce18af1bee01257e as the first argument. The successful receipt contains OFTSand Approval(caller, Endpoint, 0) at log 679 followed by Endpoint DelegateSet(OFTSand, caller) at log 680. Verified source confirms approveAndCall checks only that the callback's first ABI argument equals the external caller and then executes an unrestricted target.call; LayerZero's official OApp documentation confirms the delegate controls Endpoint configuration. The parameter check therefore does not preserve the authority boundary: Endpoint authorizes the call as coming from OFTSand. Code history: deployer 0xcba49d154b4bb9a9ad7f5dad396cb9a0a3a62abc directly created OFTSand in block 17735349 transaction 69; archival code is empty one block earlier and the direct, non-proxy runtime has the declared hash at deployment and pre-anchor. Loss: the first 15 Ethereum adapter releases after takeover, from 0xa7d48611455b840cb8c832550bab45ac437d744ebf5ff632dc82d8837c639085 through 0x41a0e4b1d0ad52bc9b2116286eed4d87df1997ccf0e9489616aa9984ab9d25d0, each emit OFTReceived with source EID 30184 and sum exactly 14753431.668978 SAND. As a balance cross-check, the adapter held 14743464.210048718748018388 SAND immediately before the first release, received 10366.335701 SAND in two deposits during the campaign, and held 398.876771718748018388 SAND after the fifteenth release. Later adapter withdrawals use unrelated recipients or source EIDs and are excluded. BNB Chain's separate successful takeover transaction is not included here: the only BNB-origin Ethereum releases isolated were two 1-SAND transfers, and no at-least-$1,000 BNB-side depletion was established."
+        }
+      ],
+      "verification": {
+        "tier": "reviewed",
+        "limitations": [
+          "The Sandbox's promised full technical report was not yet published at review time. Its initial statement says Ethereum reserves remained intact but does not reconcile the onchain adapter releases and near-zero post-campaign adapter balance."
+        ],
+        "reviewSourceIds": [
+          "source-9"
+        ]
+      },
+      "notes": [
+        "This Base incident owns the 15 Base-origin Ethereum escrow releases and does not assign nominal unbacked token supply a loss value.",
+        "The same OFTSand address on BNB Chain has a different immutable-bearing runtime hash and a separate successful delegate-takeover anchor. That chain is excluded pending evidence of at least $1,000 actual depletion; loss is not duplicated here."
+      ]
+    },
+    {
+      "$schema": "../../schema/incident.schema.json",
+      "schemaVersion": "2.0.0",
       "id": "eip155:8453:0x1a6002d8aee205dff67cb2cdaf60569721655857d49ffe2ce81e10fde8c45946",
       "protocol": {
         "name": "Unverified_6077",
@@ -104386,65 +105493,89 @@
       },
       "classification": {
         "rootCause": "code-bug",
-        "summary": "Rebalancer burnHook callback reenters burn() to withdraw the WETH liquidity twice (state-changing reentrancy)."
+        "summary": "Rebalancer invoked an untrusted strategy burnHook before reducing its recorded pool reserves. A callback could reenter burn while the stale reserves remained available, causing the same WETH liquidity to be counted and withdrawn twice."
       },
       "loss": {
-        "kind": "legacy-unspecified",
+        "kind": "gross-assets-lost",
         "usd": {
-          "amount": 501000,
+          "amount": 501279,
           "valuationTimestamp": 1733818249,
-          "method": "legacy-unspecified",
-          "sourceIds": []
+          "method": "reported",
+          "sourceIds": [
+            "source-7"
+          ]
         },
         "minimumUsd": null,
-        "assets": [],
-        "confidence": "unknown",
-        "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+        "assets": [
+          {
+            "asset": {
+              "chainId": 8453,
+              "tokenAddress": "0x4200000000000000000000000000000000000006",
+              "symbol": "WETH"
+            },
+            "amount": "133.7",
+            "usdValue": null,
+            "valuation": null,
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-5"
+            ]
+          }
+        ],
+        "confidence": "medium",
+        "notes": "Exact pre-recovery victim depletion is 133.7 WETH: Rebalancer's WETH balance fell from 133.707875556674808577 immediately before the anchor transaction to 0.007875556674808577 afterward. The receipt records 267.4 WETH supplied to Rebalancer from flash-loan proceeds, 401.1 WETH returned across the nested burns, repayment of the 267.4 WETH principal, and retention of the 133.7 WETH victim depletion. Published analysis values 133.7 WETH at approximately $501,279; the USD total is therefore reported rather than independently price-reproduced."
       },
       "targets": [
         {
           "id": "target-1",
           "executionAddress": "0x6a0b87d6b74f7d5c92722f6a11714dbeda9f3895",
-          "relationship": "unknown",
+          "relationship": "direct",
           "codeArtifact": {
-            "address": null,
-            "codeHash": null
+            "address": "0x6a0b87d6b74f7d5c92722f6a11714dbeda9f3895",
+            "codeHash": "0x4ddff0fcf34f2f4e362181592355533db5b78d21f3da1aca283aa6bc9c952100"
           },
           "deployment": {
             "timestamp": 1732870613,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
-            "creatorAddress": null
+            "blockNumber": 23040633,
+            "transactionHash": "0xc9f674bb3a48324d4b69fe0d975300e87d6170b9eca440b27a32697a2e8a8709",
+            "transactionIndex": 95,
+            "creatorAddress": "0x4587dd6356d7293e5f10db4d853332bd5b218c0b"
           },
           "lastCodeChange": {
             "kind": "deployment",
             "timestamp": 1732870613,
-            "blockNumber": null,
-            "transactionHash": null,
-            "transactionIndex": null,
+            "blockNumber": 23040633,
+            "transactionHash": "0xc9f674bb3a48324d4b69fe0d975300e87d6170b9eca440b27a32697a2e8a8709",
+            "transactionIndex": 95,
             "logIndex": null,
             "mechanism": {
               "type": "deployment",
               "address": "0x6a0b87d6b74f7d5c92722f6a11714dbeda9f3895"
             },
-            "description": "Legacy basis: execution-address deployment."
+            "description": "Direct immutable Rebalancer runtime deployed in this transaction and unchanged through the exploit; its pre-exploit and current runtime hashes match, and the runtime contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction."
           },
           "codeAgeSeconds": 947636,
-          "failureModeId": "legacy:eip155:8453:0x8fcdfcded45100437ff94801090355f2f689941dca75de9a702e01670f361c04:failure-1",
+          "failureModeId": "failure:clober-rebalancer-strategy-hook-stale-reserve-reentrancy",
           "evidence": {
             "identitySourceIds": [
-              "source-2"
+              "source-1",
+              "source-2",
+              "source-3",
+              "source-5",
+              "source-7"
             ],
-            "codeHistorySourceIds": []
+            "codeHistorySourceIds": [
+              "source-5",
+              "source-6"
+            ]
           },
           "verification": {
-            "tier": "provisional",
-            "curveEligible": false,
-            "limitations": [
-              "Target identity and code history came from the v1 snapshot row originally at protocols/cloberdex.json; no semantic revalidation was inherited.",
-              "The executing code artifact and its code hash have not been established in structured evidence.",
-              "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+            "tier": "reviewed",
+            "curveEligible": true,
+            "limitations": [],
+            "reviewSourceIds": [
+              "source-5"
             ]
           }
         }
@@ -104454,7 +105585,10 @@
           "id": "source-1",
           "type": "onchain-transaction",
           "supports": [
-            "incident-anchor"
+            "incident-anchor",
+            "target-identity",
+            "root-cause",
+            "loss"
           ],
           "chainId": 8453,
           "transactionHash": "0x8fcdfcded45100437ff94801090355f2f689941dca75de9a702e01670f361c04"
@@ -104464,18 +105598,76 @@
           "type": "source-code",
           "supports": [
             "target-identity",
-            "root-cause"
+            "root-cause",
+            "loss"
           ],
           "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
           "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
           "path": "src/test/2024-12/CloberDEX_exp.sol"
+        },
+        {
+          "id": "source-3",
+          "type": "source-code",
+          "supports": [
+            "target-identity",
+            "root-cause"
+          ],
+          "repository": "https://github.com/clober-dex/clober-liquidity-vault",
+          "commit": "8c81375496e0c340f1458148ec586d59cff3bf6e",
+          "path": "src/Rebalancer.sol"
+        },
+        {
+          "id": "source-4",
+          "type": "source-code",
+          "supports": [
+            "root-cause"
+          ],
+          "repository": "https://github.com/clober-dex/clober-liquidity-vault",
+          "commit": "7c5b7980d2e6a597c4d6ce79e001096d68473d57",
+          "path": "src/Rebalancer.sol"
+        },
+        {
+          "id": "source-5",
+          "type": "review-note",
+          "supports": [
+            "incident-anchor",
+            "target-identity",
+            "code-history",
+            "root-cause",
+            "loss"
+          ],
+          "reviewer": "OpenAI Codex",
+          "reviewedAt": "2026-08-25T12:15:20Z",
+          "note": "Reviewed Base block 23514451, the attacker helper creation at transaction index 1, the successful exploit at index 2, the complete call trace and prestate, the Rebalancer creation transaction and runtime, Clober's pre-incident source and same-day fix, the commit-pinned reproduction, exact WETH balances and receipt transfers, and published technical reporting. Index 1 only deploys the attacker helper; index 2 is the earliest successful transaction that invokes the defective burn path and realizes loss. The trace directly executes Rebalancer 0x6a0b87d6b74f7d5c92722f6a11714dbeda9f3895, whose prestate runtime hash is 0x4ddff0fcf34f2f4e362181592355533db5b78d21f3da1aca283aa6bc9c952100. That hash matches current state, and the runtime contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction, establishing deployment as the complete executable-code history. In the vulnerable source, _burn calls the attacker-selected strategy's burnHook before reducing reserveA and reserveB; Clober's fix moves reserve settlement and deductions before that callback. Rebalancer's WETH balance decreases exactly from 133.707875556674808577 to 0.007875556674808577. The 267.4 WETH flash-loan principal is supplied and repaid within the transaction, leaving exactly 133.7 WETH of victim depletion before recovery."
+        },
+        {
+          "id": "source-6",
+          "type": "onchain-transaction",
+          "supports": [
+            "target-identity",
+            "code-history"
+          ],
+          "chainId": 8453,
+          "transactionHash": "0xc9f674bb3a48324d4b69fe0d975300e87d6170b9eca440b27a32697a2e8a8709"
+        },
+        {
+          "id": "source-7",
+          "type": "post-mortem",
+          "supports": [
+            "target-identity",
+            "root-cause",
+            "loss"
+          ],
+          "url": "https://blog.solidityscan.com/cloberdex-liquidity-vault-hack-analysis-f22eb960aa6f"
         }
       ],
       "verification": {
-        "tier": "provisional",
+        "tier": "reviewed",
         "limitations": [
-          "Classification and loss came from the v1 snapshot row originally at protocols/cloberdex.json; legacy measurement.status=OK is provenance only.",
-          "The legacy USD loss lacks uniformly structured valuation provenance."
+          "The 133.7 WETH victim depletion is exact, but the approximately $501,279 USD total is retained from published incident-time reporting rather than an independently reproduced historical price observation."
+        ],
+        "reviewSourceIds": [
+          "source-5"
         ],
         "legacy": {
           "snapshot": "research/raw/legacy-v1.json",

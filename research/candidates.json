@@ -46,11 +46,11 @@
     "webList": {
       "file": "research/raw/web-candidates.md",
       "lineNumbers": "1-based",
-      "sha256": "16f4ab3594f2c9097c3f6552284b552fa251da0b3e3c122117237f6149178257"
+      "sha256": "d5646b46086f07326ef3a68d39590218d57943fcc7972da4acad7e87a54f17c9"
     },
     "exclusions": {
       "file": "research/raw/exclusions.json",
-      "sha256": "4751bcc12124a5ac26ef8b8a758b32ab8a7c3a530c13da9bf3c438c64c820eaf"
+      "sha256": "9ab014b2e8f96d4a7b67e9078bb065d697172b56e4c892aff61a065df0684c3b"
     },
     "legacyV1": {
       "file": "research/raw/legacy-v1.json",
@@ -65,24 +65,24 @@
     },
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
-      "files": 632,
-      "sha256": "aa7c0fe007693dc5ee99cef329398d1babdcaf474cd143f84f97baaf48639b6f"
+      "files": 633,
+      "sha256": "35ecf6c8d46d25879eb772e0e5be2ca5d9fb92d70e287fcc7d8836765a8cc4b1"
     }
   },
   "counts": {
-    "total": 1494,
+    "total": 1496,
     "bySource": {
       "defihacklabs": 869,
-      "exclusion": 15,
+      "exclusion": 16,
       "legacy": 130,
-      "web-list": 480
+      "web-list": 481
     },
     "byDisposition": {
-      "excluded": 29,
+      "excluded": 30,
       "included": 660,
       "out-of-scope": 269,
       "pending": 12,
-      "unresolved": 524
+      "unresolved": 525
     },
     "defihacklabsCoverage": {
       "total": 869,
@@ -5242,7 +5242,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:56:0x3fe3a1883f0ae263a260f7d3e9b462468f4f83c2c88bb89d1dee5d7d24262b51"
+          "eip155:56:0x5058c820fa0bb0daff2bd1b30151cf84c618dffe123546223b7089c8c2e18331"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -23870,6 +23870,25 @@
       }
     },
     {
+      "id": "exclusion:16",
+      "source": {
+        "kind": "exclusion",
+        "file": "research/raw/exclusions.json",
+        "entryIndex": 15
+      },
+      "candidate": {
+        "name": "The Sandbox SAND BNB Chain OFT delegate takeover",
+        "chain": "bsc",
+        "date": "2026-08-21T23:42:18Z",
+        "candidateVictim": "0xac531eb26ca1d21b85126de8fb87e80e09002dcf",
+        "exploitTx": "0x7ca710d5f575276e12ed7a3617a65002159c87d512fb19e6f59bc31b46b19c95"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "LOSS_NOT_ESTABLISHED: transaction 0x7ca710d5f575276e12ed7a3617a65002159c87d512fb19e6f59bc31b46b19c95 successfully executes the same OFTSand approveAndCall confused-deputy defect on BNB Chain and changes the LayerZero delegate, but unbacked SAND minted afterward is not victim depletion. The direct, non-proxy BNB runtime was created in transaction 0xe2e732c54c0100eb201159cf09f6d0d219ec6d83ce1deda9ce59041acb607fb7 at block 40897855:19 on 2024-07-29T13:39:09Z, hashes to 0x460fa6e44db22c54a7e236b8fa05d455dc7783be2ed77e711528eca57c729a0b at deployment and pre-anchor, and was 65,095,389 seconds old at takeover. Receipt-level Ethereum reconciliation attributes the 14,753,431.668978-SAND adapter drain to Base source EID 30184; the only isolated BNB source-EID 30102 releases are 1 SAND each in transactions 0xa4a89826af300e2ec210cce6f666f25b689c659d68d8be9c4646feedab650880 and 0xc3e5902d7417776de10018bf72a34ca0e3c42fa20cd056ecd4e82f05dfb85ecf. No exact BNB liquidity-pool or backing-asset depletion of at least $1,000 has been evidenced. This separate-chain campaign can enter the cohort if non-nominal loss above the threshold is established without duplicating the Base-owned Ethereum drain."
+      }
+    },
+    {
       "id": "exclusion:2",
       "source": {
         "kind": "exclusion",
@@ -39505,6 +39524,24 @@
         "project": "Maya Protocol",
         "reportedLoss": "$1.7m",
         "mechanism": "trade-account, outbound and pool-accounting bugs"
+      },
+      "disposition": {
+        "status": "unresolved",
+        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+      }
+    },
+    {
+      "id": "web:2026-08-21:the-sandbox-sand-oft-bridge",
+      "source": {
+        "kind": "web-list",
+        "file": "research/raw/web-candidates.md",
+        "line": 10
+      },
+      "candidate": {
+        "date": "2026-08-21",
+        "project": "The Sandbox SAND OFT bridge",
+        "reportedLoss": "approximately $686k actual Ethereum escrow depletion",
+        "mechanism": "approveAndCall confused-deputy callback overwrote LayerZero delegate on Base and BNB Chain; nominal unbacked mints excluded"
       },
       "disposition": {
         "status": "unresolved",
