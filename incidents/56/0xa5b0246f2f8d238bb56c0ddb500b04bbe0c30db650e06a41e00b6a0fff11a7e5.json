@@ -16,75 +16,103 @@
       "timestamp": 1649518714
     },
     "attackerAddresses": [
-      "0x74298086c94dab3252c5dac979c9755c2eb08e49"
+      "0x74298086c94dab3252c5dac979c9755c2eb08e49",
+      "0x4e284686fbcc0f2900f638b04c4d4b433c40a345"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "LiquidityMigrationV2.migrate() converted GYM/WBNB LP into GYMNET/WBNB LP without validating the incoming LP's composition, so a flash loan minted LP against a skewed GYM pair and migrated it out for far more GYMNET-backed liquidity than it was worth."
+    "summary": "LiquidityMigrationV2.migrate() removed caller-supplied GYM/WBNB LP, then reused the raw GYM quantity as the desired quantity of a different asset, GYMNET, spending the contract's own GYMNET reserve and minting the resulting GYMNET/WBNB LP directly to the caller. The attacker skewed the GYM pair and constructed LP whose withdrawal outputs matched the GYMNET pair ratio, forcing the migration to deplete 1.166 million treasury GYMNET without any value-equivalence check."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 561595,
+      "amount": 732336.0088284722,
       "valuationTimestamp": 1649518714,
-      "method": "legacy-unspecified",
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-1",
+        "source-7"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0x3a0d9d7764fae860a659eb96a500f1323b411e68",
+          "symbol": "GYMNET"
+        },
+        "amount": "1166737.573465332474488629",
+        "usdValue": 732336.0088284722,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1649518714,
+          "unitPriceUsd": 0.6276784304231824,
+          "sourceIds": [
+            "source-1",
+            "source-7"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Exact pre-recovery victim depletion is the LiquidityMigrationV2 GYMNET balance change across the exploit: 1,450,998.605164940945782286 before to 284,261.031699608471293657 after, a loss of 1,166,737.573465332474488629 GYMNET also emitted from the victim in Transfer log 49. The 1,399,999.999999999999999838 GYM left in the migration contract was attacker-supplied campaign input and does not offset gross victim depletion. No earlier transaction in block 16798807 touched the GYMNET/WBNB pair, so its block-16798806 reserves are the exact pre-exploit price state: 7,677,163.643402146827976102 GYMNET and 11,387.586657604004961399 WBNB. Their ratio values the depleted GYMNET at about 1,730.629414932106 WBNB; DefiLlama's incident-time BNB price of $423.1616558171135 gives $732,336.0088284722. The legacy $561,595 figure instead values the attacker's lower 1,327.140409926955785497 WBNB retained proceeds after repayment and token-transfer fees, so it is not the preferred gross victim-loss boundary."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x1befe6f3f0e8edd2d4d15cae97baee01e51ea4a4",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x1befe6f3f0e8edd2d4d15cae97baee01e51ea4a4",
+        "codeHash": "0x7cb3f60f9ac8a23f133a2764e15f1c0e0d413ee248b7cf3a53732617a7965d11"
       },
       "deployment": {
         "timestamp": 1648120259,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 16336055,
+        "transactionHash": "0x73795968dfd5af9dc6ec1a11b41ab9b96f6257b9fbb33dc54aa8fd09b5e94ba8",
+        "transactionIndex": 193,
         "creatorAddress": "0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1648120259,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 16336055,
+        "transactionHash": "0x73795968dfd5af9dc6ec1a11b41ab9b96f6257b9fbb33dc54aa8fd09b5e94ba8",
+        "transactionIndex": 193,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x1befe6f3f0e8edd2d4d15cae97baee01e51ea4a4"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Direct LiquidityMigrationV2 creation by 0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2. Archival code is absent at block 16336054 and the 2,399-byte runtime hashes to 0x7cb3f60f9ac8a23f133a2764e15f1c0e0d413ee248b7cf3a53732617a7965d11 in the deployment block and immediately before and during the exploit. The verified contract is not a proxy, contains no DELEGATECALL, and has zero EIP-1967 implementation and beacon slots, so deployment is its only executable-code change."
       },
       "codeAgeSeconds": 1398455,
-      "failureModeId": "legacy:eip155:56:0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5:failure-1",
+      "failureModeId": "failure:gym-migration-cross-token-quantity-reuse",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-4"
+          "source-3",
+          "source-4",
+          "source-5",
+          "source-8"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-5",
+          "source-8"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/gym-network.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-8"
         ]
       }
     }
@@ -94,7 +122,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 56,
       "transactionHash": "0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5"
@@ -114,26 +145,71 @@
       "id": "source-3",
       "type": "post-mortem",
       "supports": [
+        "target-identity",
         "root-cause"
       ],
       "url": "https://medium.com/@Beosin_com/beosin-analysis-of-the-attack-on-gymdefi-e5a23bfd93fe"
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "source-code",
       "supports": [
         "target-identity",
-        "code-history",
+        "root-cause"
+      ],
+      "repository": "https://github.com/sanbir/evm-hack-registry",
+      "commit": "d6c70c964a670c7ac83c24b3ca91bd862b1bf9d6",
+      "path": "2022-04-Gym_1_exp/sources/LiquidityMigrationV2_1BEfe6/contracts_LpMigration.sol"
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x73795968dfd5af9dc6ec1a11b41ab9b96f6257b9fbb33dc54aa8fd09b5e94ba8"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "incident-anchor"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x8f79a7119292ecd0b5b2fa108b0830ead3d2a7098e649cd428f922ee16422584"
+    },
+    {
+      "id": "source-7",
+      "type": "price-data",
+      "supports": [
         "loss"
       ],
-      "note": "onchain review: LiquidityMigrationV2 0x1BEfe6f3f0E8edd2D4D15Cae97BAEe01E51ea4A4 created 2022-03-24T11:10:59Z by 0x86dfe4dd65c962cfce0ed5b60fcf90840b26f7c2, unrelated to attack sender 0x74298086c94dab3252c5dac979c9755c2eb08e49; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the attack sender netted 1,327.14 WBNB in the exploit transaction. Loss converted: 1,327.14 WBNB x $423.16 at incidentTimestamp 1649518714 (DefiLlama coingecko:binancecoin) = $561,595."
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1649518714/coingecko:binancecoin",
+      "observedAt": 1787658854
+    },
+    {
+      "id": "source-8",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-25T11:54:14Z",
+      "note": "Canonical-anchor review: archive transaction-count searches recover the attacker's complete prefix. Nonce 0 deploys attack contract 0x4e284686... in 0xa6f4bf10; nonce 1 calls its attack entry point in 0x8f79a711 but reverts with no logs; nonce 2 is 0xa5b0246f, the first successful campaign transaction and the single coherent exploit. Its call trace reaches direct target 0x1befe6f3... with migrate(uint256), selector 0x454b0608. Defect review: verified source shows migrate() removes caller-provided GYM/WBNB LP, receives GYM plus BNB, then passes the raw GYM amount as amountTokenDesired for GYMNET and mints the resulting GYMNET/WBNB LP to msg.sender. The contract had given the router unlimited approval over its own GYMNET. There is no conversion-rate, oracle, caller-contribution, or minimum-output invariant connecting the distinct GYM and GYMNET assets. In the canonical transaction, the attacker manipulates and supplies the old LP, migrate() transfers 1,166,737.573465332474488629 treasury GYMNET to the new pair, and 44,760.251562411855105534 new LP is minted to the attack contract and immediately redeemed. Code-history review: LiquidityMigrationV2 is a direct creation in 0x73795968 at block 16336055 index 193 by 0x86dfe4dd...; code is empty in block 16336054, and runtime hash 0x7cb3f60f9ac8a23f133a2764e15f1c0e0d413ee248b7cf3a53732617a7965d11 matches at creation, in pre-exploit transaction state, and in the incident block. It has no DELEGATECALL and both EIP-1967 selection slots are zero. Loss review: victim GYMNET balance drops exactly from 1450998.605164940945782286 to 284261.031699608471293657. The GYMNET/WBNB pair has no earlier interaction in the exploit block, so block-16798806 reserves supply the exact pre-exploit price: 7677163.643402146827976102 GYMNET versus 11387.586657604004961399 WBNB. At DefiLlama's incident BNB price of 423.1616558171135 USD, the gross victim depletion is 732336.0088284722 USD. Attacker-supplied GYM is excluded; the later financing repayment and transfer fees explain why retained attacker proceeds are only 1327.140409926955785497 WBNB."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/gym-network.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-8"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

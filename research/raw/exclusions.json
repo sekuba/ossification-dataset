@@ -125,6 +125,23 @@
       "exploitTx": "0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12",
       "defihacklabs": "src/test/2026-07/SummerFi_exp.sol@ad353ba25fbb",
       "reason": "CONFIGURATION_ERROR: SummerFi's primary post-mortem states that FleetCommander and Ark accounting behaved as designed and identifies the failure as an operational offboarding state: the impaired Silo Varlamore Arks had deposit caps set to zero but remained in each FleetCommander's active set, so their stale reported value continued to count in NAV. The exploit donated the impaired asset into those still-active Arks and redeemed against liquid positions. Because governance/process state, rather than a defect in executed EVM code, created the exposure, there is no code-age observation."
+    },
+    {
+      "name": "VOW temporary usdRate configuration exposure",
+      "chain": "ethereum",
+      "date": "2024-08-13T11:09:23Z",
+      "candidateVictim": "0x184497031808f2b6a2126886c712cc41f146e5dc",
+      "exploitTx": "0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561",
+      "defihacklabs": "src/test/2024-08/VOW_exp.sol@ad353ba25fbb",
+      "reason": "CONFIGURATION_ERROR: authorized rate-setter transaction 0xda2a8568a5a210fdfb51880f4e8c91165ea122ada9977a4b11598d56782d49a5 changed VOWToken's mutable usdRate from [5,1] to [1,100] at block 20519307, 24 seconds before the exploit. The unchanged direct VSCTokenManager runtime at 0x184497031808f2b6a2126886c712cc41f146e5dc then applied the configured 100-vUSD-per-VOW rate verbatim: its permissionless ERC-777 receive path burned 1,486,625.296150499360431664 VOW and minted 148,662,529.615049936043166400 vUSD. VOW's primary incident account (https://vowwhitepaper.com/great-test/august-2024) identifies a scheduled temporary rate change, says the contracts followed their coded logic, and classifies the vulnerability as economic rather than software. The absence of a conversion cap was an available safeguard, but the loss depended on an authorized unsafe parameter rather than a defect in executed EVM code, so methodology cohort condition 1 is not met and there is no code-age observation."
+    },
+    {
+      "name": "The Sandbox SAND BNB Chain OFT delegate takeover",
+      "chain": "bsc",
+      "date": "2026-08-21T23:42:18Z",
+      "candidateVictim": "0xac531eb26ca1d21b85126de8fb87e80e09002dcf",
+      "exploitTx": "0x7ca710d5f575276e12ed7a3617a65002159c87d512fb19e6f59bc31b46b19c95",
+      "reason": "LOSS_NOT_ESTABLISHED: transaction 0x7ca710d5f575276e12ed7a3617a65002159c87d512fb19e6f59bc31b46b19c95 successfully executes the same OFTSand approveAndCall confused-deputy defect on BNB Chain and changes the LayerZero delegate, but unbacked SAND minted afterward is not victim depletion. The direct, non-proxy BNB runtime was created in transaction 0xe2e732c54c0100eb201159cf09f6d0d219ec6d83ce1deda9ce59041acb607fb7 at block 40897855:19 on 2024-07-29T13:39:09Z, hashes to 0x460fa6e44db22c54a7e236b8fa05d455dc7783be2ed77e711528eca57c729a0b at deployment and pre-anchor, and was 65,095,389 seconds old at takeover. Receipt-level Ethereum reconciliation attributes the 14,753,431.668978-SAND adapter drain to Base source EID 30184; the only isolated BNB source-EID 30102 releases are 1 SAND each in transactions 0xa4a89826af300e2ec210cce6f666f25b689c659d68d8be9c4646feedab650880 and 0xc3e5902d7417776de10018bf72a34ca0e3c42fa20cd056ecd4e82f05dfb85ecf. No exact BNB liquidity-pool or backing-asset depletion of at least $1,000 has been evidenced. This separate-chain campaign can enter the cohort if non-nominal loss above the threshold is established without duplicating the Base-owned Ethereum drain."
     }
   ]
 }

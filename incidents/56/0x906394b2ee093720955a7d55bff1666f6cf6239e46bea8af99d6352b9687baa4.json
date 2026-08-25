@@ -6,7 +6,7 @@
     "name": "CS Token",
     "slug": "cs-token"
   },
-  "name": "CS token outdated sellAmount global",
+  "name": "CS Token stale sellAmount pair burn",
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -16,75 +16,100 @@
       "timestamp": 1684860210
     },
     "attackerAddresses": [
-      "0x2cdeee9698ffc9fcabc116b820c24e89184027ba"
+      "0x2cdeee9698ffc9fcabc116b820c24e89184027ba",
+      "0x90fa57d23b85cdd52c46b85636f44c47926ee2e3"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "CS computes the burn amount from a stale global sellAmount variable rather than the current transfer, so the attacker repeatedly burned CS out of the liquidity pool and swapped the imbalance for USDT."
+    "summary": "CS stores the current sell size in a global sellAmount variable, then lets a later qualifying transfer consume that stale value to burn 80% of it directly from the CS/USDT pair before calling pair.sync(). The attacker repeatedly paired a sale with a self-transfer to contract the CS reserve and drain USDT."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 714285,
+      "amount": 954285.0018263389,
       "valuationTimestamp": 1684860210,
-      "method": "legacy-unspecified",
+      "method": "stablecoin-par",
       "sourceIds": [
-        "source-4"
+        "source-1"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+          "symbol": "USDT"
+        },
+        "amount": "954285.001826338883421706",
+        "usdValue": 954285.0018263389,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1684860210,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-5"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exploit receipt's 515 USDT Transfer logs net to exactly 954,285.001826338883421706 USDT leaving the CS/USDT pair. The flash pair supplied 80,000,000 USDT principal and received 80,240,000 USDT, so the attacker EOA retained exactly 714,285.001826338883421706 USDT after the 240,000 USDT flash fee. Gross victim assets lost, rather than attacker net proceeds, is the comparable loss measure."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x8bc6ce23e5e2c4f0a96429e3c9d482d74171215e",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x8bc6ce23e5e2c4f0a96429e3c9d482d74171215e",
+        "codeHash": "0x98906396418da3f9987939e89914b04a834ea8a4d9e456ce8ba93fb583d70bd7"
       },
       "deployment": {
         "timestamp": 1684753996,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 28431614,
+        "transactionHash": "0x5b67a37abf45b11964ee3ff8bdd96c27f9e14220baac75f83bb424ad50b314b3",
+        "transactionIndex": 76,
         "creatorAddress": "0x0ea934e6653ab74e92be3ba1ea29b814c1a7fb46"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1684753996,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 28431614,
+        "transactionHash": "0x5b67a37abf45b11964ee3ff8bdd96c27f9e14220baac75f83bb424ad50b314b3",
+        "transactionIndex": 76,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x8bc6ce23e5e2c4f0a96429e3c9d482d74171215e"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Plain CS deployment; its 21,408-byte runtime is unchanged from creation through the exploit."
       },
       "codeAgeSeconds": 106214,
-      "failureModeId": "legacy:eip155:56:0x906394b2ee093720955a7d55bff1666f6cf6239e46bea8af99d6352b9687baa4:failure-1",
+      "failureModeId": "failure:cs-token-stale-sell-amount-pair-burn",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/cs-token.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -94,7 +119,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 56,
       "transactionHash": "0x906394b2ee093720955a7d55bff1666f6cf6239e46bea8af99d6352b9687baa4"
@@ -120,20 +148,34 @@
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "target-identity",
+        "code-history"
+      ],
+      "chainId": 56,
+      "transactionHash": "0x5b67a37abf45b11964ee3ff8bdd96c27f9e14220baac75f83bb424ad50b314b3"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: CS 0x8BC6Ce23E5e2c4f0A96429E3C9d482d74171215e created 2023-05-22T11:13:16Z by 0x0ea934e6653ab74e92be3ba1ea29b814c1a7fb46, unrelated to attack sender 0x2cdeee9698ffc9fcabc116b820c24e89184027ba; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 954,285.00 USDT left 0x6bc2823de2c3718d3669c2e7036e1d888c4107a1 and the attacker netted 714,285.00 USDT after repaying the 240,000 USDT flash loan."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-25T10:21:40Z",
+      "note": "The attacker EOA's only successful call into its final helper is transaction 0x906394b2...baa4 at block 28466977 index 32; its six earlier nonce transactions are helper deployments or a self-transfer, and their receipts contain no CS-token or CS/USDT-pair logs. The anchor trace directly enters CS 1,686 times: 595 state-changing CALLs and 1,091 STATICCALLs, with no DELEGATECALL. Verified CS source shows _transfer storing sellAmount on a sell, a later qualifying transfer calling sync(), and sync() burning sellAmount * 800 / 1000 from the pair before pair.sync(); the exploit repeatedly sells 3,000 CS and self-transfers 2 wei to consume the stale global value. The direct CS contract was created by 0x0ea934e6...fb46 in transaction 0x5b67a37a...14b3 at block 28431614 index 76. Its code is empty one block earlier, and the 21,408-byte runtime hash 0x98906396...0bd7 is identical at creation and immediately before the exploit; the EIP-1967 implementation, beacon and admin slots are zero. Code age is 106,214 seconds. Summing all 515 USDT Transfer logs in the exploit receipt by address gives the CS/USDT pair a net -954,285.001826338883421706 USDT, the flash pair +240,000 USDT, the attacker helper zero, and the attacker EOA +714,285.001826338883421706 USDT. The flash leg was 80,000,000 USDT out and 80,240,000 USDT back: 240,000 is the fee, not the loan principal."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/cs-token.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

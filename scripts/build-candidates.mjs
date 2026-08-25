@@ -139,6 +139,17 @@ const exclusions = readJson(exclusionsPath).entries
 const legacyV1 = readJson(legacyV1Path)
 const primaryRecords = parsePrimaryIncidents(primaryPaths)
 
+const exclusionIdsByExploitTx = new Map()
+for (const [index, entry] of exclusions.entries()) {
+  const transactionHash = entry.exploitTx?.toLowerCase()
+  if (!/^0x[0-9a-f]{64}$/.test(transactionHash ?? '')) continue
+  const exclusionId = `exclusion:${index + 1}`
+  exclusionIdsByExploitTx.set(transactionHash, [
+    ...(exclusionIdsByExploitTx.get(transactionHash) ?? []),
+    exclusionId,
+  ])
+}
+
 const primaryByTx = new Map()
 const primaryByDfhlPath = new Map()
 const primaryByLegacyRow = new Map()
@@ -184,6 +195,7 @@ const legacyRows = legacyV1.rows.map(({ source, protocol, incident }, contextInd
   exploitTx: incident.exploitTx,
   victimAddresses: incident.victimContract ? [incident.victimContract.toLowerCase()] : [],
   dfhlPaths: dfhlPathsFromLegacy(incident),
+  exclusionIds: exclusionIdsByExploitTx.get(incident.exploitTx?.toLowerCase()) ?? [],
   incidentIds: unique([
     ...(incident.exploitTx ? primaryByTx.get(incident.exploitTx.toLowerCase()) ?? [] : []),
     ...(primaryByLegacyRow.get(`${source.file}#${source.incidentIndex}`) ?? []),
@@ -281,12 +293,15 @@ function dfhlDisposition(rows, poc) {
     }
   }
 
-  const exclusionIndexes = exclusionsByPoc.get(poc) ?? []
-  if (exclusionIndexes.length > 0) {
+  const exclusionIds = unique([
+    ...(exclusionsByPoc.get(poc) ?? []).map((index) => `exclusion:${index + 1}`),
+    ...rows.flatMap((row) => row.exclusionIds),
+  ]).sort()
+  if (exclusionIds.length > 0) {
     return {
       status: 'excluded',
-      exclusionIds: exclusionIndexes.map((index) => `exclusion:${index + 1}`),
-      reason: 'The source has an explicit exclusion adjudication and no admitted primary incident.',
+      exclusionIds,
+      reason: 'The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident.',
     }
   }
 
@@ -312,6 +327,14 @@ function dfhlDisposition(rows, poc) {
 }
 
 function legacyDisposition(row) {
+  if (row.exclusionIds.length > 0) {
+    return {
+      status: 'excluded',
+      exclusionIds: row.exclusionIds,
+      reason: 'The exact exploit transaction has an explicit exclusion adjudication.',
+    }
+  }
+
   if (row.category !== 'code-bug') {
     return {
       status: 'out-of-scope',
@@ -480,6 +503,7 @@ const webCandidates = webRows.map((web) => {
       .some((name) => normalizedName(name) === candidateName)
   })
   const incidentIds = unique(exactSourceRows.flatMap((row) => row.incidentIds)).sort()
+  const exclusionIds = unique(exactSourceRows.flatMap((row) => row.exclusionIds)).sort()
   const disposition =
     incidentIds.length === 1
       ? {
@@ -487,7 +511,13 @@ const webCandidates = webRows.map((web) => {
           incidentIds,
           reason: 'Exact normalized project name and UTC date match one primary incident.',
         }
-      : {
+      : incidentIds.length === 0 && exclusionIds.length > 0
+        ? {
+            status: 'excluded',
+            exclusionIds,
+            reason: 'An exact name/date legacy match has an explicit exploit-transaction exclusion.',
+          }
+        : {
           status: 'unresolved',
           reason:
             incidentIds.length > 1
@@ -513,6 +543,7 @@ const webCandidates = webRows.map((web) => {
     ...(exactSourceRows.length > 0
       ? { matchedRows: exactSourceRows.map(legacyCoordinates) }
       : {}),
+    ...(exclusionIds.length > 0 ? { relatedExclusionIds: exclusionIds } : {}),
     disposition,
   }
 })

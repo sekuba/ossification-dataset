@@ -24,16 +24,16 @@
         "legacyV1": 748
       },
       "byDisposition": {
-        "excluded": 12,
+        "excluded": 18,
         "included": 1202,
-        "out-of-scope": 261,
-        "pending": 36,
+        "out-of-scope": 259,
+        "pending": 32,
         "unresolved": 96
       },
       "openByReason": {
         "incident-anchors": 1,
         "loss-evidence": 18,
-        "semantic-research": 113
+        "semantic-research": 109
       }
     }
   },
@@ -50,7 +50,7 @@
     },
     "exclusions": {
       "file": "research/raw/exclusions.json",
-      "sha256": "85fa6b3f4c0ff6a33d899c7a6178248d247d23ef51e6e1e1c645568909c026bd"
+      "sha256": "4751bcc12124a5ac26ef8b8a758b32ab8a7c3a530c13da9bf3c438c64c820eaf"
     },
     "legacyV1": {
       "file": "research/raw/legacy-v1.json",
@@ -65,24 +65,24 @@
     },
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
-      "files": 615,
-      "sha256": "91b8ed16b8a2dc72c936c358ca13181d1ec6e1833b613ad38ce4aed7e251c8fd"
+      "files": 632,
+      "sha256": "aa7c0fe007693dc5ee99cef329398d1babdcaf474cd143f84f97baaf48639b6f"
     }
   },
   "counts": {
-    "total": 1493,
+    "total": 1494,
     "bySource": {
       "defihacklabs": 869,
-      "exclusion": 14,
+      "exclusion": 15,
       "legacy": 130,
       "web-list": 480
     },
     "byDisposition": {
-      "excluded": 26,
+      "excluded": 29,
       "included": 660,
-      "out-of-scope": 270,
+      "out-of-scope": 269,
       "pending": 12,
-      "unresolved": 525
+      "unresolved": 524
     },
     "defihacklabsCoverage": {
       "total": 869,
@@ -205,7 +205,7 @@
         "exclusionIds": [
           "exclusion:11"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -2711,7 +2711,7 @@
         "exclusionIds": [
           "exclusion:9"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -2735,7 +2735,7 @@
         "exclusionIds": [
           "exclusion:10"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -2924,7 +2924,12 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:250:0x9f40542ed53737b6aa0c17a2ab0c1f295b665ed83f9f8e3c66e9161a64d684cc"
+          "eip155:250:0x24770e104ae1f8f47d1c095046379557ba3d17e49d3186e5f46f22d1067a57e9",
+          "eip155:250:0x2906c8e15b53ec1fcb1af64a416643e15404339adbf7aa0d2bfa3fc993cbda0a",
+          "eip155:250:0x7f79934a9c2fb01e3f7af57939746cfdc4b3854ecfff712b84a593e60d8e3754",
+          "eip155:250:0x9f40542ed53737b6aa0c17a2ab0c1f295b665ed83f9f8e3c66e9161a64d684cc",
+          "eip155:250:0xb8d718935fa9d1caa25534fb639af4a5dc8d3ca61363613b528a40486b512bbf",
+          "eip155:250:0xb928d338907ad42430a05e9e87d73e2cd5815af0279fe430845265943a2e22ad"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -4684,7 +4689,8 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:1:0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f"
+          "eip155:1:0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f",
+          "eip155:43114:0x782b2410fcc9449ead554a81f78184b6f9cca89f07ea346bc50cf11887cd9b18"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -6157,7 +6163,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:56:0xdb01fa33bf5b79a3976ed149913ba0a18ddd444a072a2f34a0042bf32e4e7995"
+          "eip155:56:0xccd12f22629b2c42d2b680362dadbd1b3d89cb4a87a8c9b297766b4974c6ad34"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -6324,7 +6330,7 @@
         "exclusionIds": [
           "exclusion:12"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -7689,7 +7695,7 @@
         "exclusionIds": [
           "exclusion:1"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -8649,7 +8655,17 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:8453:0xbb837d417b76dd237b4418e1695a50941a69259a1c4dee561ea57d982b9f10ec"
+          "eip155:8453:0x075fcdd02922b7c502dff3441ab947e874eee2ab0bf31231770b10508d4258d8",
+          "eip155:8453:0x0bbc4c363f31485bdaeeca37fa248f48f688f18ddbc59e3fa9f016a093df687c",
+          "eip155:8453:0x4db0b2516f5e98083cea14d3d0f356c94e20942604a2a3116dd860effbbadc29",
+          "eip155:8453:0x5005ac22398b82d22d89f3f4e55ebf62bb2e437b21482c0de581f69b1cdb6a94",
+          "eip155:8453:0x8d19071832c3027e67826249676380263a6c9821e01c2512ad46a810f2d29b03",
+          "eip155:8453:0xaa648913d80d746d69c740c04b3d573e0fb6d07779dc19588e5a942cfcd66032",
+          "eip155:8453:0xb1d37bfad3730434c68e318c98e0a9bfb7797ad0309af75f14ed0f59608e016f",
+          "eip155:8453:0xb4647281edc4df48d209b668f0debb0e56d94ebf892df24bb05f0664508483c3",
+          "eip155:8453:0xbb837d417b76dd237b4418e1695a50941a69259a1c4dee561ea57d982b9f10ec",
+          "eip155:8453:0xee9ee6773b82495511ee2a6679f0acd57def85256b156cd898830b7d65fbdc1d",
+          "eip155:8453:0xf0c2ed12a446713d6e38e7a4f0e05d45360ee9305b7d6e0b796fc44f848f6052"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -9468,7 +9484,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:1:0xcbe521aea28911fe9983030748028e12541e347b8b6b974d026fa5065c22f0cf"
+          "eip155:1:0x9c0503217d453905bf30f16317c1ed93292d7494dfe3765aa972d7bdea108a00"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -11101,8 +11117,11 @@
         }
       ],
       "disposition": {
-        "status": "out-of-scope",
-        "reason": "The linked legacy row is outside the primary code-bug dataset or was scope-only."
+        "status": "included",
+        "incidentIds": [
+          "eip155:42161:0x025cf2858723369d606ee3abbc4ec01eab064a97cc9ec578bf91c6908679be75"
+        ],
+        "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
     },
     {
@@ -13312,7 +13331,7 @@
         "exclusionIds": [
           "exclusion:3"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -13736,7 +13755,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:56:0x660837a1640dd9cc0561ab7ff6c85325edebfa17d8b11a3bb94457ba6dcae18c"
+          "eip155:56:0xd24aa99431a705ceec72f40f26514841350981d438107a4e43113261f673dca6"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -14648,6 +14667,9 @@
       "coverage": {
         "kind": "direct-reference"
       },
+      "relatedExclusionIds": [
+        "exclusion:15"
+      ],
       "matchedRows": [
         {
           "file": "research/raw/legacy-v1.json",
@@ -14658,11 +14680,11 @@
         }
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:1:0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561"
+        "status": "excluded",
+        "exclusionIds": [
+          "exclusion:15"
         ],
-        "reason": "The source is linked to at least one incident admitted to the primary dataset."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -15762,7 +15784,7 @@
         "exclusionIds": [
           "exclusion:4"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -15899,7 +15921,7 @@
         "exclusionIds": [
           "exclusion:7"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -18919,7 +18941,7 @@
         "exclusionIds": [
           "exclusion:6"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -19456,7 +19478,7 @@
         "exclusionIds": [
           "exclusion:8"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -20172,7 +20194,7 @@
         "exclusionIds": [
           "exclusion:2"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -23243,7 +23265,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:56:0xaaea183bdb5d7e4fd3c8da1d5bfe7edcb2e1db2458cef9a3adac54db6a7793d1"
+          "eip155:56:0x6a50fea9a44cf8c1bd288fb1857da942dd601a1a062aff9598b755f3e7580ff4"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -23364,7 +23386,7 @@
         "exclusionIds": [
           "exclusion:14"
         ],
-        "reason": "The source has an explicit exclusion adjudication and no admitted primary incident."
+        "reason": "The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident."
       }
     },
     {
@@ -23820,6 +23842,31 @@
       "disposition": {
         "status": "excluded",
         "reason": "CONFIGURATION_ERROR: SummerFi's primary post-mortem states that FleetCommander and Ark accounting behaved as designed and identifies the failure as an operational offboarding state: the impaired Silo Varlamore Arks had deposit caps set to zero but remained in each FleetCommander's active set, so their stale reported value continued to count in NAV. The exploit donated the impaired asset into those still-active Arks and redeemed against liquid positions. Because governance/process state, rather than a defect in executed EVM code, created the exposure, there is no code-age observation."
+      }
+    },
+    {
+      "id": "exclusion:15",
+      "source": {
+        "kind": "exclusion",
+        "file": "research/raw/exclusions.json",
+        "entryIndex": 14,
+        "defihacklabs": {
+          "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+          "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+          "path": "src/test/2024-08/VOW_exp.sol",
+          "recordedRef": "src/test/2024-08/VOW_exp.sol@ad353ba25fbb"
+        }
+      },
+      "candidate": {
+        "name": "VOW temporary usdRate configuration exposure",
+        "chain": "ethereum",
+        "date": "2024-08-13T11:09:23Z",
+        "candidateVictim": "0x184497031808f2b6a2126886c712cc41f146e5dc",
+        "exploitTx": "0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "CONFIGURATION_ERROR: authorized rate-setter transaction 0xda2a8568a5a210fdfb51880f4e8c91165ea122ada9977a4b11598d56782d49a5 changed VOWToken's mutable usdRate from [5,1] to [1,100] at block 20519307, 24 seconds before the exploit. The unchanged direct VSCTokenManager runtime at 0x184497031808f2b6a2126886c712cc41f146e5dc then applied the configured 100-vUSD-per-VOW rate verbatim: its permissionless ERC-777 receive path burned 1,486,625.296150499360431664 VOW and minted 148,662,529.615049936043166400 vUSD. VOW's primary incident account (https://vowwhitepaper.com/great-test/august-2024) identifies a scheduled temporary rate change, says the contracts followed their coded logic, and classifies the vulnerability as economic rather than software. The absence of a conversion cap was an available safeguard, but the loss depended on an authorized unsafe parameter rather than a defect in executed EVM code, so methodology cohort condition 1 is not met and there is no code-age observation."
       }
     },
     {
@@ -34014,9 +34061,15 @@
           "name": "Rho Markets PriceOracleV2 ETH feed overwrite"
         }
       ],
+      "relatedExclusionIds": [
+        "exclusion:13"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "An exact legacy name/date match exists, but it is not admitted to the primary dataset."
+        "status": "excluded",
+        "exclusionIds": [
+          "exclusion:13"
+        ],
+        "reason": "An exact name/date legacy match has an explicit exploit-transaction exclusion."
       }
     },
     {

@@ -16,27 +16,53 @@
       "timestamp": 1698188027
     },
     "attackerAddresses": [
-      "0xce6397e53c13ff2903ffe8735e478d31e648a2c6"
+      "0xce6397e53c13ff2903ffe8735e478d31e648a2c6",
+      "0xe6c6e86e04de96c4e3a29ad480c94e7a471969ab"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "Maestro's Router 2 forwarded a caller-supplied target and calldata during its taxed-token swap path without validating them, so the attacker made the router call transferFrom on liquidity pairs and drain tokens from users who had approved it."
+    "summary": "Maestro Router 2 implementation 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a exposed function 0x9239127f without caller authorization or target/calldata constraints. Through the proxy, an unprivileged caller could make the router execute token transferFrom calls as the spender and remove tokens from users who had approved the router."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 500654,
-      "valuationTimestamp": 1698188027,
-      "method": "legacy-unspecified",
+      "amount": 482137.5766631149,
+      "valuationTimestamp": 1698190259,
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-4",
+        "source-5"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "270.505159823556961290",
+        "usdValue": 482137.5766631149,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1698190259,
+          "unitPriceUsd": 1782.36,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-4",
+          "source-5",
+          "source-10"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The 12 successful campaign receipts show exactly 270.505159823556961290 WETH transferred from liquidation pools to the attack helper and immediately withdrawn to ETH. This is the exact common-asset value realized from the stolen tokens before any recovery, rather than the rounded 280-ETH public estimate. It is recorded as net loss because the gross victim depletion comprised 11 different volatile or illiquid tokens; separately adding those token quantities to their sale proceeds would double count the same loss. Receipt logs establish exact stolen quantities of 565463522794.182597666471533996 MOG, 48547556.581675106888722181 LMI, 36699014.396393139889031068 JOE, 9347.142332543648356945 BANANA, 4988293193.069537666 OGGY, 210000848.249795702514222702 jim, 240800.995682007751449462 ETF, 16597.430949033 LP, 6444188221.913920492320455870 APU, 102061241.618795802640566220 шайлушай, and 10685.567762358287885017 PROPHET. PROPHET_Dividends mirror-transfer logs are accounting shares and are not a twelfth asset. Later Maestro reimbursements do not reduce this pre-recovery measurement. DefiLlama's nearest WETH observation was $1,782.36 at 2023-10-24T23:30:00Z, 59 seconds before campaign end.",
+    "realizedAt": 1698190259
   },
   "targets": [
     {
@@ -49,41 +75,50 @@
       },
       "deployment": {
         "timestamp": 1697204147,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 18341808,
+        "transactionHash": "0xf9cfff6e357df268737245ccdefe235874c973bbc7db448f0cb0d8e9f0ec21c1",
+        "transactionIndex": 71,
         "creatorAddress": "0x707d9f893ec2799ddef1524db15eba99d67fc431"
       },
       "lastCodeChange": {
-        "kind": "deployment",
+        "kind": "implementation-change",
         "timestamp": 1697204147,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 18341808,
+        "transactionHash": "0xf9cfff6e357df268737245ccdefe235874c973bbc7db448f0cb0d8e9f0ec21c1",
+        "transactionIndex": 71,
+        "logIndex": 212,
         "mechanism": {
-          "type": "deployment",
-          "address": "0x80a64c6d7f12c47b7c66c5b4e20e72bc1fcd5d9e"
+          "type": "event",
+          "address": "0x80a64c6d7f12c47b7c66c5b4e20e72bc1fcd5d9e",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "The proxy's creation transaction emitted its sole pre-incident Upgraded event at log 212, selecting implementation 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a in topic1. The implementation slot reads that address after deployment and immediately before the exploit. The implementation runtime was independently deployed 180 seconds earlier in transaction 0xb9f410053228bc6b25aa0fe513550d11c61e7d66d451f7e07ed193bb0d261805 and hashes to 0x037e8031318a63c3d7212fb95b4ba28d279dc57ec5c0423ad22f4c9acf509447 at deployment and pre-exploit. No later pre-incident Upgraded event exists."
       },
       "codeAgeSeconds": 983880,
-      "failureModeId": "legacy:eip155:1:0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92:failure-1",
+      "failureModeId": "failure:maestro-router2-unrestricted-external-call",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-4"
+          "source-3",
+          "source-6",
+          "source-7",
+          "source-8",
+          "source-10"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-6",
+          "source-7",
+          "source-10"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/maestro-bot.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-10"
         ]
       }
     }
@@ -93,7 +128,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92"
@@ -103,7 +141,8 @@
       "type": "source-code",
       "supports": [
         "target-identity",
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
@@ -113,26 +152,105 @@
       "id": "source-3",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "url": "https://twitter.com/Phalcon_xyz/status/1717014871836098663"
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "onchain-transaction-set",
       "supports": [
-        "target-identity",
-        "code-history",
         "loss"
       ],
-      "note": "onchain review: router proxy 0x80a64c6D7f12C47B7c66c5B4E20E72bc1FCd5d9e created 2023-10-13T13:35:47Z by 0x707d9f893ec2799ddef1524db15eba99d67fc431, unrelated to the attack sender; a single EIP-1967 Upgraded event in the creation block installs logic 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a and no later upgrade precedes the incident, so age runs from that install (11.4 days). The recorded tx is the first of 12 drain txs listed in the PoC; the ~280 ETH figure is their sum, converted at $1,788.05 per ETH at incidentTimestamp 1698188027 (DefiLlama) = $500,654."
+      "chainId": 1,
+      "transactionHashes": [
+        "0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92",
+        "0xede874f9a4333a26e97d3be9d1951e6a3c2a8861e4e301787093cfb1293d4756",
+        "0xe60c5a3154094828065049121e244dfd362606c2a5390d40715ba54699ba9da6",
+        "0xf4ae22177c3abbb0f21defe51dd14eff68eb1b0c52ac4104186220138e8e5bb2",
+        "0x6cba3a67d6b8de664d860b096c8c558a1d65e5fa9735c657ddc98f67969561a2",
+        "0xddd1048fe3f2df1fb98e534a97173b32a9fca662dbd257a72725482431d3f25e",
+        "0xffb4bd29825bdd41adf344028f759692021cbadc2d4cb5b587e68fd8285c5eb1",
+        "0xa9948c8f0500a867091a090d12125f88868ac29e52af6391569094e82d416904",
+        "0xc49499325cb5ad3bf4391ae95855ce2ee2b0222f9282c524daa1c4586a8fcd8b",
+        "0xcfe1d2b333e1b9da5e2d5f1d7697b628c818cc41f9f3020187d4ce2c2610a05c",
+        "0x33f6adf410bbd0ae08b0cd44410de1e5b28e516434567113982fcac36ed9e1a4",
+        "0x4f4d6909a442b4d86f79a9044dcada6a128ddd9f62c26f410134a72d2fc31389"
+      ]
+    },
+    {
+      "id": "source-5",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1698190259/ethereum:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2?searchWidth=4h",
+      "observedAt": 1787660110
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xf9cfff6e357df268737245ccdefe235874c973bbc7db448f0cb0d8e9f0ec21c1"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xb9f410053228bc6b25aa0fe513550d11c61e7d66d451f7e07ed193bb0d261805"
+    },
+    {
+      "id": "source-8",
+      "type": "post-mortem",
+      "supports": [
+        "target-identity",
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://www.certik.com/blog/maestro-and-unibot"
+    },
+    {
+      "id": "source-9",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause",
+        "loss"
+      ],
+      "url": "https://twitter.com/MaestroBots/status/1717113987479785558"
+    },
+    {
+      "id": "source-10",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-25T12:15:10Z",
+      "note": "Campaign and anchor: the attacker EOA deployed helper 0xe6c6e86e04de96c4e3a29ad480c94e7a471969ab in transaction 0xaf321e7b2c630b2a80c94de23958b1f49d4193b5878738d058c5a02576668374 at block 18423209. Enumerating that helper's successful calls shows 0xc087fbd68b9349b71838982e789e204454bfd00eebf9c8e101574376eb990d92 at block 18423220:7 is its first defect-executing call, followed by the other eleven declared transactions through block 18423404:0; two unrelated copycat calls reverted and do not enter the campaign. Trace and receipt evidence shows the helper repeatedly reaches proxy 0x80a64c6d7f12c47b7c66c5b4e20e72bc1fcd5d9e, which delegatecalls implementation 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a. Function 0x9239127f then causes the proxy execution context to call victim-selected tokens with transferFrom calldata, spending user approvals. CertiK and Phalcon independently identify the same unprotected arbitrary-call defect; the implementation is unverified, so the semantic boundary is supported by executed bytecode/decompiled analysis rather than verified Solidity source. Code history: creator 0x707d9f893ec2799ddef1524db15eba99d67fc431 directly deployed the EIP-1967 proxy in 0xf9cfff6e357df268737245ccdefe235874c973bbc7db448f0cb0d8e9f0ec21c1 at block 18341808:71. Creation log 212 is the only Upgraded event through the incident and selects 0x8eae9827b45bcc6570c4e82b9e4fe76692b2ff7a in topic1. The EIP-1967 slot holds that address at creation and pre-anchor. The implementation was deployed in 0xb9f410053228bc6b25aa0fe513550d11c61e7d66d451f7e07ed193bb0d261805 at block 18341793:97 by 0x40039e1f77ca0b4ae96a9f80c4941d3ee391ce71; its runtime hash is unchanged from deployment through the incident. Loss: exact receipt aggregation finds 270505159823556961290 wei-WETH transferred from liquidity pairs to the helper across the 12 transactions, then withdrawn to ETH. This provides a non-double-counted realized net measure for the exact stolen-token basket documented in loss.notes; Maestro's later 610-ETH reimbursement is recovery/compensation and does not reduce pre-recovery loss."
     }
   ],
   "verification": {
-    "tier": "provisional",
+    "tier": "reviewed",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/maestro-bot.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+      "The defect-bearing implementation was not source-verified; root-cause review relies on execution traces, bytecode/decompiled analysis, and independent incident reporting."
+    ],
+    "reviewSourceIds": [
+      "source-10"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

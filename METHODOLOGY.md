@@ -127,9 +127,11 @@ Provider and unsupported-method outcomes are `INCONCLUSIVE`.
 
 Loss is the value stolen or permanently locked because of the defect. `kind`
 states whether the measurement is gross assets lost, net loss, or permanently
-locked value. Prefer the exact defect-caused gross outflow from victims when it
-can be isolated. Use net loss only when gross outflow cannot be separated, and
-state how financing, fees, payments, and recoveries are treated.
+locked value. Prefer exact pre-recovery victim depletion when it can be
+isolated. Identifiable attacker-supplied campaign inputs are not victim loss;
+financing fees, builder payments, and later recoveries do not reduce gross
+victim depletion. Use net loss only when gross victim depletion cannot be
+separated, and state how every adjustment is treated.
 
 A loss spanning several transactions in the same incident covers the coherent
 campaign. Cross-chain or separate-deployment losses belong to their respective
@@ -143,7 +145,8 @@ Reviewed asset components identify the chain and token, decimal quantity, USD
 value, valuation timestamp and method, and evidence IDs. Stable assets may use
 1:1 valuation. Liquid assets use a timestamped price source. Illiquid assets use
 an evidenced lower bound when it establishes cohort admission. `price-data`
-sources record provider, URL, and observation time.
+sources record provider, URL, and evidence-retrieval time in `observedAt`; the
+asset valuation's `timestamp` is the historical price time.
 
 Legacy asset prose remains a provisional migration representation. Reviewed
 records use structured components and high or medium confidence.

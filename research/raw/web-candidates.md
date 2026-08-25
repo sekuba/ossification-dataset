@@ -1,13 +1,13 @@
 date | project | reported loss | candidate mechanism
 
-> Automated web-research leads from v1. Each row preserves its date, project,
-> reported loss, and candidate mechanism. Promotion links the lead to cited
-> primary evidence.
+> Web-research leads. Each row preserves its date, project, reported loss, and
+> candidate mechanism. Promotion links the lead to cited primary evidence.
 
 2026
 
-2026-08-18–2026-07-28 
+2026-08-22–2026-07-28
 
+2026-08-21 | The Sandbox SAND OFT bridge | approximately $686k actual Ethereum escrow depletion | approveAndCall confused-deputy callback overwrote LayerZero delegate on Base and BNB Chain; nominal unbacked mints excluded
 2026-08-18 | Maya Protocol | $1.7m | trade-account, outbound and pool-accounting bugs
 2026-08-15 | FoxMarket | $118.7k | spot-quote and LP-bond manipulation
 2026-08-11 | Harmony L1 | $3.2m | unauthorized ONE mint; distinct from Horizon Bridge
