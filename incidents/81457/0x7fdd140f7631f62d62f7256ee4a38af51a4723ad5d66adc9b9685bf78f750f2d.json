@@ -6,7 +6,7 @@
     "name": "Bazaar",
     "slug": "bazaar"
   },
-  "name": "Bazaar",
+  "name": "Bazaar Balancer-fork exitPool without sender validation",
   "incident": {
     "chainId": 81457,
     "exploit": {
@@ -16,70 +16,113 @@
       "timestamp": 1718049249
     },
     "attackerAddresses": [
-      "0x3cf5b87726af770c94494e886d2a69c42a203884"
+      "0x3cf5b87726af770c94494e886d2a69c42a203884",
+      "0xd31c7a22f4e6f928f1d4adabbc08c7bf88a3e402"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "Balancer-fork exitPool lacked sender validation, letting attacker exit another holder's position"
+    "summary": "The Bazaar vault is a Balancer fork whose exitPool() never checks that the caller is the position holder or an approved relayer of it. The attacker called exitPool naming another holder as the sender, burning 850,000,000 of that holder’s BZR pool tokens and receiving the corresponding 392.37 WETH and 880,539,680 rYOLO."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 1400000,
+      "amount": 1440195.639792327,
       "valuationTimestamp": 1718049249,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-3"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 81457,
+          "tokenAddress": "0x4300000000000000000000000000000000000004",
+          "symbol": "WETH"
+        },
+        "amount": "392.368916281212373207",
+        "usdValue": 1440195.639792327,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1718049249,
+          "unitPriceUsd": 3670.514100459816,
+          "sourceIds": [
+            "source-3"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 81457,
+          "tokenAddress": "0x86cba7808127d76deac14ec26ef6000aa78b2ebb",
+          "symbol": "rYOLO"
+        },
+        "amount": "880539680.680963671973966099",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The whole loss is in the single exploit transaction, which is a contract creation whose constructor performs the exit. The vault 0xefb4e3cc438ef2854727a7df0d0baf844484edab pays out exactly 392.368916281212373207 WETH and 880539680.680963671973966099 rYOLO to the attacker contract while 850,000,000 BZR pool tokens are burned from the holder 0xb66585c4e460d49154d50325ce60adc44bc900e9. DefiLlama has no price series for rYOLO, so that component is recorded in quantity only and the USD total counts the WETH leg alone, which makes the figure a floor. WETH on Blast is priced through the DefiLlama ETH series. Nothing was recovered."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xefb4e3cc438ef2854727a7df0d0baf844484edab",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xefb4e3cc438ef2854727a7df0d0baf844484edab",
+        "codeHash": "0xc0538736e15021b4d9f6eb211b35a54de0595fc7a28fcdf96cff7d6671337fa9"
       },
       "deployment": {
         "timestamp": 1717956701,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 4573443,
+        "transactionHash": "0x7b8c96239eae0f2575f1e8ef3823e1a06e130ca25f94653d01d2fa750f672579",
+        "transactionIndex": 16,
+        "creatorAddress": "0x1cfecded895d851f16a39e1bc85d9196ee92021f"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1717956701,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 4573443,
+        "transactionHash": "0x7b8c96239eae0f2575f1e8ef3823e1a06e130ca25f94653d01d2fa750f672579",
+        "transactionIndex": 16,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0xefb4e3cc438ef2854727a7df0d0baf844484edab"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Non-upgradeable contract. The runtime code hash is 0xc0538736e15021b4d9f6eb211b35a54de0595fc7a28fcdf96cff7d6671337fa9 both at the deployment block 4573443 and at block 4619716, and the EIP-1967 implementation slot is zero, so no code change occurred between deployment and the exploit."
       },
       "codeAgeSeconds": 92548,
-      "failureModeId": "legacy:eip155:81457:0x7fdd140f7631f62d62f7256ee4a38af51a4723ad5d66adc9b9685bf78f750f2d:failure-1",
+      "failureModeId": "failure:bazaar-vault-exitpool-missing-sender-check",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-1",
+          "source-2",
+          "source-4",
+          "source-5"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-4",
+          "source-5"
+        ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/bazaar.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -89,7 +132,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 81457,
       "transactionHash": "0x7fdd140f7631f62d62f7256ee4a38af51a4723ad5d66adc9b9685bf78f750f2d"
@@ -104,13 +150,47 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-06/Bazaar_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1718049249/coingecko:ethereum",
+      "observedAt": 1787645696
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 81457,
+      "transactionHash": "0x7b8c96239eae0f2575f1e8ef3823e1a06e130ca25f94653d01d2fa750f672579"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "Claude Opus 5",
+      "reviewedAt": "2026-08-25T12:45:00Z",
+      "note": "The attacker EOA sent eight Blast transactions; the anchor is the exploit-contract creation and the only one that touches the vault. Netting the receipt shows the vault paying WETH and rYOLO to the attacker contract against BZR burned from a third-party holder, which is the exit executed on someone else’s position. The vault is not upgradeable: identical runtime code hash at the deployment block 4573443 and at block 4619716, EIP-1967 slot zero, so the exploited code is 1.07 days old and its deployer 0x1cfecded895d851f16a39e1bc85d9196ee92021f is not an attacker address. rYOLO has no DefiLlama price series so its component carries quantity only and the USD figure is the WETH leg alone."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/bazaar.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

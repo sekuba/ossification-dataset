@@ -342,6 +342,11 @@ function verifyIncident(record, state, errors) {
     source.transactionHash === exploit.transactionHash)?.supports ?? []).includes('incident-anchor'))
     errors.push(`${label}: exact exploit transaction source must declare incident-anchor support`)
 
+  const realizedAt = incident.loss?.realizedAt
+  if (realizedAt !== undefined && realizedAt < exploit?.timestamp)
+    errors.push(`${label}: loss.realizedAt precedes the incident anchor; the campaign cannot end before it starts`)
+  const valuationLimit = Math.max(exploit?.timestamp ?? 0, realizedAt ?? 0)
+
   const usd = incident.loss?.usd
   if (usd) {
     if (incidentReviewed && usd.sourceIds.length === 0) errors.push(`${label}: reviewed loss.usd must cite loss evidence`)
@@ -350,8 +355,11 @@ function verifyIncident(record, state, errors) {
       else if (!(incident.sources.find((source) => source.id === sourceId)?.supports ?? []).includes('loss'))
         errors.push(`${label}: loss.usd source ${sourceId} does not declare loss support`)
     }
-    if (usd.valuationTimestamp > exploit.timestamp)
-      errors.push(`${label}: loss valuationTimestamp is after the exploit; document later repricing outside the primary value`)
+    if (usd.valuationTimestamp > valuationLimit)
+      errors.push(
+        `${label}: loss valuationTimestamp is after the incident anchor and any declared loss.realizedAt; ` +
+          'document later repricing outside the primary value',
+      )
   }
   const minimumUsd = incident.loss?.minimumUsd
   if (usd && minimumUsd) errors.push(`${label}: use loss.usd or loss.minimumUsd, not both`)
@@ -366,10 +374,10 @@ function verifyIncident(record, state, errors) {
   for (const [assetIndex, asset] of (incident.loss?.assets ?? []).entries()) {
     if (incidentReviewed && asset.sourceIds.length === 0)
       errors.push(`${label}: reviewed loss.assets[${assetIndex}] must cite loss evidence`)
-    if (asset.valuation?.timestamp > exploit.timestamp)
+    if (asset.valuation?.timestamp > valuationLimit)
       errors.push(
-        `${label}: loss.assets[${assetIndex}].valuation.timestamp is after the exploit; ` +
-          'incident-price evidence must be contemporaneous or earlier',
+        `${label}: loss.assets[${assetIndex}].valuation.timestamp is after the incident anchor and any ` +
+          'declared loss.realizedAt; incident-price evidence must be contemporaneous with the loss or earlier',
       )
     const assetSourceIds = [
       ...(asset.sourceIds ?? []),
@@ -527,9 +535,6 @@ function verifyIncident(record, state, errors) {
       errors.push(`${targetLabel}: event-based reviewed change requires logIndex`)
   }
 
-  const parsedLegacyDate = Date.parse(incident.verification?.legacy?.date) / 1000
-  if (Number.isFinite(parsedLegacyDate) && parsedLegacyDate !== exploit?.timestamp)
-    errors.push(`${label}: legacy.date does not equal incident exploit timestamp`)
   const legacy = incident.verification?.legacy
   if (legacy) {
     const key = `${legacy.originalFile}\u0000${legacy.originalIncidentIndex}`
@@ -537,8 +542,13 @@ function verifyIncident(record, state, errors) {
     if (!rawRow)
       errors.push(`${label}: legacy coordinate does not resolve in research/raw/legacy-v1.json`)
     else {
-      if (rawRow.incident?.exploitTx?.toLowerCase() !== exploit.transactionHash)
-        errors.push(`${label}: legacy coordinate resolves to a different exploit transaction`)
+      if (rawRow.incident?.date !== legacy.date)
+        errors.push(`${label}: legacy.date does not equal the snapshot row date`)
+      const reanchored = rawRow.incident?.exploitTx?.toLowerCase() !== exploit.transactionHash
+      if (reanchored && legacy.reanchored !== true)
+        errors.push(`${label}: incident anchor differs from the snapshot row; set legacy.reanchored`)
+      if (!reanchored && legacy.reanchored === true)
+        errors.push(`${label}: legacy.reanchored is set but the incident anchor is unchanged`)
       if (rawRow.protocol?.slug !== incident.protocol.slug)
         errors.push(`${label}: legacy coordinate resolves to a different protocol slug`)
     }

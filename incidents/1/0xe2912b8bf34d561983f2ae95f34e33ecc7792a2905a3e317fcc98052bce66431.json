@@ -6,7 +6,7 @@
     "name": "PikeFinance",
     "slug": "pikefinance"
   },
-  "name": "PikeFinance",
+  "name": "Pike Finance uninitialized upgrade implementation",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -16,25 +16,50 @@
       "timestamp": 1714515551
     },
     "attackerAddresses": [
-      "0x19066f7431df29a0910d287c8822936bb7d89e23"
+      "0x19066f7431df29a0910d287c8822936bb7d89e23",
+      "0x1da4bc596bfb1087f2f7999b0340fcba03c47fbd"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "uninitialized UUPS proxy: initialize then upgradeToAndCall to attacker impl to withdraw ETH"
+    "summary": "The implementation Pike installed on 2024-04-28 to fix an earlier incident left initialize() reachable on the proxy, so the first caller could set every privileged role. The attacker called initialize() to make itself owner and upgrader, then called upgradeToAndCall() through the same implementation to install its own logic and sweep the proxy’s 479.39 ETH in the same transaction."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 1400000,
+      "amount": 1438263.7873084752,
       "valuationTimestamp": 1714515551,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-6"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "479.393838338750964434",
+        "usdValue": 1438263.7873084752,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1714515551,
+          "unitPriceUsd": 3000.17161733348,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exploit transaction sends 479.393838338750964434 ETH from the proxy to the attacker EOA and is the only transaction the attacker sent against Pike; the other three transactions in that EOA’s history are the exploit-contract creation and two disposal swaps. Pike was hit on Arbitrum and Optimism in the same campaign at different addresses; this record covers the Ethereum leg only and does not carry those amounts. DefiLlama’s nearest ETH observation is 57 seconds after the incident timestamp. Nothing was recovered."
   },
   "targets": [
     {
@@ -47,42 +72,47 @@
       },
       "deployment": {
         "timestamp": 1706635211,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 19120773,
+        "transactionHash": "0x0fcc85422e9726a5d8b2ce00291051df0167089e0d1a5e66bfac908c0769e05d",
+        "transactionIndex": 56,
+        "creatorAddress": "0xb1ea97c9f68978905fb1bf5089e71a073bc4f5c8"
       },
       "lastCodeChange": {
         "kind": "implementation-change",
         "timestamp": 1714335575,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 19756154,
+        "transactionHash": "0xfeb205066bb64668ea847330ddeb62e2f6b8dcc2b8ae32e4e1d0715ddd62f98d",
+        "transactionIndex": 94,
+        "logIndex": 276,
         "mechanism": {
           "type": "event",
           "address": "0xfc7599cffea9de127a9f9c748ccb451a34d2f063",
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 3 pre-incident Upgraded event(s)."
+        "description": "The proxy emitted four Upgraded events; the last legitimate one, log 276 of block 19756154, installed 0xb30c120eb92c120bf11b358b4b9961e6679b6ae7 by the operator 0xb1ea97c9f68978905fb1bf5089e71a073bc4f5c8. The fourth Upgraded is emitted inside the exploit transaction itself by the attacker’s own upgradeToAndCall and is not a pre-exploit code change."
       },
       "codeAgeSeconds": 179976,
-      "failureModeId": "legacy:eip155:1:0xe2912b8bf34d561983f2ae95f34e33ecc7792a2905a3e317fcc98052bce66431:failure-1",
+      "failureModeId": "failure:pike-uninitialized-upgrade-implementation",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-1",
+          "source-2",
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/pikefinance.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -92,7 +122,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xe2912b8bf34d561983f2ae95f34e33ecc7792a2905a3e317fcc98052bce66431"
@@ -105,23 +138,58 @@
         "root-cause"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
-      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/PikeFinance_exp.sol"
     },
     {
       "id": "source-3",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "code-history"
       ],
-      "note": "attacker-event correction: of the 4 Upgraded events before the incident, the last (block 19771059) is emitted by the exploit tx itself (attacker initialize+upgradeToAndCall); the last legitimate change is the operator 0xb1ea97c9f68978905fb1bf5089e71a073bc4f5c8 upgrade at block 19756154, 2024-04-28T20:19:35Z - the post-first-hack fix whose new implementation was left uninitialized. Age 2.1 days (previously misrecorded as 0s)"
+      "chainId": 1,
+      "transactionHash": "0x0fcc85422e9726a5d8b2ce00291051df0167089e0d1a5e66bfac908c0769e05d"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xfeb205066bb64668ea847330ddeb62e2f6b8dcc2b8ae32e4e1d0715ddd62f98d"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "Claude Opus 5",
+      "reviewedAt": "2026-08-25T11:35:00Z",
+      "note": "The exploit trace delegate-calls the legitimate implementation 0xb30c120eb92c120bf11b358b4b9961e6679b6ae7 twice before any attacker code runs: once for initialize(), which succeeds from an arbitrary caller and emits Initialized(1), and once for upgradeToAndCall(), which the caller is now authorised for. Only then does the attacker implementation execute and forward the proxy balance. The defect therefore lives in victim code that predates all adversarial control and executes in the anchor, which is why this target is curve-eligible even though the drain itself runs attacker code. The proxy emitted four Upgraded events between its creation block 19120773 and the exploit; the last pre-exploit one is at block 19756154, so the exploited implementation is 2.08 days old, and the fourth belongs to the exploit transaction and is excluded. The implementation had been installed two days earlier as the fix for an earlier Pike incident."
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1714515551/coingecko:ethereum",
+      "observedAt": 1787644589
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/pikefinance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

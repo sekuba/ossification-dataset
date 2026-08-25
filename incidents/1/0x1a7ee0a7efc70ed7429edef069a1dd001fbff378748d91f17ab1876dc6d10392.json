@@ -6,7 +6,7 @@
     "name": "Hopelend",
     "slug": "hopelend"
   },
-  "name": "Hopelend",
+  "name": "HopeLend empty-market liquidity index inflation",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -16,25 +16,50 @@
       "timestamp": 1697629739
     },
     "attackerAddresses": [
-      "0xa8bbb3742f299b183190a9b079f1c0db8924145b"
+      "0xa8bbb3742f299b183190a9b079f1c0db8924145b",
+      "0xc74b72bbf904bac9fac880303922fc76a69f0bb4"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "Aave-fork empty-market donation inflated liquidity index plus rounding error to over-withdraw shares"
+    "summary": "The HopeLend pool is an Aave v3 fork whose liquidity index is computed from the reserve balance without a floor on an empty market. With one wei of hEthWBTC supply outstanding the attacker donated WBTC straight to the hEthWBTC reserve, inflating the index so that the rounding on burn returned far more underlying than had been supplied, and used the resulting collateral to borrow the WETH, USDT and USDC markets out."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 825000,
+      "amount": 835550.6256910105,
       "valuationTimestamp": 1697629739,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-5"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "528.004085822170762393",
+        "usdValue": 835550.6256910105,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1697629739,
+          "unitPriceUsd": 1582.47,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Netting the exploit receipt across the attacker EOA and its exploit contract leaves exactly one non-zero position, 528.004085822170762393 WETH; the WBTC donation, the USDT and USDC borrows and the flash-loan legs all net to zero because they were repaid inside the transaction. The variable debt the attacker leaves behind against those markets is not additionally counted, since the WETH figure already measures what left. A large share of this was taken by a MEV bot that front-ran the attacker rather than by the attacker; that is a redistribution among third parties and does not change the amount the protocol lost. Nothing was recovered by HopeLend."
   },
   "targets": [
     {
@@ -48,40 +73,43 @@
       "deployment": {
         "timestamp": 1691388719,
         "blockNumber": 17861190,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x17002566cc3508dfa3c0fa52fcbca990e42fd510"
+        "transactionHash": "0x79ed6539033537d054fd7977d00e21918495f22ccaae7ca8823541758ff84ee2",
+        "transactionIndex": 61,
+        "creatorAddress": "0xe94a20ef25d067743b9d965a8d46c1c035489b7d"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1691388719,
         "blockNumber": 17861190,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x79ed6539033537d054fd7977d00e21918495f22ccaae7ca8823541758ff84ee2",
+        "transactionIndex": 61,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x53fbcada1201a465740f2d64ecdf6fac425f9030"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The pool is an Aave-fork InitializableImmutableAdminUpgradeabilityProxy, which sets its implementation in the constructor and never emits Upgraded; the proxy emitted no Upgraded event at all between its creation block 17861190 and the exploit. Its EIP-1967 implementation slot is zero at block 17861189 and holds 0x3a6d9bf8286a4ada77c15ecf82d4c0c0af95be74 at block 18377041, so the proxy creation is the change that made the exploited implementation active."
       },
       "codeAgeSeconds": 6241020,
-      "failureModeId": "legacy:eip155:1:0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392:failure-1",
+      "failureModeId": "failure:aave-fork-empty-market-index-inflation",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/hopelend.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -91,7 +119,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392"
@@ -104,24 +135,49 @@
         "root-cause"
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
-      "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-10/Hopelend_exp.sol"
     },
     {
       "id": "source-3",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "target-identity",
         "code-history"
       ],
-      "note": "Onchain review: the victim is an Aave-v3-style InitializableImmutableAdminUpgradeabilityProxy created 2023-08-07T05:31:59Z (block 17861190) by 0x17002566cc3508dfa3c0fa52fcbca990e42fd510, unrelated to the attack sender 0xA8Bbb3742f299B183190a9B079f1C0db8924145b. Its EIP-1967 implementation slot was binary-searched with eth_getStorageAt over [17861190, 18377041] and held 0x3a6d9bf8286a4ada77c15ecf82d4c0c0af95be74 throughout - the implementation the exploit delegatecalls for supply/withdraw/borrow - and the three further addresses running in the victim's context (0x03b89eb02817cc36285da0f175257cbb6bd6105b, 0x51ab0f9684d265a1defffc9701a6a3ce4ac50d98, 0xd8ed919c591a071b1fce031ac30167ed0be8277c) are PUSH20 link-time library constants inside that implementation's immutable bytecode. keccak(eth_getCode) on the proxy is identical at the creation and incident blocks. Deployment basis confirmed."
+      "chainId": 1,
+      "transactionHash": "0x79ed6539033537d054fd7977d00e21918495f22ccaae7ca8823541758ff84ee2"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "Claude Opus 5",
+      "reviewedAt": "2026-08-25T14:45:00Z",
+      "note": "The pool proxy emitted no Upgraded event between its creation block 17861190 and the exploit, and its EIP-1967 slot goes from zero at 17861189 to 0x3a6d9bf8286a4ada77c15ecf82d4c0c0af95be74 at its creation and still reads that at block 18377041, so the deployment is the change that made the exploited implementation active and the code is 72.2 days old. The proxy was created by the Aave-fork configurator factory 0xe94a20ef25d067743b9d965a8d46c1c035489b7d, sent by 0x17002566cc3508dfa3c0fa52fcbca990e42fd510, neither of which is an attacker address. The attacker EOA is a serial exploiter with 429 transactions; this one is its only HopeLend transaction. Loss is the single non-zero net position in the exploit receipt."
+    },
+    {
+      "id": "source-5",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1697629739/ethereum:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "observedAt": 1787647484
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/hopelend.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -133,7 +189,5 @@
       "date": "2023-10-18T11:48:59Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true."
-  ]
+  "notes": []
 }

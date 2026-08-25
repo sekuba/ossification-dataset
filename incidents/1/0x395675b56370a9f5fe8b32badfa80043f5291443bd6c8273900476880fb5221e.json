@@ -21,22 +21,56 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "DVM.init() is external with no initializer guard and no access control, so inside a flashLoan callback the attacker re-pointed _BASE_TOKEN_/_QUOTE_TOKEN_ at worthless tokens they controlled, making the flash-loan repayment check pass against the fake balances while the pool's real wCRES and USDT walked out."
+    "summary": "DVM.init() is a plain external function with no initializer guard and no access control. Inside a flashLoan callback the attacker called it again to repoint _BASE_TOKEN_ and _QUOTE_TOKEN_ at worthless tokens of their own, so the pool’s repayment check measured the fake balances and passed while the real wCRES and USDT had already left."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 1139456,
+      "amount": 1139456.204397,
       "valuationTimestamp": 1615237065,
-      "method": "legacy-unspecified",
+      "method": "stablecoin-par",
       "sourceIds": [
-        "source-3"
+        "source-1"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "symbol": "USDT"
+        },
+        "amount": "1139456.204397",
+        "usdValue": 1139456.204397,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1615237065,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xa0afaa285ce85974c3c881256cb7f225e3a1178a",
+          "symbol": "wCRES"
+        },
+        "amount": "133548.938584725046782716",
+        "usdValue": null,
+        "valuation": null,
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Netting the exploit receipt shows this pool paying out 1139456.204397 USDT and 133548.938584725046782716 wCRES and receiving only the attacker’s own FDO and FUSDT. DefiLlama has no price series for wCRES, so that component carries quantity only and the USD figure is the USDT leg at par, which makes it a floor. The headline figures of USD 2 to 3.8 million for the DODO incident aggregate several pools and value the wCRES leg; this record covers the wCRES-USDT pool alone. Part of the proceeds was returned to DODO by searchers who front-ran the attacker; that is a recovery and is not netted here."
   },
   "targets": [
     {
@@ -50,39 +84,42 @@
       "deployment": {
         "timestamp": 1614341266,
         "blockNumber": 11932747,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x96627558c67e7cf488d8fa9f359daefb43c7e834"
+        "transactionHash": "0x4ef041835374bd81488e945246ff260b0d0872849935ea0c7bafe2085c857ba2",
+        "transactionIndex": 66,
+        "creatorAddress": "0x5e5a7b76462e4bdf83aa98795644281bdba80b88"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1614341266,
         "blockNumber": 11932747,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "transactionHash": "0x4ef041835374bd81488e945246ff260b0d0872849935ea0c7bafe2085c857ba2",
+        "transactionIndex": 66,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x051ebd717311350f1684f89335bed4abd083a2b6"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The pool is an EIP-1167 minimal proxy whose runtime, 0x363d3d373d3d3d363d732bbd66fc4898242bdbd2583bbe1d76e8b8f714455af43d82803e903d91602b57fd5bf3, hardcodes the DVM master 0x2bbd66fc4898242bdbd2583bbe1d76e8b8f71445 and cannot be repointed. The clone creation is therefore the change that put that code into service for this execution context, and it is later than the master’s own deployment."
       },
       "codeAgeSeconds": 895799,
-      "failureModeId": "legacy:eip155:1:0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e:failure-1",
+      "failureModeId": "failure:dodo-dvm-recallable-init",
       "evidence": {
         "identitySourceIds": [
-          "source-3"
+          "source-1",
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/dodo.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -92,7 +129,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e"
@@ -101,26 +141,41 @@
       "id": "source-2",
       "type": "post-mortem",
       "supports": [
-        "root-cause"
+        "root-cause",
+        "loss"
       ],
       "url": "https://blog.dodoex.io/dodo-pool-incident-postmortem-with-a-little-help-from-our-friends-327e66872d42"
     },
     {
       "id": "source-3",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x4ef041835374bd81488e945246ff260b0d0872849935ea0c7bafe2085c857ba2"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
         "code-history",
+        "root-cause",
         "loss"
       ],
-      "note": "onchain review: I read the verified DVM source at 0x051ebd71 - init() is a plain external function with no guard. The attack tx moves 1,139,456.204397 USDT and 133,548.94 wCRES out of this pool against fake-token inflows; lossUsd is set to the USDT leg only (USD-pegged 1:1, directly verified) rather than the $2m-$3.8m headline that aggregates several pools and unconverted wCRES. Pool created 2021-02-26 by 0x96627558c67e7cf488d8fa9f359daefb43c7e834, not by attack sender 0x368a6558 Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1167 minimal-proxy clone: its 45-byte runtime is 363d3d373d3d3d363d73 followed by the master 0x2bbd66fc4898242bdbd2583bbe1d76e8b8f71445, so the DELEGATECALL target is baked into the code and cannot be repointed; the master's runtime is byte-identical at the clone's creation block 11932747 and the incident block 12000165 and contains no DELEGATECALL of its own, so the deployment basis is exact."
+      "reviewer": "Claude Opus 5",
+      "reviewedAt": "2026-08-25T13:00:00Z",
+      "note": "The verified DVM source has init() as a plain external function with no guard, and the exploit receipt shows this pool paying out its real reserves against the attacker’s fake tokens. The pool is a minimal proxy created by the DODO factory 0x5e5a7b76462e4bdf83aa98795644281bdba80b88 in block 11932747, its 45-byte runtime pins the master and cannot be repointed, so the clone creation is the age basis and the exploited code is 10.4 days old. The attacker EOA sent 102 transactions in the campaign, which spanned several DODO pools; this record is scoped to the wCRES-USDT pool that appears in the anchor trace and its loss is the netting of that pool’s own token deltas."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/dodo.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

@@ -16,63 +16,130 @@
       "timestamp": 1647340120
     },
     "attackerAddresses": [
-      "0xd041ad9aae5cf96b21c3ffcb303a0cb80779e358"
+      "0xd041ad9aae5cf96b21c3ffcb303a0cb80779e358",
+      "0xdbf225e3d626ec31f502d435b0f72d82b08e1bdd"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "Hundred's Compound-fork markets for Gnosis ERC-677 tokens transferred the underlying before updating borrow accounting, so the token's transferAndCall hook re-entered borrow() and drained several markets (compound-finance/compound-protocol issue 141)."
+    "summary": "Hundred’s Compound fork sends the underlying token to the borrower before it writes the new borrow balance. Gnosis bridged tokens are ERC-677, so the transfer hands control back to the borrower, who re-entered borrow() on the same and other markets while the accounting still showed no debt. The markets were drained of USDC, WBTC and WETH in one transaction. This is compound-finance/compound-protocol issue 141."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 1700000,
+      "amount": 4317363.896745388,
       "valuationTimestamp": 1647340120,
-      "method": "legacy-unspecified",
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-1",
+        "source-6"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 100,
+          "tokenAddress": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
+          "symbol": "USDC"
+        },
+        "amount": "3630474.307448",
+        "usdValue": 3630474.307448,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1647340120,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 100,
+          "tokenAddress": "0x8e5bbbb09ed1ebde8674cda39a0c169401db4252",
+          "symbol": "WBTC"
+        },
+        "amount": "16.17030715",
+        "usdValue": 624309.350286066,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1647340120,
+          "unitPriceUsd": 38608.37920361123,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 100,
+          "tokenAddress": "0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1",
+          "symbol": "WETH"
+        },
+        "amount": "24.715930916595319168",
+        "usdValue": 62580.23901132239,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1647340120,
+          "unitPriceUsd": 2531.979848240447,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Components are the market-side balance deltas in the single exploit transaction: the hUSDC market 0x243e33aa7f6787154a8e59d3c27a66db3f8818ee pays out 3630474.307448 USDC, the WBTC market 0xe4e43864ea18d5e5211352a4b810383460ab7fcc pays out 16.17030715 WBTC and the WETH market 0x8e15a22853a0a60a0fbb0d875055a8e66cff0235 pays out 24.715930916595319168 WETH. The attacker EOA keeps all of the WBTC and WETH and 3623974.824826 USDC; the 6499.482622 USDC difference is the fee taken by the flash-loan pool 0xa227c72a4055a9dc949cae24f54535fe890d3663 and still left the protocol. The v1 snapshot carried USD 1,700,000, which is well below the measured amount. Nothing was recovered."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x243e33aa7f6787154a8e59d3c27a66db3f8818ee",
-      "relationship": "unknown",
+      "relationship": "proxy",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xfcd8570ad81e6c77b8d252bebeba62ed980bd64d",
+        "codeHash": "0x7437931c483c98fe794b58b5a2fe9be81fbbee9945bf832e53ff2468f815eaae"
       },
       "deployment": {
         "timestamp": 1619347920,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 15722098,
+        "transactionHash": "0xd750f99ab2b8b6d1ad3daced76c0377629e5db22458a15833fa81d32b3ffcee4",
+        "transactionIndex": 1,
         "creatorAddress": "0xb16a11442878d6f1ef202ae63233a7c13e98fd7f"
       },
       "lastCodeChange": {
-        "kind": "deployment",
+        "kind": "implementation-change",
         "timestamp": 1619347920,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "logIndex": null,
+        "blockNumber": 15722098,
+        "transactionHash": "0xd750f99ab2b8b6d1ad3daced76c0377629e5db22458a15833fa81d32b3ffcee4",
+        "transactionIndex": 1,
+        "logIndex": 2,
         "mechanism": {
-          "type": "deployment",
-          "address": "0x243e33aa7f6787154a8e59d3c27a66db3f8818ee"
+          "type": "event",
+          "address": "0x243e33aa7f6787154a8e59d3c27a66db3f8818ee",
+          "eventTopic": "0xd604de94d45953f9138079ec1b82d533cb2160c906d1076d1f7ed54befbca97a",
+          "codeAddressLocation": "data-word-1-address"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The delegator’s only NewImplementation event, log 2 of its own creation transaction, moved the implementation from the zero address to 0xfcd8570ad81e6c77b8d252bebeba62ed980bd64d. The CErc20Delegator keeps the implementation in storage slot 18, which holds that address continuously from block 15722098 to the exploit block, and no EIP-1967 Upgraded event was ever emitted."
       },
       "codeAgeSeconds": 27992200,
-      "failureModeId": "legacy:eip155:100:0x534b84f657883ddc1b66a314e8b392feb35024afdec61dfe8e7c510cfac1a098:failure-1",
+      "failureModeId": "failure:compound-fork-erc677-borrow-reentrancy",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
           "source-4",
@@ -80,12 +147,11 @@
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/hundred-finance.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -95,7 +161,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 100,
       "transactionHash": "0x534b84f657883ddc1b66a314e8b392feb35024afdec61dfe8e7c510cfac1a098"
@@ -121,28 +190,44 @@
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "target-identity",
-        "code-history",
-        "loss"
+        "code-history"
       ],
-      "note": "onchain review: market 0x243E33aa7f6787154a8E59d3C27a66db3F8818ee created 2021-04-25T10:52:00Z by 0xb16a11442878d6f1ef202ae63233a7c13e98fd7f, not the attack-tx sender 0xd041ad9aae5cf96b21c3ffcb303a0cb80779e358. This is a Compound-fork delegator, so besides checking for EIP-1967 Upgraded events (none) the NewImplementation(address,address) log was also queried: the only one is at the creation block 15722098, so the executing code was 324.0 days old. The PoC also names markets 0xe4e43864ea18d5e5211352a4b810383460ab7fcc, 0x8e15a22853a0a60a0fbb0d875055a8e66cff0235 and 0x090a00a2de0ea83def700b5e216f87a5d4f394fe. Loss $1.7 million per the DeFiHackLabs 2022 index entry for this PoC. Distinct from the 2023-04 Hundred Finance row on optimism already in this file."
+      "chainId": 100,
+      "transactionHash": "0xd750f99ab2b8b6d1ad3daced76c0377629e5db22458a15833fa81d32b3ffcee4"
     },
     {
       "id": "source-5",
       "type": "review-note",
       "supports": [
-        "code-history"
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. CErc20Delegator: `implementation` is storage slot 18 (slot 17 is `underlying` = 0xddafbb505ad214d7b80b1f830fccc89b60fb7a83). Slot 18 held 0xfcd8570ad81e6c77b8d252bebeba62ed980bd64d continuously over a 25-point probe of [15722098, 21120320] and the only NewImplementation(address,address) on the delegator is the 0x0 -> 0xfcd8570a write in its creation block. callTracer on the exploit tx confirms the delegator delegatecalls only that implementation, which itself has zero DELEGATECALL opcodes."
+      "reviewer": "Claude Opus 5",
+      "reviewedAt": "2026-08-25T10:25:00Z",
+      "note": "The attacker EOA sent six transactions on Gnosis: one exploit-contract creation, the anchor, and four transfers of proceeds, so the anchor is the only defect-executing transaction. The hUSDC delegator emitted exactly one NewImplementation event, in its own creation block, and no EIP-1967 Upgraded event, so the exploited implementation is 324.0 days old. Its creator 0xb16a11442878d6f1ef202ae63233a7c13e98fd7f is not the attacker. The WBTC market 0xe4e43864ea18d5e5211352a4b810383460ab7fcc and the WETH market 0x8e15a22853a0a60a0fbb0d875055a8e66cff0235 were drained in the same transaction and run the same delegator pattern; they are not separate targets because they would group to the same (code hash, failure mode) pair as this one, and their losses are carried in the incident total. Loss is measured from the market-side token deltas in the exploit receipt."
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1647340120/coingecko:wrapped-bitcoin,coingecko:ethereum,coingecko:usd-coin",
+      "observedAt": 1787643981
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/hundred-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -154,7 +239,5 @@
       "date": "2022-03-15T10:28:40Z"
     }
   },
-  "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true."
-  ]
+  "notes": []
 }

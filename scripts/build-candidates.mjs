@@ -141,9 +141,15 @@ const primaryRecords = parsePrimaryIncidents(primaryPaths)
 
 const primaryByTx = new Map()
 const primaryByDfhlPath = new Map()
+const primaryByLegacyRow = new Map()
 for (const { incident } of primaryRecords) {
   const tx = incident.incident.exploit.transactionHash
   primaryByTx.set(tx, [...(primaryByTx.get(tx) ?? []), incident.id])
+  const legacy = incident.verification?.legacy
+  if (legacy) {
+    const key = `${legacy.originalFile}#${legacy.originalIncidentIndex}`
+    primaryByLegacyRow.set(key, [...(primaryByLegacyRow.get(key) ?? []), incident.id])
+  }
   for (const source of incident.sources ?? []) {
     if (
       source.type === 'source-code' &&
@@ -178,9 +184,10 @@ const legacyRows = legacyV1.rows.map(({ source, protocol, incident }, contextInd
   exploitTx: incident.exploitTx,
   victimAddresses: incident.victimContract ? [incident.victimContract.toLowerCase()] : [],
   dfhlPaths: dfhlPathsFromLegacy(incident),
-  incidentIds: incident.exploitTx
-    ? primaryByTx.get(incident.exploitTx.toLowerCase()) ?? []
-    : [],
+  incidentIds: unique([
+    ...(incident.exploitTx ? primaryByTx.get(incident.exploitTx.toLowerCase()) ?? [] : []),
+    ...(primaryByLegacyRow.get(`${source.file}#${source.incidentIndex}`) ?? []),
+  ]).sort(),
   protocol,
   incident,
 }))

@@ -16,73 +16,100 @@
       "timestamp": 1701813183
     },
     "attackerAddresses": [
-      "0xce27b195fa6de27081a86b98b64f77f5fb328dd5"
+      "0xce27b195fa6de27081a86b98b64f77f5fb328dd5",
+      "0xe1997bc971d5986aa57e9cdb8ce87c6f4c1b1c1e"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "BvaultsStrategy.convertDustToEarned() is permissionless and swaps the strategy's holdings through PancakeSwap with no minimum-output check, so a flash-loan-skewed pool let the attacker capture the strategy's swap."
+    "summary": "BvaultsStrategy.convertDustToEarned() is callable by anyone and swaps the strategy’s holdings through PancakeSwap with no minimum-output argument and no slippage bound. The attacker flash-loaned the BUSD/ALPACA pool out of balance, called the function so the strategy sold 768,358.95 BUSD into the skewed pool for 513.35 ALPACA, and took the difference when the pool re-balanced."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 769000,
+      "amount": 768261.5602647279,
       "valuationTimestamp": 1701813183,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "incident-price",
+      "sourceIds": [
+        "source-1",
+        "source-5"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+          "symbol": "BUSD"
+        },
+        "amount": "768358.953227757555088466",
+        "usdValue": 768358.9532277576,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1701813183,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The strategy 0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e pays out 768358.953227757555088466 BUSD in the single exploit transaction and receives 513.348353791467415682 ALPACA for it, worth USD 97.39 at the DefiLlama ALPACA price for the incident timestamp. The component records the BUSD that left; loss.usd.amount is the net shortfall after crediting that ALPACA, which is why loss.kind is net-loss. The attacker EOA keeps 760889.017097225537647455 BUSD; the difference is the flash-loan fee paid to the pool out of the drained funds. Nothing was recovered."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e",
+        "codeHash": "0xada77033047849187832a245e0e1f814d255430597cfce06d3a321ebd117e1cd"
       },
       "deployment": {
         "timestamp": 1614674002,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 5324911,
+        "transactionHash": "0xdd4031277401d5eca44cc73e153effaee20a983b5b513cbf517e08cc9a9911db",
+        "transactionIndex": 68,
         "creatorAddress": "0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1614674002,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 5324911,
+        "transactionHash": "0xdd4031277401d5eca44cc73e153effaee20a983b5b513cbf517e08cc9a9911db",
+        "transactionIndex": 68,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Non-upgradeable contract. The runtime code hash is 0xada77033047849187832a245e0e1f814d255430597cfce06d3a321ebd117e1cd both at the deployment block 5324911 and at block 34099688, and the EIP-1967 implementation slot is zero, so no code change occurred between deployment and the exploit."
       },
       "codeAgeSeconds": 87139181,
-      "failureModeId": "legacy:eip155:56:0x51913be3f31d5ddbfc77da789e5f9653ed6b219a52772309802226445a1edd5f:failure-1",
+      "failureModeId": "failure:bvaults-strategy-unprotected-dust-swap",
       "evidence": {
         "identitySourceIds": [
-          "source-3",
-          "source-4"
+          "source-1",
+          "source-2",
+          "source-4",
+          "source-6"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-6"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/bearn-dao.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-6"
         ]
       }
     }
@@ -92,21 +119,16 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 56,
       "transactionHash": "0x51913be3f31d5ddbfc77da789e5f9653ed6b219a52772309802226445a1edd5f"
     },
     {
       "id": "source-2",
-      "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
-      "url": "https://twitter.com/AnciliaInc/status/1732159377749180646"
-    },
-    {
-      "id": "source-3",
       "type": "source-code",
       "supports": [
         "target-identity",
@@ -114,23 +136,56 @@
       ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
-      "path": "src/test/2023-12/BEARNDAO_exp.sol"
+      "path": "src/test/2023-12/BvaultsStrategy_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "supports": [
+        "root-cause"
+      ],
+      "url": "https://twitter.com/BlockSecTeam/status/1732176228244140494"
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "target-identity",
         "code-history"
       ],
-      "note": "onchain review: victim 0x21125d94cfe886e7179c8d2fe8c1ea8d57c73e0e created 2021-03-02T08:33:22Z by 0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36, which is not the attack-tx sender 0xce27b195fa6de27081a86b98b64f77f5fb328dd5; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+      "chainId": 56,
+      "transactionHash": "0xdd4031277401d5eca44cc73e153effaee20a983b5b513cbf517e08cc9a9911db"
+    },
+    {
+      "id": "source-5",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1701813183/coingecko:alpaca-finance",
+      "observedAt": 1787647663
+    },
+    {
+      "id": "source-6",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "Claude Opus 5",
+      "reviewedAt": "2026-08-25T15:30:00Z",
+      "note": "The attacker EOA sent sixteen transactions in the campaign window; the anchor is the only one that touches the strategy, the rest being exploit-contract creations, WBNB wrapping and disposal swaps. The strategy is not upgradeable: identical runtime code hash at the deployment block 5324911 and at block 34099688 with a zero EIP-1967 slot, so the exploited code is 1008.6 days old, deployed by 0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36, which is not an attacker address. Loss is measured net because the strategy did receive consideration for the BUSD it sold, just at a price the caller controlled inside the transaction; the ALPACA received is recorded as a negative component so the total is the strategy’s actual shortfall."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/bearn-dao.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-6"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",

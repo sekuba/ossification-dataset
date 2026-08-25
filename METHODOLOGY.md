@@ -57,6 +57,13 @@ Attacker-installed exploit machinery receives explicit attribution. The
 executable-code curve uses deployment, implementation, and module changes;
 parameter, market, and exposure changes are retained as configuration context.
 
+An unprotected initializer left reachable on a deployed proxy is a defect in
+that deployed code, exploitable and publicly visible from the moment it is
+installed. Such an incident anchors on the earliest transaction that calls the
+initializer, so the age spans the interval the defect survived unexploited, and
+a later drain through attacker-installed implementations belongs to the loss
+rather than to the age.
+
 A deployment basis requires positive evidence that the relevant code state
 continued through the exploit. Suitable evidence depends on architecture and
 can combine runtime hashes, implementation or beacon slots, custom events,

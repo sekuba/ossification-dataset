@@ -6,7 +6,7 @@
     "name": "Aztec",
     "slug": "aztec"
   },
-  "name": "Aztec V1 rollup escape hatch",
+  "name": "Aztec 2.0 escape-hatch verifier soundness failure",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -21,69 +21,137 @@
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "The permissionless escapeHatch() path accepted Turbo-PLONK proofs whose published inner proof_id was left unconstrained by the circuit, so a proof authorising a withdrawal with no matching deposit passed TurboVerifier and drained the rollup's pooled ETH, DAI and renBTC."
+    "summary": "The escape-hatch verifier the deprecated Aztec 2.0 RollupProcessor delegated proof checking to did not bind a note’s output owner to the party entitled to it, so a proof carrying an attacker-chosen outputOwner verified as sound. escapeHatch() forwarded the attacker’s proof, verify() returned true, and the rollup paid the requested withdrawals out of pooled funds without any further ownership check."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 2160000,
+      "amount": 2201243.5200759624,
       "valuationTimestamp": 1781721287,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "incident-price",
+      "sourceIds": [
+        "source-4",
+        "source-5"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "1158",
+        "usdValue": 2044075.402010789,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1781721287,
+          "unitPriceUsd": 1765.177376520543,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "symbol": "DAI"
+        },
+        "amount": "150000",
+        "usdValue": 150000,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1781721287,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xeb4c2781e4eba804ce9a9803c67d0893436bb27d",
+          "symbol": "renBTC"
+        },
+        "amount": "0.46963295",
+        "usdValue": 7168.1180651733275,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1781721287,
+          "unitPriceUsd": 15263.234969295336,
+          "sourceIds": [
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Three escape-hatch transactions from the same EOA drained the rollup: the ETH leg in the anchor transaction, then the DAI leg at block 25339169 and the renBTC leg at block 25339172. The rollup balance falls from 1158.759804206229645062 ETH to 0.759804206229645062 ETH, from 150095.695899720407042487 DAI to 95.695899720407042487 DAI, and from 0.46963295 renBTC to 0, and the attacker address holds exactly the difference afterwards. The 0.759804206229645062 ETH residue a copycat swept the next morning is not included. Nothing was recovered; the contract’s ownership is renounced so it could not be paused."
   },
   "targets": [
     {
       "id": "target-1",
-      "executionAddress": "0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba",
-      "relationship": "unknown",
+      "executionAddress": "0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8",
+        "codeHash": "0x720803cbe1c6bc6d8cfb917329fc4dfc50693ec518842dd0ccb5277b9343f79b"
       },
       "deployment": {
-        "timestamp": 1614799636,
-        "blockNumber": 11967192,
-        "transactionHash": "0x699eb365b1c797084d87ac685bd0276e1d5eed713fe95a0e1e2f2b0b99eb32bd",
-        "transactionIndex": 34,
-        "creatorAddress": "0xfcf75295f242c4e87203abb5d7c9bbeda90a8895"
+        "timestamp": 1707995675,
+        "blockNumber": 19232962,
+        "transactionHash": "0x481bdfd3ae4f103a0b03321b086b931e4c7653d25d0c4a8469fdab0e32b2f00a",
+        "transactionIndex": 30,
+        "creatorAddress": "0x36bb84d28bb2d9772158cc9a09feaa5472ebfd32"
       },
       "lastCodeChange": {
-        "kind": "deployment",
-        "timestamp": 1614799636,
-        "blockNumber": 11967192,
-        "transactionHash": "0x699eb365b1c797084d87ac685bd0276e1d5eed713fe95a0e1e2f2b0b99eb32bd",
-        "transactionIndex": 34,
-        "logIndex": null,
+        "kind": "implementation-change",
+        "timestamp": 1707996527,
+        "blockNumber": 19233032,
+        "transactionHash": "0xcd796eeaf302b098f59b3a45867000a2f873d5d5a2a347987f4a6cd307b54d4b",
+        "transactionIndex": 72,
+        "logIndex": 166,
         "mechanism": {
-          "type": "deployment",
-          "address": "0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba"
+          "type": "event",
+          "address": "0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba",
+          "eventTopic": "0xd24015cc99cc1700cafca3042840a1d8ac1e3964fd2e0e37ea29c654056ee327",
+          "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The ninth and final VerifierUpdated event the RollupProcessor emitted before the exploit selected 0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8; its verifier storage slot 6 reads that address from block 19233032 through block 25339093, and the exploit trace shows escapeHatch calling it."
       },
-      "codeAgeSeconds": 166921651,
-      "failureModeId": "legacy:eip155:1:0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5:failure-1",
+      "codeAgeSeconds": 73724760,
+      "failureModeId": "failure:aztec-v1-escape-hatch-verifier-output-owner-unbound",
       "evidence": {
         "identitySourceIds": [
-          "source-3",
-          "source-4",
-          "source-5"
+          "source-1",
+          "source-2",
+          "source-6",
+          "source-8"
         ],
         "codeHistorySourceIds": [
-          "source-4",
-          "source-5"
+          "source-2",
+          "source-3",
+          "source-8"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/aztec.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-8"
         ]
       }
     }
@@ -93,21 +161,58 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 1,
       "transactionHash": "0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5"
     },
     {
       "id": "source-2",
-      "type": "post-mortem",
+      "type": "onchain-transaction",
       "supports": [
-        "root-cause"
+        "target-identity",
+        "code-history"
       ],
-      "url": "https://x.com/ivanbogatyy/status/2069159603942596830"
+      "chainId": 1,
+      "transactionHash": "0x481bdfd3ae4f103a0b03321b086b931e4c7653d25d0c4a8469fdab0e32b2f00a"
     },
     {
       "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0xcd796eeaf302b098f59b3a45867000a2f873d5d5a2a347987f4a6cd307b54d4b"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction-set",
+      "supports": [
+        "loss"
+      ],
+      "chainId": 1,
+      "transactionHashes": [
+        "0x5c196c37a109d74c9797254287a0331f30e0daa637af241bd28fdc43774705c3",
+        "0x9e1d6ab7c20ae235409d7dd3a9cd47c04f07293585b3498b8beed82d6f6b03ca",
+        "0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5"
+      ]
+    },
+    {
+      "id": "source-5",
+      "type": "price-data",
+      "supports": [
+        "loss"
+      ],
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1781721287/coingecko:ethereum,ethereum:0x6b175474e89094c44da98b954eedeac495271d0f,ethereum:0xeb4c2781e4eba804ce9a9803c67d0893436bb27d",
+      "observedAt": 1787642092
+    },
+    {
+      "id": "source-6",
       "type": "source-code",
       "supports": [
         "target-identity",
@@ -118,30 +223,33 @@
       "path": "src/test/2026-06/AztecEscapeHatch_exp.sol"
     },
     {
-      "id": "source-4",
-      "type": "review-note",
+      "id": "source-7",
+      "type": "post-mortem",
       "supports": [
-        "target-identity",
-        "code-history"
+        "root-cause"
       ],
-      "note": "onchain review: rollup 0x737901bea3eeb88459df9ef1BE8fF3Ae1B42A2ba created 2021-03-03 by 0xfcf75295f242c4e87203abb5d7c9bbeda90a8895, no EIP-1967 upgrade events; ETH leg measured here, DAI leg 0x5c196c37a109d74c9797254287a0331f30e0daa637af241bd28fdc43774705c3 and renBTC leg 0x9e1d6ab7c20ae235409d7dd3a9cd47c04f07293585b3498b8beed82d6f6b03ca same victim"
+      "url": "https://aztec-labs.com/blog/june-2026-incidents"
     },
     {
-      "id": "source-5",
-      "type": "onchain-transaction",
+      "id": "source-8",
+      "type": "review-note",
       "supports": [
+        "incident-anchor",
         "target-identity",
-        "code-history"
+        "code-history",
+        "root-cause",
+        "loss"
       ],
-      "chainId": 1,
-      "transactionHash": "0x699eb365b1c797084d87ac685bd0276e1d5eed713fe95a0e1e2f2b0b99eb32bd"
+      "reviewer": "Claude Opus 5",
+      "reviewedAt": "2026-08-25T08:30:00Z",
+      "note": "The legacy record measured this against the RollupProcessor’s 2021-03-03 deployment, giving 5.29 years. That is the wrong artifact. The rollup does not contain the failing logic: escapeHatch statically calls the verifier held in its storage slot 6, and the exploit trace shows TurboVerifier 0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8 running the check and delegate-calling its verification key 0xf3761b450571a49fa8e2af6e37e1eb3516209d56 for key id 0. Both were deployed by 0x36bb84d28bb2d9772158cc9a09feaa5472ebfd32 in block 19232962 on 2024-02-15, and the RollupProcessor emitted nine VerifierUpdated events in total, the last of which, log 166 of block 19233032, selected 0x48cb7ba0; slot 6 holds that address continuously through block 25339093. The exploited verifier is therefore 853.3 days old, not 5.29 years. The target is recorded on the verifier itself rather than on the rollup because the verifier is the artifact whose verify() accepted the unsound proof; its verification key, which the published analyses name as the component that failed to bind the output owner, was deployed in the same block, so the age is the same under either attribution. Loss is the rollup’s ETH, DAI and renBTC balance deltas across the three escape-hatch transactions, all of which land in the attacker address."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/aztec.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-8"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
