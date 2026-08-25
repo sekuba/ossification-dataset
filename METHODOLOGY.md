@@ -15,13 +15,34 @@ A primary incident satisfies three conditions:
    bound of at least 1,000.
 
 Candidate records hold discovery leads, context incidents, and entries awaiting
-one of these claims. The curve contains the reviewed subset of primary
-incidents.
+one of these claims. The release retains every admitted target, but the
+executable-code curve contains only reviewed, curve-eligible target
+observations with a concrete USD loss.
+
+A code defect is executable logic that violates an evidenced security invariant
+under calls or inputs the deployed system permits. This includes missing or
+incorrect authorization, accounting, validation, initialization, and external
+interaction logic. Exclude losses caused only by compromised credentials,
+malicious or mistaken privileged actions, configured parameter values that the
+code applies as designed, market conditions, or offchain/front-end behavior.
+In a mixed case, admit the incident only when the executed EVM code itself
+failed an evidenced invariant; configuration changes remain context, not the
+code-age anchor.
 
 ## Incident and target units
 
-An incident is anchored to one successful exploit or failure-finalizing
-transaction and owns the classification and loss measurement.
+An incident represents one coherent campaign against an affected execution
+context on one chain. Anchor it to the earliest successful transaction in the
+campaign that executes the defect, or to the transaction that makes a permanent
+loss final when there is no earlier defect-executing success. The incident owns
+the classification and a loss measurement not counted by another record.
+
+Repeated transactions against the same affected code state on the same chain
+belong to one incident. The same defect against a separate deployment or on a
+different chain is a separate incident because its anchors and age are
+independent. When one transaction implicates several independently aged code
+states, represent them as targets of that incident. Curve deduplication handles
+code-identical repetitions; it does not merge their source records or losses.
 
 A target is an independently aged execution context and code artifact implicated
 in that incident. It distinguishes:
@@ -31,6 +52,13 @@ in that incident. It distinguishes:
   runtime containing the defect;
 - `relationship`: how the execution context reached the artifact;
 - `lastCodeChange`: the change that made the artifact active.
+
+An incident has at most one target for each exact
+`(codeArtifact.codeHash, failureModeId)` pair. If a same-chain campaign exploits
+many code-identical deployments through the same failure, use the execution
+context first reached by the anchored campaign as the representative target and
+cover the full campaign in the loss evidence. Add targets for distinct code or
+failure pairs and for distinct defect-bearing roles in the causal path.
 
 This representation covers direct contracts, proxies, beacons, clones,
 diamonds, routers, shared implementations, and libraries.
@@ -73,7 +101,7 @@ storage history, and execution traces.
 
 Verification follows the ownership of each claim:
 
-- Incident `provisional`: classification or loss awaits review.
+- Incident `provisional`: exploit anchor, classification, or loss awaits review.
 - Incident `reviewed`: exploit anchor, code-bug classification, and loss have
   been reviewed.
 - Target `provisional`: artifact identity or code history awaits research.
@@ -99,11 +127,13 @@ Loss is the value stolen or permanently locked because of the defect. `kind`
 states whether the measurement is gross assets lost, net loss, or permanently
 locked value.
 
-A loss spanning several transactions or chains is one incident when they form a
-coherent campaign caused by the same defect. The incident anchor fixes the
-code-age timestamp; the loss covers the campaign. Evidence can combine onchain
-transactions, project reports, technical post-mortems, and reputable published
-analysis. Reported estimates state their scope and valuation method.
+A loss spanning several transactions in the same incident covers the coherent
+campaign. Cross-chain or separate-deployment losses belong to their respective
+incident records and must not be duplicated. The incident anchor fixes the
+code-age timestamp; `realizedAt` records a later campaign end when needed.
+Evidence can combine onchain transactions, project reports, technical
+post-mortems, and reputable published analysis. Reported estimates state their
+scope and valuation method.
 
 Reviewed asset components identify the chain and token, decimal quantity, USD
 value, valuation timestamp and method, and evidence IDs. Stable assets may use
@@ -113,6 +143,10 @@ sources record provider, URL, and observation time.
 
 Legacy asset prose remains a provisional migration representation. Reviewed
 records use structured components and high or medium confidence.
+
+An evidenced `minimumUsd` lower bound is enough for dataset admission when an
+exact valuation is unavailable. It is not enough for the comparable curve,
+which requires `loss.usd.amount >= 1,000`.
 
 ## Curve construction
 

@@ -5,10 +5,11 @@ failure, and the resulting loss.
 
 ## Interface
 
-Each file under `incidents/<chainId>/` represents one selected exploit or
-failure-finalizing transaction and
-uses the stable ID `eip155:<chainId>:<exploitTx>`. The incident owns its
-classification and loss. Its targets own independently measured code ages.
+Each file under `incidents/<chainId>/` represents one same-chain exploit
+campaign, anchored to one selected defect-executing or failure-finalizing
+transaction, and uses the stable ID `eip155:<chainId>:<exploitTx>`. The
+incident owns its classification and non-overlapping loss. Its targets own
+independently measured code ages.
 
 A target identifies:
 
@@ -25,8 +26,8 @@ incident timestamp - last pre-exploit executable-code change timestamp
 ```
 
 Transaction and log positions provide exact ordering. `METHODOLOGY.md` defines
-cohort admission, measurements, verification, loss valuation, and
-deduplication.
+the scope boundary, incident units, measurements, verification, loss
+valuation, and deduplication.
 
 ## Repository layout
 

@@ -7,28 +7,27 @@ curve construction.
 
 1. Add discovery leads to the research inputs and assign a candidate
    disposition.
-2. Create `incidents/<chainId>/<exploitTx>.json` after establishing the cohort
-   admission claims.
-3. Add one target for every independently aged code state.
-4. Link incident and target claims to evidence source IDs.
-5. Run the onchain verifier and promote each claim at its achieved tier.
-6. Link reviewed claims to an attestation naming the reviewer and review time.
-7. Regenerate and review `dist/latest/`.
+2. Establish the code-defect, onchain-anchor, and USD-loss admission claims.
+3. Create one `incidents/<chainId>/<exploitTx>.json` per affected same-chain
+   campaign. Keep separate deployments or chains separate and never duplicate
+   their losses.
+4. Add targets under the representative rule in `METHODOLOGY.md`, then link
+   each claim to evidence source IDs.
+5. Run the onchain verifier and promote only the claims actually reproduced and
+   reviewed. Link semantic review to an attestation naming the reviewer and
+   review time.
+6. Regenerate and review `research/revalidation.json` and `dist/latest/`.
 
-## Incident evidence
+## Review checklist
 
-Establish:
+For the incident, establish:
 
 - the successful exploit transaction and execution context;
 - the EVM code defect and causal root-cause evidence;
 - stolen or permanently locked assets valued at USD 1,000 or more;
 - structured loss kind, components, valuation, confidence, and source IDs.
 
-The incident owns classification and loss.
-
-## Target evidence
-
-Record:
+For each target, establish:
 
 - `executionAddress`, `relationship`, and defect-bearing `codeArtifact`;
 - runtime code hash;
@@ -39,21 +38,11 @@ Record:
 - identity and code-history source IDs;
 - reviewed `failure:<namespace>` identity when available.
 
-Proxy and modular targets retain both execution context and code-artifact roles.
-Event changes identify the exact topic or data word selecting the code address.
-Deployment-based ages include positive continuity evidence.
-
-## Promotion
-
-Claims begin as `provisional`. Automated anchor reproduction promotes a target
-to `mechanical`. Semantic review promotes the incident or target to
-`reviewed`. A reviewed target under a reviewed incident becomes
-`curveEligible` when every curve condition holds.
-
-Reviewed incident attestations cover the exploit anchor, root cause, and loss.
-Reviewed target attestations cover artifact identity and complete code history.
-Store the attestation as a `review-note` with `reviewer` and `reviewedAt`, then
-link it through `verification.reviewSourceIds`.
+Claims begin as `provisional`. `mechanical` means the verifier reproduced the
+target anchors; it is not semantic review. Set incident or target `reviewed`
+only after linking a `review-note` with `reviewer` and `reviewedAt` through
+`verification.reviewSourceIds`. Set `curveEligible` only when all curve rules in
+`METHODOLOGY.md` hold.
 
 ## Validation
 
