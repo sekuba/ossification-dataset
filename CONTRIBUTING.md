@@ -9,8 +9,8 @@ curve construction.
    disposition.
 2. Establish the code-defect, onchain-anchor, and USD-loss admission claims.
 3. Create one `incidents/<chainId>/<exploitTx>.json` per affected same-chain
-   campaign. Keep separate deployments or chains separate and never duplicate
-   their losses.
+   campaign. Keep different chains and separate campaigns distinct; a coherent
+   mass campaign may use the representative-target rule. Never duplicate loss.
 4. Add targets under the representative rule in `METHODOLOGY.md`, then link
    each claim to evidence source IDs.
 5. Run the onchain verifier and promote only the claims actually reproduced and

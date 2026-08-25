@@ -1,7 +1,8 @@
 # Ossification Dataset
 
 An auditable dataset of EVM code-bug exploits, the age of the executing code at
-failure, and the resulting loss.
+failure, and the resulting loss. Its generated release is consumed by L2BEAT's
+ossification framework to present an ossification score.
 
 ## Interface
 
@@ -9,7 +10,7 @@ Each file under `incidents/<chainId>/` represents one same-chain exploit
 campaign, anchored to one selected defect-executing or failure-finalizing
 transaction, and uses the stable ID `eip155:<chainId>:<exploitTx>`. The
 incident owns its classification and non-overlapping loss. Its targets own
-independently measured code ages.
+the target-level code ages.
 
 A target identifies:
 

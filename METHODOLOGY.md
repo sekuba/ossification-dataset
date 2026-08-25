@@ -37,12 +37,14 @@ campaign that executes the defect, or to the transaction that makes a permanent
 loss final when there is no earlier defect-executing success. The incident owns
 the classification and a loss measurement not counted by another record.
 
-Repeated transactions against the same affected code state on the same chain
-belong to one incident. The same defect against a separate deployment or on a
-different chain is a separate incident because its anchors and age are
-independent. When one transaction implicates several independently aged code
-states, represent them as targets of that incident. Curve deduplication handles
-code-identical repetitions; it does not merge their source records or losses.
+Repeated transactions in one coherent campaign on the same chain belong to one
+incident. Such a campaign may span code-identical deployments under the
+representative-target rule below. A campaign on a different chain, or a
+separate campaign against another deployment, is a separate incident because
+its anchors, age, and loss are independent. When one incident implicates
+several distinct defect-bearing code states, represent them as targets of that
+incident. Curve deduplication handles code-identical repetitions across
+incidents; it does not merge their source records or losses.
 
 A target is an independently aged execution context and code artifact implicated
 in that incident. It distinguishes:
@@ -125,7 +127,9 @@ Provider and unsupported-method outcomes are `INCONCLUSIVE`.
 
 Loss is the value stolen or permanently locked because of the defect. `kind`
 states whether the measurement is gross assets lost, net loss, or permanently
-locked value.
+locked value. Prefer the exact defect-caused gross outflow from victims when it
+can be isolated. Use net loss only when gross outflow cannot be separated, and
+state how financing, fees, payments, and recoveries are treated.
 
 A loss spanning several transactions in the same incident covers the coherent
 campaign. Cross-chain or separate-deployment losses belong to their respective
