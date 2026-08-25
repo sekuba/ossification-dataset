@@ -168,8 +168,8 @@ reviewed `failure:<namespace>` identifier.
 
 `dist/latest/curve.json` publishes selected observations, deduplicated
 observations, exclusions, and sorted `ageKnots`. Each observation references
-its incident-level loss through `incidentId`. `research/revalidation.json`
-publishes the deterministic blocker list for every target.
+its incident-level loss through `incidentId`, and every non-selected target
+appears with its `exclusionReasons`.
 
 ## Provenance and releases
 

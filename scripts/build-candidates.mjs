@@ -153,9 +153,18 @@ for (const [index, entry] of exclusions.entries()) {
 const primaryByTx = new Map()
 const primaryByDfhlPath = new Map()
 const primaryByLegacyRow = new Map()
+// Incidents declare the discovery leads they answer. This is the only link that
+// works for records outside the legacy migration, and it is exact by construction.
+const primaryByDiscoveryId = new Map()
 for (const { incident } of primaryRecords) {
   const tx = incident.incident.exploit.transactionHash
   primaryByTx.set(tx, [...(primaryByTx.get(tx) ?? []), incident.id])
+  for (const candidateId of incident.discovery ?? []) {
+    primaryByDiscoveryId.set(candidateId, [
+      ...(primaryByDiscoveryId.get(candidateId) ?? []),
+      incident.id,
+    ])
+  }
   const legacy = incident.verification?.legacy
   if (legacy) {
     const key = `${legacy.originalFile}#${legacy.originalIncidentIndex}`
@@ -216,6 +225,22 @@ const otherIdentifierByPoc = new Map(
   dfhl.coveredOtherIdentifier.map((entry) => [entry.poc, entry]),
 )
 const noDatasetRowByPoc = new Map(dfhl.noDatasetRow.map((entry) => [entry.poc, entry]))
+// Legacy category labels that settle scope on their own. `oracle-manipulation`
+// is deliberately absent: METHODOLOGY admits a manipulable price read when the
+// deployed code itself fails to validate it, so those rows need the boundary
+// test, not a label.
+const CATEGORIES_OUTSIDE_COHORT = new Set([
+  'economic-design',
+  'governance-design',
+  'insider-rug',
+  'key-compromise',
+  'offchain-infra',
+])
+
+function declaredIncidentIds(candidateId) {
+  return primaryByDiscoveryId.get(candidateId) ?? []
+}
+
 const dfhlAdjudications = [
   ...(dfhl.adjudications?.lossBelowUsd1000 ?? []).map((poc) => ({
     poc,
@@ -232,7 +257,7 @@ const dfhlAdjudications = [
   ...(dfhl.adjudications?.legacyMatches ?? []).map(({ poc, entryIndex }) => ({
     poc,
     status: 'out-of-scope',
-    reason: legacyDisposition(legacyRows[entryIndex]).reason,
+    reason: legacyDisposition(legacyRows[entryIndex], null).reason,
     evidence: { kind: 'legacy-v1', entryIndex },
   })),
 ]
@@ -284,6 +309,7 @@ function dfhlDisposition(rows, poc) {
   const incidentIds = unique([
     ...rows.flatMap((row) => row.incidentIds),
     ...(primaryByDfhlPath.get(poc) ?? []),
+    ...declaredIncidentIds(`dfhl:${poc}`),
   ]).sort()
   if (incidentIds.length > 0) {
     return {
@@ -307,7 +333,8 @@ function dfhlDisposition(rows, poc) {
 
   if (rows.length > 0) {
     const allOutsidePrimaryScope = rows.every(
-      (row) => row.category !== 'code-bug' || row.measurementStatus === 'SCOPE_ONLY',
+      (row) =>
+        CATEGORIES_OUTSIDE_COHORT.has(row.category) || row.measurementStatus === 'SCOPE_ONLY',
     )
     return allOutsidePrimaryScope
       ? {
@@ -326,7 +353,16 @@ function dfhlDisposition(rows, poc) {
   }
 }
 
-function legacyDisposition(row) {
+function legacyDisposition(row, id) {
+  const declared = declaredIncidentIds(id)
+  if (declared.length > 0) {
+    return {
+      status: 'included',
+      incidentIds: [...declared].sort(),
+      reason: 'An admitted incident declares this discovery lead.',
+    }
+  }
+
   if (row.exclusionIds.length > 0) {
     return {
       status: 'excluded',
@@ -335,7 +371,7 @@ function legacyDisposition(row) {
     }
   }
 
-  if (row.category !== 'code-bug') {
+  if (CATEGORIES_OUTSIDE_COHORT.has(row.category)) {
     return {
       status: 'out-of-scope',
       reason: `The legacy category ${row.category} is outside the EVM code-bug cohort.`,
@@ -354,6 +390,14 @@ function legacyDisposition(row) {
       status: 'out-of-scope',
       reason:
         'The measured unit is executable EVM contract code; this defect is in a chain-level precompile.',
+    }
+  }
+
+  if (row.category === 'oracle-manipulation') {
+    return {
+      status: 'pending',
+      reason:
+        'Legacy labelled this row oracle manipulation. The cohort admits a manipulable price read when the deployed code itself fails to validate it, so the row awaits the METHODOLOGY boundary test.',
     }
   }
 
@@ -502,10 +546,20 @@ const webCandidates = webRows.map((web) => {
       .filter(Boolean)
       .some((name) => normalizedName(name) === candidateName)
   })
-  const incidentIds = unique(exactSourceRows.flatMap((row) => row.incidentIds)).sort()
+  const declared = declaredIncidentIds(id)
+  const incidentIds = unique([
+    ...exactSourceRows.flatMap((row) => row.incidentIds),
+    ...declared,
+  ]).sort()
   const exclusionIds = unique(exactSourceRows.flatMap((row) => row.exclusionIds)).sort()
   const disposition =
-    incidentIds.length === 1
+    declared.length > 0
+      ? {
+          status: 'included',
+          incidentIds,
+          reason: 'An admitted incident declares this discovery lead.',
+        }
+      : incidentIds.length === 1
       ? {
           status: 'included',
           incidentIds,
@@ -611,7 +665,7 @@ const legacyCandidates = legacyRows
         notes: row.incident.notes,
         sources: row.incident.sources ?? [],
       },
-      disposition: legacyDisposition(row),
+      disposition: legacyDisposition(row, id),
     }
   })
 

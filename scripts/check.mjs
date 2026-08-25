@@ -317,6 +317,8 @@ function verifyIncident(record, state, errors) {
   if (state.incidentIds.has(incident.id))
     errors.push(`${label}: duplicate incident id also appears in ${state.incidentIds.get(incident.id)}`)
   else state.incidentIds.set(incident.id, label)
+  for (const candidateId of incident.discovery ?? [])
+    state.discoveryRefs.set(candidateId, [...(state.discoveryRefs.get(candidateId) ?? []), label])
   const txKey = `${chainId}:${exploit?.transactionHash}`
   if (state.exploitTransactions.has(txKey))
     errors.push(`${label}: exploit transaction also appears in ${state.exploitTransactions.get(txKey)}`)
@@ -555,7 +557,7 @@ function verifyIncident(record, state, errors) {
   }
 }
 
-function validateCandidates(root, incidentIds, errors, notes) {
+function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
   const candidatePath = path.join(root, 'research', 'candidates.json')
   if (!existsSync(candidatePath)) return
   const document = parseJson(candidatePath, 'research/candidates.json', errors)
@@ -637,6 +639,11 @@ function validateCandidates(root, incidentIds, errors, notes) {
     }
   }
 
+  for (const [candidateId, labels] of discoveryRefs) {
+    if (!ids.has(candidateId))
+      errors.push(`${labels.join(', ')}: discovery cites unknown research candidate ${candidateId}`)
+  }
+
   if (document.counts?.total !== document.candidates.length)
     errors.push(`research/candidates.json: counts.total does not equal ${document.candidates.length}`)
   for (const [status, count] of Object.entries(counts)) {
@@ -713,53 +720,6 @@ function validateCandidates(root, incidentIds, errors, notes) {
   if (generated.primaryIncidents?.files !== primaryFiles.length ||
       generated.primaryIncidents?.sha256 !== digestFiles(root, primaryFiles))
     errors.push('research/candidates.json: generatedFrom.primaryIncidents is stale')
-}
-
-function validateRevalidation(root, targetKeys, errors) {
-  const documentPath = path.join(root, 'research', 'revalidation.json')
-  const schemaPath = path.join(root, 'schema', 'revalidation.schema.json')
-  const document = parseJson(documentPath, 'research/revalidation.json', errors)
-  const schema = parseJson(schemaPath, 'schema/revalidation.schema.json', errors)
-  if (!document || !schema) return
-  try {
-    assertSupportedSchema(schema)
-    for (const error of validateSchema(document, schema))
-      errors.push(`research/revalidation.json: schema ${error}`)
-  } catch (error) {
-    errors.push(`schema/revalidation.schema.json: ${error.message}`)
-    return
-  }
-
-  const queueKeys = new Set()
-  const blockerCounts = {}
-  let ready = 0
-  for (const [index, item] of (document.items ?? []).entries()) {
-    const key = `${item.incidentId}#${item.targetId}`
-    if (queueKeys.has(key))
-      errors.push(`research/revalidation.json: duplicate item ${key}`)
-    queueKeys.add(key)
-    if (!targetKeys.has(key))
-      errors.push(`research/revalidation.json: items[${index}] references unknown target ${key}`)
-    if (item.blockers.length === 0) ready++
-    for (const blocker of item.blockers)
-      blockerCounts[blocker] = (blockerCounts[blocker] ?? 0) + 1
-  }
-  for (const key of targetKeys) {
-    if (!queueKeys.has(key)) errors.push(`research/revalidation.json: missing target ${key}`)
-  }
-  if (document.input?.incidents !== new Set([...targetKeys].map((key) => key.split('#')[0])).size)
-    errors.push('research/revalidation.json: input.incidents is stale')
-  if (document.input?.targets !== targetKeys.size)
-    errors.push('research/revalidation.json: input.targets is stale')
-  const incidentFiles = walkJsonFiles(path.join(root, 'incidents')).map((file) => file.absolute)
-  if (document.input?.incidentsSha256 !== `sha256:${digestFiles(root, incidentFiles)}`)
-    errors.push('research/revalidation.json: input.incidentsSha256 is stale')
-  if (document.counts?.ready !== ready || document.counts?.blocked !== targetKeys.size - ready)
-    errors.push('research/revalidation.json: ready/blocked counts are stale')
-  for (const [blocker, expected] of Object.entries(document.counts?.byBlocker ?? {})) {
-    if ((blockerCounts[blocker] ?? 0) !== expected)
-      errors.push(`research/revalidation.json: count for ${blocker} is stale`)
-  }
 }
 
 function validateDistribution(root, errors) {
@@ -841,9 +801,9 @@ export function checkDataset(root = ROOT) {
   }
   const state = {
     incidentIds: new Map(),
+    discoveryRefs: new Map(),
     exploitTransactions: new Map(),
     legacyRows,
-    targetKeys: new Set(),
   }
   for (const file of files) {
     const record = {
@@ -859,13 +819,10 @@ export function checkDataset(root = ROOT) {
         Array.isArray(record.incident.targets) && Array.isArray(record.incident.sources) &&
         record.incident.loss && record.incident.verification) {
       verifyIncident(record, state, errors)
-      for (const target of record.incident.targets)
-        state.targetKeys.add(`${record.incident.id}#${target.id}`)
     }
   }
 
-  validateCandidates(root, state.incidentIds, errors, notes)
-  validateRevalidation(root, state.targetKeys, errors)
+  validateCandidates(root, state.incidentIds, state.discoveryRefs, errors, notes)
   validateDistribution(root, errors)
   return { errors, notes, incidentCount: files.length }
 }

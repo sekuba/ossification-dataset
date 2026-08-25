@@ -574,6 +574,7 @@ date | project | reported loss | candidate mechanism
 2021-03-05 | Paid Network | approximately $3m realized | unauthorized mint
 2021-03-04 | Meerkat Finance | approximately $31m | malicious upgrade or rug
 2021-02-27 | Furucombo | approximately $14m | proxy approval or arbitrary-call exploit
+2021-02-13 | Alpha Homora v2 and Iron Bank | approximately $37.5m | share-accounting or rounding flaw in leveraged borrowing
 
 2020
 
@@ -596,3 +597,9 @@ date | project | reported loss | candidate mechanism
 2020-04-18 | Uniswap imBTC pool | approximately $300k | ERC-777 reentrancy
 2020-02-18 | bZx, second incident | approximately $645k | oracle manipulation
 2020-02-15 | bZx, first incident | approximately $350k | flash-loan or oracle manipulation
+
+2016
+
+2016 candidates 
+
+2016-06-17 | The DAO | approximately 3.64m ETH | recursive-call reentrancy in splitDAO

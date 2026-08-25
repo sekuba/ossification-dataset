@@ -170,7 +170,7 @@
         },
         "research": {
           "type": "object",
-          "required": ["candidates", "candidateSchema", "rawInputs", "revalidation", "revalidationSchema"],
+          "required": ["candidates", "candidateSchema", "rawInputs"],
           "additionalProperties": false,
           "properties": {
             "candidates": { "$ref": "#/$defs/fileHash" },
@@ -180,9 +180,7 @@
               "minItems": 1,
               "uniqueItems": true,
               "items": { "$ref": "#/$defs/fileHash" }
-            },
-            "revalidation": { "$ref": "#/$defs/fileHash" },
-            "revalidationSchema": { "$ref": "#/$defs/fileHash" }
+            }
           }
         }
       }

@@ -41,6 +41,15 @@
       "minItems": 1,
       "items": { "$ref": "#/$defs/source" }
     },
+    "discovery": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^(?:dfhl|legacy|web):[^\\s]+$"
+      },
+      "description": "Research-ledger candidate ids this incident resolves. Declares the discovery lead a record answers so research/candidates.json can mark it covered; carries no evidentiary weight."
+    },
     "verification": { "$ref": "#/$defs/incidentVerification" },
     "notes": {
       "type": "array",
