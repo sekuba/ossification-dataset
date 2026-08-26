@@ -7,7 +7,8 @@ curve construction.
 
 1. Add discovery leads to the research inputs, and claim the lead a record
    answers in its `discovery` field.
-2. Establish the code-defect, onchain-anchor, and USD-loss admission claims.
+2. Establish the EVM vulnerability, onchain-anchor, and USD-loss admission
+   claims.
 3. Create one `incidents/<chainId>/<exploitTx>.json` per affected same-chain
    campaign. Keep different chains and separate campaigns distinct; a coherent
    mass campaign may use the representative-target rule. Never duplicate loss.
@@ -23,19 +24,20 @@ curve construction.
 For the incident, establish:
 
 - the successful exploit transaction and execution context;
-- the EVM code defect and causal root-cause evidence;
+- the EVM code or persistent-state vulnerability and causal evidence;
 - stolen or permanently locked assets valued at USD 1,000 or more;
 - structured loss kind, components, valuation, confidence, and source IDs.
 
 For each target, establish:
 
-- `executionAddress`, `relationship`, and defect-bearing `codeArtifact`;
+- `executionAddress`, `relationship`, and implicated `codeArtifact`;
 - runtime code hash;
 - deployment transaction and creator;
-- latest pre-exploit executable-code change;
+- latest pre-exploit age reset: deployment, code change, or causal
+  configuration change;
 - exact block, transaction index, and log index;
-- mechanism-specific event, storage, creation, or trace evidence;
-- identity and code-history source IDs;
+- mechanism-specific event, storage, view-call, creation, or trace evidence;
+- identity and age-history source IDs;
 - reviewed `failure:<namespace>` identity when available.
 
 Claims begin as `provisional`. Reproducing anchors with the verifier is not
@@ -61,6 +63,9 @@ cannot go stale:
 # loss notes describe realised proceeds while loss.usd.method says otherwise;
 # relabel to realised-proceeds where that is genuinely the basis used
 grep -rlE 'realis(ed|ation)|realiz(ed|ation)' incidents | xargs grep -Ll '"method": "realised-proceeds"'
+
+# re-examine configuration exclusions under causal critical-state age resets
+jq -r '.entries[] | select(.reason | test("^CONFIGURATION_(ERROR|AND_MARKET):|parameter value|parameter-value"; "i")) | .name' research/raw/exclusions.json
 ```
 
 ## Validation

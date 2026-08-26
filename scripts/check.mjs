@@ -18,7 +18,12 @@ import { buildArtifacts, ROOT, sha256 } from './build.mjs'
 const INCIDENT_ID = /^eip155:([1-9][0-9]*):(0x[0-9a-f]{64})$/
 const LEGACY_ID = /^legacy:/
 const REVIEWED_FAILURE_ID = /^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$/
-const ALLOWED_CHANGE_KINDS = new Set(['deployment', 'implementation-change', 'module-change'])
+const ALLOWED_AGE_RESET_KINDS = new Set([
+  'deployment',
+  'implementation-change',
+  'module-change',
+  'configuration-change',
+])
 const CANDIDATE_STATUSES = new Set(['included', 'excluded', 'out-of-scope', 'pending', 'unresolved'])
 const CANDIDATE_SOURCE_KINDS = new Set(['defihacklabs', 'web-list', 'exclusion', 'legacy'])
 const SUPPORTED_SCHEMA_KEYWORDS = new Set([
@@ -406,52 +411,59 @@ function verifyIncident(record, state, errors) {
   for (const [index, target] of (incident.targets ?? []).entries()) {
     const targetLabel = `${label}: targets[${index}]`
     const deployment = target.deployment
-    const change = target.lastCodeChange
+    const reset = target.ageReset
     const targetTier = target.verification?.tier
     const targetEligible = target.verification?.curveEligible === true
     const eligible = incidentReviewed && targetTier === 'reviewed' && targetEligible
     if (targetIds.has(target.id)) errors.push(`${targetLabel}: duplicate target id ${target.id}`)
     targetIds.add(target.id)
-    if (target.codeAgeSeconds !== exploit.timestamp - change.timestamp)
+    if (target.codeAgeSeconds !== exploit.timestamp - reset.timestamp)
       errors.push(
-        `${targetLabel}: codeAgeSeconds ${target.codeAgeSeconds} != incident.timestamp - lastCodeChange.timestamp ` +
-          `(${exploit.timestamp - change.timestamp})`,
+        `${targetLabel}: codeAgeSeconds ${target.codeAgeSeconds} != incident.timestamp - ageReset.timestamp ` +
+          `(${exploit.timestamp - reset.timestamp})`,
       )
-    // `deployment` anchors the execution context; `lastCodeChange` anchors the
-    // artifact. A change emitted by the execution address itself must postdate
-    // that address. Shared code reached through a factory clone, beacon,
-    // diamond or router is activated once for every context that reads it, so a
-    // context instantiated later does not reset the artifact's age.
-    const changeTargetsExecutionAddress =
-      change.mechanism?.address === undefined || change.mechanism.address === target.executionAddress
-    if (changeTargetsExecutionAddress && change.timestamp < deployment.timestamp)
-      errors.push(`${targetLabel}: last code change precedes target deployment`)
-    if (change.timestamp > exploit.timestamp)
-      errors.push(`${targetLabel}: last code change occurs after exploit`)
+    // A shared artifact can predate this execution context; a reset applied to
+    // the context itself cannot.
+    const resetTargetsExecutionAddress =
+      reset.mechanism?.address === undefined || reset.mechanism.address === target.executionAddress
+    if (resetTargetsExecutionAddress && reset.timestamp < deployment.timestamp)
+      errors.push(`${targetLabel}: age reset precedes target deployment`)
+    if (reset.timestamp > exploit.timestamp)
+      errors.push(`${targetLabel}: age reset occurs after exploit`)
     if (deployment.blockNumber !== null && exploit.blockNumber !== null && deployment.blockNumber > exploit.blockNumber)
       errors.push(`${targetLabel}: deployment block is after exploit block`)
-    if (change.blockNumber !== null && exploit.blockNumber !== null && change.blockNumber > exploit.blockNumber)
-      errors.push(`${targetLabel}: last-code-change block is after exploit block`)
-    const deploymentVsChange = compareTransactionOrder(deployment, change)
-    if (changeTargetsExecutionAddress && deploymentVsChange !== null && deploymentVsChange > 0)
-      errors.push(`${targetLabel}: deployment transaction is ordered after last code change`)
-    const changeVsExploit = compareTransactionOrder(change, exploit)
-    if (changeVsExploit !== null && changeVsExploit >= 0)
-      errors.push(`${targetLabel}: last code change transaction does not precede exploit transaction`)
+    if (reset.blockNumber !== null && exploit.blockNumber !== null && reset.blockNumber > exploit.blockNumber)
+      errors.push(`${targetLabel}: age-reset block is after exploit block`)
+    const deploymentVsReset = compareTransactionOrder(deployment, reset)
+    if (resetTargetsExecutionAddress && deploymentVsReset !== null && deploymentVsReset > 0)
+      errors.push(`${targetLabel}: deployment transaction is ordered after age reset`)
+    const resetVsExploit = compareTransactionOrder(reset, exploit)
+    if (resetVsExploit !== null && resetVsExploit >= 0)
+      errors.push(`${targetLabel}: age-reset transaction does not precede exploit transaction`)
     const deploymentVsExploit = compareTransactionOrder(deployment, exploit)
     if (deploymentVsExploit !== null && deploymentVsExploit >= 0)
       errors.push(`${targetLabel}: deployment transaction does not precede exploit transaction`)
 
-    if (change.kind === 'deployment') {
+    if (reset.kind === 'deployment') {
       for (const key of ['timestamp', 'blockNumber', 'transactionHash', 'transactionIndex']) {
-        if (deployment[key] !== change[key])
-          errors.push(`${targetLabel}: deployment-basis lastCodeChange.${key} differs from deployment.${key}`)
+        if (deployment[key] !== reset[key])
+          errors.push(`${targetLabel}: deployment-basis ageReset.${key} differs from deployment.${key}`)
       }
-      if (change.mechanism?.type !== 'deployment')
-        errors.push(`${targetLabel}: deployment-basis lastCodeChange must use deployment mechanism`)
-      else if (change.mechanism.address !== target.executionAddress)
+      if (reset.mechanism?.type !== 'deployment')
+        errors.push(`${targetLabel}: deployment-basis ageReset must use deployment mechanism`)
+      else if (reset.mechanism.address !== target.executionAddress)
         errors.push(`${targetLabel}: deployment mechanism address must equal executionAddress`)
     }
+    if (
+      reset.kind === 'configuration-change' &&
+      !['storage-write', 'view-call'].includes(reset.mechanism?.type)
+    )
+      errors.push(`${targetLabel}: configuration-change age reset must identify a storage write or view call`)
+    if (
+      ['storage-write', 'view-call'].includes(reset.mechanism?.type) &&
+      reset.mechanism.valueBefore === reset.mechanism.valueAfter
+    )
+      errors.push(`${targetLabel}: age-reset valueBefore and valueAfter must differ`)
     if (target.relationship === 'direct' && target.codeArtifact?.address &&
         target.codeArtifact.address !== target.executionAddress)
       errors.push(`${targetLabel}: direct target code artifact address must equal executionAddress`)
@@ -467,7 +479,7 @@ function verifyIncident(record, state, errors) {
       localPairs.add(pair)
     }
 
-    for (const field of ['identitySourceIds', 'codeHistorySourceIds']) {
+    for (const field of ['identitySourceIds', 'ageSourceIds']) {
       for (const sourceId of target.evidence?.[field] ?? []) {
         if (!sourceById.has(sourceId))
           errors.push(`${targetLabel}: evidence.${field} cites unknown source id ${sourceId}`)
@@ -491,16 +503,16 @@ function verifyIncident(record, state, errors) {
     if (eligible) {
       if (!usd || usd.amount < 1_000)
         errors.push(`${targetLabel}: curve eligibility requires evidenced loss.usd.amount >= 1000`)
-      if (!ALLOWED_CHANGE_KINDS.has(change.kind))
-        errors.push(`${targetLabel}: curve cannot use ${change.kind} as executable-code age`)
+      if (!ALLOWED_AGE_RESET_KINDS.has(reset.kind))
+        errors.push(`${targetLabel}: curve cannot use ${reset.kind} as an age reset`)
       if (LEGACY_ID.test(target.failureModeId) || !REVIEWED_FAILURE_ID.test(target.failureModeId))
         errors.push(`${targetLabel}: curve failureModeId must use the reviewed failure:<namespace> form`)
       if (!target.codeArtifact?.address || !target.codeArtifact?.codeHash)
         errors.push(`${targetLabel}: curve eligibility requires an address and code hash for the code artifact`)
       if ((target.evidence?.identitySourceIds ?? []).length === 0 ||
-          (target.evidence?.codeHistorySourceIds ?? []).length === 0)
-        errors.push(`${targetLabel}: curve eligibility requires target-specific identity and code-history evidence`)
-      for (const [anchorName, anchor] of [['deployment', deployment], ['lastCodeChange', change]]) {
+          (target.evidence?.ageSourceIds ?? []).length === 0)
+        errors.push(`${targetLabel}: curve eligibility requires target-specific identity and age-history evidence`)
+      for (const [anchorName, anchor] of [['deployment', deployment], ['ageReset', reset]]) {
         if (anchor.blockNumber === null || anchor.transactionHash === null)
           errors.push(`${targetLabel}: curve eligibility requires a complete ${anchorName} anchor`)
         else {
@@ -509,22 +521,22 @@ function verifyIncident(record, state, errors) {
             source.transactionHash === anchor.transactionHash)
           if (!anchorSource)
             errors.push(`${targetLabel}: ${anchorName} transaction must have an onchain source entry`)
-          else if (!(target.evidence?.codeHistorySourceIds ?? []).includes(anchorSource.id))
+          else if (!(target.evidence?.ageSourceIds ?? []).includes(anchorSource.id))
             errors.push(`${targetLabel}: ${anchorName} transaction source must be linked in target evidence`)
         }
       }
       if (!deployment.creatorAddress) errors.push(`${targetLabel}: curve eligibility requires creatorAddress`)
-      if (change.transactionHash === exploit.transactionHash)
-        errors.push(`${targetLabel}: attacker-transaction code changes cannot define pre-exploit code age`)
-      if (change.mechanism?.type === 'event' && change.mechanism.codeAddressLocation === null)
-        errors.push(`${targetLabel}: eligible event change requires codeAddressLocation`)
+      if (reset.transactionHash === exploit.transactionHash)
+        errors.push(`${targetLabel}: exploit transaction cannot define a pre-exploit age reset`)
+      if (reset.mechanism?.type === 'event' && reset.mechanism.codeAddressLocation === null)
+        errors.push(`${targetLabel}: eligible event reset requires codeAddressLocation`)
     } else if (targetTier !== 'provisional') {
       if ([deployment.blockNumber, deployment.transactionHash, deployment.transactionIndex, deployment.creatorAddress,
-        change.blockNumber, change.transactionHash, change.transactionIndex].some((value) => value === null))
+        reset.blockNumber, reset.transactionHash, reset.transactionIndex].some((value) => value === null))
         errors.push(`${targetLabel}: non-provisional verification requires complete anchors`)
     }
-    if (targetTier === 'reviewed' && change.mechanism?.type === 'event' && change.logIndex === null)
-      errors.push(`${targetLabel}: event-based reviewed change requires logIndex`)
+    if (targetTier === 'reviewed' && reset.mechanism?.type === 'event' && reset.logIndex === null)
+      errors.push(`${targetLabel}: event-based reviewed reset requires logIndex`)
   }
 
   const legacy = incident.verification?.legacy

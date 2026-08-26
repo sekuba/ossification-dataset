@@ -11,17 +11,17 @@ V2 defines a new incident-and-target interface for audited code age and loss.
 - Distinguished execution context from defect-bearing code artifacts, and aged
   shared code from artifact activation, so a clone instantiated after the
   template was wired in does not reset the age.
-- Added exact transaction ordering, typed code-change mechanisms, runtime
+- Added exact transaction ordering, typed age-reset mechanisms, runtime
   hashes, creator evidence, and claim-addressed sources.
 - Split incident review from target verification, and restricted curve
-  admission to reviewed executable-code observations.
+  admission to reviewed age observations.
 - Collapsed sibling instances of one template into a single curve observation,
   then byte-identical artifacts across incidents.
 - Added a reproducible candidate ledger, resolved by a declared `discovery`
   link from an incident to the leads it answers, and a deterministic release
   manifest.
-- Narrowed legacy category auto-exclusion to causes outside executed EVM code;
-  oracle, economic and governance mechanism labels await the boundary test.
+- Narrowed legacy category auto-exclusion to causes outside EVM code or
+  persistent onchain state; mechanism labels await causal review.
 - Added named, timestamped review attestations and RPC-backed mechanical anchor
   enrichment.
 - Pinned the production discovery cohort to complete source inventories through
@@ -34,6 +34,8 @@ V2 defines a new incident-and-target interface for audited code age and loss.
   `realised-proceeds`.
 - Re-examined every minimal-proxy target under the case-by-case clone rule and
   retained clone age where instance state or assets created the exposure.
+- Reset code age on a causal critical-state change, anchored by a storage write
+  or reproducible view call.
 - Dropped `classification.rootCause`, a constant, and the `supports` declaration
   on sources, which restated what the per-claim references already say.
 

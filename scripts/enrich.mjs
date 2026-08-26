@@ -56,7 +56,6 @@ const EXPLORER_KEY_ENV_BY_CHAIN_ID = {
   534352: ['SCROLL_ETHERSCAN_API_KEY', 'ETHERSCAN_API_KEY'],
 }
 
-const SUPPORT_ORDER = ['incident-anchor', 'target-identity', 'code-history', 'root-cause', 'loss']
 const lower = (value) => value?.toLowerCase()
 const hexInt = (value) => (value === null || value === undefined ? null : Number.parseInt(value, 16))
 
@@ -162,7 +161,7 @@ function nextSourceId(incident) {
   return `source-${highest + 1}`
 }
 
-function ensureOnchainSource(incident, target, transactionHash, supports) {
+function ensureOnchainSource(incident, target, transactionHash, claims) {
   const chainId = incident.incident.chainId
   let source = incident.sources.find(
     (candidate) =>
@@ -175,25 +174,18 @@ function ensureOnchainSource(incident, target, transactionHash, supports) {
     source = {
       id: nextSourceId(incident),
       type: 'onchain-transaction',
-      supports: [],
       chainId,
       transactionHash,
     }
     incident.sources.push(source)
     changed = true
   }
-  const merged = [...new Set([...source.supports, ...supports])]
-    .sort((a, b) => SUPPORT_ORDER.indexOf(a) - SUPPORT_ORDER.indexOf(b))
-  if (JSON.stringify(merged) !== JSON.stringify(source.supports)) {
-    source.supports = merged
+  if (target && claims.includes('age-history') && !target.evidence.ageSourceIds.includes(source.id)) {
+    target.evidence.ageSourceIds.push(source.id)
+    target.evidence.ageSourceIds.sort()
     changed = true
   }
-  if (target && supports.includes('code-history') && !target.evidence.codeHistorySourceIds.includes(source.id)) {
-    target.evidence.codeHistorySourceIds.push(source.id)
-    target.evidence.codeHistorySourceIds.sort()
-    changed = true
-  }
-  if (target && supports.includes('target-identity') && !target.evidence.identitySourceIds.includes(source.id)) {
+  if (target && claims.includes('target-identity') && !target.evidence.identitySourceIds.includes(source.id)) {
     target.evidence.identitySourceIds.push(source.id)
     target.evidence.identitySourceIds.sort()
     changed = true
@@ -366,13 +358,13 @@ async function enrichFile(file, useExplorer) {
         changes.push(`${target.id}:creator`)
       }
       if (
-        target.lastCodeChange.kind === 'deployment' &&
-        target.lastCodeChange.mechanism.type === 'deployment'
+        target.ageReset.kind === 'deployment' &&
+        target.ageReset.mechanism.type === 'deployment'
       ) {
         for (const key of ['timestamp', 'blockNumber', 'transactionHash', 'transactionIndex']) {
-          if (target.lastCodeChange[key] !== deployment[key]) {
-            target.lastCodeChange[key] = deployment[key]
-            changes.push(`${target.id}:deployment-change`)
+          if (target.ageReset[key] !== deployment[key]) {
+            target.ageReset[key] = deployment[key]
+            changes.push(`${target.id}:deployment-reset`)
           }
         }
       }
@@ -381,25 +373,27 @@ async function enrichFile(file, useExplorer) {
           incident,
           target,
           deployment.transactionHash,
-          ['target-identity', 'code-history'],
+          ['target-identity', 'age-history'],
         )
       ) changes.push(`${target.id}:deployment-source`)
     }
 
-    const change = target.lastCodeChange
-    if (change.transactionHash && change.transactionHash !== deployment.transactionHash) {
-      const anchor = await transactionAnchor(chainId, change.transactionHash)
-      if (applyPosition(change, anchor)) changes.push(`${target.id}:change-anchor`)
+    const reset = target.ageReset
+    if (reset.transactionHash && reset.transactionHash !== deployment.transactionHash) {
+      const anchor = await transactionAnchor(chainId, reset.transactionHash)
+      if (applyPosition(reset, anchor)) changes.push(`${target.id}:age-reset-anchor`)
       if (
         ensureOnchainSource(
           incident,
           target,
-          change.transactionHash,
-          ['target-identity', 'code-history'],
+          reset.transactionHash,
+          reset.kind === 'configuration-change'
+            ? ['age-history']
+            : ['target-identity', 'age-history'],
         )
-      ) changes.push(`${target.id}:change-source`)
+      ) changes.push(`${target.id}:age-reset-source`)
     }
-    const age = incident.incident.exploit.timestamp - change.timestamp
+    const age = incident.incident.exploit.timestamp - reset.timestamp
     if (target.codeAgeSeconds !== age) {
       target.codeAgeSeconds = age
       changes.push(`${target.id}:age`)
@@ -418,9 +412,9 @@ async function enrichFile(file, useExplorer) {
         deployment.transactionHash,
         deployment.transactionIndex,
         deployment.creatorAddress,
-        change.blockNumber,
-        change.transactionHash,
-        change.transactionIndex,
+        reset.blockNumber,
+        reset.transactionHash,
+        reset.transactionIndex,
       ].every((value) => value !== null) &&
       removeLimitation(
         target.verification,

@@ -242,9 +242,8 @@ for (const [index, entry] of exclusions.entries()) {
 
 const CATEGORIES_OUTSIDE_COHORT = new Set(['insider-rug', 'key-compromise', 'offchain-infra'])
 
-// These name a mechanism, not a cause. Each can be a defect in executed code or
-// a configuration the code applied as written, so the row awaits the
-// METHODOLOGY boundary test instead of a label.
+// These name a mechanism, not a cause. Each can be a defect in executed code, a
+// causal persistent state change, or neither, so the row awaits causal review.
 // The cohort is eip155-only, so a row on one of these chains yields no
 // measurable EVM code state whatever its category says.
 const NON_EVM_CHAINS = new Set(['solana', 'starknet', 'sui'])
@@ -438,7 +437,7 @@ function legacyDisposition(row, id) {
   if (UNDECIDED_CATEGORIES.has(row.category)) {
     return {
       status: 'pending',
-      reason: `Legacy labelled this row ${row.category}, which names a mechanism rather than a cause. The row awaits the METHODOLOGY boundary test: is there a parameter value at which the deployed code is correct?`,
+      reason: `Legacy labelled this row ${row.category}, which names a mechanism rather than a cause. Review whether executed code violated an invariant or a persistent onchain configuration change created the vulnerable state.`,
     }
   }
 

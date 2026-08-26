@@ -1,62 +1,71 @@
 # Methodology
 
-This repository measures the age of EVM code when a defect in that code caused a
-material exploit loss. Each measurement carries the onchain anchors and claim
+This repository measures EVM code age when a contract vulnerability caused a
+material exploit loss. Code age resets on executable-code changes and on causal
+critical-state changes. Each measurement carries the onchain anchors and claim
 evidence needed for independent review.
 
 ## Cohort
 
 A primary incident satisfies three conditions:
 
-1. A defect in executed EVM code caused the exploit.
-2. A successful transaction that executes the defect or finalizes its loss,
-   together with an implicated execution context, is identified onchain.
+1. A vulnerability in executed EVM code or persistent onchain configuration
+   state caused the exploit.
+2. A successful transaction that exercises the vulnerability or finalizes its
+   loss, together with an implicated execution context, is identified onchain.
 3. Stolen or permanently locked assets have an evidenced USD value or lower
    bound of at least 1,000.
 
 Candidate records hold discovery leads, context incidents, and entries awaiting
-one of these claims. The release retains every admitted target, but the
-executable-code curve contains only reviewed, curve-eligible target
-observations with a concrete USD loss.
+one of these claims. The release retains every admitted target, but the code-age
+curve contains only reviewed, curve-eligible target observations with a
+concrete USD loss.
 
 A code defect is executable logic that violates an evidenced security invariant
 under calls or inputs the deployed system permits. This includes missing or
 incorrect authorization, accounting, validation, initialization, and external
-interaction logic. Exclude losses caused only by compromised credentials,
-malicious or mistaken privileged actions, configured parameter values that the
-code applies as designed, market conditions, or offchain/front-end behavior.
-In a mixed case, admit the incident only when the executed EVM code itself
-failed an evidenced invariant; configuration changes remain context, not the
-code-age anchor. The operative test is whether some parameter value would make
-the deployed code correct. If one would, the defect is that parameter and the
-incident yields no code-age observation. If none would, the code is defective
-whatever it is configured with.
+interaction logic.
+
+A configuration change is age-bearing when its persistent onchain state change
+created the vulnerable condition later exercised by the exploit. The changed
+value must be necessary to that condition, and its transaction and before/after
+value must be anchored through a storage write or reproducible view call. Age
+resets at that change even when the code applies the value as designed. A safer
+parameter value or parameter-only mitigation does not decide attribution.
+
+Exclude losses caused only by compromised credentials, direct privileged
+transfers or drains, market conditions, or offchain/front-end behavior. A
+privileged action or credential compromise is not itself an observation; a
+persistent state change it makes can qualify only when it creates a vulnerability
+exercised by a later transaction. Values that only change exposure or loss size
+do not reset age.
 
 ## Incident and target units
 
 An incident represents one coherent campaign against an affected execution
 context on one chain. Anchor it to the earliest successful transaction in the
-campaign that executes the defect, or to the transaction that makes a permanent
-loss final when there is no earlier defect-executing success. The incident owns
-the summary and a loss measurement not counted by another record.
+campaign that exercises the vulnerability, or to the transaction that makes a
+permanent loss final when there is no earlier successful exploit. The incident
+owns the summary and a loss measurement not counted by another record.
 
 Repeated transactions in one coherent campaign on the same chain belong to one
 incident. Such a campaign may span code-identical deployments under the
 representative-target rule below. A campaign on a different chain, or a
 separate campaign against another deployment, is a separate incident because
 its anchors, age, and loss are independent. When one incident implicates
-several distinct defect-bearing code states, represent them as targets of that
-incident. Curve deduplication handles code-identical repetitions across
-incidents; it does not merge their source records or losses.
+several distinct vulnerable execution contexts or code artifacts, represent
+them as targets of that incident. Curve deduplication handles code-identical
+repetitions across incidents; it does not merge their source records or losses.
 
 A target is an independently aged execution context and code artifact implicated
 in that incident. It distinguishes:
 
 - `executionAddress`: the address supplying storage and authority;
 - `codeArtifact`: the implementation, facet, module, library, or direct
-  runtime containing the defect;
+  runtime containing the defect or consuming the causal state;
 - `relationship`: how the execution context reached the artifact;
-- `lastCodeChange`: the change that made the artifact active.
+- `ageReset`: the latest code or causal configuration change that established
+  the vulnerable state.
 
 An incident has at most one target for each exact
 `(codeArtifact.codeHash, failureModeId)` pair. If a same-chain campaign exploits
@@ -77,22 +86,25 @@ diamonds, routers, shared implementations, and libraries.
 For each target:
 
 ```text
-codeAgeSeconds = incident.timestamp - lastCodeChange.timestamp
+codeAgeSeconds = incident.timestamp - ageReset.timestamp
 ```
 
-`lastCodeChange` is the latest pre-exploit onchain change to the executable
-code used by the target. Ordering uses
-`(blockNumber, transactionIndex, logIndex)`.
+`ageReset` is the latest pre-exploit onchain change that established the
+vulnerable code-and-critical-state combination. It is the latest executable-code
+activation unless a later causal configuration change reset the clock. Ordering
+uses `(blockNumber, transactionIndex, logIndex)`.
 
 Supported mechanisms include deployment, implementation or beacon changes,
 diamond cuts, module or route installation, code-selecting storage writes, and
-metamorphic redeployment. Event anchors identify the event topic and the exact
-topic or data word containing the selected code address.
+metamorphic redeployment. A configuration reset identifies either an exact
+storage write or raw calldata and return data before and after the reset. Event
+anchors for code changes identify the event topic and the exact topic or data
+word containing the selected code address.
 
-The age basis is the victim code state immediately before exploit execution.
-Attacker-installed exploit machinery receives explicit attribution. The
-executable-code curve uses deployment, implementation, and module changes;
-parameter, market, and exposure changes are retained as configuration context.
+The age basis is the victim code and critical configuration state immediately
+before exploit execution. Attacker-installed exploit machinery receives
+explicit attribution. A qualifying reset must strictly precede the exploit
+transaction.
 
 An unprotected initializer left reachable on a deployed proxy is a defect in
 that deployed code, exploitable and publicly visible from the moment it is
@@ -107,7 +119,7 @@ diamond's routing, a router's module table - that is the activation event, and a
 per-user account created moments before the exploit does not reset the age of
 the template it delegates to. Where the pointer is fixed at creation, as in an
 EIP-1167 clone, the default is the clone's own creation. `deployment` anchors the
-execution context throughout; `lastCodeChange` anchors the artifact.
+execution context throughout; `ageReset` anchors the measured state.
 
 A clone can reasonably be aged either from itself or from the logic it copies,
 and the record decides case by case and says which in its review note. Prefer
@@ -117,9 +129,9 @@ flaw in shared logic is exploited when a particular deployment makes it worth
 exploiting. Prefer the shared logic when the instance adds nothing that bears on
 the defect.
 
-A deployment basis requires positive evidence that the relevant code state
-continued through the exploit. Suitable evidence depends on architecture and
-can combine runtime hashes, implementation or beacon slots, custom events,
+An age basis requires positive evidence that the relevant code and critical
+state continued through the exploit. Suitable evidence depends on architecture
+and can combine runtime hashes, implementation or beacon slots, custom events,
 storage history, and execution traces.
 
 ## Verification
@@ -127,18 +139,18 @@ storage history, and execution traces.
 Verification follows the ownership of each claim:
 
 - Incident `provisional`: exploit anchor, summary, or loss awaits review.
-- Incident `reviewed`: exploit anchor, code-bug summary, and loss have been
+- Incident `reviewed`: exploit anchor, vulnerability summary, and loss have been
   reviewed. Only reviewed incidents reach `dist/latest/incidents.json`.
-- Target `provisional`: artifact identity or code history awaits research.
+- Target `provisional`: artifact identity or age history awaits research.
 - Target `reviewed`: execution relationship, artifact hash, failure identity,
-  exact anchors, and code-history completeness have been reviewed.
+  exact anchors, and age-history completeness have been reviewed.
 
 A curve observation requires a reviewed incident and a reviewed target with
 `curveEligible: true`. Each target is promoted independently.
 
 Every reviewed claim links to a `review-note` attestation with a reviewer and
 review time. Incident attestations cover anchor, root cause, and loss; target
-attestations cover artifact identity and complete code history.
+attestations cover artifact identity and complete age history.
 
 The verifier reports `PASS_ANCHORS`, `FAIL`, `INCOMPLETE`, or
 `INCONCLUSIVE`. `PASS_ANCHORS` certifies the bounded mechanical checks.
@@ -146,10 +158,10 @@ Provider and unsupported-method outcomes are `INCONCLUSIVE`.
 
 ## Loss
 
-Loss is the value stolen or permanently locked because of the defect. `kind`
-states whether the measurement is gross assets lost, net loss, or permanently
-locked value. Prefer exact pre-recovery victim depletion when it can be
-isolated. Identifiable attacker-supplied campaign inputs are not victim loss;
+Loss is the value stolen or permanently locked because of the vulnerability.
+`kind` states whether the measurement is gross assets lost, net loss, or
+permanently locked value. Prefer exact pre-recovery victim depletion when it can
+be isolated. Identifiable attacker-supplied campaign inputs are not victim loss;
 financing fees, builder payments, and later recoveries do not reduce gross
 victim depletion. Use net loss only when gross victim depletion cannot be
 separated, and state how every adjustment is treated.
@@ -165,11 +177,11 @@ scope and valuation method.
 Reviewed asset components identify the chain and token, decimal quantity, USD
 value, valuation timestamp and method, and evidence IDs. `method` records the
 basis: `realised-proceeds` when the figure is what the assets actually sold for,
-which is required wherever the attacker's own selling moved the price. Stable assets may use
-1:1 valuation. Liquid assets use a timestamped price source. Illiquid assets use
-an evidenced lower bound when it establishes cohort admission. `price-data`
-sources record provider, URL, and evidence-retrieval time in `observedAt`; the
-asset valuation's `timestamp` is the historical price time.
+which is required wherever the attacker's own selling moved the price. Stable
+assets may use 1:1 valuation. Liquid assets use a timestamped price source.
+Illiquid assets use an evidenced lower bound when it establishes cohort
+admission. `price-data` sources record provider, URL, and evidence-retrieval time
+in `observedAt`; the asset valuation's `timestamp` is the historical price time.
 
 Legacy asset prose remains a provisional migration representation. Reviewed
 records use structured components and high or medium confidence.
@@ -188,8 +200,8 @@ byte-identical artifacts collapse across incidents.
 
 For complete anchors on one chain, selection uses block number and transaction
 index. Cross-chain or incomplete comparisons use timestamp, chain ID, incident
-ID, and target ID. A distinct defect in identical bytecode receives a distinct
-reviewed `failure:<namespace>` identifier.
+ID, and target ID. A distinct vulnerability in identical bytecode receives a
+distinct reviewed `failure:<namespace>` identifier.
 
 `dist/latest/curve.json` publishes selected observations, deduplicated
 observations, exclusions, and sorted `ageKnots`. Each observation references its
@@ -200,10 +212,9 @@ instead of summing per observation.
 
 ## Provenance and releases
 
-Evidence sources declare the claims they support. Target evidence links identity
-and code-history claims to source IDs. Repository evidence records repository,
-path, and a full 40-character commit. Onchain evidence records EIP-155 chain and
-transaction coordinates.
+Claims link directly to evidence source IDs. Repository evidence records a
+repository, path, and full 40-character commit. Onchain evidence records EIP-155
+chain and transaction coordinates.
 
 `research/candidates.json` assigns every discovery entry an included, excluded,
 out-of-scope, pending, or unresolved disposition. Generated releases include

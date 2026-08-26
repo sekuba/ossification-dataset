@@ -13,7 +13,7 @@
  * Any FAIL, INCOMPLETE, or INCONCLUSIVE result exits nonzero. Use
  * --allow-incomplete only for exploratory bulk research. A successful result
  * is PASS_ANCHORS: the declared anchors reproduced, not a semantic review or
- * proof that the declared change was the latest relevant code change.
+ * proof that the declared reset was the latest relevant code or state change.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
@@ -384,32 +384,32 @@ async function verifyDeployment(chainId, target, report) {
   } else incomplete(report, `${target.id}:creator`, 'creatorAddress is null')
 }
 
-async function verifyChangeMechanism(chainId, target, anchored, report) {
-  const change = target.lastCodeChange
-  const mechanism = change.mechanism
-  const label = `${target.id}:change-mechanism`
+async function verifyAgeResetMechanism(chainId, target, anchored, report) {
+  const reset = target.ageReset
+  const mechanism = reset.mechanism
+  const label = `${target.id}:age-reset-mechanism`
   if (mechanism.type === 'deployment') {
     if (
-      change.transactionHash !== target.deployment.transactionHash ||
-      change.blockNumber !== target.deployment.blockNumber
+      reset.transactionHash !== target.deployment.transactionHash ||
+      reset.blockNumber !== target.deployment.blockNumber
     )
-      fail(report, label, 'deployment change does not match the deployment anchor')
+      fail(report, label, 'deployment reset does not match the deployment anchor')
     else if (mechanism.address !== target.executionAddress)
       fail(
         report,
         label,
         `deployment mechanism address is not executionAddress ${target.executionAddress}`,
       )
-    else pass(report, label, 'last code change is execution-address deployment')
+    else pass(report, label, 'age reset is execution-address deployment')
     return
   }
   if (mechanism.type === 'event') {
-    if (!mechanism.address || !mechanism.eventTopic || change.logIndex === null) {
+    if (!mechanism.address || !mechanism.eventTopic || reset.logIndex === null) {
       incomplete(report, label, 'event mechanism requires address, eventTopic, and logIndex')
       return
     }
-    const wanted = anchored.receipt.logs.find((log) => hexInt(log.logIndex) === change.logIndex)
-    if (!wanted) fail(report, label, `receipt has no logIndex ${change.logIndex}`)
+    const wanted = anchored.receipt.logs.find((log) => hexInt(log.logIndex) === reset.logIndex)
+    if (!wanted) fail(report, label, `receipt has no logIndex ${reset.logIndex}`)
     else if (lower(wanted.address) !== mechanism.address || lower(wanted.topics?.[0]) !== mechanism.eventTopic)
       fail(report, label, 'recorded emitter/topic do not match the receipt log')
     else {
@@ -440,7 +440,7 @@ async function verifyChangeMechanism(chainId, target, anchored, report) {
       incomplete(report, label, 'storage-write requires address, slot, valueBefore, and valueAfter')
       return
     }
-    if (change.blockNumber === 0) {
+    if (reset.blockNumber === 0) {
       fail(report, label, 'storage-write cannot be checked before block zero')
       return
     }
@@ -448,14 +448,14 @@ async function verifyChangeMechanism(chainId, target, anchored, report) {
       await rpc(chainId, 'eth_getStorageAt', [
         mechanism.address,
         mechanism.storageSlot,
-        blockTag(change.blockNumber - 1),
+        blockTag(reset.blockNumber - 1),
       ]),
     )
     const after = lower(
       await rpc(chainId, 'eth_getStorageAt', [
         mechanism.address,
         mechanism.storageSlot,
-        blockTag(change.blockNumber),
+        blockTag(reset.blockNumber),
       ]),
     )
     if (before !== mechanism.valueBefore || after !== mechanism.valueAfter)
@@ -464,7 +464,7 @@ async function verifyChangeMechanism(chainId, target, anchored, report) {
       pass(report, label, `${mechanism.storageSlot}: ${before} -> ${after} at block boundaries`)
       try {
         const diff = await rpc(chainId, 'debug_traceTransaction', [
-          change.transactionHash,
+          reset.transactionHash,
           { tracer: 'prestateTracer', tracerConfig: { diffMode: true } },
         ])
         if (!diff?.pre || !diff?.post)
@@ -488,7 +488,7 @@ async function verifyChangeMechanism(chainId, target, anchored, report) {
             pass(
               report,
               `${target.id}:storage-write-attribution`,
-              `${change.transactionHash} wrote the declared transition`,
+              `${reset.transactionHash} wrote the declared transition`,
             )
         }
       } catch (error) {
@@ -497,8 +497,26 @@ async function verifyChangeMechanism(chainId, target, anchored, report) {
     }
     return
   }
-  if (mechanism.type === 'configuration') {
-    incomplete(report, label, 'configuration age is not executable-code age')
+  if (mechanism.type === 'view-call') {
+    if (
+      !mechanism.address ||
+      !mechanism.callData ||
+      !mechanism.valueBefore ||
+      !mechanism.valueAfter
+    ) {
+      incomplete(report, label, 'view-call requires address, calldata, valueBefore, and valueAfter')
+      return
+    }
+    if (reset.blockNumber === 0) {
+      fail(report, label, 'view-call cannot be checked before block zero')
+      return
+    }
+    const call = { to: mechanism.address, data: mechanism.callData }
+    const before = lower(await rpc(chainId, 'eth_call', [call, blockTag(reset.blockNumber - 1)]))
+    const after = lower(await rpc(chainId, 'eth_call', [call, blockTag(reset.blockNumber)]))
+    if (before !== mechanism.valueBefore || after !== mechanism.valueAfter)
+      fail(report, label, `view results ${before} -> ${after} do not match the record`)
+    else pass(report, label, `${mechanism.callData}: ${before} -> ${after} at block boundaries`)
     return
   }
   if (mechanism.type === 'metamorphic-redeployment') {
@@ -510,35 +528,35 @@ async function verifyChangeMechanism(chainId, target, anchored, report) {
 
 async function verifyTarget(incident, target, exploitAnchor, report) {
   const chainId = incident.incident.chainId
-  if (target.codeAgeSeconds !== incident.incident.exploit.timestamp - target.lastCodeChange.timestamp)
-    fail(report, `${target.id}:age`, 'codeAgeSeconds does not equal incident minus lastCodeChange')
+  if (target.codeAgeSeconds !== incident.incident.exploit.timestamp - target.ageReset.timestamp)
+    fail(report, `${target.id}:age`, 'codeAgeSeconds does not equal incident minus ageReset')
   else pass(report, `${target.id}:age`, `${target.codeAgeSeconds}s`)
 
   await verifyTrace(chainId, incident.incident.exploit.transactionHash, target, report)
   await verifyCodeHash(chainId, target, exploitAnchor, report)
   await verifyDeployment(chainId, target, report)
 
-  const change = await transactionAnchor(
+  const reset = await transactionAnchor(
     chainId,
-    target.lastCodeChange,
-    `${target.id}:last-code-change`,
+    target.ageReset,
+    `${target.id}:age-reset`,
     report,
   )
-  if (change) {
-    const changePosition = {
-      blockNumber: change.blockNumber,
-      transactionIndex: change.transactionIndex,
-      logIndex: target.lastCodeChange.logIndex,
+  if (reset) {
+    const resetPosition = {
+      blockNumber: reset.blockNumber,
+      transactionIndex: reset.transactionIndex,
+      logIndex: target.ageReset.logIndex,
     }
     const exploitPosition = {
       blockNumber: exploitAnchor.blockNumber,
       transactionIndex: exploitAnchor.transactionIndex,
       logIndex: -1,
     }
-    if (comparePosition(changePosition, exploitPosition) >= 0)
-      fail(report, `${target.id}:ordering`, 'last code change is not strictly before the exploit transaction')
-    else pass(report, `${target.id}:ordering`, 'last code change is strictly before the exploit')
-    await verifyChangeMechanism(chainId, target, change, report)
+    if (comparePosition(resetPosition, exploitPosition) >= 0)
+      fail(report, `${target.id}:ordering`, 'age reset is not strictly before the exploit transaction')
+    else pass(report, `${target.id}:ordering`, 'age reset is strictly before the exploit')
+    await verifyAgeResetMechanism(chainId, target, reset, report)
   }
 
   const attackers = new Set(

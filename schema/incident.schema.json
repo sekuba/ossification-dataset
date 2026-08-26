@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Onchain exploited-code-age incident",
-  "description": "One measured EVM code-bug incident with exploit-time code age and loss evidence.",
+  "description": "One measured EVM exploit with age reset by code or causal configuration changes and onchain loss evidence.",
   "type": "object",
   "required": [
     "$schema",
@@ -363,7 +363,7 @@
         "creatorAddress": { "$ref": "#/$defs/nullableAddress" }
       }
     },
-    "changeAnchor": {
+    "ageResetAnchor": {
       "type": "object",
       "required": ["kind", "timestamp", "blockNumber", "transactionHash", "transactionIndex", "logIndex", "mechanism", "description"],
       "additionalProperties": false,
@@ -376,9 +376,26 @@
         "transactionHash": { "$ref": "#/$defs/nullableHash" },
         "transactionIndex": { "type": ["integer", "null"], "minimum": 0 },
         "logIndex": { "type": ["integer", "null"], "minimum": 0 },
-        "mechanism": { "$ref": "#/$defs/changeMechanism" },
+        "mechanism": { "$ref": "#/$defs/ageResetMechanism" },
         "description": { "type": ["string", "null"] }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "configuration-change" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "mechanism": {
+                "properties": { "type": { "enum": ["storage-write", "view-call"] } },
+                "required": ["type"]
+              },
+              "description": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ]
     },
     "completeAnchor": {
       "type": "object",
@@ -392,7 +409,7 @@
         "creatorAddress": { "$ref": "#/$defs/address" }
       }
     },
-    "completeChangeAnchor": {
+    "completeAgeReset": {
       "type": "object",
       "required": ["kind", "timestamp", "blockNumber", "transactionHash", "transactionIndex", "logIndex", "mechanism", "description"],
       "additionalProperties": false,
@@ -405,11 +422,28 @@
         "transactionHash": { "$ref": "#/$defs/hash" },
         "transactionIndex": { "type": "integer", "minimum": 0 },
         "logIndex": { "type": ["integer", "null"], "minimum": 0 },
-        "mechanism": { "$ref": "#/$defs/changeMechanism" },
+        "mechanism": { "$ref": "#/$defs/ageResetMechanism" },
         "description": { "type": ["string", "null"] }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "configuration-change" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "mechanism": {
+                "properties": { "type": { "enum": ["storage-write", "view-call"] } },
+                "required": ["type"]
+              },
+              "description": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ]
     },
-    "changeMechanism": {
+    "ageResetMechanism": {
       "oneOf": [
         {
           "type": "object",
@@ -450,11 +484,14 @@
         },
         {
           "type": "object",
-          "required": ["type", "address"],
+          "required": ["type", "address", "callData", "valueBefore", "valueAfter"],
           "additionalProperties": false,
           "properties": {
-            "type": { "const": "metamorphic-redeployment" },
-            "address": { "$ref": "#/$defs/address" }
+            "type": { "const": "view-call" },
+            "address": { "$ref": "#/$defs/address" },
+            "callData": { "type": "string", "pattern": "^0x[0-9a-f]{8}(?:[0-9a-f]{64})*$" },
+            "valueBefore": { "type": "string", "pattern": "^0x(?:[0-9a-f]{64})+$" },
+            "valueAfter": { "type": "string", "pattern": "^0x(?:[0-9a-f]{64})+$" }
           }
         },
         {
@@ -462,8 +499,8 @@
           "required": ["type", "address"],
           "additionalProperties": false,
           "properties": {
-            "type": { "const": "configuration" },
-            "address": { "$ref": "#/$defs/nullableAddress" }
+            "type": { "const": "metamorphic-redeployment" },
+            "address": { "$ref": "#/$defs/address" }
           }
         },
         {
@@ -484,7 +521,7 @@
         "relationship",
         "codeArtifact",
         "deployment",
-        "lastCodeChange",
+        "ageReset",
         "codeAgeSeconds",
         "failureModeId",
         "evidence",
@@ -507,7 +544,7 @@
           }
         },
         "deployment": { "$ref": "#/$defs/deploymentAnchor" },
-        "lastCodeChange": { "$ref": "#/$defs/changeAnchor" },
+        "ageReset": { "$ref": "#/$defs/ageResetAnchor" },
         "codeAgeSeconds": { "type": "integer", "minimum": 0 },
         "failureModeId": { "type": "string", "minLength": 1 },
         "evidence": { "$ref": "#/$defs/targetEvidence" },
@@ -526,7 +563,7 @@
           "then": {
             "properties": {
               "deployment": { "$ref": "#/$defs/completeAnchor" },
-              "lastCodeChange": { "$ref": "#/$defs/completeChangeAnchor" }
+              "ageReset": { "$ref": "#/$defs/completeAgeReset" }
             }
           }
         },
@@ -556,7 +593,7 @@
               "evidence": {
                 "properties": {
                   "identitySourceIds": { "minItems": 1 },
-                  "codeHistorySourceIds": { "minItems": 1 }
+                  "ageSourceIds": { "minItems": 1 }
                 }
               },
               "verification": {
@@ -582,12 +619,12 @@
               "verification": {
                 "properties": { "tier": { "const": "reviewed" } }
               },
-              "lastCodeChange": {
+              "ageReset": {
                 "properties": {
-                  "kind": { "enum": ["deployment", "implementation-change", "module-change"] },
+                  "kind": { "enum": ["deployment", "implementation-change", "module-change", "configuration-change"] },
                   "mechanism": {
                     "properties": {
-                      "type": { "enum": ["deployment", "event", "storage-write", "metamorphic-redeployment"] },
+                      "type": { "enum": ["deployment", "event", "storage-write", "view-call", "metamorphic-redeployment"] },
                       "address": { "$ref": "#/$defs/address" }
                     },
                     "allOf": [
@@ -630,7 +667,7 @@
     },
     "targetEvidence": {
       "type": "object",
-      "required": ["identitySourceIds", "codeHistorySourceIds"],
+      "required": ["identitySourceIds", "ageSourceIds"],
       "additionalProperties": false,
       "properties": {
         "identitySourceIds": {
@@ -638,7 +675,7 @@
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/sourceId" }
         },
-        "codeHistorySourceIds": {
+        "ageSourceIds": {
           "type": "array",
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/sourceId" }
@@ -652,7 +689,7 @@
       "properties": {
         "tier": {
           "enum": ["provisional", "reviewed"],
-          "description": "provisional = artifact identity or code history awaits research; reviewed = target identity and complete code history reviewed."
+          "description": "provisional = artifact identity or age history awaits research; reviewed = target identity and complete age history reviewed."
         },
         "curveEligible": { "type": "boolean" },
         "limitations": {

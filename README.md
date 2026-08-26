@@ -1,8 +1,8 @@
 # Ossification Dataset
 
-An auditable dataset of EVM code-bug exploits: the age of the defective code at
-the moment it failed, and the loss, both measured onchain. L2BEAT consumes the
-generated release to present an ossification score.
+An auditable dataset of EVM exploits: code age at failure, reset by code or
+causal critical-state changes, and loss, all measured onchain. L2BEAT consumes
+the generated release to present an ossification score.
 
 `METHODOLOGY.md` defines the cohort, the measurements, and how the curve is
 built. `CONTRIBUTING.md` is the workflow for adding a record.
@@ -27,8 +27,8 @@ scripts/build-candidates.mjs          deterministic research-ledger builder
 
 ## Consuming the release
 
-Each curve observation carries one `codeAgeSeconds` and resolves its
-incident-level summary and loss through `incidentId` in
+Each curve observation carries `codeAgeSeconds` and `ageResetKind`, and resolves
+its incident-level summary and loss through `incidentId` in
 `dist/latest/incidents.json`. That file lists **reviewed incidents only** —
 evidence, targets, verification and the unreviewed legacy backlog stay in
 `incidents/` and are hashed in the manifest, so a published figure is never a

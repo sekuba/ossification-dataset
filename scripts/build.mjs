@@ -35,9 +35,9 @@ export const COHORT_RULES = {
     'target verification.tier equals reviewed',
     'target verification.curveEligible equals true',
     `loss.usd.amount is at least ${LOSS_FLOOR_USD}`,
-    'lastCodeChange.kind describes executable-code deployment or change',
+    'ageReset.kind describes deployment, executable-code change, or a causal configuration change',
   ],
-  codeChangeKinds: ['deployment', 'implementation-change', 'module-change'],
+  ageResetKinds: ['deployment', 'implementation-change', 'module-change', 'configuration-change'],
   deduplication:
     'two passes, each keeping the earliest exploit under the deterministic selection order: first group by (incidentId, failureModeId) so sibling instances of one template collapse to one observation, then by (codeArtifact.codeHash, failureModeId) so byte-identical artifacts collapse across incidents',
   deduplicationSelectionOrder:
@@ -117,6 +117,7 @@ function observationDetails(record, target) {
     targetCurveEligible: target.verification.curveEligible,
     failureModeId: target.failureModeId,
     codeArtifactCodeHash: target.codeArtifact.codeHash,
+    ageResetKind: target.ageReset.kind,
     codeAgeSeconds: target.codeAgeSeconds,
   }
 }
@@ -134,8 +135,8 @@ function exclusionReasons(incident, target) {
   if (usd === null) reasons.push('loss:no-usd-valuation')
   else if (usd < LOSS_FLOOR_USD) reasons.push('loss:below-floor')
 
-  if (!COHORT_RULES.codeChangeKinds.includes(target.lastCodeChange?.kind))
-    reasons.push(`last-code-change:${target.lastCodeChange?.kind ?? 'missing'}`)
+  if (!COHORT_RULES.ageResetKinds.includes(target.ageReset?.kind))
+    reasons.push(`age-reset:${target.ageReset?.kind ?? 'missing'}`)
   return reasons
 }
 
@@ -248,7 +249,7 @@ export function createCurve(records) {
   return {
     $schema: '../../schema/release-curve.schema.json',
     formatVersion: 1,
-    description: 'Empirical ages of exploited executable code, with every source target accounted for.',
+    description: 'Empirical code ages at EVM exploits, reset by code or causal configuration changes.',
     cohortRules: COHORT_RULES,
     counts: {
       sourceIncidents: records.length,
