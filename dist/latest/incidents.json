@@ -8005,6 +8005,94 @@
       }
     },
     {
+      "id": "eip155:1:0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561",
+      "protocol": {
+        "name": "VOW",
+        "slug": "vow"
+      },
+      "name": "VOW temporary usdRate exposure",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561",
+        "blockNumber": 20519309,
+        "transactionIndex": 1,
+        "timestamp": 1723547363
+      },
+      "summary": "A scheduled rate-setting transaction changed the effective VOW-to-vUSD conversion from [5,1] to [1,100]. Twenty-four seconds later, the attacker flash-borrowed VOW, sent it through the permissionless VSCTokenManager receive path, minted 148.66 million vUSD, and traded it against VOW liquidity pools.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 1058620.251774619,
+          "valuationTimestamp": 1723546535,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-6"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "175.477781952968920940",
+            "usdValue": 462649.73409461905,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1723546535,
+              "unitPriceUsd": 2636.5146,
+              "sourceIds": [
+                "source-1",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-6"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+              "symbol": "USDT"
+            },
+            "amount": "595970.517680",
+            "usdValue": 595970.51768,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1723547363,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1"
+              ]
+            },
+            "sourceIds": [
+              "source-1"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x1bbf25e71ec48b84d773809b4ba55b6f4be946fb",
+              "symbol": "VOW"
+            },
+            "amount": "5801632.714644004917570378",
+            "usdValue": null,
+            "valuation": null,
+            "sourceIds": [
+              "source-1"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The exploit sends exactly 175.477781952968920940 ETH, 595,970.517680 USDT, and 5,801,632.714644004917570378 VOW to the attacker EOA after repaying the flash-borrowed VOW. The Chainlink ETH/USD feed returned $2,636.5146, and USDT is valued at par. VOW is left unpriced because the exploit itself consumed its liquidity, so the USD total is a floor."
+      }
+    },
+    {
       "id": "eip155:1:0x75e3aeb00df69882a1b15d424e5e642650326ca3b923d7fd1922d57c51bc2c78",
       "protocol": {
         "name": "Miner (ERC-X)",
@@ -10848,6 +10936,64 @@
       }
     },
     {
+      "id": "eip155:1:0xaee0f8d1235584a3212f233b655f87b89f22f1d4890782447c4ef742b37af58d",
+      "protocol": {
+        "name": "Compound v2",
+        "slug": "compound-v2"
+      },
+      "name": "Compound v2 UNI oracle guard stale-price bad debt",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xaee0f8d1235584a3212f233b655f87b89f22f1d4890782447c4ef742b37af58d",
+        "blockNumber": 19290921,
+        "transactionIndex": 27,
+        "timestamp": 1708698935
+      },
+      "summary": "Compound's immutable UniswapAnchoredView accepted Chainlink UNI updates only while they stayed within 15% of a 30-minute Uniswap v3 TWAP. A genuine rapid UNI rally moved the reporter outside that band, so validate() emitted PriceGuarded and retained the stale $8.34 price. The actor supplied stablecoin collateral, borrowed 232,890.987 UNI at that valuation across six transactions, and sold it at the higher market price; liquidations exhausted the collateral and left 28,699.848 UNI of bad debt.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 297943.48288385815,
+          "valuationTimestamp": 1708699751,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-2",
+            "source-3",
+            "source-4",
+            "source-8"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+              "symbol": "UNI"
+            },
+            "amount": "28699.848014519304045859",
+            "usdValue": 297943.48288385815,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1708699751,
+              "unitPriceUsd": 10.381361,
+              "sourceIds": [
+                "source-4",
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-2",
+              "source-3"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The final liquidation transaction records accountBorrows of exactly 28,699.848014519304045859 UNI after the six campaign borrows and all economically useful collateral seizures. The borrower retains no cUNI and only non-economic cUSDC and cDAI dust. The quantity is valued at the $10.381361 UNI price accepted onchain by UniswapAnchoredView 24 seconds before that liquidation; subsequent interest and unrelated same-window borrower campaigns are excluded.",
+        "realizedAt": 1708699775
+      }
+    },
+    {
       "id": "eip155:1:0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581",
       "protocol": {
         "name": "Poly Network",
@@ -13361,6 +13507,187 @@
       }
     },
     {
+      "id": "eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d",
+      "protocol": {
+        "name": "Yearn",
+        "slug": "yearn-yusdt"
+      },
+      "name": "iEarn yUSDT hard-coded iUSDC accounting mismatch",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d",
+        "blockNumber": 17036779,
+        "transactionIndex": 0,
+        "timestamp": 1681365155
+      },
+      "summary": "The immutable yUSDT runtime hard-coded Fulcrum's iUSDC market while treating assetBalanceOf() as USDT in its pool-value calculation. The attacker minted iUSDC to the vault, inflating the USDT-denominated share price, then used deposit and withdraw calls to create unbacked yUSDT and extract assets through the Curve yPool; the next block repeated the same defect against a sibling yUSDT deployment connected to the BUSD pool.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 11649884.27924573,
+          "valuationTimestamp": 1681365347,
+          "method": "other",
+          "sourceIds": [
+            "source-2",
+            "source-7"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+              "symbol": "DAI"
+            },
+            "amount": "3032142.156139043816254804",
+            "usdValue": 3032142.1561390436,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1681365827,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-2",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "2782771.35525",
+            "usdValue": 2782771.35525,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1681365827,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-2",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+              "symbol": "USDT"
+            },
+            "amount": "1501781.66894",
+            "usdValue": 1501781.66894,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1681365827,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-2",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x0000000000085d4780b73119b644ae5ecd22b376",
+              "symbol": "TUSD"
+            },
+            "amount": "1512528.387000053792916917",
+            "usdValue": 1512528.387000054,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1681365827,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-2",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x4fabb145d64652a948d72533023f6e7a623c7c53",
+              "symbol": "BUSD"
+            },
+            "amount": "1785091.038104302846317121",
+            "usdValue": 1785091.0381043027,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1681365827,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-2",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x1456688345527be1f37e9e627da0837d6f08c925",
+              "symbol": "USDP"
+            },
+            "amount": "61000.719448240129881728",
+            "usdValue": 61000.71944824013,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1681365827,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-2",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "symbol": "WETH"
+            },
+            "amount": "507.550988138411541129",
+            "usdValue": 974568.9543640895,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1681365347,
+              "unitPriceUsd": 1920.14,
+              "sourceIds": [
+                "source-2",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The USD total is the attacker cluster's exact net holdings after both defect executions, settlement and consolidation: six stablecoins valued at par plus 507.550988138411541129 WETH valued at the Chainlink ETH/USD answer of $1,920.14 updated at timestamp 1681365347. It excludes all repaid flash-loan principal. Gross victim depletion is not used because the campaign routes assets through two yUSDT deployments, Curve pools, Aave and an attacker helper, making the independently observable net proceeds the cleaner quantity.",
+        "realizedAt": 1681365827
+      }
+    },
+    {
       "id": "eip155:1:0xd5e2edd6089dcf5dca78c0ccbdf659acedab173a8ab3cb65720e35b640c0af7c",
       "protocol": {
         "name": "DAO Maker",
@@ -13677,6 +14004,74 @@
         ],
         "confidence": "high",
         "notes": "The exploit changes the attack contract's ParticleExchange accountBalance from zero to exactly 50.126827091960426151 ETH, equal to the exchange's full ETH balance at that block."
+      }
+    },
+    {
+      "id": "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0",
+      "protocol": {
+        "name": "WazirX",
+        "slug": "wazirx"
+      },
+      "name": "WazirX Safe singleton replacement",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0",
+        "blockNumber": 20331573,
+        "transactionIndex": 46,
+        "timestamp": 1721283563
+      },
+      "summary": "A threshold-authorized Safe transaction delegatecalled a helper that replaced the wallet's singleton with attacker code. Ninety-six seconds later, the attacker began calling the new singleton's drain function and transferred the Safe's assets to a receiver.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 52465724.26965749,
+          "valuationTimestamp": 1721282147,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-2",
+            "source-7"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "15298.162196710885193018",
+            "usdValue": 52465724.26965749,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1721282147,
+              "unitPriceUsd": 3429.54425473,
+              "sourceIds": [
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2",
+              "source-7"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x6810e776880c02933d47db1b9fc05908e5386b96",
+              "symbol": "GNO"
+            },
+            "amount": "4.104646231600560442",
+            "usdValue": null,
+            "valuation": null,
+            "sourceIds": [
+              "source-1"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Transaction 0xe3dba30431bcd1d8b9189460cb973ff0addf332ea423c5b2349ba57e536f0495 transferred the Safe's complete 15,298.162196710885193018 ETH balance to the receiver. The Chainlink ETH/USD feed returned $3,429.54425473, producing the declared value. The anchor transferred 4.104646231600560442 GNO; that and the campaign's other ERC-20 drains are unpriced, so the USD total is a floor rather than the reported mixed-asset headline.",
+        "realizedAt": 1721287979
       }
     },
     {

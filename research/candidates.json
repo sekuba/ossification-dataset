@@ -25,15 +25,15 @@
       },
       "byDisposition": {
         "excluded": 25,
-        "included": 1261,
+        "included": 1267,
         "out-of-scope": 53,
-        "pending": 172,
+        "pending": 166,
         "unresolved": 96
       },
       "openByReason": {
         "incident-anchors": 1,
         "loss-evidence": 18,
-        "semantic-research": 249
+        "semantic-research": 243
       }
     }
   },
@@ -50,7 +50,7 @@
     },
     "adjudications": {
       "file": "research/raw/adjudications.json",
-      "sha256": "1be8eb352a829583edb9520275b4e519d8da4fcbab9718888db177b84482a770"
+      "sha256": "45092a82542f8421ce53d6b34a229ed2dacb1ebb7a024e682f846ffeb039c7f4"
     },
     "legacyV1": {
       "file": "research/raw/legacy-v1.json",
@@ -65,8 +65,8 @@
     },
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
-      "files": 685,
-      "sha256": "132ddbfdc0d0b6a8a385cb1c22b6329d64c54d0162679aa3d4b4e83c3c5cc5c0"
+      "files": 689,
+      "sha256": "c3ad91faca6207bacf4aa878f1e84b5b0d687c7bb8585876bf36a22f0a0626f0"
     }
   },
   "counts": {
@@ -79,9 +79,9 @@
     },
     "byDisposition": {
       "excluded": 225,
-      "included": 780,
+      "included": 787,
       "out-of-scope": 54,
-      "pending": 168,
+      "pending": 161,
       "unresolved": 376
     },
     "defihacklabsCoverage": {
@@ -645,8 +645,11 @@
         "exploitTx": "0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561"
       },
       "disposition": {
-        "status": "pending",
-        "reason": "CAUSAL_CONFIGURATION: transaction 0xda2a8568a5a210fdfb51880f4e8c91165ea122ada9977a4b11598d56782d49a5 changed usdRate from [5,1] to [1,100] at block 20519307, 24 seconds before the exploit. The permissionless receive path then burned 1,486,625.296150499360431664 VOW and minted 148,662,529.615049936043166400 vUSD at that rate. The write created the later-exercised condition even though the runtime applied it as designed. Reopened pending exact state evidence and victim-loss valuation."
+        "status": "included",
+        "reason": "INCLUDED_CAUSAL_CONFIGURATION: transaction 0xda2a8568a5a210fdfb51880f4e8c91165ea122ada9977a4b11598d56782d49a5 changed the effective VOW-to-vUSD rate from [5,1] to [1,100]. The reviewed incident reproduces that state 24 seconds before the exploit, the manager execution and mint, and a $1,058,620.25 onchain ETH-and-USDT loss floor.",
+        "incidentIds": [
+          "eip155:1:0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561"
+        ]
       }
     },
     {
@@ -984,8 +987,11 @@
         "exploitTx": "0x48164d3adbab78c2cb9876f6e17f88e321097fcd14cadd57556866e4ef3e185d"
       },
       "disposition": {
-        "status": "pending",
-        "reason": "CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: a threshold-authorized execTransaction at block 20331565 delegatecalled code that changed the Safe singleton from 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 to attacker implementation 0xef279c2ab14960aa319008cbea384b9f8ac35fc6. Later drains exercised that persistent code-selection change. Reopened because the onchain change can qualify even though compromised signing caused it; review must identify the earliest later drain, attribute attacker-installed machinery, and measure the interval from singleton replacement."
+        "status": "included",
+        "reason": "INCLUDED_CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: the reviewed incident reproduces the Safe singleton write from 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 to attacker code, the first drain 96 seconds later, the malicious runtime and creation traces, and a $52,465,724.27 onchain ETH-only loss floor.",
+        "incidentIds": [
+          "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0"
+        ]
       }
     },
     {
@@ -8659,11 +8665,11 @@
         }
       ],
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:12"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
     },
     {
@@ -13952,11 +13958,11 @@
         }
       ],
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:25"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0xaee0f8d1235584a3212f233b655f87b89f22f1d4890782447c4ef742b37af58d"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
     },
     {
@@ -17037,11 +17043,11 @@
         }
       ],
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:15"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
     },
     {
@@ -27293,11 +27299,11 @@
         ]
       },
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:25"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0xaee0f8d1235584a3212f233b655f87b89f22f1d4890782447c4ef742b37af58d"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An admitted primary incident anchors this row's exploit transaction."
       }
     },
     {
@@ -36700,11 +36706,11 @@
         "adjudication:30"
       ],
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:30"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {

@@ -137,8 +137,8 @@
       "candidateVictim": "0x184497031808f2b6a2126886c712cc41f146e5dc",
       "exploitTx": "0x758efef41e60c0f218682e2fa027c54d8b67029d193dd7277d6a881a24b9a561",
       "defihacklabs": "src/test/2024-08/VOW_exp.sol@ad353ba25fbb",
-      "disposition": "pending",
-      "reason": "CAUSAL_CONFIGURATION: transaction 0xda2a8568a5a210fdfb51880f4e8c91165ea122ada9977a4b11598d56782d49a5 changed usdRate from [5,1] to [1,100] at block 20519307, 24 seconds before the exploit. The permissionless receive path then burned 1,486,625.296150499360431664 VOW and minted 148,662,529.615049936043166400 vUSD at that rate. The write created the later-exercised condition even though the runtime applied it as designed. Reopened pending exact state evidence and victim-loss valuation."
+      "disposition": "included",
+      "reason": "INCLUDED_CAUSAL_CONFIGURATION: transaction 0xda2a8568a5a210fdfb51880f4e8c91165ea122ada9977a4b11598d56782d49a5 changed the effective VOW-to-vUSD rate from [5,1] to [1,100]. The reviewed incident reproduces that state 24 seconds before the exploit, the manager execution and mint, and a $1,058,620.25 onchain ETH-and-USDT loss floor."
     },
     {
       "name": "The Sandbox SAND BNB Chain OFT delegate takeover",
@@ -285,8 +285,8 @@
       "date": "2024-07-18T06:17:47Z",
       "candidateVictim": "0x27fd43babfbe83a81d14665b1a6fb8030a60c9b4",
       "exploitTx": "0x48164d3adbab78c2cb9876f6e17f88e321097fcd14cadd57556866e4ef3e185d",
-      "disposition": "pending",
-      "reason": "CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: a threshold-authorized execTransaction at block 20331565 delegatecalled code that changed the Safe singleton from 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 to attacker implementation 0xef279c2ab14960aa319008cbea384b9f8ac35fc6. Later drains exercised that persistent code-selection change. Reopened because the onchain change can qualify even though compromised signing caused it; review must identify the earliest later drain, attribute attacker-installed machinery, and measure the interval from singleton replacement.",
+      "disposition": "included",
+      "reason": "INCLUDED_CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: the reviewed incident reproduces the Safe singleton write from 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 to attacker code, the first drain 96 seconds later, the malicious runtime and creation traces, and a $52,465,724.27 onchain ETH-only loss floor.",
       "candidateIds": [
         "web:2024-07-18:wazirx"
       ]
