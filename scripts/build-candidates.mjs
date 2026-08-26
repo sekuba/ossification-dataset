@@ -227,6 +227,19 @@ const otherIdentifierByPoc = new Map(
 const noDatasetRowByPoc = new Map(dfhl.noDatasetRow.map((entry) => [entry.poc, entry]))
 // A legacy category settles scope only when it names a cause outside executed
 // EVM code.
+// An exclusion may name the discovery leads it adjudicates, the mirror of an
+// incident's `discovery`. Without it an exclusion only reaches a lead that
+// happens to share a legacy row.
+const exclusionIdsByCandidateId = new Map()
+for (const [index, entry] of exclusions.entries()) {
+  for (const candidateId of entry.candidateIds ?? []) {
+    exclusionIdsByCandidateId.set(candidateId, [
+      ...(exclusionIdsByCandidateId.get(candidateId) ?? []),
+      `exclusion:${index + 1}`,
+    ])
+  }
+}
+
 const CATEGORIES_OUTSIDE_COHORT = new Set(['insider-rug', 'key-compromise', 'offchain-infra'])
 
 // These name a mechanism, not a cause. Each can be a defect in executed code or
@@ -337,6 +350,7 @@ function dfhlDisposition(rows, poc, ambiguous = false) {
   const exclusionIds = unique([
     ...(exclusionsByPoc.get(poc) ?? []).map((index) => `exclusion:${index + 1}`),
     ...rows.flatMap((row) => row.exclusionIds),
+    ...(exclusionIdsByCandidateId.get(`dfhl:${poc}`) ?? []),
   ]).sort()
   if (exclusionIds.length > 0) {
     return {
@@ -390,10 +404,11 @@ function legacyDisposition(row, id) {
     }
   }
 
-  if (row.exclusionIds.length > 0) {
+  const exclusionIds = unique([...row.exclusionIds, ...(exclusionIdsByCandidateId.get(id) ?? [])]).sort()
+  if (exclusionIds.length > 0) {
     return {
       status: 'excluded',
-      exclusionIds: row.exclusionIds,
+      exclusionIds,
       reason: 'The exact exploit transaction has an explicit exclusion adjudication.',
     }
   }
@@ -577,7 +592,10 @@ const webCandidates = webRows.map((web) => {
     ...exactSourceRows.flatMap((row) => row.incidentIds),
     ...declared,
   ]).sort()
-  const exclusionIds = unique(exactSourceRows.flatMap((row) => row.exclusionIds)).sort()
+  const exclusionIds = unique([
+    ...exactSourceRows.flatMap((row) => row.exclusionIds),
+    ...(exclusionIdsByCandidateId.get(id) ?? []),
+  ]).sort()
   const disposition =
     declared.length > 0
       ? {

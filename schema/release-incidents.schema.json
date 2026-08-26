@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://l2beat.com/schemas/ossification-dataset/release-incidents.schema.json",
   "title": "Ossification incident release",
+  "description": "Incident-level classification and loss, joinable to a curve observation through id. Targets are projected into curve.json; full records, evidence and verification live in incidents/ and are hashed in the manifest.",
   "type": "object",
   "required": ["$schema", "formatVersion", "schemaVersion", "incidents"],
   "additionalProperties": false,
@@ -11,7 +12,21 @@
     "schemaVersion": { "const": "2.0.0" },
     "incidents": {
       "type": "array",
-      "items": { "$ref": "incident.schema.json" }
+      "items": {
+        "type": "object",
+        "required": ["id", "protocol", "name", "chainId", "exploit", "classification", "loss", "verificationTier"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "incident.schema.json#/properties/id" },
+          "protocol": { "$ref": "incident.schema.json#/$defs/protocol" },
+          "name": { "type": "string", "minLength": 1 },
+          "chainId": { "type": "integer", "minimum": 1 },
+          "exploit": { "$ref": "incident.schema.json#/$defs/incident/properties/exploit" },
+          "classification": { "$ref": "incident.schema.json#/$defs/classification" },
+          "loss": { "$ref": "incident.schema.json#/$defs/loss" },
+          "verificationTier": { "enum": ["provisional", "reviewed"] }
+        }
+      }
     }
   }
 }

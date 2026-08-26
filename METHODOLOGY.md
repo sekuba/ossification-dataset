@@ -27,7 +27,10 @@ malicious or mistaken privileged actions, configured parameter values that the
 code applies as designed, market conditions, or offchain/front-end behavior.
 In a mixed case, admit the incident only when the executed EVM code itself
 failed an evidenced invariant; configuration changes remain context, not the
-code-age anchor.
+code-age anchor. The operative test is whether some parameter value would make
+the deployed code correct. If one would, the defect is that parameter and the
+incident yields no code-age observation. If none would, the code is defective
+whatever it is configured with.
 
 ## Incident and target units
 
@@ -98,12 +101,21 @@ initializer, so the age spans the interval the defect survived unexploited, and
 a later drain through attacker-installed implementations belongs to the loss
 rather than to the age.
 
-Shared code reached through a factory clone, beacon, diamond or router is aged
-from when the artifact became active in the configuration the execution context
-reads, not from when that context was instantiated. A per-user account created
-moments before the exploit does not reset the age of the template it delegates
-to, and `deployment` continues to anchor the execution context while
-`lastCodeChange` anchors the artifact.
+Shared code is aged from when the artifact became active for the execution
+context that ran it. Where the context reads a mutable pointer - a beacon, a
+diamond's routing, a router's module table - that is the activation event, and a
+per-user account created moments before the exploit does not reset the age of
+the template it delegates to. Where the pointer is fixed at creation, as in an
+EIP-1167 clone, the default is the clone's own creation. `deployment` anchors the
+execution context throughout; `lastCodeChange` anchors the artifact.
+
+A clone can reasonably be aged either from itself or from the logic it copies,
+and the record decides case by case and says which in its review note. Prefer
+the clone when the defect only became reachable through that instance - the
+token it was configured with, or the balance it accumulated - because a latent
+flaw in shared logic is exploited when a particular deployment makes it worth
+exploiting. Prefer the shared logic when the instance adds nothing that bears on
+the defect.
 
 A deployment basis requires positive evidence that the relevant code state
 continued through the exploit. Suitable evidence depends on architecture and
@@ -118,8 +130,6 @@ Verification follows the ownership of each claim:
 - Incident `reviewed`: exploit anchor, code-bug classification, and loss have
   been reviewed.
 - Target `provisional`: artifact identity or code history awaits research.
-- Target `mechanical`: the automated verifier reproduced the declared
-  anchors.
 - Target `reviewed`: execution relationship, artifact hash, failure identity,
   exact anchors, and code-history completeness have been reviewed.
 

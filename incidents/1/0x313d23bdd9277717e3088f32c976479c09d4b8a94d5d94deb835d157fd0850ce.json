@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1641538291,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 13956790,
+        "transactionHash": "0x3e4ff29ca956b25f492deb59a351ab3bbb557afd71ab3560802e142791d9e081",
+        "transactionIndex": 251,
+        "creatorAddress": "0x37c6ca7be321e1ce86f2f8062171c47748951bfb"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1641538291,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 13956790,
+        "transactionHash": "0x3e4ff29ca956b25f492deb59a351ab3bbb557afd71ab3560802e142791d9e081",
+        "transactionIndex": 251,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:1:0x313d23bdd9277717e3088f32c976479c09d4b8a94d5d94deb835d157fd0850ce:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/mevbot-0x28d9.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,6 +106,16 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2022-12/MEVbot_0x28d9_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x3e4ff29ca956b25f492deb59a351ab3bbb557afd71ab3560802e142791d9e081"
     }
   ],
   "verification": {

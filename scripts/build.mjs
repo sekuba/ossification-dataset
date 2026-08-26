@@ -46,7 +46,7 @@ export const COHORT_RULES = {
   incidentReference:
     'observation.incidentId resolves the incident-level classification and loss in incidents.json; loss is intentionally not copied onto each target observation, and an incident that contributes several observations owns one loss, so a loss-weighted curve must aggregate per incidentId rather than sum per observation',
   ordering: 'ascending codeAgeSeconds, then observationId',
-  excludedTargetTiers: ['mechanical', 'provisional'],
+  excludedTargetTiers: ['provisional'],
 }
 
 function walkJsonFiles(dir, relativeTo = dir) {
@@ -356,7 +356,18 @@ export function buildArtifacts(root = ROOT) {
     $schema: '../../schema/release-incidents.schema.json',
     formatVersion: 1,
     schemaVersion: schemaVersions[0],
-    incidents: records.map((record) => record.incident),
+    // Loss and classification only. The full records live in incidents/ and are
+    // hashed in the manifest, so copying them here would duplicate the dataset.
+    incidents: records.map(({ incident }) => ({
+      id: incident.id,
+      protocol: incident.protocol,
+      name: incident.name,
+      chainId: incident.incident.chainId,
+      exploit: incident.incident.exploit,
+      classification: incident.classification,
+      loss: incident.loss,
+      verificationTier: incident.verification.tier,
+    })),
   }
   const curve = createCurve(records)
   const evidenceSources = records.flatMap((record) => record.incident.sources ?? [])

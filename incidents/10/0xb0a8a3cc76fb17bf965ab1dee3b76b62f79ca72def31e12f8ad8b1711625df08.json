@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1637816357,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 438459,
+        "transactionHash": "0x69b6960eb5a4f6a385b7b31ff03beabc7e7e38ba99c53b2bce30d9ffe4b2c675",
+        "transactionIndex": 0,
+        "creatorAddress": "0x849a19c0746fb0d335e02dec0d0b3e057e585176"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1637816357,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 438459,
+        "transactionHash": "0x69b6960eb5a4f6a385b7b31ff03beabc7e7e38ba99c53b2bce30d9ffe4b2c675",
+        "transactionIndex": 0,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -71,18 +71,19 @@
       "failureModeId": "legacy:eip155:10:0xb0a8a3cc76fb17bf965ab1dee3b76b62f79ca72def31e12f8ad8b1711625df08:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/perpetual-protocol.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/perpetual-protocol.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -123,6 +124,16 @@
         "code-history"
       ],
       "note": "deployment-basis recheck (storage, not events): all seven DELEGATECALLs the OrderBook proxy makes in the attack tx go to 0x6ba44773cc1388605f57e7c3730f8aff70773e5a, which is the value of the EIP-1967 implementation slot at the creation block 438459, at the incident block 154311432 and at all 41 evenly spaced samples in between; the proxy runtime is byte-identical at both ends. Deployment is the correct basis; 1694.5 days."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 10,
+      "transactionHash": "0x69b6960eb5a4f6a385b7b31ff03beabc7e7e38ba99c53b2bce30d9ffe4b2c675"
     }
   ],
   "verification": {

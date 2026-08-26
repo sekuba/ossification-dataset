@@ -6,7 +6,7 @@
     "name": "MEV bot 0x8c2d",
     "slug": "mevbot-0x8c2d"
   },
-  "name": "MEV bot unprotected swap callback",
+  "name": "Asset-harvesting contract 0x19a2 unauthorised payer transferFrom",
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -16,73 +16,99 @@
       "timestamp": 1699815052
     },
     "attackerAddresses": [
-      "0x69e068eb917115ed103278b812ec7541f021cea0"
+      "0x69e068eb917115ed103278b812ec7541f021cea0",
+      "0x3918e0d26b41134c006e8d2d7e3206a53b006108"
     ]
   },
   "classification": {
     "rootCause": "code-bug",
-    "summary": "The MEV bot's PancakeSwap swap callback performs no caller or authorisation check, so anyone could trigger it through a WBNB/BUSDT pair swap and have the bot pay out its whole BUSDT balance."
+    "summary": "The shared asset-harvesting contract 0x19a23ddaa47396335894229e0439d3d187d89ec9, which MEV bots on BSC hold live BUSDT allowances to, exposes two permissionless entry points. Selector 0xac3994ec records an order under a caller-supplied key and debits only msg.sender, so anyone can designate themselves as that order's privileged executor. Selector 0x1270d364 then reads the payer, recipient, token and amount out of calldata and performs token.transferFrom(payer, recipient, amount) after checking only that msg.sender matches the address stored with the order; nothing binds the payer to the order or requires the payer's consent. An attacker contract deployed 63 seconds earlier registered its own order and used it to move the entire BUSDT balance of bot 0x8c2d4ed92badb9b65f278efb8b440f4bc995ffe7, which had an unlimited allowance outstanding."
   },
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 365000,
+      "amount": 366058.04020632565,
       "valuationTimestamp": 1699815052,
-      "method": "legacy-unspecified",
-      "sourceIds": []
+      "method": "stablecoin-par",
+      "sourceIds": [
+        "source-1"
+      ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+          "symbol": "BUSDT"
+        },
+        "amount": "366058.040206325661577467",
+        "usdValue": 366058.04020632565,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1699815052,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The component is the single unauthorised transferFrom in the exploit receipt, log index 5: 366,058.040206325661577467 BUSDT moved from bot 0x8c2d4ed92badb9b65f278efb8b440f4bc995ffe7 to attacker contract 0x3918e0d26b41134c006e8d2d7e3206a53b006108, which was the bot's whole BUSDT balance. The equal-sized 366,058.040206325661577467 BUSDT taken from the WBNB/BUSDT pair 0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae in the same transaction was a flash swap and was repaid as 367,159.518762613502083719 BUSDT; that 1,101.478556287840506252 BUSDT financing fee does not reduce gross victim depletion, so the attacker's realised 364,956.561650037821071215 BUSDT is lower than the loss recorded here. No other address was drained in this transaction and the attacker EOA sent no further exploit transactions. BUSDT is valued at par; DefiLlama returns no historical quote for this token at the incident timestamp."
   },
   "targets": [
     {
       "id": "target-1",
-      "executionAddress": "0x8c2d4ed92badb9b65f278efb8b440f4bc995ffe7",
-      "relationship": "unknown",
+      "executionAddress": "0x19a23ddaa47396335894229e0439d3d187d89ec9",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0x19a23ddaa47396335894229e0439d3d187d89ec9",
+        "codeHash": "0x24baa5b548ec939273217de9618ac83fd5b8f78f2115068bf1d7c456638cfb16"
       },
       "deployment": {
-        "timestamp": 1693207554,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": "0x761453712e163571c02208d8609ae234215e66bf"
+        "timestamp": 1667400289,
+        "blockNumber": 22711195,
+        "transactionHash": "0x8b7324a8bf492b9d871760d21bde0ded64b2efefd61bfe180a5c42617adeaf3a",
+        "transactionIndex": 106,
+        "creatorAddress": "0x86c1a0ba13a4991c50a0252610eacfedee7a46e3"
       },
       "lastCodeChange": {
         "kind": "deployment",
-        "timestamp": 1693207554,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "timestamp": 1667400289,
+        "blockNumber": 22711195,
+        "transactionHash": "0x8b7324a8bf492b9d871760d21bde0ded64b2efefd61bfe180a5c42617adeaf3a",
+        "transactionIndex": 106,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
-          "address": "0x8c2d4ed92badb9b65f278efb8b440f4bc995ffe7"
+          "address": "0x19a23ddaa47396335894229e0439d3d187d89ec9"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Non-upgradeable contract deployed by a top-level creation transaction. Its 3,426-byte runtime hashes to 0x24baa5b548ec939273217de9618ac83fd5b8f78f2115068bf1d7c456638cfb16 at both the creation block 22711195 and block 33435892, the address holds no code at block 22711194, and the EIP-1967 implementation slot is zero, so the deployment is the only pre-exploit code change."
       },
-      "codeAgeSeconds": 6607498,
-      "failureModeId": "legacy:eip155:56:0x3dcb26a1f49eb4d02ca29960b4833bfb2e83d7b5d9591aed1204168944c8c9b3:failure-1",
+      "codeAgeSeconds": 32414763,
+      "failureModeId": "failure:mev-settlement-0x19a2-unauthorized-payer-transferfrom",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "codeHistorySourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/mevbot-0x8c2d.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-5"
         ]
       }
     }
@@ -92,7 +118,10 @@
       "id": "source-1",
       "type": "onchain-transaction",
       "supports": [
-        "incident-anchor"
+        "incident-anchor",
+        "target-identity",
+        "root-cause",
+        "loss"
       ],
       "chainId": 56,
       "transactionHash": "0x3dcb26a1f49eb4d02ca29960b4833bfb2e83d7b5d9591aed1204168944c8c9b3"
@@ -118,19 +147,34 @@
     },
     {
       "id": "source-4",
-      "type": "review-note",
+      "type": "onchain-transaction",
       "supports": [
         "target-identity",
         "code-history"
       ],
-      "note": "onchain review: victim 0x8c2d4ed92badb9b65f278efb8b440f4bc995ffe7 created 2023-08-28T07:25:54Z by 0x761453712e163571c02208d8609ae234215e66bf, which is not the attack-tx sender 0x69e068eb917115ed103278b812ec7541f021cea0; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
+      "chainId": 56,
+      "transactionHash": "0x8b7324a8bf492b9d871760d21bde0ded64b2efefd61bfe180a5c42617adeaf3a"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "supports": [
+        "incident-anchor",
+        "target-identity",
+        "code-history",
+        "root-cause",
+        "loss"
+      ],
+      "reviewer": "Claude Opus 5",
+      "reviewedAt": "2026-08-26T01:20:00Z",
+      "note": "Re-targeted. The legacy row named the loss-bearing bot 0x8c2d4ed92badb9b65f278efb8b440f4bc995ffe7 as the execution context and described the defect as an unprotected PancakeSwap swap callback; both are wrong. The 22-frame callTracer output of the anchor contains no frame whose callee is 0x8c2d4ed9 at all - the callees are 0x3918e0d26b41134c006e8d2d7e3206a53b006108, 0x5cc05fde1d231a840061c1a2d7e913cedc8eabaf, BUSDT, the WBNB/BUSDT pair, 0x19a23ddaa47396335894229e0439d3d187d89ec9, WBNB and the attacker EOA - and the 0x84800812 pancakeCall callback runs on the attacker's own contract, which is the normal flash-swap callee, not a victim surface. The address whose code moves the funds is 0x19a23dda: it is called twice, first with 0xac3994ec, whose handler at 0x033f uses CALLER as the transferFrom payer and writes an order record keyed on the calldata word 0x0000000065511e8d000000380000000000000000, then with 0x1270d364, whose handler at 0x0256 takes token, payer, recipient and amount from calldata and reaches the shared transferFrom builder at 0x0419; the only guard on that path is the CALLER equality at offset 0x0608 that reverts with 'E9', and it compares msg.sender against the address stored with the order, never against the payer. DeFiHackLabs' reproduction agrees, labelling 0x19a23dda the assetHarvestingContract and commenting that 0xac3994ec designates a privileged role for the attacker. Evidence that the payer is unbound is the receipt itself: log 5 is USDT.transferFrom(0x8c2d4ed9, 0x3918e0d2, 366058040206325661577467) emitted by an allowance held by 0x19a23dda, where 0x3918e0d2 was created 63 seconds earlier at block 33435872 by an EOA unrelated to the bot. At the exploit block 15 distinct addresses held live BUSDT approvals to 0x19a23dda, including the bot and the bot's own deployer 0x761453712e163571c02208d8609ae234215e66bf, so this is shared infrastructure rather than the bot's private code. Anchor: attacker EOA 0x69e068eb917115ed103278b812ec7541f021cea0 sent exactly four transactions - nonce 0 is a bare CREATE of the exploit contract with no subcalls, nonce 1 is this anchor, nonces 2 and 3 are a BUSDT approval and a LiFi bridge of the proceeds - so the anchor is the earliest and only defect-executing success and the incident is a single transaction. Code history: 0x19a23dda was created by top-level creation transaction 0x8b7324a8bf492b9d871760d21bde0ded64b2efefd61bfe180a5c42617adeaf3a at block 22711195 index 106 by 0x86c1a0ba13a4991c50a0252610eacfedee7a46e3, not an attacker; its runtime hash is 0x24baa5b548ec939273217de9618ac83fd5b8f78f2115068bf1d7c456638cfb16 at both block 22711195 and block 33435892, the account is empty at block 22711194, and the EIP-1967 slot is zero, so the age is 1699815052 - 1667400289 = 32,414,763 s, not the 6,607,498 s the legacy row derived from the bot's deployment. The contract is unverified, so the defect is characterised from the disassembled runtime, the trace and DeFiHackLabs' reproduction rather than from source; the code-age measurement does not depend on that characterisation. Loss taken from the receipt's BUSDT transfers with the flash swap netted out."
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/mevbot-0x8c2d.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-5"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -142,5 +186,7 @@
       "date": "2023-11-12T18:50:52Z"
     }
   },
-  "notes": []
+  "notes": [
+    "The loss-bearing party is MEV bot 0x8c2d4ed92badb9b65f278efb8b440f4bc995ffe7, which is retained as the protocol identity for continuity with the legacy row. The defect and therefore the code-age target is the shared asset-harvesting contract 0x19a23ddaa47396335894229e0439d3d187d89ec9 that the bot had approved."
+  ]
 }

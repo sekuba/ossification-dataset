@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1718256239,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 20080796,
+        "transactionHash": "0x2cb44dc5d97cec85f9dd51cde4018b8d03b4557b6ed224d77d205685f52db5e3",
+        "transactionIndex": 59,
+        "creatorAddress": "0x2921f6be50a2b098b123b9bf0abdc1ea015dbb9f"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1718256239,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 20080796,
+        "transactionHash": "0x2cb44dc5d97cec85f9dd51cde4018b8d03b4557b6ed224d77d205685f52db5e3",
+        "transactionIndex": 59,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -69,17 +69,19 @@
       "failureModeId": "legacy:eip155:1:0x7f2540af4a1f7b0172a46f5539ebf943dd5418422e4faa8150d3ae5337e92172:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-2"
+          "source-2",
+          "source-3"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-3"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/erc20transfer.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -104,6 +106,16 @@
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-10/Erc20transfer_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2cb44dc5d97cec85f9dd51cde4018b8d03b4557b6ed224d77d205685f52db5e3"
     }
   ],
   "verification": {

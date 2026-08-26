@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1762757651,
-        "blockNumber": 23731141,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 23767200,
+        "transactionHash": "0x2f233e04f820bf0d88646278f18858454add84435d04a1be198db21ec4c42e80",
+        "transactionIndex": 124,
+        "creatorAddress": "0xcd29be25e0b021a9404c90e163bb20680e2cf032"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1762757651,
-        "blockNumber": 23731141,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 23767200,
+        "transactionHash": "0x2f233e04f820bf0d88646278f18858454add84435d04a1be198db21ec4c42e80",
+        "transactionIndex": 124,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,18 +70,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/drlvaultv3.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/drlvaultv3.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -115,6 +116,16 @@
         "code-history"
       ],
       "note": "Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1167 minimal-proxy clone whose 45-byte runtime hardcodes the master 0x8aa6b0e10bd6dbaf5159967f92f2e740afe2b4c3 (created at block 23731141), so the DELEGATECALL target cannot be repointed; the master's runtime is byte-identical at the clone's creation block 23767200 and the incident block 23769387 and contains no DELEGATECALL, so the 7.3-hour age is measured from the deployment of code that never changed."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x2f233e04f820bf0d88646278f18858454add84435d04a1be198db21ec4c42e80"
     }
   ],
   "verification": {

@@ -319,6 +319,15 @@ function verifyIncident(record, state, errors) {
   else state.incidentIds.set(incident.id, label)
   for (const candidateId of incident.discovery ?? [])
     state.discoveryRefs.set(candidateId, [...(state.discoveryRefs.get(candidateId) ?? []), label])
+  for (const source of incident.sources ?? []) {
+    if (!source.supports?.includes('loss')) continue
+    const hashes = source.transactionHashes ?? (source.transactionHash ? [source.transactionHash] : [])
+    for (const hash of hashes) {
+      const key = `eip155:${source.chainId}:${hash}`
+      if (!state.lossTransactions.has(key)) state.lossTransactions.set(key, new Set())
+      state.lossTransactions.get(key).add(incident.id)
+    }
+  }
   const txKey = `${chainId}:${exploit?.transactionHash}`
   if (state.exploitTransactions.has(txKey))
     errors.push(`${label}: exploit transaction also appears in ${state.exploitTransactions.get(txKey)}`)
@@ -809,6 +818,7 @@ export function checkDataset(root = ROOT) {
   const state = {
     incidentIds: new Map(),
     discoveryRefs: new Map(),
+    lossTransactions: new Map(),
     exploitTransactions: new Map(),
     legacyRows,
   }
@@ -827,6 +837,14 @@ export function checkDataset(root = ROOT) {
         record.incident.loss && record.incident.verification) {
       verifyIncident(record, state, errors)
     }
+  }
+
+  // METHODOLOGY forbids counting one loss twice. A transaction cited as loss
+  // evidence by two incidents is not always wrong - one transaction can drain
+  // two protocols - but it always needs a human to confirm the amounts are
+  // disjoint, so surface it rather than blocking on it.
+  for (const [key, ids] of state.lossTransactions) {
+    if (ids.size > 1) notes.push(`loss evidence ${key} is cited by ${[...ids].sort().join(', ')}`)
   }
 
   validateCandidates(root, state.incidentIds, state.discoveryRefs, errors, notes)

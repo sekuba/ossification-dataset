@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1697179271,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 18339748,
+        "transactionHash": "0x5ddfad83147c8ac1c291a28b722811168368bc21a4cc7439dc9981db045b5306",
+        "transactionIndex": 138,
+        "creatorAddress": "0xc493bd1d8d794357e79da84613b67533afc4d337"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1697179271,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 18339748,
+        "transactionHash": "0x5ddfad83147c8ac1c291a28b722811168368bc21a4cc7439dc9981db045b5306",
+        "transactionIndex": 138,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,18 +70,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/equilibriaependle.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/equilibriaependle.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -115,6 +116,16 @@
         "code-history"
       ],
       "note": "onchain review: victim re-anchored from implementation 0x615b0B54e585ab83ba1c94a734cd4499dEc1C956 to the proxy the protocol runs at, 0xd30d6fd662c0d92b49f3c3e478e125ba1d968059, which holds that implementation in its EIP-1967 slot and emits the exploit transaction's logs while the implementation emits none; age measured from when the proxy started running the implementation rather than from the implementation's own deployment (58956036s -> 58768788s)"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x5ddfad83147c8ac1c291a28b722811168368bc21a4cc7439dc9981db045b5306"
     }
   ],
   "verification": {

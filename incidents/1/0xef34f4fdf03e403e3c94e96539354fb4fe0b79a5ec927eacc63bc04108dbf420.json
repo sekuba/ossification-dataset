@@ -47,17 +47,17 @@
       },
       "deployment": {
         "timestamp": 1735578803,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 21516710,
+        "transactionHash": "0x118d6b786d44b6fa3dfac6396a3127eb6abc050fc5c1a1230cf700a08ac7c8f5",
+        "transactionIndex": 158,
+        "creatorAddress": "0xd1bd232f94df1465f7f33eb0f74ac5b6585d8029"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1735578803,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 21516710,
+        "transactionHash": "0x118d6b786d44b6fa3dfac6396a3127eb6abc050fc5c1a1230cf700a08ac7c8f5",
+        "transactionIndex": 158,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -70,18 +70,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "codeHistorySourceIds": [
-          "source-3"
+          "source-3",
+          "source-4"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/lauratoken.json; no semantic revalidation was inherited.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Target identity and code history came from the v1 snapshot row originally at protocols/lauratoken.json; no semantic revalidation was inherited."
         ]
       }
     }
@@ -115,6 +116,16 @@
         "code-history"
       ],
       "note": "Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1167 minimal-proxy clone whose 45-byte runtime hardcodes the master 0x539d54074e052ae82de4936ae6bb213ab773559e, so the DELEGATECALL target cannot be repointed; the master's runtime is byte-identical at the clone's creation block 21516710 and the incident block 21529888 and contains no DELEGATECALL, so deployment is exact."
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x118d6b786d44b6fa3dfac6396a3127eb6abc050fc5c1a1230cf700a08ac7c8f5"
     }
   ],
   "verification": {

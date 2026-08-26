@@ -38,9 +38,9 @@ For each target, establish:
 - identity and code-history source IDs;
 - reviewed `failure:<namespace>` identity when available.
 
-Claims begin as `provisional`. `mechanical` means the verifier reproduced the
-target anchors; it is not semantic review. Set incident or target `reviewed`
-only after linking a `review-note` with `reviewer` and `reviewedAt` through
+Claims begin as `provisional`. Reproducing anchors with the verifier is not
+semantic review. Set incident or target `reviewed` only after linking a
+`review-note` with `reviewer` and `reviewedAt` through
 `verification.reviewSourceIds`. Set `curveEligible` only when all curve rules in
 `METHODOLOGY.md` hold.
 

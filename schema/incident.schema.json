@@ -527,7 +527,7 @@
           "if": {
             "properties": {
               "verification": {
-                "properties": { "tier": { "enum": ["mechanical", "reviewed"] } },
+                "properties": { "tier": { "const": "reviewed" } },
                 "required": ["tier"]
               }
             }
@@ -622,7 +622,7 @@
           "if": {
             "properties": {
               "verification": {
-                "properties": { "tier": { "enum": ["provisional", "mechanical"] } },
+                "properties": { "tier": { "const": "provisional" } },
                 "required": ["tier"]
               }
             }
@@ -660,8 +660,8 @@
       "additionalProperties": false,
       "properties": {
         "tier": {
-          "enum": ["provisional", "mechanical", "reviewed"],
-          "description": "provisional = incomplete target/code research; mechanical = anchors reproduced by a limited strategy; reviewed = target identity and complete code history reviewed."
+          "enum": ["provisional", "reviewed"],
+          "description": "provisional = artifact identity or code history awaits research; reviewed = target identity and complete code history reviewed."
         },
         "curveEligible": { "type": "boolean" },
         "limitations": {

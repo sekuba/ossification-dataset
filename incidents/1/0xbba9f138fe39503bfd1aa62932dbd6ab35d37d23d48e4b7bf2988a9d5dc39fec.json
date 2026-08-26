@@ -49,17 +49,17 @@
       },
       "deployment": {
         "timestamp": 1651093496,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
-        "creatorAddress": null
+        "blockNumber": 14668794,
+        "transactionHash": "0x5fe942c5d09bd3b427c5d8c0ecabd0d2468d4452b0b7f32f87ca358c0c997132",
+        "transactionIndex": 128,
+        "creatorAddress": "0x4a4c7c5549359b9fff0137bb3ec4d48c4aa79cc7"
       },
       "lastCodeChange": {
         "kind": "deployment",
         "timestamp": 1651093496,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 14668794,
+        "transactionHash": "0x5fe942c5d09bd3b427c5d8c0ecabd0d2468d4452b0b7f32f87ca358c0c997132",
+        "transactionIndex": 128,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
@@ -72,17 +72,19 @@
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
-        "codeHistorySourceIds": []
+        "codeHistorySourceIds": [
+          "source-4"
+        ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
           "Target identity and code history came from the v1 snapshot row originally at protocols/thetanuts.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
     }
@@ -116,6 +118,16 @@
         "loss"
       ],
       "note": "onchain review of the exploit tx: the attack contract's net gain is 105,471.4991 USDC plus 33,593.77 TN-CSCPv1 vault shares (AVAXUSD/BNBUSD/MATICUSD). The ~$2.1M figure circulating for this incident is the at-risk amount, of which ~$2M was rescued by a whitehat, so it is not the realised loss; the duplicate thetanutsfi row carrying that figure was removed"
+    },
+    {
+      "id": "source-4",
+      "type": "onchain-transaction",
+      "supports": [
+        "target-identity",
+        "code-history"
+      ],
+      "chainId": 1,
+      "transactionHash": "0x5fe942c5d09bd3b427c5d8c0ecabd0d2468d4452b0b7f32f87ca358c0c997132"
     }
   ],
   "verification": {
