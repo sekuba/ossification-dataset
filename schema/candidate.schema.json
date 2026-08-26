@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://l2beat.com/schemas/ossification-dataset/candidate.schema.json",
   "title": "Ossification research candidate ledger",
-  "description": "The generated, source-addressed disposition ledger. Overlapping source entries are intentionally retained.",
+  "description": "Generated, source-addressed candidate dispositions. Overlapping source entries remain distinct.",
   "type": "object",
   "required": [
     "$schema",
@@ -16,7 +16,7 @@
   "additionalProperties": false,
   "properties": {
     "$schema": { "const": "../schema/candidate.schema.json" },
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "description": { "type": "string", "minLength": 1 },
     "cohort": { "$ref": "#/$defs/cohort" },
     "generatedFrom": {
@@ -24,7 +24,7 @@
       "required": [
         "defihacklabs",
         "webList",
-        "exclusions",
+        "adjudications",
         "legacyV1",
         "primaryIncidents"
       ],
@@ -32,7 +32,7 @@
       "properties": {
         "defihacklabs": { "$ref": "#/$defs/defihacklabsInput" },
         "webList": { "$ref": "#/$defs/webInput" },
-        "exclusions": { "$ref": "#/$defs/fileInput" },
+        "adjudications": { "$ref": "#/$defs/fileInput" },
         "legacyV1": { "$ref": "#/$defs/legacyV1Input" },
         "primaryIncidents": {
           "type": "object",
@@ -206,14 +206,14 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^(dfhl:|web:|exclusion:|legacy:).+"
+          "pattern": "^(dfhl:|web:|adjudication:|legacy:).+"
         },
         "source": { "$ref": "#/$defs/source" },
         "coverage": { "$ref": "#/$defs/coverage" },
-        "relatedExclusionIds": {
+        "relatedAdjudicationIds": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^exclusion:[1-9][0-9]*$" }
+          "items": { "type": "string", "pattern": "^adjudication:[1-9][0-9]*$" }
         },
         "matchedRows": {
           "type": "array",
@@ -228,7 +228,7 @@
       "oneOf": [
         { "$ref": "#/$defs/defihacklabsSource" },
         { "$ref": "#/$defs/webSource" },
-        { "$ref": "#/$defs/exclusionSource" },
+        { "$ref": "#/$defs/adjudicationSource" },
         { "$ref": "#/$defs/legacySource" }
       ]
     },
@@ -254,13 +254,13 @@
         "line": { "type": "integer", "minimum": 1 }
       }
     },
-    "exclusionSource": {
+    "adjudicationSource": {
       "type": "object",
       "required": ["kind", "file", "entryIndex"],
       "additionalProperties": false,
       "properties": {
-        "kind": { "const": "exclusion" },
-        "file": { "const": "research/raw/exclusions.json" },
+        "kind": { "const": "adjudication" },
+        "file": { "const": "research/raw/adjudications.json" },
         "entryIndex": { "type": "integer", "minimum": 0 },
         "defihacklabs": {
           "type": "object",
@@ -411,11 +411,11 @@
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/incidentId" }
         },
-        "exclusionIds": {
+        "adjudicationIds": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^exclusion:[1-9][0-9]*$" }
+          "items": { "type": "string", "pattern": "^adjudication:[1-9][0-9]*$" }
         }
       },
       "allOf": [

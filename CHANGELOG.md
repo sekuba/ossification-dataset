@@ -36,6 +36,14 @@ V2 defines a new incident-and-target interface for audited code age and loss.
   retained clone age where instance state or assets created the exposure.
 - Reset code age on a causal critical-state change, anchored by a storage write
   or reproducible view call.
+- Re-examined configuration adjudications under that rule: reopened 13 persistent
+  state changes for incident research while retaining direct privileged drains
+  and market or governance risk as exclusions.
+- Replaced exclusion-only research records with explicit adjudications so a
+  rejected lead can be reopened without losing its evidence trail.
+- Admitted the Yearn v1 yDAI, Rho Markets, and Moonwell cbETH configuration
+  incidents after reconstructing their state resets and losses onchain;
+  corrected reported loss scopes where they did not match causal depletion.
 - Dropped `classification.rootCause`, a constant, and the `supports` declaration
   on sources, which restated what the per-claim references already say.
 

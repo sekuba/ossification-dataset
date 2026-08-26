@@ -6742,6 +6742,66 @@
       }
     },
     {
+      "id": "eip155:1:0x59faab5a1911618064f1ffa1e4649d85c99cfd9f0d64dcebbc1af7d7630da98b",
+      "protocol": {
+        "name": "Yearn",
+        "slug": "yearn-ydai"
+      },
+      "name": "Yearn v1 yDAI loose Curve slippage configuration",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x59faab5a1911618064f1ffa1e4649d85c99cfd9f0d64dcebbc1af7d7630da98b",
+        "blockNumber": 11792184,
+        "transactionIndex": 7,
+        "timestamp": 1612473160
+      },
+      "summary": "Yearn's controller selected StrategyDAI3pool for the v1 DAI vault while the strategy's slippage allowance was 1% and the vault's earn() function was permissionless. In each exploit round the attacker imbalanced Curve 3pool, deposited DAI into yDAI, called earn() so the strategy added that DAI near the configured minimum, restored the pool, and withdrew. Eleven transactions repeated the loss-making round trip before Yearn disabled further investment.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 11072464.48854697,
+          "valuationTimestamp": 1612475535,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-5",
+            "source-7"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+              "symbol": "DAI"
+            },
+            "amount": "11072464.488546969286678676",
+            "usdValue": 11072464.48854697,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1612475535,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-2",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross pre-recovery loss to the shares outstanding before the campaign. Immediately before the anchor, at block 11792183, yDAI totalSupply was 31,494,626.844158695810766902 and getPricePerFullShare was 1.110058316613691736 DAI. After the eleventh and final defect-executing transaction, at block 11792351, getPricePerFullShare was 0.758491538466562243 DAI. Their product, (1.110058316613691736 - 0.758491538466562243) * 31,494,626.844158695810766902, is 11,072,464.488546969286678676 DAI. Using only the opening supply excludes attacker-supplied temporary deposits and later users' shares. The attacker's final Curve unwind at block 11792373 raised the onchain share price by 4.067954716 DAI across the opening supply; gross pre-recovery depletion remains the value before that recovery. DAI is valued at par.",
+        "realizedAt": 1612475535
+      }
+    },
+    {
       "id": "eip155:1:0x5a63da39b5b83fccdd825fed0226f330f802e995b8e49e19fbdd246876c67e1f",
       "protocol": {
         "name": "Rugged Art",
@@ -18267,6 +18327,64 @@
       }
     },
     {
+      "id": "eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05",
+      "protocol": {
+        "name": "Rho Markets",
+        "slug": "rho-markets"
+      },
+      "name": "Rho Markets native-ETH feed overwritten by rWBTC listing",
+      "chainId": 534352,
+      "exploit": {
+        "transactionHash": "0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05",
+        "blockNumber": 7580143,
+        "transactionIndex": 0,
+        "timestamp": 1721379589
+      },
+      "summary": "PriceOracleV2 keys each Chainlink feed by the configured underlying of an rToken. Rho listed rWBTC without setting its RTokenConfig, so its underlying remained the zero address used by the native-ETH market. The admin's subsequent rWBTC feed transaction therefore replaced the ETH/USD feed with WBTC/USD and made 1 ETH read as $63,653.144. Seven borrow transactions then used ETH collateral at that price to remove wstETH from the rwstETH market.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 4885267.725382614,
+          "valuationTimestamp": 1721379962,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-5"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 534352,
+              "tokenAddress": "0xf610a9dfb7c89644979b4a0f27063e9e7d7cda32",
+              "symbol": "wstETH"
+            },
+            "amount": "1233.956023308315527280",
+            "usdValue": 4885267.725382614,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1721379962,
+              "unitPriceUsd": 3959.029035965882,
+              "sourceIds": [
+                "source-2",
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-5"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The seven campaign receipts show rwstETH 0xe4fc4c444effb5eca80274c021f652980794eae6 transferring exactly 1,233.956023308315527280 wstETH to the attack helper. In the same transactions the helper sold that wstETH through pool 0x05dff4a55473562dd26bdbe4f74410a7307175bf for 1,443.560249567875793338 WETH. Valuing the realised WETH at the legitimate ETH/USD Chainlink answer of $3,384.18 immediately before the bad feed write gives $4,885,267.725382613902298592. Attacker-supplied flash loans and ETH collateral are excluded. The later return of funds does not reduce gross pre-recovery loss. The legacy $7.6m report is not retained because it does not reconcile with the victim's complete wstETH outflow during the mispricing window.",
+        "realizedAt": 1721379962
+      }
+    },
+    {
       "id": "eip155:56:0x04a1f0d1694242515ecb14faa71053901f11a1286cd21c27fe5542f9eeb62356",
       "protocol": {
         "name": "YYDS",
@@ -24724,6 +24842,40 @@
         ],
         "confidence": "medium",
         "notes": "Matcha reports $13.43 million taken from 18 SwapNet users across Base, BNB Chain, and Arbitrum. The selected Base transaction records 13,342,433.169249 USDC transferred from one victim to the attacker; the structured asset is this directly observed component of the reported campaign total."
+      }
+    },
+    {
+      "id": "eip155:8453:0xc1e807bba4a3bb5739d06a7f9c615f93665349a635a2353fec1070d1b613df17",
+      "protocol": {
+        "name": "Moonwell",
+        "slug": "moonwell"
+      },
+      "name": "Moonwell cbETH OEV feed denomination mismatch",
+      "chainId": 8453,
+      "exploit": {
+        "transactionHash": "0xc1e807bba4a3bb5739d06a7f9c615f93665349a635a2353fec1070d1b613df17",
+        "blockNumber": 42194663,
+        "transactionIndex": 190,
+        "timestamp": 1771178673
+      },
+      "summary": "Moonwell's ChainlinkOracle expects each configured feed to return a USD-denominated value. MIP-X43 instead assigned cbETH a CBETH/ETH wrapper that returned the roughly 1.12 exchange ratio, so getUnderlyingPrice valued one cbETH at about $1.12 rather than $2,206.68. This made healthy cbETH-backed accounts liquidatable for negligible debt repayment and made cbETH cheap to over-borrow.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 2705352.52,
+          "valuationTimestamp": 1771549485,
+          "method": "reported",
+          "sourceIds": [
+            "source-7",
+            "source-8",
+            "source-10"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [],
+        "confidence": "high",
+        "notes": "Moonwell's live remediation ledger values each affected liquidation at its contemporaneous corrected collateral and debt prices, then defines borrower net loss as collateral seized minus debt repaid. Its 859 rows total $5,516,843.594852737 seized minus $2,811,445.0752305076 repaid = $2,705,398.519622221. One $45.997226547535 rETH/cbXRP liquidation in transaction 0xa8c0a1783c947d4fa9b95cf14771ad25c712dad860ae274700f02ea83443653f predates the bad configuration by 9 hours 43 minutes and is excluded. The remaining 858 rows total $2,705,352.522395674, reported here to cents. The post-mortem's earlier $1,779,044.83 was a protocol bad-debt snapshot, not this borrower-equity loss. Later remediation payments do not reduce incident-time loss.",
+        "realizedAt": 1771549485
       }
     },
     {

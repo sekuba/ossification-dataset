@@ -118,11 +118,11 @@
         "researchCandidates": { "type": "integer", "minimum": 0 },
         "researchCandidatesBySource": {
           "type": "object",
-          "required": ["defihacklabs", "exclusion", "legacy", "web-list"],
+          "required": ["adjudication", "defihacklabs", "legacy", "web-list"],
           "additionalProperties": false,
           "properties": {
+            "adjudication": { "type": "integer", "minimum": 0 },
             "defihacklabs": { "type": "integer", "minimum": 0 },
-            "exclusion": { "type": "integer", "minimum": 0 },
             "legacy": { "type": "integer", "minimum": 0 },
             "web-list": { "type": "integer", "minimum": 0 }
           }

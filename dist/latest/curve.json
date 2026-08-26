@@ -28,20 +28,20 @@
     ]
   },
   "counts": {
-    "sourceIncidents": 682,
-    "sourceTargets": 717,
-    "eligibleBeforeDeduplication": 340,
-    "curveObservations": 311,
+    "sourceIncidents": 685,
+    "sourceTargets": 720,
+    "eligibleBeforeDeduplication": 343,
+    "curveObservations": 314,
     "deduplicatedObservations": 29,
     "provisionalObservations": 375,
     "otherExcludedObservations": 2,
     "incidentsByVerificationTier": {
       "provisional": 374,
-      "reviewed": 308
+      "reviewed": 311
     },
     "targetsByVerificationTier": {
       "provisional": 375,
-      "reviewed": 342
+      "reviewed": 345
     },
     "exclusionReasons": {
       "age-reset:unknown": 2,
@@ -52,6 +52,24 @@
     }
   },
   "observations": [
+    {
+      "observationId": "eip155:8453:0xc1e807bba4a3bb5739d06a7f9c615f93665349a635a2353fec1070d1b613df17#target-1",
+      "incidentId": "eip155:8453:0xc1e807bba4a3bb5739d06a7f9c615f93665349a635a2353fec1070d1b613df17",
+      "targetId": "target-1",
+      "chainId": 8453,
+      "exploit": {
+        "blockNumber": 42194663,
+        "transactionIndex": 190,
+        "timestamp": 1771178673
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:moonwell-cbeth-feed-denomination",
+      "codeArtifactCodeHash": "0x71bd27bf1769455c19a40556cd1d3bee966615d5c3c0b9c87f659e31179b57fe",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 0
+    },
     {
       "observationId": "eip155:1:0x5b99165fb07881590fab962185b5dee877f2978fac83f5f76c88639edcba827d#target-1",
       "incidentId": "eip155:1:0x5b99165fb07881590fab962185b5dee877f2978fac83f5f76c88639edcba827d",
@@ -123,6 +141,24 @@
       "codeArtifactCodeHash": "0xbe2214a5bae06adeb2e832d0394131e64370f3e7fe510187bafcff91445d1356",
       "ageResetKind": "deployment",
       "codeAgeSeconds": 15
+    },
+    {
+      "observationId": "eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05#target-1",
+      "incidentId": "eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05",
+      "targetId": "target-1",
+      "chainId": 534352,
+      "exploit": {
+        "blockNumber": 7580143,
+        "transactionIndex": 0,
+        "timestamp": 1721379589
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:rho-zero-underlying-feed-alias",
+      "codeArtifactCodeHash": "0x382670aef0b31165479a3040b4b19e7a6e7c4954586c5206fdc15fa3d25b50ea",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 77
     },
     {
       "observationId": "eip155:1:0xcc36283cee837a8a0d4af0357d1957dc561913e44ad293ea9da8acf15d874ed5#target-1",
@@ -2013,6 +2049,24 @@
       "codeArtifactCodeHash": "0xe88612726aedfe83ea5ed9a9a70df5450f552dcc9ceb3c6fb838079c576540f6",
       "ageResetKind": "implementation-change",
       "codeAgeSeconds": 1331472
+    },
+    {
+      "observationId": "eip155:1:0x59faab5a1911618064f1ffa1e4649d85c99cfd9f0d64dcebbc1af7d7630da98b#target-1",
+      "incidentId": "eip155:1:0x59faab5a1911618064f1ffa1e4649d85c99cfd9f0d64dcebbc1af7d7630da98b",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 11792184,
+        "transactionIndex": 7,
+        "timestamp": 1612473160
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:yearn-v1-ydai-loose-curve-slippage",
+      "codeArtifactCodeHash": "0xdca6ecc6d43890257a6aec9c2151af3ef7e0a41520bdb126edd95805cb420871",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 1390941
     },
     {
       "observationId": "eip155:56:0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5#target-1",
@@ -5652,10 +5706,12 @@
     }
   ],
   "ageKnots": [
+    0,
     12,
     12,
     12,
     15,
+    77,
     900,
     4180,
     5712,
@@ -5761,6 +5817,7 @@
     1157670,
     1275519,
     1331472,
+    1390941,
     1398455,
     1413491,
     1511548,

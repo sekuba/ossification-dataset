@@ -14,7 +14,7 @@ incidents/<chainId>/<exploitTx>.json  source records, id eip155:<chainId>:<explo
 schema/incident.schema.json           source schema
 schema/release-*.schema.json          generated-interface schemas
 research/candidates.json              discovery-lead coverage ledger
-research/raw/                         hashed discovery and migration inputs
+research/raw/                         hashed inputs; adjudications.json holds decisions
 dist/latest/incidents.json            reviewed incidents: summary and loss
 dist/latest/curve.json                curve observations and exclusions
 dist/latest/manifest.json             cohort rules, counts, and source hashes

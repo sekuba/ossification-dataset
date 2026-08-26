@@ -130,23 +130,33 @@ function dfhlPathsFromLegacy(incident) {
 const rawDirectory = join(root, 'research', 'raw')
 const dfhlPath = join(rawDirectory, 'defihacklabs-coverage.json')
 const webPath = join(rawDirectory, 'web-candidates.md')
-const exclusionsPath = join(rawDirectory, 'exclusions.json')
+const adjudicationsPath = join(rawDirectory, 'adjudications.json')
 const legacyV1Path = join(rawDirectory, 'legacy-v1.json')
 const primaryPaths = jsonFiles(join(root, 'incidents'))
 
 const dfhl = readJson(dfhlPath)
-const exclusions = readJson(exclusionsPath).entries
+const adjudicationDocument = readJson(adjudicationsPath)
+const adjudications = adjudicationDocument.entries.map((entry) => ({
+  ...entry,
+  disposition: entry.disposition ?? adjudicationDocument.defaultDisposition,
+}))
+if (
+  adjudicationDocument.defaultDisposition !== 'excluded' ||
+  adjudications.some((entry) => !['included', 'excluded', 'pending'].includes(entry.disposition))
+) {
+  throw new Error('research/raw/adjudications.json has an unsupported disposition')
+}
 const legacyV1 = readJson(legacyV1Path)
 const primaryRecords = parsePrimaryIncidents(primaryPaths)
 
-const exclusionIdsByExploitTx = new Map()
-for (const [index, entry] of exclusions.entries()) {
+const adjudicationIdsByExploitTx = new Map()
+for (const [index, entry] of adjudications.entries()) {
   const transactionHash = entry.exploitTx?.toLowerCase()
   if (!/^0x[0-9a-f]{64}$/.test(transactionHash ?? '')) continue
-  const exclusionId = `exclusion:${index + 1}`
-  exclusionIdsByExploitTx.set(transactionHash, [
-    ...(exclusionIdsByExploitTx.get(transactionHash) ?? []),
-    exclusionId,
+  const adjudicationId = `adjudication:${index + 1}`
+  adjudicationIdsByExploitTx.set(transactionHash, [
+    ...(adjudicationIdsByExploitTx.get(transactionHash) ?? []),
+    adjudicationId,
   ])
 }
 
@@ -204,7 +214,7 @@ const legacyRows = legacyV1.rows.map(({ source, protocol, incident }, contextInd
   exploitTx: incident.exploitTx,
   victimAddresses: incident.victimContract ? [incident.victimContract.toLowerCase()] : [],
   dfhlPaths: dfhlPathsFromLegacy(incident),
-  exclusionIds: exclusionIdsByExploitTx.get(incident.exploitTx?.toLowerCase()) ?? [],
+  adjudicationIds: adjudicationIdsByExploitTx.get(incident.exploitTx?.toLowerCase()) ?? [],
   incidentIds: unique([
     ...(incident.exploitTx ? primaryByTx.get(incident.exploitTx.toLowerCase()) ?? [] : []),
     ...(primaryByLegacyRow.get(`${source.file}#${source.incidentIndex}`) ?? []),
@@ -227,15 +237,15 @@ const otherIdentifierByPoc = new Map(
 const noDatasetRowByPoc = new Map(dfhl.noDatasetRow.map((entry) => [entry.poc, entry]))
 // A legacy category settles scope only when it names a cause outside executed
 // EVM code.
-// An exclusion may name the discovery leads it adjudicates, the mirror of an
-// incident's `discovery`. Without it an exclusion only reaches a lead that
+// An adjudication may name the discovery leads it settles, the mirror of an
+// incident's `discovery`. Without it an adjudication only reaches a lead that
 // happens to share a legacy row.
-const exclusionIdsByCandidateId = new Map()
-for (const [index, entry] of exclusions.entries()) {
+const adjudicationIdsByCandidateId = new Map()
+for (const [index, entry] of adjudications.entries()) {
   for (const candidateId of entry.candidateIds ?? []) {
-    exclusionIdsByCandidateId.set(candidateId, [
-      ...(exclusionIdsByCandidateId.get(candidateId) ?? []),
-      `exclusion:${index + 1}`,
+    adjudicationIdsByCandidateId.set(candidateId, [
+      ...(adjudicationIdsByCandidateId.get(candidateId) ?? []),
+      `adjudication:${index + 1}`,
     ])
   }
 }
@@ -288,11 +298,23 @@ for (const adjudication of dfhlAdjudications) {
   }
   dfhlAdjudicationByPoc.set(adjudication.poc, adjudication)
 }
-const exclusionsByPoc = new Map()
-for (const [index, entry] of exclusions.entries()) {
+const adjudicationsByPoc = new Map()
+for (const [index, entry] of adjudications.entries()) {
   const path = entry.defihacklabs?.match(/^(src\/test\/[^@]+)/)?.[1]
   if (!path) continue
-  exclusionsByPoc.set(path, [...(exclusionsByPoc.get(path) ?? []), index])
+  adjudicationsByPoc.set(path, [...(adjudicationsByPoc.get(path) ?? []), index])
+}
+const adjudicationById = new Map(
+  adjudications.map((entry, index) => [`adjudication:${index + 1}`, entry]),
+)
+
+function incidentIdsForAdjudication(adjudicationId) {
+  const entry = adjudicationById.get(adjudicationId)
+  const transactionHash = entry?.exploitTx?.toLowerCase()
+  return unique([
+    ...(transactionHash ? primaryByTx.get(transactionHash) ?? [] : []),
+    ...(primaryByDiscoveryId.get(adjudicationId) ?? []),
+  ]).sort()
 }
 
 function rowsForOtherIdentifier(entry) {
@@ -330,6 +352,35 @@ function ambiguousOtherIdentifier(otherMatch, rows) {
   return frequency > rows.length
 }
 
+function explicitAdjudication(ids) {
+  const adjudicationIds = unique(ids).sort()
+  if (adjudicationIds.length === 0) return null
+  const includedIds = adjudicationIds.filter(
+    (adjudicationId) => adjudicationById.get(adjudicationId)?.disposition === 'included',
+  )
+  if (includedIds.length > 0) {
+    const incidentIds = unique(includedIds.flatMap(incidentIdsForAdjudication)).sort()
+    if (incidentIds.length === 0)
+      throw new Error(`Included adjudication has no admitted incident: ${includedIds.join(', ')}`)
+    return {
+      status: 'included',
+      incidentIds,
+      adjudicationIds,
+      reason: 'An exact adjudication links this lead to an admitted incident.',
+    }
+  }
+  const pending = adjudicationIds.some(
+    (adjudicationId) => adjudicationById.get(adjudicationId)?.disposition === 'pending',
+  )
+  return {
+    status: pending ? 'pending' : 'excluded',
+    adjudicationIds,
+    reason: pending
+      ? 'An exact adjudication reopened this lead under the causal critical-state rule.'
+      : 'An exact adjudication excludes this lead from the primary dataset.',
+  }
+}
+
 function dfhlDisposition(rows, poc, ambiguous = false) {
   const directIds = unique([
     ...(primaryByDfhlPath.get(poc) ?? []),
@@ -346,18 +397,12 @@ function dfhlDisposition(rows, poc, ambiguous = false) {
     }
   }
 
-  const exclusionIds = unique([
-    ...(exclusionsByPoc.get(poc) ?? []).map((index) => `exclusion:${index + 1}`),
-    ...rows.flatMap((row) => row.exclusionIds),
-    ...(exclusionIdsByCandidateId.get(`dfhl:${poc}`) ?? []),
-  ]).sort()
-  if (exclusionIds.length > 0) {
-    return {
-      status: 'excluded',
-      exclusionIds,
-      reason: 'The source or its exact exploit-transaction match has an explicit exclusion adjudication and no admitted primary incident.',
-    }
-  }
+  const adjudicated = explicitAdjudication([
+    ...(adjudicationsByPoc.get(poc) ?? []).map((index) => `adjudication:${index + 1}`),
+    ...rows.flatMap((row) => row.adjudicationIds),
+    ...(adjudicationIdsByCandidateId.get(`dfhl:${poc}`) ?? []),
+  ])
+  if (adjudicated) return adjudicated
 
   if (ambiguous) {
     return {
@@ -385,7 +430,7 @@ function dfhlDisposition(rows, poc, ambiguous = false) {
 
   return {
     status: 'unresolved',
-    reason: 'The source snapshot has no dataset row or explicit exclusion adjudication.',
+    reason: 'The source snapshot has no dataset row or explicit adjudication.',
   }
 }
 
@@ -403,14 +448,11 @@ function legacyDisposition(row, id) {
     }
   }
 
-  const exclusionIds = unique([...row.exclusionIds, ...(exclusionIdsByCandidateId.get(id) ?? [])]).sort()
-  if (exclusionIds.length > 0) {
-    return {
-      status: 'excluded',
-      exclusionIds,
-      reason: 'The exact exploit transaction has an explicit exclusion adjudication.',
-    }
-  }
+  const adjudicated = explicitAdjudication([
+    ...row.adjudicationIds,
+    ...(adjudicationIdsByCandidateId.get(id) ?? []),
+  ])
+  if (adjudicated) return adjudicated
 
   if (CATEGORIES_OUTSIDE_COHORT.has(row.category)) {
     return {
@@ -499,8 +541,8 @@ const dfhlCandidates = allDfhlPaths.map((poc) => {
     ...(otherMatch ? rowsForOtherIdentifier(otherMatch) : directRows),
     ...adjudicationRows,
   ])
-  const relatedExclusionIds = (exclusionsByPoc.get(poc) ?? []).map(
-    (index) => `exclusion:${index + 1}`,
+  const relatedAdjudicationIds = (adjudicationsByPoc.get(poc) ?? []).map(
+    (index) => `adjudication:${index + 1}`,
   )
   const coverage = otherMatch
     ? {
@@ -526,7 +568,7 @@ const dfhlCandidates = allDfhlPaths.map((poc) => {
       url: `https://github.com/SunWeb3Sec/DeFiHackLabs/blob/${dfhl.commit}/${poc}`,
     },
     coverage,
-    ...(relatedExclusionIds.length > 0 ? { relatedExclusionIds } : {}),
+    ...(relatedAdjudicationIds.length > 0 ? { relatedAdjudicationIds } : {}),
     ...(rows.length > 0
       ? { matchedRows: rows.map(legacyCoordinates).sort((a, b) => compareStrings(a.file, b.file)) }
       : {}),
@@ -591,10 +633,11 @@ const webCandidates = webRows.map((web) => {
     ...exactSourceRows.flatMap((row) => row.incidentIds),
     ...declared,
   ]).sort()
-  const exclusionIds = unique([
-    ...exactSourceRows.flatMap((row) => row.exclusionIds),
-    ...(exclusionIdsByCandidateId.get(id) ?? []),
+  const adjudicationIds = unique([
+    ...exactSourceRows.flatMap((row) => row.adjudicationIds),
+    ...(adjudicationIdsByCandidateId.get(id) ?? []),
   ]).sort()
+  const adjudicated = explicitAdjudication(adjudicationIds)
   const disposition =
     declared.length > 0
       ? {
@@ -608,12 +651,8 @@ const webCandidates = webRows.map((web) => {
           incidentIds,
           reason: 'Exact normalized project name and UTC date match one primary incident.',
         }
-      : incidentIds.length === 0 && exclusionIds.length > 0
-        ? {
-            status: 'excluded',
-            exclusionIds,
-            reason: 'An exact name/date legacy match has an explicit exploit-transaction exclusion.',
-          }
+      : incidentIds.length === 0 && adjudicated
+        ? adjudicated
         : {
           status: 'unresolved',
           reason:
@@ -640,40 +679,47 @@ const webCandidates = webRows.map((web) => {
     ...(exactSourceRows.length > 0
       ? { matchedRows: exactSourceRows.map(legacyCoordinates) }
       : {}),
-    ...(exclusionIds.length > 0 ? { relatedExclusionIds: exclusionIds } : {}),
+    ...(adjudicationIds.length > 0 ? { relatedAdjudicationIds: adjudicationIds } : {}),
     disposition,
   }
 })
 
-const exclusionCandidates = exclusions.map((entry, index) => ({
-  id: `exclusion:${index + 1}`,
-  source: {
-    kind: 'exclusion',
-    file: relative(root, exclusionsPath),
-    entryIndex: index,
-    ...(entry.defihacklabs
-      ? {
-          defihacklabs: {
-            repository: 'https://github.com/SunWeb3Sec/DeFiHackLabs',
-            commit: fullDefiHackLabsCommit(entry.defihacklabs, dfhl.commit),
-            path: entry.defihacklabs.match(/^(src\/test\/[^@]+)/)?.[1],
-            recordedRef: entry.defihacklabs,
-          },
-        }
-      : {}),
-  },
-  candidate: {
-    name: entry.name,
-    chain: entry.chain,
-    date: entry.date,
-    candidateVictim: entry.candidateVictim,
-    exploitTx: entry.exploitTx,
-  },
-  disposition: {
-    status: 'excluded',
-    reason: entry.reason,
-  },
-}))
+const adjudicationCandidates = adjudications.map((entry, index) => {
+  const id = `adjudication:${index + 1}`
+  const incidentIds = entry.disposition === 'included' ? incidentIdsForAdjudication(id) : []
+  if (entry.disposition === 'included' && incidentIds.length === 0)
+    throw new Error(`Included adjudication has no admitted incident: ${id}`)
+  return {
+    id,
+    source: {
+      kind: 'adjudication',
+      file: relative(root, adjudicationsPath),
+      entryIndex: index,
+      ...(entry.defihacklabs
+        ? {
+            defihacklabs: {
+              repository: 'https://github.com/SunWeb3Sec/DeFiHackLabs',
+              commit: fullDefiHackLabsCommit(entry.defihacklabs, dfhl.commit),
+              path: entry.defihacklabs.match(/^(src\/test\/[^@]+)/)?.[1],
+              recordedRef: entry.defihacklabs,
+            },
+          }
+        : {}),
+    },
+    candidate: {
+      name: entry.name,
+      chain: entry.chain,
+      date: entry.date,
+      candidateVictim: entry.candidateVictim,
+      exploitTx: entry.exploitTx,
+    },
+    disposition: {
+      status: entry.disposition,
+      reason: entry.reason,
+      ...(incidentIds.length > 0 ? { incidentIds } : {}),
+    },
+  }
+})
 
 const legacyIdCounts = new Map()
 const legacyCandidates = legacyRows
@@ -715,7 +761,7 @@ const legacyCandidates = legacyRows
 const candidates = [
   ...dfhlCandidates,
   ...webCandidates,
-  ...exclusionCandidates,
+  ...adjudicationCandidates,
   ...legacyCandidates,
 ].sort((a, b) => compareStrings(a.id, b.id))
 
@@ -784,9 +830,9 @@ const cohortOpenByReason = Object.fromEntries(
 
 const result = {
   $schema: '../schema/candidate.schema.json',
-  schemaVersion: 1,
+  schemaVersion: 2,
   description:
-    'Deterministic provenance ledger for source candidates, explicit exclusions, and legacy rows outside the primary dataset. Entries from different source inventories may refer to the same real-world event; that overlap is retained rather than guessed away.',
+    'Deterministic, source-addressed candidate dispositions. Overlapping source entries remain distinct.',
   cohort: {
     id: COHORT_ID,
     cutoff: COHORT_CUTOFF,
@@ -823,9 +869,9 @@ const result = {
       lineNumbers: '1-based',
       sha256: sha256(readFileSync(webPath)),
     },
-    exclusions: {
-      file: relative(root, exclusionsPath),
-      sha256: sha256(readFileSync(exclusionsPath)),
+    adjudications: {
+      file: relative(root, adjudicationsPath),
+      sha256: sha256(readFileSync(adjudicationsPath)),
     },
     legacyV1: {
       file: relative(root, legacyV1Path),

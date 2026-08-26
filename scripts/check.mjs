@@ -25,7 +25,7 @@ const ALLOWED_AGE_RESET_KINDS = new Set([
   'configuration-change',
 ])
 const CANDIDATE_STATUSES = new Set(['included', 'excluded', 'out-of-scope', 'pending', 'unresolved'])
-const CANDIDATE_SOURCE_KINDS = new Set(['defihacklabs', 'web-list', 'exclusion', 'legacy'])
+const CANDIDATE_SOURCE_KINDS = new Set(['defihacklabs', 'web-list', 'adjudication', 'legacy'])
 const SUPPORTED_SCHEMA_KEYWORDS = new Set([
   '$schema', '$id', '$ref', '$defs', 'title', 'description', 'default', 'examples',
   'type', 'const', 'enum', 'format', 'pattern', 'minLength', 'maxLength',
@@ -578,16 +578,16 @@ function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
       errors.push(`schema/candidate.schema.json: ${error.message}`)
     }
   }
-  if (document.schemaVersion !== 1) errors.push('research/candidates.json: schemaVersion must equal 1')
+  if (document.schemaVersion !== 2) errors.push('research/candidates.json: schemaVersion must equal 2')
   if (!Array.isArray(document.candidates)) {
     errors.push('research/candidates.json: candidates must be an array')
     return
   }
 
   const ids = new Set()
-  const exclusionIds = new Set(
+  const adjudicationIds = new Set(
     document.candidates
-      .filter((candidate) => candidate.source?.kind === 'exclusion')
+      .filter((candidate) => candidate.source?.kind === 'adjudication')
       .map((candidate) => candidate.id),
   )
   const counts = {}
@@ -619,11 +619,12 @@ function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
     for (const incidentId of incidentRefs) {
       if (!incidentIds.has(incidentId)) errors.push(`${label}: dangling incident id ${incidentId}`)
     }
-    for (const exclusionId of [
-      ...(candidate.relatedExclusionIds ?? []),
-      ...(disposition.exclusionIds ?? []),
+    for (const adjudicationId of [
+      ...(candidate.relatedAdjudicationIds ?? []),
+      ...(disposition.adjudicationIds ?? []),
     ]) {
-      if (!exclusionIds.has(exclusionId)) errors.push(`${label}: dangling exclusion id ${exclusionId}`)
+      if (!adjudicationIds.has(adjudicationId))
+        errors.push(`${label}: dangling adjudication id ${adjudicationId}`)
     }
     for (const matchedRow of candidate.matchedRows ?? []) {
       if (matchedRow.file?.startsWith('incidents/') && !existsSync(path.join(root, matchedRow.file)))
@@ -690,7 +691,7 @@ function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
     errors.push('research/candidates.json: cannot claim complete coverage with pending/unresolved candidates')
 
   const generated = document.generatedFrom ?? {}
-  for (const field of ['defihacklabs', 'webList', 'exclusions', 'legacyV1']) {
+  for (const field of ['defihacklabs', 'webList', 'adjudications', 'legacyV1']) {
     const relative = generated[field]?.file
     const absolute = typeof relative === 'string' ? path.resolve(root, relative) : ''
     const rawRoot = `${path.resolve(root, 'research', 'raw')}${path.sep}`

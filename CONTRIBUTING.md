@@ -52,7 +52,8 @@ semantic review. Set incident or target `reviewed` only after linking a
 Set `discovery` to the candidate ids a record answers, for example
 `["web:2021-05-29:belt-finance"]`. Ids come from `research/candidates.json`; a
 campaign spanning several chains has one lead claimed by each chain's incident.
-The field is research bookkeeping and supports no claim.
+The field is research bookkeeping and supports no claim. Edit the raw inputs,
+including `research/raw/adjudications.json`, then regenerate the ledger.
 
 ## Known follow-ups
 
@@ -64,8 +65,6 @@ cannot go stale:
 # relabel to realised-proceeds where that is genuinely the basis used
 grep -rlE 'realis(ed|ation)|realiz(ed|ation)' incidents | xargs grep -Ll '"method": "realised-proceeds"'
 
-# re-examine configuration exclusions under causal critical-state age resets
-jq -r '.entries[] | select(.reason | test("^CONFIGURATION_(ERROR|AND_MARKET):|parameter value|parameter-value"; "i")) | .name' research/raw/exclusions.json
 ```
 
 ## Validation
