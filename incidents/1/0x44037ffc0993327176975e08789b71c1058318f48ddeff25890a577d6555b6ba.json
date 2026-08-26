@@ -62,7 +62,7 @@
           "type": "deployment",
           "address": "0x4e34dd25dbd367b1bf82e1b5527dbbe799fad0d0"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Clone basis: the pool clone pins its master and owns the USDC/stETH market, liquidity, and position state used by the health-factor failure."
       },
       "codeAgeSeconds": 28919148,
       "failureModeId": "legacy:eip155:1:0x44037ffc0993327176975e08789b71c1058318f48ddeff25890a577d6555b6ba:failure-1",
@@ -74,7 +74,8 @@
         ],
         "codeHistorySourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
@@ -115,6 +116,13 @@
       "id": "source-5",
       "type": "review-note",
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is an EIP-1167 minimal proxy - runtime 0x363d3d373d3d3d363d73c86d2555f8c360d3c5e8e4364f42c1f2d169330e5af43d82803e903d91602b57fd5bf3 - so the delegate target 0xc86d2555f8c360d3c5e8e4364f42c1f2d169330e is baked into the bytecode and cannot be repointed. That master's runtime is byte-identical at 13 sample points across [19213660, 21608070] and contains zero DELEGATECALL opcodes; callTracer on the exploit tx confirms the clone delegatecalls only the master."
+    },
+    {
+      "id": "source-6",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-26T08:03:41Z",
+      "note": "Clone basis retained under the case-by-case rule: this pool clone owned the USDC/stETH market, liquidity, and position state used by the health-factor failure. Deployment transaction coordinates remain unresolved, so the target stays provisional."
     }
   ],
   "verification": {

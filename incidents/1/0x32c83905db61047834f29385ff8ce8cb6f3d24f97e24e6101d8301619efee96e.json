@@ -104,11 +104,10 @@
       "verification": {
         "tier": "reviewed",
         "curveEligible": true,
-        "limitations": [
-          "Aged from the clone rather than the shared implementation it copies; not yet re-examined under the clone rule in METHODOLOGY.md."
-        ],
+        "limitations": [],
         "reviewSourceIds": [
-          "source-4"
+          "source-4",
+          "source-8"
         ]
       }
     }
@@ -151,6 +150,13 @@
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1587095964&to=1587189564",
       "observedAt": 1787576959
+    },
+    {
+      "id": "source-8",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-26T08:03:41Z",
+      "note": "Clone basis retained under the case-by-case rule: factory creation bound this exchange to imBTC, whose ERC-777 hook enabled the reentrancy, and the clone accumulated the ETH reserve that was drained."
     }
   ],
   "verification": {

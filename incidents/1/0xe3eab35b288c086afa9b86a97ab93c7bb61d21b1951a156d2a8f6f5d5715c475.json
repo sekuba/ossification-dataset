@@ -60,7 +60,7 @@
           "type": "deployment",
           "address": "0x6a06707ab339bee00c6663db17ddb422301ff5e8"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Clone basis: the vault clone pins its master and held the USDC inventory sold through the unguarded swap path."
       },
       "codeAgeSeconds": 26400,
       "failureModeId": "legacy:eip155:1:0xe3eab35b288c086afa9b86a97ab93c7bb61d21b1951a156d2a8f6f5d5715c475:failure-1",
@@ -72,7 +72,8 @@
         ],
         "codeHistorySourceIds": [
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
@@ -108,6 +109,13 @@
       "type": "onchain-transaction",
       "chainId": 1,
       "transactionHash": "0x2f233e04f820bf0d88646278f18858454add84435d04a1be198db21ec4c42e80"
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-26T08:03:41Z",
+      "note": "Clone basis retained under the case-by-case rule: the clone held the vault's USDC inventory, making its own deployment the start of the exposure to the shared swap path. Root cause and loss remain provisional."
     }
   ],
   "verification": {

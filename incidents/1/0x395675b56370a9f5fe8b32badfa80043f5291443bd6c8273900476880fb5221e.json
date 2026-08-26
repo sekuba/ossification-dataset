@@ -114,11 +114,10 @@
       "verification": {
         "tier": "reviewed",
         "curveEligible": true,
-        "limitations": [
-          "Aged from the clone rather than the shared implementation it copies; not yet re-examined under the clone rule in METHODOLOGY.md."
-        ],
+        "limitations": [],
         "reviewSourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       }
     }
@@ -147,6 +146,13 @@
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T13:00:00Z",
       "note": "The verified DVM source has init() as a plain external function with no guard, and the exploit receipt shows this pool paying out its real reserves against the attacker’s fake tokens. The pool is a minimal proxy created by the DODO factory 0x5e5a7b76462e4bdf83aa98795644281bdba80b88 in block 11932747, its 45-byte runtime pins the master and cannot be repointed, so the clone creation is the age basis and the exploited code is 10.4 days old. The attacker EOA sent 102 transactions in the campaign, which spanned several DODO pools; this record is scoped to the wCRES-USDT pool that appears in the anchor trace and its loss is the netting of that pool’s own token deltas."
+    },
+    {
+      "id": "source-5",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-26T08:03:41Z",
+      "note": "Clone basis retained under the case-by-case rule: this DVM clone selected wCRES and USDT and held the real reserves that the re-callable initializer let the attacker replace with fake-token balances."
     }
   ],
   "verification": {

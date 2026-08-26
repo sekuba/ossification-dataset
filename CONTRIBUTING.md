@@ -58,10 +58,6 @@ Open work is a query over the records, never a hand-maintained list, so it
 cannot go stale:
 
 ```bash
-# aged from an EIP-1167 clone rather than the logic it copies; re-examine
-# case by case under the clone rule in METHODOLOGY.md
-grep -rl '"relationship": "minimal-proxy"' incidents
-
 # loss notes describe realised proceeds while loss.usd.method says otherwise;
 # relabel to realised-proceeds where that is genuinely the basis used
 grep -rlE 'realis(ed|ation)|realiz(ed|ation)' incidents | xargs grep -Ll '"method": "realised-proceeds"'

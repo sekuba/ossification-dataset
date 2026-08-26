@@ -110,11 +110,10 @@
       "verification": {
         "tier": "reviewed",
         "curveEligible": true,
-        "limitations": [
-          "Aged from the clone rather than the shared implementation it copies; not yet re-examined under the clone rule in METHODOLOGY.md."
-        ],
+        "limitations": [],
         "reviewSourceIds": [
-          "source-5"
+          "source-5",
+          "source-7"
         ]
       }
     }
@@ -177,6 +176,13 @@
         "0xee4e25d690d56aa77446e18422ba26ffb6d4ca3531b81ae3fbc478330a3ab7c0",
         "0xf479febaffb9be360b1568220e6f1b0332c7f5e8a61f058c4bbec99cd570f90c"
       ]
+    },
+    {
+      "id": "source-7",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-26T08:03:41Z",
+      "note": "Clone basis retained under the case-by-case rule: the wallet clone's own initializer flag remained unset and it held the TEL later swept, so that instance state made the shared master exploitable."
     }
   ],
   "verification": {

@@ -32,6 +32,8 @@ V2 defines a new incident-and-target interface for audited code age and loss.
   in `incidents/` for review rather than beside reviewed losses.
 - Recorded the valuation basis in `loss.usd.method`, including
   `realised-proceeds`.
+- Re-examined every minimal-proxy target under the case-by-case clone rule and
+  retained clone age where instance state or assets created the exposure.
 - Dropped `classification.rootCause`, a constant, and the `supports` declaration
   on sources, which restated what the per-claim references already say.
 
