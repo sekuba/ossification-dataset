@@ -19,10 +19,7 @@
       "0x60f3fdb85b2f7faaa888ca7afc382c57f6415a81"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Uniswap V1 imBTC exchange updated its reserves after pulling tokens, so imBTC's ERC-777 tokensToSend hook let the attacker re-enter tokenToEthSwapInput() at a stale price and drain the ETH reserve."
-  },
+  "summary": "The Uniswap V1 imBTC exchange updated its reserves after pulling tokens, so imBTC's ERC-777 tokensToSend hook let the attacker re-enter tokenToEthSwapInput() at a stale price and drain the ETH reserve.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -108,7 +105,7 @@
         "tier": "reviewed",
         "curveEligible": true,
         "limitations": [
-          "Aged from the clone rather than the shared implementation it copies. Not yet re-examined under the case-by-case rule in METHODOLOGY.md; the implementation is older and may be the better basis if the clone adds nothing bearing on the defect."
+          "Aged from the clone rather than the shared implementation it copies; not yet re-examined under the clone rule in METHODOLOGY.md."
         ],
         "reviewSourceIds": [
           "source-4"
@@ -120,23 +117,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2020-04/uniswap-erc777.sol"
@@ -144,22 +130,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://eprint.iacr.org/2021/284.pdf"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T13:13:41Z",
       "note": "Reviewed the exploit call trace, exact ETH value movements, factory creation transaction, forwarder and template bytecode, pinned reproduction, and campaign analysis. The imBTC exchange is a 46-byte Vyper minimal proxy whose runtime hardcodes template 0x2157a7894439191e520825fe9399ab8655e0f708 and delegatecalls it during the exploit. That template pays ETH before imBTC.transferFrom completes; imBTC invokes the attacker's ERC-777 tokensToSend hook during transferFrom, permitting a nested tokenToEthSwapInput against the unchanged token balance. Factory transaction 0x95fad6ac213a300c76c873f52598c32b61fedefa62e01acab8f06311a76d435f created the exchange and immutably selected the template; both forwarder and template runtime hashes are identical at creation and immediately before the exploit. In the selected transaction the exchange receives 1 ETH and pays 0.611341052127704463 plus 0.472375805535296596 ETH, an exact net loss of 0.083716857663001059 ETH forwarded as profit to the attacker EOA. The campaign analysis attributes 1,278 ETH of accumulated profit across 525 transactions to this same exchange defect."
@@ -167,19 +142,12 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x95fad6ac213a300c76c873f52598c32b61fedefa62e01acab8f06311a76d435f"
     },
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1587095964&to=1587189564",
       "observedAt": 1787576959

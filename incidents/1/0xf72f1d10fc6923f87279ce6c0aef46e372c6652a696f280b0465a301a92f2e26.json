@@ -19,10 +19,7 @@
       "0x8a4571c3a618e00d04287ca6385b6b020ce7a305"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MCC used the same RFI reflection accounting as HODL: deliver() burned the caller's reflected balance and inflated every other holder's tokenFromReflection(), and the attacker skimmed the inflated MCC out of the MCC/WETH pair."
-  },
+  "summary": "MCC used the same RFI reflection accounting as HODL: deliver() burned the caller's reflected balance and inflated every other holder's tokenFromReflection(), and the attacker skimmed the inflated MCC out of the MCC/WETH pair.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,19 +91,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xf72f1d10fc6923f87279ce6c0aef46e372c6652a696f280b0465a301a92f2e26"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/MultiChainCapital_exp.sol"
@@ -114,28 +104,16 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BeosinAlert/status/1655846558762692608"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: MCC 0x1a7981D87E3b6a95c1516EB820E223fE979896b3 created 2021-11-19T16:23:07Z by 0xfa21382cdf68cca1b3a7107a8cc80688eefbeebc (the fee-excluded address), unrelated to the attack sender; no EIP-1967 events, age from deployment (535.6 days). ~10 ETH x $1,842.04 at incidentTimestamp 1683617735 (DefiLlama) = $18,420."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x15d5355a1fb35f671b8033cf40bbec88e75cbaa595014998bb2ed787f71e5cb8"
     }

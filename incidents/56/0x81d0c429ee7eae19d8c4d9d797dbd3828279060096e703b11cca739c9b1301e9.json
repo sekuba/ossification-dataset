@@ -19,10 +19,7 @@
       "0xe02b595ca69d8d3e120043536e6e76caea385a82"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "SquidMulticall.run() executes an arbitrary Default call supplied by the caller, so the attacker targeted the Binance-Peg ETH token and used the multicall's standing approvals to transferFrom 1 ETH out of a user."
-  },
+  "summary": "SquidMulticall.run() executes an arbitrary Default call supplied by the caller, so the attacker targeted the Binance-Peg ETH token and used the multicall's standing approvals to transferFrom 1 ETH out of a user.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x81d0c429ee7eae19d8c4d9d797dbd3828279060096e703b11cca739c9b1301e9"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/DefimonAlerts/status/2041530294369386806"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-04/SquidMulticallAllowanceDrain_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xad6cea45f98444a922a2b4fe96b8c90f0862d2f4 created 2024-10-01T02:14:47Z by 0xb5e6c16cb726bb24075075e0993971aa8d73f764, which is not the attack-tx sender 0xe02b595ca69d8d3e120043536e6e76caea385a82; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 1 ETH x $2129.741200 at the incident timestamp 1775554900 (DefiLlama coingecko:ethereum) = $2,130. The Twitter report notes about $800K of cross-chain approvals were at risk and about $512K was later rescued; this row is scoped to the exploit transaction."
     }
   ],

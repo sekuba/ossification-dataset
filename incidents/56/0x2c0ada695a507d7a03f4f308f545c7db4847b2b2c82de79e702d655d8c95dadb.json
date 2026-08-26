@@ -19,10 +19,7 @@
       "0xcc78063840428c5ae53f3dc6d80759984788cbc0"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "GPU's _transfer credits the recipient before debiting the sender, so a self-transfer of the full balance doubles it; the attacker looped 87 self-transfers inside a flash loan and sold the minted GPU."
-  },
+  "summary": "GPU's _transfer credits the recipient before debiting the sender, so a self-transfer of the full balance doubles it; the attacker looped 87 self-transfers inside a flash loan and sold the minted GPU.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x2c0ada695a507d7a03f4f308f545c7db4847b2b2c82de79e702d655d8c95dadb"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/PeckShieldAlert/status/1788153869987611113"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-05/GPU_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xf51CBf9F8E089Ca48e454EB79731037a405972ce created 2024-05-08T06:47:56Z by 0x48b3d7f0561bc564cf6555543be619cd8145e520, which is not the attack-tx sender 0xcc78063840428c5ae53f3dc6d80759984788cbc0; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

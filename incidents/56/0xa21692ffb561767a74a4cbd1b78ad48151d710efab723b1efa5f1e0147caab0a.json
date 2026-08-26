@@ -19,10 +19,7 @@
       "0xfb8ef8de849079559801bff8848178640cdd41b7"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Calling OLIFE's transfer() and deliver() shrinks rSupply and tSupply so the reflection rate rises and the liquidity pair's OLIFE balance inflates without a sync(), letting the attacker swap the surplus out for WBNB."
-  },
+  "summary": "Calling OLIFE's transfer() and deliver() shrinks rSupply and tSupply so the reflection rate rises and the liquidity pair's OLIFE balance inflates without a sync(), letting the attacker swap the surplus out for WBNB.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xa21692ffb561767a74a4cbd1b78ad48151d710efab723b1efa5f1e0147caab0a"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-04/OLIFE_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BeosinAlert/status/1648520494516420608"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: OLIFE 0xb5a0Ce3Acd6eC557d39aFDcbC93B07a1e1a9e3fa created 2021-06-04T16:54:29Z by 0x60a3da04d69f65774595983190970b4fbb67f6ce, unrelated to attack sender 0xfb8ef8de849079559801bff8848178640cdd41b7; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 32.2863 WBNB left the OLIFE/WBNB pair; 32.2863 WBNB x $343.14 at incidentTimestamp 1681866281 (DefiLlama coingecko:binancecoin) = $11,079."
     }
   ],

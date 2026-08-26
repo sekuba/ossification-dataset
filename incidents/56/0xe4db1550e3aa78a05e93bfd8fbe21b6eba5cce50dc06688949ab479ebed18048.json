@@ -19,10 +19,7 @@
       "0x96b89c2560bcc43c342c12ba9c33dab7eb571a90"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The miner contract's mint(address[],uint256[]) has no permission check, so the attacker minted 200 land NFTs to themselves and redeemed them for XQJ and then BUSD."
-  },
+  "summary": "The miner contract's mint(address[],uint256[]) has no permission check, so the attacker minted 200 land NFTs to themselves and redeemed them for XQJ and then BUSD.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/landNFT_exp.sol"
@@ -111,18 +101,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BeosinAlert/status/1658000784943124480"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: miner 0x2e599883715D2f92468Fa5ae3F9aab4E930E3aC7 created 2023-03-06T09:48:58Z by 0xdd9e4fe7a975a637c29f3da23b2477ae1a9f8ad8, unrelated to attack sender 0x96b89c2560bcc43c342c12ba9c33dab7eb571a90; no EIP-1967 Upgraded events, age measured from deployment. lossUsd uses the 149,616 BUSD reported by Beosin (BUSD taken at 1:1)."
     }
   ],

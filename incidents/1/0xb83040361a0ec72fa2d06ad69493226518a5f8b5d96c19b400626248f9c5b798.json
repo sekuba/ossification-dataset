@@ -19,10 +19,7 @@
       "0x08096e9ae70d7c5f2707b203a7801b75d1412156"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Mure distribution contract validated the claim authorisation against a caller-influenced signer source rather than a fixed trusted signer, letting the attacker forge an approved distribution and drain the QUEST held for beneficiary 0x29b0a315924E05aC0c898a63D96daA33CfD1cAc7."
-  },
+  "summary": "The Mure distribution contract validated the claim authorisation against a caller-influenced signer source rather than a fixed trusted signer, letting the attacker forge an approved distribution and drain the QUEST held for beneficiary 0x29b0a315924E05aC0c898a63D96daA33CfD1cAc7.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,27 +91,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xb83040361a0ec72fa2d06ad69493226518a5f8b5d96c19b400626248f9c5b798"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/DefimonAlerts/status/2058211424761942226"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-05/MureDistribution_exp.sol"
@@ -122,20 +109,11 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x365083717eFB17F3895290BA38f20F568C7A4D8a created 2024-03-28 by 0x80922fd8cdc39ad594c1dac15f36d0aaafe6d47f, unrelated to attack sender; single EIP-1967 Upgraded event at deployment; 4,848,683.803036 QUEST drained (~5.45 ETH)"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xd54d256f9cb06e14d48398c7028a008bb7aa685dd7d2999ee24f31e7099ff447"
     }

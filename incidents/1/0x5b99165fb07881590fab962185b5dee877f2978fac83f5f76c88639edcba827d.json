@@ -26,10 +26,7 @@
       "0x6980a47bee930a4584b09ee79ebe46484fbdbdd0"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MainchainGatewayV3 implementation 0xfc274ec92bbb1a1472884558d1b5caac6f8220ee replaced the live read `_getTotalWeight() = IBridgeManager(BRIDGE_MANAGER).getTotalWeight()` with a cached `_totalOperatorWeight` that only `initializeV3()` populates, and `initializeV3` is `reinitializer(3)`. The upgrade that installed it ran `initializeV4(wethUnwrapper)` instead, so OpenZeppelin's `_initialized` jumped from 2 to 4 and `initializeV3` became permanently uncallable while the cache stayed at zero. `minimumVoteWeight()` = `(_num * _getTotalWeight() + _denom - 1) / _denom` therefore returns 0 for every value of the threshold parameters, and `_submitWithdrawal`'s verification loop evaluates `weight >= minimumWeight` after the first iteration with no floor on the quorum, so a single arbitrary signature from a non-operator satisfies it. Any caller could then mint themselves an arbitrary withdrawal receipt with an unused id and drain the gateway."
-  },
+  "summary": "MainchainGatewayV3 implementation 0xfc274ec92bbb1a1472884558d1b5caac6f8220ee replaced the live read `_getTotalWeight() = IBridgeManager(BRIDGE_MANAGER).getTotalWeight()` with a cached `_totalOperatorWeight` that only `initializeV3()` populates, and `initializeV3` is `reinitializer(3)`. The upgrade that installed it ran `initializeV4(wethUnwrapper)` instead, so OpenZeppelin's `_initialized` jumped from 2 to 4 and `initializeV3` became permanently uncallable while the cache stayed at zero. `minimumVoteWeight()` = `(_num * _getTotalWeight() + _denom - 1) / _denom` therefore returns 0 for every value of the threshold parameters, and `_submitWithdrawal`'s verification loop evaluates `weight >= minimumWeight` after the first iteration with no floor on the quorum, so a single arbitrary signature from a non-operator satisfies it. Any caller could then mint themselves an arbitrary withdrawal receipt with an unused id and drain the gateway.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -157,42 +154,24 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x5b99165fb07881590fab962185b5dee877f2978fac83f5f76c88639edcba827d"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x8f2924a52e63564c9cb0b119d72dc8290daa39c59cbe02e7f1ab6b2160ac9aa4"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x855dd3b1194e3b889f4667b6a0996220e350e034d35d3eab29b4f23bc205767e"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x6491f922971341c2437e8a77320ab2e258d0493c8fe7cec6b60cb30a6ff1b3f5",
@@ -210,19 +189,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x2619570088683e6cc3a38d93c3d98899e5783864e15525d5f5810c11189ba6cb"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1722934139/coingecko:ethereum",
       "observedAt": 1787718344
@@ -230,9 +202,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1722934139/ethereum:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       "observedAt": 1787718344
@@ -240,13 +209,6 @@
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T06:40:00Z",
       "note": "Admitted after applying METHODOLOGY's boundary test explicitly in both directions. Against admission: had initializeV3() been run, the same bytecode would compute minimumVoteWeight() = 1540 and behave correctly, DefiLlama codes the incident as an uninitialized proxy, and the upgrade itself was a privileged governor action. For admission, and decisive: the parameters of this contract are the threshold pair, and _minimumVoteWeight(0) = (_num * 0 + _denom - 1) / _denom = 0 for every (_num, _denom) with _denom >= 1, so no parameter value makes the deployed code correct; _submitWithdrawal carries no floor on the quorum and evaluates weight >= minimumWeight only after the first ecrecover, so a zero quorum is accepted rather than rejected; and _totalOperatorWeight is not a configured parameter at all but an internal cache of a value MainchainBridgeManager already held authoritatively (getTotalWeight() stayed 2200 throughout). The remaining escape hatch is closed onchain: because initializeV4 is reinitializer(4) and ran in the upgrade, OZ's _initialized went 2 -> 4 without ever reaching 3, and cast call initializeV3() against the proxy at block 20468500 reverts with 'Initializable: contract is already initialized'. There was therefore no reachable state of the deployed system in which this artifact was correct, which distinguishes it from the excluded configuration cases (Shoebill's oracle priced other markets correctly with the same expression) and aligns it with the admitted initialization cases (USPD, Pike, Telcoin) and with METHODOLOGY's statement that initialization logic is executable-code logic. The exploit transactions used no privileged role. Onchain reproduction against the l2beat Ethereum RPC: minimumVoteWeight() returns 1540 at block 20468437 and 0 at 20468438, 20468439 and 20468679, while IBridgeManager.getTotalWeight() stayed 2200; the EIP-1967 implementation slot of proxy 0x64192819ac13ef72bf6b5ae239ac672b43a9af08 is 0x72e28a9009ad12de019bff418cd210d4bbc3d403 at block 20468437 and 0xfc274ec92bbb1a1472884558d1b5caac6f8220ee from 20468438 through 20468679, and the artifact runtime hashes to 0xf82fc255221b0ea5bcdb5ca916477d0fa50e5df0c7b236b5a0ef770613c3248e at blocks 20468438, 20468439 and 20468678. The proxy emitted exactly five Upgraded events over its whole life (blocks 15006576, 15039388, 17030381, 18417558, 20468438) and the fifth is log 497 of transaction 0x855dd3b1, so the recorded lastCodeChange is the latest pre-exploit change; the proxy itself was created by top-level CREATE from 0xaa1d342354d755ec515f40e7d5e83cb4184bb9ee, which is not an exploiter. Anchor selection: the anchor is the earliest successful transaction that executes the defect, which is the first post-upgrade Withdrew, one block and twelve seconds after the upgrade. Its callTracer trace is EOA 0xc9a5643e -> helper 0x60e1a5714ab98f4ba55811c45899fb425433bb65 -> gateway proxy submitWithdrawal (0x4d0d6673) -> DELEGATECALL to 0xfc274ec92bbb1a1472884558d1b5caac6f8220ee -> exactly one STATICCALL to the ecrecover precompile -> 13851752129284625 wei paid to 0xc9a5643e. A single ecrecover is the signature of the collapsed quorum: a control trace of the last pre-upgrade Withdrew 0x9f3ff50a466df901eb3b598e402d801e4f1dd1e297f8f5abcd8b2126dc0f4d0b at block 20468330 contains sixteen ecrecover calls, the loop breaking at 1600 >= 1540. Every one of the twelve post-upgrade Withdrew transactions shows the same single ecrecover and none of their recovered signers is in the 22-operator set. The anchor's decoded receipt is id 162970, kind 1, mainchain (0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54, WETH, chainId 1), ronin chainId 2020, ERC20 quantity 13851752129284625, so the exploiter named itself as the recipient of a forged receipt. Loss is the sum of the twelve receipts, 3998.634663464696217977 ETH and 1998064.518829 USDC, valued at DefiLlama's nearest observations of USD 2462.65 at 1722934022 and USD 0.9954885561840877 at 1722934242, giving USD 11,836,288.02 against a DefiLlama headline of USD 12 million. The bridge was paused at block 20468866 by PauseEnforcer 0xe514d9deb7966c8be0ca922de8a064264ea6bcd4 and the fix, implementation 0xd6c4986bbe09f2ddb262b4611b0ba06891be605e installed at block 20638773, restored minimumVoteWeight() to 1540."

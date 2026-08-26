@@ -20,10 +20,7 @@
       "0xec14207d56e10f72446576779d9b843e476e0fb0"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The YEED token distributes a reflection fee to every holder on each transfer, including the PancakeSwap pairs it trades in, without those pairs resyncing. The attacker cycled skim() between the three YEED pairs so each cycle credited the pairs more YEED than their recorded reserves, then swapped the accumulated YEED out for the pools’ USDT."
-  },
+  "summary": "The YEED token distributes a reflection fee to every holder on each transfer, including the PancakeSwap pairs it trades in, without those pairs resyncing. The attacker cycled skim() between the three YEED pairs so each cycle credited the pairs more YEED than their recorded reserves, then swapped the accumulated YEED out for the pools\u2019 USDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -117,22 +114,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x0507476234193a9a5c7ae2c47e4c4b833a7c3923cefc6fd7667b72f3ca3fa83a"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-04/Zeed_exp.sol"
@@ -140,34 +127,20 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://medium.com/@zeedcommunity/the-solution-for-the-yeed-lp-pool-attack-a120c53948cd"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xc51b6528ff4995c42d1177d8013ce122e7dd99078cfed4ae82e1e8fb8905840c"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T13:35:00Z",
-      "note": "One exploit transaction carries the whole loss; netting its receipt shows the three YEED pairs 0x33d5e574bd1ebf3ceb693319c2e276dabe388399, 0xe91840503494228647dd87fddcab73204fe83391 and 0x4374f82d2d6f65815c0783850fc36817db16bbfb paying out USDT that sums exactly to the attacker contract’s gain. The token is not upgradeable: identical runtime code hash at the deployment block 17102057 and at block 17132514 with a zero EIP-1967 slot, so the exploited code is 1.06 days old and its deployer 0x9765912d6d1848f155914e2b84b4d80661eb5337 is not an attacker address. The defect is in the token rather than in PancakeSwap: crediting reflection to the pair address without a sync is what lets skim repeatedly hand the attacker the difference."
+      "note": "One exploit transaction carries the whole loss; netting its receipt shows the three YEED pairs 0x33d5e574bd1ebf3ceb693319c2e276dabe388399, 0xe91840503494228647dd87fddcab73204fe83391 and 0x4374f82d2d6f65815c0783850fc36817db16bbfb paying out USDT that sums exactly to the attacker contract\u2019s gain. The token is not upgradeable: identical runtime code hash at the deployment block 17102057 and at block 17132514 with a zero EIP-1967 slot, so the exploited code is 1.06 days old and its deployer 0x9765912d6d1848f155914e2b84b4d80661eb5337 is not an attacker address. The defect is in the token rather than in PancakeSwap: crediting reflection to the pair address without a sync is what lets skim repeatedly hand the attacker the difference."
     }
   ],
   "verification": {

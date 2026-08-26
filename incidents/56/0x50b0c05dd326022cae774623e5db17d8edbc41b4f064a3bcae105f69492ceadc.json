@@ -21,10 +21,7 @@
       "0x8937dd570e3cb32df77e39c0805d17e88f9d14ae"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "StrategyEllipsisImpl.eps3ToWant() values the strategy's staked 3EPS position as the raw sum of the BUSD, USDC and USDT ERC-20 balances held by the Ellipsis StableSwap pool, scaled by the strategy's LP share. That sum is not the pool's StableSwap invariant and moves with any single-transaction swap, so wantLockedTotal() is an attacker-controlled spot quantity. MultiStrategyTokenImpl consumes it unfiltered: _deposit() mints beltBUSD shares from the calcPoolValueInToken() delta and _withdraw() redeems shares at pool * shares / totalSupply, paying out of whichever strategy holds the most assets. Cycling deposit -> Ellipsis exchange() -> withdraw inside one transaction therefore minted shares against a depressed Ellipsis valuation and redeemed them against an inflated one, draining BUSD out of the Venus strategy."
-  },
+  "summary": "StrategyEllipsisImpl.eps3ToWant() values the strategy's staked 3EPS position as the raw sum of the BUSD, USDC and USDT ERC-20 balances held by the Ellipsis StableSwap pool, scaled by the strategy's LP share. That sum is not the pool's StableSwap invariant and moves with any single-transaction swap, so wantLockedTotal() is an attacker-controlled spot quantity. MultiStrategyTokenImpl consumes it unfiltered: _deposit() mints beltBUSD shares from the calcPoolValueInToken() delta and _withdraw() redeems shares at pool * shares / totalSupply, paying out of whichever strategy holds the most assets. Cycling deposit -> Ellipsis exchange() -> withdraw inside one transaction therefore minted shares against a depressed Ellipsis valuation and redeemed them against an inflated one, draining BUSD out of the Venus strategy.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -177,25 +174,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x50b0c05dd326022cae774623e5db17d8edbc41b4f064a3bcae105f69492ceadc"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T14:10:00Z",
       "note": "Campaign reconstructed from chain state, not from reporting. Attacker EOA 0xbfaaba3337c51e97ed4546b4631e8efdbab63077 created exploit contract 0x4eb362934d56f2669a712cb92d316cd465921b5d in transaction 0xaae7d00613cfe41b2e0124b882a9e7a07bf102edc0d5615b5ade7d41bb79a2fa at block 7838174, then sent fifteen calls to selector 0x6add6bd6; the first two (blocks 7838502 and 7838684) reverted, so the anchor is the earliest successful one, 0x50b0c05dd326022cae774623e5db17d8edbc41b4f064a3bcae105f69492ceadc at block 7838862 index 47, status 1, timestamp 1622315374. Eight calls succeeded in total (blocks 7838862, 7838872, 7838876, 7839001, 7839132, 7839136, 7839140, 7839265); three further calls by the attacker EOA and two by copycats reverted and are excluded. The callTracer trace of the anchor has 4199 frames and shows the PancakeSwap flash-swap loop calling beltBUSD 0x9171bf7c050ac8b4cf7835e51f7b4841dfb2ccd0 with deposit(uint256,uint256) eight times and withdraw(uint256,uint256) seven times, interleaved with exchange(int128,int128,uint256,uint256) on the Ellipsis StableSwap 0x160caed03795365f3a589f10c379ffa7d75d4e76. Inside those calls the StrategyEllipsis proxy 0x4cdb64df300a2b8f6f0e5c72909b9fbcf3b3f135 is entered 64 times, 63 of them wantLockedTotal() (0x42da4eb3), and beltBUSD is entered 23 times; both DELEGATECALL their declared implementations within their own execution context. Reading the deployed sources: StrategyEllipsisImpl.eps3ToWant() returns (BUSD+USDC+USDT balanceOf(ellipsisSwapAddress)) * curEps3Bal / totalSupply(3EPS), a raw reserve sum rather than the StableSwap invariant, and wantLockedTotal() adds only the idle want balance; MultiStrategyTokenImpl.calcPoolValueInToken() sums getBalanceOfOneStrategy over the six strategies and _deposit/_withdraw mint and burn beltBUSD directly against that spot number, with _withdraw paying out of findMostLockedStrategy(). Both are code defects that hold for every parameter value: no strategy list, ratio, or fee setting makes a raw-reserve LP price manipulation-resistant, and the vault applies no invariant, delay, or bound to the valuations it consumes. The Ellipsis pool balances move from 373079739/290502809/171264773 to 416641137/290110416/171274529 BUSD/USDC/USDT and its virtual price from 1.001646511056555684 to 1.037965523235372353 across the campaign, confirming the manipulation. Code history: StrategyEllipsis proxy created by 0x7111d0f651a331bc2b9eefcfe56d8a03f92601a1 at block 6540868 index 4; eth_getLogs over topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b from creation to block 7838861 returns exactly two Upgraded events, 0x60c61639d43bafc214a74dce28192a6de4255c28 at block 6637362 and 0xa56e834fbc2087024d329aa69eec1392d0a8d4c4 at block 6952957 index 431 log 359, and the EIP-1967 slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc still holds the latter at block 7838861. beltBUSD proxy created by the same deployer at block 6540911 index 12; the same scan returns exactly one Upgraded event, 0xff997862e88785ceacc8b3ce791c0a487682ee98 at block 6637440 index 90 log 328, still in the slot at block 7838861. Both implementation runtimes hash identically at their deployment block, at block 7838861, and today: 0x40b8026462e5410a3eeada58af8ffcd7a1503c521cbf1b54c5f849ef69ee1182 (12985 bytes) and 0x731b2db5993498af31dd006583f7fa035de01847dd331592a3025e4006a49e38 (16375 bytes). Resulting ages are 2718971 and 3674315 seconds. Loss recomputed from the vault's own calcPoolValueInToken()/totalSupply() at blocks 7838861 and 7839266 as described in loss.notes; the 6234753.171048180404312114 BUSD credited to 0x8937dd570e3cb32df77e39c0805d17e88f9d14ae across the eight receipts matches the widely reported 6.23M attacker profit, and the 60004917.985223011664813989 BUSD net outflow from Venus vBUSD 0x95c78222b3d6e262426483d42cfa53685a67ab9d in the same receipts matches the per-strategy accounting. The frequently quoted 50M headline is a project-side figure that mixes attacker profit with fee dissipation; the reproduced vault depletion is 46944373.93 BUSD."
@@ -203,49 +187,30 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x124070722d898cccdee6d125d680b5cedb21d6c1affa3a28ec54a9c094bfa6bd"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xe970d569f0e02f5d9f5512f883a7908f364284aa33b789d6828a34a3097da9c2"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x353855116d070156090e396ce1ef8d07395e866a8dadd06675b4d3ccb081b780"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x2e301ee8a6e7c4711662126951e4fb2ea41e0c900dc016764fb222a2e5ff1ac6"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x50b0c05dd326022cae774623e5db17d8edbc41b4f064a3bcae105f69492ceadc",
@@ -261,28 +226,17 @@
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://halborn.com/explained-the-belt-finance-hack-may-2021/"
     },
     {
       "id": "source-9",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x35f0860bdb55646f5631617c7100739a2a45370bfc1a10d96283520303f5667b"
     },
     {
       "id": "source-10",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x1e205434cb48f88f641a4213e98dc1f5b2ea2fdd955739c1cfe764bfac0eebf9"
     }

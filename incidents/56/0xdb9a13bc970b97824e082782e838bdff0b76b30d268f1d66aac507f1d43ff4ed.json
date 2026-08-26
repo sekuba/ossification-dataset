@@ -19,10 +19,7 @@
       "0x056c20ab7e25e4dd7e49568f964d98e415da63d3"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The ULME token let an unauthorised caller move other holders' balances, so the attacker swept 101 holder addresses into the ULME/BUSD pair inside one flash-loan-funded transaction."
-  },
+  "summary": "The ULME token let an unauthorised caller move other holders' balances, so the attacker swept 101 holder addresses into the ULME/BUSD pair inside one flash-loan-funded transaction.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-10/ULME_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://medium.com/neptune-mutual/decoding-ulme-token-flash-loan-attack-56470d261787"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: ULME 0xAE975a25646E6eB859615d0A147B909c13D31FEd created 2022-10-19T14:46:13Z by 0x4a005e5e40ce2b827c873ca37af77e6873e37203, unrelated to attack sender 0x056c20ab7e25e4dd7e49568f964d98e415da63d3; no EIP-1967 Upgraded events, age measured from deployment. DeFiHackLabs carries two PoCs (ULME_exp and ULME_exp2) for this same incident; one row is recorded. lossUsd uses the ~$250k reported drained (the attacker's net profit after the frontrun was ~$50k); onchain, 200,170.83 USDT moved into the ULME/BUSD pair 0xf18e5EC98541D073dAA0864232B9398fa183e0d4 from holder addresses in this transaction."
     }
   ],

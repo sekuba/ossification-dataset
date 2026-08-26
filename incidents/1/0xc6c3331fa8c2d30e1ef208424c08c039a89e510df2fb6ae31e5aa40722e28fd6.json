@@ -23,10 +23,7 @@
       "0x856da0acbff24fd61a470023e8a5dae8fc45bde8"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Socket route 406 (WrappedTokenSwapperImpl 0xcc5fda5e3ca925bd0bb428c8b2669496ee43067e) is delegatecalled by SocketGateway and, in performAction, forwards fully caller-controlled calldata to a caller-controlled address with `fromToken.call(swapExtraData)`. With amount = 0 the surrounding balance-delta and safeTransferFrom checks are satisfied trivially, so the attacker made the gateway execute `USDC.transferFrom(victim, attacker, allowance)` and equivalent calls on WETH, USDT, WBTC, DAI and MATIC, draining every unlimited approval users held on SocketGateway. The route had been registered three days earlier through NewRouteAdded(uint32,address); the gateway itself was never upgraded."
-  },
+  "summary": "Socket route 406 (WrappedTokenSwapperImpl 0xcc5fda5e3ca925bd0bb428c8b2669496ee43067e) is delegatecalled by SocketGateway and, in performAction, forwards fully caller-controlled calldata to a caller-controlled address with `fromToken.call(swapExtraData)`. With amount = 0 the surrounding balance-delta and safeTransferFrom checks are satisfied trivially, so the attacker made the gateway execute `USDC.transferFrom(victim, attacker, allowance)` and equivalent calls on WETH, USDT, WBTC, DAI and MATIC, draining every unlimited approval users held on SocketGateway. The route had been registered three days earlier through NewRouteAdded(uint32,address); the gateway itself was never upgraded.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -225,40 +222,24 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0xc6c3331fa8c2d30e1ef208424c08c039a89e510df2fb6ae31e5aa40722e28fd6"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x1df44e224c7a715da25fa33dcad2ca3a930d1a4dafd263e61c07b52673d505f4"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x29328ac0edf7b080320bc8ed998fcd3e866f7eec3775b0d91a86f5d02ab83c28"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0xc6c3331fa8c2d30e1ef208424c08c039a89e510df2fb6ae31e5aa40722e28fd6",
@@ -268,9 +249,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1705432283/ethereum:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2,ethereum:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599,ethereum:0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",
       "observedAt": 1787641148
@@ -278,30 +256,16 @@
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "url": "https://rivanorth.com/blog/hack-explained-socket"
     },
     {
       "id": "source-7",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://www.theblock.co/post/273964/socket-ether-recovery-bungee-exploit"
     },
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:20:00Z",
       "note": "Anchor kept. The attacker EOA 0x50df5a22.. sent only two exploit transactions, both contract creations that drain inside the constructor: 0xc6c3331f (block 19021454, txIndex 0, nonce 0) and 0x591d054a (block 19021465). 0xc6c3331f is the earliest and executes the defect. callTracer on it: created contract 0xf2d5951b.. creates 0xd2bc9a9c.. and calls f82448e8, which loops over a hard-coded victim list and for each victim CALLs SocketGateway 0x3a23f943181408eac424116af7b7790c94cb97a5 with msg.sig 0x00000196, i.e. uint32 routeId 406 in the gateway's compact route dispatch; the gateway DELEGATECALLs route 0xcc5fda5e3ca925bd0bb428c8b2669496ee43067e with performAction(0x7899f9ed) carrying fromToken = USDC, amount = 0, and swapExtraData = transferFrom(victim, attacker, allowance). Etherscan-verified source of the route (WrappedTokenSwapperImpl, solc 0.8.7) shows the non-native branch doing safeTransferFrom(msg.sender, socketGateway, amount) then `fromToken.call(swapExtraData)` with no validation of either operand, and the amount-0 path makes the surrounding balance-delta require a no-op, so the defect is in the route bytecode and the gateway supplies the storage, approvals and msg.sender. Code history: the gateway was created at block 16848303 txIndex 82 inside factory 0x17b1007fa5d96e75f6733e3790dccfaeeda7e5ff (callTracer shows the CREATE frame from that factory) and emitted 0 Upgraded(address) logs over [16848303, 19021453]; code arrives as routes instead. All 22 NewRouteAdded(uint32,address) events (topic0 0x79779838..) in that window were enumerated: routeIds 0x181..0x196 in ascending order, the last being routeId 0x196 = 406 -> 0xcc5fda5e.. at block 18996162, txIndex 88, logIndex 345, transaction 0x1df44e22 sent by 0x5fd7d0d6b91cc4787bcb86ca47e0bd4ea0346d34. The route address is topic2. RouteDisabled (0xc60cf0bd..) has 0 occurrences, routes(406) is 0x0 at block 18996161 and 0xcc5fda5e.. at block 19021453, and routesCount is 407, so id 406 could not have been re-pointed by a later addRoute. keccak(code) of the route is 0x2deac76a.. both at block 18996162 and at block 19021453, and prestateTracer on the anchor returns the same hash, so the exploited code is 305,256s (3d 12h 47m 36s) old measured from installation; the route contract itself had been deployed 333 blocks earlier at block 18995829 by 0x8be6c8b2ca6f39fd70c9ddf35b4c34301ae10c0f, so installation is the later and correct basis. Loss: ERC-20 Transfer netting over the two exploit receipts, stables at par and WETH/WBTC/MATIC at DefiLlama observations 1705432188/1705432250/1705432224, totals 3,302,795.17 USD, consistent with the reported ~3.3M. The 1,032 ETH plus token return in the week after is recorded in loss.notes only."

@@ -20,10 +20,7 @@
       "0x9c9fb3100a2a521985f0c47de3b4598dafd25b01"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "StaxLPStaking.migrateStake(address oldStaking, uint256 amount) took the migration source as a caller-supplied address and called oldStaking.migrateWithdraw() without checking that the caller was an authorised migrator or that the source was a known staking contract. The attacker passed a contract of their own, was credited a stake equal to the whole StaxLP balance held by the staking contract, and withdrew it."
-  },
+  "summary": "StaxLPStaking.migrateStake(address oldStaking, uint256 amount) took the migration source as a caller-supplied address and called oldStaking.migrateWithdraw() without checking that the caller was an authorised migrator or that the source was a known staking contract. The attacker passed a contract of their own, was credited a stake equal to the whole StaxLP balance held by the staking contract, and withdrew it.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -63,7 +60,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The exploit transaction moves the staking contract’s entire StaxLP balance, 321154.865567124596801893 xFraxTempleLP, to the attacker. Within 41 blocks the attacker unwound that position through three further transactions and ended holding 1830.122796124022576955 WETH and nothing else, so the realised proceeds are used as the unit valuation, priced at the DefiLlama ETH observation nearest the incident timestamp. That is a realisation value including the attacker’s own market impact, not a mark-to-model LP value, hence method “other”. Nothing was recovered."
+    "notes": "The exploit transaction moves the staking contract\u2019s entire StaxLP balance, 321154.865567124596801893 xFraxTempleLP, to the attacker. Within 41 blocks the attacker unwound that position through three further transactions and ended holding 1830.122796124022576955 WETH and nothing else, so the realised proceeds are used as the unit valuation, priced at the DefiLlama ETH observation nearest the incident timestamp. That is a realisation value including the attacker\u2019s own market impact, not a mark-to-model LP value, hence method \u201cother\u201d. Nothing was recovered."
   },
   "targets": [
     {
@@ -122,22 +119,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x8c3f442fc6d640a6ff3ea0b12be64f1d4609ea94edd2966f42c01cd9bdcf04b5"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2022-10/Templedao_exp.sol"
@@ -145,19 +132,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x601bf705db76812a867ac34da18920d70b1e866b7d18cd26174e78b8e076ab92"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x21b3e2d8ffcdd3e792b6d5b91277e3ef5f99df9e15bd2225668dc3a66f678763",
@@ -168,9 +148,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1665493715/coingecko:ethereum",
       "observedAt": 1787641970
@@ -178,16 +155,9 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T08:05:00Z",
-      "note": "The anchor is the attacker EOA’s first and only call that touches StaxLPStaking; the trace reads the contract’s StaxLP balance, calls migrateStake with the attacker’s own contract 0x9bdb04493af17eb318a23bfefe43f07b3e58ecfb as oldStaking, receives a Staked credit for the full 321154.865567124596801893, and then withdrawAll(false) transfers the tokens out. StaxLPStaking is not upgradeable: its runtime code hash is identical at the deployment block 14887950 and at block 15725066, and its EIP-1967 implementation slot is zero, so the exploited code is 131.5 days old, deployed by 0xb1e8ab0a81aadf632a653e46caeda1593d71d143, which is unrelated to the attacker. Netting ERC-20 transfers across the exploit and the attacker’s three follow-up transactions leaves a single non-zero position of 1830.122796124022576955 WETH, every other token nets to exactly zero, which fixes the realised value of the stolen LP."
+      "note": "The anchor is the attacker EOA\u2019s first and only call that touches StaxLPStaking; the trace reads the contract\u2019s StaxLP balance, calls migrateStake with the attacker\u2019s own contract 0x9bdb04493af17eb318a23bfefe43f07b3e58ecfb as oldStaking, receives a Staked credit for the full 321154.865567124596801893, and then withdrawAll(false) transfers the tokens out. StaxLPStaking is not upgradeable: its runtime code hash is identical at the deployment block 14887950 and at block 15725066, and its EIP-1967 implementation slot is zero, so the exploited code is 131.5 days old, deployed by 0xb1e8ab0a81aadf632a653e46caeda1593d71d143, which is unrelated to the attacker. Netting ERC-20 transfers across the exploit and the attacker\u2019s three follow-up transactions leaves a single non-zero position of 1830.122796124022576955 WETH, every other token nets to exactly zero, which fixes the realised value of the stolen LP."
     }
   ],
   "verification": {

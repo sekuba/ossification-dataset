@@ -22,10 +22,7 @@
       "0x7fd7be7bc8a26bd6a98b10683912c604af8bca52"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Royal1155LDA._beforeTokenTransfer loops over the ERC-1155 ids array and never reads the parallel amounts array, so it credits the recipient's shadow per-tier balance _BALANCES_[tierId][to] with exactly one unit per array entry regardless of how many units the ERC-1155 transfer actually moves. Its sender-side branch is additionally skipped whenever _IS_OWNED_TOKENS_BACKFILL_COMPLETE_ is false and the sender's shadow balance has already reached zero, so the same id can be listed many times without reverting. A safeBatchTransferFrom listing LDA id 42<<128|424242 one hundred times with one hundred zero amounts therefore left tierBalanceOf(42, receiver) at 100 against a tier supply of 1, and Royalties, which pro-rates a tier's deposited USDC by tierBalanceOf, paid a claim 100 times the attacker's own 2638.089539 USDC royalty deposit and emptied the contract."
-  },
+  "summary": "Royal1155LDA._beforeTokenTransfer loops over the ERC-1155 ids array and never reads the parallel amounts array, so it credits the recipient's shadow per-tier balance _BALANCES_[tierId][to] with exactly one unit per array entry regardless of how many units the ERC-1155 transfer actually moves. Its sender-side branch is additionally skipped whenever _IS_OWNED_TOKENS_BACKFILL_COMPLETE_ is false and the sender's shadow balance has already reached zero, so the same id can be listed many times without reverting. A safeBatchTransferFrom listing LDA id 42<<128|424242 one hundred times with one hundred zero amounts therefore left tierBalanceOf(42, receiver) at 100 against a tier supply of 1, and Royalties, which pro-rates a tier's deposited USDC by tierBalanceOf, paid a claim 100 times the attacker's own 2638.089539 USDC royalty deposit and emptied the contract.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -126,22 +123,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 137,
       "transactionHash": "0x7a92106f145045b7a2bdce60a22109739f9b0cd0185bf16ff83fd1fac98cb42e"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-06/RoyalRoyalties_exp.sol"
@@ -149,29 +136,18 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 137,
       "transactionHash": "0x379e9a01747d26229e602127651b42bf2b496ec5d943aef8be265ce955c958c0"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 137,
       "transactionHash": "0x41cc4c61989503f96e8fd457684afb3bf090cb7e7adf69f26084a4de9b153894"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1782232072/polygon:0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
       "observedAt": 1787663821
@@ -179,13 +155,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Reviewed the 634-frame callTracer trace and full receipt of the anchor, the Etherscan-verified Royal1155LDA source, the proxy's complete Upgraded history, and the Royalties proxy's USDC balance and transfer history. Root cause reproduced against source lines 744-830 of contracts/ldas/Royal1155LDA.sol: _beforeTokenTransfer takes ids and amounts but only ever indexes ids, unconditionally executing _BALANCES_[tierId][to] = oldBalance + 1 per entry, while the sender branch at line 780 is guarded by (_IS_OWNED_TOKENS_BACKFILL_COMPLETE_ || balance != 0) so a zero sender balance simply falls through instead of hitting the insufficient-balance require. The anchor's TransferBatch log carries 100 ids all equal to 0x2a<<128|0x67932 and 100 zero amounts, and the trace shows the proxy delegatecalling the implementation for safeBatchTransferFrom 0x2eb2c2d6 and issuing 100 beforeLdaTransfer 0xf3319033 callbacks into Royalties, each of which reads tierBalanceOf 0xde8b9955 back from the proxy. This confirms and sharpens the migrated summary. Cohort check: setting _IS_OWNED_TOKENS_BACKFILL_COMPLETE_ to true would have capped this particular multiplier, but it would not repair the amount-blind loop, which still diverges tierBalanceOf from the ERC-1155 balances for any zero-amount or repeated entry, so no parameter value makes the deployed code correct. Target confirmed as the TransparentUpgradeableProxy 0x7c885c4bfd179fb59f1056fbea319d579a278075 delegating to 0xd5b297c08d890376b6cbdba6023a39ffbdf65c78, whose runtime hashes to 0x88192149835c34eb8313d100d18c386ba3f2736c3f3c9aecb5140730de4d82e4 both at the upgrade block 41219477 and at the pre-exploit block 89018050; the proxy was created top-level by 0x169593017ddb4b8b5de7df2acd12ada9b58dd53b at 23571896:55 and its twelfth and last pre-exploit Upgraded event sits at 41219477:52 logIndex 311, giving 1782232072-1680801550 = 101430522 s. Anchor confirmed as a single transaction: this is the only TransferBatch on the proxy since the upgrade whose data exceeds twenty entries (13058 hex characters against at most 2818 for every other), the attacker EOA's nonces 0 to 2 are a self-transfer and two contract creations, and the largest USDC outflow from the Royalties proxy in blocks 60000000-89018051 other than this one is 5037.6875. Loss rebuilt from the Royalties proxy's own balance delta rather than the legacy round 261163, which was the attacker's post-flash-fee take."

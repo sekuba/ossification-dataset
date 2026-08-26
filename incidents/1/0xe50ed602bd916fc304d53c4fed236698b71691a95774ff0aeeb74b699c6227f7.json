@@ -19,10 +19,7 @@
       "0xfa2731d0bede684993ab1109db7ecf5bf33e8051"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "AnyswapV4Router treated a non-reverting permit call as proof of authorization. WETH's fallback returned successfully without creating an allowance, after which the router consumed users' pre-existing approvals."
-  },
+  "summary": "AnyswapV4Router treated a non-reverting permit call as proof of authorization. WETH's fallback returned successfully without creating an allowance, after which the router consumed users' pre-existing approvals.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -117,23 +114,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xe50ed602bd916fc304d53c4fed236698b71691a95774ff0aeeb74b699c6227f7"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-01/Anyswap_exp.sol"
@@ -141,22 +127,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/multichainorg/answers-to-the-frequently-asked-questions-about-multichain-vulnerability-b3efe109a308"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T13:30:52Z",
       "note": "Reviewed the exploit receipt and call trace, router-creation anchor, archive-node runtime at deployment block 12657964 and immediately before incident block 14037237, verified router metadata, commit-pinned reproduction, Multichain's incident FAQ, and incident-time ETH price observation. The incident calls 0x6b7a87899490ece95443e979ca9485cbe7e71522 directly and the trace contains no delegated implementation, correcting the legacy proxy classification. The 18,508-byte router runtime has hash 0xd486e19e680b62428460944b53af4651a00108b45a6d9dd69040aa0044284434 at both historical blocks, establishing deployment as its applicable code-selection event. The anchor transaction moved exactly 308.636644758370382903 WETH; Multichain reported 445 WETH lost across the incident as of January 18."
@@ -164,19 +139,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xf1080c8a90d86e428a736b1d63e097b33b7ea941b1657656f485a94d4a192839"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1642608758&to=1642615958",
       "observedAt": 1787573452

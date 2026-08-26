@@ -19,10 +19,7 @@
       "0x6b67f9e79180e08cb42132754bc9f88558b1e535"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The SNK minter multiplies a parent account's rewardPerToken by the summed balances of all its children, so stacking referral children multiplied the mintable SNK, which the attacker sold into the BUSD pool."
-  },
+  "summary": "The SNK minter multiplies a parent account's rewardPerToken by the summed balances of all its children, so stacking referral children multiplied the mintable SNK, which the attacker sold into the BUSD pool.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x7394f2520ff4e913321dd78f67dd84483e396eb7a25cbb02e06fe875fc47013a"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/SNK_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1656176776425644032"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: SNK minter 0xA3f5ea945c4970f48E322f1e70F4CC08e70039ee created 2022-12-27T15:55:14Z by 0x040e73929ee1db37b5ad532a4c3bcef67a91c016, unrelated to attack sender 0x6b67f9e79180e08cb42132754bc9f88558b1e535; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 197,725.73 USDT left the SNK pool 0x7957096Bd7324357172B765C4b0996Bb164ebfd4 in this transaction (the earlier 0xace1129259... transaction only set the position up)."
     }
   ],

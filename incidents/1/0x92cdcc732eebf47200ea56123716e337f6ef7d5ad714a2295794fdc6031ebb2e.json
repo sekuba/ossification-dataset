@@ -19,10 +19,7 @@
       "0x67104175fc5fabbdb5a1876c3914e04b94c71741"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ConnectorDeleverageParaswap decoded caller-controlled swap targets and calldata, approved the supplied token-transfer proxy, and called the supplied target without validating either address or the function selector. The attacker therefore made the connector call WETH.transferFrom against Dough accounts that had approved it."
-  },
+  "summary": "ConnectorDeleverageParaswap decoded caller-controlled swap targets and calldata, approved the supplied token-transfer proxy, and called the supplied target without validating either address or the function selector. The attacker therefore made the connector call WETH.transferFrom against Dough accounts that had approved it.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -119,25 +116,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x92cdcc732eebf47200ea56123716e337f6ef7d5ad714a2295794fdc6031ebb2e"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:11:40Z",
       "note": "Reviewed the exploit receipt and complete call trace, direct creation trace and receipt, runtime at creation and immediately before exploitation, standard proxy slots, verified ConnectorDeleverageParaswap source, pinned reproduction, and incident analyses. The trace calls flashloanReq on 0x9f54e8eaa9658316bb8006e03fff1cb191aafbe6, then that contract executes attacker-supplied WETH.transferFrom calldata that moves 596.844648055377423623 WETH from Dough account 0x534a3bb1ecb886ce9e7632e33d97bf22f838d085. Its source passes caller-controlled paraSwapContract, tokenTransferProxy, and paraswapCallData directly into allowance and call operations. The target is a direct post-Dencun deployment: its 12,625-byte runtime is identical at creation and pre-exploit state, EIP-1967 implementation and beacon slots are zero, and its DELEGATECALL sites use link-time library constants rather than mutable implementation storage. The reported incident scope is approximately 1.8 million USDC across eight black-hat victim calls."
@@ -145,40 +129,22 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xb077348a66815e69c47c48b364b3fca35ee805b1e9ca4ca4653489bb61c3e610"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.verichains.io/p/dough-finance-lack-of-input-data"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.certik.com/blog/dough-finance-incident-analysis"
     },
     {
       "id": "source-6",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "d5167541cd4c982cd4d29e583089b2a1a5caa6e6",
       "path": "src/test/2024-07/DoughFina_exp.sol"

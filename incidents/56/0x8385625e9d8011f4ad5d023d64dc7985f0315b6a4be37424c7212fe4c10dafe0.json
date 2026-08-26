@@ -19,10 +19,7 @@
       "0x6ded5927f2408a8d115da389b3fe538990e93c5b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "PLTD's transfer() deducts from the liquidity pair's balance on every transfer to it without calling sync(), so the attacker shrank the PLTD reserve and swapped out the pair's USDT at an inflated rate."
-  },
+  "summary": "PLTD's transfer() deducts from the liquidity pair's balance on every transfer to it without calling sync(), so the attacker shrank the PLTD reserve and swapped out the pair's USDT at an inflated rate.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x8385625e9d8011f4ad5d023d64dc7985f0315b6a4be37424c7212fe4c10dafe0"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-10/PLTD_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BeosinAlert/status/1582181583343484928"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: PLTD 0x29b2525e11BC0B0E9E59f705F318601eA6756645 created 2022-09-17T07:34:03Z by 0xa2bb74b9829dd5847131b5d1df7178f59ff68f97, unrelated to attack sender 0x6ded5927f2408a8d115da389b3fe538990e93c5b; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 24,497.86 USDT left the PLTD/USDT pair 0x4397C76088db8f16C15455eB943Dd11F2DF56545 to the attack contract."
     }
   ],

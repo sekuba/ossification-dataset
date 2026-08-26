@@ -21,10 +21,7 @@
       "0xe70cdd37667cddf52cabf3edabe377c58fae99e9"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "consumptionReturnPool.getPriceOfUSDT() converted stored USDT-denominated returns to YYDS using the instantaneous ERC-20 balances of the YYDS/USDT pair, with no TWAP or manipulation protection. During a pair flash swap, the attacker reduced the pair's USDT balance from 1186471.120130432957137499 USDT to 1.2 USDT while its YYDS balance remained 1656.938602269843892480. Integer normalization then produced a price of only 0.000603864734299516 USDT per YYDS. Two attacker-controlled callers used genuine matured return records totalling 1.683 USDT to withdraw 2787.048000000004191719 YYDS and sold it into the same pair. The withdrawal functions do index msg.sender's stored entitlement arrays; the defect is the manipulable pair-balance oracle, not missing entitlement checks."
-  },
+  "summary": "consumptionReturnPool.getPriceOfUSDT() converted stored USDT-denominated returns to YYDS using the instantaneous ERC-20 balances of the YYDS/USDT pair, with no TWAP or manipulation protection. During a pair flash swap, the attacker reduced the pair's USDT balance from 1186471.120130432957137499 USDT to 1.2 USDT while its YYDS balance remained 1656.938602269843892480. Integer normalization then produced a price of only 0.000603864734299516 USDT per YYDS. Two attacker-controlled callers used genuine matured return records totalling 1.683 USDT to withdraw 2787.048000000004191719 YYDS and sold it into the same pair. The withdrawal functions do index msg.sender's stored entitlement arrays; the defect is the manipulable pair-balance oracle, not missing entitlement checks.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -120,22 +117,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x04a1f0d1694242515ecb14faa71053901f11a1286cd21c27fe5542f9eeb62356"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-09/Yyds_exp.sol"
@@ -143,31 +130,17 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1567928377432051713"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xce8c0ba1d246ff05b41f314305fe9e293a8078fa9b92ae87e628f81a7000247d"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:11:08Z",
       "note": "Anchor retained after chronology review. Transaction 0x04a1f0d1 is successful at block 21157029 index 4 and atomically executes the defect and realizes the loss. The attacker EOA's preceding calls to its main contract are deployment, helper deployment/binding, and withdrawToken operations; a YYDS Transfer-log search from consumptionReturnPool over the attacker setup window through block 21157028 finds no payout to either attacker helper. The exploit trace is the first attacker transaction in that sequence to reach consumptionReturnPool. The requested alternative hash 0x198db4332ad92ce761be04a5027f4bd5f9f80dc86659710952a57ae1c07d7b3e is not returned as a BSC transaction and has no corpus file. Semantic review corrects the legacy access-control description: verified consumptionReturnPool source shows all three withdrawal functions iterate only msg.sender's consumers, users, or merchants arrays and revert when totalReturnAmount is zero. At block 21157028, getReturnAmountByReferral is 0.51 USDT-denominated units for helper 0xe70cdd37 and 0.51 for main attacker contract 0x586770e9; the main contract also has 0.663 merchant return, while both have zero consumer return. The defect is getPriceOfUSDT(), which reads raw USDT and YYDS balanceOf(pair), normalizes each with integer division, and uses the instantaneous ratio to convert those returns into YYDS. The trace records initial pair reserves of 1186471.120130432957137499 USDT / 1656.938602269843892480 YYDS, then flash-withdraws 1186469.920024032957137499 USDT, leaving 1.2 USDT. getPriceOfUSDT floors those live balances to 1 and 1656 whole tokens and returns 603864734299516, or 0.000603864734299516 USDT per YYDS. Successful referral, referral, and merchant withdrawals consequently release 844.560000000001270218 + 844.560000000001270218 + 1097.928000000001651283 = 2787.048000000004191719 YYDS. The attacker sells all of it to the pair and returns 444183.647236821385893095 USDT; Swap and Transfer logs independently show the pair and attacker net 742286.272787211571244404 USDT loss/profit. Target history was re-derived independently: creation transaction 0xce8c0ba1 is a direct top-level CREATE at block 18075331 index 158 by 0x17304f0e5a5b42242f0118715b8c28cfe987373b, not an attacker. The target has no code one block earlier and the same 9998-byte runtime hash 0xddfe3e1d2619c12409543651a0fa9897b81b50dec246feef0f3f0562c56fc9aa at deployment and block 21157028. Verified source and bytecode show no proxy or DELEGATECALL, and both EIP-1967 code-selection slots are zero, so deployment is the complete code-change anchor and code age is 9273474 seconds."

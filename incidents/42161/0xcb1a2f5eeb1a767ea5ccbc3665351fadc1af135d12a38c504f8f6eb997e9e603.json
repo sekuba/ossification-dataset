@@ -21,10 +21,7 @@
       "0x42fae47296b26385c4a5b62c46e4305a27c88988"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LiquidityProviderBase._limitFees() caps a Uniswap V3 position's pending fees only when BOTH token fee amounts exceed their max-APR budget (`if (totalFees0 > max0 && totalFees1 > max1)`), so fees accrued in a single token are returned uncapped. UniV3Wrapper.getAssetsBasedOnPrice() adds those uncapped fees to the oracle-priced fair reserves, and Lava's WrapperOracle divides that sum by totalSupply to price the USDC/USDC.e wrapper LP token. The attacker minted a dust LP position, drove one-directional swaps through the 0x8e295789 USDC/USDC.e pool to accrue ~100k of token0-only fees against a 0.000999-share supply, and borrowed the Lava market out against the inflated collateral. The Chainlink-derived sqrtPriceX96 in WrapperOracle defends only the getAmountsForLiquidity() leg; the unclaimed-fee addend bypasses it entirely."
-  },
+  "summary": "LiquidityProviderBase._limitFees() caps a Uniswap V3 position's pending fees only when BOTH token fee amounts exceed their max-APR budget (`if (totalFees0 > max0 && totalFees1 > max1)`), so fees accrued in a single token are returned uncapped. UniV3Wrapper.getAssetsBasedOnPrice() adds those uncapped fees to the oracle-priced fair reserves, and Lava's WrapperOracle divides that sum by totalSupply to price the USDC/USDC.e wrapper LP token. The attacker minted a dust LP position, drove one-directional swaps through the 0x8e295789 USDC/USDC.e pool to accrue ~100k of token0-only fees against a 0.000999-share supply, and borrowed the Lava market out against the inflated collateral. The Chainlink-derived sqrtPriceX96 in WrapperOracle defends only the getAmountsForLiquidity() leg; the unclaimed-fee addend bypasses it entirely.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -209,30 +206,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHash": "0xcb1a2f5eeb1a767ea5ccbc3665351fadc1af135d12a38c504f8f6eb997e9e603"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://quadrigainitiative.com/casestudy/lavalendingflashloanattack.php"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-03/LavaLending_exp.sol"
@@ -240,32 +224,18 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0xeddb97760876069fcdb2c74671ce28197193122d912f9976c8ccb85ecef93de1"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0xe7a3231de33ef552d90cd757c1329aee9dc593f66b9bc0af00f7a00c6d12f97d"
     },
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Anchor: eth_getTransactionReceipt for 0xcb1a2f5e... returns status 1 at block 195240643 index 1, timestamp 1711666653, sender 0x851aa754c39bf23cdaac2025367514dfd7530418 nonce 517. I pulled the sender's full Arbiscan tx list for blocks 194000000-196500000 (45 transactions, mostly repeated 0x848f244a calls into its bot 0x3e52c217a902002ca296fe6769c22fedaee9fda1) and cross-checked it against every log ever emitted by the wrapper 0x10bda01ac4e644fd84a04dab01e15a5edcee46dd up to the exploit block: 83 logs in 34 transactions, of which exactly one, this anchor, comes from the attacker. The campaign is therefore this single transaction; the sender's later nonces 519-523 are only cash-out ERC-20 transfers. Root cause read from the verified sources: LiquidityProviderBase._limitFees() caps pending fees only under the conjunction totalFees0 > max0 && totalFees1 > max1, so a one-sided fee accrual is passed through uncapped; UniV3Wrapper.getAssetsBasedOnPrice() adds getUnclaimedFees() and balance0/balance1 on top of LiquidityAmounts.getAmountsForLiquidity(totalLiquidity, price); WrapperOracle 0x7746872c6892bcfb4254390283719f2bd2d4da76 (which DeFiHackLabs labels the vulnerable contract) derives its sqrtPriceX96 from Chainlink and is itself correct - it only protects the fair-reserve leg, so the defect is in the wrapper artifact, not the oracle. Target: the anchor's callTracer shows the executing context is the ERC-1967 proxy 0x10bda01ac4e644fd84a04dab01e15a5edcee46dd, whose every frame DELEGATECALLs 0xf6b3c18023c1e387a673b3101c73fc985290fbd9. eth_getStorageAt on slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc at block 195240642 returns 0x...f6b3c18023c1e387a673b3101c73fc985290fbd9. The implementation's 20,734-byte runtime hashes to 0x2883fd173f2ed2037da0bd18739964089354b7012895fc09fc8666d56cd252d4 at its own creation block 188026392, at the upgrade block 188026419 and at block 195240642, so the artifact is unchanged. Code history: eth_getLogs for topic0 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b on the proxy from genesis to the exploit block returns exactly two Upgraded events, the creation one (block 182270155, tx index 4, log index 16, implementation 0xedc9c9bbc6308f02f0500b50a8c318e2e46d0824) and block 188026419, tx index 4, log index 20, implementation 0xf6b3c18023c1e387a673b3101c73fc985290fbd9; there is no third. Proxy and implementation were both created by the Lava deployer 0xe56a6ca72979a511782cf6d4d0e3be80b6f1e681, unrelated to the attacker. codeAgeSeconds = 1711666653 - 1709821709 = 1844944 s (21.35 days). Loss: netting every ERC-20 Transfer in the anchor receipt gives victim depletion of 78,401.109923 USDC, 97,565.718958 USDC.e, 60,349.016947 USDT, 20.332935232888003060 WETH and 8.525476552027716376 wstETH; all five Lava reserves went to a zero balance, and the wrapper's getAssets() fell from 100,959.807705 / 4.684079 to 192.729695 / 0 with totalSupply falling from 0.000999764 to 0.000001097. The USDC and USDC.e columns balance exactly against the attacker's proceeds plus the Uniswap flash fees (78,401.109923 = 77,477.425666 + 923.684256 + 0.000001; 97,565.718958 = 96,215.533581 + 1,350.185377), which confirms nothing is missing or double-counted."
@@ -273,9 +243,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1711666653/coingecko:ethereum",
       "observedAt": 1787663821
@@ -283,9 +250,6 @@
     {
       "id": "source-8",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1711666653/ethereum:0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
       "observedAt": 1787663821
@@ -293,9 +257,6 @@
     {
       "id": "source-9",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://hackmd.io/@LavaSecurity/03282024"
     }
   ],

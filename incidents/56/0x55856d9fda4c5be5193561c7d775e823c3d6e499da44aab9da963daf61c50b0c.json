@@ -22,10 +22,7 @@
       "0x515788797914cb663114aeb806b3cfb6096f6d1a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LBP's add-liquidity mining credit is derived from the live PancakeSwap LBP/USDT pair state inside the same transaction. LBP._settlePendingLpAdd passes the pair's post-mint USDT reserve and LP totalSupply into LBPHashrate.notifyCredit, which mints 2 * userLpDelta * currentRUsdt / currentTotalLp of hashrate, and LBP._stagePending records the credit recipient as whatever address last sent LBP to the pair without excluding the pair itself. The attacker flash-borrowed 41,861,104.64 USDT, swapped 15,000,000 USDT into the pair and then added liquidity with a further 5,790,511.65 USDT, lifting the pair's USDT reserve from 439,363.60 to roughly 21.1 million by settle time, and had 10,737,390.51 hashrate credited to the pair address; the ensuing auto-harvest called LBP.mintReward and minted 115,092.77 fresh LBP straight into the pair's own token balance, an unsynced surplus PancakeSwap accounts as swap input, which the attacker swapped back out for the pair's USDT."
-  },
+  "summary": "LBP's add-liquidity mining credit is derived from the live PancakeSwap LBP/USDT pair state inside the same transaction. LBP._settlePendingLpAdd passes the pair's post-mint USDT reserve and LP totalSupply into LBPHashrate.notifyCredit, which mints 2 * userLpDelta * currentRUsdt / currentTotalLp of hashrate, and LBP._stagePending records the credit recipient as whatever address last sent LBP to the pair without excluding the pair itself. The attacker flash-borrowed 41,861,104.64 USDT, swapped 15,000,000 USDT into the pair and then added liquidity with a further 5,790,511.65 USDT, lifting the pair's USDT reserve from 439,363.60 to roughly 21.1 million by settle time, and had 10,737,390.51 hashrate credited to the pair address; the ensuing auto-harvest called LBP.mintReward and minted 115,092.77 fresh LBP straight into the pair's own token balance, an unsynced surplus PancakeSwap accounts as swap input, which the attacker swapped back out for the pair's USDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -120,30 +117,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x55856d9fda4c5be5193561c7d775e823c3d6e499da44aab9da963daf61c50b0c"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/DefimonAlerts/status/2067329401977532429"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-06/LBP_exp.sol"
@@ -151,19 +135,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xc34d13f2af2d1a8baab78f197d9b7719d767ca7b5504a9ead039c60f4b72af13"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1781685338/bsc:0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c,bsc:0x55d398326f99059ff775485246999027b3197955",
       "observedAt": 1787702581
@@ -171,13 +148,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:40:00Z",
       "note": "Anchor: the anchor is nonce 0 of attacker EOA 0xb26dfe6b6180a30e2a2d9826867cc7e06631825a and its only outgoing transaction ever; the whole attack runs in the constructor of 0x202ba7498c65f9f5c49b9c90953b562f9e0538fb, which deploys coordinator 0x5449ded887576f43fc339851e942ebc1e6f8118b, so there is no earlier defect-executing success. The two prior entries on the EOA are inbound funding transfers. Root cause read from the Etherscan-verified LBP and LBPHashrate sources and the 213-frame callTracer output. LBP._settlePendingLpAdd calls hashrate.notifyCredit(lastTransfer, userLpDelta, currentRUsdt, currentTotalLp) where currentRUsdt and currentTotalLp are the pair's live post-mint state, and LBPHashrate.notifyCredit mints hashAmount = 2 * lpDelta * currentRUsdt / currentTotalLp; LBP._stagePending sets lastTransfer = from with no exclusion for the pair, and LBP.balanceOf adds hashrate.pendingRewards on top of the raw ERC-20 balance. Reproduced in the receipt: 41,861,104.641678089199196186 USDT flash-borrowed from 0x8f73b65b4caaf64fba2af91cc5d4a2a1318e5d8c and 0x238a358808379702088667322f80ac48bad5e6c4; 15,000,000 USDT swapped into the pair; log 70 mints 10,737,390.507980558866879696 hLBP to the pair 0x00e3ea08fd8cbad955ec5d2292ad637670c31524, which back-solves to a settle-time USDT reserve near 21.1 million against the 439,363.60 the pair actually held before the campaign; log 75 then mints 115,092.769711426275179473 LBP from the zero address directly into the pair, followed by a StaticReward event, and log 139 pays the coordinator 21,170,154.993871220994788545 USDT out of the pair. Total fresh LBP minted in the transaction is 207,166.985481. Targeting: DeFiHackLabs names 0x88886f0fd371dff856291badced45922bc888888 as the vulnerable contract and that address executes in the anchor trace; it is not a proxy, its EIP-1967 slot is zero and its runtime hash 0x5b4aa4064191fa2dc836b801cc615a438aedb4ac9268926cc2879c779034e15f is identical at its creation block 96812381 and at block 104727183, so lastCodeChange is the deployment and the age is 1781685338 - 1778119071 = 3,566,267 s. The creation transaction was sent by EOA 0x000000000000afafb7c8aea1866f5e15b9305209 to the canonical CREATE2 deterministic-deployment proxy 0x4e59b44847b379578588920ca78fbf26c0b4956c, which is the CREATE2 parent recorded as creatorAddress; neither address is the attacker. The sibling accumulator contract LBPHashrate 0x5e3cbc82d020be91a989eb747934104e9ab585fe was deployed from the same factory three blocks earlier at timestamp 1778119070, so it carries the same age and is not recorded as a separate target for the same failure. Loss reconstructed from the receipt's USDT Transfer logs and cross-checked against getReserves() at blocks 104727183 and 104727184."

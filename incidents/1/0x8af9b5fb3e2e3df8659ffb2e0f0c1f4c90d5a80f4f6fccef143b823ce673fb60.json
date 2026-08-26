@@ -19,10 +19,7 @@
       "0x792ec27874e1f614e757a1ae49d00ef5b2c73959"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Astrid withdraw/claim trusts an attacker-supplied fake restaked-token contract, releasing real staked stETH/rETH/cbETH."
-  },
+  "summary": "Astrid withdraw/claim trusts an attacker-supplied fake restaked-token contract, releasing real staked stETH/rETH/cbETH.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x8af9b5fb3e2e3df8659ffb2e0f0c1f4c90d5a80f4f6fccef143b823ce673fb60"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-10/Astrid_exp.sol"
@@ -113,10 +103,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xdd8b7284bb796b8f0b4cb13869a98082d01d46e802f259f87acd06a83d8832df"
     }

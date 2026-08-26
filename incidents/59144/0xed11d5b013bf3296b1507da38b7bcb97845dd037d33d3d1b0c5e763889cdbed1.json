@@ -20,10 +20,7 @@
       "0xb7f6354b2cfd3018b3261fbc63248a56a24ae91a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ConstantProductPool.velocore__execute() lacked the vault-only authorization required for its state-changing accounting. The attacker called it directly three times with extreme signed amounts to corrupt feeMultiplier; subsequent Vault.execute() calls reached unchecked effective-fee arithmetic that underflowed and returned invalid pool deltas, draining seven pools in the selected transaction."
-  },
+  "summary": "ConstantProductPool.velocore__execute() lacked the vault-only authorization required for its state-changing accounting. The attacker called it directly three times with extreme signed amounts to corrupt feeMultiplier; subsequent Vault.execute() calls reached unchecked effective-fee arithmetic that underflowed and returned invalid pool deltas, draining seven pools in the selected transaction.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -431,30 +428,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 59144,
       "transactionHash": "0xed11d5b013bf3296b1507da38b7bcb97845dd037d33d3d1b0c5e763889cdbed1"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/BeosinAlert/status/1797247874528645333"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-06/Velocore_exp.sol"
@@ -462,13 +446,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T19:23:18Z",
       "note": "Reviewed the successful Linea receipt and full call trace, all seven defect-executing ConstantProductPool creation traces, deployment-block and pre-exploit runtimes, the commit-pinned reproduction, Verichains' technical analysis, and Zokyo's post-mortem. Attack contract 0xb7f6354b2cfd3018b3261fbc63248a56a24ae91a directly calls velocore__execute(address,bytes32[],int128[],bytes) three times on each of seven pools before Vault 0x1d0188c4b276a09366d05d6be06af61a73bc7535 calls the same entrypoint to realize the corrupted accounting. No pool call delegates execution. Each 17,153-byte direct runtime is absent in the block before its internal CREATE by factory 0xbe6c6a389b82306e88d74d1692b67285a9db9a47 and has the same hash at deployment and immediately before the exploit: e2c67a block 128549:1 hash 0x5acd76d2160393ea6b82f9eb1fd09fcf02b9b040a5b55da5ec17f2c5499bbeb0; 820aaf block 178197:4 hash 0x4c8174df0ce940be28a46decc2e39eaae439a90543b07afce3b17eaa5ca03a14; 1d12e2 block 1089428:6 hash 0xe37842fa2ba5bc7732a13361edd10ca4192647a967c5658ed765e7e62169fa86; d0e67c block 166346:9 hash 0x23208b3707ef8ed43ae741ae1d7e4ebcef16bb0aee5381af5411b2a0eaa18601; f3e3ec block 273362:1 hash 0x0ee292a13576b0de201f0c3e1c4a2b51416ca23c16a34d0b314c9e43e11bf370; 99ee72 block 1089610:4 hash 0x5b686ee74a0fb45513bb194ad47c8bbb852b893fc1f877a3e3d0a985249c0bed; bd4b27 block 874867:11 hash 0x73a62e729ccf2c5483f52c21a33847b677c87acba736dcd72859abbcd8d87fd4. The receipt records 632,705.032352 USDC transferred from the Vault to the attack contract alongside other assets. Verichains and Zokyo report an approximately $6.8 million campaign loss across Linea and zkSync."
@@ -476,91 +453,52 @@
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.verichains.io/p/velocores-incident-analysis"
     },
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/zokyo-io/postmortem-velocore-90cc92996aad"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 59144,
       "transactionHash": "0x8cf7767670daea64b5f93692f396af008001e26ecab1ce597d72dbfcda4e440c"
     },
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 59144,
       "transactionHash": "0x1a9018ea8d3be4945a7c5df353406e574ea7f8d1e9e9aabef8a29a13b72c2b86"
     },
     {
       "id": "source-9",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 59144,
       "transactionHash": "0x320385029bc9a6a3e16cd78c445d5d5e15c8c65476feca400ffe8303dd43cc88"
     },
     {
       "id": "source-10",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 59144,
       "transactionHash": "0x1c5d4f42dc2351c03f249cece73c978e4cffed11e548f8bdd03bed0bcc390624"
     },
     {
       "id": "source-11",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 59144,
       "transactionHash": "0x53955a6fcf11c63ad64e90a23d679e3a30639732bf9b56aad2acfc1334faf9ad"
     },
     {
       "id": "source-12",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 59144,
       "transactionHash": "0xe3bbf494ec94dd8f7301ce802723c64175c7d32f509d6332f24a2d39d5d09586"
     },
     {
       "id": "source-13",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 59144,
       "transactionHash": "0xa3c7b336f7b9a34c0a51747a5d72ab982703046ecc3cab4af9234d4b789ebc97"
     }

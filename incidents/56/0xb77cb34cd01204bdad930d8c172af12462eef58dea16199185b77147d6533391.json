@@ -19,10 +19,7 @@
       "0x054a3574d8082112575843dd944ff42c58dda38d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "GPT's transfer fee is taken from the liquidity pair's own balance and routed back into the token without a sync(), so repeated flash-loaned transfers shifted the reserve and let the attacker extract the pair's USDT."
-  },
+  "summary": "GPT's transfer fee is taken from the liquidity pair's own balance and routed back into the token without a sync(), so repeated flash-loaned transfers shifted the reserve and let the attacker extract the pair's USDT.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xb77cb34cd01204bdad930d8c172af12462eef58dea16199185b77147d6533391"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/GPT_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1661424685320634368"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: GPT 0xa1679abEF5Cd376cC9A1C4c2868Acf52e08ec1B3 created 2023-05-24T13:23:49Z by 0xc1727c083ea796addefcf594ce9114160a49f3aa, unrelated to attack sender 0x054a3574d8082112575843dd944ff42c58dda38d; no EIP-1967 Upgraded events, age measured from deployment (the token was under three hours old). Loss verified onchain: 58,520.32 USDT left the GPT pair 0x77a684943aA033e2E9330f12D4a1334986bCa3ef and 42,973.44 USDT reached the attack contract."
     }
   ],

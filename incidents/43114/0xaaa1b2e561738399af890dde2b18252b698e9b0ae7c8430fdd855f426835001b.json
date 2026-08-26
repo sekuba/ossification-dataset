@@ -19,10 +19,7 @@
       "0xf59dc5521f191bcb53a9bcbd1654be81b72ee96f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The rebalancer executed caller-supplied target/calldata from its own address with no whitelist, so an attacker had it call Aave Pool.borrow(WAVAX, 7000e18, 2, 0, victim) against the WAVAX borrowing power the victim had delegated to it, then transferred the received WAVAX out with a second arbitrary call."
-  },
+  "summary": "The rebalancer executed caller-supplied target/calldata from its own address with no whitelist, so an attacker had it call Aave Pool.borrow(WAVAX, 7000e18, 2, 0, victim) against the WAVAX borrowing power the victim had delegated to it, then transferred the received WAVAX out with a second arbitrary call.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,27 +91,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 43114,
       "transactionHash": "0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/DefimonAlerts/status/2046504796463808991"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-04/AaveRebalancerCreditDelegation_exp.sol"
@@ -122,20 +109,11 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: rebalancer 0x7A7bAB45363Efb0394Ff27bfA29bb7C0534cA8C9 created 2025-12-31T18:31:23Z by 0x6fdae9edacc6461b21f71a1a6a420197d2b0c3aa (the delegating victim), not the attack-tx sender 0xf59dc5521f191bcb53a9bcbd1654be81b72ee96f; no EIP-1967 events, 108.5 days old. 6,999.91 WAVAX x $9.194 at the incident timestamp (DefiLlama coingecko:avalanche-2) = $64,357."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 43114,
       "transactionHash": "0xcda8ca73c8ae863b2ca90012dbda735bb1ecf26e9bf3fe55332d35a4794fd4ee"
     }

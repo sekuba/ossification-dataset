@@ -20,10 +20,7 @@
       "0xcce2e1a23194bd50d99eb830af580df0b7e3225b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The closed-source SwapNet Router's swap entrypoint (selector 0x87395540) performed a low-level call to a caller-supplied target with caller-supplied calldata and no target validation, so passing a token address made the router itself execute transferFrom() against users' standing infinite approvals."
-  },
+  "summary": "The closed-source SwapNet Router's swap entrypoint (selector 0x87395540) performed a low-level call to a caller-supplied target with caller-supplied calldata and no target validation, so passing a token address made the router itself execute transferFrom() against users' standing infinite approvals.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -121,52 +118,27 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 8453,
       "transactionHash": "0xc15df1d131e98d24aa0f107a67e33e66cf2ea27903338cc437a3665b6404dd57"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.verichains.io/p/swapnet-exploit-analysis"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blocksec.com/blog/17m-closed-source-smart-contract-exploit-arbitrary-call-swapnet-aperture"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://meta.matcha.xyz/SwapNet-Incident-Post-Mortem"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T18:58:52Z",
       "note": "Reviewed the Base receipts and call traces, proxy creation trace, all four pre-incident Upgraded events, historical implementation storage, and the proxy and implementation runtimes. The selected transaction creates attack contract 0xcce2e1a23194bd50d99eb830af580df0b7e3225b; its constructor calls selector 0x87395540 on router proxy 0x616000e384ef1c2b52f5f3a88d57a3b64f23757e, which delegates to 0xdc3914ca7b18a2bf41b43a263258b71e32296d7d and then calls Base USDC transferFrom, moving 13,342,433.169249 USDC from victim 0xba15e9b644685cb845af18a738abd40c6bcd78ed to the attacker EOA. The proxy was CREATE2-deployed by 0x4e59b44847b379578588920ca78fbf26c0b4956c at block 37894488; its runtime hash is unchanged through the exploit. The final pre-incident upgrade is log 678 in block 38456419 and stores the implementation in data word 0. Historical storage changes from 0x934fbbe51a803f667866f17e6fb5a4e2a4455e0c before that block to the traced artifact afterward. The selected implementation's 24,352-byte runtime hashes to 0x770a3b9dcbcbddf1d3f177c07d920ab3c9ad08613b9de052e1d3eb994d407190 at its creation block and immediately before the exploit. Matcha reports $13.43 million taken from 18 users across three chains."
@@ -174,20 +146,12 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0x544796970ba184008e7bf4597e08f7d6c519694f1338499ec310328798cc27e8"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0xa7476fdea3ca11dcb806cd7beb6c0a412d2c6c028e975cdf650ba19f2a7a50e1"
     }

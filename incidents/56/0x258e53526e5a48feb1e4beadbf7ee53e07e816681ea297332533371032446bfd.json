@@ -19,10 +19,7 @@
       "0xdc459596aed13b9a52fb31e20176a7d430be8b94"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "WGPT burn-on-transfer inflates the pair's balance discrepancy; repeated transfer+skim drains the WGPT/BUSDT LP."
-  },
+  "summary": "WGPT burn-on-transfer inflates the pair's balance discrepancy; repeated transfer+skim drains the WGPT/BUSDT LP.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x258e53526e5a48feb1e4beadbf7ee53e07e816681ea297332533371032446bfd"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-07/WGPT_exp.sol"

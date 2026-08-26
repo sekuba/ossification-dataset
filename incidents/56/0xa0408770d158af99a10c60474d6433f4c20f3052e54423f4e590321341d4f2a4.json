@@ -19,10 +19,7 @@
       "0xff1db040e4f2a44305e28f8de728dabff58f01e1"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "TGBS exposes _burnBlock(), which burns TGBS held by the TGBS/WBNB pair, so the attacker burned the pool down inside a DODO flash loan and sold its TGBS into the inflated reserves."
-  },
+  "summary": "TGBS exposes _burnBlock(), which burns TGBS held by the TGBS/WBNB pair, so the attacker burned the pool down inside a DODO flash loan and sold its TGBS into the inflated reserves.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xa0408770d158af99a10c60474d6433f4c20f3052e54423f4e590321341d4f2a4"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1765285257949974747"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-03/TGBS_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xedecfA18CAE067b2489A2287784a543069f950F4 created 2024-02-09T12:25:55Z by 0xd9d9eb8988ed6a10a9246287ce0d938e618a17ff, which is not the attack-tx sender 0xff1db040e4f2a44305e28f8de728dabff58f01e1; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

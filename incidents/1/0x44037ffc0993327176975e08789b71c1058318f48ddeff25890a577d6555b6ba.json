@@ -19,10 +19,7 @@
       "0x55f5f8058816d5376df310770ca3a2e294089c33"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The UnilendV2Pool health-factor check computed collateral value from a position whose lend side was being redeemed in the same call, so a flash-loaned lend/borrow/redeemUnderlying sequence let the attacker borrow the pool's entire stETH liquidity and then withdraw the collateral backing it."
-  },
+  "summary": "The UnilendV2Pool health-factor check computed collateral value from a position whose lend side was being redeemed in the same call, so a flash-loaned lend/borrow/redeemUnderlying sequence let the attacker borrow the pool's entire stETH liquidity and then withdraw the collateral backing it.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,27 +91,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x44037ffc0993327176975e08789b71c1058318f48ddeff25890a577d6555b6ba"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://slowmist.medium.com/analysis-of-the-unilend-hack-90022fa35a54"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-01/Unilend_exp.sol"
@@ -122,20 +109,11 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: UnilendV2Pool (USDC/stETH) 0x4E34DD25Dbd367B1bF82E1B5527DBbE799fAD0d0 (verified, ContractName UnilendV2Pool) created 2024-02-12T18:14:11Z by 0x99a221a87b3c2238c90650fa9be0f11e4c499d06, not the attack-tx sender 0x55f5f8058816d5376df310770ca3a2e294089c33; no EIP-1967 events, 334.7 days old. Calls are routed through UnilendV2Core 0x7f2E24D2394f2bdabb464B888cb02EbA6d15B958 but the accounting the PoC abuses lives in the pool. Setup transactions 0xdaf42127499f878b62fc5ba2103135de1c36e1646487cee309c077296814f5ff and 0xefa9c4383dc58e492cd1c670d2661968db28fa7557b9c8f90685e5a6cbbf41fe precede the recorded drain. 60 stETH at a January 2025 ETH price near $3,300 is roughly $200k. Loss converted at the incident timestamp: 60 stETH x $3,251.10 (DefiLlama historical ETH price) = $195,066."
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is an EIP-1167 minimal proxy - runtime 0x363d3d373d3d3d363d73c86d2555f8c360d3c5e8e4364f42c1f2d169330e5af43d82803e903d91602b57fd5bf3 - so the delegate target 0xc86d2555f8c360d3c5e8e4364f42c1f2d169330e is baked into the bytecode and cannot be repointed. That master's runtime is byte-identical at 13 sample points across [19213660, 21608070] and contains zero DELEGATECALL opcodes; callTracer on the exploit tx confirms the clone delegatecalls only the master."
     }
   ],

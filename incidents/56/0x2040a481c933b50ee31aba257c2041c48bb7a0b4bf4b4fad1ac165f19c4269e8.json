@@ -19,10 +19,7 @@
       "0xf5f21746ff9351f16a42fa272d7707cc35760e4b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "WECOStaking.deposit() returns more WECOIN to the depositor than it takes in, so the attacker looped 1-token deposits until the staking contract's WECOIN balance was drained."
-  },
+  "summary": "WECOStaking.deposit() returns more WECOIN to the depositor than it takes in, so the attacker looped 1-token deposits until the staking contract's WECOIN balance was drained.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x2040a481c933b50ee31aba257c2041c48bb7a0b4bf4b4fad1ac165f19c4269e8"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/MetaSec_xyz/status/1725311048625041887"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-11/WECO_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xd672b766d66662f5c6fd798a999e1193a7945451 created 2023-08-11T20:33:33Z by 0xcc424d4af7add42bed4ae68e27a1547ee81173b1, which is not the attack-tx sender 0xf5f21746ff9351f16a42fa272d7707cc35760e4b; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

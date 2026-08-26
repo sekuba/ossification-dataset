@@ -19,10 +19,7 @@
       "0x6ea83f23795f55434c38ba67fcc428aec0c296dc"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "swapAndRepay/_buyOnParaSwap forwarded caller-supplied paraswapData to Augustus and left the collateral-asset allowance standing, so a crafted swap payload let the attacker pull tokens users had approved to the periphery adapter."
-  },
+  "summary": "swapAndRepay/_buyOnParaSwap forwarded caller-supplied paraswapData to Augustus and left the collateral-asset allowance standing, so a crafted swap payload let the attacker pull tokens users had approved to the periphery adapter.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -92,27 +89,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xc27c3ec61c61309c9af35af062a834e0d6914f9352113617400577c0f2b0e9de"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://blog.solidityscan.com/aave-repay-adapter-hack-analysis-aafd234e15b9"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-08/AAVE_Repay_Adapter.sol"
@@ -120,19 +107,11 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: adapter 0x02e7b851... created by 0x57dc6c401819ea097db8d4b66d8e35cda0277a73 in tx 0xfebcf4a63b149c5605b46bdfe8a255c7e4435a1990ad535603bd8d75c4a63a0b (2023-07-12), unrelated to attack sender 0x6ea83f23...; no EIP-1967 Upgraded events before the incident"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xfebcf4a63b149c5605b46bdfe8a255c7e4435a1990ad535603bd8d75c4a63a0b"
     }

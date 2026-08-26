@@ -19,10 +19,7 @@
       "0x3ea6ba6d3415e4dfd380516c799aafa94e420519"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The HYPR L1StandardBridge implementation cleared the storage used by Initializable, leaving the deployed bridge reinitializable. The incident transaction reinitialized the bridge and released 2.57 million escrowed HYPR."
-  },
+  "summary": "The HYPR L1StandardBridge implementation cleared the storage used by Initializable, leaving the deployed bridge reinitializable. The incident transaction reinitialized the bridge and released 2.57 million escrowed HYPR.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -124,21 +121,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity"
-      ],
       "chainId": 1,
       "transactionHash": "0x51ce3d9cfc85c1f6a532b908bb2debb16c7569eb8b76effe614016aac6635f65"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-12/HYPR_exp.sol"
@@ -146,31 +134,16 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.verichains.io/p/hypers-op-stack-bridge-exploit-analysis"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://rekt.news/zh/hypr-network-rekt"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T13:30:52Z",
       "note": "Reviewed the exploit receipt and call trace, deployment and implementation-install anchors, transaction-local implementation-slot state diff, pre-exploit implementation slot and runtime hash, the verified L1ChugSplashProxy and ProxyAdmin architecture, every external and internal call to ProxyAdmin 0xba86cd28d937f1cc7c74a365368477408578364a from proxy deployment through the pre-exploit block, the commit-pinned reproduction, Verichains analysis, and reported loss. The exploit executes bridge proxy 0x40c31236b228935b0329eff066b1ad96e319595e and delegates to 0xe468b43b4ae4d750cd6a5d7edacc1a751302c99c. Of the 12 successful external ProxyAdmin calls in that interval, transaction 0x4cdfc7580172bee1a1decbe6190e0a018533259f324923c059f2833336cd0351 is the only call selecting code for this bridge; no internal ProxyAdmin calls occurred. Its state diff changes the proxy's EIP-1967 implementation slot from zero to 0xe468b43b4ae4d750cd6a5d7edacc1a751302c99c, and that value and runtime remain present immediately before the exploit. The transaction transferred exactly 2,570,000 HYPR from bridge custody."
@@ -178,20 +151,12 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x4cdfc7580172bee1a1decbe6190e0a018533259f324923c059f2833336cd0351"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xde6ef3d519c24181a9be80e3a5f02ac52116ef4bee1453dba0ac37c7bc54f9f1"
     }

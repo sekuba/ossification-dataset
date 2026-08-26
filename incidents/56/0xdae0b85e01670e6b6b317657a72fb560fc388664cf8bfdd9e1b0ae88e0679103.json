@@ -19,10 +19,7 @@
       "0x9c66b0c68c144ffe33e7084fe8ce36ebc44ad21e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BCT's inviter contracts expose unprotected transfer helpers (selectors 0x4e515153 and 0xf986351d) and buy(), letting the attacker shuffle BCT between attacker-created inviters, skim the pair and sell into the distorted reserves."
-  },
+  "summary": "BCT's inviter contracts expose unprotected transfer helpers (selectors 0x4e515153 and 0xf986351d) and buy(), letting the attacker shuffle BCT between attacker-created inviters, skim the pair and sell into the distorted reserves.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xdae0b85e01670e6b6b317657a72fb560fc388664cf8bfdd9e1b0ae88e0679103"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-12/BCT_exp.sol"
@@ -113,11 +103,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x88b3eb62e363d9f153beab49c5c2ef2e785a375a created 2023-12-07T09:27:07Z by 0x7c105b177bfa6ff732c503267d8021a9485d4843, which is not the attack-tx sender 0x9c66b0c68c144ffe33e7084fe8ce36ebc44ad21e; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 10.2 BNB x $241.69/BNB at the incident timestamp 1702129049 (DefiLlama coingecko:binancecoin) = $2,465."
     }
   ],

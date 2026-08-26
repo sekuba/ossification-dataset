@@ -19,10 +19,7 @@
       "0xc9a5643ed8e4cd68d16fe779d378c0e8e7225a54"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BBT.setRegistry(address) had no access control, so the attacker pointed the token at a registry contract of their own whose getContractAddress() returned the caller, passing the mint() authorization check and minting 1e31 BBT that was dumped on Uniswap V2."
-  },
+  "summary": "BBT.setRegistry(address) had no access control, so the attacker pointed the token at a registry contract of their own whose getContractAddress() returned the caller, passing the mint() authorization check and minting 1e31 BBT that was dumped on Uniswap V2.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -95,27 +92,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x4019890fe5a5bd527cd3b9f7ee6d94e55b331709b703317860d028745e33a8ca"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/8olidity/status/1767470002566058088"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-03/BBT_exp.sol"
@@ -123,11 +110,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: TransparentUpgradeableProxy 0x3541499cda8CA51B24724Bb8e7Ce569727406E04 created 2024-01-18 by 0xb0ab5d6f8e99c07fa4965524bbe9c57d9ed35a38, not the attack-tx sender; three EIP-1967 Upgraded events, the last at block 19113181 on 2024-01-29T15:49:35Z installing 0x74463ed91bfa45bca06d59e8b383a89709842f69, so the executing code was 42.7 days old. 5.06 ETH at a March 2024 ETH price near $4,000 is roughly $20k, above the $1,000 floor. Loss converted at the incident timestamp: 5.06 ETH x $3,972.80 (DefiLlama historical ETH price) = $20,102."
     }
   ],

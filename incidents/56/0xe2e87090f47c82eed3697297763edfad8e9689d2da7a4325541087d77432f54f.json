@@ -19,10 +19,7 @@
       "0x7ccf451d3c48c8bb747f42f29a0cde4209ff863e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ZS exposes a permissionless destory_pair_amount() that deletes the ZS/BUSDT pair's ZS balance; the attacker called it and then sync()ed the pair to sell into the inflated price."
-  },
+  "summary": "ZS exposes a permissionless destory_pair_amount() that deletes the ZS/BUSDT pair's ZS balance; the attacker called it and then sync()ed the pair to sell into the inflated price.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xe2e87090f47c82eed3697297763edfad8e9689d2da7a4325541087d77432f54f"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/MetaSec_xyz/status/1711189697534513327"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-10/ZS_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x12b3b6b1055b8ad1ae8f60a0b6c79a9825bcb4bc created 2023-09-26T10:35:05Z by 0x5d301735ea0e436856866b59e256842581710d2c, which is not the attack-tx sender 0x7ccf451d3c48c8bb747f42f29a0cde4209ff863e; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

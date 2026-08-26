@@ -20,10 +20,7 @@
       "0x058bae36467a9fc5e1045dbdffc2fd65b91c2203"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LockedDeal.CreateMassPools(address,uint64[],uint256[],address[]) charges the caller getArraySum(_StartAmount), and getArraySum accumulates the caller-supplied array with an unchecked sum = sum + _array[i] under Solidity 0.6.12. An amount array summing to 1 modulo 2**256 therefore transferred a single token unit in while CreatePool credited the attacker's pools with the full element values, and because the pools' _FinishTime was already past, WithdrawToken immediately paid out the contract's entire balance of each token."
-  },
+  "summary": "LockedDeal.CreateMassPools(address,uint64[],uint256[],address[]) charges the caller getArraySum(_StartAmount), and getArraySum accumulates the caller-supplied array with an unchecked sum = sum + _array[i] under Solidity 0.6.12. An amount array summing to 1 modulo 2**256 therefore transferred a single token unit in while CreatePool credited the attacker's pools with the full element values, and because the pools' _FinishTime was already past, WithdrawToken immediately paid out the contract's entire balance of each token.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -491,22 +488,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x4635d5c63cc02a960c8a4e552099e825b229d169c931bd3697a9f2e28aec45ff"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-03/poolz_exp.sol"
@@ -514,17 +501,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/peckshield/status/1635860470359015425"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x39718b03ae346dfe0210b1057cf9f0c378d9ab943512264f06249ae14030c5d5",
@@ -536,13 +517,6 @@
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T01:10:00Z",
       "note": "Full re-review of the migrated Poolz row. Re-anchored: the snapshot row used 0x39718b03ae346dfe0210b1057cf9f0c378d9ab943512264f06249ae14030c5d5, which is nonce 2 of attacker 0x190cd736f5825ff0ae0141b5c9cb7fcd042cef2a. Its transaction list shows nonce 0 deploying helper 0x058bae36467a9fc5e1045dbdffc2fd65b91c2203 at block 26475308 and nonce 1, 0x4635d5c63cc02a960c8a4e552099e825b229d169c931bd3697a9f2e28aec45ff at block 26475367 index 5, timestamp 1678850051, receipt status 0x1, already draining four tokens from LockedDeal; that is the new anchor. Five successive helper calls (nonces 1 to 5) drain seventeen tokens in total and nothing else on BSC touches the defect: an eth_getLogs scan of LockedDeal's TransferOut topic 0xe4d818e6f992efbd60db553f3edce819a199baec79a784b95c89bc8ee86f2584 over blocks 26400000 to 26600000 shows every other withdrawal is a single-token user withdrawal, while only the helper's five transactions withdraw four tokens at once. Root cause confirmed against the Etherscan-verified LockedDeal source (Solidity v0.6.12+commit.27d51765, so no checked arithmetic): CreateMassPools(address,uint64[],uint256[],address[]) calls TransferInToken(_Token, msg.sender, getArraySum(_StartAmount)), and getArraySum accumulates with a bare sum = sum + _array[i] rather than SafeMath.add. The callTracer trace shows the helper calling selector 0x1b45d17b (CreateMassPools) on 0x8bfaa473a899439d8e07bf86a8c6ce5de42fe54b with an amount array whose elements sum to 1 modulo 2**256, so the receipt records an inbound ERC20 Transfer of exactly 1 unit while two NewPoolCreated events credit the attacker's pools with the full balances; the helper then calls selector 0xa4b910fb (WithdrawToken) and the contract pays out its entire holding of each token, because the pools were created with a _FinishTime already in the past. Target: LockedDeal is a direct, non-proxy contract - the anchor trace contains no DELEGATECALL out of it and its runtime carries no EIP-1967 slot. eth_getCode is 23614 hex characters and keccaks to 0x6acba47ffe3ee4f06de872a5ea54cb26f694618122fdf3572bc9d5d48345999a at its creation block 9573149, at block 26475366 immediately before the exploit, and in the anchor transaction's prestateTracer entry, so the deployment basis is exact. It was created top-level by 0xf7f1f00b13f4c3d818f052498902067ab91a3a66 in transaction 0x7644174a141060d5bd161d581f548ff1a103292c281f6da5280160056d1847e4 at block 9573149 index 5, timestamp 1627556708, and the receipt's contractAddress is the LockedDeal itself. codeAgeSeconds = 1678850051 - 1627556708 = 51293343 (593.7 days). Loss re-measured on BSC only: the snapshot used PeckShield's ~$390,000 figure, which spans the attacker's BSC, Ethereum and Polygon deployments and would double-count against those chains' own records. I summed the ERC20 Transfer logs whose sender is LockedDeal across the five transactions - seventeen tokens - and then valued them at realised proceeds rather than spot, because every one is a thin PancakeSwap listing that the attacker's own selling moved. Realised proceeds are the BNB the attacker EOA received: I matched every transaction in which one of the seventeen tokens left the EOA against the internal BNB transfers into it, giving 1328.5787180093985 BNB across 45 sales between blocks 26476303 and 26526477, valued at the DefiLlama BNB price of 311.7638042244487 at the anchor timestamp. The EOA's only other incoming BNB in that window is 0.7715889332514798 of pre-attack funding at block 26474866, so no proceeds from the Ethereum or Polygon legs are counted; the 38.472135 anyETH the attacker bridged in was forwarded out, never sold for BNB. PORTX realises zero because the attacker could not sell it and burned all 760845.5139006841 units to the zero address at block 26490195, and 48281.787213 KMON was never sold, so this figure is a floor on victim depletion."
@@ -550,9 +524,6 @@
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1678850162/coingecko:binancecoin",
       "observedAt": 1787703400
@@ -560,10 +531,6 @@
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x7644174a141060d5bd161d581f548ff1a103292c281f6da5280160056d1847e4"
     }

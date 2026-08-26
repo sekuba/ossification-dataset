@@ -19,10 +19,7 @@
       "0x493c5655d40b051a64bc88a6af21d73d3a9b72a2"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "A WBTC collateral input token exposed mint(address,uint256) without caller authorization. The attacker minted arbitrary collateral, deposited it into the vault, and borrowed unbacked ShezUSD."
-  },
+  "summary": "A WBTC collateral input token exposed mint(address,uint256) without caller authorization. The attacker minted arbitrary collateral, deposited it into the vault, and borrowed unbacked ShezUSD.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -97,20 +94,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity"
-      ],
       "chainId": 1,
       "transactionHash": "0x871ce0518bef66595ad5885a07d5699cbc71bffa7f8be732fc2565d087cb78ad"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-09/Shezmu_exp.sol"
@@ -118,42 +107,22 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xd212440fa9dcf76f2fd951e9fe95ec6668ed854f05a8419ee85faef6db7a20d8"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/@shezmuteam/shezmu-incident-response-a-journey-to-duat-d9cbaa08298b"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://www.web3isgoinggreat.com/single/shezmu-hack"
     },
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T20:05:00Z",
       "note": "Reviewed the live Ethereum transactions, receipts, call trace, target creation transaction, pre-exploit runtime and hash, deployed bytecode, independent exploit reproduction, project post-mortem, and reported loss. The previous anchor was a later transaction in the same campaign; 0x871ce0518bef66595ad5885a07d5699cbc71bffa7f8be732fc2565d087cb78ad is the earliest attack transaction identified by Shezmu and calls mint(address,uint256) on 0x641249db01d5c9a04d1a223765ffd15f95167924 before depositing the freely minted collateral. The direct runtime dispatches that public selector into its ERC-20 mint routine without caller authentication. The runtime was created at 20666529:69, contains no proxy delegation, and its pre-exploit hash matches the declaration. The project describes the same target and campaign; the $4.9 million reported amount is retained as gross face value, with negotiated recovery recorded separately."

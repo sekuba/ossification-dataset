@@ -19,10 +19,7 @@
       "0x98250d30aed204e5cbb8fef7f099bc68dbc4b896"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The bot authenticated its swap callback by checking the caller against a CREATE2 address derived from a factory address, token pair and init-code hash all supplied in the call data, so the attacker deployed a contract at a matching derived address and used the callback to move the operator's WETH, USDT and USDC allowances to themselves."
-  },
+  "summary": "The bot authenticated its swap callback by checking the caller against a CREATE2 address derived from a factory address, token pair and init-code hash all supplied in the call data, so the attacker deployed a contract at a matching derived address and used the callback to move the operator's WETH, USDT and USDC allowances to themselves.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,27 +91,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x53334c36502bd022bd332f2aa493862fd8f722138d1989132a46efddcc6b04d4"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/SlowMist_Team/status/1815656653100077532"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-07/MEVbot_0xdd7c_exp.sol"
@@ -122,20 +109,11 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: bot 0xDd7c2987686B21f656F036458C874D154A923685 created 2024-07-21T11:01:23Z by 0x0000000000e715268e0fe41ced1dd101fc696355 (the operator address whose balances were drained), not the attack-tx sender 0x98250d30aed204e5cbb8fef7f099bc68dbc4b896; no EIP-1967 events, 1.86 days old. Loss reported ~18k USD across WETH, USDT and USDC."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x8d06bb6c94ff8dde8b0cc5c7aa4caed6be5df70fbf5de12e9d4cf253d25ce6af"
     }

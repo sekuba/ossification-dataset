@@ -19,10 +19,7 @@
       "0x7373dca267bdc623dfba228696c9d4e8234469f6"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Defrost LSWUSDC vault released the underlying USDC before updating the caller's share accounting, so re-entering the withdrawal from the token callback let one deposit be redeemed repeatedly until the vault's USDC was gone."
-  },
+  "summary": "The Defrost LSWUSDC vault released the underlying USDC before updating the caller's share accounting, so re-entering the withdrawal from the token callback let one deposit be redeemed repeatedly until the vault's USDC was gone.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 43114,
       "transactionHash": "0xc6fb8217e45870a93c25e2098f54f6e3b24674a3083c30664867de474bf0212d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/PeckShieldAlert/status/1606276020276891650"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-12/Defrost_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: LSWUSDC 0xfF152e21C5A511c478ED23D1b89Bb9391bE6de96 created 2022-09-13T02:51:58Z by 0x3cd5854fe3a13707b7882d8290d3cae793a7751a, not the attack-tx sender 0x7373dca267bdc623dfba228696c9d4e8234469f6; no EIP-1967 events, 101.4 days old. Summing the ERC-20 Transfer logs of the exploit receipt gives a net +173,637.63 USDC to the attack contract 0x792e8f3727cad6e00c58d478798f0907c4cec340, which matches the ~$170k figure in the DeFiHackLabs 2022 index; USDC taken at 1:1."
     }
   ],

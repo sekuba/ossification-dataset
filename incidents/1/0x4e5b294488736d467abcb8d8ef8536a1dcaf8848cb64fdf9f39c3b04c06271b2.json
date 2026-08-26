@@ -20,10 +20,7 @@
       "0x52522d35725836d48e12e64731fa170bcd9423bf"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The retired Ethereum Dolomite exchange contract exposes callFunction(), which performs an arbitrary external call on behalf of the contract. Its only protection is a noEntry reentrancy flag that the caller can clear by entering through the unguarded SoloMargin operate path, after which anyone can make the contract call transferFrom on any token. The attacker used it to pull USDC, WETH and DAI out of every wallet that still held a stale approval to the contract."
-  },
+  "summary": "The retired Ethereum Dolomite exchange contract exposes callFunction(), which performs an arbitrary external call on behalf of the contract. Its only protection is a noEntry reentrancy flag that the caller can clear by entering through the unguarded SoloMargin operate path, after which anyone can make the contract call transferFrom on any token. The attacker used it to pull USDC, WETH and DAI out of every wallet that still held a stale approval to the contract.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -158,38 +155,22 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x4e5b294488736d467abcb8d8ef8536a1dcaf8848cb64fdf9f39c3b04c06271b2"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "url": "https://medium.com/dolomite-official/legacy-smart-contract-vulnerability-post-mortem-analysis-931d7b555269"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://cointelegraph.com/news/old-dolomite-exchange-contract-suffers-1-8-million-loss-from-approval-exploit"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x0143882f373b0d1ad113da2b335b781fde01d1464e86da5a7dbfa8cd824d234b",
@@ -208,19 +189,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x556f0cb498a156eaffb8fc96ee5d0c654a590b1e8ceab8bdd4186b672bc32900"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1710950987/ethereum:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2,ethereum:0x6b175474e89094c44da98b954eedeac495271d0f,ethereum:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       "observedAt": 1787643473
@@ -228,13 +202,6 @@
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:55:00Z",
       "note": "The attacker EOA sent 27 transactions in total, of which eleven call the exchange contract directly; the anchor is the first of those and the earliest defect-executing transaction. The contract is not upgradeable: its runtime code hash is identical at the deployment block 10243378 and at block 19477008 and its EIP-1967 implementation slot is zero, so the exploited code is 1378.3 days old, deployed by the Dolomite deployer 0x52256ef863a713ef349ae6e97a7e8f35785145de, which is unrelated to the attacker. Loss is the netting of ERC-20 transfers across all eleven exploit transactions; every token that moves nets to zero across the whole set except USDC, WETH and DAI, and the attacker helper contract receives all of it. Because the drained value sat in individual wallets under stale approvals, it is stolen third-party value rather than protocol treasury, which the loss note states."

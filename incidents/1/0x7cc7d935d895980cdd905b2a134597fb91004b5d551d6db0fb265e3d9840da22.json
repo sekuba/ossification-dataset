@@ -20,10 +20,7 @@
       "0xc5ac25cfc2b8284e84ca47dad21cf1319f732c11"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "xSNX.mint(uint256 minRate) derived the fund's SNX unit value from the caller's own swap execution rate (weiPerOneSnx = ethContributed * 1e18 / snxContributed, where snxContributed is whatever kyberNetworkProxy.swapEtherToToken returned for a caller-supplied minRate) and fed it to TradeAccounting.calculateIssueTokenPrice, so a flash-loan-skewed SNX/ETH market collapsed the computed NAV per token and 0.125 ETH minted 1,282,360,456.05 xSNXa against a 7,567,827.98 xSNXa supply; no deviation check against the Synthetix oracle rate was applied. In the same transaction xBNT.mint(address[] path, uint256 minReturn) forwarded an arbitrary caller-supplied Bancor path to convertByPath and treated the returned amount as incrementalBnt without requiring path[path.length-1] == address(bnt), so four 0.03 ETH conversions ending in the SPD token 0x1dea979ae76f26071870f824088da78979eb91c8 were credited as BNT and minted 3,908,930,748.753742907112776888 xBNTa, half of which was sold through Bancor for 781,673.47 BNT inside the same transaction and half kept."
-  },
+  "summary": "xSNX.mint(uint256 minRate) derived the fund's SNX unit value from the caller's own swap execution rate (weiPerOneSnx = ethContributed * 1e18 / snxContributed, where snxContributed is whatever kyberNetworkProxy.swapEtherToToken returned for a caller-supplied minRate) and fed it to TradeAccounting.calculateIssueTokenPrice, so a flash-loan-skewed SNX/ETH market collapsed the computed NAV per token and 0.125 ETH minted 1,282,360,456.05 xSNXa against a 7,567,827.98 xSNXa supply; no deviation check against the Synthetix oracle rate was applied. In the same transaction xBNT.mint(address[] path, uint256 minReturn) forwarded an arbitrary caller-supplied Bancor path to convertByPath and treated the returned amount as incrementalBnt without requiring path[path.length-1] == address(bnt), so four 0.03 ETH conversions ending in the SPD token 0x1dea979ae76f26071870f824088da78979eb91c8 were credited as BNT and minted 3,908,930,748.753742907112776888 xBNTa, half of which was sold through Bancor for 781,673.47 BNT inside the same transaction and half kept.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -245,25 +242,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x7cc7d935d895980cdd905b2a134597fb91004b5d551d6db0fb265e3d9840da22"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T13:41:01Z",
       "note": "Reviewed the exploit receipt (status 1, 248 logs, block 12419918 index 0, timestamp 1620827026), the full 2,713-line call trace, both proxy creations, both implementation deployments, the proxy implementation-slot history, the Etherscan-verified sources of xSNXProxy/xSNX/xBNTProxy/xBNT, and every attacker liquidation transaction. The anchor is the earliest defect-executing success of the campaign: the attacker EOA 0x07e02088d68229300ae503395c6536f09179dc3e sent only one earlier transaction, the creation of exploit contract 0xc5ac25cfc2b8284e84ca47dad21cf1319f732c11 at block 12419856. Both xToken modules were drained inside this one transaction, so it is one incident with two targets. xSNXa: the callTracer shows 26 DELEGATECALL frames from proxy 0x2367012ab9c3da91290f71590d5ce217721eefe4 to 0x04bef870de607519c91d16a23434ad5745f62a63; the proxy stores its implementation in the custom slot keccak256(\"xsnx.implementationPosition\") = 0x9f43fe7f4c655e385b198003e595b6958d4fa1901d8e425e54e1fda4a402dc52, which reads 0x04bef870... at the creation block 10971007, at 121 evenly spaced samples up to block 12419917, and today. Only proxyAdmin 0x38138586aedb29b436eab16105b09c317f5a79dd may propose and only cosigners 0xe5dcc182d0cf9c26fbc66187258876a1fbd3d40e / 0x4dbe024eaa8a75a2b1dd3a3a0acc943ee60cb62e may confirm an implementation change, all three are EOAs at the exploit block, and none of the 1,106 direct transactions to the proxy before the exploit carries the confirmImplementation(address) selector 0x8c01c3f7 or the proposeNewImplementation(address) selector 0x47757fb6, so the constructor write is the complete code history. The implementation runtime hashes to 0x74f809b71e48296fd738600de179d899618a76182a56b2764c2657f491888201 both at its own deployment block 10970937 and at block 12419917. In the trace the attacker skews SNX/ETH on Uniswap and SushiSwap, syncs pair 0x43ae24960e5534731fc831386c07755a2dc33d47, then calls xSNXa.mint(0) with 0.125 ETH; calculateTokensToMintWithEth(1097942811393295183064239, 124750000000000000, 774893147715179451091, 7567827980868346761778498, false) returns 1282360456053635664073574493 wei of xSNXa, i.e. 1.28 billion tokens against a 7.57 million supply. xBNTa: 9 DELEGATECALL frames from proxy 0x39f8e6c7877478de0604fe693c6080511bc0a6da to 0x104499cee754463990393989c046d84e3b1d96e9. eth_getLogs over the whole proxy lifetime (12285460 to 12419918) returns exactly two Upgraded(address) events, block 12316631 selecting 0xc2e48cae71da01ae0112fedcd6e8a9e5ed521e44 and block 12324316 log index 68 selecting 0x104499cee754463990393989c046d84e3b1d96e9; the EIP-1967 slot reads 0x104499ce... at block 12419917 and the runtime hashes to 0xab30554478560ff7bc82e9ff38f3e4546ec6104f56a9977ee6374921eba911fd at both block 12324316 and block 12419917. Four xBNTa mints of 0.03 ETH each use the Bancor path [ETH, 0xb1cd6e4153b2a390cf00a6556b0fc1458c4a5533, BNT, 0xb2f40825d32b658d39e4f73bb34d33ba628e8b76, 0x1dea979ae76f26071870f824088da78979eb91c8]; the xBNTa contract's net token gain in the transaction is 3,420,117.264017 SPD and zero BNT, confirming the missing path[path.length-1] == bnt check; Transfer-from-zero logs total 3,908,930,748.753742907112776888 newly minted xBNTa, of which exactly 1,954,465,374.376871453556388444 reached the attacker EOA and the remainder was converted to BNT in the same transaction. Loss reconstruction from receipts, not from blog totals: the prestate diff shows xSNXAdmin 0x7cd5e2d0056a7a7f09cbb86e540ef4f6dccc97dd going from 415.643497 ETH to 0 and the attacker EOA gaining 2,422.004613114626938018 ETH, with a further 5 ETH sent to block miner 0x5a0b54d5dc17e0aadc383d2db43b0a0d3e029c4c out of the same extracted balance; Transfer logs give the EOA exactly 407,752.021689978181093846 SNX, 781,673.469511189097273740 BNT and 1,954,465,374.376871453556388444 xBNTa. Liquidation was reconstructed transaction by transaction: BNT sold for 1,479.022638776856410914 ETH, SNX sold in ten 1inch trades for 1,948.698205540616982034 ETH, xBNTa converted on Bancor on 2021-05-20 (block 12470953) for only 5.365103413152759515 ETH. At the DefiLlama ETH price of 4,309.796191971819 USD (and 2,716.7182297961044 USD for the 2021-05-20 leg) this totals 25,247,248.96 USD, consistent with but slightly above the widely reported 24.5 million because the incident minute sits at the 2021 ETH price peak. The flash-loaned 61,833.227224473099385337 WETH was repaid in the same transaction and is excluded."
@@ -271,59 +255,36 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xe0c8f01c159c95bd3493cbd9be33756c1285902ff034a507548d1a9ca2fa1aca"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x406d35d7523f8d1b0b910fac1d7938a8f73d7ef7b589827e37dd6a4203bafd4a"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x4a03a4ca5a7fb50f08981258c300a101e1673ed54b02aae9a64c1cb6705b25d5"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x835222d63695953433ebd47f7e4b6da5a64b2ec59bb43141aa185e70745c9ec1"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x0a0c577a67b4ccea3cfb860dd7d1a9e3ee0ac2b6773d83c586993ae6eeaaa44e"
     },
     {
       "id": "source-8",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x50b070157ed8cc87c393a3adbeaec31d379e55effb489e7a1a08ca9c6d5164ec",
@@ -343,9 +304,6 @@
     {
       "id": "source-9",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1620827026/coingecko:ethereum",
       "observedAt": 1787663821
@@ -353,9 +311,6 @@
     {
       "id": "source-10",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1621509403/coingecko:ethereum",
       "observedAt": 1787663821
@@ -363,20 +318,11 @@
     {
       "id": "source-11",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/xtoken/initial-report-on-xbnta-xsnxa-exploit-d6e784387f8e"
     },
     {
       "id": "source-12",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.theblock.co/news/regulation/2021-05-12-defi-protocol-xtoken-exploit-attack-104667"
     }
   ],

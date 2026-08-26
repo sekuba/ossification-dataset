@@ -19,10 +19,7 @@
       "0x69810917928b80636178b1bb011c746efe61770d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ShidoLock lockTokens/claimTokens migration releases SHIDO based on attacker-supplied locked LP without validation."
-  },
+  "summary": "ShidoLock lockTokens/claimTokens migration releases SHIDO based on attacker-supplied locked LP without validation.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x72f8dd2bcfe2c9fbf0d933678170417802ac8a0d8995ff9a56bfbabe3aa712d6"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-06/SHIDO_exp.sol"

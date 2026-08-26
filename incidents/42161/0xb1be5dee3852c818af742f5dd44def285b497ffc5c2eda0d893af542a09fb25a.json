@@ -21,10 +21,7 @@
       "0x404888f2396127061c46fc07bd0fcb91faacf439"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "OracleTWAP is Rodeo's price feed for unshETH, but it does not compute a time-weighted average. latestAnswer() returns the unweighted mean of four stored slots, and update() fills one slot per call with a single instantaneous sample of OracleUniswapV2Eth.latestAnswer(), which is the spot reserve ratio of the thin Camelot unshETH/WETH pair 0x29fc01f04032c76ca40f353c7df685f4444c15ed times the Chainlink ETH/USD answer. No price accumulator, deviation bound, outlier rejection or same-block guard exists anywhere in the contract, and update() is rate-limited to one call per 30 minutes, so the sample instants are public and predictable. Rodeo's keeper 0x3b1f14068fa2af4b08b578e80834bc031a52363d called update() on a fixed clock, and the attacker sandwiched three consecutive samples with a swap into and out of the pair, lifting slots 1 to 3 from 2,639.236641922531347490 to 4,973.350465837606916071, 4,994.765044571862817590 and 4,269.731359394042641877 USD. At the anchor block latestAnswer() therefore returned 4,219.270877931510930757 USD while the contract's own currentPrice() read 2,642.426353532527916618. Every guard that should have stopped the leveraged open reads that same number: StrategyHelper.swap derives its slippage floor as convert(ast0, ast1, amt) * (10000 - slp) / 10000, so an inflated unshETH price lowers the minimum unshETH the swap must return, and InvestorActor's health check values the resulting position with the same feed. The violated invariant is that a collateral price used to authorise borrowing must not be settable by the borrower's own trades; no value of any parameter this deployed contract exposes restores it, because the only settable state is the exec keeper set and the sampling source is fixed in the constructor with no setter."
-  },
+  "summary": "OracleTWAP is Rodeo's price feed for unshETH, but it does not compute a time-weighted average. latestAnswer() returns the unweighted mean of four stored slots, and update() fills one slot per call with a single instantaneous sample of OracleUniswapV2Eth.latestAnswer(), which is the spot reserve ratio of the thin Camelot unshETH/WETH pair 0x29fc01f04032c76ca40f353c7df685f4444c15ed times the Chainlink ETH/USD answer. No price accumulator, deviation bound, outlier rejection or same-block guard exists anywhere in the contract, and update() is rate-limited to one call per 30 minutes, so the sample instants are public and predictable. Rodeo's keeper 0x3b1f14068fa2af4b08b578e80834bc031a52363d called update() on a fixed clock, and the attacker sandwiched three consecutive samples with a swap into and out of the pair, lifting slots 1 to 3 from 2,639.236641922531347490 to 4,973.350465837606916071, 4,994.765044571862817590 and 4,269.731359394042641877 USD. At the anchor block latestAnswer() therefore returned 4,219.270877931510930757 USD while the contract's own currentPrice() read 2,642.426353532527916618. Every guard that should have stopped the leveraged open reads that same number: StrategyHelper.swap derives its slippage floor as convert(ast0, ast1, amt) * (10000 - slp) / 10000, so an inflated unshETH price lowers the minimum unshETH the swap must return, and InvestorActor's health check values the resulting position with the same feed. The violated invariant is that a collateral price used to authorise borrowing must not be settable by the borrower's own trades; no value of any parameter this deployed contract exposes restores it, because the only settable state is the exec keeper set and the sampling source is fixed in the constructor with no setter.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -121,25 +118,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHash": "0xb1be5dee3852c818af742f5dd44def285b497ffc5c2eda0d893af542a09fb25a"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T00:00:00Z",
       "note": "Campaign reconstruction from the attacker EOA 0x2f3788f2396127061c46fc07bd0fcb91faace328's full 45-transaction Arbitrum history. Only four transactions touch Rodeo code, all of them calls to the exploit contract 0xe9544ee39821f72c4fc87a5588522230e340aa54 with selector 0xb706d096: 0xb1be5dee... at block 110043453 index 3 timestamp 1689061525, 0x98f1e234... at 110045546 index 2, 0xdbcb3082... at 110047873 index 1 and 0x3942760f... at 110047988 index 2, each receipt status 0x1. I traced all twenty non-trivial campaign transactions with callTracer and checked each for Pool 0x0032f5e1520a66c6e572e96a11fbf54aea26f9be, Investor 0x8accf43dd31dfcd4919cc7d65912a475bfa60369, InvestorActor 0x6ff76f4794e4a6122734a11d680dbb351533ae95, StrategyHelper 0x72f7101371201cefd43af026eef1403652f115ee, StrategyLong 0x9e058177a854336d962d5ae576e9a46cfd8374d7 and OracleTWAP 0xf3721d8a2c051643e06bf2646762522fa66100da; the earlier 0x30deecc4 / 0x7b37c42b / 0x3520aec6 transactions are pure Camelot pump-and-dump legs and reach none of them, so 0xb1be5dee is the earliest successful defect-executing transaction. Defect, from the verified OracleTWAP source (solc 0.8.17): latestAnswer() is 'require(block.timestamp < lastTimestamp + 60 minutes); return (prices[0]+prices[1]+prices[2]+prices[3])/4' and update() is 'require(block.timestamp > lastTimestamp + 30 minutes); lastIndex=(lastIndex+1)%4; prices[lastIndex]=currentPrice()', where currentPrice() is a single call to oracle.latestAnswer(). Storage slot 0 of the deployed instance holds 0x2d9985e57591def5ef939542e28169c8ea5d05a2, verified as OracleUniswapV2Eth, whose latestAnswer() is 'pair.getReserves()' turned into a ratio and multiplied by a Chainlink ETH/USD answer, i.e. an instantaneous AMM spot read. Manipulation reproduced from the Updated(int256) logs on 0xf3721d8a: samples at 04:30:36 and 05:01:00 UTC are 2,641.13 and 2,639.24, then 05:45:36 gives 4,973.35, 06:30:36 gives 4,994.77 and 07:01:02 gives 4,269.73, and each of those three sits between an attacker pump transaction (110014595, 110025246, 110032565) and the matching dump (110014925, 110025556, 110032863) 60 to 90 seconds later. Archive eth_call at block 110043452 confirms prices() = [2639.236641922531347490, 4973.350465837606916071, 4994.765044571862817590, 4269.731359394042641877], latestAnswer() = 4219.270877931510930757 and currentPrice() = 2642.426353532527916618, a 1.60x inflation. The anchor's 269-frame trace shows the path: exploit contract -> Investor.earn (0x754e8bdf) -> InvestorActor (0x20f11719) -> Pool.borrow (0xc5ebeaec) -> InvestorActorStrategyProxy -> StrategyLong.mint (0x94d008ef) -> StrategyHelper (0xd5bcb9b5), which STATICCALLs OracleTWAP decimals (0x313ce567) and latestAnswer (0x50d25bcd) and then swaps USDC through Camelot pairs 0x84652bb2539513baf36e225c930fdd8eaa63ce27 and 0x29fc01f04032c76ca40f353c7df685f4444c15ed; InvestorActor then re-reads the same oracle through StrategyLong.rate (0xe7ee6ad6) for the health check. OracleTWAP is reached only by STATICCALL, never DELEGATECALL, so it is a direct target. Boundary test: the deployed instance exposes no price parameter at all. 'oracle' is written once in the constructor and has no setter, updateInterval is a constant, the ring size 4 is hardcoded, and file() only toggles the exec keeper set, so there is no parameter value at which this bytecode is correct. Rodeo's own remediation confirms it: at block 111804653 StrategyHelper.setOracle repointed unshETH from 0xf3721d8a to 0xa670543cdb3abb5a2830834bca2022fb7edc4f2d, a contract named OracleZero whose latestAnswer() returns 0, i.e. the asset was delisted rather than the oracle reconfigured. Code history: OracleTWAP was created by top-level CREATE (to = null) from Rodeo deployer 0x20de070f1887f82fce2bdcf5d6d9874091e6fae9 in 0x33522eba43e86e4b2a66a8913fedfda51432a3d1465a6afa78e59886d3bee6df at block 107468469 index 1, timestamp 1688390911, receipt status 0x1; eth_getCode is empty at block 107468468 and its 2,044-byte runtime hashes to 0x66a5adc219f145270e45e4a8d84e5f3535b21ba8ac87adee8112c0663fef4756 at blocks 108000000, 110043452 and head, with no DELEGATECALL, CREATE, CREATE2 or SELFDESTRUCT opcode outside PUSH data. StrategyHelper registered it as the unshETH oracle in the single SetOracle(unshETH, 0xf3721d8a...) log at block 107478435, 9,966 blocks after deployment, and the only later SetOracle for unshETH is the post-incident switch at block 111804653. Code age 1689061525 - 1688390911 = 670,614 s (7.76 days). Loss: see loss.notes; the Pool's USDC balance and getTotalBorrow() were read at blocks 110043452, 110043453, 110045546, 110047873, 110047988 and 110048300 and the attacker's native-ETH ledger was closed to within 0.0033 ETH of gas. Ledger scope: the research ledger carries two rows for 2023-07-11 Rodeo Finance, one with no transaction and a 1,500,000 USD estimate and one with this transaction and 888,000 USD. They are the same campaign: a single attacker EOA, a single exploit contract, four transactions inside 21 minutes against one Pool, so this record answers both and no loss is duplicated."
@@ -147,19 +131,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0x33522eba43e86e4b2a66a8913fedfda51432a3d1465a6afa78e59886d3bee6df"
     },
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1689061525/coingecko:ethereum",
       "observedAt": 1787663821
@@ -167,10 +144,6 @@
     {
       "id": "source-5",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-07/RodeoFinance_exp.sol"
@@ -178,18 +151,11 @@
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/@Rodeo_Finance/rodeo-post-mortem-overview-f35635c14101"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHashes": [
         "0xb1be5dee3852c818af742f5dd44def285b497ffc5c2eda0d893af542a09fb25a",
@@ -204,10 +170,6 @@
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://immunebytes.com/blog/rodeo-finance-hack-analysis-report-july-11-2023/"
     }
   ],

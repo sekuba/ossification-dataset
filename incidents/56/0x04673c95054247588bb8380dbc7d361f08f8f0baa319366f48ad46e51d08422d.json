@@ -19,10 +19,7 @@
       "0xcfc591db031b760961fe8943a183741ed7cd1f82"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The HackDao token's _transfer() burns/redistributes tokens out of the liquidity pair's own balance without calling sync(), so the attacker repeatedly skim()ed the resulting surplus and swapped it for the pair's WBNB."
-  },
+  "summary": "The HackDao token's _transfer() burns/redistributes tokens out of the liquidity pair's own balance without calling sync(), so the attacker repeatedly skim()ed the resulting surplus and swapped it for the pair's WBNB.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x04673c95054247588bb8380dbc7d361f08f8f0baa319366f48ad46e51d08422d"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-05/HackDao_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1529084919976034304"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: HackDao 0x94e06c77b02Ade8341489Ab9A23451F68c13eC1C created 2022-02-11T05:05:15Z by 0xbc1424bfa11934ab06a67dcad17b5cd71a01b4a3, unrelated to attack sender 0xcfc591db031b760961fe8943a183741ed7cd1f82; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 175.21 WBNB left the HackDao/WBNB pair to the attack contract 0x24cb6980995aeb7d5a9204e04b17dcd1e99a4694. Loss converted: 175.2083 WBNB x $325.71 at incidentTimestamp 1653374630 (DefiLlama coingecko:binancecoin) = $57,067."
     }
   ],

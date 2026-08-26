@@ -19,10 +19,7 @@
       "0xbef24b94c205999ea17d2ae4941ce849c9114bfd"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "SATX's transfer logic leaves surplus SATX in the SATX/WBNB pair above its reserves, which the attacker repeatedly harvested with skim() and sync() before withdrawing the pair's WBNB."
-  },
+  "summary": "SATX's transfer logic leaves surplus SATX in the SATX/WBNB pair above its reserves, which the attacker repeatedly harvested with skim() and sync() before withdrawing the pair's WBNB.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x7e02ee7242a672fb84458d12198fae4122d7029ba64f3673e7800d811a8de93f"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/SATX_exp.sol"
@@ -113,11 +103,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xFd80a436dA2F4f4C42a5dBFA397064CfEB7D9508 created 2024-01-24T14:38:05Z by 0x256db6a4f6f8b5310ad7d31bfbf629f9df406c0f, which is not the attack-tx sender 0xbef24b94c205999ea17d2ae4941ce849c9114bfd; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). The PoC header quotes the loss as ~999M SATX; measured from the exploit transaction the attacker nets 49.3396 WBNB, roughly USD 28K at April 2024 prices. 49.34 WBNB x $526.703478/BNB at the incident timestamp 1713283735 (DefiLlama coingecko:binancecoin) = $25,987."
     }
   ],

@@ -23,10 +23,7 @@
       "0x304a554a310c7e546dfe434669c62820b7d83490"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "TheDAO.splitDAO(uint256,address) moved the caller's proportional ether to the child DAO with createTokenProxy.value(fundsToBeMoved) and then called withdrawRewardFor(msg.sender) before zeroing balances[msg.sender], totalSupply and paidOut[msg.sender]. withdrawRewardFor forwards nearly all remaining gas through ManagedAccount.payOut(address,uint256), which performs a value-bearing call to the token holder, so the attacker's fallback re-entered splitDAO while its own DAO-token balance was still intact and fundsToBeMoved was recomputed from the same unburned balance on every recursion. The violated invariant is that a split must pay out a token holder's share at most once per token lot; the deployed code performed the external interaction before the state update that enforces it."
-  },
+  "summary": "TheDAO.splitDAO(uint256,address) moved the caller's proportional ether to the child DAO with createTokenProxy.value(fundsToBeMoved) and then called withdrawRewardFor(msg.sender) before zeroing balances[msg.sender], totalSupply and paidOut[msg.sender]. withdrawRewardFor forwards nearly all remaining gas through ManagedAccount.payOut(address,uint256), which performs a value-bearing call to the token holder, so the attacker's fallback re-entered splitDAO while its own DAO-token balance was still intact and fundsToBeMoved was recomputed from the same unburned balance on every recursion. The violated invariant is that a split must pay out a token holder's share at most once per token lot; the deployed code performed the external interaction before the state update that enforces it.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -124,25 +121,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x0ec3f2488a93839524add10ea229e773f6bc891b4eb4794c3337d4495263790b"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T00:00:00Z",
       "note": "Anchor: 0x0ec3f2488a93839524add10ea229e773f6bc891b4eb4794c3337d4495263790b, block 1718497 index 0, timestamp 1466134488 (2016-06-17T03:34:48Z), sender 0x969837498944ae1dc0dcac2d0c65634c88729b2d to attack contract 0xc0ee9db1a9e07ca63e4ff0d5fb6f86bf68d47b89. Pre-Byzantium receipt has no status field and 31 logs; the callTracer trace has 81 frames and no error. The trace shows the defect directly: 0xc0ee9db1... calls TheDAO 0xbb9bc244d798123fde783fcc1c72d3bb8c189413 splitDAO(uint256,address) 0x82661dc4, TheDAO createNewDAO via 0x4a574510c7014e4ae985403536074abe582adfc8 creating child DAO 0x304a554a310c7e546dfe434669c62820b7d83490, then createTokenProxy(address) 0xbaac5300 with 258.0565647603817 ETH, then rewardAccount accumulatedInput() 0xd2cc718f twice and ManagedAccount.payOut(address,uint256) 0x0221038a on 0xd2e16a20dd7b1ae54fb0312209784478d069c7b0, whose 2.2190537131e-08 ETH call back into 0xc0ee9db1... re-enters splitDAO; nine createTokenProxy payments of 258.0565647603817 ETH each execute before gas runs out, and the child DAO's balance at block 1718497 is exactly 2,322.509082843435582024 ETH. Earliest-successful check, done independently: I paged Etherscan txlistinternal for TheDAO from block 0 to 1718496 (23,646 unique internal rows) and for the reward account 0xd2e16a20... over the same range; no transaction before the anchor produced more than one outgoing ether transfer from either contract, and the anchor is the first transaction in which TheDAO paid the same recipient more than once (nine times). The two earlier splitDAO attempts from the attacker, 0xd3d4483662185863cde4326ccf5205204adbcda33468587e8153de3fb83a9a37 (block 1718413) and 0xe32189414c58bf52fe580189463d904537fcd68c95e5766e2fd52749212fb9ca (block 1718426), plus 0xcc034684feadc2f4a3fc99d947b844683b53c1c10cc672140acceea0daa2b733 (block 1718415) from the second attacker, all failed. The second attacker chain, EOA 0xf35e2cc8e6523d683ed44870f5b7cc785051a77d through contract 0xf835a0247b0063c04ef22006ebe57c5f11977cc4, first succeeded at block 1718499, after the anchor. Target: TheDAO is a direct, immutable 2016 deployment with no proxy or delegatecall dispatch. Created by top-level CREATE from 0x793ea9692ada1900fbd0b80fffec6e431fe8b391 in 0xe9ebfecc2fa10100db51a4408d18193b3ac504584b51a4e55bdef1318f0a30f9 at block 1428757 index 0, timestamp 1461980578; the receipt's contractAddress is the target. The 10,838-byte runtime hashes to 0x6a5d24750f78441e56fec050dc52fe8e911976485b7472faac7464a176a67caa at blocks 1428757, 1428758, 1500000 and 1718496, and both prestateTracer on the anchor and eth_getProof at block 1718496 return the same hash. Code age 1466134488 - 1461980578 = 4,153,910 s (48.08 days). Etherscan's verified source (ContractName DAO, solc v0.3.1-2016-04-12-3ad5e82) and DAO.sol at repository tag v1.0 (commit 982e3c242ee31dfed4c04db79ea9751ac3e98efb, 2016-04-29, one day before deployment) both show splitDAO calling withdrawRewardFor(msg.sender) before 'totalSupply -= balances[msg.sender]; balances[msg.sender] = 0;'. Loss: I enumerated every internal transfer into the child DAO 0x304a554a310c7e546dfe434669c62820b7d83490 by paging Etherscan txlistinternal to exhaustion. 14,112 transfers from TheDAO across 488 successful transactions in blocks 1718497-1720245 total 3,641,694.241898506992612617 ETH, and the child DAO's balance at block 1720685 is exactly 3,641,694.241898506992612617 ETH (a later unrelated 1,000 ETH deposit at block 1848152 and 714.285714285714285714 ETH before block 1850000 are excluded). The 488 transactions split evenly between the two attacker EOAs, 244 each, all with selector 0x625e847d except the anchor and 0xecbdaf337c91c3b4ece2bfbd5fd1dee159dbe0bfbe528222c6e4f8e6149532a7, which use 0xc4463c80. TheDAO's balance fell from 11,599,353.240235775461586204 ETH at block 1718496 to 7,929,780.451475795897256723 ETH at block 1720685; the total outflow over that window, 3,669,572.788759979564329481 ETH, matches that balance delta to the wei, and the 27,878.546861472571716864 ETH remainder is nine other recipients over 16 transfers with never more than one transfer per recipient per transaction, i.e. ordinary splits, and is excluded. The attacker held 258.056141471 DAO tokens at block 1718496 against a totalSupply of 11,599,318.102767995456781865, so their honest entitlement was about 258 ETH. Valued at the DefiLlama 2016-06-17T00:00:00Z point of 15.397397817568129 USD/ETH the drain is 56,072,614.97 USD; DefiLlama has no intraday 2016 data, and the next daily point, 2016-06-18T00:00:00Z, is 11.197136666677007 USD. The DAO hard fork at block 1920000 reversed the theft offchain: the child DAO reads zero and WithdrawDAO 0xbf4ed7b27f1d666546e30d74d50d173d20bca754 holds 12,001,961.845205763407115004 ETH at block 1920001. Per METHODOLOGY that recovery does not reduce gross victim depletion."
@@ -150,19 +134,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xe9ebfecc2fa10100db51a4408d18193b3ac504584b51a4e55bdef1318f0a30f9"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x0ec3f2488a93839524add10ea229e773f6bc891b4eb4794c3337d4495263790b",
@@ -658,9 +635,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1466134488/coingecko:ethereum",
       "observedAt": 1787663821
@@ -668,10 +642,6 @@
     {
       "id": "source-6",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/blockchainsllc/DAO",
       "commit": "982e3c242ee31dfed4c04db79ea9751ac3e98efb",
       "path": "DAO.sol"
@@ -679,27 +649,16 @@
     {
       "id": "source-7",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.ethereum.org/2016/06/17/critical-update-re-dao-vulnerability"
     },
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://hackingdistributed.com/2016/06/18/analysis-of-the-dao-exploit/"
     },
     {
       "id": "source-9",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://eips.ethereum.org/EIPS/eip-779"
     }
   ],

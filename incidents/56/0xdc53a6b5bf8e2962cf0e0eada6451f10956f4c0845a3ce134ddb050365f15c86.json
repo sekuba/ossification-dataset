@@ -19,10 +19,7 @@
       "0x9cc3270de4a3948449c1a73eabff5d0275f60785"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MBC's transfer path lets a caller reduce the liquidity pair's own token balance without sync(), and the same pattern in ZZSH, so the attacker skewed both reserves and swapped the imbalance out for USDT."
-  },
+  "summary": "MBC's transfer path lets a caller reduce the liquidity pair's own token balance without sync(), and the same pattern in ZZSH, so the attacker skewed both reserves and swapped the imbalance out for USDT.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xdc53a6b5bf8e2962cf0e0eada6451f10956f4c0845a3ce134ddb050365f15c86"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-11/MBC_ZZSH_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/CertiKAlert/status/1597639717096460288"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: MBC 0x4E87880A72f6896E7e0a635A5838fFc89b13bd17 created 2022-07-30T14:14:32Z by 0x5c1c48821d3e0d5d2f05081e1a6507f2f9e8d51c, unrelated to attack sender 0x9cc3270de4a3948449c1a73eabff5d0275f60785; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: the attacker netted 5,904.37 USDT while 8,910.12 USDT left MBC and 1,525.55 USDT left ZZSH in the exploit transaction."
     }
   ],

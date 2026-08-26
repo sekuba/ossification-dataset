@@ -19,10 +19,7 @@
       "0xfedc2487ed4bb740a268c565dacdd39c17be7ebd"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The SDO reward pool credited deposits and computed pending rewards from the amount passed in rather than the amount actually received, and SDO burns a fee on every transfer, so a deposit/withdraw/harvest loop kept minting rewards the pool could not back."
-  },
+  "summary": "The SDO reward pool credited deposits and computed pending rewards from the amount passed in rather than the amount actually received, and SDO burns a fee on every transfer, so a deposit/withdraw/harvest loop kept minting rewards the pool could not back.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 137,
       "transactionHash": "0x55dad44a7ed31d1637e70879af66e02290d39aea54554f8411e6ec19c03a074b"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2021-06/SafeDollar_exp.sol"
@@ -113,11 +103,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: the PoC carries no transaction hash, so the exploit tx was recovered by querying eth_getLogs on the reward pool 0x17684f4d5385FAc79e75CeafC93f22D90066eD5C across the PoC's fork block window (16225170-16225176), which yields exactly one transaction, 0x55dad44a...074b at block 16225172. The pool was created 2021-06-11T07:08:52Z by 0x82d733c32bb3b760ca50b83b75642b668e9b2ebd, not the attack-tx sender 0xfedc2487ed4bb740a268c565dacdd39c17be7ebd; no EIP-1967 events, 16.6 days old. Loss $0.2 million per the DeFiHackLabs 2021 index entry for this PoC."
     }
   ],

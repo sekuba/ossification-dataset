@@ -19,10 +19,7 @@
       "0x00bad13fa32e0000e35b8517e19986b93f000034"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "unprotected uniswapV3SwapCallback on a solver contract callable directly to drain tokens"
-  },
+  "summary": "unprotected uniswapV3SwapCallback on a solver contract callable directly to drain tokens",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x2fc9f2fd393db2273abb9b0451f9a4830aa2ebd5490d453f1a06a8e9e5edc4f9"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-11/CoW_exp.sol"
@@ -111,18 +101,11 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "code-history"
-      ],
       "note": "deployment-basis recheck: GPv2Settlement is not a proxy - its only delegatecall site is StorageAccessible.simulateDelegatecallInternal, a simulation helper reachable only by calling the contract itself, and callTracer shows the exploit tx makes no DELEGATECALL from the settlement contract at all. Its runtime is byte-identical at the creation block 12593265 and the incident block 21135438, and no EIP-1967 slot is set. Deployment is exact; 1248.0 days."
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xf49f90aa5a268c40001d1227b76bb4dd8247f18361fcad9fffd4a7a44f1320d3"
     }

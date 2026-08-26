@@ -19,10 +19,7 @@
       "0xdfab184bc668f16c1cb949228068588106924569"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "GoodFundManager.collectInterest accepted duplicated staking-contract entries and double-counted them to over-claim COMP rewards routed through Compound."
-  },
+  "summary": "GoodFundManager.collectInterest accepted duplicated staking-contract entries and double-counted them to over-claim COMP rewards routed through Compound.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -119,23 +116,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x1106418384414ed56cd7cbb9fedc66a02d39b663d580abc618f2d387348354ab"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-12/GoodCompound_exp.sol"
@@ -143,13 +129,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:26:34Z",
       "note": "Reviewed the exploit receipt and call trace, proxy creation trace, exploit-time bytecode, all Upgraded logs from deployment through the incident, and the commit-pinned reproduction. The duplicated array entries reach collectInterest through proxy 0x0c6c80d2061afa35e160f3799411d83bdeea0a5a, which delegates to 0x4a37a8d7cdb43d89b4dbd7ecfaeaf9bd39e24929. Exactly three pre-incident Upgraded events exist; the last is log 22 of transaction 0xe710b2...5dce and selects that artifact. The beneficiary's exact receipt-level COMP increase is 250.631203709042906285 after subtracting its 7.4 COMP input."
@@ -157,20 +136,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x18e0a5bf500f92dd3ef0894c9ad3ff13856b3cff80f6592e2e2bcc66374c8d50"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xe710b21c2424aefbefb08971d5c45bae65ee7d2740a69da62634db95eb325dce"
     }

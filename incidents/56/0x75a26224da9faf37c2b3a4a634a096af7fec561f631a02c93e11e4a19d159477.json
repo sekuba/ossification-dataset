@@ -19,10 +19,7 @@
       "0xb9bdc2537c6f4b587a5c81a67e7e3a4e6ddda189"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "batchTransferLockToken(Airdrop[]) has no owner check, so the attacker allocated itself 5.08e26 tokens and sold them into the pair."
-  },
+  "summary": "batchTransferLockToken(Airdrop[]) has no owner check, so the attacker allocated itself 5.08e26 tokens and sold them into the pair.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x75a26224da9faf37c2b3a4a634a096af7fec561f631a02c93e11e4a19d159477"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://explorer.phalcon.xyz/tx/bsc/0x75a26224da9faf37c2b3a4a634a096af7fec561f631a02c93e11e4a19d159477"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-11/ShibaToken_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x13b1f2e227ca6f8e08ac80368fd637f5084f10a5 created 2023-11-06T15:06:40Z by 0x8db1ee0bd5411d0f6f1f0ef309c6eb32dcebe2e9, which is not the attack-tx sender 0xb9bdc2537c6f4b587a5c81a67e7e3a4e6ddda189; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

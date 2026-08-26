@@ -21,10 +21,7 @@
       "0x8618314270528e245fbbb6fba54e245bb61a8d47"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "On every sell the NGP token’s _update hook moves treasury and reward fees out of the PancakeSwap pair itself, with super._update(mainPair, treasuryAddress, ...) and super._update(mainPair, rewardPoolAddress, ...), and then calls IUniswapV2Pair(mainPair).sync(). Each sell therefore permanently shrinks the pair’s NGP reserve and raises the NGP price. The attacker repeated small sells behind a flash loan until the price was inflated, then sold a large NGP position and took almost the whole USDT reserve."
-  },
+  "summary": "On every sell the NGP token\u2019s _update hook moves treasury and reward fees out of the PancakeSwap pair itself, with super._update(mainPair, treasuryAddress, ...) and super._update(mainPair, rewardPoolAddress, ...), and then calls IUniswapV2Pair(mainPair).sync(). Each sell therefore permanently shrinks the pair\u2019s NGP reserve and raises the NGP price. The attacker repeated small sells behind a flash loan until the price was inflated, then sold a large NGP position and took almost the whole USDT reserve.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -60,7 +57,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The NGP/USDT PancakeSwap pair 0x20cab54946d070de7cc7228b62f213fccf3ffb1e holds 2212887.451145128834721055 USDT at block 61515894 and 9.156136012843449018 USDT at block 61515895; the difference is the loss to the pair’s liquidity providers, who are left holding NGP. The whole loss is in the one exploit transaction. Of that outflow, 1896191.720695873504350698 USDT reaches 0x8618314270528e245fbbb6fba54e245bb61a8d47 and the remainder goes to the token’s own fee recipients. DefiLlama prices USDT at exactly 1 at the incident timestamp. Nothing was recovered."
+    "notes": "The NGP/USDT PancakeSwap pair 0x20cab54946d070de7cc7228b62f213fccf3ffb1e holds 2212887.451145128834721055 USDT at block 61515894 and 9.156136012843449018 USDT at block 61515895; the difference is the loss to the pair\u2019s liquidity providers, who are left holding NGP. The whole loss is in the one exploit transaction. Of that outflow, 1896191.720695873504350698 USDT reaches 0x8618314270528e245fbbb6fba54e245bb61a8d47 and the remainder goes to the token\u2019s own fee recipients. DefiLlama prices USDT at exactly 1 at the incident timestamp. Nothing was recovered."
   },
   "targets": [
     {
@@ -119,22 +116,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xc2066e0dff1a8a042057387d7356ad7ced76ab90904baa1e0b5ecbc2434df8e1"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-09/NGP_exp.sol"
@@ -142,19 +129,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x4ded148c1e3f589574a8359d4f1861e122100fd8cfad377c87e976e68d88a463"
     },
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1758135745/bsc:0x55d398326f99059ff775485246999027b3197955",
       "observedAt": 1787642892
@@ -162,16 +142,9 @@
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:40:00Z",
-      "note": "The token source is verified on BscScan as contract \"Token\"; its _update override contains, on the sell branch, super._update(mainPair, treasuryAddress, treasuryAmount), super._update(mainPair, rewardPoolAddress, rewardAmount) and then IUniswapV2Pair(mainPair).sync(), which is the defect: fees are taken out of the pair’s own balance and the reserve is resynchronised, so each sell lowers the NGP reserve and raises the price. The attacker EOA sent one exploit transaction against NGP; the surrounding transactions in its history are contract creations and unrelated activity. The token is not upgradeable: its runtime code hash is identical at the deployment block 60396646 and at block 61515894 and its EIP-1967 implementation slot is zero, so the exploited code is 9.72 days old. Its deployer 0x6a65e4558ecb7b3dcb4781ce65e5eb65d4eb0cf9 is not an attacker address. Loss is the NGP/USDT pair’s USDT balance delta across the exploit block, which matches the sum of the transfer netting to the beneficiary and fee recipients."
+      "note": "The token source is verified on BscScan as contract \"Token\"; its _update override contains, on the sell branch, super._update(mainPair, treasuryAddress, treasuryAmount), super._update(mainPair, rewardPoolAddress, rewardAmount) and then IUniswapV2Pair(mainPair).sync(), which is the defect: fees are taken out of the pair\u2019s own balance and the reserve is resynchronised, so each sell lowers the NGP reserve and raises the price. The attacker EOA sent one exploit transaction against NGP; the surrounding transactions in its history are contract creations and unrelated activity. The token is not upgradeable: its runtime code hash is identical at the deployment block 60396646 and at block 61515894 and its EIP-1967 implementation slot is zero, so the exploited code is 9.72 days old. Its deployer 0x6a65e4558ecb7b3dcb4781ce65e5eb65d4eb0cf9 is not an attacker address. Loss is the NGP/USDT pair\u2019s USDT balance delta across the exploit block, which matches the sum of the transfer netting to the beneficiary and fee recipients."
     }
   ],
   "verification": {

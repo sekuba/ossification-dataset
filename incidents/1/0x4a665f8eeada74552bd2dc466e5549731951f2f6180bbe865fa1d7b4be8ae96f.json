@@ -19,10 +19,7 @@
       "0xf7105f68085294b6a45dd7231a6987b070e1abaf"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ArbitrageV5.burn() redeemed depegged USC at a hard-coded $1 value without the peg check used by mint(), letting the attacker buy discounted USC and withdraw full-value collateral."
-  },
+  "summary": "ArbitrageV5.burn() redeemed depegged USC at a hard-coded $1 value without the peg check used by mint(), letting the attacker buy discounted USC and withdraw full-value collateral.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -89,27 +86,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x4a665f8eeada74552bd2dc466e5549731951f2f6180bbe865fa1d7b4be8ae96f"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://hacked.slowmist.io/?c=ETH&page=1"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xf689ec1d1364528956280a44473659e1b063a0471d0ea8f16933edd2c1fb69cb"
     }

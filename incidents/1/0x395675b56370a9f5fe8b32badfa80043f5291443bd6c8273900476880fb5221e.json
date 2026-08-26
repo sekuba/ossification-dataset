@@ -19,10 +19,7 @@
       "0x368a6558255bccac517da5106647d8182c571b23"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "DVM.init() is a plain external function with no initializer guard and no access control. Inside a flashLoan callback the attacker called it again to repoint _BASE_TOKEN_ and _QUOTE_TOKEN_ at worthless tokens of their own, so the pool’s repayment check measured the fake balances and passed while the real wCRES and USDT had already left."
-  },
+  "summary": "DVM.init() is a plain external function with no initializer guard and no access control. Inside a flashLoan callback the attacker called it again to repoint _BASE_TOKEN_ and _QUOTE_TOKEN_ at worthless tokens of their own, so the pool’s repayment check measured the fake balances and passed while the real wCRES and USDT had already left.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -118,7 +115,7 @@
         "tier": "reviewed",
         "curveEligible": true,
         "limitations": [
-          "Aged from the clone rather than the shared implementation it copies. Not yet re-examined under the case-by-case rule in METHODOLOGY.md; the implementation is older and may be the better basis if the clone adds nothing bearing on the defect."
+          "Aged from the clone rather than the shared implementation it copies; not yet re-examined under the clone rule in METHODOLOGY.md."
         ],
         "reviewSourceIds": [
           "source-4"
@@ -130,44 +127,23 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x395675b56370a9f5fe8b32badfa80043f5291443bd6c8273900476880fb5221e"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.dodoex.io/dodo-pool-incident-postmortem-with-a-little-help-from-our-friends-327e66872d42"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x4ef041835374bd81488e945246ff260b0d0872849935ea0c7bafe2085c857ba2"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T13:00:00Z",
       "note": "The verified DVM source has init() as a plain external function with no guard, and the exploit receipt shows this pool paying out its real reserves against the attacker’s fake tokens. The pool is a minimal proxy created by the DODO factory 0x5e5a7b76462e4bdf83aa98795644281bdba80b88 in block 11932747, its 45-byte runtime pins the master and cannot be repointed, so the clone creation is the age basis and the exploited code is 10.4 days old. The attacker EOA sent 102 transactions in the campaign, which spanned several DODO pools; this record is scoped to the wCRES-USDT pool that appears in the anchor trace and its loss is the netting of that pool’s own token deltas."

@@ -21,10 +21,7 @@
       "0x899266243fd2b9a0426b58bd6d534c6b813ef27a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "XBridge.listToken() has no caller restriction, so anyone could register a listing for a token the bridge already custodies and pair it with a corresponding token and chain of their own choosing. The attacker listed the bridge’s own STC, SRLTY and Mazi holdings against listings they controlled and then called withdrawTokens() to move the real deposits out."
-  },
+  "summary": "XBridge.listToken() has no caller restriction, so anyone could register a listing for a token the bridge already custodies and pair it with a corresponding token and chain of their own choosing. The attacker listed the bridge\u2019s own STC, SRLTY and Mazi holdings against listings they controlled and then called withdrawTokens() to move the real deposits out.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -100,7 +97,7 @@
       }
     ],
     "confidence": "medium",
-    "notes": "Components are the bridge proxy’s net ERC-20 deltas across the six campaign transactions the attacker sent to its exploit contract between blocks 19723701 and 19723925. All three tokens are thin, so the DefiLlama unit prices, observed 98 to 167 seconds before the anchor, are a mark-to-market figure rather than a realisable one, which is why confidence is medium; contemporaneous reporting put the loss near USD 1.6 million. Nothing was recovered."
+    "notes": "Components are the bridge proxy\u2019s net ERC-20 deltas across the six campaign transactions the attacker sent to its exploit contract between blocks 19723701 and 19723925. All three tokens are thin, so the DefiLlama unit prices, observed 98 to 167 seconds before the anchor, are a mark-to-market figure rather than a realisable one, which is why confidence is medium; contemporaneous reporting put the loss near USD 1.6 million. Nothing was recovered."
   },
   "targets": [
     {
@@ -131,7 +128,7 @@
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "The fifth and last Upgraded event the proxy emitted before the exploit, log 248 of block 19720066, selected 0x354cca2f55dde182d36fe34d673430e226a3cb8c. The anchor transaction’s trace shows the proxy delegate-calling exactly that implementation for listToken, 12 hours 13 minutes later."
+        "description": "The fifth and last Upgraded event the proxy emitted before the exploit, log 248 of block 19720066, selected 0x354cca2f55dde182d36fe34d673430e226a3cb8c. The anchor transaction\u2019s trace shows the proxy delegate-calling exactly that implementation for listToken, 12 hours 13 minutes later."
       },
       "codeAgeSeconds": 43992,
       "failureModeId": "failure:xbridge-permissionless-listtoken",
@@ -162,30 +159,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://twitter.com/CyversAlerts/status/1783045506471432610"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/XBridge_exp.sol"
@@ -193,28 +177,18 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xcccd8f8e99f050149c9b9d6881858b6126b2093af440b9054471d7b02293f843"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x3e388b6728e192148b0b1485779f9c908c559b98280f07d52d02a783148b1dad"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x6956a153b5f595b769f2ddd9d941d32ca9adf61e721da57f5a528dca50ea64f1",
@@ -228,9 +202,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1713943115/ethereum:0x19ae49b9f38dd836317363839a5f6bfbfa7e319a,ethereum:0x142a774e8b52550e88e196cedd7a5835acb646d0,ethereum:0x5b8650cd999b23cf39ab12e3213fbc8709c7f5cb",
       "observedAt": 1787644100
@@ -238,16 +209,9 @@
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T10:50:00Z",
-      "note": "The attacker EOA created two contracts and then sent six transactions to the exploit contract; the anchor is the first of them and its trace is a bare successful listToken through the bridge proxy, which is the defect executing with no value moving yet. The remaining five carry the withdrawTokens legs, so the loss is measured across all six. The proxy is an OwnedUpgradeabilityProxy that does not use the EIP-1967 slot; it emitted exactly five Upgraded events between its creation block 18391304 and the exploit, the last at block 19720066 installing 0x354cca2f55dde182d36fe34d673430e226a3cb8c, and the anchor trace shows the proxy delegate-calling that implementation, which fixes both the artifact and the 12.2-hour age. Its creator 0xfe6fb9ded2651fd325512657d34911d2fb5d646b is not the attacker. The v1 record’s deployment block was the last upgrade block rather than the proxy creation block; that is corrected here."
+      "note": "The attacker EOA created two contracts and then sent six transactions to the exploit contract; the anchor is the first of them and its trace is a bare successful listToken through the bridge proxy, which is the defect executing with no value moving yet. The remaining five carry the withdrawTokens legs, so the loss is measured across all six. The proxy is an OwnedUpgradeabilityProxy that does not use the EIP-1967 slot; it emitted exactly five Upgraded events between its creation block 18391304 and the exploit, the last at block 19720066 installing 0x354cca2f55dde182d36fe34d673430e226a3cb8c, and the anchor trace shows the proxy delegate-calling that implementation, which fixes both the artifact and the 12.2-hour age. Its creator 0xfe6fb9ded2651fd325512657d34911d2fb5d646b is not the attacker. The v1 record\u2019s deployment block was the last upgrade block rather than the proxy creation block; that is corrected here."
     }
   ],
   "verification": {

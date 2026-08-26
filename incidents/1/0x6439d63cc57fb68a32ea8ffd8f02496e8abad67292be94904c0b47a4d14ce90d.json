@@ -19,10 +19,7 @@
       "0xdc8076c21365a93aac0850b67e4ca5fdec5fab9b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Sorra staking contract computed the reward for a deposit(amount, tier) position from the raw deposited SOR amount without scaling by the tier or the pool's remaining reward budget, so a large tier-0 deposit claimed after the 14-day lock paid out far more SOR than the pool could back."
-  },
+  "summary": "The Sorra staking contract computed the reward for a deposit(amount, tier) position from the raw deposited SOR amount without scaling by the tier or the pool's remaining reward budget, so a large tier-0 deposit claimed after the 14-day lock paid out far more SOR than the pool could back.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,27 +91,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x6439d63cc57fb68a32ea8ffd8f02496e8abad67292be94904c0b47a4d14ce90d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/1875582709512188394"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-01/sorraStaking.sol"
@@ -122,20 +109,11 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: sorStaking 0x5d16b8Ba2a9a4ECA6126635a6FFbF05b52727d50 created 2024-12-19T18:18:47Z by 0x216847420b9566474d81241e055987fe55924adf, not the attack-tx sender 0xdc8076c21365a93aac0850b67e4ca5fdec5fab9b; no EIP-1967 events, 15.7 days old. The PoC's setup transaction 0x72a252277e30ea6a37d2dc9905c280f3bc389b87f72b81a59aa8f50baebd8eaa is the deposit; the claim recorded here is the drain. Reported loss 4.8 + 2.4 + 0.8 = 8 ETH across the claim transactions; 8 ETH x $3,598.98 at the incident timestamp (DefiLlama) = $28,792."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xc604f8c2a9d58f51f6651509f2e1326f4773bb6fb4067b09554c2ab2c455b33b"
     }

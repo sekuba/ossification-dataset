@@ -21,10 +21,7 @@
       "0xd717b85b5da61a56afeb57173c7336084243cdf0"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The 2022 NFT Trader swap contract settles the creator's ERC-721 leg before the counterparty leg and has no reentrancy guard, so the attacker re-entered from onERC721Received to repoint the open swap at an address that still held an approval and had that address's Bored Ape or Mutant Ape pulled on settlement. Same defect shape as the 2021 BatchSwap contract, but distinct deployed code with its own age."
-  },
+  "summary": "The 2022 NFT Trader swap contract settles the creator's ERC-721 leg before the counterparty leg and has no reentrancy guard, so the attacker re-entered from onERC721Received to repoint the open swap at an address that still held an approval and had that address's Bored Ape or Mutant Ape pulled on settlement. Same defect shape as the 2021 BatchSwap contract, but distinct deployed code with its own age.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -140,40 +137,23 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x906d06acd236c48a8c8708d7dc50d968b8faad7c7c393e7c01549adf4922b180"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xf18443f23421dea1f3f131d06a5b72598df1136f0e188195d7d9d1bc493e9aef"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://cointelegraph.com/news/nft-trader-stolen-bayc-mayc-returned-bounty-payment"
     },
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1702725683/coingecko:ethereum",
       "observedAt": 1787641120
@@ -181,13 +161,6 @@
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T07:25:00Z",
       "note": "Separated from the NFT Trader BatchSwap record because a second, independently deployed swap contract with its own code hash and its own age was drained in the same campaign, and the verifier ties every target to the anchor transaction's trace. Enumerating every transaction that emitted a log from 0x13d8faf4a690f5ae52e2d2c52938d1167057b9af between blocks 18790000 and 18810000 and keeping only ERC-721 transfers whose sender is neither the transaction sender nor its entry contract yields 35 distinct victim tokens, 26 BAYC and 9 MAYC, and identifies 0x906d06acd2 at block 18798295 as the earliest transaction that pulls a victim token; the two earlier transactions from the same sender at blocks 18796599 and 18798010 only move the attacker's own Uniswap V3 position. The contract is not upgradeable: its runtime code hash is 0xd91249c514889751ab1239777b7309b888b07817671551ed41db8cdbd3becf7a at both the deployment block 14543914 and block 18797419, and its EIP-1967 implementation slot is zero, so age runs from the 2022-04-08 deployment by 0x4bc2f1e9bf517cd944e8ffe0047c80c5b574d532, 617.1 days. Collection medians used for valuation come from single-item marketplace fills over blocks 18790000-18804000, restricted to transactions carrying a Seaport or Blur fill event and measured as the seller-side payment, excluding every campaign address. An earlier revision of this record used a looser sampler that counted any transfer accompanied by a WETH movement and returned a BAYC median of 21.801 ETH; that sample included non-sale transfers and understated the floor, and the corrected medians are BAYC 26.300 ETH and MAYC 5.190 ETH."

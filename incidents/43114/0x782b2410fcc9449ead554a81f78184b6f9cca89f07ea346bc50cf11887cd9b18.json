@@ -20,10 +20,7 @@
       "0xa2741ab491026af1fedf76beb0f74376d8fdd67f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ElasticSwap Exchange tracks internal x*y=k reserves separately from live ERC-20 balances to account for elastic-token decay. removeLiquidity calculates both token payouts from the live balances, but reduces the internal base reserve pro rata while subtracting the live-balance-derived quote payout from the internal quote reserve with a zero clamp. Quote tokens transferred directly to the exchange therefore inflate a liquidity withdrawal without ever increasing its internal quote reserve. On Avalanche, the attacker matched the pool balances to mint nearly half the liquidity supply, donated 393,769.263016 USDC.e directly, and withdrew; the internal quote reserve fell from 196,885.131508 USDC.e to 0.5 USDC.e. A 50 USDC.e swap against the damaged curve then returned 41,119.385246751458510447 TIC."
-  },
+  "summary": "ElasticSwap Exchange tracks internal x*y=k reserves separately from live ERC-20 balances to account for elastic-token decay. removeLiquidity calculates both token payouts from the live balances, but reduces the internal base reserve pro rata while subtracting the live-balance-derived quote payout from the internal quote reserve with a zero clamp. Quote tokens transferred directly to the exchange therefore inflate a liquidity withdrawal without ever increasing its internal quote reserve. On Avalanche, the attacker matched the pool balances to mint nearly half the liquidity supply, donated 393,769.263016 USDC.e directly, and withdrew; the internal quote reserve fell from 196,885.131508 USDC.e to 0.5 USDC.e. A 50 USDC.e swap against the damaged curve then returned 41,119.385246751458510447 TIC.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -141,29 +138,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 43114,
       "transactionHash": "0x782b2410fcc9449ead554a81f78184b6f9cca89f07ea346bc50cf11887cd9b18"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://quillaudits.medium.com/decoding-elastic-swaps-850k-exploit-quillaudits-9ceb7fcd8d1a"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-12/ElasticSwap_exp.sol"
@@ -171,19 +156,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 43114,
       "transactionHash": "0x21f5b88161c4ad47ec1c0cba286eb1eaebc25bddc26ee31d6d3c3b41ef1e8210"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "Avalanche TIC/USDC.e onchain pool reserves",
       "url": "https://snowtrace.io/address/0x4cf9dc05c715812fead782dc98de0168029e05c8",
       "observedAt": 1787652068
@@ -191,13 +169,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:01:08Z",
       "note": "Avalanche execution and loss were re-derived independently rather than copied from the Ethereum record. Transaction 0x782b2410 is successful at block 23563710 index 1 and timestamp 1670898185; sender 0x3bdf01ed calls attacker helper 0xa2741ab4, whose trace reaches the TIC/USDC.e Exchange 0x4ae1da57. Verified Exchange source and execution reproduce the same failure identity as Ethereum: removeLiquidity computes its quote payout from the live quote-token balance, then subtracts that payout from the lower internal quote reserve with a zero clamp, while the internal base reserve is reduced only pro rata. The Avalanche trace reads initial internal balances of 41532.645399984141510552 TIC / 196885.131508 USDC.e, adds 41532.645399985141510552 TIC plus 196885.131508 USDC.e after a 1e-9 TIC priming add, transfers a further 393769.263016 USDC.e directly to the exchange, and removes 4412803431946595 ELP. The withdrawal returns 41532.645399985141510552 TIC and 393769.763016 USDC.e, leaving internal balances at 41532.645399985141510552 TIC / 0.5 USDC.e; swapQuoteTokenForBaseToken(50 USDC.e, 1, ...) then returns 41119.385246751458510447 TIC. Across the entire transaction, exchange balances and receipt Transfer logs both establish net loss of exactly 41119.385246748693436063 TIC and 195078.151742 USDC.e. TIC price evidence is the separate constant-product TIC/USDC.e pool 0x4cf9dc05 at block 23563709: token0/token1 are TIC/USDC.e and getReserves returns 51112.399053176577020730 TIC / 242733.525540 USDC.e, or 4.749014525564799 USDC.e per TIC. This single-pool spot is transparent but has liquidation-slippage limitations, so loss confidence is medium. Target history was re-derived on Avalanche: creation transaction 0x21f5b881 at block 13156135 index 12 contains one CREATE from ExchangeFactory 0x8b3d780d to the target; the target has no code in block 13156134 and the same 11365-byte runtime hash 0x882f35b4aef687a2c0d2c52b72e96b3f9174538b0f85a737c368a7789c24f37c at deployment and block 23563709. EIP-1967 implementation and beacon slots are zero. The trace's five DELEGATECALLs go only to hardcoded MathLib 0xe3c08c95, whose runtime hash 0xb1f05f46b2061d2cd5a62d70d233d4bf60110a6abe62a0fd7057f30d9178ff59 also matches at both anchor blocks. The exchange is therefore direct and 21467946 seconds old. Its exact runtime hash differs from the Ethereum exchange because the compiler embeds instance-specific immutable addresses, but both records intentionally share the reviewed failureModeId because the defect-bearing source logic is the same."

@@ -19,10 +19,7 @@
       "0x5abb91b9c01a5ed3ae762d32b236595b459d5777"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "VerusProof did not reject a cross-chain-export output carrying the supplemental flag. A crafted output that Verus treated as inactive supplemental data was therefore parsed on Ethereum as an active export whose attacker-chosen transfer hash authorized unbacked ETH, tBTC, and USDC payouts."
-  },
+  "summary": "VerusProof did not reject a cross-chain-export output carrying the supplemental flag. A crafted output that Verus treated as inactive supplemental data was therefore parsed on Ethereum as an active export whose attacker-chosen transfer hash authorized unbacked ETH, tBTC, and USDC payouts.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -170,24 +167,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x6990f01720f57fc515d0e976a0c4f8157e0a9529194c4c15d190e98d087eb321"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-05/VerusBridge_exp.sol"
@@ -195,11 +180,6 @@
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "root-cause"
-      ],
       "repository": "https://github.com/monkins1010/Verus-Ethereum-contracts",
       "commit": "3c88fd6bfa97b087a85491ac14d976ef5a941885",
       "path": "contracts/MMR/VerusProof.sol"
@@ -207,24 +187,11 @@
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://x.com/VerusCoin/status/2056829444124213652"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T19:05:29Z",
       "note": "Reviewed the exploit receipt and call trace, exact native/token payouts, Delegator creation, VerusProof creation and historical runtime, the contracts[] storage layout, every successful upgrade-selector transaction sent to the Delegator from the VerusProof installation through the pre-exploit block, each upgrade transaction's state diff, the commit-pinned reproduction, Verus's incident explanation, and the VerusProof patch. The anchor calls Delegator.submitImports and delegates first to SubmitImports, then to VerusProof 0x5e8060ecbf415aa25f12c1d67fde832bd87dcfa1, where the crafted supplemental output passes checkExportAndTransfers/proveImports. The May 22 patch adds an explicit FLAG_SUPPLEMENTAL rejection in VerusProof. The 19,397-byte VerusProof runtime was created in transaction 0x39828f2c49653f8281d24c0e05d119b1353a749aada1f5455f79ce6d14880f9c and hashes to 0x42928a45ef4c9b3b03550c972a98d1e49cb944d676f0f548e83c9920e8fb8dee from creation through the incident. Transaction 0x1de7078bb3ed60fe4d252f07af1a6d0003d1fc50772dbc86c7c05e4a83f91cb6 installed it in contracts[2]. The six later successful upgrade-selector calls changed other module slots; prestateTracer diffs show none wrote contracts[2], which still selected this artifact immediately before exploitation."
@@ -232,29 +199,18 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x1de7078bb3ed60fe4d252f07af1a6d0003d1fc50772dbc86c7c05e4a83f91cb6"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x7bd34b417fd69a0df81dffb4b29c318ce1d3a337ef86a794f6a7e3b10692a428"
     },
     {
       "id": "source-8",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1779062123/coingecko:ethereum",
       "observedAt": 1787598329
@@ -262,9 +218,6 @@
     {
       "id": "source-9",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1779062123/coingecko:bitcoin",
       "observedAt": 1787598329
@@ -272,10 +225,6 @@
     {
       "id": "source-10",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x39828f2c49653f8281d24c0e05d119b1353a749aada1f5455f79ce6d14880f9c"
     }

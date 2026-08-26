@@ -19,10 +19,7 @@
       "0xc8a65fadf0e0ddaf421f28feab69bf6e2e589963"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "EthCrossChainManager accepted an attacker-selected destination and method string from an authenticated cross-chain message. The string f1121318093 produced the selector of EthCrossChainData.putCurEpochConPubKeyBytes(bytes), allowing the attacker to replace the keeper public key and authorize later withdrawals."
-  },
+  "summary": "EthCrossChainManager accepted an attacker-selected destination and method string from an authenticated cross-chain message. The string f1121318093 produced the selector of EthCrossChainData.putCurEpochConPubKeyBytes(bytes), allowing the attacker to replace the keeper public key and authorize later withdrawals.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -96,34 +93,18 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x0a51dcb1acfd4f44b5198d344f88acd1887fc694c4ff67c8e2bb8be6e9f1ae77"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T14:01:00Z",
       "note": "Reviewed the selected transaction, its call trace and calldata, the deployment transaction, archive-node runtimes, the main campaign inflows on Ethereum, BNB Chain, and Polygon, Poly Network's post-mortem, and Chainalysis reporting. The selected successful transaction calls verifyHeaderAndExecuteTx on EthCrossChainManager 0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270 directly. Its decoded cross-chain payload selects EthCrossChainData 0xcf2afe102057ba5c16f899271045a0a37fcb10f2 and method string f1121318093; the trace shows the manager calling putCurEpochConPubKeyBytes(bytes), replacing the keeper key. The manager was directly deployed at block 10650091:92 by 0xac171e587438ec2bc9a9bc502633d0bfc850d612. Its 19,242-byte runtime hashes to 0x453bdc92fb3b5a86df479506ccd67704b05254ee11e6330fc5e97c6b2070328d both at deployment and immediately before the selected transaction, and disassembly contains no DELEGATECALL, SELFDESTRUCT, CREATE, or CREATE2 opcode. Subsequent bridge withdrawals sent ten material assets to the Ethereum attacker address, five to the BNB Chain attacker address, and USDC.e in two Polygon transactions. The onchain withdrawals and independent reports support the $611 million same-bug campaign total."
@@ -131,18 +112,11 @@
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/poly-network/honour-exploit-and-code-how-we-lost-610m-dollar-and-got-it-back-c4a7d0606267"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://www.chainalysis.com/blog/2022-defi-hacks/"
     }
   ],

@@ -19,10 +19,7 @@
       "0x309d413391e975b553b7b8d19bc11f8a6c2eb889"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Proposal 62 changed the supplier and borrower COMP-index initialization checks from greater-than-or-equal to strict greater-than. Accounts whose market index equalled compInitialIndex remained uninitialized, so a later claim calculated rewards from index zero and transferred vastly excess COMP."
-  },
+  "summary": "Proposal 62 changed the supplier and borrower COMP-index initialization checks from greater-than-or-equal to strict greater-than. Accounts whose market index equalled compInitialIndex remained uninitialized, so a later claim calculated rewards from index zero and transferred vastly excess COMP.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -119,25 +116,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xf4bfef1655f2092cf062c008153a5be66069b2b1fedcacbf4037c1f3cc8a9f45"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:40:45Z",
       "note": "Reviewed the exploit receipt and call trace, exact COMP transfer, Unitroller deployment, verified Unitroller/Comptroller source, Proposal 64 analysis, Proposal 62 execution receipt, all 11 NewImplementation events from deployment through the incident, implementation slot 2, pre-exploit implementation runtime hash, and the incident-time COMP price observation. The anchored claimComp call transferred exactly 91,170.351328585460017120 COMP from Unitroller to 0x309d413391e975b553b7b8d19bc11f8a6c2eb889. At the nearest preceding DefiLlama observation, 1,291 seconds before the claim, COMP was $299.4068016365511, valuing this transaction's transfer at $27,297,023.30. Proposal 62's strict-greater-than initialization checks left accounts at index zero when the market index equalled compInitialIndex, causing later claims to accrue from zero. Proposal 62 transaction 0xc5098f8fb149262d7f26d32c0642e0e8bee5383d9df9c4988070f63a23cb9912 emitted NewImplementation at log 117 and selected 0x374abb8ce19a73f2c4efad642bda76c797f19233. That was the last of 11 pre-incident selection events; storage slot 2 and the exploit trace confirm the same implementation immediately before and during the claim."
@@ -145,37 +129,23 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xc5098f8fb149262d7f26d32c0642e0e8bee5383d9df9c4988070f63a23cb9912"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x248b9a322c868c084e1b3ccb753f182c2f29b7420904ab7a6e2e94c10d02c6ab"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://www.comp.xyz/t/analysis-of-proposal-64/2384"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1632965906/coingecko:compound-governance-token",
       "observedAt": 1787575245
@@ -183,9 +153,6 @@
     {
       "id": "source-7",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://rekt.news/overcompensated"
     }
   ],

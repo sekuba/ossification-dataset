@@ -19,10 +19,7 @@
       "0x67624bfadee937c9281b4f98ce18af1bee01257e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "OFTSand exposed an unrestricted approveAndCall callback whose first-argument check did not constrain the callback target, selector, or authority used by the callee. Calling the LayerZero Endpoint through OFTSand therefore made the Endpoint see the OFT itself as msg.sender and let an unprivileged caller replace the OFT's configuration delegate. This is an executed confused-deputy defect in the direct OFTSand runtime, not a compromised credential or an initially unsafe configured parameter."
-  },
+  "summary": "OFTSand exposed an unrestricted approveAndCall callback whose first-argument check did not constrain the callback target, selector, or authority used by the callee. Calling the LayerZero Endpoint through OFTSand therefore made the Endpoint see the OFT itself as msg.sender and let an unprivileged caller replace the OFT's configuration delegate. This is an executed confused-deputy defect in the direct OFTSand runtime, not a compromised credential or an initially unsafe configured parameter.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -122,31 +119,18 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 8453,
       "transactionHash": "0x149eb0eec5f1c793b094b46889059b510281a7eff3c1597bb262777a5cfaa237"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0xc55651bcf7dc996f8bced152804b12064ee3a0be1cc5d6b37b225860491da39b"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/thesandboxgame/sandbox-smart-contracts",
       "commit": "29aeca619c7b005f74ab59520351f0480cefb685",
       "path": "packages/oft-sand/contracts/sand/ERC20BasicApproveExtension.sol"
@@ -154,9 +138,6 @@
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0xa7d48611455b840cb8c832550bab45ac437d744ebf5ff632dc82d8837c639085",
@@ -179,9 +160,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1787361731/ethereum:0x3845badade8e6dff049820680d1f14bd3903a5d0?searchWidth=6h",
       "observedAt": 1787659536
@@ -189,42 +167,21 @@
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://x.com/TheSandboxGame/status/2091063415649251821"
     },
     {
       "id": "source-7",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://x.com/blockaid_/status/2091016046555582891"
     },
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "url": "https://docs.layerzero.network/v2/developers/evm/oapp/overview"
     },
     {
       "id": "source-9",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T12:05:36Z",
       "note": "Anchor and defect: enumeration of successful calls to Base OFTSand around the takeover makes 0x149eb0eec5f1c793b094b46889059b510281a7eff3c1597bb262777a5cfaa237 the earliest campaign call to approveAndCall. Its calldata names LayerZero Endpoint V2 0x1a44076050125825900e736c501f859c50fe728c as callback target, amount zero, and setDelegate with external caller 0x67624bfadee937c9281b4f98ce18af1bee01257e as the first argument. The successful receipt contains OFTSand Approval(caller, Endpoint, 0) at log 679 followed by Endpoint DelegateSet(OFTSand, caller) at log 680. Verified source confirms approveAndCall checks only that the callback's first ABI argument equals the external caller and then executes an unrestricted target.call; LayerZero's official OApp documentation confirms the delegate controls Endpoint configuration. The parameter check therefore does not preserve the authority boundary: Endpoint authorizes the call as coming from OFTSand. Code history: deployer 0xcba49d154b4bb9a9ad7f5dad396cb9a0a3a62abc directly created OFTSand in block 17735349 transaction 69; archival code is empty one block earlier and the direct, non-proxy runtime has the declared hash at deployment and pre-anchor. Loss: the first 15 Ethereum adapter releases after takeover, from 0xa7d48611455b840cb8c832550bab45ac437d744ebf5ff632dc82d8837c639085 through 0x41a0e4b1d0ad52bc9b2116286eed4d87df1997ccf0e9489616aa9984ab9d25d0, each emit OFTReceived with source EID 30184 and sum exactly 14753431.668978 SAND. As a balance cross-check, the adapter held 14743464.210048718748018388 SAND immediately before the first release, received 10366.335701 SAND in two deposits during the campaign, and held 398.876771718748018388 SAND after the fifteenth release. Later adapter withdrawals use unrelated recipients or source EIDs and are excluded. BNB Chain's separate successful takeover transaction is not included here: the only BNB-origin Ethereum releases isolated were two 1-SAND transfers, and no at-least-$1,000 BNB-side depletion was established."

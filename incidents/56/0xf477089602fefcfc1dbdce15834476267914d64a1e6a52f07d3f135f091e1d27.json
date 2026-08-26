@@ -19,10 +19,7 @@
       "0xc4f82210c2952fcec77efe734ab2d9b14e858469"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "XSIJ exposes a permissionless removePoolAmount() that destroys XSIJ held by the XSIJ/BUSD pair, letting the attacker buy first, shrink the pool and sell back at the inflated price."
-  },
+  "summary": "XSIJ exposes a permissionless removePoolAmount() that destroys XSIJ held by the XSIJ/BUSD pair, letting the attacker buy first, shrink the pool and sell back at the inflated price.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xf477089602fefcfc1dbdce15834476267914d64a1e6a52f07d3f135f091e1d27"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/CertiKAlert/status/1752384801535918264"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-01/XSIJ_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x31bfA137C76561ef848c2af9Ca301b60451CaAC0 created 2024-01-25T12:33:31Z by 0x09168697cb9bdfce7739f46e152451ef8b2ded4b, which is not the attack-tx sender 0xc4f82210c2952fcec77efe734ab2d9b14e858469; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

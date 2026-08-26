@@ -19,10 +19,7 @@
       "0x4645863205b47a0a3344684489e8c446a437d66c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Venus-fork market over-borrow via redeemUnderlying/collateral accounting flaw"
-  },
+  "summary": "Venus-fork market over-borrow via redeemUnderlying/collateral accounting flaw",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x90f374ca33fbd5aaa0d01f5fcf5dee4c7af49a98dc56b47459d8b7ad52ef1e93"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-02/DualPools_exp.sol"
@@ -111,10 +101,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is a Compound Unitroller; comptrollerImplementation is storage slot 2 (named layout via `cast storage`). Exactly one NewImplementation(address,address) fires, at block 25390597 (2023-02-05T01:25:23Z), 246 s after the Unitroller's own creation at block 25390515 (1675560077) - it is the initial wiring of the same deployment session, preceded by the matching NewPendingImplementation pair. Slot 2 is constant at 0x55decf1b592b1b3ff8af3fe801b0780276d222bc from that block to the incident (25-point probe) and callTracer on the exploit tx shows the Unitroller delegatecalling only that address (zero DELEGATECALL opcodes of its own). The 246 s is 0.0008% of the 375-day age, so the measurement is left on the deployment basis."
     }
   ],

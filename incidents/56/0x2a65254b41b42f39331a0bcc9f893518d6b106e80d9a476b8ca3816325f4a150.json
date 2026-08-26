@@ -20,10 +20,7 @@
       "0xb32a53af96f7735d47f4b76c525bd5eb02b42600"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MBU.deposit() converts the deposited amount through the oracle BNB and MBU USD prices without dividing out the 18-decimal price scale, so the minted MBU is 1e18 times the correct figure. A 0.001 WBNB deposit, worth 0.657 USD against the oracle BNB price of 656.92 USD, minted 9731099570720980.659843835099042677 MBU instead of about 0.0098 MBU; 30,000,000 of those were sold straight into the MBU/USDT PancakeSwap pair."
-  },
+  "summary": "MBU.deposit() converts the deposited amount through the oracle BNB and MBU USD prices without dividing out the 18-decimal price scale, so the minted MBU is 1e18 times the correct figure. A 0.001 WBNB deposit, worth 0.657 USD against the oracle BNB price of 656.92 USD, minted 9731099570720980.659843835099042677 MBU instead of about 0.0098 MBU; 30,000,000 of those were sold straight into the MBU/USDT PancakeSwap pair.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -60,7 +57,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The whole loss is in the single exploit transaction. The MBU/USDT PancakeSwap V2 pair 0xb5252fcef718f8629f81f1dfcff869594ad478c6 holds 2159553.516647587844183110 USDT at block 49470429 and 2427.337298644107771311 USDT at block 49470430; the difference is transferred to the attacker EOA by the pair’s swap. The unbacked MBU the attacker still held afterwards is not counted, and the 0.001 WBNB paid in is not netted out. Nothing was recovered."
+    "notes": "The whole loss is in the single exploit transaction. The MBU/USDT PancakeSwap V2 pair 0xb5252fcef718f8629f81f1dfcff869594ad478c6 holds 2159553.516647587844183110 USDT at block 49470429 and 2427.337298644107771311 USDT at block 49470430; the difference is transferred to the attacker EOA by the pair\u2019s swap. The unbacked MBU the attacker still held afterwards is not counted, and the 0.001 WBNB paid in is not netted out. Nothing was recovered."
   },
   "targets": [
     {
@@ -91,7 +88,7 @@
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "The proxy’s only Upgraded event, log 129 of its own ERC1967Proxy creation transaction, selected implementation 0x637d8ce897bb653cb83ba436cdf76bbe158f05b1; the EIP-1967 implementation slot still reads that address at block 49470429."
+        "description": "The proxy\u2019s only Upgraded event, log 129 of its own ERC1967Proxy creation transaction, selected implementation 0x637d8ce897bb653cb83ba436cdf76bbe158f05b1; the EIP-1967 implementation slot still reads that address at block 49470429."
       },
       "codeAgeSeconds": 215397,
       "failureModeId": "failure:mbu-deposit-price-scale-mint-inflation",
@@ -121,22 +118,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x2a65254b41b42f39331a0bcc9f893518d6b106e80d9a476b8ca3816325f4a150"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-05/MBUToken_exp.sol"
@@ -144,26 +131,15 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xfd789afa113bc8167e183013fa20f833e0c65a88cc0364e9a50affcee217d763"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T08:55:00Z",
-      "note": "The anchor is the attacker EOA’s only transaction that touches MBU; its trace wraps 0.001 BNB, approves the MBU proxy, calls deposit(WBNB, 1e15), and the proxy delegate-calls 0x637d8ce897bb653cb83ba436cdf76bbe158f05b1, which reads the oracle prices 656.921601740812 USD per BNB and the MBU/USDT pair reserves and mints 9731099570720980659843835099042677 wei MBU to the attacker contract. Against those same oracle inputs the correct mint is about 9.78e15 wei, so the implementation is short exactly one division by the 18-decimal price scale. The proxy emitted a single Upgraded event, log 129 of its own creation transaction at block 49326835, and its EIP-1967 slot still reads 0x637d8ce8 at block 49470429, so the exploited implementation is 2.49 days old. Its deployer 0x18027ef7cc0e7dce85120f69d0b91b4f4c9e07bf is the MBU deployer, unrelated to the attacker. The implementation is not verified on BscScan, so the defect characterisation rests on the trace arithmetic rather than on source. Loss is the USDT balance delta of the MBU/USDT pair across the exploit block."
+      "note": "The anchor is the attacker EOA\u2019s only transaction that touches MBU; its trace wraps 0.001 BNB, approves the MBU proxy, calls deposit(WBNB, 1e15), and the proxy delegate-calls 0x637d8ce897bb653cb83ba436cdf76bbe158f05b1, which reads the oracle prices 656.921601740812 USD per BNB and the MBU/USDT pair reserves and mints 9731099570720980659843835099042677 wei MBU to the attacker contract. Against those same oracle inputs the correct mint is about 9.78e15 wei, so the implementation is short exactly one division by the 18-decimal price scale. The proxy emitted a single Upgraded event, log 129 of its own creation transaction at block 49326835, and its EIP-1967 slot still reads 0x637d8ce8 at block 49470429, so the exploited implementation is 2.49 days old. Its deployer 0x18027ef7cc0e7dce85120f69d0b91b4f4c9e07bf is the MBU deployer, unrelated to the attacker. The implementation is not verified on BscScan, so the defect characterisation rests on the trace arithmetic rather than on source. Loss is the USDT balance delta of the MBU/USDT pair across the exploit block."
     }
   ],
   "verification": {

@@ -19,10 +19,7 @@
       "0x0d7d9023531ad1a88414e216ee2715f63561808a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BondMakerCollateralizedEth validated only the aggregate number of exception matches when exchanging bond groups, so repeated exception IDs could bypass per-bond multiset integrity and mint unbacked bonds. GeneralizedDotc and DecentralizedOTC then priced permissionlessly registered, attacker-crafted bond structures without validating their backing or economic shape, letting those bonds pull 542,144.628604 USDC from an LP allowance."
-  },
+  "summary": "BondMakerCollateralizedEth validated only the aggregate number of exception matches when exchanging bond groups, so repeated exception IDs could bypass per-bond multiset integrity and mint unbacked bonds. GeneralizedDotc and DecentralizedOTC then priced permissionlessly registered, attacker-crafted bond structures without validating their backing or economic shape, letting those bonds pull 542,144.628604 USDC from an LP allowance.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -324,23 +321,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xb96d572b557a12f5ef193e88cca86123a6ae1b6e98b0eeee265870c85848e0e7"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
       "path": "src/test/2026-07/LienFinance_exp.sol"
@@ -348,13 +334,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T12:04:09Z",
       "note": "Reviewed Ethereum block 25599302 transactions 0 through 4, the successful anchor receipt and complete call trace, the five victim creation transactions, all five pre-exploit runtimes, explorer-verified source, the commit-pinned replay, exact USDC transfers, and published technical analysis. Transactions 0 through 3 only deploy the attacker orchestrator and register crafted bonds/groups; transaction index 4 is the earliest successful transaction that executes exchangeEquivalentBonds' defective exception validation, prices the unbacked output, and realizes the loss. The trace directly calls BondMakerCollateralizedEth deployments 0xda6fc5625e617bb92f5359921d43321cebc6bef0 and 0x843225cf6e663e4454732d6b551a737ac7b47de0, GeneralizedDotc deployments 0x656e5e976d523a427f05b0c212a22a89ccd9ef18 and 0x7db84492cfd27e47c39499d852decc2a01476a75, and DecentralizedOTC 0x0949c77ad52602ac61b42d2de0eeb1b7cc79250f. Their distinct prestate runtime hashes match the declared artifacts. Each direct runtime is unchanged at current state and contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction, so deployment is the complete executable-code history. Source inspection confirms that exchangeEquivalentBonds counts aggregate exception matches instead of preserving exception IDs as a multiset; the OTC pricing routines then trust permissionlessly registered payoff/group structure without proving backing. Receipt USDC transfers from LP 0xa961684a3a654fb2cca8f8991226c0cefc514d80 are exactly 532,070.026484, 74.602120, and 10,000 USDC, totaling 542,144.628604 USDC before the exact final sweep to the attacker."
@@ -362,61 +341,36 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xeb76a1730da7c14ceddd29a0565e500e892be1008f9790ff6170f99118bf7411"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x991c11e55b1e1d8dff7c5ab380ac8dc453e9802c64dac57260437120328cc488"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x30ff9f54f95ba717833385c18bb939e2f06cbcb52bd98c010a57170dc88834a2"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x1b5ce1af97948af0c8e8269a6f514d5f559daa19ad3b438665c7ea647719c36c"
     },
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x1093b6896e13d9e0b41f9aab4a10850fb0176967400f45a763591f9d2a602545"
     },
     {
       "id": "source-9",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.verichains.io/p/lien-finance-hack-analysis"
     }
   ],

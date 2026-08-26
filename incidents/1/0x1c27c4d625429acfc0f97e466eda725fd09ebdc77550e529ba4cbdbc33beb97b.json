@@ -21,10 +21,7 @@
       "0xe04efd87f410e260cf940a3bcb8bc61f33464f2b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BunniHubLogic.withdraw() used imprecise rounding while updating the pool's active balances. Forty-four small withdrawals burned negligible shares but substantially reduced the accounted stablecoin reserves, allowing subsequent swaps and withdrawals to extract more USDC and USDT than the burned shares entitled the attacker to."
-  },
+  "summary": "BunniHubLogic.withdraw() used imprecise rounding while updating the pool's active balances. Forty-four small withdrawals burned negligible shares but substantially reduced the accounted stablecoin reserves, allowing subsequent swaps and withdrawals to extract more USDC and USDT than the burned shares entitled the attacker to.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -138,34 +135,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x1c27c4d625429acfc0f97e466eda725fd09ebdc77550e529ba4cbdbc33beb97b"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "url": "https://blog.verichains.io/p/bunnixyz-vulnerability-exposed-how"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:58:37Z",
       "note": "Reviewed the exploit receipt and call trace, verified BunniHub and BunniHubLogic source, both runtimes at the hub's deployment and immediately before the exploit, and the hub creation trace. The exploit executes BunniHub 0x000000000049c7bcbca294e63567b4d21eb765f1 and makes 44 DELEGATECALLs to the linked BunniHubLogic artifact 0x000000000dbb048f2e744e4b15b5aeef65e09528. The artifact address occurs three times in the immutable hub runtime; both runtime hashes are unchanged across the measured interval. The receipt establishes the exact post-flash-loan proceeds deposited for the attacker: 1,041,353.990710 USDT and 1,332,132.228158 USDC."
@@ -173,20 +153,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x198d1987676a77195f382bf987d1f4060453b559ed7a05ff1d169b786ab9c0c9"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.bunni.xyz/posts/exploit-post-mortem/"
     }
   ],

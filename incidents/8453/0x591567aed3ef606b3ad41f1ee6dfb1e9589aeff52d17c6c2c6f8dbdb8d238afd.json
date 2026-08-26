@@ -19,10 +19,7 @@
       "0xdf4089d9845c87ed8fd109bd724f30339c2d0b7b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Aave-v3-derived pool lets flash-loan fees inflate the cbBTC liquidity index while scaled supply is dust, overvaluing collateral for borrowing."
-  },
+  "summary": "Aave-v3-derived pool lets flash-loan fees inflate the cbBTC liquidity index while scaled supply is dust, overvaluing collateral for borrowing.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0x591567aed3ef606b3ad41f1ee6dfb1e9589aeff52d17c6c2c6f8dbdb8d238afd"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-07/BoJLeverageMarket_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1967 proxy over an Aave-v3-style Pool; its implementation slot holds 0xf441a52fc1898febb78fba81eed3002cbb45d571 at both the creation block 32861311 and the incident block 33136656 with no intermediate write found by binary-searching eth_getStorageAt, and both the proxy and the implementation runtimes are byte-identical at those blocks. The implementation's fourteen DELEGATECALLs are linked-library constants (0x0e905c9fa92006c3c934e6ea15de85c0a8e10683, 0x9c6c8778c84ba0ae9858b0ce63cee62aae6591ee, 0x9eafbc7dcdcef5762ce353df033b70d6ff7ca94f, 0xa059a6c6ed25c221c32a41d7f457dd3b0807c5fa), all deployed by the same deployer minutes earlier and unchanged over the window."
     }
   ],

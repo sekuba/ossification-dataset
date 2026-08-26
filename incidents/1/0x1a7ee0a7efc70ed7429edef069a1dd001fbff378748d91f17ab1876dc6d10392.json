@@ -20,10 +20,7 @@
       "0xc74b72bbf904bac9fac880303922fc76a69f0bb4"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The HopeLend pool is an Aave v3 fork whose liquidity index is computed from the reserve balance without a floor on an empty market. With one wei of hEthWBTC supply outstanding the attacker donated WBTC straight to the hEthWBTC reserve, inflating the index so that the rounding on burn returned far more underlying than had been supplied, and used the resulting collateral to borrow the WETH, USDT and USDC markets out."
-  },
+  "summary": "The HopeLend pool is an Aave v3 fork whose liquidity index is computed from the reserve balance without a floor on an empty market. With one wei of hEthWBTC supply outstanding the attacker donated WBTC straight to the hEthWBTC reserve, inflating the index so that the rounding on burn returned far more underlying than had been supplied, and used the resulting collateral to borrow the WETH, USDT and USDC markets out.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -118,22 +115,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x1a7ee0a7efc70ed7429edef069a1dd001fbff378748d91f17ab1876dc6d10392"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-10/Hopelend_exp.sol"
@@ -141,23 +128,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x79ed6539033537d054fd7977d00e21918495f22ccaae7ca8823541758ff84ee2"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T14:45:00Z",
       "note": "The pool proxy emitted no Upgraded event between its creation block 17861190 and the exploit, and its EIP-1967 slot goes from zero at 17861189 to 0x3a6d9bf8286a4ada77c15ecf82d4c0c0af95be74 at its creation and still reads that at block 18377041, so the deployment is the change that made the exploited implementation active and the code is 72.2 days old. The proxy was created by the Aave-fork configurator factory 0xe94a20ef25d067743b9d965a8d46c1c035489b7d, sent by 0x17002566cc3508dfa3c0fa52fcbca990e42fd510, neither of which is an attacker address. The attacker EOA is a serial exploiter with 429 transactions; this one is its only HopeLend transaction. Loss is the single non-zero net position in the exploit receipt."
@@ -165,9 +141,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1697629739/ethereum:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
       "observedAt": 1787647484

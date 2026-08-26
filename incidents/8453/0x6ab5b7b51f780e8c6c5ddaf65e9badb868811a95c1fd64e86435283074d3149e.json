@@ -21,10 +21,7 @@
       "0x1e03834f759dac9561d366958b00fe000d9e00e3"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The price feed the fork's oracle 0x93d619623abc60a22ee71a15db62eede3ef4dd5a serves for market cSUI is the immutable adapter 0xc112e41c1094ff7fbf9e5dc0d1026103542e7e0c. Its latestAnswer() reads the instantaneous slot0().sqrtPriceX96 of Uniswap-V3-style pool 0x5c45b0f48c326f79b56709d8f63ce2bee7697106 and returns chainlinkEthUsd * 2**192 / sqrtPriceX96**2, reproduced to the unit in the anchor trace: 253253757616 * 2**192 / 2858318274747956646160580417568**2 = 194578070. The runtime contains the slot0 selector and no observe/observations selector, so there is no time-weighted observation, no minimum-liquidity floor, no deviation cap against the previous answer and no staleness bound; the only bound in the code clamps the ratio at 1e16, sixteen orders of magnitude above any plausible uSUI price. One 500 WETH exactInputSingle into the pool inside the same transaction drove sqrtPriceX96 from 2858318274747956646160580417568 to the 1e21 limit, lifting getUnderlyingPrice(cSUI) from 1.9457807e18 to 2.5325375761e37, after which 50 uSUI of collateral supported borrowing every market of the fork to zero. No parameter value makes this code correct: the priced token, the Chainlink ETH/USD wrapper and the pool address are storage configuration, but an unaveraged slot0 read is manipulable under every configuration of them."
-  },
+  "summary": "The price feed the fork's oracle 0x93d619623abc60a22ee71a15db62eede3ef4dd5a serves for market cSUI is the immutable adapter 0xc112e41c1094ff7fbf9e5dc0d1026103542e7e0c. Its latestAnswer() reads the instantaneous slot0().sqrtPriceX96 of Uniswap-V3-style pool 0x5c45b0f48c326f79b56709d8f63ce2bee7697106 and returns chainlinkEthUsd * 2**192 / sqrtPriceX96**2, reproduced to the unit in the anchor trace: 253253757616 * 2**192 / 2858318274747956646160580417568**2 = 194578070. The runtime contains the slot0 selector and no observe/observations selector, so there is no time-weighted observation, no minimum-liquidity floor, no deviation cap against the previous answer and no staleness bound; the only bound in the code clamps the ratio at 1e16, sixteen orders of magnitude above any plausible uSUI price. One 500 WETH exactInputSingle into the pool inside the same transaction drove sqrtPriceX96 from 2858318274747956646160580417568 to the 1e21 limit, lifting getUnderlyingPrice(cSUI) from 1.9457807e18 to 2.5325375761e37, after which 50 uSUI of collateral supported borrowing every market of the fork to zero. No parameter value makes this code correct: the priced token, the Chainlink ETH/USD wrapper and the pool address are storage configuration, but an unaveraged slot0 read is manipulable under every configuration of them.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -386,41 +383,24 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 8453,
       "transactionHash": "0x6ab5b7b51f780e8c6c5ddaf65e9badb868811a95c1fd64e86435283074d3149e"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0xd720d036539fc82524e28fa8446f875217bbacab7aea631914588a2179b308cc"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history",
-        "root-cause"
-      ],
       "chainId": 8453,
       "transactionHash": "0x8976b5cbd4a4b1d368de904fc554e6409ea372c65f7f971599e758bfec8a4b0a"
     },
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1729813473/base:0x4200000000000000000000000000000000000006,base:0xB79DD08EA68A908A97220C76d19A6aA9cBDE4376,base:0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf,base:0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2,base:0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938,base:0xB4fDe59a779991bfB6a52253B51947828b982be3,base:0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55,base:0x2Da56AcB9Ea78330f947bD57C54119Debda7AF71,base:0x532f27101965dd16442E59d40670FaF5eBB142E4,base:0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed,base:0xB1a03EdA10342529bBF8EB700a06C60441fEf25d,base:0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4",
       "observedAt": 1787663821
@@ -428,9 +408,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1729813473/coingecko:wrapped-steth,coingecko:dogwifcoin",
       "observedAt": 1787663821
@@ -438,9 +415,6 @@
     {
       "id": "source-6",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-10/CompoundFork_exploit.sol"
@@ -448,9 +422,6 @@
     {
       "id": "source-7",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 8453,
       "transactionHashes": [
         "0xa53fb283a6684ff8afd482eb9e6022fd33f3614da1ffe9ad9c404f5e243691b0",
@@ -468,13 +439,6 @@
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T00:00:00Z",
       "note": "Boundary test applied to a legacy oracle-manipulation row. Anchor: 0x81d5187c8346073b648f2d44b9e269509513aae2 deploys the attack contract 0x7562846468089cf0e8f7b38ac53406b895284901 with nonce 0 in block 21512037 and calls it with nonce 1 in transaction 0x6ab5b7b5... at block 21512063 index 96, status 1, timestamp 1729813473; that is the earliest successful transaction that executes the defective feed and it contains the entire victim depletion, so the anchor is unchanged from the legacy row. Defect: the oracle 0x93d619... is a plain feed dispatcher - in the trace it reads cToken.symbol(), cToken.underlying(), feed.decimals() and feed.latestAnswer() and rescales, which is correct for any well-formed feed. The defective executed code is the feed itself, 0xc112e41c1094ff7fbf9e5dc0d1026103542e7e0c, whose storage holds only decimals 8 (slot 0), the 1e8 scale (slot 1), the label 'SUI Token' with underlying decimals 18 (slot 2), the priced token 0xb0505e5a... (slot 3), the Chainlink ETH/USD wrapper 0x71041ddd... (slot 4) and the pool 0x5c45b0f4... (slot 5). Its runtime contains the slot0 selector 3850c7bd and neither 883bdbfd (observe) nor 252c09d7 (observations), so it can only read an instantaneous price. I reproduced the formula exactly against two independent readings in the anchor trace: with sqrtPriceX96 = 2858318274747956646160580417568 and Chainlink ETH/USD = 253253757616 the adapter returns 194578070, which is 253253757616 * 2**192 // 2858318274747956646160580417568**2 to the unit; after the attacker's 500 WETH exactInputSingle pins sqrtPriceX96 at the 1e21 price limit the adapter returns 2532537576160000000000000000, i.e. the ETH/USD answer times the code's hardcoded 1e16 ratio clamp, and getUnderlyingPrice(cSUI) jumps from 1945780700000000000 to 25325375761600000000000000000000000000. That clamp is a compiled-in constant, not a settable parameter, and it is sixteen orders of magnitude above any plausible uSUI price. The three settable values - priced token, ETH feed, pool - cannot make an unaveraged slot0 read manipulation-resistant, so the boundary test fails and the row is admitted as a code-age observation, matching the treatment of the Polter Finance pool-balance-ratio adapter. This is not the failure:empty-market-donation-rounding defect: no exchange-rate inflation or share-rounding is involved, the markets were not empty, and the collateral was overvalued by the price feed rather than by a manipulated cToken exchange rate. Identity and history: the adapter was created by 0xa4e5f386a0a90500b5521e0a42224d4a59025b5e in transaction 0xd720d036... at block 21229104 index 81 (1729247555), the same deployer as the oracle; its EIP-1967 implementation slot is zero, it is never delegatecalled, and cast code at block 21229104 and at block 21512062 both hash to 0x0d35e1351328d99d18279e0998de7f6bc043ad3f7eb09188ac8b75e9c1848ed9, giving codeAgeSeconds 1729813473 - 1729247555 = 565918 (6.55 days). The legacy row aged this incident from the FeedSet at 1729264741 instead; configuration is retained as context and the deployment is the basis, which moves the age from 548732 s to 565918 s. Loss: eth_call balances of each market's underlying at blocks 21512062 and 21512063 show all fourteen markets emptied in the anchor transaction, and the attacker-supplied 15 WETH and 50 uSUI are excluded, giving 989451.69 USD; the attacker's own nine disposals plus the WETH unwrap realised 390.168148420397286107 ETH = 988487.10 USD, 0.10 percent lower, which corroborates every mark."

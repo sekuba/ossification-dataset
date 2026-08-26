@@ -19,10 +19,7 @@
       "0xaa761779945dcc5f26064fc6dcb36ffab6ac7610"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "removeLiquidityViaContract forwarded BNB before zeroing lpInfo (CEI violation), letting the attacker re-enter and withdraw one LP position ~25x."
-  },
+  "summary": "removeLiquidityViaContract forwarded BNB before zeroing lpInfo (CEI violation), letting the attacker re-enter and withdraw one LP position ~25x.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xd16a1c3dcd84427b2c7dcccbe1854c1c5bf65900460e1a44a95c1aaaf140c3a5"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-05/JoeAgent_exp.sol"

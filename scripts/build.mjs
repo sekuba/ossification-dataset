@@ -31,7 +31,6 @@ export const COHORT_RULES = {
   curveUsdComparability:
     'the curve is narrower than dataset admission: it requires a concrete loss.usd.amount, not only a lower bound',
   curveInclusion: [
-    'classification.rootCause equals code-bug',
     'incident verification.tier equals reviewed',
     'target verification.tier equals reviewed',
     'target verification.curveEligible equals true',
@@ -44,7 +43,7 @@ export const COHORT_RULES = {
   deduplicationSelectionOrder:
     'for observations on the same chain with complete exploit anchors: blockNumber, transactionIndex, timestamp, incidentId, target id; otherwise: timestamp, chainId, incidentId, target id',
   incidentReference:
-    'observation.incidentId resolves the incident-level classification and loss in incidents.json; loss is intentionally not copied onto each target observation, and an incident that contributes several observations owns one loss, so a loss-weighted curve must aggregate per incidentId rather than sum per observation',
+    'observation.incidentId resolves the incident-level summary and loss in incidents.json, which lists reviewed incidents only; loss is intentionally not copied onto each target observation, and an incident that contributes several observations owns one loss, so a loss-weighted curve must aggregate per incidentId rather than sum per observation',
   ordering: 'ascending codeAgeSeconds, then observationId',
   excludedTargetTiers: ['provisional'],
 }
@@ -124,8 +123,6 @@ function observationDetails(record, target) {
 
 function exclusionReasons(incident, target) {
   const reasons = []
-  if (incident.classification?.rootCause !== 'code-bug')
-    reasons.push(`root-cause:${incident.classification?.rootCause ?? 'missing'}`)
   if (incident.verification?.tier !== 'reviewed')
     reasons.push(`incident-verification-tier:${incident.verification?.tier ?? 'missing'}`)
   if (target.verification?.tier !== 'reviewed')
@@ -356,17 +353,21 @@ export function buildArtifacts(root = ROOT) {
     $schema: '../../schema/release-incidents.schema.json',
     formatVersion: 1,
     schemaVersion: schemaVersions[0],
-    // Loss and classification only. The full records live in incidents/ and are
-    // hashed in the manifest, so copying them here would duplicate the dataset.
-    incidents: records.map(({ incident }) => ({
+    // Reviewed incidents only, and only the fields a curve observation cannot
+    // supply. Provisional records are legacy rows whose loss has not been
+    // checked; they stay in incidents/ for review and are hashed in the
+    // manifest, but publishing their figures beside reviewed ones invites
+    // summing the two together.
+    incidents: records
+      .filter(({ incident }) => incident.verification?.tier === 'reviewed')
+      .map(({ incident }) => ({
       id: incident.id,
       protocol: incident.protocol,
       name: incident.name,
       chainId: incident.incident.chainId,
       exploit: incident.incident.exploit,
-      classification: incident.classification,
+      summary: incident.summary,
       loss: incident.loss,
-      verificationTier: incident.verification.tier,
     })),
   }
   const curve = createCurve(records)

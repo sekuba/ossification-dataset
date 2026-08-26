@@ -19,10 +19,7 @@
       "0x680910cf5fc9969a25fd57e7896a14ff1e55f36b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The attacker combined Compound-v2 empty-market exchange-rate manipulation in oETH with NFTLiquidation's trust in caller-supplied repay and collateral oTokens. Fake oTokens controlled the liquidation calculation and callback, enabling a real self-liquidation for one unit of repayment after the attacker had borrowed the other markets."
-  },
+  "summary": "The attacker combined Compound-v2 empty-market exchange-rate manipulation in oETH with NFTLiquidation's trust in caller-supplied repay and collateral oTokens. Fake oTokens controlled the liquidation calculation and callback, enabling a real self-liquidation for one unit of repayment after the attacker had borrowed the other markets.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -223,22 +220,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-09/OnyxDAO_exp.sol"
@@ -246,13 +233,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T21:20:00Z",
       "note": "Reviewed the live Ethereum receipt and complete call trace, the two victim architectures and pre-exploit hashes, NFTLiquidationProxy creation and every pre-exploit NewImplementation event, custom implementation storage slot 2, oETH creation and immutable runtime, explorer-verified source, the commit-pinned reproduction, exact token transfers, and published technical reporting. The legacy target incorrectly treated implementation 0xf10bc5be84640236c71173d1809038af4ee19002 as a direct execution address; the exploit actually calls proxy 0x323398de3c35f96053d930d25fe8d92132f83d44, which delegates the vulnerable liquidateWithSingleRepay calls to that artifact. Its sole NewImplementation event selected the artifact at 16727653:52 log 78 and slot 2 retained it through the exploit. Separately, direct oETH 0x2ccb7d00a9e10d0c3408b5eefb67011abfacb075 executes the empty-market donation and rounding loop. The two defects compose: fake repay and collateral oTokens control the liquidation path and reenter a real liquidation after oETH's exchange rate has been manipulated. The receipt establishes the exact VUSD, XCN, DAI, WBTC and USDT components; security reporting values the gross basket at approximately $3.8 million."
@@ -260,50 +240,30 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity"
-      ],
       "chainId": 1,
       "transactionHash": "0x761632eaf2576ced8663e074ecbb0ca4be2f464020a09d0f3f3a2af9e35e3dac"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x7da096ccfc236bfef8d3ed9995d82a03927f480ead63092cdc2257952962afb9"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xeabe5a4bf5b7e4d872e1cd39d6be2844d636e01f3c0fb4598286319749ae0fda"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x119814062f85854706aa45c5532759e56fd61e6e63c2748c8b4cca2fd4e61ff0"
     },
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.halborn.com/blog/post/explained-the-onyx-protocol-hack-september-2024"
     }
   ],

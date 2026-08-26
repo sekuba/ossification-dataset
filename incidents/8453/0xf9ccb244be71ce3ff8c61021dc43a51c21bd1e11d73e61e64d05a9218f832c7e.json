@@ -19,10 +19,7 @@
       "0xc2b2197ca4b2ee3b4eb61fc59e6d592d04a2e26a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "HenloKart's ETH transfer helper treated from == msg.sender as authority to pay out of the contract's own balance rather than requiring msg.value, so a zero-value race commitment was funded from the contract, and an inverted cancel-lock check let the attacker cancel immediately and take the fake deposit back."
-  },
+  "summary": "HenloKart's ETH transfer helper treated from == msg.sender as authority to pay out of the contract's own balance rather than requiring msg.value, so a zero-value race commitment was funded from the contract, and an inverted cancel-lock check let the attacker cancel immediately and take the fake deposit back.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -92,27 +89,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0xf9ccb244be71ce3ff8c61021dc43a51c21bd1e11d73e61e64d05a9218f832c7e"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://t.me/defimon_alerts/518"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-02/HenloKart_exp.sol"
@@ -120,11 +107,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: proxy 0x27fafc210e4b240786d9ef3aa44399fb7e107f6f created 2025-02-22T18:32:29Z by 0x72c3c8b0cacdf6e36b39c9462a42756b2a294ccb, not the attack-tx sender 0xc2b2197ca4b2ee3b4eb61fc59e6d592d04a2e26a; a single EIP-1967 Upgraded event at deployment installs 0x5e30de98d133f956e118233ed8e054e0f5e65781, so the executing code was 3.57 days old. 0.59 ETH x $2,467.27 at the incident timestamp (DefiLlama) = $1,456."
     }
   ],

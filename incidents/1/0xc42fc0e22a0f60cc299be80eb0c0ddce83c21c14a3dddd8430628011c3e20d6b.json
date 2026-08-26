@@ -19,10 +19,7 @@
       "0xc0ccff0b981b419e6e47560c3659c5f0b00e4985"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Unprotected function invokes uniswapV3MintCallback to transfer tokens victims approved to the contract."
-  },
+  "summary": "Unprotected function invokes uniswapV3MintCallback to transfer tokens victims approved to the contract.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xc42fc0e22a0f60cc299be80eb0c0ddce83c21c14a3dddd8430628011c3e20d6b"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-07/Civfund_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xcf8e9b4005763e5cbe8d5695a18b16005ab4e115894e203352bcad59e38705ae"
     }

@@ -20,10 +20,7 @@
       "0xf00bc28d22d71be74bc8ab0d11fe77f6d77850ac"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Pro executor implementation exposed exec() without the caller allowlist added by the post-incident replacement and without a cadence or batch limit, allowing an untrusted caller to force repeated Pro sales under attacker-controlled pool conditions and extract USDT."
-  },
+  "summary": "The Pro executor implementation exposed exec() without the caller allowlist added by the post-incident replacement and without a cadence or batch limit, allowing an untrusted caller to force repeated Pro sales under attacker-controlled pool conditions and extract USDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -124,21 +121,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x6a50fea9a44cf8c1bd288fb1857da942dd601a1a062aff9598b755f3e7580ff4"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
       "path": "src/test/2026-07/ProToken_exp.sol"
@@ -146,9 +134,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x6a50fea9a44cf8c1bd288fb1857da942dd601a1a062aff9598b755f3e7580ff4",
@@ -167,52 +152,28 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xd75c1410d433bdd2e10ec52f8b190898955fc66cc9b6a46e07ad8b5e54b255e9"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x61573de9c4dbedd9bf1c1d4bb1766f32cbf9c5f1ffb092e6c62db4a67c662f4a"
     },
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://hacked.slowmist.io/?c=BSC"
     },
     {
       "id": "source-7",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://softstack.io/blog/july-2026-protocol-recap"
     },
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T11:17:34Z",
       "note": "Reviewed the 11 campaign transactions and receipts, indexed Pro and USDT Transfer logs, proxy and implementation creation transactions/runtime bytecode, the proxy constructor's Upgraded event, exploit-time target attribution, the later remediation upgrade, and security-firm reporting. Transaction 0x6a50fe...80ff4 at block 112652246:1 is the first successful defect execution by EOA 0x427671b2c8e91034a91fe698f9b7259b2345f45d through helper 0xf00bc28d22d71be74bc8ab0d11fe77f6d77850ac; ten more same-helper transactions end at 0xaaea18...793d1. Each batch repeatedly reached exec() through proxy 0xc44f2accac20598a3f2b4d489a970fcf52a04a3c and implementation 0x7fba63d0c45f265c1bea3ed2e49f0691a9d9aa87. The artifact was deployed at block 87886213:43; the proxy was deployed by the same EOA one transaction later, and constructor log 128 selected it. No intervening implementation selection preceded this campaign; runtime hash 0x7666800a8209b6ff010f8c2513099b624472d89747dbd67b88fae41cb2cacc17 remained present. Campaign receipts reconcile exactly: executor -167,500 Pro; pair +151,425.148167480 Pro and -7,462,273.897551865680153047 USDT; configured receivers +7,404,304.727660184073717188 USDT; attacker EOA +57,969.169891681606435859 USDT. GoPlus reporting distinguishes the configured receivers from the attacker and documents the post-incident implementation's new caller check."

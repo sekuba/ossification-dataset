@@ -19,10 +19,7 @@
       "0xae39a6c2379bef53334ea968f4c711c8cf3898b6"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The bot exposed a public entry point that executed caller-supplied calldata with no access control, letting the attacker make it pull 91,638 USDC out of a companion contract that had approved it."
-  },
+  "summary": "The bot exposed a public entry point that executed caller-supplied calldata with no access control, letting the attacker make it pull 91,638 USDC out of a companion contract that had approved it.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x674f74b30a3d7bdf15fa60a7c29d96a402ea894a055f624164a8009df98386a0"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-11/MEV_0ad8_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Supremacy_CA/status/1590337718755954690"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: bot 0x0ad8229d4bc84135786ae752b9a9d53392a8afd4 created 2020-05-07T04:25:30Z by 0xd5b5b26521665cb37623dca0e49c553b41dbf076, unrelated to the attack sender; no EIP-1967 events, age from deployment. Loss read from the tx receipt: 91,638.11 USDC moved from 0x211b6a11... to the attacker EOA."
     }
   ],

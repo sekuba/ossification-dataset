@@ -19,10 +19,7 @@
       "0xc58a769e3089792670dff22ab85a11983816323b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "0x MainnetSettler BASIC action allows attacker-chosen target and calldata, calling USDT.transferFrom against a victim's pre-existing allowance to the Settler."
-  },
+  "summary": "0x MainnetSettler BASIC action allows attacker-chosen target and calldata, calling USDT.transferFrom against a victim's pre-existing allowance to the Settler.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x4e2f5bccc5d428c39cd93c64dcd2502d5cf05fb30892c753475155d498ef5887"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-03/ZeroExSettler_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xfafcc9be3a8c6ceda26df29046b8651fa1298537b55c9b09fc5fd0d815f943e6"
     }

@@ -19,10 +19,7 @@
       "0xad2cb8f48e74065a0b884af9c5a4ecbba101be23"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Factory.collectFees authorizes via token0.creator() and assumes token1==WETH without checking, so a fake token1 with no-op withdraw() causes the Factory to send real ETH to the attacker."
-  },
+  "summary": "Factory.collectFees authorizes via token0.creator() and assumes token1==WETH without checking, so a fake token1 with no-op withdraw() causes the Factory to send real ETH to the attacker.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x837752ca27743c9b37d901ff6cf9cdbe98b6097c660394a390de075455d8ccea"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-06/InitcodeFactoryFees_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x38cb966cde9f3606d7ad5efe5f5105f59f96f9dbc41f708571b479d19eb97964"
     }

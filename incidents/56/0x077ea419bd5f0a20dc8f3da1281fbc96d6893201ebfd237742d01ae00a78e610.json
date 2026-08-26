@@ -19,10 +19,7 @@
       "0xd76bfdbfe0f47d63c99ea47f05262e0d43097e5a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "swapIn executes attacker-supplied swapRouter/calldata, letting the aggregator spend the victim's USDT allowance via arbitrary transferFrom."
-  },
+  "summary": "swapIn executes attacker-supplied swapRouter/calldata, letting the aggregator spend the victim's USDT allowance via arbitrary transferFrom.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x077ea419bd5f0a20dc8f3da1281fbc96d6893201ebfd237742d01ae00a78e610"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-06/TSAggregatorGeneric_exp.sol"

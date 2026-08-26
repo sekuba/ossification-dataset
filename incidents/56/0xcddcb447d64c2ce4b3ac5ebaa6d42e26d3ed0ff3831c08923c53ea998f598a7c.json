@@ -19,10 +19,7 @@
       "0xb358bfd28b02c5e925b89ad8b0eb35913d2d0805"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Reflection/fee-on-transfer accounting lets repeated skim() extract fee-inflated balance and drain the LP."
-  },
+  "summary": "Reflection/fee-on-transfer accounting lets repeated skim() extract fee-inflated balance and drain the LP.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xcddcb447d64c2ce4b3ac5ebaa6d42e26d3ed0ff3831c08923c53ea998f598a7c"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2022-12/DFS_exp.sol"

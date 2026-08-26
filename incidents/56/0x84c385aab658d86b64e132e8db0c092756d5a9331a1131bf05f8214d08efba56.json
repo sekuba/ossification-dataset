@@ -19,10 +19,7 @@
       "0x3d71366228ebd5196d45ee72f82405da601190ad"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "VISTA's flash-loan path burns the borrowed tokens on repayment without checking whether the balance it burns is frozen, letting the attacker convert frozen presale allocations into free supply and sell it."
-  },
+  "summary": "VISTA's flash-loan path burns the borrowed tokens on repayment without checking whether the balance it burns is frozen, letting the attacker convert frozen presale allocations into free supply and sell it.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x84c385aab658d86b64e132e8db0c092756d5a9331a1131bf05f8214d08efba56"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/1848403791881900130"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-10/VISTA_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x493361D6164093936c86Dcb35Ad03b4C0D032076 created 2023-07-19T08:36:38Z by 0x5f2155247584b88a0aa7d7c8817ed663680cd081, which is not the attack-tx sender 0x3d71366228ebd5196d45ee72f82405da601190ad; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

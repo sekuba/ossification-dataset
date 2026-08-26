@@ -19,10 +19,7 @@
       "0x9b99d7ce9e39c68ab93348fd31fd4c99f79e4b19"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Repeated tiny liquidations rounded the seized kTAF collateral up, allowing more collateral to be redeemed than the DAI repaid was worth."
-  },
+  "summary": "Repeated tiny liquidations rounded the seized kTAF collateral up, allowing more collateral to be redeemed than the DAI repaid was worth.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -116,23 +113,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-10/kTAF_exp.sol"
@@ -140,23 +126,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x8e5861f2ba6d0554684ca372efdc029259437ea95e51da5858255d0d8ee02bd2"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T00:00:00Z",
       "note": "Reviewed the exploit receipt and call trace, DAI transfers, the creation transaction, the pre-exploit runtime, and the commit-pinned reproduction. The kTAF address is a top-level direct deployment with no DELEGATECALL or SELFDESTRUCT opcode. Its runtime hash is 0x99d334b97cbc99d6b743a08d40f02b2c14b425110fb646afa658fdd414b60d6a both at deployment block 10518850 and immediately before exploit block 18385886. After the flash loan was repaid, the attack contract transferred exactly 8,187.514103413431539366 DAI to the attacker."

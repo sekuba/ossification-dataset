@@ -19,10 +19,7 @@
       "0x499057d1ae21f2afe0b46c154f9529201c44c6c1"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The ATM token converts its accumulated fees by swapping ATM to WBNB and WBNB to USDT from inside _transfer with no slippage bound, so the attacker skewed the WBNB/ATM pair with a flash loan plus skim() and sandwiched the token's own swap."
-  },
+  "summary": "The ATM token converts its accumulated fees by swapping ATM to WBNB and WBNB to USDT from inside _transfer with no slippage bound, so the attacker skewed the WBNB/ATM pair with a flash loan plus skim() and sandwiched the token's own swap.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xee10553c26742bec9a4761fd717642d19012bab1704cbced048425070ee21a8a"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://app.blocksec.com/explorer/tx/bsc/0xee10553c26742bec9a4761fd717642d19012bab1704cbced048425070ee21a8a"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/ATM_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xa5957E0E2565dc93880da7be32AbCBdF55788888 created 2024-03-23T07:42:57Z by 0xf8cfc849343777676ba60386374bbda1199516f8, which is not the attack-tx sender 0x499057d1ae21f2afe0b46c154f9529201c44c6c1; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

@@ -19,10 +19,7 @@
       "0xee4b3dd20902fa3539706f25005fa51d3b7bdf1b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ENF_ETHLEV ERC4626 withdraw is reentered via ETH callback to withdraw assets twice against stale share accounting."
-  },
+  "summary": "ENF_ETHLEV ERC4626 withdraw is reentered via ETH callback to withdraw assets twice against stale share accounting.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -120,23 +117,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x6e6e556a5685980317cb2afdb628ed4a845b3cbd1c98bdaffd0561cb2c4790fa"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-08/EarningFram_exp.sol"
@@ -144,13 +130,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:28:23Z",
       "note": "Reviewed the exploit receipt and call trace, the proxy creation and EIP-1967 implementation slot, the complete pre-exploit Upgraded-event history, and the commit-pinned reproduction. The exploit executes the ERC4626 withdrawal path at proxy 0x5655c442227371267c165101048e4838a762675d through implementation 0x863e572b215fd67c855d973f870266cf827aea5e. Three Upgraded events occurred before the incident; the last, at block 16710548 log 66, restored this implementation and no later Upgraded event occurred. During the exploit, 320.599641877332363469 ETH entered the strategy and two reentrant withdrawal legs returned 320.097765098000317500 and 159.826145613429898220 ETH."
@@ -158,29 +137,18 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x743a4dd4b4647a1098875bace2e28d5a4a16a109ec04a00e7f5dcb15e8b40c49"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xdfe12c81e01804e8b1babe5cd25481432439393893d34f6cc0088ebc478f1558"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1691480063&to=1691570063",
       "observedAt": 1787574503

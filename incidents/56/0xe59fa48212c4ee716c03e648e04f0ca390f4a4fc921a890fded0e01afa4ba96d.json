@@ -21,14 +21,11 @@
       "0x3f693effc53908d517f186a20431f756c90c2229"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BEP20TokenA (RES) settles its transfer fees against AMM state the caller controls in the same transaction. _distB() pays the fee out of the contract's ALL treasury in an amount computed by _atoB()/_tokenACalcTokenB() from live getReserves() of the RES/USDT and USDT/ALL PancakeSwap pairs, and _isBuySwap()/_isSellSwap() arm that path from the pair's raw balanceOf rather than from any manipulation-resistant price, so donating USDT into the RES/USDT pair turns a negligible buy fee into an arbitrarily large ALL payout. The external thisAToB() has no caller restriction and sells the contract's accumulated RES balance into the same pair, then calls _burn(_swapV2Pair, burnNumber) for the full pre-swap amount before sync(); because that sell is itself fee-charged, the burn destroys more RES than the pair received, so the pair pays out USDT for tokens it does not keep."
-  },
+  "summary": "BEP20TokenA (RES) settles its transfer fees against AMM state the caller controls in the same transaction. _distB() pays the fee out of the contract's ALL treasury in an amount computed by _atoB()/_tokenACalcTokenB() from live getReserves() of the RES/USDT and USDT/ALL PancakeSwap pairs, and _isBuySwap()/_isSellSwap() arm that path from the pair's raw balanceOf rather than from any manipulation-resistant price, so donating USDT into the RES/USDT pair turns a negligible buy fee into an arbitrarily large ALL payout. The external thisAToB() has no caller restriction and sells the contract's accumulated RES balance into the same pair, then calls _burn(_swapV2Pair, burnNumber) for the full pre-swap amount before sync(); because that sell is itself fee-charged, the burn destroys more RES than the pair received, so the pair pays out USDT for tokens it does not keep.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
-      "amount": 291391.54798034244,
+      "amount": 291391.54798034247,
       "valuationTimestamp": 1665051350,
       "method": "stablecoin-par",
       "sourceIds": [
@@ -144,22 +141,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xe59fa48212c4ee716c03e648e04f0ca390f4a4fc921a890fded0e01afa4ba96d"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-10/RES_exp.sol"
@@ -167,30 +154,16 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://quillaudits.medium.com/res-token-290k-flash-loan-exploit-quillaudits-9300657fff7b"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "legacy migration note retained for provenance: onchain review: RES 0xecCD8B08Ac3B587B7175D40Fb9C60a20990F8D21 created 2022-07-20T13:06:03Z by 0xf53ff2f90ab93a429b5c6ac0e62825e50ccee195, unrelated to attack sender 0x986b2e2a1cf303536138d8ac762447500fd781c6; no EIP-1967 Upgraded events, age measured from deployment. DeFiHackLabs carries two PoCs (RES_exp and RES_exp2) for this same incident; one row is recorded. lossUsd uses the 290,671 USDT stated in the PoC header and the QuillAudits write-up."
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T01:40:00Z",
       "note": "Reviewed the anchor receipt and 3,438-frame call trace, the Etherscan-verified BEP20TokenA source, the deployment receipt, runtime bytecode at deployment and immediately before the exploit, the attacker EOA's full transaction list, the token's complete ALL-payout log history, and per-block balances of every account the money passed through. The anchor 0xe59fa482... is successful at 21948017:2 and calls RES 0xeccd8b08ac3b587b7175d40fb9c60a20990f8d21 directly in 34 frames with no DELEGATECALL, so the token itself is the defect-bearing runtime; the PancakeSwap pair 0x05ba2c512788bd95cd6d61d3109c53a14b01c82a runs stock Cake-LP code and is a victim, not the target. Root cause read from the verified source: _transfer routes buys through _isBuySwap/_distBuyFee and _distB, and _distB computes its ALL payout as _atoB(amountA), i.e. two chained _tokenACalcTokenB() calls that read getReserves() of the RES/USDT and USDT/ALL pairs at call time; thisAToB() is external with no modifier and _thisAToB() swaps _balances[address(this)] into the pair and then _burn(_swapV2Pair, burnNumber) before sync(). Both paths execute in the anchor: log 106 shows the pair's reserves inflated to 10,274,136.736514808378277308 USDT after six flash-loan-funded donations, log 108/112 the token selling 118,713.29810460 RES into the pair for 8,299,153.098464700338369656 USDT, log 116 the same 118,713.29810460 RES burned straight out of the pair, log 117 the sync, and logs 126/127 the ALL treasury paying 833.166669449666336800 to the attacker helper and 856.797163716336401880 to the LP address. Anchor minimality: scanning every ALL Transfer whose sender is the RES contract from genesis shows the first transaction moving more than 10 ALL out of the treasury is this anchor; the only comparable follow-up is the same attacker's second run at 21948032:27. Campaign loss reconstructed from balances at blocks 21948016 and 21948032: the RES/USDT pair lost 257,246.702416323995089511 BSC-USD and the ALL/USDT pair 34,144.845564018428936002 BSC-USD, 291,391.547980342424025513 in total, against 290,672.423507432812779987 the attacker withdrew to the EOA in transactions 0x333e79a8... and 0x1637766a...; the 719.12 gap is flash-loan fees. Code history: created by top-level CREATE in 0x04c70aae... at 19716684:179 by 0xf53ff2f90ab93a429b5c6ac0e62825e50ccee195, an address unrelated to the attacker; the runtime hashes to 0xec70a7c099ca13caeb43e9d2b24619c64141b9ff81ae9a54031c416e23e64636 at both block 19716684 and block 21948016, the contract is not a proxy and has no upgrade mechanism, so the code was 6,728,987 s (77.88 days) old."
@@ -198,9 +171,6 @@
     {
       "id": "source-6",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0xef19a4dfd69874d5efda3e38b5a19cae4e0b0bdc95769760bd85ede4d15609ac",
@@ -211,10 +181,6 @@
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x04c70aae4393d2b22c3ea1d97c663bb3bd2ebe593d61ea6385f432bc10c1d912"
     }

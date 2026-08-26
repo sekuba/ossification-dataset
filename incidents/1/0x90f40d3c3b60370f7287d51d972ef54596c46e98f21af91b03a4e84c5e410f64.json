@@ -21,10 +21,7 @@
       "0x7bd736631afbe1d3795a94f60574f7fa0ae89347"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The reward vault's permissionless trackPurchase(buyer) treated a buyer's token-balance increase as purchase value and credited withdrawable ETH without authenticating ETH spent, a genuine purchase, or unique economic activity. Reversible balance movements could therefore create unbacked allocations that massWithdraw paid from the vault."
-  },
+  "summary": "The reward vault's permissionless trackPurchase(buyer) treated a buyer's token-balance increase as purchase value and credited withdrawable ETH without authenticating ETH spent, a genuine purchase, or unique economic activity. Reversible balance movements could therefore create unbacked allocations that massWithdraw paid from the vault.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -121,33 +118,18 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x90f40d3c3b60370f7287d51d972ef54596c46e98f21af91b03a4e84c5e410f64"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xe7094a0eb5078abee79e96cba177659f89bccf290f6af07b1f3792236cf24038"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
       "path": "src/test/2026-07/ProjektRewardVault_exp.sol"
@@ -155,18 +137,11 @@
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://softstack.io/blog/july-2026-protocol-recap"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1784941919/coingecko:ethereum",
       "observedAt": 1787659438
@@ -174,13 +149,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T12:03:58Z",
       "note": "Historical trace review confirms that the fresh attacker EOA's nonce-0 CREATE transaction is the sole campaign transaction and deploys attack contract 0x12d6fe4822325bba82faf6cf706e6b6885c922f9. The transaction trace shows the reward vault directly executing trackPurchase(address), selector 0x3627301e, during the accounting phase and massWithdraw(), selector 0xbf0a196d, before making 13 ETH payments whose exact sum is the recorded gross loss. The vault calls token balanceOf functions while tracking the purported buyers; no ETH enters the vault from those calls. The unverified vault is a direct runtime, not a proxy: its deployment receipt, unchanged deployment/pre-incident runtime hash, zero EIP-1967 implementation slot, and absence of runtime code-change opcodes establish deployment as the complete code history. The 301.704684684555317704 ETH trace outflow agrees exactly with the transaction pre-state and post-block balances after accounting for 0.010929982131153814 ETH received by the vault in the two preceding same-block transactions."

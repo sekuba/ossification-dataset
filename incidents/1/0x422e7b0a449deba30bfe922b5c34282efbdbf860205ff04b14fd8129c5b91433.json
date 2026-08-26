@@ -23,10 +23,7 @@
       "0xf70f691d30ce23786cfb3a1522cfd76d159aca8d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "XNFT.withdrawNFT() returned a pledged NFT without closing or invalidating the pledge order, so getOrderDetail kept reporting the collateral and P2Controller.borrowAllowed kept approving borrows against it. The attacker pledged one BAYC, withdrew it, re-pledged it into a new order, and repeated the cycle to open 83 simultaneously borrowable orders backed by the same token."
-  },
+  "summary": "XNFT.withdrawNFT() returned a pledged NFT without closing or invalidating the pledge order, so getOrderDetail kept reporting the collateral and P2Controller.borrowAllowed kept approving borrows against it. The attacker pledged one BAYC, withdrew it, re-pledged it into a new order, and repeated the cycle to open 83 simultaneously borrowable orders backed by the same token.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -123,21 +120,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x422e7b0a449deba30bfe922b5c34282efbdbf860205ff04b14fd8129c5b91433"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-06/XCarnival_exp.sol"
@@ -145,27 +133,17 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1541070850505723905"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x7650071a9338a8bed6fa1a279a3a66ae0279bbb5718c32d1e9a592f9efd38ac9"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x51cbfd46f21afb44da4fa971f220bd28a14530e1d5da5009cfbdfee012e57e35",
@@ -179,9 +157,6 @@
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1656244531/coingecko:ethereum",
       "observedAt": 1787639523
@@ -189,13 +164,6 @@
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T06:40:00Z",
       "note": "Re-anchored. The v1 snapshot anchored this incident to 0x7cd094bc34c6700090f88950ab0095a95eb0d54c8e5012f1f46266c8871027ff, a bare BoredApeYachtClub transferFrom that never touches XCarnival; it executes no defect and finalizes no loss. The earliest transaction that executes the defect is 0x422e7b0a44, in which the attacker contract runs four pledgeAndBorrow/withdrawNFT cycles against the XNFT proxy 0xb14b3b9682990ccc16f52eb04146c3ceab01169a, each delegatecalling implementation 0x39360ac1239a0b98cb8076d4135d0f72b7fd9909 and leaving the order borrowable after the BAYC leaves the proxy. The proxy emitted exactly one Upgraded event, log 302 of its own creation transaction 0x7650071a93 at block 14909176, and the EIP-1967 implementation slot still reads 0x39360ac1 at block 15028860, so the exploited code is 20d 23h 10m 59s old. Its creator 0xc087629431256745e6e3d87b3ec14e8b42d47e48 is the XCarnival deployer, unrelated to the attacker. Loss is the 2,988 ETH drained from the xETH pool across six borrow transactions, confirmed by pool balance before and after and by the four exploit contracts' forwarding totals."

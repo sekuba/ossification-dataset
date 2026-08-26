@@ -7,7 +7,6 @@
     "datasetAdmission": "losses meet the 1000 USD floor through loss.usd or an evidenced loss.minimumUsd lower bound",
     "curveUsdComparability": "the curve is narrower than dataset admission: it requires a concrete loss.usd.amount, not only a lower bound",
     "curveInclusion": [
-      "classification.rootCause equals code-bug",
       "incident verification.tier equals reviewed",
       "target verification.tier equals reviewed",
       "target verification.curveEligible equals true",
@@ -21,7 +20,7 @@
     ],
     "deduplication": "two passes, each keeping the earliest exploit under the deterministic selection order: first group by (incidentId, failureModeId) so sibling instances of one template collapse to one observation, then by (codeArtifact.codeHash, failureModeId) so byte-identical artifacts collapse across incidents",
     "deduplicationSelectionOrder": "for observations on the same chain with complete exploit anchors: blockNumber, transactionIndex, timestamp, incidentId, target id; otherwise: timestamp, chainId, incidentId, target id",
-    "incidentReference": "observation.incidentId resolves the incident-level classification and loss in incidents.json; loss is intentionally not copied onto each target observation, and an incident that contributes several observations owns one loss, so a loss-weighted curve must aggregate per incidentId rather than sum per observation",
+    "incidentReference": "observation.incidentId resolves the incident-level summary and loss in incidents.json, which lists reviewed incidents only; loss is intentionally not copied onto each target observation, and an incident that contributes several observations owns one loss, so a loss-weighted curve must aggregate per incidentId rather than sum per observation",
     "ordering": "ascending codeAgeSeconds, then observationId",
     "excludedTargetTiers": [
       "provisional"

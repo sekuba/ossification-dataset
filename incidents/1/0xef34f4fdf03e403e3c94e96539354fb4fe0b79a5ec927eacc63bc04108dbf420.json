@@ -19,10 +19,7 @@
       "0x25869347f7993c50410a9b9b9c48f37d79e12a36"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Unprotected removeLiquidityWhenKIncreases() in the LAURA token removes LAURA from the pair, letting attacker steal the pair's WETH."
-  },
+  "summary": "Unprotected removeLiquidityWhenKIncreases() in the LAURA token removes LAURA from the pair, letting attacker steal the pair's WETH.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xef34f4fdf03e403e3c94e96539354fb4fe0b79a5ec927eacc63bc04108dbf420"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-01/LAURAToken_exp.sol"
@@ -111,19 +101,11 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "Recheck of the deployment basis (DELEGATECALL audit): the victim is an EIP-1167 minimal-proxy clone whose 45-byte runtime hardcodes the master 0x539d54074e052ae82de4936ae6bb213ab773559e, so the DELEGATECALL target cannot be repointed; the master's runtime is byte-identical at the clone's creation block 21516710 and the incident block 21529888 and contains no DELEGATECALL, so deployment is exact."
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x118d6b786d44b6fa3dfac6396a3127eb6abc050fc5c1a1230cf700a08ac7c8f5"
     }

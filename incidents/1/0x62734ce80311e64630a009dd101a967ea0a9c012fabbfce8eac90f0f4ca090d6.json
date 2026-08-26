@@ -19,10 +19,7 @@
       "0xa7264a43a57ca17012148c46adbc15a5f951766e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Settlement._settleOrder() used attacker-controlled interactionLength in unchecked Yul pointer arithmetic. A wrapped length moved the appended suffix backward in memory, overwrote the authenticated resolver field, and made the deprecated Fusion v1 contract call a third-party resolver against its standing token approvals."
-  },
+  "summary": "Settlement._settleOrder() used attacker-controlled interactionLength in unchecked Yul pointer arithmetic. A wrapped length moved the appended suffix backward in memory, overwrote the authenticated resolver field, and made the deprecated Fusion v1 contract call a third-party resolver against its standing token approvals.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -120,23 +117,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x62734ce80311e64630a009dd101a967ea0a9c012fabbfce8eac90f0f4ca090d6"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-03/OneInchFusionV1SettlementHack.sol_exp.sol"
@@ -144,33 +130,17 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x418a5c81125f237598ef41853ce8f365f46d551ead68abbc680b18d57f7e3791"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.decurity.io/research/yul-calldata-corruption-1inch-postmortem"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T06:13:23Z",
       "note": "Reviewed the live Ethereum transaction, receipt and call trace, the Settlement creation transaction, its pre-exploit runtime and hash, disassembly, the pinned reproduction, 1inch's commit-pinned source, and Decurity's incident-response post-mortem. The exploit executes settleOrders() on direct contract 0xa88800cd213da5ae406ce248380802bd53b47647 and supplies interactionLength 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe00. Unchecked Yul additions wrap, causing the real suffix to overwrite the resolver field and making Settlement call TrustedVolumes resolver 0xb02f39e382c90160eb816de5e0e428ac771d77b5. The selected receipt records two exact 1,000,000 USDC transfers out of that resolver. Settlement contains no delegatecall or self-destruct path; its pre-exploit runtime hashes to the declared artifact. It was deployed at 16241236:152 by 0x11799622f4d98a24514011e8527b969f7488ef47 and remained unchanged for 69,470,844 seconds. The approximately $4.5 million reported gross resolver loss is retained, with Decurity's later near-total recovery kept separate."

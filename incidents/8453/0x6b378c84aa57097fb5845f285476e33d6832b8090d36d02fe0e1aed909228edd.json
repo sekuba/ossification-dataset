@@ -21,10 +21,7 @@
       "0x551f3110f12c763d1611d5a63b5f015d1c1a954c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "KiloEx's MinimalForwarder exposes two relay entry points. Selector 0x2b3102be enforces `approvedRouters[req.to] && isKeeper[msg.sender]` before relaying, but the public `execute((address,address,uint256,uint256,uint256,bytes),bytes)` (0x47153f82) jumps straight to the internal relay helper with no keeper, router, or reentrancy guard. It only checks that the EIP-712 signature recovers to the attacker-supplied `req.from`, then calls `req.to` with `req.from` appended as the ERC-2771 sender. The downstream KiloEx delegate contract 0xfdc7bc3a9fde88e7bcfb69c8b9ca7fda483627ed authorises callers solely with `require(msg.sender == trustedForwarder)` and never inspects the forwarded sender, so a self-generated keypair (0x551f3110f12c763d1611d5a63b5f015d1c1a954c, nonce 0, isKeeper false) was enough to reach the privileged setPrices-and-execute path, open a leveraged position at a self-set price of 100, and close it against the USDC liquidity pool."
-  },
+  "summary": "KiloEx's MinimalForwarder exposes two relay entry points. Selector 0x2b3102be enforces `approvedRouters[req.to] && isKeeper[msg.sender]` before relaying, but the public `execute((address,address,uint256,uint256,uint256,bytes),bytes)` (0x47153f82) jumps straight to the internal relay helper with no keeper, router, or reentrancy guard. It only checks that the EIP-712 signature recovers to the attacker-supplied `req.from`, then calls `req.to` with `req.from` appended as the ERC-2771 sender. The downstream KiloEx delegate contract 0xfdc7bc3a9fde88e7bcfb69c8b9ca7fda483627ed authorises callers solely with `require(msg.sender == trustedForwarder)` and never inspects the forwarded sender, so a self-generated keypair (0x551f3110f12c763d1611d5a63b5f015d1c1a954c, nonce 0, isKeeper false) was enough to reach the privileged setPrices-and-execute path, open a leveraged position at a self-set price of 100, and close it against the USDC liquidity pool.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -119,30 +116,18 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 8453,
       "transactionHash": "0x6b378c84aa57097fb5845f285476e33d6832b8090d36d02fe0e1aed909228edd"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0xf76f1c60b60d98d750f17cea87b7b896a5b909b2f71d6b6d921b1c2669e506c7"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 8453,
       "transactionHashes": [
         "0x6b378c84aa57097fb5845f285476e33d6832b8090d36d02fe0e1aed909228edd",
@@ -153,37 +138,21 @@
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://www.halborn.com/blog/post/explained-the-kiloex-hack-april-2025"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://quillaudits.medium.com/kiloex-exploit-breakdown-7-4m-drained-across-chains-ff6e2293d5cb"
     },
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://www.coinspeaker.com/kiloex-exchange-hacker-returns-7-and-a-half-million-after-exploit/"
     },
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:20:00Z",
       "note": "Anchor kept. The attacker EOA 0x00fac92881556a90fdb19eae9f23640b95b4bcbd deployed exploit contract 0xd649a0876453fc7626569b28e364262192874e18 at block 28932940 and then sent exactly three successful calls to it (selector 0x7493b4a4) at blocks 28933730, 28933848 and 28935593; 0x6b378c84 is the earliest and every one of the three routes through the forwarder. callTracer on the anchor: attacker contract -> Uniswap V3 flash -> createIncreasePosition on router 0x796f1793599d7b6aca6a87516546ddf8e5f3aa9d, then CALL 0x3274b668aed85479e2a8511e74d7db7240ebe7c8 selector 0x47153f82 which DELEGATECALLs 0xbed75e25a63d2be11605038921aa5eef78bb4e61, ecrecover returns req.from 0x551f3110f12c763d1611d5a63b5f015d1c1a954c, and the forwarder then CALLs 0xfdc7bc3a9fde88e7bcfb69c8b9ca7fda483627ed selector 0xac9fd279, which drives PriceFeed.setPrices([0x9ef1b8c0e4f7dc8bf5719ea496883dc6401d5b2e],[100]) and executeIncreasePosition. Defect location established from the runtime of 0xbed75e25: the dispatcher sends 0x2b3102be to 0x1649, which loads mapping slot 0xd3 (approvedRouters[req.to]) and mapping slot 0xce (isKeeper[msg.sender]) and reverts 'execute not allowed' unless both hold, while 0x47153f82 at 0x15a1 decodes and jumps directly to the internal relay at 0x1d9c with no such check. At block 28933729 isKeeper(0x551f3110..) is false and getNonce(0x551f3110..) is 0 while approvedRouters(0xfdc7bc3a..) is true, and 0x551f3110 has nonce 0 and no code, i.e. a keypair the attacker generated. eth_call of the same 0xac9fd279 payload to 0xfdc7bc3a from an unrelated address at block 28933729 reverts 'DelegateCollection: not trustedForwarder' with and without the appended ERC-2771 sender, confirming the delegate's only guard is msg.sender == the forwarder proxy, which is why the forwarder proxy is the execution address supplying storage and authority. Code history: the proxy was created at block 27437694 tx 0xf76f1c60 txIndex 208 by KiloEx deployer 0x1d568fc08a1d3978985bc3e896a22abd1222abcf (creation receipt contractAddress equals the proxy). All 13,625 logs the proxy emitted over [27437694, 28933729] were enumerated by topic0: 13,617 relay events 0x3b702134, 4 keeper-configuration events 0x72605a8a, 1 Initialized 0x7f26b83f, 1 router-configuration event 0x38f252aa, 1 AdminChanged 0x7e644d79 and exactly 1 Upgraded 0xbc7cd75a (block 27437694, txIndex 208, logIndex 446, topic1 = 0xbed75e25..). The EIP-1967 implementation slot reads 0xbed75e25.. at block 28933729 and keccak(code) of 0xbed75e25 is 0xca3ef451.. both at block 27437694 and at block 28933729, and prestateTracer on the anchor returns the same hash, so the exploited code is 2,992,072s (34d 15h 7m 52s) old. Loss: ERC-20 Transfer netting over the three exploit transactions gives -3,323,209.390248 USDC for pool 0xdf5acc61.., +3,323,170.888033 USDC for the attacker EOA, +15 USDC for the Uniswap pool and +23.502215 USDC for the KiloEx vault; USDC valued at par. Only the Base leg is counted here because the BSC leg is a separate incident record. The attacker's later return of the funds under a 10% bounty deal is recorded in loss.notes and not netted out."

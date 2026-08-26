@@ -19,10 +19,7 @@
       "0xd11a93a8db5f8d3fb03b88b4b24c3ed01b8a411c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Carrot's transferFrom() skips the allowance subtraction entirely when _isExcludedFromFee[_msgSender()] is true, and _beforeTransfer() let the attacker add themselves to that mapping, so they could move any holder's CARROT."
-  },
+  "summary": "Carrot's transferFrom() skips the allowance subtraction entirely when _isExcludedFromFee[_msgSender()] is true, and _beforeTransfer() let the attacker add themselves to that mapping, so they could move any holder's CARROT.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xa624660c29ee97f3f4ebd36232d8199e7c97533c9db711fa4027994aa11e01b9"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-10/Carrot_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1579908411235237888"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: Carrot 0xcFF086EaD392CcB39C49eCda8C974ad5238452aC created 2022-09-28T16:26:31Z by 0x8958c8689d325fd9e2a1ede3d5dc1acfcfb65742, unrelated to attack sender 0xd11a93a8db5f8d3fb03b88b4b24c3ed01b8a411c; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 31,318.18 USDT left the pool to the attacker in the exploit transaction."
     }
   ],

@@ -19,10 +19,7 @@
       "0x3690c5efc63eea1167c4d92a3f2dd8afdb85c294"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "NovaBox adds new dual ETH/NOVA depositors to the dividend list without initialising their dividend checkpoints, and its extcodesize guard is bypassed from a constructor, so a fresh depositor could immediately withdraw and collect the whole stale historical ETH dividend."
-  },
+  "summary": "NovaBox adds new dual ETH/NOVA depositors to the dividend list without initialising their dividend checkpoints, and its extcodesize guard is bypassed from a constructor, so a fresh depositor could immediately withdraw and collect the whole stale historical ETH dividend.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x0cfa357e9e4db1540246f17cb6bfa0634ff8727d7cf241b63fb22605021c8844"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/DefimonAlerts/status/2064616360466919793"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-06/NovaBox_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xbc4191167D4B0251cAB5201a527Daa8a7d3846b0 created 2018-10-11 by 0x01e806d7fca11320e96480f7a6e55ad98356237a, unrelated to attack sender; no EIP-1967 upgrade events; 56.73 ETH drained"
     }
   ],

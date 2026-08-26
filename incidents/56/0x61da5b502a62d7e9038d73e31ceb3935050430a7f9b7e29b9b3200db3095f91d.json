@@ -19,10 +19,7 @@
       "0x67a5f6bd9f8763c7e6c4ea0b54d1b14b9e5ee7e2"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The 98 swap contract's public swapTokensForTokens(address[],uint256,uint256,address) spends the contract's own token balance and sends the proceeds to a caller-supplied recipient, so the attacker drained its entire 98 holding to itself."
-  },
+  "summary": "The 98 swap contract's public swapTokensForTokens(address[],uint256,uint256,address) spends the contract's own token balance and sends the proceeds to a caller-supplied recipient, so the attacker drained its entire 98 holding to itself.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x61da5b502a62d7e9038d73e31ceb3935050430a7f9b7e29b9b3200db3095f91d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/1875462686353363435"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-01/98Token_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xB040D88e61EA79a1289507d56938a6AD9955349C created 2025-01-03T07:23:26Z by 0x0d06757892d3a5772b23bdb6198cb2613419fd94, which is not the attack-tx sender 0x67a5f6bd9f8763c7e6c4ea0b54d1b14b9e5ee7e2; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

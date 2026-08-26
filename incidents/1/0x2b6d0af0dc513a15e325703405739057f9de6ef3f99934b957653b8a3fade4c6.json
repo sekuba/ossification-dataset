@@ -19,10 +19,7 @@
       "0x9d44f1a37044500064111010632a8a59003701c8"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "FarmingLPToken minted shares from manipulable router spot quotes. After inflating the quoted SUSHI value of a small LP deposit, the attacker used the resulting shares to withdraw the vault's pre-existing USDC/WETH LP tokens and transferred surplus shares away before the withdrawal burn."
-  },
+  "summary": "FarmingLPToken minted shares from manipulable router spot quotes. After inflating the quoted SUSHI value of a small LP deposit, the attacker used the resulting shares to withdraw the vault's pre-existing USDC/WETH LP tokens and transferred surplus shares away before the withdrawal burn.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -127,7 +124,7 @@
         "tier": "reviewed",
         "curveEligible": true,
         "limitations": [
-          "Aged from the clone rather than the shared implementation it copies. Not yet re-examined under the case-by-case rule in METHODOLOGY.md; the implementation is older and may be the better basis if the clone adds nothing bearing on the defect."
+          "Aged from the clone rather than the shared implementation it copies; not yet re-examined under the clone rule in METHODOLOGY.md."
         ],
         "reviewSourceIds": [
           "source-4"
@@ -139,23 +136,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x2b6d0af0dc513a15e325703405739057f9de6ef3f99934b957653b8a3fade4c6"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-11/Burntbubba_exp.sol"
@@ -163,21 +149,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/MetaSec_xyz/status/1730044259087315046"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T11:40:42Z",
       "note": "Reviewed the exploit receipt and call trace, verified implementation source, factory-creation trace, clone and implementation runtimes, and commit-pinned reproduction. FarmingLPToken's deposit path mints shares from router spot quotes, which the attack manipulates before redeeming the old USDC/WETH LP position through emergencyWithdraw. The victim is an EIP-1167 clone whose runtime immutably selects 0x44d1c6b94b282c678c95b7f4b18de5a53ea4fa9f. Clone and implementation hashes are unchanged from block 16377287 through the pre-exploit state, and the implementation contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction. The creation trace identifies factory 0xee083e0f0f5de2ff34662f1ef6f76d897d5047ef. The receipt records the exact LP transfer and its burn into 1,601.512305 USDC and 0.786674387891306409 WETH."
@@ -185,19 +161,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x04093e5bad15cbb93163dd1266fe2a923bb770c64775c1ea0e4a32193690743d"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1701295199&to=1701298799",
       "observedAt": 1787568316

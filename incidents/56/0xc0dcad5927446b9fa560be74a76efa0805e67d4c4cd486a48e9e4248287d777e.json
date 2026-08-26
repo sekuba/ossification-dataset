@@ -19,10 +19,7 @@
       "0x7b6a1f878bf29430788e743ee149ed2a3202f136"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "changeRouterVersion() is public (the onlyOwner restriction is only a comment), so the attacker swapped in a fake router and pair and made swapAndLiquify forward the token's whole BNB balance to itself."
-  },
+  "summary": "changeRouterVersion() is public (the onlyOwner restriction is only a comment), so the attacker swapped in a fake router and pair and made swapAndLiquify forward the token's whole BNB balance to itself.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xc0dcad5927446b9fa560be74a76efa0805e67d4c4cd486a48e9e4248287d777e"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://t.me/defimon_alerts/931"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-04/bitdog_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x4bbb53252b0cee84e6824e85989ea2eddeec25f1 created 2022-04-09T04:45:52Z by 0x55198f3ea9e10479790cfe190e7d9590561b0dbe, which is not the attack-tx sender 0x7b6a1f878bf29430788e743ee149ed2a3202f136; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 2.10 BNB x $599.85/BNB at the incident timestamp 1745767843 (DefiLlama coingecko:binancecoin) = $1,260."
     }
   ],

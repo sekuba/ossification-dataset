@@ -19,10 +19,7 @@
       "0xfe51ffcd2af4748d77130646988f966733583dc1"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The unverified contract exposed a WETH-withdrawal path with no caller check, letting an arbitrary address move its WETH balance out; the same attacker repeated it against the contract in 0xf93db4cdee0ed2af06067a9c953ebc62dd17f70be37961636c42d698cc23e932."
-  },
+  "summary": "The unverified contract exposed a WETH-withdrawal path with no caller check, letting an arbitrary address move its WETH balance out; the same attacker repeated it against the contract in 0xf93db4cdee0ed2af06067a9c953ebc62dd17f70be37961636c42d698cc23e932.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,27 +91,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x83c71a83656b0fecfa860e76a9becf738930b3f1b2510c7d0339ab585090a82d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/1831637553415610877"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-09/unverified_a89f_exp.sol"
@@ -122,20 +109,11 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xb3094734FE249A7b0110dC12D66F6C404aDA28Cb created 2024-09-03T09:44:59Z by 0x7ac8d212922c1ca49a7b7a78b1e652c511fbbdc7, not the attack-tx sender 0xfe51ffcd2af4748d77130646988f966733583dc1; unverified, no EIP-1967 events, 1.98 days old. Reported loss $1.5k, above the $1,000 floor."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xf7bdd57a3294f396b44b178814806be13cb066df78a0cdfddb41f93e98918ca8"
     }

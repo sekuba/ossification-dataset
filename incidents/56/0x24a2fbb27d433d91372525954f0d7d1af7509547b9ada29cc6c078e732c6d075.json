@@ -19,10 +19,7 @@
       "0xcd03ed98868a6cd78096f116a4b56a5f2c67757d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The MicDao sale contract's swap(uint256,address) sells MicDao at a fixed rate far below the market price and enforces its purchase limit only per msg.sender, so the attacker routed a flash loan through 80 throwaway helper contracts and dumped the proceeds."
-  },
+  "summary": "The MicDao sale contract's swap(uint256,address) sells MicDao at a fixed rate far below the market price and enforces its purchase limit only per msg.sender, so the attacker routed a flash loan through 80 throwaway helper contracts and dumped the proceeds.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x24a2fbb27d433d91372525954f0d7d1af7509547b9ada29cc6c078e732c6d075"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/ChainAegis/status/1714837519488205276"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-10/MicDao_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x19345233ea7486c1D5d780A19F0e303597E480b5 created 2023-10-07T02:29:06Z by 0x6a83ab2666e76e39e4b30e65c9159621f27b8ba9, which is not the attack-tx sender 0xcd03ed98868a6cd78096f116a4b56a5f2c67757d; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). The PoC header names the MicDao token 0xf6876f6ab2637774804b85aecc17b434a2b57168 as the victim, but the exploited entry point is the sale contract 0x19345233ea7486c1D5d780A19F0e303597E480b5 that every helper calls."
     }
   ],

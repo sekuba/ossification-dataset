@@ -19,10 +19,7 @@
       "0x473993e254be8d46ed85b149335b2be02b2891f1"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Bebop settle() executed caller-supplied interaction transferFrom calldata against accounts that had approved the settlement contract, with no maker-signature/auth check."
-  },
+  "summary": "Bebop settle() executed caller-supplied interaction transferFrom calldata against accounts that had approved the settlement contract, with no maker-signature/auth check.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0x9099383a0731fcd40550f6443c935f579085251d34b7c7285603f68b7c12f678"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-08/BaseBebopSettlement_exp.sol"

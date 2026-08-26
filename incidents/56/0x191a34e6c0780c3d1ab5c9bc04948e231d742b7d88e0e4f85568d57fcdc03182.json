@@ -19,10 +19,7 @@
       "0x1a7b15354e2f6564fcf6960c79542de251ce0dc9"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LaunchpadLockableStaking recomputes stakePendingRewards on each stake without clearing what the user already accrued, so the attacker repeated stake/withdraw cycles to multiply the TPAD payout."
-  },
+  "summary": "LaunchpadLockableStaking recomputes stakePendingRewards on each stake without clearing what the user already accrued, so the attacker repeated stake/withdraw cycles to multiply the TPAD payout.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x191a34e6c0780c3d1ab5c9bc04948e231d742b7d88e0e4f85568d57fcdc03182"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BeosinAlert/status/1721800306101793188"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-11/TrustPad_exp.sol"
@@ -121,10 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xe613c058701c768e0d04d1bf8e6a6dc1a0c6d48a created 2022-07-18T16:52:20Z by 0x8d9322e08f5220f9a98d533d03e61be4bf3141dd, which is not the attack-tx sender 0x1a7b15354e2f6564fcf6960c79542de251ce0dc9; 16 EIP-1967 Upgraded events on the victim before the incident; code age measured from last of 16 upgrade events (onchain)."
     }
   ],

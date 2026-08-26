@@ -19,10 +19,7 @@
       "0x13459bc2db6053524881415321667d5e16f5f15c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BIFKN314 flashSwap checks repayment only after the callback, so addLiquidity mints hugely inflated LP shares while pool balances are distorted."
-  },
+  "summary": "BIFKN314 flashSwap checks repayment only after the callback, so addLiquidity mints hugely inflated LP shares while pool balances are distorted.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 43114,
       "transactionHash": "0xab813aeecd174d51a9f6d7d0eb9b323bccedba6c5cce0e965781a08f3473dbd5"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-07/AvaxBIFKNPair_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 43114,
       "transactionHash": "0x99b306174e05a9bc80f304b58abf8d4621dbd1021384f45b656ac97b916509f6"
     }

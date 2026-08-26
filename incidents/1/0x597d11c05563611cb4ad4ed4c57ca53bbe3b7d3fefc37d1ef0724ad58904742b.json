@@ -20,10 +20,7 @@
       "0x00000000b2ff98680adaf8a3e382176bbfc34c8f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The three Punk CompoundModel pools exposed initialize() without access control or a one-time initialization guard. The extraction contract reinitialized each pool with itself as forge_, invested the pool's stablecoins into Compound, and called withdrawToForge() to redeem and sweep the funds."
-  },
+  "summary": "The three Punk CompoundModel pools exposed initialize() without access control or a one-time initialization guard. The extraction contract reinitialized each pool with itself as forge_, invested the pool's stablecoins into Compound, and called withdrawToForge() to redeem and sweep the funds.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -86,7 +83,7 @@
           "symbol": "DAI"
         },
         "amount": "2954191.544042759328963399",
-        "usdValue": 2954191.5440427593,
+        "usdValue": 2954191.544042759,
         "valuation": {
           "method": "stablecoin-par",
           "timestamp": 1628578498,
@@ -160,35 +157,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/punkprotocol/punk-finance-fair-launch-incident-report-984d9e340eb"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T18:58:52Z",
       "note": "Re-anchored from transaction 0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281 at index 52 to the frontrunning loss-bearing transaction at index 50 in the same block. The legacy transaction repeats the defect after the pools have been drained and receives only 0.028802 USDC, 0.036879 USDT, and 0.030390567272501362 DAI. The selected transaction calls initialize(address,address,address,address,address,address), invest(), and withdrawToForge(uint256) on each of the USDC, USDT, and DAI CompoundModel pools and transfers exactly 2,995,824.696852 USDC, 3,000,022.7862 USDT, and 2,954,191.544042759328963399 DAI to extraction contract 0x00000000b2ff98680adaf8a3e382176bbfc34c8f. All three pools are direct top-level deployments by 0xe36cc0432619247ab12f1cdd19bb3e7a24a7f47c, share the same 6,097-byte runtime and hash 0xad4296ca86f0d86547eee00e3723dbbd3a2c3462c846dd5dcd5b4ce9773625ce at deployment and immediately before the exploit, and execute without proxy delegation. The structured target uses the USDC pool as the representative execution context because the three pools contain the same code artifact and failure mode."
@@ -196,39 +175,24 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x39a78785a85250ee6f17459113efa2bdc2d5069a37f751171ee44efb3ac219f7"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xf1439835fb293178d3d4c009b43e6e0c8d1562dbb2120e0ecbaa32386d3bf32a"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xef09df5396fa5930af4dc78fc4bf70ba5eeb5e03e33381b03eb5d4621e04c5b8"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281"
     }

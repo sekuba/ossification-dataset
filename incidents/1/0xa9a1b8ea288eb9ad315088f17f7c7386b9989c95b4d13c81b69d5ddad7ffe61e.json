@@ -19,10 +19,7 @@
       "0xce1f4b4f17224ec6df16eeb1e3e5321c54ff6ede"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Cream's borrow path transferred hook-enabled AMP before committing the borrower's updated debt, so the AMP recipient hook could re-enter a second market and borrow again against collateral already consumed by the unfinished outer borrow."
-  },
+  "summary": "Cream's borrow path transferred hook-enabled AMP before committing the borrower's updated debt, so the AMP recipient hook could re-enter a second market and borrow again against collateral already consumed by the unfinished outer borrow.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -131,24 +128,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T18:20:16Z",
       "note": "Reviewed the selected exploit receipt and call trace, all 17 successful campaign transactions listed by Cream, the crAMP delegator creation and six NewImplementation events, the implementation deployment and historical runtime, Cream's post-mortem, contemporaneous loss reporting, and the commit-pinned reproduction. The selected transaction calls crAMP 0x2db6c82ce72c8d7d770ba1b5f5ed0b6e075066d6, which delegates the vulnerable borrow path to 0x3c710b981f5ef28da1807ce7ed3f2a28580e0754. The final pre-exploit NewImplementation event selected that artifact at block 13107006, transaction index 148, log index 278. Its 22,972-byte runtime hash is 0x8baa1ca9740376827834cc920d50b79f894652e197a5dbbd25c11b928877e284 at deployment and immediately before the exploit. A full event scan and slot-18 history find no later implementation selection. Code age is therefore 241,533 seconds. Cream's final campaign accounting supersedes the smaller early loss estimate."
@@ -156,50 +141,29 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/cream-finance/c-r-e-a-m-finance-post-mortem-amp-exploit-6ceb20a630c5"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x099330597c35d299ea45b1afbf1937852414e1e5e1c3d9be988c14987d1a8003"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x266f3ed46c26c97ec85231d584978419f1d12bed08251045fa90b5d4ef02312f"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xe19cf88e613750175390d370f4e3cd1443831de7c06abea2f9cbff1df6be3b18"
     },
     {
       "id": "source-7",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2021-08/Cream_exp.sol"
@@ -207,17 +171,11 @@
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://coincodex.com/article/12145/cream-finance-publishes-update-on-exploit-says-affected-users-will-be-compensated-through-protocol-fees/"
     },
     {
       "id": "source-9",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x0016745693d68d734faa408b94cdf2d6c95f511b50f47b03909dc599c1dd9ff6",

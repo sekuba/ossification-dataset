@@ -19,10 +19,7 @@
       "0xb6911dee6a5b1c65ad1ac11a99aec09c2cf83c0e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Ncufi.register() lets a caller name a referrer it also controls and STAKE() pays the referral commission out of the pool immediately, so 100 self-referred 10,000-BUSD stakes returned far more than they cost."
-  },
+  "summary": "Ncufi.register() lets a caller name a referrer it also controls and STAKE() pays the referral commission out of the pool immediately, so 100 self-referred 10,000-BUSD stakes returned far more than they cost.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x556419e0a6ee8e6de6b3679605f9f62ad013007419a1b55c9f56590a824bfb52"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://app.blocksec.com/explorer/tx/bsc/0x556419e0a6ee8e6de6b3679605f9f62ad013007419a1b55c9f56590a824bfb52"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-06/INcufi_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x80df77b2Ae5828FF499A735ee823D6CD7Cf95f5a created 2024-05-16T16:10:05Z by 0xb79c0bbeb77fce9e6662b3416f01392ab66c3b14, which is not the attack-tx sender 0xb6911dee6a5b1c65ad1ac11a99aec09c2cf83c0e; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

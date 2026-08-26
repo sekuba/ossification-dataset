@@ -20,10 +20,7 @@
       "0x7d3bd50336f64b7a473c51f54e7f0bd6771cc355"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "PositionManager.executeDecreaseOrder updated ShortsTracker before executing the external order and its callback. Re-entry from that callback interleaved another position change while global short data and Vault position data described different states, corrupting GLP valuation and enabling underpriced minting followed by inflated redemptions."
-  },
+  "summary": "PositionManager.executeDecreaseOrder updated ShortsTracker before executing the external order and its callback. Re-entry from that callback interleaved another position change while global short data and Vault position data described different states, corrupting GLP valuation and enabling underpriced minting followed by inflated redemptions.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -287,22 +284,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHash": "0x03182d3f0956a91c4e4c8f225bbc7975f9434fab042228c7acdc5ec9a32626ef"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-07/gmx_exp.sol"
@@ -310,23 +297,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0xcd5b472c13f7180967d9f6157ce6c12397e41185cb74290d1f7b101bfeb316af"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T14:06:51Z",
       "note": "Reviewed the selected transaction receipt and call trace, the commit-pinned reproduction, PositionManager's verified runtime source, its creation transaction, and runtime bytecode at deployment and immediately before the exploit. The trace enters PositionManager.executeDecreaseOrder, updates ShortsTracker, calls OrderBook, and re-enters the attacker callback before the outer position transition is complete. The selected transaction contains the inflated GLP mint/redemption loop and the Vault reserve outflows. Loss quantities are each token's net Vault outflow in this transaction; same-transaction attacker deposits are subtracted. PositionManager is a direct contract whose deployment and pre-exploit runtime hashes are identical."
@@ -334,9 +310,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1752064211/arbitrum:0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f,arbitrum:0x82af49447d8a07e3bd95bd0d56f35241523fbab1,arbitrum:0xf97f4df75117a78c1a5a0dbb814af92458539fb4,arbitrum:0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0",
       "observedAt": 1787580411

@@ -21,10 +21,7 @@
       "0xd7447eb70e60cf6a88445e26684ebe03ee9936bb"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "IdolMain._beforeTokenTransfer settles stETH rewards twice for the same holder when the sender and the receiver are the same address. It first calls _claimEthRewards(_from), which pays balanceOf(_from) * (rewardPerGod - claimedSnapshots[_from]) and writes claimedSnapshots[_from] = rewardPerGod, and then, because the sender will hold one fewer token, executes delete claimedSnapshots[_from] whenever balanceOf(_from) == 1. It then evaluates the receiver branch, where balanceOf(_to) > 0 still holds, and calls _claimEthRewards(_to) against a snapshot that has just been zeroed, paying the whole cumulative rewardPerGod again. Calling safeTransferFrom(self, self, tokenId) in a loop therefore mints one full rewardPerGod payout per iteration while the token never leaves the caller. The onlyAllowedContracts(_to) guard, which relies on Address.isContract, does not stop it because the loop runs inside the exploit contract's constructor, when its code size is still zero."
-  },
+  "summary": "IdolMain._beforeTokenTransfer settles stETH rewards twice for the same holder when the sender and the receiver are the same address. It first calls _claimEthRewards(_from), which pays balanceOf(_from) * (rewardPerGod - claimedSnapshots[_from]) and writes claimedSnapshots[_from] = rewardPerGod, and then, because the sender will hold one fewer token, executes delete claimedSnapshots[_from] whenever balanceOf(_from) == 1. It then evaluates the receiver branch, where balanceOf(_to) > 0 still holds, and calls _claimEthRewards(_to) against a snapshot that has just been zeroed, paying the whole cumulative rewardPerGod again. Calling safeTransferFrom(self, self, tokenId) in a loop therefore mints one full rewardPerGod payout per iteration while the token never leaves the caller. The onlyAllowedContracts(_to) guard, which relies on Address.isContract, does not stop it because the loop runs inside the exploit contract's constructor, when its code size is still zero.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -124,30 +121,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x9ac08d865feefeb644d34533fe59fbf144e55fa2def302ede1e966a6b8ab025a"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://rekt.news/theidolsnft-rekt"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-01/IdolsNFT_exp.sol"
@@ -155,23 +139,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x2bb2234438c3123c1b793c3a8bf3e406d81d53c533c537fd4d500348d15844d8"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Re-anchored. The snapshot row pointed at 0x5e989304...5284c, the attacker EOA's nonce-24 transaction at block 21624240. Walking 0xe546480138d50bb841b204691c39cc514858d101 from nonce 0 shows the campaign starts twelve blocks earlier: 0x9ac08d865feefeb644d34533fe59fbf144e55fa2def302ede1e966a6b8ab025a, nonce 0, block 21624128, transactionIndex 151, timestamp 1736874575, status 1, creating exploit contract 0xd7447eb70e60cf6a88445e26684ebe03ee9936bb. Its 1,154-frame callTracer trace already executes the defect: 151 CALLs of safeTransferFrom(address,address,uint256) (0x42842e0e) on IdolMain 0x439cac149b935ae1d726569800972e1669d17094, every one with from == to == 0xd7447eb7...36bb and tokenId 940, interleaved with 5 updateRewardPerGod() calls and 169 stETH balance reads. Idol 940 had been moved to that counterfactual address at block 21623518 in 0x321c0038...71c12, while it was still codeless, so the ERC721 Transfer log at 21624128 is the first self-transfer. Root cause read from the Etherscan-verified IdolMain source (solc 0.8.9): _beforeTokenTransfer pays _claimEthRewards(_from), then deletes claimedSnapshots[_from] under 'if (balanceOf(_from) == 1)', then falls into the receiver branch where balanceOf(_to) > 0 and pays _claimEthRewards(_to) against the zeroed snapshot, so a self-transfer yields balanceOf * rewardPerGod a second time; the onlyAllowedContracts(_to) modifier is inert because Address.isContract returns false during the exploit contract's own construction. Target: relationship direct, no proxy and no delegatecall in the trace; the 24,062-byte runtime hashes to 0x50e83ed5daa99f894289865080daed9b0361e1f994eb2916f017dbe036180b65 identically at its creation block 14304371 and at block 21624127. Created by 0x1a898355c4939e1e4b15330d4da1fc028a8dad66 in 0x2bb22344...844d8 at 14304371:102, timestamp 1646180663; that address is not the attacker. Code age 1736874575 - 1646180663 = 90693912 s (1049.7 days). Loss recomputed from stETH Transfer logs rather than from the reported figure: 107.685747932188918815 stETH left IdolMain to the nineteen attacker-controlled addresses across 51 transactions between blocks 21624128 and 21626433 (campaign end timestamp 1736902487), against the legacy row's 97 stETH. IdolMain's own stETH balance fell from 2806.7176 to 2704.9313 over the same window, consistent after the positive Lido rebase. Priced at the DefiLlama stETH quote 3220.3 for 1736902487, giving 346,780.41 USD instead of the legacy 310,658. Outflows after block 21627000 (55.98 stETH) go to unrelated claimant addresses and are not counted."
@@ -179,9 +152,6 @@
     {
       "id": "source-6",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0xbffcf01e5aef5d5fc82f9ab7bf78110e3479dffc8f4dc503f663c6b47b9992a4",
@@ -239,9 +209,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1736902487/ethereum:0xae7ab96520de3a18e5e111b5eaab095312d7fe84",
       "observedAt": 1787705428
@@ -249,9 +216,6 @@
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x321c0038331065107aea06985e0c2d5ebec5bcad6605cc74fc6840fe8de71c12"
     }

@@ -20,10 +20,7 @@
       "0xccc599f33c9e1635bb32d48c25a26e64451fbbdd"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Gamma's Camelot/Algebra Clearing v1.2.3 gate contains an unsafe exception in getDepositAmount: whenever the vault totalSupply is zero or either getTotalAmounts component is zero, it returns amountStart = 0 and amountEnd = the opposite token's deposit maximum instead of enforcing the configured depositDelta/deltaScale ratio band. Concentrated-liquidity vaults become entirely single-sided when the pool price moves outside their ranges, so the attacker manipulated each pool into that state, made extremely imbalanced deposits that clearDeposit should have rejected, received shares priced at the manipulated spot price, restored the price and redeemed the disproportionate shares. Gamma's later security review identifies this single-sided ratio-check exception as the root cause and says the initially blamed threshold configuration was only a contributing condition."
-  },
+  "summary": "Gamma's Camelot/Algebra Clearing v1.2.3 gate contains an unsafe exception in getDepositAmount: whenever the vault totalSupply is zero or either getTotalAmounts component is zero, it returns amountStart = 0 and amountEnd = the opposite token's deposit maximum instead of enforcing the configured depositDelta/deltaScale ratio band. Concentrated-liquidity vaults become entirely single-sided when the pool price moves outside their ranges, so the attacker manipulated each pool into that state, made extremely imbalanced deposits that clearDeposit should have rejected, received shares priced at the manipulated spot price, restored the price and redeemed the disproportionate shares. Gamma's later security review identifies this single-sided ratio-check exception as the root cause and says the initially blamed threshold configuration was only a contributing condition.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -96,46 +93,28 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 42161,
       "transactionHash": "0x025cf2858723369d606ee3abbc4ec01eab064a97cc9ec578bf91c6908679be75"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0x203d2c56abf456779509546101ee32d39efd95a32d000fd4b3091a2750ad0413"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://gammastrategies.medium.com/post-mortem-remediation-plan-9a62f10d90f3"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://gammastrategies.medium.com/security-review-and-opening-of-deposits-7dcd4e35a494"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHashes": [
         "0x1e1a6016d230f0043425e3ec223bd3c22ae113ea19557d355aec356299524e11",
@@ -169,13 +148,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:11:28Z",
       "note": "The first successful transaction by EOA 0x5351536145610aa448a8bf85ba97c71caf31909c is 0x025cf2858723369d606ee3abbc4ec01eab064a97cc9ec578bf91c6908679be75 at block 166873292 index 1, timestamp 1704339037. Its constructor creates 0x2ee5663ceac6bac7b75d255c870f9e3cd45af1a5 and helper 0xfd42cba85f6567fef32bab24179de21b9851b63e; the call tree reaches UniProxy 0x1f1ca4e8236cd13032653391db7e9544a6ad123e and then static-calls Clearing 0x1f7792ed527a399159583730017cdb5003d57f4f. Deposit events show repeated extreme deposits, including 1 raw USDT paired with 300,000 USDC.e, while the transaction finishes with only 18,848,944 raw USDT-USDC.e Hypervisor shares and zero net underlying-token gain. That is a successful public execution of the defect and therefore the age anchor even though the first material extraction came later. The first EOA then ran four more successful USDT-USDC.e transactions and twelve wstETH-WETH transactions through this Clearing; EOA 0xccc599f33c9e1635bb32d48c25a26e64451fbbdd later ran one successful USDT-USDC.e transaction at block 166881598 and nine successful wstETH-WETH transactions through block 166889816. Source-5 lists every successful transaction after the anchor in this two-vault Clearing campaign. They form one incident because the same two EOAs repeat the same manipulation/deposit/redemption sequence on one chain through the same non-upgradeable Clearing artifact; the combined loss does not include either other Clearing deployment. At block 166873291, positions(0x61a7...) and positions(0x3d53...) both have depositOverride=true, twapOverride=true, version=4 and priceThreshold=200, while the global values are twapCheck=true, twapInterval=3600, priceThreshold=100, depositDelta=1002 and deltaScale=1000. The setting let the manipulation reach a single-sided state, but the code exception then made the ratio bounds vacuous. Code history: creation transaction 0x203d2c56abf456779509546101ee32d39efd95a32d000fd4b3091a2750ad0413 deployed the direct Clearing at block 103442465 index 1, timestamp 1687354564, from Gamma deployer 0x71e7d05be74ff748c45402c06a941c822d756dc5. The runtime is empty one block earlier and has hash 0xe0b3726ece505e92124109df6ea492e2b5dae631d406b51bab080dab825994e5 at creation, block 135157878 and block 166873291; the EIP-1967 implementation slot is zero. The latest code change is therefore deployment and age at the anchor is 16,984,473 seconds (196d 13h 54m 33s). Gamma's report separately assigns about $1.357M to 0x61a7 and $771K to 0x3d53, for this record's non-overlapping reported $2.128M."

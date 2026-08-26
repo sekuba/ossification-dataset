@@ -19,10 +19,7 @@
       "0xad2cb8f48e74065a0b884af9c5a4ecbba101be23"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "A flash-loan-funded buy of 9.66e25 RANT from the RANT/WBNB pair followed by a single transfer of 1.07e25 RANT into the RANT token contract returned enough BNB to repay the loan and keep 311 BNB, i.e. RANT's transfer handler redeems tokens sent to itself out of its own reserves at a rate detached from the pool price."
-  },
+  "summary": "A flash-loan-funded buy of 9.66e25 RANT from the RANT/WBNB pair followed by a single transfer of 1.07e25 RANT into the RANT token contract returned enough BNB to repay the loan and keep 311 BNB, i.e. RANT's transfer handler redeems tokens sent to itself out of its own reserves at a rate detached from the pool price.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/Phalcon_xyz/status/1941788315549946225"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-07/RANTToken_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xc321ac21a07b3d593b269acdace69c3762ca2dd0 created 2025-07-03T11:47:40Z by 0x2373241ec958124cbd3636fc9561f7ec623adbe3, which is not the attack-tx sender 0xad2cb8f48e74065a0b884af9c5a4ecbba101be23; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 311.4 BNB x $655.16/BNB at the incident timestamp 1751728596 (DefiLlama coingecko:binancecoin) = $204,017."
     }
   ],

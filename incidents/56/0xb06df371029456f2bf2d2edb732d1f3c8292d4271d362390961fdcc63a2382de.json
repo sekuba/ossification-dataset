@@ -19,10 +19,7 @@
       "0x27441c62dbe261fdf5e1feec7ed19cf6820d583b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LABUBU token self-transfer bug inflates the attacker's balance by transferring to itself 30 times, then swaps out the phantom tokens."
-  },
+  "summary": "LABUBU token self-transfer bug inflates the attacker's balance by transferring to itself 30 times, then swaps out the phantom tokens.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xb06df371029456f2bf2d2edb732d1f3c8292d4271d362390961fdcc63a2382de"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-12/LABUBU_exp.sol"

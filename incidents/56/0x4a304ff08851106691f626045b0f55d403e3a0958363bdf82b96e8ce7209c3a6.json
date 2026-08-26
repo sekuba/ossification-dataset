@@ -22,10 +22,7 @@
       "0x403612623377a76ef80225d289f414cd2655e3e8"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Midas CToken.redeemFresh converted an exact requested underlying amount to the cTokens to burn with divScalarByExpTruncate, rounding the burn down. After reducing the fsAMM-HAY-BUSD market to 1,001 wei of cToken supply and donating underlying to inflate its exchange rate, the attacker repeatedly requested about 1.998 wei of underlying while burning only 1 wei; the remaining-supply guard did not activate because each redemption left exactly 1,000 wei. The inflated collateral position was then used to borrow and liquidate cash from three other Midas markets."
-  },
+  "summary": "Midas CToken.redeemFresh converted an exact requested underlying amount to the cTokens to burn with divScalarByExpTruncate, rounding the burn down. After reducing the fsAMM-HAY-BUSD market to 1,001 wei of cToken supply and donating underlying to inflate its exchange rate, the attacker repeatedly requested about 1.998 wei of underlying while burning only 1 wei; the remaining-supply guard did not activate because each redemption left exactly 1,000 wei. The inflated collateral position was then used to borrow and liquidate cash from three other Midas markets.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -165,21 +162,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 56,
       "transactionHash": "0x4a304ff08851106691f626045b0f55d403e3a0958363bdf82b96e8ce7209c3a6"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-06/MidasCapitalXYZ_exp.sol"
@@ -187,19 +175,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/midas-capital/midas-exploit-post-mortem-1ae266222994"
     },
     {
       "id": "source-4",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/Midas-Protocol/contracts",
       "commit": "9939efc7884efae48ee6da81112f5d4cc0a0dc08",
       "path": "contracts/compound/CToken.sol"
@@ -207,9 +187,6 @@
     {
       "id": "source-5",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/Midas-Protocol/contracts",
       "commit": "532bae69ae7bc5d3ae317b4a63783189d2ec4e48",
       "path": "contracts/compound/CToken.sol"
@@ -217,19 +194,12 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x85b9de1deca0fe6d3659c8a90d572c0f047a196ec2d2b70b203b3812a52c89b8"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x4a304ff08851106691f626045b0f55d403e3a0958363bdf82b96e8ce7209c3a6",
@@ -254,9 +224,6 @@
     {
       "id": "source-8",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1687021967/bsc:0xf307910a4c7bbc79691fd374889b36d8531b08e3,bsc:0x52f24a5e03aee338da5fd9df68d2b6fae1178827,bsc:0x0782b6d8c4551b9760e74c0545a9bcd90bdc41e5",
       "observedAt": 1787657332
@@ -264,32 +231,18 @@
     {
       "id": "source-9",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x4885a0b115a9933ad3eb6e65cb89fe4a43805e4b9772c15dc259cded8972f954"
     },
     {
       "id": "source-10",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x134ea72112bc857fea3cb624efce6023082812506a16b08d32ae99e76570b569"
     },
     {
       "id": "source-11",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T11:28:52Z",
       "note": "The selected transaction is the earliest successful defect-executing transaction by attacker EOA 0x4b92cc3452ef1e37528470495b86d3f976470734: at BSC block 29185769 index 40 it calls exploit root 0xc40119c7269a5fa813d878bf83d14e3462fc8fde, reduces the fsAMM-HAY-BUSD market to 1,001 wei supply, donates underlying, borrows against the inflated position, and performs the first under-rounded redeemUnderlying. Fourteen later successful transactions repeat the redemption, one self-liquidates, and the seventeenth reborrows the returned ankrBNB cash; they end at block 29185989 timestamp 1687021967. A successful call at block 29185947 emitted no logs and changed no measured value, so it is excluded as a no-op; later swaps are proceeds handling. Receipt Transfer logs netted by each victim market exactly match the pre-campaign versus post-campaign balance differences recorded in loss.assets. The target was internally CREATE2-deployed by 0xfc1f56c58286e7215701a773b61bff2e18a177de in source-6 at block 27304205. Its 618-byte delegator runtime is unchanged from deployment through the incident. CDelegationStorage slot 0 and six NewImplementation events establish the full implementation sequence: 0x62473df8 at deployment, 0x74517010 at block 27392990, 0x8e156d3c at 27539708, 0xb8729ec6 at 27543808, 0x13a2eb85 at 28121136, 0x1d48efba at 28886223, and 0xf3c870b7c201515e2552d018ec2a15910fd35909 at 29067669. The final event is source-9, and slot 0 still selects 0xf3c870b7c201515e2552d018ec2a15910fd35909 at block 29185768. That artifact was deployed in source-10 at block 29067248, and its runtime hash is 0x093da8322f7f3d19d6b2180caf9db93b3f62bf72824ee02523200b17adb41f87 at deployment, selection, and pre-anchor blocks. Although the market also routes extension functions to 0xe4fea88df81eba4f579208fa5abeb10aaf84e3f4, the anchor call trace shows redeemUnderlying (0x852a12e3) and redeem (0xdb006a75) delegate directly to slot-0 implementation 0xf3c870b7c201515e2552d018ec2a15910fd35909. The official vulnerable source uses divScalarByExpTruncate for redeemAmountIn; official commit 532bae69 fixes the exploit by rounding the burn up and includes a pre-incident fork regression test against this exact market and attacker call. The artifact was selected 355,231 seconds before the first defect execution."

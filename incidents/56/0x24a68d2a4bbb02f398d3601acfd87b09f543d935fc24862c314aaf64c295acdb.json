@@ -19,10 +19,7 @@
       "0xe2512f5a3714f473ab2bc3d95e3459fde7cc4b28"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BUNN's reflective deliver() lowers the reflected supply so the liquidity pair's BUNN balance falls without a sync(), letting the attacker swap a small holding for the pair's WBNB at the stale rate."
-  },
+  "summary": "BUNN's reflective deliver() lowers the reflected supply so the liquidity pair's BUNN balance falls without a sync(), letting the attacker swap a small holding for the pair's WBNB at the stale rate.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x24a68d2a4bbb02f398d3601acfd87b09f543d935fc24862c314aaf64c295acdb"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-06/BUNN_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/DecurityHQ/status/1671803688996806656"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: BUNN 0xc54AAecF5fA1b6c007d019a9d14dFb4a77CC3039 created 2021-04-20T23:10:44Z by 0x3e46da8914103c8e682bf96615d65fd43c509f58, unrelated to attack sender 0xe2512f5a3714f473ab2bc3d95e3459fde7cc4b28; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 52 WBNB left the BUNN/WBNB pair; 52 WBNB x $249.36 at incidentTimestamp 1687379215 (DefiLlama coingecko:binancecoin) = $12,967."
     }
   ],

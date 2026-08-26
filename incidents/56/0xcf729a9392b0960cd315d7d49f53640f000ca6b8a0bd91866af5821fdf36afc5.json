@@ -19,10 +19,7 @@
       "0xd227dc77561b58c5a2d2644ac0173152a1a5dc3d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Compound-fork cToken exchange-rate donation/inflation used to over-borrow markets"
-  },
+  "summary": "Compound-fork cToken exchange-rate donation/inflation used to over-borrow markets",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xcf729a9392b0960cd315d7d49f53640f000ca6b8a0bd91866af5821fdf36afc5"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-12/Channels_exp.sol"
@@ -111,10 +101,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "deployment-basis recheck: this is a Compound-fork CErc20Delegator, whose logic pointer lives in storage slot 18, not the EIP-1967 slot. callTracer shows the victim DELEGATECALLing 0xb2903a54b6dd5888286c74b2498dfdac56d7c71b (selectors 0xc37f68e2, 0xc5ebeaec), and prestate/eth_getStorageAt confirm slot 18 holds that address; binary-searching slot 18 over [13522176, 34847596] returns the same value at both ends with no intervening write, and the delegator runtime is byte-identical at both blocks. No NewImplementation ever fired. Deployment is the correct basis; 745.5 days."
     }
   ],

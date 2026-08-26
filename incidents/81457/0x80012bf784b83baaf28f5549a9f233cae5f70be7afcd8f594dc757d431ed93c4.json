@@ -19,10 +19,7 @@
       "0x6a89a8c67b5066d59bf4d81d59f70c3976facd0a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The token's custom _update() read the recipient balance before reducing the sender balance. When sender and recipient were equal, its final recipient write overwrote the reduction with the stale balance plus the transfer amount, doubling the account's balance on every self-transfer."
-  },
+  "summary": "The token's custom _update() read the recipient balance before reducing the sender balance. When sender and recipient were equal, its final recipient write overwrote the reduction with the stale balance plus the transfer amount, doubling the account's balance on every self-transfer.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -118,20 +115,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity"
-      ],
       "chainId": 81457,
       "transactionHash": "0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-03/SSS_exp.sol"
@@ -139,42 +128,23 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 81457,
       "transactionHash": "0xe798c6322f1bc3066b92293c5295877e87dbb833a7caba9c4cfd5fc458cfde33"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/neptune-mutual/how-was-super-sushi-samurai-exploited-e48a96c6dd6a"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 81457,
       "transactionHash": "0x62e6b906bb5aafdc57c72cd13e20a18d2de3a4a757cd2f24fde6003ce5c9f2c6"
     },
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T20:40:00Z",
       "note": "Reviewed the live Blast transactions, receipts and call traces for campaign setup, balance inflation and pool cash-out; the exact direct-contract creation transaction; pre-exploit runtime and hash; explorer-verified source; the commit-pinned reproduction; and published security analysis. The legacy anchor was the cash-out 48 seconds after the defect ran. Reanchoring to 0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4 captures 25 direct transfer(self,balance) calls whose values double each time. In _update(), _postCheck reads the recipient's old balance before the sender reduction, then the final recipient write overwrites that reduction when both addresses are equal. The target is an immutable direct runtime created at 570927:3; the creation and pre-exploit hashes match and no delegation is present. The later cash-out transferred exactly 1,310.040494988573740722 WETH from the pool to the attack contract, reported at approximately $4.6 million and later returned for a bounty."

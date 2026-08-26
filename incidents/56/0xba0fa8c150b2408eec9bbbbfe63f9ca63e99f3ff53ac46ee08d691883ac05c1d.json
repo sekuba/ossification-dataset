@@ -21,10 +21,7 @@
       "0x2df8dd8880010a28b1539d9aeff9bceec39e2040"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "xWinDefi credits XWIN rewards along two paths that disagree. The subscriber's own reward, in _storeRewardQty, is time weighted: it multiplies the accumulated base by the number of blocks the position has been held, so an instantly redeemed subscription earns nothing. The referral and manager rewards, in _updateReferralReward, are a flat fraction of _tradeParams.amount credited at subscription time with no holding period, and Redeem's _updateRewardBal only unwinds the subscriber's accumulators, never the referral's. The only guard against self dealing is require(msg.sender != _tradeParams.referral), an address-equality test that a second attacker-controlled contract defeats. Subscribing 76,000 flash-loaned BNB while naming a second attacker contract as referral, then redeeming in the same call frame, therefore mints 15,200 XWIN to the attacker for a round-trip cost of about 0.03 BNB in fund slippage, and the loop is repeatable until the protocol's rewardRemaining budget runs out."
-  },
+  "summary": "xWinDefi credits XWIN rewards along two paths that disagree. The subscriber's own reward, in _storeRewardQty, is time weighted: it multiplies the accumulated base by the number of blocks the position has been held, so an instantly redeemed subscription earns nothing. The referral and manager rewards, in _updateReferralReward, are a flat fraction of _tradeParams.amount credited at subscription time with no holding period, and Redeem's _updateRewardBal only unwinds the subscriber's accumulators, never the referral's. The only guard against self dealing is require(msg.sender != _tradeParams.referral), an address-equality test that a second attacker-controlled contract defeats. Subscribing 76,000 flash-loaned BNB while naming a second attacker contract as referral, then redeeming in the same call frame, therefore mints 15,200 XWIN to the attacker for a round-trip cost of about 0.03 BNB in fund slippage, and the loop is repeatable until the protocol's rewardRemaining budget runs out.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -123,22 +120,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xba0fa8c150b2408eec9bbbbfe63f9ca63e99f3ff53ac46ee08d691883ac05c1d"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2021-06/xWin_exp.sol"
@@ -146,31 +133,17 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://peckshield.medium.com/xwin-finance-incident-root-cause-analysis-71d0820e6bc1"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x1f354dcc3912bc79d9a44c83902827ab17e32c39e220ef49fa504cb99ccc1d23"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Anchor confirmed, target confirmed, root cause rewritten from the verified source and the trace, campaign extended to two transactions and the loss recomputed. 0xba0fa8c1...05c1d is successful at block 8589726 index 50, timestamp 1624579645, sent by 0xb63f0d8b9aa0c4e68d5630f54bfefc6cf2c2ad19 with nonce 2 to attack contract 0x67d3737c410f4d206012cad5cb41b2e155061945. Earliest-defect check: nonces 0 and 1 of that EOA are contract creations (0x9d495eee... and the attack contract itself) and touch nothing else, so this is the first defect-executing success. The 1,972-frame trace calls xWinDefi 0x1bf7fe7568211ecff68b6bc7ccad31ecd8fe8092 82 times directly, never through DELEGATECALL: 21 Subscribe (0x544faa64), 20 Redeem (0xa1980547), 40 view calls and one WithdrawReward (0x2c07f74f). Decoding the Subscribe tuples shows xFundAddress 0x8f52e0c41164169818c1fb04b263fdc7c1e56088, priceImpactTolerance 10000 (100 percent), a probe call of 10 wei with a zero referral, and then 20 calls of about 75,999.99 BNB each naming 0x2df8dd8880010a28b1539d9aeff9bceec39e2040, a second attacker contract, as referral, so the require(msg.sender != _tradeParams.referral) guard never fires. Reading the Etherscan-verified xWinDefi source (solc 0.6.12) against that trace: Subscribe calls _storeRewardQty, which time-weights the subscriber's own reward by block.number - blockstart and therefore pays zero on a same-block redeem, and _updateReferralReward, which credits the referral previousRealizedQty += amount * referralperunit / 1e18 with no holding requirement; Redeem's _updateRewardBal touches only the subscriber's accumulators. Measured, each round trip credits 15,200 XWIN, 0.2 of the 76,000 BNB notional, and returns 75,999.97 BNB of the 76,000 subscribed, so the round-trip cost is about 0.03 BNB. The single WithdrawReward then paid 303,998.8676541809 XWIN from xWinDefi to the referral contract. Target identity and history: direct, non-upgradeable, 15,407-byte runtime hashing to 0x55e0efee3657add28046b676ab4d9bab3869138143e4a38d0bd58cfd032ee474 at both creation block 4902105 and block 8589725. Created by 0x79cc34069c59f9cd5445daf65ebbf44976a462b3 in 0x1f354dcc...1d23 at 4902105:32, timestamp 1613391744, not an attacker address. Code age 1624579645 - 1613391744 = 11187901 s (129.5 days). Campaign: the snapshot row recorded one transaction, but the EOA repeated the whole loop at nonce 3 in 0xda1016b2...7643 at block 8589740, draining another 303,999.7541105271 XWIN, so the loss covers both. Loss recomputed as realised proceeds because the attacker dumped all 607,998.62 XWIN into PancakePair 0xd4a3dcf47887636b19ed1b54aab722bd620e5fb4 within the same transactions and the second, equally sized dump realised only 43.59 BNB against the first dump's 842.51: prestateTracer diffs give the EOA a native balance increase of 842436308973088883142 wei and 43514700032845251585 wei, and adding back the 76342460000000000 and 75821520000000000 wei of gas gives 886.103172985934134727 BNB, 273,622.998 USD at the DefiLlama BNB price 308.79361050917015 for the anchor timestamp. This replaces the legacy round 300,000."
@@ -178,19 +151,12 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "loss",
-        "root-cause"
-      ],
       "chainId": 56,
       "transactionHash": "0xda1016b24b8982ea27671e3502691c0ca17231e1dbc0dfd00df41f0646217643"
     },
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1624579645/coingecko:binancecoin",
       "observedAt": 1787705428

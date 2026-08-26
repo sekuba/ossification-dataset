@@ -19,10 +19,7 @@
       "0x67a909f2953fb1138bea4b60894b51291d2d0795"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BRA's _transfer() charges a double tax to the liquidity pair without calling sync(), so the attacker could skim() the resulting imbalance out of the pair."
-  },
+  "summary": "BRA's _transfer() charges a double tax to the liquidity pair without calling sync(), so the attacker could skim() the resulting imbalance out of the pair.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -92,19 +89,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x6759db55a4edec4f6bedb5691fc42cf024be3a1a534ddcc7edd471ef205d4047"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-01/BRA_exp.sol"
@@ -112,19 +102,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1612701106982862849"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: BRA 0x449fea37d339a11efe1b181e5d5462464bba3752 created 2022-10-12T11:39:37Z by 0xcbb1568753e0616d582c4b88d65d27d99e182dc6, unrelated to attack sender 0x67a909f2953fb1138bea4b60894b51291d2d0795; no EIP-1967 Upgraded events, age measured from deployment. Loss converted from the 819 BNB reported across the two attack transactions (675.72 WBNB in this one, verified onchain): 819 BNB x $273.24 at incidentTimestamp 1673325640 (DefiLlama coingecko:binancecoin) = $223,787. Recheck (deployment basis confirmed): keccak(eth_getCode) is identical at the creation block 22110532 and the incident block 24655772, the token holds no EIP-1967/beacon/implementation slot, the exploit trace contains no DELEGATECALL out of the token at all, and the one delegatecall in the verified source - future(address,string), gated on _ExtenAddress - cannot change the token's own runtime."
     }
   ],

@@ -19,10 +19,7 @@
       "0xed187f37e5ad87d5b3b2624c01de56c5862b7a9b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "AaveLinearPool rounded a crafted bb-a-USDC-to-USDC swap output to zero while still changing the pool's BPT balance. After the attacker reduced virtual supply close to zero, this accounting change inflated bb-a-USDC's rate; the nested bb-a-USD pool cached that rate and exchanged the overvalued BPT for bb-a-DAI and bb-a-USDT."
-  },
+  "summary": "AaveLinearPool rounded a crafted bb-a-USDC-to-USDC swap output to zero while still changing the pool's BPT balance. After the attacker reduced virtual supply close to zero, this accounting change inflated bb-a-USDC's rate; the nested bb-a-USD pool cached that rate and exchanged the overvalued BPT for bb-a-DAI and bb-a-USDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -87,7 +84,7 @@
         "valuation": {
           "method": "other",
           "timestamp": 1693122959,
-          "unitPriceUsd": 1.1004342891518316,
+          "unitPriceUsd": 1.1004342891518315,
           "sourceIds": [
             "source-5"
           ]
@@ -158,23 +155,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x2a027c8b915c3737942f512fc5d26fd15752d0332353b3059de771a35a606c2d"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-08/Balancer_exp.sol"
@@ -182,34 +168,17 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x4f9f1467f2f3e6ee4857c9ef18e2dfcc2ca6a5b3a0881736bf0c164147ba5668"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blocksec.com/blog/tiny-rounding-down-big-fund-losses-an-in-depth-analysis-of-the-recent-balancer-incident"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T13:13:44Z",
       "note": "Reviewed the exploit receipt and call trace, AaveLinearPool creation trace and historical runtime, the pre-transaction aUSDC rate, BlockSec's transaction analysis, verified contract metadata, and the commit-pinned reproduction. Balancer Vault calls onSwap directly at bb-a-USDC pool 0x9210f1204b5a24742eba12f710636d76240df3d0. The crafted sequence first reduces virtual supply and then executes a bb-a-USDC swap whose USDC output rounds to zero while the accounting change inflates the BPT rate cached by the nested boosted pool. No delegatecall originates from the target. Its 17,465-byte runtime has hash 0xa8e951312123e60a23e24ec18bea80c1ca7452a8fd30b36d831ff28f525108d8 at creation block 13799621 and immediately before the exploit. The factory's direct CREATE is therefore the complete code-selection history, giving an age of 53,688,032 seconds. The receipt confirms exact post-flash-loan proceeds of 114,324.73526534493285625 DAI, 253,461.006245 USDT, and 0.970495 aUSDC."

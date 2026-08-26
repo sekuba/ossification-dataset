@@ -19,10 +19,7 @@
       "0x0d1969a30bb4ba02e731862edbced5f5abba8373"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Each MetaPoint per-user contract exposes a public approve() that grants the caller an unlimited POT allowance, so an attacker can authorize itself and transferFrom the contract's entire POT balance."
-  },
+  "summary": "Each MetaPoint per-user contract exposes a public approve() that grants the caller an unlimited POT allowance, so an attacker can authorize itself and transferFrom the contract's entire POT balance.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -119,20 +116,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 56,
       "transactionHash": "0xccd12f22629b2c42d2b680362dadbd1b3d89cb4a87a8c9b297766b4974c6ad34"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-04/MetaPoint_exp.sol"
@@ -140,21 +129,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/PeckShieldAlert/status/1645980197987192833"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T09:50:32Z",
       "note": "Re-anchored from the legacy PoC transaction 0xdb01fa33...e7995 to the first successful defect-executing campaign transaction 0xccd12f22...6ad34 at block 27263530 index 27. Its trace first calls approve() on 0x0f6c39efa4db888ff9f73175dff0129d4b7166cb, whose direct runtime then calls POT.approve(0xefa208b619099146de85f1dfedf0e9dcbb8defe1, uint256.max). The per-user contract was created by factory 0x71a0c153f52cefcf6d26253f67b10dabed5556ff in transaction 0xc3d6da64...2b420 at block 26963008 index 30. Its 370-byte runtime hashes to 0x08e4f6d3d509f87b6758fa77e7fb5cc0fd01b92bfce1d5783dbd2848b67fa973 at deployment, immediately before the campaign, and currently, giving an age of 914214 seconds. The same EOA used 0xefa208b619099146de85f1dfedf0e9dcbb8defe1 for 13 campaign calls and 0xc6e451c8fa3418b703121ac23e44803d143c5d5c for 29, spanning blocks 27263530-27265182; 25 calls granted allowances and 17 drained balances. The drain receipts record 466 unique victim POT transfers to pair 0x9117df9aa33b23c0a9c2c913ad0739273c3930b3 totaling 209431.616898011367571955 POT. All 466 victims have the exact same runtime immediately before the campaign, and their creation records all identify factory 0x71a0c153f52cefcf6d26253f67b10dabed5556ff. The pool paid 823417.781370262268552996 USDT to the two attack contracts; every unit was forwarded to the USDT/WBNB pair, which paid 2515.786571418808574992 WBNB to the attacker EOA. The exact realized USDT proceeds at par supersede the legacy 2500-BNB estimate. The first executed code-identical deployment is the deterministic campaign representative; adding the other 465 contexts would produce redundant observations under code-hash/failure-mode deduplication."
@@ -162,19 +141,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xc3d6da64cbdbe7f7154a461408d319a8e4e7d8315b6d44a43d0dc6d5aeb2b420"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x04c2c81dbd17a17b5eb50ec72678071328a61afe2cf07350cbca9a14a978fba6",

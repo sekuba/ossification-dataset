@@ -19,10 +19,7 @@
       "0xd9936ea91a461aa4b727a7e3661bcd6cd257481c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LPC.transfer() writes the recipient balance from a value cached before the sender deduction and never checks sender != recipient, so transferring to oneself mints LPC out of thin air."
-  },
+  "summary": "LPC.transfer() writes the recipient balance from a value cached before the sender deduction and never checks sender != recipient, so transferring to oneself mints LPC out of thin air.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x0e970ed84424d8ea51f6460ce6105ab68441d4450a80bc8d749fdf01e504ed8c"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-07/LPC_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BeosinAlert/status/1551535854681718784"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: LPC 0x1E813fA05739Bf145c1F182CB950dA7af046778d created 2022-03-14T12:41:20Z by 0xfae915e700847328e33af8f6921bec93ce06f995, unrelated to attack sender 0xd9936ea91a461aa4b727a7e3661bcd6cd257481c; no EIP-1967 Upgraded events, age measured from deployment. Loss converted: 178 BNB x $253.96 at incidentTimestamp 1658732507 (DefiLlama coingecko:binancecoin) = $45,205, consistent with the ~$45,715 stated in the PoC header."
     }
   ],

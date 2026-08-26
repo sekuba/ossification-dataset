@@ -19,10 +19,7 @@
       "0x53635bf7b92b9512f6de0eb7450b26d5d1ad9a4c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Router's command executor did not validate the target/parameters of the commands it dispatched, so the attacker crafted a transferFrom-style call and pulled 188,013 asdCRV out of wallets that had approved the router."
-  },
+  "summary": "The Router's command executor did not validate the target/parameters of the commands it dispatched, so the attacker crafted a transferFrom-style call and pulled 188,013 asdCRV out of wallets that had approved the router.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -118,29 +115,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x491cf8b2a5753fdbf3096b42e0a16bc109b957dc112d6537b1ed306e483d0744"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.verichains.io/p/spectra-protocol-exploit-arbitrary"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-07/Spectra_finance_exp.sol"
@@ -148,13 +133,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T11:52:27Z",
       "note": "Reviewed the exploit receipt and call trace, proxy creation receipt, complete Upgraded(address) log range from block 20191518 through the exploit block, pre-exploit implementation bytecode hash, pinned reproduction, and Verichains analysis. The exploit calls proxy 0x3d20601ac0ba9cae4564ddf7870825c505b69f1a, which delegates the vulnerable command to 0x51bdbfcd7656e2c25ad1bc8037f70572b7142ecc. Its only pre-exploit upgrade event is log 171 in the creation transaction and selects that implementation. The exploit receipt records an exact transfer of 188013.365080870249823427 asdCRV; Verichains reports its contemporaneous value as $73,325."
@@ -162,10 +140,6 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xeda25ed9cdbfa5a1fa3ef994eaca81f3905c4441f4bf56c820054774d7d30c52"
     }

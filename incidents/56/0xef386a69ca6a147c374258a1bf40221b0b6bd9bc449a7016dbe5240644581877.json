@@ -19,10 +19,7 @@
       "0xfb1cc1548d039f14b02cff9ae86757edd2cdb8a5"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "claimReferral(address) pays out referral commission accrued from the caller's own buyAsset() purchases with no check that the referral was independent, so a flash-loaned 1000 BNB self-referred purchase could be claimed back repeatedly."
-  },
+  "summary": "claimReferral(address) pays out referral commission accrued from the caller's own buyAsset() purchases with no check that the referral was independent, so a flash-loaned 1000 BNB self-referred purchase could be claimed back repeatedly.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xef386a69ca6a147c374258a1bf40221b0b6bd9bc449a7016dbe5240644581877"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-02/StepHeroNFTs_exp.sol"
@@ -113,11 +103,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x9823E10A0bF6F64F59964bE1A7f83090bf5728aB created 2021-08-31T08:03:50Z by 0x7c1620dabfac63ba40ae2bb453dd5d5f65d19102, which is not the attack-tx sender 0xfb1cc1548d039f14b02cff9ae86757edd2cdb8a5; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 137.9 BNB x $651.91/BNB at the incident timestamp 1740111790 (DefiLlama coingecko:binancecoin) = $89,898."
     }
   ],

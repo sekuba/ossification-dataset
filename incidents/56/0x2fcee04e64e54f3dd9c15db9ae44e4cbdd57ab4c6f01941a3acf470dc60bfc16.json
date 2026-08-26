@@ -19,10 +19,7 @@
       "0x90c4c1aa895a086215765ec9639431309633b198"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "KEST's _transfer fee logic moves KEST out of the KEST/WBNB pair without a sync, so the attacker repeatedly skimmed the pair back to itself and removed liquidity at the distorted ratio."
-  },
+  "summary": "KEST's _transfer fee logic moves KEST out of the KEST/WBNB pair without a sync, so the attacker repeatedly skimmed the pair back to itself and removed liquidity at the distorted ratio.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x2fcee04e64e54f3dd9c15db9ae44e4cbdd57ab4c6f01941a3acf470dc60bfc16"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/MetaSec_xyz/status/1736077719849623718"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-12/KEST_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x7dda132dd57b773a94e27c5caa97834a73510429 created 2023-12-10T11:42:32Z by 0xcc1388ea8a63f564502eb300f5f2782069bacd51, which is not the attack-tx sender 0x90c4c1aa895a086215765ec9639431309633b198; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

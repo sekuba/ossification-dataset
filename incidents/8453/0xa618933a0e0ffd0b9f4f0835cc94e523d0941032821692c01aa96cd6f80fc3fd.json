@@ -21,10 +21,7 @@
       "0x5ff34545ea227bca3826b11d6c1599095b39d9b8"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "NORMIE's _transfer contains two cooperating defects. _get_premarket_user sets premarket_user[recipient] for any address that receives exactly balanceOf(teamWalletAddress) in a single transfer, so the flag is self-assignable; and for a flagged recipient buying from a market pair, _transfer executes _balances[address(this)] += amount, crediting the token contract the full purchase amount without debiting any account and without changing _totalSupply, so the sum of balances exceeds supply. The same function then sells the contract's balance through swapAndLiquify whenever it exceeds a threshold randomised from block.timestamp and block.difficulty, with no slippage bound and no per-block cap. The attacker flagged their helper by flash-swapping exactly the team wallet's 5,000,000-token balance out of the SushiSwap pair, then shuttled 2,266,628.300256719 NORMIE between the helper and the pair with skim, minting that amount into the contract each round and forcing 51 unbounded swapbacks that dumped 237,150,000 NORMIE into the pair, collapsing the price so the tokens flash-borrowed and sold at the pre-attack price could be repurchased for a fraction of the proceeds. No parameter choice makes this correct: the credit is unbacked at every threshold, and the threshold only sets how often the contract liquidates it."
-  },
+  "summary": "NORMIE's _transfer contains two cooperating defects. _get_premarket_user sets premarket_user[recipient] for any address that receives exactly balanceOf(teamWalletAddress) in a single transfer, so the flag is self-assignable; and for a flagged recipient buying from a market pair, _transfer executes _balances[address(this)] += amount, crediting the token contract the full purchase amount without debiting any account and without changing _totalSupply, so the sum of balances exceeds supply. The same function then sells the contract's balance through swapAndLiquify whenever it exceeds a threshold randomised from block.timestamp and block.difficulty, with no slippage bound and no per-block cap. The attacker flagged their helper by flash-swapping exactly the team wallet's 5,000,000-token balance out of the SushiSwap pair, then shuttled 2,266,628.300256719 NORMIE between the helper and the pair with skim, minting that amount into the contract each round and forcing 51 unbounded swapbacks that dumped 237,150,000 NORMIE into the pair, collapsing the price so the tokens flash-borrowed and sold at the pre-attack price could be repurchased for a fraction of the proceeds. No parameter choice makes this correct: the credit is unbacked at every threshold, and the threshold only sets how often the contract liquidates it.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -123,30 +120,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 8453,
       "transactionHash": "0xa618933a0e0ffd0b9f4f0835cc94e523d0941032821692c01aa96cd6f80fc3fd"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/lookonchain/status/1794680612399542672"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-05/NORMIE_exp.sol"
@@ -154,19 +138,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0x6758fd5c3bc76140ce82ed4be320aa21d9a979bc80a0fe578962a8e802bf5ebc"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1716694913/coingecko:ethereum",
       "observedAt": 1787700157
@@ -174,9 +151,6 @@
     {
       "id": "source-6",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 8453,
       "transactionHashes": [
         "0xa618933a0e0ffd0b9f4f0835cc94e523d0941032821692c01aa96cd6f80fc3fd",
@@ -198,13 +172,6 @@
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Re-reviewed the legacy NORMIE row from chain data. Anchor: 0xa618933a0e0ffd0b9f4f0835cc94e523d0941032821692c01aa96cd6f80fc3fd is status 1 at 14952783:10, timestamp 1716694913, and is nonce 2 of attacker EOA 0xf7f3a556ac21d081f6dba961b6a84e52e37a717d, whose nonce 0 created the attack contract 0xef0ba56da26b4ddfef0959c1d0fc7a73a908befc and whose nonce 1 was a bare 2 ETH funding transfer, so this is the earliest successful defect-executing transaction; every later transaction of the campaign repeats the same buy / 0x4b293bf9 exploit / withdraw cycle against the same token. Root cause read from the verified Solidity at 0x7f12d13b34f5f4f0a9449c16bcd42f0da47af200 and from the 4,442-frame trace: _get_premarket_user(recipient, amount) sets premarket_user[recipient] when amount == balanceOf(teamWalletAddress), and the attacker's helper 0x5ff34545ea227bca3826b11d6c1599095b39d9b8 obtained exactly the team wallet's 5,000,000-token balance from the pair to set that flag; thereafter _transfer runs _balances[address(this)] += amount on each of the helper's buys, an unbacked credit with no offsetting debit and no _totalSupply change, and the swapAndLiquify branch (guarded only by contractTokenBalance >= _minimumTokensBeforeSwap * ((keccak256(block.timestamp, block.difficulty) % 11) + 90) / 100) then sells 4,650,000 tokens per trigger through the router with amountOutMin 0. The trace shows 51 eventSwapAndLiquify emissions selling 237,150,000 NORMIE and paying 100.05140219385335 ETH to teamWalletAddress 0xd8056b0f8aa2126a8db6f0b3109fe9127617beb2. Target identity: the token is a direct, non-proxy contract; its runtime hashes to 0x6bcd21aadcfad2f32a1ebaac6937eeb4c0cda3e5425b82ef572f3dcea78030d1 at its creation block 11486835, at block 14952782 immediately before the exploit, and at head, the empty-code hash appears at block 11486834, and EIP-1967 slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc is zero. Creation transaction 0x6758fd5c3bc76140ce82ed4be320aa21d9a979bc80a0fe578962a8e802bf5ebc at 11486835:3 was sent by 0xd8056b0f8aa2126a8db6f0b3109fe9127617beb2, the project deployer and team wallet, not by any attacker address. Code age is 1716694913 - 1709763017 = 6931896 s (80.23 d), confirming the legacy value. Loss re-measured rather than inherited from the legacy 490,000 USD headline: summing this contract's Transfer logs gives a net WETH depletion of 162.53230179892626 in the SushiSwap pair 0x24605e0bb933f6ec96e6bbbcea0be8cc880f6e6f and 12.0 in the Uniswap V3 pool 0x67ab0e84c7f9e399a67037f94a08e5c664dc1c66 for the anchor alone, and Etherscan's internal-transaction ledger for the attack contract shows 224.980662844423876994 ETH paid out to the operator against 17.9 ETH of operator capital, leaving 207.080662844423876994 ETH net across the campaign; at the DefiLlama ETH price 3747.71 for timestamp 1716694924 that is 776078.27 USD."

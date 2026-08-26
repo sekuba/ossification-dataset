@@ -19,10 +19,7 @@
       "0x3c6184f4ee527600dcc0163ccc47dedd110a6101"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BeefyZapRouter.executeOrder ran arbitrary route steps (transferFrom of vault tokens) only gated by msg.sender==order.user, letting attacker spend third-party allowances."
-  },
+  "summary": "BeefyZapRouter.executeOrder ran arbitrary route steps (transferFrom of vault tokens) only gated by msg.sender==order.user, letting attacker spend third-party allowances.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 42161,
       "transactionHash": "0x536463212dfcdf99616b8fda50795bc8374b07b0cddc505da431f37786d1f857"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-08/BeefyZapRouter_exp.sol"

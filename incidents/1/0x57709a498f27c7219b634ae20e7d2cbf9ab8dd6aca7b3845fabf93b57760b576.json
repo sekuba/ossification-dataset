@@ -19,10 +19,7 @@
       "0x224c940003dd0b8aa1a20e655ced0363d573fa46"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "An authorized spender's helper spendFromUser let the spender pull any user's tokens via the shared AllowanceTarget approvals, an access-control flaw draining approved balances."
-  },
+  "summary": "An authorized spender's helper spendFromUser let the spender pull any user's tokens via the shared AllowanceTarget approvals, an access-control flaw draining approved balances.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x57709a498f27c7219b634ae20e7d2cbf9ab8dd6aca7b3845fabf93b57760b576"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-04/unverified_a152_exp.sol"
@@ -111,10 +101,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "deployment-basis recheck: the victim's single DELEGATECALL in the exploit tx (selector 0xaced3248) goes to 0xc5107fc88af7a0536f9197cfc68fc86fd60ed846, which prestateTracer shows is read from the keccak slot 0xf4efdb76b845a8770afe715c2e72e59b0624107b44d7824eb8bf07159a5a9c29. Binary-searching that slot over [17982849, 24973582] finds exactly one write, at block 17982856 - seven blocks and 84 seconds after the creation block, i.e. part of the deployment/registration sequence - and no change in the following 977 days. The runtime is byte-identical at both blocks. Deployment remains the right basis (the 84-second offset is inside the deploy sequence and is not recorded as a separate change); 977.5 days."
     }
   ],

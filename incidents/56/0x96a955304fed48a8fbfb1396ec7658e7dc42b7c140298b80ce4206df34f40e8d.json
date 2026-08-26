@@ -19,10 +19,7 @@
       "0x56b2d55457b31fb4b78ebddd6718ea2667804a06"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LW.transferFrom() accepts the token contract itself as the source without checking any allowance, so the attacker pulled 1e33 LW straight out of the contract and sold it into the LW/BUSDT pair."
-  },
+  "summary": "LW.transferFrom() accepts the token contract itself as the source without checking any allowance, so the attacker pulled 1e33 LW straight out of the contract and sold it into the LW/BUSDT pair.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x96a955304fed48a8fbfb1396ec7658e7dc42b7c140298b80ce4206df34f40e8d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://app.blocksec.com/explorer/tx/bsc/0x96a955304fed48a8fbfb1396ec7658e7dc42b7c140298b80ce4206df34f40e8d"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-07/LW_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xABC6e5a63689b8542dbDC4b4f39a7e00d4AC30c8 created 2024-07-07T06:33:35Z by 0xef200a2238c508dade54fbf6ced707368ff6fbe6, which is not the attack-tx sender 0x56b2d55457b31fb4b78ebddd6718ea2667804a06; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

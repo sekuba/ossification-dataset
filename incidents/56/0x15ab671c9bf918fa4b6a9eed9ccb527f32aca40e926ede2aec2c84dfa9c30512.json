@@ -19,10 +19,7 @@
       "0x031958a8137745350549fd95055398dd536a07c7"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MINER's _transfer burns part of the MINER/WBNB pair's balance on each trade, so the attacker looped small buys with pair.skim() to keep pushing the price up before selling out."
-  },
+  "summary": "MINER's _transfer burns part of the MINER/WBNB pair's balance on each trade, so the attacker looped small buys with pair.skim() to keep pushing the price up before selling out.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x15ab671c9bf918fa4b6a9eed9ccb527f32aca40e926ede2aec2c84dfa9c30512"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-02/MINER_bsc_exp.sol"
@@ -113,11 +103,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x2ba9d4a8c41c60b71ff7df2c3f54b008644b954e created 2024-02-12T11:23:40Z by 0x06f8fc2ceaebb832b338cc8b34191a0e885494a7, which is not the attack-tx sender 0x031958a8137745350549fd95055398dd536a07c7; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 3.5 WBNB x $323.88/BNB at the incident timestamp 1707862458 (DefiLlama coingecko:binancecoin) = $1,134."
     }
   ],

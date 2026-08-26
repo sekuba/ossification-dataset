@@ -20,10 +20,7 @@
       "0xd5c6f3b71bcceb2ef8332bd8225f5f39e56a122c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The executor contract exposes printMoney(), selector 0x94655f2b, with no caller check. It forwards caller-supplied token, amount and recipient words to the paired holder contract 0xb5cb0555a1d28c9dfdbc14017dae131d5c1cc19c, which trusts the executor as its only authorised caller, so anyone could transfer the holder’s balances anywhere. The attacker called it seven times in one transaction and swept the holder’s WBNB, ETH, USDT, TUSD, BTCB, USDC and FDUSD."
-  },
+  "summary": "The executor contract exposes printMoney(), selector 0x94655f2b, with no caller check. It forwards caller-supplied token, amount and recipient words to the paired holder contract 0xb5cb0555a1d28c9dfdbc14017dae131d5c1cc19c, which trusts the executor as its only authorised caller, so anyone could transfer the holder\u2019s balances anywhere. The attacker called it seven times in one transaction and swept the holder\u2019s WBNB, ETH, USDT, TUSD, BTCB, USDC and FDUSD.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -179,7 +176,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Components are the holder contract’s net ERC-20 deltas in the single exploit transaction, and they match the attacker’s net gain token for token. The v1 snapshot carried USD 2,000,000 for this row; that figure is not supported on chain. The holder held 22.49 WBNB, 1.51 ETH, 0.032 BTCB and about 13,500 in stablecoins at the exploit block, which is the entirety of what left. Stablecoin components use par; the largest DefiLlama deviation from par among them at the incident timestamp is 0.13 percent. The attacker EOA is a serial exploiter with 72 transactions, but only this one touches this victim. Nothing was recovered."
+    "notes": "Components are the holder contract\u2019s net ERC-20 deltas in the single exploit transaction, and they match the attacker\u2019s net gain token for token. The v1 snapshot carried USD 2,000,000 for this row; that figure is not supported on chain. The holder held 22.49 WBNB, 1.51 ETH, 0.032 BTCB and about 13,500 in stablecoins at the exploit block, which is the entirety of what left. Stablecoin components use par; the largest DefiLlama deviation from par among them at the incident timestamp is 0.13 percent. The attacker EOA is a serial exploiter with 72 transactions, but only this one touches this victim. Nothing was recovered."
   },
   "targets": [
     {
@@ -238,30 +235,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x8c026c3939f7e2d0376d13e30859fa918a5a567348ca1329836df88bef30c73e"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/1937761064713941187"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-06/unverified_b5cb_exp.sol"
@@ -269,19 +253,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x29028ab5eea287f5b47b8883e1534dd62bbc6303a514cc5e875212297a375dfa"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1750823338/bsc:0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c,bsc:0x2170ed0880ac9a755fd29b2688956bd959f933f8,bsc:0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
       "observedAt": 1787642892
@@ -289,16 +266,9 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:25:00Z",
-      "note": "The exploit is one transaction whose entry contract is created inside it and calls the executor’s printMoney() seven times, once per token; each call reaches the holder contract, which performs the ERC-20 transfer to the attacker EOA. keccak of printMoney() is 0x94655f2b, matching the selector named in the snapshot summary. The executor is not upgradeable: its runtime code hash is identical at the deployment block 52031002 and at block 52052679 and its EIP-1967 implementation slot is zero, so the exploited code is 9 hours 2 minutes old. Its deployer 0xb6f90981027b95d74b58cb728672bc0143400ad0 is not the attacker. The defect is placed on the executor rather than the holder because the holder’s transfer entry point does restrict its caller to the executor; the missing check is printMoney()’s. The v1 loss figure of USD 2,000,000 is not reproducible: the holder’s entire balance at the exploit block, and the attacker’s entire gain, is USD 35,145.31."
+      "note": "The exploit is one transaction whose entry contract is created inside it and calls the executor\u2019s printMoney() seven times, once per token; each call reaches the holder contract, which performs the ERC-20 transfer to the attacker EOA. keccak of printMoney() is 0x94655f2b, matching the selector named in the snapshot summary. The executor is not upgradeable: its runtime code hash is identical at the deployment block 52031002 and at block 52052679 and its EIP-1967 implementation slot is zero, so the exploited code is 9 hours 2 minutes old. Its deployer 0xb6f90981027b95d74b58cb728672bc0143400ad0 is not the attacker. The defect is placed on the executor rather than the holder because the holder\u2019s transfer entry point does restrict its caller to the executor; the missing check is printMoney()\u2019s. The v1 loss figure of USD 2,000,000 is not reproducible: the holder\u2019s entire balance at the exploit block, and the attacker\u2019s entire gain, is USD 35,145.31."
     }
   ],
   "verification": {

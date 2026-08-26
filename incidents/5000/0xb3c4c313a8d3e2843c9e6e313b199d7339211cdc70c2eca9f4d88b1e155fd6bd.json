@@ -20,10 +20,7 @@
       "0x618f768af6291705eb13e0b2e96600b3851911d1"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The mUSDY market runs the ERC-3156 borrower callback while its own cash balance is still reduced by the flash-loaned amount, and the mToken exchange rate is computed from that cash balance. Supplying USDY back inside the callback therefore minted mUSDY at an inflated rate. The attacker repeated the cycle 24 times to build collateral it had not paid for and borrowed the WETH and mETH markets out against it."
-  },
+  "summary": "The mUSDY market runs the ERC-3156 borrower callback while its own cash balance is still reduced by the flash-loaned amount, and the mToken exchange rate is computed from that cash balance. Supplying USDY back inside the callback therefore minted mUSDY at an inflated rate. The attacker repeated the cycle 24 times to build collateral it had not paid for and borrowed the WETH and mETH markets out against it.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -79,7 +76,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Components are the attacker EOA’s net token gain in the single exploit transaction, which is a contract creation whose constructor runs the whole attack. The four later transactions in that EOA’s history only unwrap and swap the proceeds. The borrows backing the collateral were never repaid. DefiLlama observations are 127 and 103 seconds after the incident timestamp. Nothing was recovered."
+    "notes": "Components are the attacker EOA\u2019s net token gain in the single exploit transaction, which is a contract creation whose constructor runs the whole attack. The four later transactions in that EOA\u2019s history only unwrap and swap the proceeds. The borrows backing the collateral were never repaid. DefiLlama observations are 127 and 103 seconds after the incident timestamp. Nothing was recovered."
   },
   "targets": [
     {
@@ -142,30 +139,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 5000,
       "transactionHash": "0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://minterest.com/blog/minterest-security-incident-post-mortem-report/"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-07/Minterest_exp.sol"
@@ -173,19 +157,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 5000,
       "transactionHash": "0x6a3685cabc1cdd11dc7222ea23f2538fb7e3249f352a5e480d27f0754e70cb68"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1720963466/mantle:0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111,mantle:0xcda86a272531e8640cd7f1a92c01839911b90bb0",
       "observedAt": 1787645441
@@ -193,24 +170,13 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T12:10:00Z",
-      "note": "The attacker EOA sent five Mantle transactions; the first is the exploit-contract creation whose constructor performs the whole attack, and it is therefore both the earliest and the only defect-executing transaction. The mUSDY market proxy emitted exactly two Upgraded events between its creation block 49704565 and the exploit, the second at block 57147116 installing 0x4b351368459ccc0024197d24ab7ba278e4c6f510, and its EIP-1967 slot still reads that address at block 66416576, so the exploited implementation is 142.9 days old. Its creator 0x66f850099e6d5dbd712d15244b65bd822f36be7e is not an attacker address. Loss is the attacker’s net token gain in the exploit transaction: 223.640470785331714615 WETH and 204.486893253187905361 mETH."
+      "note": "The attacker EOA sent five Mantle transactions; the first is the exploit-contract creation whose constructor performs the whole attack, and it is therefore both the earliest and the only defect-executing transaction. The mUSDY market proxy emitted exactly two Upgraded events between its creation block 49704565 and the exploit, the second at block 57147116 installing 0x4b351368459ccc0024197d24ab7ba278e4c6f510, and its EIP-1967 slot still reads that address at block 66416576, so the exploited implementation is 142.9 days old. Its creator 0x66f850099e6d5dbd712d15244b65bd822f36be7e is not an attacker address. Loss is the attacker\u2019s net token gain in the exploit transaction: 223.640470785331714615 WETH and 204.486893253187905361 mETH."
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 5000,
       "transactionHash": "0xf2b48f909027e54331ecaffb5761496ddf1c27e7d42a07c7c693f4c5d4f9853c"
     }

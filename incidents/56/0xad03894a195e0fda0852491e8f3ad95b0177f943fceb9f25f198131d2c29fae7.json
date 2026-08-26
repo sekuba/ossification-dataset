@@ -23,10 +23,7 @@
       "0xee8bdcc159fe4cfede8d37e507b8291d6e5b5038"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MasterChef.depositByAddLiquidity() passes the caller-supplied token addresses straight into _doTransferIn and paraRouter.addLiquidity without checking them against the pool LP pair, and addLiquidityInternal then credits the deposit with the raw increase of the pool LP token balance (newBalance - oldBalance). The attacker supplied two tokens of their own whose transferFrom re-entered deposit(pid, amount) with real LP tokens, so the same real LP deposit was counted twice: once by the reentrant deposit and once as the balance delta measured by depositByAddLiquidity. Two withdraw() calls then removed roughly twice the LP that had been paid in."
-  },
+  "summary": "MasterChef.depositByAddLiquidity() passes the caller-supplied token addresses straight into _doTransferIn and paraRouter.addLiquidity without checking them against the pool LP pair, and addLiquidityInternal then credits the deposit with the raw increase of the pool LP token balance (newBalance - oldBalance). The attacker supplied two tokens of their own whose transferFrom re-entered deposit(pid, amount) with real LP tokens, so the same real LP deposit was counted twice: once by the reentrant deposit and once as the balance delta measured by depositByAddLiquidity. Two withdraw() calls then removed roughly twice the LP that had been paid in.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -224,29 +221,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 56,
       "transactionHash": "0xad03894a195e0fda0852491e8f3ad95b0177f943fceb9f25f198131d2c29fae7"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://halborn.com/explained-the-paraluni-hack-march-2022/"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-03/Paraluni_exp.sol"
@@ -254,28 +239,18 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x73185ee206c91e3090b906b493498ea2b9a1817fa6f5570ae2bf3037f31a516e"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xff4d96ec5ccec75a767c74cf9df19b54f7ba3798d0531b3222b4fcd7d1608339"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0xad03894a195e0fda0852491e8f3ad95b0177f943fceb9f25f198131d2c29fae7",
@@ -328,9 +303,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1647121956/bsc:0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c,bsc:0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c,bsc:0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82,coingecko:ethereum",
       "observedAt": 1787700000
@@ -338,13 +310,6 @@
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T12:20:00Z",
       "note": "Re-anchored. The v1 snapshot anchored to 0x70f367b9420ac2654a5223cc311c7f9c361736a39fd4e7dff9ed1b85bab7ad54 at block 16008281, which is the ninth defect-executing transaction of the campaign. Enumerating every log the MasterChef 0x633fa755a83b015cccdc451f82c57ea0bd32b4b4 emitted between blocks 16002000 and 16010000 isolates exactly 45 transactions carrying the Deposit,Deposit,Withdraw,Withdraw signature of the exploit; all 45 are successful and sent by 0x94bc1d555e63eea23fe7fdbf937ef3f9ac5fcf8f, and the earliest is 0xad03894a195e0fda0852491e8f3ad95b0177f943fceb9f25f198131d2c29fae7 at block 16005645 index 96, which is the new anchor. It is the first successful depositByAddLiquidity (selector 0xff09731b) of the campaign: the five earlier attempts through exploit contracts 0x8cb25c27, 0xac8f6d45, 0x781febd9, 0xf1ef6296, 0xf19c3e3e and 0x4d17c4ae all reverted, and the attacker transactions before them are ordinary deposit/withdraw calls that do not execute the defect. The anchor is a small rehearsal of the full attack against the single-asset BTCB pool and nets about 0.0000995 BTCB. The victim is a ParaProxy: ParaProxyAdminStorage puts admin at slot 0, pendingAdmin at 1, implementation at 2 and pendingImplementation at 3, and the fallback delegatecalls slot 2, so EIP-1967 does not apply. Its 1,339-byte runtime is unchanged (keccak(eth_getCode) 0x51a7d38fa15852fa2f9451040d0aac41bfa3135e188c04594dab2cc6505445ec at both block 13431009 and block 16005644). Enumerating all 5,316 logs the proxy emitted from its creation block 13431009 to block 16005644 gives exactly two NewImplementation(address,address) events (topic 0xd604de94d45953f9138079ec1b82d533cb2160c906d1076d1f7ed54befbca97a): block 13431092 index 109 log 292 installing 0x905072738158b5e74251c82e6165b62f3eb513a5, and block 13657442 index 133 log 373 installing 0xa386f30853a7eb7e6a25ec8389337a5c6973421d; the four NewPendingImplementation events (0xe945ccee) are the matching two-step proposals and there is no other code-selecting event. Storage slot 2 confirms the same transition (0x905072... at 13657441, 0xa386f308... at 13657442 and still at 16005644). The prestateTracer over the anchor transaction gives the implementation code hash 0x96e938633e5bd6f202fc89578d387aedbbc35160c9feda67c01b966673792946, and the anchor trace shows 0x633fa755 delegate-calling 0xa386f308 for 0xff09731b, so the exploited code is 7,066,558 s (81d 18h 55m 58s) old. Creator 0xd5c0bd4a6f30824e13b15282d431063bd01bd7d0 is the Paraluni deployer of both the proxy and both implementations, not the attacker. Loss is the MasterChef net ERC-20 outflow over the 45 exploit transactions, with Para-LP positions decomposed through pair reserves and totalSupply at block 16005644; it comes to USD 1,780,448.59, consistent with the attacker EOA ending the campaign with 4,638.5 BNB (about USD 1.74M) from 0.89 BNB."

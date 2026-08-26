@@ -20,10 +20,7 @@
       "0x58491274790b6dfc9233b09d8212e1957cc37a03"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ShoebillOracle.getUnderlyingPrice(cToken) computes priceOf(tokenOf[symbol]) * 10**(36-18) / unitOf[symbol], where unitOf is a per-market divisor the owner writes as 10**underlyingDecimals. When the sbSolvBTC and sbSolvBTC.BBN markets were registered the owner wrote 18 instead of 10**18, so the divisor was 5.56e16 times too small and getUnderlyingPrice(sbSolvBTC) returned 4.0116e39 instead of 7.221e22, roughly USD 4.01e21 per SolvBTC. 0.0001 SolvBTC of collateral therefore supported borrowing 19.51269875 WBTC and 1.597302881501740092 tBTC out of the Shoebill pools. The oracle implementation installed two hours earlier added the SolvBTC price mapping but its scaling arithmetic is correct and produced correct prices for every other market through the same expression, so the wrong value came from the parameter, not from the code."
-  },
+  "summary": "ShoebillOracle.getUnderlyingPrice(cToken) computes priceOf(tokenOf[symbol]) * 10**(36-18) / unitOf[symbol], where unitOf is a per-market divisor the owner writes as 10**underlyingDecimals. When the sbSolvBTC and sbSolvBTC.BBN markets were registered the owner wrote 18 instead of 10**18, so the divisor was 5.56e16 times too small and getUnderlyingPrice(sbSolvBTC) returned 4.0116e39 instead of 7.221e22, roughly USD 4.01e21 per SolvBTC. 0.0001 SolvBTC of collateral therefore supported borrowing 19.51269875 WBTC and 1.597302881501740092 tBTC out of the Shoebill pools. The oracle implementation installed two hours earlier added the SolvBTC price mapping but its scaling arithmetic is correct and produced correct prices for every other market through the same expression, so the wrong value came from the parameter, not from the code.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -145,58 +142,35 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 60808,
       "transactionHash": "0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://quadrigainitiative.com/casestudy/shoebillfinancebtcmarketcollateraloracleexploit.php"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 60808,
       "transactionHash": "0x8a73e1063bd3f22f828b5b9e980558de51276f4cd60abab711a2cd5140b6ac37"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 60808,
       "transactionHash": "0x490b9b66d79e6a1282711cc20d0e8faf903bcb971f2bc5c1f0a4b789468f036e"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "root-cause"
-      ],
       "chainId": 60808,
       "transactionHash": "0x1f18269612e18bacce6992e472015305c35804354bf30a63209285e9323dad8a"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1730364521/coingecko:wrapped-bitcoin",
       "observedAt": 1787648127
@@ -204,9 +178,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1730364521/coingecko:tbtc",
       "observedAt": 1787648127
@@ -214,13 +185,6 @@
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:00:00Z",
       "note": "Triaged as configuration, not a code defect, so the record is reviewed but curve-ineligible. Onchain review on BOB (chainId 60808) over https://rpc.gobob.xyz and https://explorer.gobob.xyz/api/v2; neither implementation is verified on the explorer, so the oracle was analysed from bytecode. The oracle proxy 0xe103f874b2d144c5b327fa3d57069bb19c0779e2 emitted exactly two Upgraded events over its whole life (blocks 800000-37392680): 0x037d45ca2b024a25a6091212761e0757227b60c8 in its creation block 847433 and 0x8a34c9ada41318e6d4b8652ca6349540ec5eb772 at block 8747068 log 0, which the EIP-1967 slot still holds at block 8751266 and today; the artifact runtime hash is 0x37fe8c893aa88cf6d2e4cbf9c8b4c1ee6a21db947ff8ca9c5af41c8e44705b1f at both the upgrade block and block 8751266. Disassembling getUnderlyingPrice in the new implementation gives price = priceOf(tokenOf[symbol]) * 10**(36 - 18) / unitOf[symbol], with tokenOf at storage slot 0x6a and unitOf at slot 0x69, both mapping(string => ...) keyed by the cToken's symbol() and both written by the owner. Reading those slots at block 8751266: unitOf['sbWBTC'] = 100000000, unitOf['sbtBTC'] = 1000000000000000000, unitOf['sbSolvBTC'] = 18 and unitOf['sbSolvBTC.BBN'] = 18. The first two are 10**underlyingDecimals and yield Compound-correct prices through the same expression (getUnderlyingPrice(sbWBTC) = 722093752583300034068480000000000 = priceOf(WBTC) * 1e10; getUnderlyingPrice(sbtBTC) = 72042855267439998926848 = priceOf(tBTC)); the last two are the raw decimal count, and getUnderlyingPrice(sbSolvBTC) = 4011631958796111300380444444444444444444, which reproduces exactly as priceOf(WBTC) * 10**18 / 18. The upgrade did add a hard-coded branch mapping SolvBTC 0x541fd749419ca806a8bc7da8ac23d346f2df8b77 and SolvBTC.BBN 0xcc0966d8418d412c599a6421b760a847eb169a8c onto the WBTC reference price (the old implementation reverts on both, the new one returns 72209.375e18 for each), but that branch returns a correctly 1e18-scaled BTC price. getUnderlyingPrice(sbSolvBTC) still reverted at blocks 8747068 through 8747348, i.e. for 280 blocks after the code change, and only began returning the inflated value at block 8747349, in which the Shoebill deployer sent 0x1f18269612e18bacce6992e472015305c35804354bf30a63209285e9323dad8a to the oracle with symbols ['sbSolvBTC.BBN','sbSolvBTC'], units [18,18] and tokens [SolvBTC, SolvBTC.BBN] - the units wrong by 1e18/18 and the symbol-to-token pairs crossed. The implementation was never replaced afterwards; the fix was to clear the registration, and priceOf(SolvBTC) reverts again today. Anchor unchanged and confirmed as the only exploit transaction: a scan of Borrow events on the three BTC markets from block 8747349 to 8790000 returns only the two in 0xa6e181ea, against 500029 sbSolvBTC units minted at block 8751229. Proxy creator 0xcff0e961d0dec9dadf8587f66f158738e1366264 is the Shoebill deployer, unrelated to attacker 0x58491274790b6dfc9233b09d8212e1957cc37a03 or its contract 0x06ca861fc14a58a4fd5fdda45e904304785ae238. Standing in for the unavailable execution trace: Unitroller 0xb7ed6c062caaacb1a13f317e0a751289280fc306, on which the exploit transaction emits both Borrow events, returns 0xe103f874b2d144c5b327fa3d57069bb19c0779e2 from oracle() at block 8751266, and the proxy's EIP-1967 implementation slot at that block is 0x8a34c9ada41318e6d4b8652ca6349540ec5eb772, so the borrow path read the declared artifact through the declared proxy."

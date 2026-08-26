@@ -19,10 +19,7 @@
       "0xc3cb0872c42bfa5eb3b0258d7eea2ccaf6a49475"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "AIC fee-on-transfer accounting let repeated AIC/NEX cycles inflate the pair's untracked AIC surplus, which the attacker extracted through the public skim() function."
-  },
+  "summary": "AIC fee-on-transfer accounting let repeated AIC/NEX cycles inflate the pair's untracked AIC surplus, which the attacker extracted through the public skim() function.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -89,19 +86,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x905cc861bcc525d3a8e699583943831b97500bbac11c92dc20ed6edbddd69f87"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
       "path": "src/test/2026-08/AIC_exp.sol"
@@ -109,9 +99,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity"
-      ],
       "note": "onchain review: victim creator 0x13b81c2e8a4edd2aac1a096889b778103b16f7e8 via 0x00b3fde6a293c628c0a23db5fb0aef2e2e033a5e146e8def94f9efa8ad1d57b2; not attacker"
     }
   ],

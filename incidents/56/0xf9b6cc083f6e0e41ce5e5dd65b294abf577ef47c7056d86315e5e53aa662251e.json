@@ -19,10 +19,7 @@
       "0xcf2362b46669e04b16d0780cf9b6e61c82de36a7"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "GDS credits token holders a share sized from the liquidity pair's live balance on every transfer, so a flash-loaned position repeatedly harvested that share and drained the pair's USDT."
-  },
+  "summary": "GDS credits token holders a share sized from the liquidity pair's live balance on every transfer, so a flash-loaned position repeatedly harvested that share and drained the pair's USDT.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xf9b6cc083f6e0e41ce5e5dd65b294abf577ef47c7056d86315e5e53aa662251e"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-01/GDS_exp.sol"
@@ -111,18 +101,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1610167174978760704"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: GDS 0xC1Bb12560468fb255A8e8431BDF883CC4cB3d278 created 2022-12-04T06:21:05Z by 0x5b18b1d988479526267a1aa0d66765cc7c3cc3a8, unrelated to attack sender 0xcf2362b46669e04b16d0780cf9b6e61c82de36a7; no EIP-1967 Upgraded events, age measured from deployment. The attack ran over two transactions; lossUsd uses the ~$180k reported by DeFiHackLabs and PeckShield."
     }
   ],

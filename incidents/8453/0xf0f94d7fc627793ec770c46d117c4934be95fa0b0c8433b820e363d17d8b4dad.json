@@ -21,10 +21,7 @@
       "0x2d450322e3526f489afcc8c49923b35d355c70bc"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "SquidRouterModule accepted Axelar express execution while treating caller-supplied sourceAddress and delegate values as authority and never binding the delegate to msg.sender. Forged payloads therefore drove victim Safes to approve and swap valuable assets into attacker pools."
-  },
+  "summary": "SquidRouterModule accepted Axelar express execution while treating caller-supplied sourceAddress and delegate values as authority and never binding the delegate to msg.sender. Forged payloads therefore drove victim Safes to approve and swap valuable assets into attacker pools.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -99,20 +96,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity"
-      ],
       "chainId": 8453,
       "transactionHash": "0xf0f94d7fc627793ec770c46d117c4934be95fa0b0c8433b820e363d17d8b4dad"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-05/NewMarketTrading_exp.sol"
@@ -120,31 +109,17 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0x35eba2583c94301e1aef89867d9ec438d9a3378875dc7be6b3cf02799d65f693"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://rekt.news/newmarkettrading-rekt"
     },
     {
       "id": "source-5",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "root-cause"
-      ],
       "repository": "https://github.com/sanbir/evm-hack-registry",
       "commit": "d6c70c964a670c7ac83c24b3ca91bd862b1bf9d6",
       "path": "2026-05-NewMarketTrading_exp/sources/SquidRouterModule_1f1d37/contracts_modules_SquidRouterModule.sol"
@@ -152,13 +127,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T19:36:01Z",
       "note": "Reviewed the three-chain campaign ordering, the live Base receipt and call trace for the earliest successful drain, the Base creation receipt and trace, historical runtime code, pinned verified source, and the cited campaign report. The selected Base transaction is the first successful campaign call after the attacker wrapper's deployment, preceding the first Arbitrum drain by 18 seconds and the first Ethereum drain by 34 seconds. It calls SquidRouterModule 0x1f1d37a3bf840e35c6a860c7c2da71fe555123ca through expressExecuteWithToken with amount zero and attacker-supplied sourceAddress, victim Safe, registered delegate, and actions. The module checks the supplied delegate's permissions but never binds it to msg.sender, then repeatedly drives victim Safes through execTransactionFromModule to approve and swap valuable tokens into attacker pools. The module was created at 42545004:101 by 0x311df7369ecbca483eab798129aa1687b767d137. Code was absent one block earlier; the direct runtime has no DELEGATECALL or SELFDESTRUCT and its hash stayed unchanged through the anchor. Rekt reports $3.98 million gross across 308 successful drains and 88 Safes on Base, Arbitrum, and Ethereum."

@@ -20,10 +20,7 @@
       "0xe1997bc971d5986aa57e9cdb8ce87c6f4c1b1c1e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BvaultsStrategy.convertDustToEarned() is callable by anyone and swaps the strategy’s holdings through PancakeSwap with no minimum-output argument and no slippage bound. The attacker flash-loaned the BUSD/ALPACA pool out of balance, called the function so the strategy sold 768,358.95 BUSD into the skewed pool for 513.35 ALPACA, and took the difference when the pool re-balanced."
-  },
+  "summary": "BvaultsStrategy.convertDustToEarned() is callable by anyone and swaps the strategy\u2019s holdings through PancakeSwap with no minimum-output argument and no slippage bound. The attacker flash-loaned the BUSD/ALPACA pool out of balance, called the function so the strategy sold 768,358.95 BUSD into the skewed pool for 513.35 ALPACA, and took the difference when the pool re-balanced.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -118,22 +115,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x51913be3f31d5ddbfc77da789e5f9653ed6b219a52772309802226445a1edd5f"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-12/BvaultsStrategy_exp.sol"
@@ -141,27 +128,17 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1732176228244140494"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xdd4031277401d5eca44cc73e153effaee20a983b5b513cbf517e08cc9a9911db"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1701813183/coingecko:alpaca-finance",
       "observedAt": 1787647663
@@ -169,16 +146,9 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T15:30:00Z",
-      "note": "The attacker EOA sent sixteen transactions in the campaign window; the anchor is the only one that touches the strategy, the rest being exploit-contract creations, WBNB wrapping and disposal swaps. The strategy is not upgradeable: identical runtime code hash at the deployment block 5324911 and at block 34099688 with a zero EIP-1967 slot, so the exploited code is 1008.6 days old, deployed by 0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36, which is not an attacker address. Loss is measured net because the strategy did receive consideration for the BUSD it sold, just at a price the caller controlled inside the transaction; the ALPACA received is recorded as a negative component so the total is the strategy’s actual shortfall."
+      "note": "The attacker EOA sent sixteen transactions in the campaign window; the anchor is the only one that touches the strategy, the rest being exploit-contract creations, WBNB wrapping and disposal swaps. The strategy is not upgradeable: identical runtime code hash at the deployment block 5324911 and at block 34099688 with a zero EIP-1967 slot, so the exploited code is 1008.6 days old, deployed by 0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36, which is not an attacker address. Loss is measured net because the strategy did receive consideration for the BUSD it sold, just at a price the caller controlled inside the transaction; the ALPACA received is recorded as a negative component so the total is the strategy\u2019s actual shortfall."
     }
   ],
   "verification": {

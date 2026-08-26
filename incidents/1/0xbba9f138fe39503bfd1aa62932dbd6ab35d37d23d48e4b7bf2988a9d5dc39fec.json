@@ -19,10 +19,7 @@
       "0x30498e4466789e534c72e03b52a16c978655b41e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Same Thetanuts index-vault flaw: flash-borrow shares, claim to crush totalSupply, then free-mint via integer-division truncation to repay and keep component vaults."
-  },
+  "summary": "Same Thetanuts index-vault flaw: flash-borrow shares, claim to crush totalSupply, then free-mint via integer-division truncation to repay and keep component vaults.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-06/Thetanuts_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "loss"
-      ],
       "note": "onchain review of the exploit tx: the attack contract's net gain is 105,471.4991 USDC plus 33,593.77 TN-CSCPv1 vault shares (AVAXUSD/BNBUSD/MATICUSD). The ~$2.1M figure circulating for this incident is the at-risk amount, of which ~$2M was rescued by a whitehat, so it is not the realised loss; the duplicate thetanutsfi row carrying that figure was removed"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x5fe942c5d09bd3b427c5d8c0ecabd0d2468d4452b0b7f32f87ca358c0c997132"
     }

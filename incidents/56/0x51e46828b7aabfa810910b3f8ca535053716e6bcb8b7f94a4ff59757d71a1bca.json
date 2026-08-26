@@ -19,10 +19,7 @@
       "0xee18c4c2e123402731f43d680e75ca2809c30f8b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "issueWithSingleToken2 accepted attacker-supplied component weightings and traded CKToken holdings via a Pancake spot adapter with zero minimum output, turning a 1-unit issue into real outflows."
-  },
+  "summary": "issueWithSingleToken2 accepted attacker-supplied component weightings and traded CKToken holdings via a Pancake spot adapter with zero minimum output, turning a 1-unit issue into real outflows.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x51e46828b7aabfa810910b3f8ca535053716e6bcb8b7f94a4ff59757d71a1bca"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-06/CookFinanceIssuance_exp.sol"

@@ -19,10 +19,7 @@
       "0xe60329a82c5add1898ba273fc53835ac7e6fd5ca"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "claimEther(address,uint256) has no access control, so the attacker called it from a throwaway contract constructor and sent 20.85 BNB of the contract's balance to itself."
-  },
+  "summary": "claimEther(address,uint256) has no access control, so the attacker called it from a throwaway contract constructor and sent 20.85 BNB of the contract's balance to itself.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x679028cb0a5af35f57cbea120ec668a5caf72d74fcc6972adc7c75ef6c9a9092"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/1855263208124416377"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-11/X319_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xedd632eaf3b57e100ae9142e8ed1641e5fd6b2c0 created 2024-11-09T09:38:20Z by 0x01785130a07a8dd935271535fd7e512986c5dc5e, which is not the attack-tx sender 0xe60329a82c5add1898ba273fc53835ac7e6fd5ca; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

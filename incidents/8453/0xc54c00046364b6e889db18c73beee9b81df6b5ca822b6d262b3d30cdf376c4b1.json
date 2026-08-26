@@ -19,10 +19,7 @@
       "0x3aa8bb3a19eecd229cb33fbc03ff549473e30f38"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The SYP sale proxy's buy path (selector 0x670a3267) paid a 10% rebate to every entry of a caller-supplied referrer array without bounding its length or checking that total payouts stayed under the payment received, so repeating the buyer's own address 31 times returned about 310% of each purchase in ETH and USDC."
-  },
+  "summary": "The SYP sale proxy's buy path (selector 0x670a3267) paid a 10% rebate to every entry of a caller-supplied referrer array without bounding its length or checking that total payouts stayed under the payment received, so repeating the buyer's own address 31 times returned about 310% of each purchase in ETH and USDC.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -92,27 +89,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0xc54c00046364b6e889db18c73beee9b81df6b5ca822b6d262b3d30cdf376c4b1"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://github.com/anon-cBE4/anon-cBE4/blob/main/writeups/SynapLogic_attack_analyze.md"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-01/SynapLogic_exp.sol"
@@ -120,11 +107,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: sale proxy created 2025-10-12 by 0xaf4d0fe93eeddabbd4ddb7451f09e6359575c214 (not the attacker); EIP-1967 impl slot held 0xc859ac8429fb4a5e24f24a7bed3fe3a8db4fb371 - the implementation named as vulnerable in the PoC - and the six Upgraded events on the proxy all land at Base blocks 41047082+, after the attack at block 41038634, so they are the emergency response, not a pre-incident change. Loss ~27.6 ETH + ~3,450 USDC; DefiLlama records $144,000 while smartcontractshacking.com lists $186,000. Recheck (deployment basis confirmed): rather than relying on the Upgraded events, the EIP-1967 implementation slot 0x3608...382bbc was binary-searched with eth_getStorageAt over [36732639, 41038633] and held 0xc859ac8429fb4a5e24f24a7bed3fe3a8db4fb371 unchanged for the whole pre-incident life of the proxy; that is also the only address the victim delegatecalls in the exploit trace (selector 0x670a3267). Confirms the six Upgraded events are post-incident and deployment is the right basis."
     }
   ],

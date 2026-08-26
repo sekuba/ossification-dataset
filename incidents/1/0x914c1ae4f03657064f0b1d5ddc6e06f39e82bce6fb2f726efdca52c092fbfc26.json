@@ -19,10 +19,7 @@
       "0xb687550842a24d7fbc6aad238fd7e0687ed59d55"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Rabby's swap router forwarded an unvalidated (target, calldata) pair from the caller, so the attacker made the router call transferFrom on token contracts and sweep balances from every user who had approved it."
-  },
+  "summary": "Rabby's swap router forwarded an unvalidated (target, calldata) pair from the caller, so the attacker made the router call transferFrom on token contracts and sweep balances from every user who had approved it.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x914c1ae4f03657064f0b1d5ddc6e06f39e82bce6fb2f726efdca52c092fbfc26"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-10/RabbyWallet_SwapRouter_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Rabby_io/status/1579833969566449666"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: router 0x6eb211caf6d304a76efe37d9abdfaddc2d4363d1 created 2022-09-12T01:35:55Z by 0x5853ed4f26a3fcea565b3fbc698bb19cdf6deb85, unrelated to the attack sender; unverified, no EIP-1967 events, age from deployment. The PoC replays only the first of ~20 drain txs; the USD figure is the aggregate reported by SlowMist."
     }
   ],

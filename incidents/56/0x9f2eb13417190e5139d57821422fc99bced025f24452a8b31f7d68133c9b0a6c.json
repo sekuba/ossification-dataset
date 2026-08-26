@@ -19,10 +19,7 @@
       "0x4645863205b47a0a3344684489e8c446a437d66c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "FIL314.hourBurn() is callable by anyone and burns FIL314 held by the FIL314/WBNB pair, so the attacker repeatedly shrank the pool and sold its position into the inflated price."
-  },
+  "summary": "FIL314.hourBurn() is callable by anyone and burns FIL314 held by the FIL314/WBNB pair, so the attacker repeatedly shrank the pool and sold its position into the inflated price.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x9f2eb13417190e5139d57821422fc99bced025f24452a8b31f7d68133c9b0a6c"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/FIL314_exp.sol"
@@ -113,11 +103,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xe8a290c6fc6fa6c0b79c9cfae1878d195aeb59af created 2024-04-12T08:02:59Z by 0x75996aa4b6e9a509ce5c6be83d8f587221898e05, which is not the attack-tx sender 0x4645863205b47a0a3344684489e8c446a437d66c; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). ~14 BNB x $614.46/BNB at the incident timestamp 1712927609 (DefiLlama coingecko:binancecoin) = $8,602."
     }
   ],

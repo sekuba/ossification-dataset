@@ -19,10 +19,7 @@
       "0x89eb2c99e970d831525c7a52badc290afa116b63"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "AIDCToken lets an ordinary router transfer burn the accumulated sell-side amount directly out of the AIDC/WBNB pair and then sync it, so repeated fresh-helper sells deflated the pair's AIDC reserve and let the attacker buy the pool out."
-  },
+  "summary": "AIDCToken lets an ordinary router transfer burn the accumulated sell-side amount directly out of the AIDC/WBNB pair and then sync it, so repeated fresh-helper sells deflated the pair's AIDC reserve and let the attacker buy the pool out.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x66960f7febf399fa8bd94904398f535c500f4f575dbf025de7b9ab450342645e"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/2071415914948685892"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-06/AIDC_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: AIDC 0x5021d71859F81B4c905b573591db8F9Cc4A0C6fe created 2026-06-27 by 0x0ca5c15d3a173065dbecfcfda0963ce8acf70668, unrelated to attack sender 0x89eb2c99e970d831525c7a52badc290afa116b63; no EIP-1967 upgrade events; ~220.13 WBNB drained from pair 0x2725033282b3bd4BE8873B7F0f622c18E3b7cbd8 one day after deployment"
     }
   ],

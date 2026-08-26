@@ -19,10 +19,7 @@
       "0x00000000dd0412366388639b1101544fff2dce8d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "DIVIDEND_JHYLP bug wrongly sets an address's balance to the LP token balance on swap, exploited via add/remove-liquidity accounting."
-  },
+  "summary": "DIVIDEND_JHYLP bug wrongly sets an address's balance to the LP token balance on swap, exploited via add/remove-liquidity accounting.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xb6a9055e3ce7f006391760fbbcc4e4bc8df8228dc47a8bb4ff657370ccc49256"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-12/JHY_exp.sol"

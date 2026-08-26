@@ -19,10 +19,7 @@
       "0x8a0dfb61cad29168e1067f6b23553035d83fcfb2"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LP vault deposit/compound/withdraw accounting inflated collateral value to over-borrow the lending pool"
-  },
+  "summary": "LP vault deposit/compound/withdraw accounting inflated collateral value to over-borrow the lending pool",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 42161,
       "transactionHash": "0xb5cfa4ae4d6e459ba285fec7f31caf8885e2285a0b4ff62f66b43e280c947216"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-10/LavaLending_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is an ERC-1967 beacon proxy: the beacon slot 0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50 holds 0x090287f882669268aea53be5b3fb284facf7bae6 at all 21 sample points across [213419780, 259645908], and that beacon's implementation (its storage slot 1) holds 0x1e515301f24abbf92dfb3d071e062739a8827b4d over the same probe, with its single Upgraded event at block 213419690 - 90 blocks (23 s) before the proxy itself was created. callTracer on the exploit tx confirms the proxy delegatecalls only 0x1e515301... ."
     }
   ],

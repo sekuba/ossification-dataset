@@ -21,10 +21,7 @@
       "0xba399a2580785a2ded740f5e30ec89fb3e617e6e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LockToken.migrate() authorized the caller using one lock ID but accepted a separate caller-supplied Uniswap V2 pair and liquidity amount. The attacker used locks for a worthless self-made token to migrate other users' locked LP balances into attacker-controlled Uniswap V3 positions."
-  },
+  "summary": "LockToken.migrate() authorized the caller using one lock ID but accepted a separate caller-supplied Uniswap V2 pair and liquidity amount. The attacker used locks for a worthless self-made token to migrate other users' locked LP balances into attacker-controlled Uniswap V3 positions.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -154,25 +151,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xb2e3ea72d353da43a2ac9a8f1670fd16463ab370e563b9b5b26119b2601277ce"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:40:45Z",
       "note": "Reviewed the exploit receipt, call trace, transaction-local account state diff, LockToken deployment, implementation runtime hash, all seven Upgraded events from deployment through the incident, the final upgrade receipt, verified implementation source, pinned reproduction, and SlowMist analysis. LockToken.migrate() checks the caller against the supplied lock ID but separately trusts caller-supplied pair, liquidity, token, price, and recipient parameters. The attacker used four locks for a self-made token to migrate other users' locked LP balances and receive the resulting assets. The transaction increased attacker-controlled balances by exactly 820.656168224540431638 ETH, 6,429,327.658867991361672391 DAI after in-transaction USDC swaps, 74,613,657,577,043.894100214078695625 CAW, and 11,837,577.721300283 TSUKA. The reported aggregate was approximately $14.5 million. Upgrade transaction 0x027468bdcc23f7e17e9c79a6a1b89e749b0ca9675422869900ec1257315284ac selected 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 at log 434; it was the last of seven selection events, and the exploit trace delegates to that artifact whose pre-exploit runtime hash is 0x2d49f76b37b39e8abb856d472f1df3bd5eaf178d91ee1accd885505a079d1e20."
@@ -180,40 +164,23 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xef39e05e7cd26a551fc0014f67dc9088aa97a0184e22ab10c54d6f412cf30e56"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x027468bdcc23f7e17e9c79a6a1b89e749b0ca9675422869900ec1257315284ac"
     },
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://slowmist.medium.com/analysis-review-of-team-finance-exploit-f439c2f63e2"
     },
     {
       "id": "source-7",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-10/TeamFinance_exp.sol"

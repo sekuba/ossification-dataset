@@ -21,10 +21,7 @@
       "0x8162a5e187128565ace634e76fdd083cb04d0145"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ReaperVaultV2 redeem(shares, receiver, owner) never verifies that the caller is owner or has the owner's share allowance, so the attacker burned arbitrary holders' rfETH shares and sent the underlying ETH to its receiver."
-  },
+  "summary": "ReaperVaultV2 redeem(shares, receiver, owner) never verifies that the caller is owner or has the owner's share allowance, so the attacker burned arbitrary holders' rfETH shares and sent the underlying ETH to its receiver.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -121,21 +118,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 250,
       "transactionHash": "0x2906c8e15b53ec1fcb1af64a416643e15404339adbf7aa0d2bfa3fc993cbda0a"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-08/ReaperFarm_exp.sol"
@@ -143,19 +131,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 250,
       "transactionHash": "0x49e54a6a6561e58535db42d4285760c04161eb66a934fa265044b4a08386a03b"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 250,
       "transactionHashes": [
         "0x2906c8e15b53ec1fcb1af64a416643e15404339adbf7aa0d2bfa3fc993cbda0a",
@@ -169,18 +150,11 @@
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://twitter.com/Reaper_Farm/status/1554500909740302337"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1659416305/coingecko:ethereum",
       "observedAt": 1787652244
@@ -188,13 +162,6 @@
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:04:04Z",
       "note": "The first rfETH transaction in the known Reaper attacker campaign is 0x2906c8e1...da0a at block 44045236 index 29. Its trace contains eleven direct calls to redeem(uint256,address,address), each naming receiver 0x2c177d20...a954 and a different owner; every owner's allowance to caller 0x8162a5e1...0145 is zero at block 44045235. Six campaign receipts contain 22 matching Withdraw events and exactly 60.199256562032326281 ETH. Earlier third-party withdrawals use unrelated caller/receiver pairs and are outside this campaign; later withdrawals to safe 0x539ef36c...88e0 are rescue activity. The vault is a direct deployment: creation transaction 0x49e54a6a...a03b made the address at block 41917267 index 3, code is empty one block earlier, and its 16,821-byte runtime hash 0x50736a88...676fe is identical at creation, a midpoint, and the pre-exploit block. EIP-1967 implementation, beacon and admin slots are zero, and the exploit trace has no DELEGATECALL from the vault. The code age is 2,564,438 seconds. The asset total uses the Withdraw assets field; USD uses the nearest DefiLlama ETH price, $1,576.9531508243954 at timestamp 1659416429."

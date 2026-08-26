@@ -19,10 +19,7 @@
       "0x835b45d38cbdccf99e609436ff38e31ac05bc502"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The OSN token's transfer hook pushed USDT dividends to LP holders through its dividend tracker without any minimum LP holding time or contract-recipient check, so the attacker split funds across helper contracts, added liquidity, and immediately collected the accumulated reward pool."
-  },
+  "summary": "The OSN token's transfer hook pushed USDT dividends to LP holders through its dividend tracker without any minimum LP holding time or contract-recipient check, so the attacker split funds across helper contracts, added liquidity, and immediately collected the accumulated reward pool.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xc7927a68464ebab1c0b1af58a5466da88f09ba9b30e6c255b46b1bc2e7d1bf09"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/SlowMist_Team/status/1787330586857861564"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-05/OSN_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: OSN token 0x810f4c6ae97bcc66da5ae6383cc31bd3670f6d13 created 2024-04-15 by 0xeac1d1cebf3165a5dbbd6367eba726a28266e81d (it deployed its dividend tracker 0x8e474bc29fb9a884b1fc297b0b4bbc465700a571 in the same tx); attack sender 0x835b45d38cbdccf99e609436ff38e31ac05bc502 is unrelated to the creator; no upgrade events"
     }
   ],

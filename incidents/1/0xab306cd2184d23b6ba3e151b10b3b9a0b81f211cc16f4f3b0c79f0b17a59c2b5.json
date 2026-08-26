@@ -19,10 +19,7 @@
       "0x6952d9246e9afe8b887b2877225163436f78e97f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The escape-hatch verifier the deprecated Aztec 2.0 RollupProcessor delegated proof checking to did not bind a note’s output owner to the party entitled to it, so a proof carrying an attacker-chosen outputOwner verified as sound. escapeHatch() forwarded the attacker’s proof, verify() returned true, and the rollup paid the requested withdrawals out of pooled funds without any further ownership check."
-  },
+  "summary": "The escape-hatch verifier the deprecated Aztec 2.0 RollupProcessor delegated proof checking to did not bind a note\u2019s output owner to the party entitled to it, so a proof carrying an attacker-chosen outputOwner verified as sound. escapeHatch() forwarded the attacker\u2019s proof, verify() returned true, and the rollup paid the requested withdrawals out of pooled funds without any further ownership check.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -98,7 +95,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Three escape-hatch transactions from the same EOA drained the rollup: the ETH leg in the anchor transaction, then the DAI leg at block 25339169 and the renBTC leg at block 25339172. The rollup balance falls from 1158.759804206229645062 ETH to 0.759804206229645062 ETH, from 150095.695899720407042487 DAI to 95.695899720407042487 DAI, and from 0.46963295 renBTC to 0, and the attacker address holds exactly the difference afterwards. The 0.759804206229645062 ETH residue a copycat swept the next morning is not included. Nothing was recovered; the contract’s ownership is renounced so it could not be paused."
+    "notes": "Three escape-hatch transactions from the same EOA drained the rollup: the ETH leg in the anchor transaction, then the DAI leg at block 25339169 and the renBTC leg at block 25339172. The rollup balance falls from 1158.759804206229645062 ETH to 0.759804206229645062 ETH, from 150095.695899720407042487 DAI to 95.695899720407042487 DAI, and from 0.46963295 renBTC to 0, and the attacker address holds exactly the difference afterwards. The 0.759804206229645062 ETH residue a copycat swept the next morning is not included. Nothing was recovered; the contract\u2019s ownership is renounced so it could not be paused."
   },
   "targets": [
     {
@@ -160,40 +157,24 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x481bdfd3ae4f103a0b03321b086b931e4c7653d25d0c4a8469fdab0e32b2f00a"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xcd796eeaf302b098f59b3a45867000a2f873d5d5a2a347987f4a6cd307b54d4b"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x5c196c37a109d74c9797254287a0331f30e0daa637af241bd28fdc43774705c3",
@@ -204,9 +185,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1781721287/coingecko:ethereum,ethereum:0x6b175474e89094c44da98b954eedeac495271d0f,ethereum:0xeb4c2781e4eba804ce9a9803c67d0893436bb27d",
       "observedAt": 1787642092
@@ -214,10 +192,6 @@
     {
       "id": "source-6",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-06/AztecEscapeHatch_exp.sol"
@@ -225,24 +199,14 @@
     {
       "id": "source-7",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://aztec-labs.com/blog/june-2026-incidents"
     },
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T08:30:00Z",
-      "note": "The legacy record measured this against the RollupProcessor’s 2021-03-03 deployment, giving 5.29 years. That is the wrong artifact. The rollup does not contain the failing logic: escapeHatch statically calls the verifier held in its storage slot 6, and the exploit trace shows TurboVerifier 0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8 running the check and delegate-calling its verification key 0xf3761b450571a49fa8e2af6e37e1eb3516209d56 for key id 0. Both were deployed by 0x36bb84d28bb2d9772158cc9a09feaa5472ebfd32 in block 19232962 on 2024-02-15, and the RollupProcessor emitted nine VerifierUpdated events in total, the last of which, log 166 of block 19233032, selected 0x48cb7ba0; slot 6 holds that address continuously through block 25339093. The exploited verifier is therefore 853.3 days old, not 5.29 years. The target is recorded on the verifier itself rather than on the rollup because the verifier is the artifact whose verify() accepted the unsound proof; its verification key, which the published analyses name as the component that failed to bind the output owner, was deployed in the same block, so the age is the same under either attribution. Loss is the rollup’s ETH, DAI and renBTC balance deltas across the three escape-hatch transactions, all of which land in the attacker address."
+      "note": "The legacy record measured this against the RollupProcessor\u2019s 2021-03-03 deployment, giving 5.29 years. That is the wrong artifact. The rollup does not contain the failing logic: escapeHatch statically calls the verifier held in its storage slot 6, and the exploit trace shows TurboVerifier 0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8 running the check and delegate-calling its verification key 0xf3761b450571a49fa8e2af6e37e1eb3516209d56 for key id 0. Both were deployed by 0x36bb84d28bb2d9772158cc9a09feaa5472ebfd32 in block 19232962 on 2024-02-15, and the RollupProcessor emitted nine VerifierUpdated events in total, the last of which, log 166 of block 19233032, selected 0x48cb7ba0; slot 6 holds that address continuously through block 25339093. The exploited verifier is therefore 853.3 days old, not 5.29 years. The target is recorded on the verifier itself rather than on the rollup because the verifier is the artifact whose verify() accepted the unsound proof; its verification key, which the published analyses name as the component that failed to bind the output owner, was deployed in the same block, so the age is the same under either attribution. Loss is the rollup\u2019s ETH, DAI and renBTC balance deltas across the three escape-hatch transactions, all of which land in the attacker address."
     }
   ],
   "verification": {

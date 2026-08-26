@@ -19,10 +19,7 @@
       "0xc4574ddef299e7e563971e200433e592eeaafa69"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "DxLockLPDep.unlockToken() used an if instead of a maturity requirement and never cleared the recorded amount after transfer. A caller with one valid lock could therefore invoke it before maturity and repeatedly withdraw the same allocation from the contract's shared LP-token balance."
-  },
+  "summary": "DxLockLPDep.unlockToken() used an if instead of a maturity requirement and never cleared the recorded amount after transfer. A caller with one valid lock could therefore invoke it before maturity and repeatedly withdraw the same allocation from the contract's shared LP-token balance.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -94,43 +91,23 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity"
-      ],
       "chainId": 56,
       "transactionHash": "0x437b26887ba03c08b7541a86e8eeda5e92a9059244fcf814c721dc13f2c1b303"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blocksec.com/blog/web3-security-dxsale-squidrouter-more"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x5f530c2547fc958407d8cfb87ba9ad67cc79a112d390c88cf389933035e53158"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "loss",
-        "root-cause"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T19:17:16Z",
       "note": "Reviewed the live BNB Chain transaction, receipt and call trace, the locker's creation trace, its pre-exploit runtime and hash, verified source, and BlockSec's campaign analysis. The anchored transaction calls unlockToken(131) on 0xeb3a9c56d963b971d320f889be2fb8b59853e449 exactly 500 times; every call succeeds and transfers the same 0.322826202340716365 LP tokens because the locker neither enforces maturity with a require nor clears the recorded amount. The prior owner compromise let the attacker reduce the new-lock fee, but the repeated drain executes through the public unlock path and requires only a valid caller-owned lock. The target is a full direct runtime with no DELEGATECALL or SELFDESTRUCT; its creation and pre-exploit hashes match and the code remained unchanged. BlockSec reports approximately $7.3 million drained across the coherent multi-transaction campaign."

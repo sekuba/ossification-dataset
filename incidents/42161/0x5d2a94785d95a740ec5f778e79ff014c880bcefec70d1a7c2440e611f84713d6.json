@@ -19,10 +19,7 @@
       "0xc91cb089084f0126458a1938b794aa73b9f9189d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BankDiamond.flash executed arbitrary transfer/transferFrom calldata to drain funds"
-  },
+  "summary": "BankDiamond.flash executed arbitrary transfer/transferFrom calldata to drain funds",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 42161,
       "transactionHash": "0x5d2a94785d95a740ec5f778e79ff014c880bcefec70d1a7c2440e611f84713d6"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-04/Rico_exp.sol"
@@ -111,19 +101,11 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x598c6c1cd9459f882530fc9d7da438cb74c6cb3b is the Rico BankDiamond, an EIP-2535 diamond whose facet code changes via DiamondCut and never emits an EIP-1967 Upgraded event; eth_getLogs over creation block 176310105 (2024-02-01) to incident block 202973713 finds five DiamondCut logs: two at deployment (2024-02-01T07:03:32Z and 07:03:51Z) and three in one tx 0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc at block 193149212, 2024-03-22T21:18:40Z, which removed seven selectors, added facet 0x254834c73e3070a674ea8059be3c813694070f06 and Replaced facets 0xc6d7b37fe18a3dd007f9b1c3b339b8c6043b3ccf (21 selectors, including flash(address,bytes) 0xa0a7930a, the exploited entry point) and 0x8dfb233ef877dd5a260a52eced01a0f7e160b7b2 (5 selectors); the age is therefore measured from that cut rather than the diamond deployment"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0x10c415ab45e3495c869d290a06b786b63b25ec25f3a3dc62c760f5bc852d0ccc"
     }

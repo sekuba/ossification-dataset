@@ -19,10 +19,7 @@
       "0x3026c464d3bd6ef0ced0d49e80f171b58176ce32"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Every Z123 swap burns liquidity out of its own pool, so repeated swaps inside a PancakeV3 flash loan left the reserves disproportionate and the attacker arbitraged the difference."
-  },
+  "summary": "Every Z123 swap burns liquidity out of its own pool, so repeated swaps inside a PancakeV3 flash loan left the reserves disproportionate and the attacker arbitraged the difference.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xc0c4e99a76da80a4cf43d3110364840151226c0a197c1728bb60dc3f1b3a6a27"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/Z123_exp.sol"
@@ -111,10 +101,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xb000f121A173D7Dd638bb080fEe669a2F3Af9760 created 2023-09-18T06:09:30Z by 0x5f8982c9eee579d5263442500419684eb9fe48cb, which is not the attack-tx sender 0x3026c464d3bd6ef0ced0d49e80f171b58176ce32; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

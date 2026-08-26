@@ -19,10 +19,7 @@
       "0x0c06340f5024c114fe196fcb38e42d20ab00f6eb"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The lending market computed its exchange rate from the raw underlying balance, so donating ETH into an empty market inflated one wei of collateral share to an arbitrary value and let the attacker borrow out the WBTC reserves."
-  },
+  "summary": "The lending market computed its exchange rate from the raw underlying balance, so donating ETH into an empty market inflated one wei of collateral share to an arbitrary value and let the attacker borrow out the WBTC reserves.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x4c684fb2618c29743531dec9253ede1b757bda0b323dc2f305e3b50ab1773da7"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-11/MetaLend_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/MetaSec_xyz/status/1728424965257691173"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: market 0x5578f2e245e932a599c46215a0ca88707230f17b created 2022-02-06T17:48:09Z by 0x01289fe1a73c538aca35ec1352df2de8cbc32b9d, unrelated to the attack sender; unverified but no EIP-1967 events, age from deployment. Loss ~$4K per the PoC header, realised in WBTC swapped to WETH; clears the $1,000 floor."
     }
   ],

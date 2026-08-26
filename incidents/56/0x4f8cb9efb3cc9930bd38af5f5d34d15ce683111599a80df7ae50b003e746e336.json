@@ -19,10 +19,7 @@
       "0x84f37f6cc75ccde5fe9ba99093824a11cfdc329d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "GSS's transfer path takes tokens out of the liquidity pair's own balance without a sync(), so the attacker skim()ed the resulting surplus and swapped it for the pair's USDT."
-  },
+  "summary": "GSS's transfer path takes tokens out of the liquidity pair's own balance without a sync(), so the attacker skim()ed the resulting surplus and swapped it for the pair's USDT.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x4f8cb9efb3cc9930bd38af5f5d34d15ce683111599a80df7ae50b003e746e336"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-08/GSS_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/bbbb/status/1694571228185723099"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: GSS 0x37e42B961AE37883BAc2fC29207A5F88eFa5db66 created 2023-08-23T06:22:32Z by 0x008ca6c5f41e846d2570033af0f87d483ccc77e1, unrelated to attack sender 0x84f37f6cc75ccde5fe9ba99093824a11cfdc329d; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 25,964.72 USDT left the GSS/USDT pool 0x1ad2cB3C2606E6D5e45c339d10f81600bdbf75C0 and 24,883.44 USDT reached the attack contract."
     }
   ],

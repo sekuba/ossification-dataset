@@ -3,7 +3,7 @@
   "schemaVersion": "2.0.0",
   "id": "eip155:1:0x653b185a57fb5909180fe4eede67e51c5e9b70af16937382f86d5aefe635e5a7",
   "protocol": {
-    "name": "Unidentified proxy 0x6f7a…ea68",
+    "name": "Unidentified proxy 0x6f7a\u2026ea68",
     "slug": "unverified-6f7a"
   },
   "name": "Unidentified proxy 0x6f7a unauthorized balance routing",
@@ -19,10 +19,7 @@
       "0xe4b97db5faf476db464bc271097fac97d6ce3783"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Proxy selector 0xbfd479c4 processed arbitrary token amounts with no caller authorization or ownership check, letting anyone route the victim's live balances into a liquidity path."
-  },
+  "summary": "Proxy selector 0xbfd479c4 processed arbitrary token amounts with no caller authorization or ownership check, letting anyone route the victim's live balances into a liquidity path.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -62,7 +59,7 @@
           "symbol": "FEI"
         },
         "amount": "2295.632629412184755149",
-        "usdValue": 2295.6326294121846,
+        "usdValue": 2295.6326294121845,
         "valuation": {
           "method": "stablecoin-par",
           "timestamp": 1755858827,
@@ -138,23 +135,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x653b185a57fb5909180fe4eede67e51c5e9b70af16937382f86d5aefe635e5a7"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-08/unverified_6f7a_exp.sol"
@@ -162,13 +148,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:26:34Z",
       "note": "Reviewed the exploit receipt and call trace, proxy deployment, exploit-time bytecode, the complete ProxyImplementationUpdated history, the EIP-1967 implementation slot, and the commit-pinned reproduction. Selector 0xbfd479c4 executes at proxy 0x6f7a14bd931554683ed15dc92e25d046ed68ea68 and delegates to 0x338ffeaccf929c88fb9574dc202dc1714b1903e7. Exactly two implementation-update events exist before the incident: initialization at deployment and log 355 of transaction 0xdb1d91...bfb3e, which selected the exploit-time artifact. The receipt records the exact DAI and FEI quantities removed from the victim."
@@ -176,20 +155,12 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xe478900bbb7a758c7901b8daef5718d947df70341122fc95e6ae2e4495328de1"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xdb1d91122869a5c61760f9e3a14fb14072d4902d890ab2680a8e140dfafbfb3e"
     }

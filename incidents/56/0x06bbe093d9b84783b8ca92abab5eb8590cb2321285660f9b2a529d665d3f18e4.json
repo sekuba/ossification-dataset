@@ -19,10 +19,7 @@
       "0x0c925a25fdaac4460cab0cc7abc90ff71f410094"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "DYNA spawns a StakingReward contract per holder and the sold-amount limit in transfer() can be bypassed by routing through those contracts, so the attacker pre-seeded 200 of them and later drained the pair."
-  },
+  "summary": "DYNA spawns a StakingReward contract per holder and the sold-amount limit in transfer() can be bypassed by routing through those contracts, so the attacker pre-seeded 200 of them and later drained the pair.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x06bbe093d9b84783b8ca92abab5eb8590cb2321285660f9b2a529d665d3f18e4"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-02/DYNA_exp.sol"
@@ -111,18 +101,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1628319536117153794"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: DYNA 0x5c0d0111ffc638802c9EfCcF55934D5C63aB3f79 created 2023-01-31T20:13:40Z by 0xa8ff6c807654c5b2b55f188e9a7ce31c8d192353, unrelated to attack sender 0x0c925a25fdaac4460cab0cc7abc90ff71f410094; no EIP-1967 Upgraded events, age measured from deployment. lossUsd uses the ~$21k reported by DeFiHackLabs and Beosin; the attack spanned two transactions."
     }
   ],

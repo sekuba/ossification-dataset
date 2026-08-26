@@ -19,10 +19,7 @@
       "0x312b559b41139c75a75c7ae1ea4454e661a02647"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Victim selector accepts a hardcoded bytecode constant keccak256(\"1205060227\") as auth bypass, letting anyone force it to swap its full balance into attacker pools."
-  },
+  "summary": "Victim selector accepts a hardcoded bytecode constant keccak256(\"1205060227\") as auth bypass, letting anyone force it to swap its full balance into attacker pools.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0x5a7462b79d6df0048299c229bdca232ea6dcb97d80cd3b512c28e67db2370d47"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-01/AIXBTForcedSwap_exp.sol"

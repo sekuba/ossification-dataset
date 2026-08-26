@@ -20,10 +20,7 @@
       "0xbff51c9c3d50d6168dfef72133f5dbda453ebf29"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The MINER ERC-X token's _transfer rejects only the zero address for sender and receiver, and the _update it calls caches uint256 fromBalance = _balances[from] and uint256 toBalance = _balances[to] before writing _balances[from] = fromBalance - value and _balances[to] = toBalance + value. When from == to the second write restores the pre-transfer balance and adds value on top, so a transfer to one's own address is a pure credit of value out of nothing while _totalSupply is unchanged. The attacker's contract looped this self-transfer 2000 times inside a Uniswap V3 swap callback, minting the MINER it owed the pool and paying for 999.999999999999998 MINER of output it never held. No parameter value repairs this: the write order is wrong for every amount."
-  },
+  "summary": "The MINER ERC-X token's _transfer rejects only the zero address for sender and receiver, and the _update it calls caches uint256 fromBalance = _balances[from] and uint256 toBalance = _balances[to] before writing _balances[from] = fromBalance - value and _balances[to] = toBalance + value. When from == to the second write restores the pre-transfer balance and adds value on top, so a transfer to one's own address is a pure credit of value out of nothing while _totalSupply is unchanged. The attacker's contract looped this self-transfer 2000 times inside a Uniswap V3 swap callback, minting the MINER it owed the pool and paying for 999.999999999999998 MINER of output it never held. No parameter value repairs this: the write order is wrong for every amount.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -122,30 +119,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x75e3aeb00df69882a1b15d424e5e642650326ca3b923d7fd1922d57c51bc2c78"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://medium.com/neptune-mutual/analysis-of-the-miner-exploit-cf4dccd48f11"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-02/Miner_exp.sol"
@@ -153,28 +137,18 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x160b3291d1e5e14a1abf91f2495e8523cec389b29a8a8500f5942a9d19ce77bc"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x92406300fd4446459b18fc17cdd775808bfc7ed1782bd4c8674a2bbe95610ad9"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1707918503/coingecko:ethereum",
       "observedAt": 1787700157
@@ -182,9 +156,6 @@
     {
       "id": "source-7",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x75e3aeb00df69882a1b15d424e5e642650326ca3b923d7fd1922d57c51bc2c78",
@@ -203,13 +174,6 @@
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Re-reviewed the legacy MINER row from chain data. Anchor: 0x75e3aeb00df69882a1b15d424e5e642650326ca3b923d7fd1922d57c51bc2c78 is status 1 at 19226600:22, timestamp 1707918503, and is nonce 49 of attacker EOA 0xea75aec151f968b8de3789ca201a2a3a7faeefba. Every earlier nonce of that account touching this token was checked by trace and none executes the defect: nonce 41 is an ordinary 0.1 WETH buy through the Uniswap V3 router, nonces 39 and 44 are approvals on the discarded helper contracts 0x9fb32ec72fe3597f949297a2c7e57f8bafa19824 and 0x589daf36284f48bf783d53f45ed5915af24091d2, and nonces 45 and 48 are ordinary transfers of the 3.572592720467130237 MINER seed to those contracts with distinct sender and recipient. The anchor is the first transaction whose trace contains Transfer(from == to). Root cause read from the verified ERC_X source: _transfer reverts only on the zero address, and _update caches fromBalance and toBalance before writing, so a from == to transfer credits value with no debit; the anchor's trace shows the exploit contract calling ERC_X::transfer(0xbff51c9c3d50d6168dfef72133f5dbda453ebf29, 499999999999999999) against itself and ERC_X::transfer(pool, 499999999999999999) alternately inside uniswapV3SwapCallback until it has paid the pool 999999999999999998000 MINER for 28.210613620184568130 WETH it did not fund. The legacy note's victim address 0x732276168b421d4792e743711e1a48172ea574a2 is the MINER/WETH Uniswap V3 pool; the defect-bearing contract is the token 0xe77ec1bf3a5c95bfe3be7bdbacfe3ac1c7e454cd, confirmed direct and non-proxy: its runtime hashes to 0x806c7839ff3be9720decf1330f2b4a5f354717f753320fbdb2796b3791bbcbfc at creation block 19206955, at block 19226599 immediately before the exploit, and at head, the empty-code hash appears at block 19206954, and EIP-1967 slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc is zero. Creation transaction 0x160b3291d1e5e14a1abf91f2495e8523cec389b29a8a8500f5942a9d19ce77bc at 19206955:74 was sent by 0x2bb152c4a84f91bb5eb740a36ce6bae45c97a1d7, not by the attacker. Code age is 1707918503 - 1707680423 = 238080 s (2.76 d), confirming the legacy value. Loss re-measured: WETH Transfer logs from the pool to the exploit contract over blocks 19226600 to 19226707 total 168607972696358826905 wei across eleven transactions (28.210613620184567, 25.40255622176122, 20.70818066299119, 20.115069116869215, 17.660883481484664, 17.369328284799646, 15.38239726675751, 12.556869132411531, 10.878366462233828, 0.016681922833464303 and 0.30702652403199526 ETH), and the same total left the contract to the attacker EOA in 0x3a4e3e1adc822240a97a5d132d97d51e1d051f516d1569b5d6993807d17f38c9 and 0x92406300fd4446459b18fc17cdd775808bfc7ed1782bd4c8674a2bbe95610ad9. At the DefiLlama ETH price 2752.56 for timestamp 1707918591 that is 464103.56 USD, close to the legacy 470000 estimate. The same EOA went on to exploit a second token, DAWN 0x863e894fabe51783849e16df657e7e8f1180506c, from block 19226869 onward; that campaign is a different code artifact and is deliberately outside this record."

@@ -19,10 +19,7 @@
       "0xd1c0f1316140d6bf1a9e2eea8a227dad151f69b7"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LoanTokenLogic's _internalTransferFrom cached the sender and receiver balances before writing them and never rejected _from == _to, so each self-transfer of iETH credited the receiver without debiting the sender and doubled the attacker's iETH before burnToEther()."
-  },
+  "summary": "LoanTokenLogic's _internalTransferFrom cached the sender and receiver balances before writing them and never rejected _from == _to, so each self-transfer of iETH credited the receiver without debiting the sender and doubled the attacker's iETH before burnToEther().",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -175,34 +172,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x85dc2a433fd9eaadaf56fd8156c956da23fc17e5ef83955c7e2c4c37efa20bb5"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://bzx.network/blog/incident"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T18:58:30Z",
       "note": "Reviewed the successful exploit receipt and trace, iETH proxy creation trace, LoanTokenLogicWeth deployment, target_ storage history, exploit-time bytecode, source reproduction, and campaign-loss reporting. The exploit calls iETH proxy 0xb983e01458529665007ff7e0cddecdb74b967eb6, which delegates to 0xde744d544a9d768e96c21b5f087fc54b776e9b25. Factory 0x8cc1cfdc1c60c19a1d7c0fa3c042a4916aa79a51 created the proxy in block 10785086. The custom target_ slot 0x14 changed from 0xe8279915fe5fb202041c3b3bf97d0f95949d503f to the exploited implementation in setTarget transaction 0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c at 2020-09-04T19:53:15Z and remained unchanged through the incident. The implementation was deployed in block 10796762 and its 20,511-byte runtime hash is 0x153147d85fddfac599aed6d58a1488595e6b12f736ad4aca8e72e1a1929ed35c at selection and exploit time. LoanTokenLogic's _internalTransferFrom cached both balances before either write and permitted sender == receiver, duplicating iTokens. The reported gross campaign loss was approximately $8.1 million: 219,199.66 LINK, 4,502.70 ETH, 1,756,351.27 USDT, 1,412,048.48 USDC, and 667,988.62 DAI; later recovery does not reduce exploit-time gross loss."
@@ -210,49 +190,29 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x689cc627a562f892ab36edd8b29c6557bedb17c78f80bb26ddaa577aa460cd6c"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://cointelegraph.com/news/defi-platform-bzx-sees-new-8m-hack-from-one-misplaced-line-of-code"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x4a1941d5e02bb655f68cdb7b23572c478bc1e18c321fac90b1d13574da0f09ef"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x6b36dfd34d34d24de463996f598dd8cb8b76b6526f74df47bf727598d5293c0a"
     },
     {
       "id": "source-8",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2020-09/bzx_exp.sol"

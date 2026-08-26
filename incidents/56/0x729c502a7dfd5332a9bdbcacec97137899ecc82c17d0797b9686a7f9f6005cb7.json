@@ -19,10 +19,7 @@
       "0x8842dd26fd301c74afc4df12e9cdabd9db107d1e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "H2O's _transfer credits extra H2O when tokens are sent to the H2O/BUSD pair, so a 50-round transfer-then-skim() loop multiplied the attacker's balance before it sold into the pool."
-  },
+  "summary": "H2O's _transfer credits extra H2O when tokens are sent to the H2O/BUSD pair, so a 50-round transfer-then-skim() loop multiplied the attacker's balance before it sold into the pool.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x729c502a7dfd5332a9bdbcacec97137899ecc82c17d0797b9686a7f9f6005cb7"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-03/H2O_exp.sol"
@@ -111,10 +101,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xe9c4d4f095c7943a9ef5ec01afd1385d011855a1 created 2025-03-14T07:29:13Z by 0x09aeaec5c8b405370cd04adcc982cb8748d7d447, which is not the attack-tx sender 0x8842dd26fd301c74afc4df12e9cdabd9db107d1e; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

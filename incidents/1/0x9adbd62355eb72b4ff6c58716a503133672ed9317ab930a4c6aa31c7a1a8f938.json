@@ -19,10 +19,7 @@
       "0x23245f620d1e910ad76e6b6de4f8284a53c9ad2d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "REVLoans.borrowFrom() registered the caller-supplied REVLoanSource (token + terminal) into _loanSourcesOf without checking it was a real registered JB terminal, so an attacker-deployed fake terminal inflated totalBorrowedFrom and let tiny revnet-token collateral borrow the revnet #3 ETH treasury out of JBMultiTerminal."
-  },
+  "summary": "REVLoans.borrowFrom() registered the caller-supplied REVLoanSource (token + terminal) into _loanSourcesOf without checking it was a real registered JB terminal, so an attacker-deployed fake terminal inflated totalBorrowedFrom and let tiny revnet-token collateral borrow the revnet #3 ETH treasury out of JBMultiTerminal.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x9adbd62355eb72b4ff6c58716a503133672ed9317ab930a4c6aa31c7a1a8f938"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://blocksec.com/blog/weekly-web3-security-roundup-2026-04-26"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-04/JuiceboxREVLoans_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: REVLoans (verified source) created 2025-09-12 by 0x755ff2f75a0a586ecfa2b9a3c959cb662458a105 (not the attacker), no EIP-1967 Upgraded events; attack tx sent directly by the attacker EOA. Loss 21.77 ETH; DefiLlama records $52,000, BlockSec ~$50.7K."
     }
   ],

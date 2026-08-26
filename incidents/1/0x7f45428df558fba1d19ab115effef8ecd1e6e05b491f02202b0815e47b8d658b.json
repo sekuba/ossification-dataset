@@ -19,10 +19,7 @@
       "0x0736930ae35eafefa789f11edf41d7b799e7c99d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ExchangeIssuance quoted attacker-supplied SetToken units without locking them, then settlement re-read units after the attacker inflated positionMultiplier, transferring the victim's own component inventory."
-  },
+  "summary": "ExchangeIssuance quoted attacker-supplied SetToken units without locking them, then settlement re-read units after the attacker inflated positionMultiplier, transferring the victim's own component inventory.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x7f45428df558fba1d19ab115effef8ecd1e6e05b491f02202b0815e47b8d658b"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
       "path": "src/test/2026-07/ExchangeIssuance_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xa6c26717dc8f525c1c028bf6b20de417f5454219ddb37f81dc76d0f9f203547e"
     }

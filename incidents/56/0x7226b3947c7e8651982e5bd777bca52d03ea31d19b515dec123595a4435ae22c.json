@@ -19,10 +19,7 @@
       "0x2dea406bb3bea68d6be8d9ef0071fdf63082fb52"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "donatePool() credits the donated WBNB to shareholders immediately and the same transaction can buy in and sell out, so a flash-loaned donate -> buy -> sell -> withdraw cycle returned more WBNB than it consumed."
-  },
+  "summary": "donatePool() credits the donated WBNB to shareholders immediately and the same transaction can buy in and sell out, so a flash-loaned donate -> buy -> sell -> withdraw cycle returned more WBNB than it consumed.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x7226b3947c7e8651982e5bd777bca52d03ea31d19b515dec123595a4435ae22c"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/Phalcon_xyz/status/1943518566831296566"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-06/BankrollNetwork_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xAdEfb902CaB716B8043c5231ae9A50b8b4eE7c4e created 2021-07-07T22:51:29Z by 0xcb71eb21f53a2f4de0f26dc90518df10be13d1ec, which is not the attack-tx sender 0x2dea406bb3bea68d6be8d9ef0071fdf63082fb52; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 24.5 WBNB x $645.43/BNB at the incident timestamp 1750317290 (DefiLlama coingecko:binancecoin) = $15,813."
     }
   ],

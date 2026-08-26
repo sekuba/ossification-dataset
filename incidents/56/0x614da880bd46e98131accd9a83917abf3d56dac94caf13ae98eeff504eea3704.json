@@ -19,10 +19,7 @@
       "0x57ecf40b596274a985967e3f698437ae0a9600a0"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "unprotected initialize plus public mint on WXeta diamond minted unlimited tokens"
-  },
+  "summary": "unprotected initialize plus public mint on WXeta diamond minted unlimited tokens",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x614da880bd46e98131accd9a83917abf3d56dac94caf13ae98eeff504eea3704"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-09/WXETA_exp.sol"
@@ -111,19 +101,11 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x05c2dd9cf547c6cccf91245346e6e1bc9926cae7 is an EIP-2535 diamond that installs code with DiamondCut and emits no EIP-1967 Upgraded event; eth_getLogs over creation block 36918555 to incident block 42284162 finds exactly two DiamondCut logs, the deployment cut (2024-03-13T00:21:55Z) and a second cut at block 36927327, 2024-03-13T07:41:33Z, tx 0xe62285b2153aca90950043f507babe523ec3b0fc3dc3f8069a8e4de803285543, which Added facet 0x7c83dc9221cfd48ac760710b7f1cd7b76ff6fcc2 with the 15 ERC20/token selectors including initialize(uint256) 0xfe4b84df and mint(address,uint256) 0x40c10f19 - the exact pair the exploit used - so the flawed code dates from that cut, 7h20m after deployment"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xe62285b2153aca90950043f507babe523ec3b0fc3dc3f8069a8e4de803285543"
     }

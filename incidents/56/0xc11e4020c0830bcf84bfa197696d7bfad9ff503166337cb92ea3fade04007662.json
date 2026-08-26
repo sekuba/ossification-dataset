@@ -20,10 +20,7 @@
       "0x216ccfd4fb3f2267677598f96ef1ff151576480c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The BH farm 0x8ca7835aa30b025b38a59309dd1479d2f452623a holds the protocol's whole BUSDT/BH PancakeSwap LP position and lets anyone redeem it by burning BH. Its withdraw function 0x4e290832(uint256 bhAmount) burns the caller's BH and then computes the LP it removes as bhAmount * sqrt(BUSDT.balanceOf(pair) * BH.balanceOf(pair)) / BH.balanceOf(pair), i.e. it derives the redemption share from the pair's live token balances instead of from its own share ledger. Both balances are freely movable by the caller inside the same transaction. The attacker pushed 22,000,000 flash-loaned BUSDT through the pair, cutting BH.balanceOf(pair) from 251,272,454 to 42,011,431 and raising BUSDT.balanceOf(pair) from 4,405,698 to 26,405,698, and then called the withdraw function ten times, each time redeeming ~55% of the whole LP position for BH that was worth a fraction of it, until the pair held 47,126 BUSDT."
-  },
+  "summary": "The BH farm 0x8ca7835aa30b025b38a59309dd1479d2f452623a holds the protocol's whole BUSDT/BH PancakeSwap LP position and lets anyone redeem it by burning BH. Its withdraw function 0x4e290832(uint256 bhAmount) burns the caller's BH and then computes the LP it removes as bhAmount * sqrt(BUSDT.balanceOf(pair) * BH.balanceOf(pair)) / BH.balanceOf(pair), i.e. it derives the redemption share from the pair's live token balances instead of from its own share ledger. Both balances are freely movable by the caller inside the same transaction. The attacker pushed 22,000,000 flash-loaned BUSDT through the pair, cutting BH.balanceOf(pair) from 251,272,454 to 42,011,431 and raising BUSDT.balanceOf(pair) from 4,405,698 to 26,405,698, and then called the withdraw function ten times, each time redeeming ~55% of the whole LP position for BH that was worth a fraction of it, until the pair held 47,126 BUSDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -118,22 +115,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xc11e4020c0830bcf84bfa197696d7bfad9ff503166337cb92ea3fade04007662"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-10/BH_exp.sol"
@@ -141,19 +128,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xfba0cb958d30113aa8e03f9082df2834c19713b56de5297ceec61cba8c6f3c85"
     },
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1697033673/coingecko:tether",
       "observedAt": 1787647058
@@ -161,13 +141,6 @@
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T11:30:00Z",
       "note": "Triaged as a code bug, not price manipulation. The BH token 0xcc61cc9f2632314c9d452aca79104ddf680952b5, which DeFiHackLabs and the v1 snapshot named as the vulnerable contract, is verified on BscScan as a plain whitelist-gated ERC20 with no transfer hook, rebase, or reserve mutation, so the target was moved to the unverified farm 0x8ca7835aa30b025b38a59309dd1479d2f452623a that the exploit actually calls. The farm's withdraw function, selector 0x4e290832, was reconstructed from the trace: it pulls and burns the caller's BH, reads BH.balanceOf(pair) and BUSDT.balanceOf(pair), and approves the router for lp = bhAmount * isqrt(usdtPair * bhPair) / bhPair before calling removeLiquidity. That formula reproduces the LP approval of all ten withdrawals in the exploit transaction to within 1 wei (18318725611309696944043921, 9225736686047882643896757, 4646093653388051077919827, 2339677337207703728875049, 1178162180518183807884828, 593246636011152523499720, 298707815015966968045519, 150396931960313578836273, 75720322755522345345574, 38121240148200729068425), so the redemption share is computed from spot balances the caller moves in the same transaction rather than from a share ledger; the attacker's 22,000,000 BUSDT swap is the manipulation input, not the defect. The pair 0x2371e4ad771020ce3d8252f1db3e5559fba8eeb5 is not on the BH whitelist, which is why the attacker had to route the swapped BH to the project contract 0x5b9dd1de70320b1ea6c8bbeba12bf4e246227999. Anchor kept: the attacker EOA's five earlier successful transactions (0x2766b931, 0xf3cef757, 0x4be97271, 0x76d1f27e, 0xf8eb8058) never touch 0x8ca7835a, so 0xc11e4020 is the first and only transaction that executes the defect. The farm is not a proxy: EIP-1967 implementation and beacon slots and the EIP-1822 slot are zero at block 32512073, the address is empty at block 32340669, and the runtime code hash is 0xfe857864a02bd86364010f1c788ca2fe8bce86c8140f0ca5478d99fcb2b33065 at both its creation block 32340670 and block 32512073, giving a code age of 516325s (5d 23h 25m 25s). Its creator 0x59a8082bc047de76209ca00d2e2c1856aaf791b5 is the BH project deployer, which also deployed the token and the pair, and is not an attacker address. Loss is the pair's BUSDT balance delta across the exploit block, 1346340.822359750672220700 BUSDT, which reconciles exactly against the attacker EOA's 1275981.822359750672220700 BUSDT, 69000 BUSDT of flash-loan fees, and 1359 BUSDT to the project fee contract 0xc9fc938bcf691affa79c9fec3d1719f6297fa20e."

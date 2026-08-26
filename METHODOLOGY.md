@@ -38,7 +38,7 @@ An incident represents one coherent campaign against an affected execution
 context on one chain. Anchor it to the earliest successful transaction in the
 campaign that executes the defect, or to the transaction that makes a permanent
 loss final when there is no earlier defect-executing success. The incident owns
-the classification and a loss measurement not counted by another record.
+the summary and a loss measurement not counted by another record.
 
 Repeated transactions in one coherent campaign on the same chain belong to one
 incident. Such a campaign may span code-identical deployments under the
@@ -126,9 +126,9 @@ storage history, and execution traces.
 
 Verification follows the ownership of each claim:
 
-- Incident `provisional`: exploit anchor, classification, or loss awaits review.
-- Incident `reviewed`: exploit anchor, code-bug classification, and loss have
-  been reviewed.
+- Incident `provisional`: exploit anchor, summary, or loss awaits review.
+- Incident `reviewed`: exploit anchor, code-bug summary, and loss have been
+  reviewed. Only reviewed incidents reach `dist/latest/incidents.json`.
 - Target `provisional`: artifact identity or code history awaits research.
 - Target `reviewed`: execution relationship, artifact hash, failure identity,
   exact anchors, and code-history completeness have been reviewed.
@@ -163,7 +163,9 @@ post-mortems, and reputable published analysis. Reported estimates state their
 scope and valuation method.
 
 Reviewed asset components identify the chain and token, decimal quantity, USD
-value, valuation timestamp and method, and evidence IDs. Stable assets may use
+value, valuation timestamp and method, and evidence IDs. `method` records the
+basis: `realised-proceeds` when the figure is what the assets actually sold for,
+which is required wherever the attacker's own selling moved the price. Stable assets may use
 1:1 valuation. Liquid assets use a timestamped price source. Illiquid assets use
 an evidenced lower bound when it establishes cohort admission. `price-data`
 sources record provider, URL, and evidence-retrieval time in `observedAt`; the

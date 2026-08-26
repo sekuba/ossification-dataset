@@ -19,10 +19,7 @@
       "0xe4b97db5faf476db464bc271097fac97d6ce3783"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Victim swapSingleToken trusted an attacker-supplied fake pair and paid DAI in the swap callback without authenticating a real pool."
-  },
+  "summary": "Victim swapSingleToken trusted an attacker-supplied fake pair and paid DAI in the swap callback without authenticating a real pool.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 137,
       "transactionHash": "0xf90407e2be3834d8534869af41849f72e9fea666cd7e23bf5c52a2fc0a497a75"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-08/unverified_d132_exp.sol"

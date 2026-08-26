@@ -25,10 +25,7 @@
       "0x6ce012f2a6fd6024b95e1bee2c75c603e4e71ce8"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ElevenNeverSellVault.emergencyBurn() returned the caller's underlying LP tokens without burning the corresponding vault shares. The attacker could therefore recover a newly deposited position through emergencyBurn() and withdraw the same shares again through withdrawAll(), taking an equal amount from existing depositors."
-  },
+  "summary": "ElevenNeverSellVault.emergencyBurn() returned the caller's underlying LP tokens without burning the corresponding vault shares. The attacker could therefore recover a newly deposited position through emergencyBurn() and withdraw the same shares again through withdrawAll(), taking an equal amount from existing depositors.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -102,34 +99,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x6450d8f4db09972853e948bee44f2cb54b9df786dace774106cd28820e906789"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "url": "https://peckshield.medium.com/eleven-finance-incident-root-cause-analysis-123b5675fa76"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T19:36:00Z",
       "note": "Reviewed the BNB Chain receipts and full call traces, the earliest campaign ordering, the affected vault's creation transaction and historical runtime, PeckShield's technical analysis, and Eleven Finance's post-mortem, recovery plan, and eventual return-of-funds update. The prior anchor 0xeaaa8f4d... is the second of five exploit transactions sent by 0xc71e2f581b77de945c8a7a191b0b238c81f11ed6. The record is re-anchored 39 seconds earlier to the first successful transaction, 0x6450d8f4... at block 8530974:28. Attack contract 0x8b2979d88be70ba1b0c48691bdcae7909d084401 calls emergencyBurn() and withdrawAll() on ElevenNeverSellVault 0x27dd6e51bf715cfc0e2fe96af26fc9ded89e4be8, reproducing the missing share burn. The vault is a direct non-proxy deployment by 0x6b3c201575ace5ed6b67df5c91e40b98c0d2be36 at block 6861143:99. Its 20,321-byte runtime is absent in the prior block and hashes to 0xaea824d27f4e41f4cddbfc33076901e3af6fe5c9b403061ce0b3ec483be6fcba at deployment and immediately before the exploit. The same campaign comprises five successful transactions from the first attacker between blocks 8530974 and 8531036 plus a later copycat transaction at block 8534790. Eleven Finance initially reported approximately $4.5 million lost and later used approximately $4.8 million after calculating affected balances; it subsequently recovered and returned nearly all exploited funds."
@@ -137,39 +117,22 @@
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://elevenfinance.medium.com/eleven-finance-nrv-vault-exploit-and-loss-of-funds-a-post-mortem-437a79ded743"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://elevenfinance.medium.com/eleven-finance-recovery-plan-a3869f8242d0"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xaacf8f29927970cdaf7186005b73e53995af85627d2db944763ef3feb53f7262"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x6450d8f4db09972853e948bee44f2cb54b9df786dace774106cd28820e906789",
@@ -183,9 +146,6 @@
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://elevenfinance.medium.com/eleven-finance-a-plan-for-the-return-of-funds-recovered-from-the-nerve-vault-exploit-39a006af20d3"
     }
   ],

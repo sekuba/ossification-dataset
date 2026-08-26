@@ -19,10 +19,7 @@
       "0xba5ed1488be60ba2facc6b66c6d6f0befba22ebe"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The DEFI5 index pool's extrapolatePoolValueFromToken() estimated total pool value from the balance/denorm of a single initialized token, so flash-loaned deposits that skewed that token set an absurd minimum balance for the freshly reindexed SUSHI record and let the attacker mint index tokens against the pool's real assets."
-  },
+  "summary": "The DEFI5 index pool's extrapolatePoolValueFromToken() estimated total pool value from the balance/denorm of a single initialized token, so flash-loaned deposits that skewed that token set an absurd minimum balance for the freshly reindexed SUSHI record and let the attacker mint index tokens against the pool's real assets.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -97,31 +94,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity"
-      ],
       "chainId": 1,
       "transactionHash": "0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://blocksecteam.medium.com/the-analysis-of-indexed-finance-security-incident-8a62b9799836"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "loss",
-        "root-cause"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T00:00:00Z",
       "note": "Reviewed the live Ethereum receipts and call traces, the DEFI5 creation trace, implementation-holder storage around both changes, every proxy-manager implementation event for the IndexPool ID from DEFI5 deployment through the exploit, the pre-exploit artifact hash, Indexed Finance's post-mortem, BlockSec's analysis, and the commit-pinned source and deployment artifact. The exploit calls DEFI5 at 0xfa6de2697d59e88ed7fc4dfe5a33dac43565ea41, which delegatecalls 0x5bd628141c62a901e0a83e630ce5fafa95bbdee4; the pinned deployment runtime hashes to the same declared value. The holder changed twice after DEFI5 deployment, at blocks 11800940 and 12347624; the latter event selected the traced artifact and no later event for that implementation ID occurred before the exploit. The flawed pool function extrapolated total value from one manipulable token balance. Indexed's approximately $16 million figure covers the coherent DEFI5 and CC10 campaign; its post-mortem reports about $11 million for the anchored DEFI5 leg and describes CC10 as the same exploit."
@@ -129,38 +112,23 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x0fa9b03e750e413b76143313aeb3a1b4d2b89548f0031f3c32962ed3941c5a0b"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x5b69a20015f5c86884b878215da291525dc38e5333f5c2002def03d72646f0a3"
     },
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://ndxfi.medium.com/indexed-attack-post-mortem-b006094f0bdc"
     },
     {
       "id": "source-7",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/indexed-finance/indexed-core",
       "commit": "f74996cc6168d653a5d99f66c257a2c4a3afc34d",
       "path": "contracts/balancer/IndexPool.sol"

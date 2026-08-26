@@ -20,10 +20,7 @@
       "0x1da4bc596bfb1087f2f7999b0340fcba03c47fbd"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The implementation Pike installed on 2024-04-28 to fix an earlier incident left initialize() reachable on the proxy, so the first caller could set every privileged role. The attacker called initialize() to make itself owner and upgrader, then called upgradeToAndCall() through the same implementation to install its own logic and sweep the proxy’s 479.39 ETH in the same transaction."
-  },
+  "summary": "The implementation Pike installed on 2024-04-28 to fix an earlier incident left initialize() reachable on the proxy, so the first caller could set every privileged role. The attacker called initialize() to make itself owner and upgrader, then called upgradeToAndCall() through the same implementation to install its own logic and sweep the proxy\u2019s 479.39 ETH in the same transaction.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -59,7 +56,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The exploit transaction sends 479.393838338750964434 ETH from the proxy to the attacker EOA and is the only transaction the attacker sent against Pike; the other three transactions in that EOA’s history are the exploit-contract creation and two disposal swaps. Pike was hit on Arbitrum and Optimism in the same campaign at different addresses; this record covers the Ethereum leg only and does not carry those amounts. DefiLlama’s nearest ETH observation is 57 seconds after the incident timestamp. Nothing was recovered."
+    "notes": "The exploit transaction sends 479.393838338750964434 ETH from the proxy to the attacker EOA and is the only transaction the attacker sent against Pike; the other three transactions in that EOA\u2019s history are the exploit-contract creation and two disposal swaps. Pike was hit on Arbitrum and Optimism in the same campaign at different addresses; this record covers the Ethereum leg only and does not carry those amounts. DefiLlama\u2019s nearest ETH observation is 57 seconds after the incident timestamp. Nothing was recovered."
   },
   "targets": [
     {
@@ -90,7 +87,7 @@
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "The proxy emitted four Upgraded events; the last legitimate one, log 276 of block 19756154, installed 0xb30c120eb92c120bf11b358b4b9961e6679b6ae7 by the operator 0xb1ea97c9f68978905fb1bf5089e71a073bc4f5c8. The fourth Upgraded is emitted inside the exploit transaction itself by the attacker’s own upgradeToAndCall and is not a pre-exploit code change."
+        "description": "The proxy emitted four Upgraded events; the last legitimate one, log 276 of block 19756154, installed 0xb30c120eb92c120bf11b358b4b9961e6679b6ae7 by the operator 0xb1ea97c9f68978905fb1bf5089e71a073bc4f5c8. The fourth Upgraded is emitted inside the exploit transaction itself by the attacker\u2019s own upgradeToAndCall and is not a pre-exploit code change."
       },
       "codeAgeSeconds": 179976,
       "failureModeId": "failure:pike-uninitialized-upgrade-implementation",
@@ -121,22 +118,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xe2912b8bf34d561983f2ae95f34e33ecc7792a2905a3e317fcc98052bce66431"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/PikeFinance_exp.sol"
@@ -144,32 +131,18 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x0fcc85422e9726a5d8b2ce00291051df0167089e0d1a5e66bfac908c0769e05d"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xfeb205066bb64668ea847330ddeb62e2f6b8dcc2b8ae32e4e1d0715ddd62f98d"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T11:35:00Z",
       "note": "The exploit trace delegate-calls the legitimate implementation 0xb30c120eb92c120bf11b358b4b9961e6679b6ae7 twice before any attacker code runs: once for initialize(), which succeeds from an arbitrary caller and emits Initialized(1), and once for upgradeToAndCall(), which the caller is now authorised for. Only then does the attacker implementation execute and forward the proxy balance. The defect therefore lives in victim code that predates all adversarial control and executes in the anchor, which is why this target is curve-eligible even though the drain itself runs attacker code. The proxy emitted four Upgraded events between its creation block 19120773 and the exploit; the last pre-exploit one is at block 19756154, so the exploited implementation is 2.08 days old, and the fourth belongs to the exploit transaction and is excluded. The implementation had been installed two days earlier as the fix for an earlier Pike incident."
@@ -177,9 +150,6 @@
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1714515551/coingecko:ethereum",
       "observedAt": 1787644589

@@ -19,10 +19,7 @@
       "0x148426fdc4c8a51b96b4bed827907b5fa6491ad0"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "iTokens_loanOpeningFunctions.takeOrderFromiToken guarded the collateral check with a short-circuiting OR - require((loanDataBytes.length == 0 && sentAmounts[6] == sentAmounts[1]) || !OracleInterface(oracle).shouldLiquidate(...)) - so with empty loanDataBytes the left operand was true and shouldLiquidate() was never called, letting a 5x short open against the iETH pool that was instantly underwater after 5,637 ETH was swapped into 51 WBTC on Uniswap V1."
-  },
+  "summary": "iTokens_loanOpeningFunctions.takeOrderFromiToken guarded the collateral check with a short-circuiting OR - require((loanDataBytes.length == 0 && sentAmounts[6] == sentAmounts[1]) || !OracleInterface(oracle).shouldLiquidate(...)) - so with empty loanDataBytes the left operand was true and shouldLiquidate() was never called, letting a 5x short open against the iETH pool that was instantly underwater after 5,637 ETH was swapped into 51 WBTC on Uniswap V1.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -124,34 +121,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0xb5c8bd9430b6cc87a0e2fe110ece6bf527fa4f170a4bc8cd032f768fc5219838"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.palkeo.com/en/projets/ethereum/bzx.html"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:30:55Z",
       "note": "Reviewed the exploit receipt and call trace, the deployment transaction, the module bytecode, targets(bytes4) values over the complete deployment-to-exploit interval, the module-install transaction's storage diff, and the technical incident analysis. The exploit path reaches BZxProxy 0x1cf226e9413addaf22412a2e182f9c0de44af002 with takeOrderFromiToken selector 0xb1eac3ad and delegates to 0xf0a42ec4ebb7664af5dae5c3209345d545da838a. That module's collateral requirement short-circuits before shouldLiquidate when the empty-data equality branch is true, allowing the underwater 5x short. The proxy's selector mapping is at slot 39; keccak256(bytes4(0xb1eac3ad) || uint256(39)) is 0x256361903829814b9e3a3327bdb9da8cbda4af9137dd310659667e590d3b9f68. Transaction 0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f changes that slot from 0xfbc580e4f16234d5783314f1d4195971eff453f4 to the recorded artifact, and targets(0xb1eac3ad) remains unchanged through the exploit. The loss uses the documented 1,193 ETH realized attacker profit after the Compound position was unwound rather than its earlier 1,271 ETH marked estimate."
@@ -159,9 +139,6 @@
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1581644337&to=1581734337",
       "observedAt": 1787574655
@@ -169,20 +146,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x7e49e3da0817322d9a118957fd535e10ae9e19e0022181d227f01e9b7c6d3d5f"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x2f2d16075c45ef0299a725d78f29726aa21c1a44cfac35ac205b48267c0e47cd"
     }

@@ -20,10 +20,7 @@
       "0x560a8e3b79d23b0a525e15c6f3486c6a293ddad2"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "HomoraBank v2 tracks each bank's debt as totalDebt and totalShare. Two flaws in the implementation active at the time combine. First, the permissionless resolveReserve(address) borrows bank.pendingReserve from the Iron Bank cToken through doBorrow, which adds the borrowed amount to bank.totalDebt while minting no debt share at all, so anyone can raise the debt-per-share ratio without bound. Second, borrow(address,uint256) converts the borrowed amount into shares with truncating division, share = amount.mul(totalShare).div(totalDebt), and neither rounds up nor rejects a zero result, so any borrow smaller than totalDebt/totalShare transfers real tokens and records no debt whatsoever; getBorrowETHValue then values the position's debt at zero and execute()'s require(collateralValue >= borrowValue) passes trivially. Using the unadvertised sUSD bank the attacker borrowed 1,000 sUSD while totalShare was zero, repaid down to totalDebt = totalShare = 1 wei, then called resolveReserve(sUSD) directly on the proxy in this transaction, which borrowed 19,709,787,742,196 wei of accrued reserve and left totalDebt = 19,709,787,742,197 against totalShare = 1. Every subsequent borrow up to that ratio emitted Borrow(..., share 0), and because doBorrow also adds each borrowed amount to totalDebt, the free-borrow ceiling doubled with every iteration until 61,089,765.301487271822120729 sUSD had been drawn from the Iron Bank iSUSD market against one wei of debt share. The attacker redeposited that sUSD as iSUSD collateral and borrowed out the iWETH, iUSDC, iUSDT and iDAI markets. Alpha's own post-mortem names both the borrow rounding error and resolveReserve's share-less totalDebt increase, and the fix replaced div with ceilDiv in borrow and in every debt-valuation path. Only feeBps is configurable and no value of it makes truncating share division correct, so this is a code defect rather than a parameter defect."
-  },
+  "summary": "HomoraBank v2 tracks each bank's debt as totalDebt and totalShare. Two flaws in the implementation active at the time combine. First, the permissionless resolveReserve(address) borrows bank.pendingReserve from the Iron Bank cToken through doBorrow, which adds the borrowed amount to bank.totalDebt while minting no debt share at all, so anyone can raise the debt-per-share ratio without bound. Second, borrow(address,uint256) converts the borrowed amount into shares with truncating division, share = amount.mul(totalShare).div(totalDebt), and neither rounds up nor rejects a zero result, so any borrow smaller than totalDebt/totalShare transfers real tokens and records no debt whatsoever; getBorrowETHValue then values the position's debt at zero and execute()'s require(collateralValue >= borrowValue) passes trivially. Using the unadvertised sUSD bank the attacker borrowed 1,000 sUSD while totalShare was zero, repaid down to totalDebt = totalShare = 1 wei, then called resolveReserve(sUSD) directly on the proxy in this transaction, which borrowed 19,709,787,742,196 wei of accrued reserve and left totalDebt = 19,709,787,742,197 against totalShare = 1. Every subsequent borrow up to that ratio emitted Borrow(..., share 0), and because doBorrow also adds each borrowed amount to totalDebt, the free-borrow ceiling doubled with every iteration until 61,089,765.301487271822120729 sUSD had been drawn from the Iron Bank iSUSD market against one wei of debt share. The attacker redeposited that sUSD as iSUSD collateral and borrowed out the iWETH, iUSDC, iUSDT and iDAI markets. Alpha's own post-mortem names both the borrow rounding error and resolveReserve's share-less totalDebt increase, and the fix replaced div with ceilDiv in borrow and in every debt-valuation path. Only feeBps is configurable and no value of it makes truncating share division correct, so this is a code defect rather than a parameter defect.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -188,24 +185,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x98f623af655f1e27e1c04ffe0bc8c9bbdb35d39999913bedfe712d4058c67c0e"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T00:00:00Z",
       "note": "Reviewed the eleven campaign transactions, their callTracer traces and receipts, the verified HomoraBank implementation source, the proxy's complete Upgraded history, and the sUSD bank state at every block boundary. Victim identity: the bank exploited in February 2021 is the TransparentUpgradeableProxy 0x5f5cd91070960d13ee549c9cc47e7a4cd00457bb created at 11515006:187 by 0xb593d82d53e2c187dc49673709a6e9f806cdc835, not 0xba5ebaf3fc1fcca67147050bf80462393814e54b, which was only created on 2021-04-28 at block 12327027 as the post-incident replacement. eth_getLogs over 11515000-11846612 returns exactly two Upgraded events on the proxy: 0x95ab3ca8133b47f16f47f6a79410680fe87a6139 at block 11704865 and 0x33bf0bb8e1405dc440eccb97ffd92fef438c8a27 at block 11836812 log 172 (tx 0xd8e94745426c8410dc958a38bb29be90b077191fcbeedaffaa5bfc26a33e0fab, index 146, timestamp 1613067113). There are no AdminChanged events. Storage slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc reads 0x33bf0bb8e1405dc440eccb97ffd92fef438c8a27 at block 11846617, and the implementation runtime hashes to 0xc5f6525cbfe9ef765424e3433f0782aaa65c57627f9a6d3cfeec03b86b0b2060 at its deployment block 11836796, at the upgrade block, and immediately before the exploit; it is the empty-code hash at 11836795. codeAgeSeconds = 1613196415 - 1613067113 = 129,302, i.e. the defective implementation was one day nineteen hours old. Anchor: getBankInfo(sUSD) on the proxy returns (reserve, totalDebt, totalShare) = (0,0,0) through block 11846604, (0, 1000e18, 1000e18) at 11846607, (0,1,1) at 11846611, then (19709787742196, 19709787742197, 1) at 11846617. The transition to a 1.97e13 debt-per-share ratio happens in 0x98f623af655f1e27e1c04ffe0bc8c9bbdb35d39999913bedfe712d4058c67c0e, a direct top-level resolveReserve(0x57ab1ec28d129707052df4df418d58a2d46d5f51) call from the attacker EOA that DELEGATECALLs 0x33bf0bb8 and then calls iSUSD.borrow; it is the earliest successful transaction in the campaign that executes defective code. The two earlier bank transactions take only sound paths (share = amount because totalShare was zero, then a normal repay), and the first Borrow event carrying share 0 follows one transaction later in 0x2e387620bb31c067efc878346742637d650843210596e770d4e2d601de5409e3 at 11846618:6. Across the campaign the bank emitted 46 Borrow events on sUSD, of which 45 carry share 0, with amounts from 19,709,787,742,196 up to 9,689,298,724,170,490,767,391,241 wei summing to 61,088,765,301,467,562,034,378,533; the bank ends with totalDebt 61,088,833,349,758,753,001,637,162 against totalShare 1. Target scope: only HomoraBank bears the defect. The Iron Bank iSUSD, iWETH, iUSDC, iUSDT and iDAI markets executed Compound-v2 borrow logic correctly against a governance-configured credit limit for a whitelisted borrower, which is configuration rather than defective code, so they are not added as targets. Loss: summed from the cToken Borrow logs of the nine campaign transactions and cross-checked against the attacker's end-of-campaign holdings of 13,244.630331762545750401 WETH and 13,532,845.885656673015123177 a3CRV. Fix evidence: the project's own repository replaces div with ceilDiv in borrow at contracts/HomoraBank.sol line 509 and in borrowBalanceStored, getPositionDebts and getBorrowETHValue."
@@ -213,29 +198,18 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xd8e94745426c8410dc958a38bb29be90b077191fcbeedaffaa5bfc26a33e0fab"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xcd4f76e69bcce5dc5f16614cf15aa99b76f21e604cf353839d6db5654d08b575"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0xcc57ac77dc3953de7832162ea4cd925970e064ead3f6861ee40076aca8e7e571",
@@ -252,28 +226,16 @@
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.alphaventuredao.io/alpha-homora-v2-post-mortem/"
     },
     {
       "id": "source-7",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://github.com/OriginProtocol/security/blob/master/incidents/2021-02-13-Alpha-Homora-v2.md"
     },
     {
       "id": "source-8",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1613196415/coingecko:ethereum",
       "observedAt": 1787663821
@@ -281,10 +243,6 @@
     {
       "id": "source-9",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/AlphaFinanceLab/alpha-homora-v2-contract",
       "commit": "20c6ff583a90454e7acb08732baa319d7f66e76c",
       "path": "contracts/HomoraBank.sol"
@@ -292,10 +250,6 @@
     {
       "id": "source-10",
       "type": "onchain-transaction",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x2e387620bb31c067efc878346742637d650843210596e770d4e2d601de5409e3"
     }

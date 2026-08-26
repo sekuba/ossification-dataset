@@ -30,10 +30,7 @@
       "0x151508c74583a265ce343edf69dbbac115926a79"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "GymSinglePool.depositFromOtherContract() is external with no caller authorization and its private _autoDeposit() helper never pulls tokens from anyone: it only credits userInfo/user_deposits for the caller-supplied _from address and makes the pool approve itself for the credited amount. Any address could therefore book an arbitrary GYMNET deposit it never funded and then call withdraw(), which transferFrom's the fabricated principal out of the pool's own GYMNET balance."
-  },
+  "summary": "GymSinglePool.depositFromOtherContract() is external with no caller authorization and its private _autoDeposit() helper never pulls tokens from anyone: it only credits userInfo/user_deposits for the caller-supplied _from address and makes the pool approve itself for the credited amount. Any address could therefore book an arbitrary GYMNET deposit it never funded and then call withdraw(), which transferFrom's the fabricated principal out of the pool's own GYMNET balance.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -133,29 +130,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 56,
       "transactionHash": "0x452bef398e4b688ae2deb5d6842b955fd54db2b7a92d5d35361ce017eeda95d7"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://www.certik.com/skynet-report/gym-network-exploit-analysis"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-06/Gym_2_exp.sol"
@@ -163,28 +148,18 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xbca88a18c7c7a96c6bca12e8b36ff4aa1aba798c9b4ca1891b61c8a1306cd5f5"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x0ca64e54f6d6e693871a62c4d210c10daf6464ddfa53490c4cb1b6ecfeefd57c"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x0ea998db28b9fb95080c48bdd456c65739f7168244d63290d9c271b523343e14",
@@ -210,9 +185,6 @@
     {
       "id": "source-7",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x6ec1745a88d809c623ac9cc2fa6cf080deb0b96efee4088e6013f2d639c779e2",
@@ -228,9 +200,6 @@
     {
       "id": "source-8",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1654658091/coingecko:binancecoin,bsc:0x3a0d9d7764fae860a659eb96a500f1323b411e68",
       "observedAt": 1787644800
@@ -238,13 +207,6 @@
     {
       "id": "source-9",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:20:00Z",
       "note": "Re-anchored. The v1 snapshot anchored this incident to 0x8432c1c6613995eeea8a3ae2cfeb9577913db6b7b35dbe26a8c56c02066096e6 at block 18501050, which is the thirteenth defect-executing transaction of the campaign, not the first. The attacker EOA 0xb2c035eee03b821cbe78644e5da8b8eaa711d2e5 sent 125 transactions; its first successful exploit call is 0x452bef398e at block 18498609 index 57, whose trace shows exploit contract 0xf80812247da2877ccc3b3ffd4ac60a1fd04823de calling the GymSinglePool proxy 0xa8987285e100a8b557f06a7889f79e0064b359f2, which delegatecalls implementation 0x0288fba0bf19072d30490a0f3c81cd9b0634258a and books a 100 GYMNET deposit with no incoming token transfer. The verified source of both 0x0288fba0 and its predecessor 0xfbbe401a76e31d73f7e4302e0b0232d79e5869d9 shows depositFromOtherContract(uint256,uint8,bool,address) declared external with only a require(isPoolActive) guard; the selector 0x0e3d1093 is absent from the earlier implementation 0x21fec98cce28979e1220396c711e5c5c30a93824, so the unguarded entrypoint first shipped in the block-18389587 upgrade and was still present, unchanged in that respect, in the artifact executed at exploit time. The proxy emitted exactly eight Upgraded events between its creation block 17821375 and the exploit, at blocks 17821375, 18139114, 18139332, 18145250, 18221435, 18252092, 18389587 and 18431003; the last of them, log 218 of transaction 0x0ca64e54f6 at block 18431003 index 70, selected 0x0288fba0, and the EIP-1967 implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc reads that address at both block 18498608 and block 18501049. The artifact's runtime code hash is 0x521c11320cc5d1da81ac2be87682703031ca75190a29ee30d364e560791f3ab0 at its deployment block 18430866, at block 18498608 and today, so the exploited code is 2d 8h 42m 56s old. The proxy and the implementation were both created by 0xc08d6d75fdd67005fa21933bd281b1e6180184b2, the GYM deployer, which is not an attacker address. The pool's GYMNET balance rose monotonically from block 18389587 to block 18498530, so no one drained the unguarded function before this campaign. Loss is the 40,190,625.4612 GYMNET the pool paid out to attacker addresses across eighteen transactions, valued at the 7,475.416854059780883755 BNB the exploiter realised selling it into PancakeSwap."

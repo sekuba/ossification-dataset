@@ -20,10 +20,7 @@
       "0x9af3dce0813fd7428c47f57a39da2f6dd7c9bb09"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The incident combined a rollover-pricing defect that let the attacker acquire an excessive CT position for dust with CorkHook.beforeSwap() lacking the authorization check that restricted calls to the official Uniswap v4 PoolManager. A direct call to the hook abused its callback and refund path to obtain matching DS, and the attacker redeemed the CT/DS pair against the protocol's wstETH reserves."
-  },
+  "summary": "The incident combined a rollover-pricing defect that let the attacker acquire an excessive CT position for dust with CorkHook.beforeSwap() lacking the authorization check that restricted calls to the official Uniswap v4 PoolManager. A direct call to the hook abused its callback and refund path to obtain matching DS, and the attacker redeemed the CT/DS pair against the protocol's wstETH reserves.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -120,50 +117,27 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xfd89cdd0be468a564dd525b222b728386d7c6780cf7b2f90d2b54493be09f64d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.cork.tech/blog/post-mortem"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "url": "https://dedaub.com/blog/the-11m-cork-protocol-hack-a-critical-lesson-in-uniswap-v4-hook-security/"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://blog.verichains.io/p/cork-protocol-exploit-analysis"
     },
     {
       "id": "source-5",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-05/Corkprotocol_exp.sol"
@@ -171,23 +145,12 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xa9f0657307aaebb5a227a62f8016051bf2dd072049864a80e868a599ea85b83a"
     },
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "loss",
-        "root-cause"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T18:58:52Z",
       "note": "Reviewed the Ethereum receipt and call trace, Hook creation trace, verified contract metadata, historical runtime, Cork's post-mortem, independent analyses, and the commit-pinned reproduction. The attack contract 0x9af3dce0813fd7428c47f57a39da2f6dd7c9bb09 directly calls CorkHook.beforeSwap (selector 0x575e24b4), rather than arriving from the official Uniswap v4 PoolManager 0x000000000004444c5dc75cb358380d2e3de08a90. That direct call reaches the Cork callback and refund path implicated by the reports. The incident combines this missing hook authorization with a separate rollover-pricing defect. The receipt records 3,760.885365943909071528 wstETH transferred from ModuleCore proxy 0xccd90f6435dd78c4ecced1fa4db0d7242548a2a9 to the attack contract. CorkHook is a direct, non-proxy runtime: origin 0x777777727073e72fbb3c81f9a8b88cc49feae2f5 submitted its creation transaction to deterministic deployer 0x4e59b44847b379578588920ca78fbf26c0b4956c, whose CREATE2 frame created the Hook at block 21840337. Its 19,380-byte runtime hashes to 0xbfdccbd992b2804786d327c814c2734071a3e552030b7ce0bb65edcf5eb0be99 at deployment and immediately before the exploit."

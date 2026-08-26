@@ -19,10 +19,7 @@
       "0xdefc385d7038f391eb0063c2f7c238cfb55b206c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "GrimBoostVault.depositFor(token, amount, user) took the deposit token as a caller-supplied parameter and minted shares around an unguarded external transferFrom call, so the attacker passed its own contract as the token and re-entered depositFor from that callback, minting eight tranches of vault shares against a single SpiritSwap BTC/WFTM LP deposit before burning them all in withdrawAll to drain the vault."
-  },
+  "summary": "GrimBoostVault.depositFor(token, amount, user) took the deposit token as a caller-supplied parameter and minted shares around an unguarded external transferFrom call, so the attacker passed its own contract as the token and re-entered depositFor from that callback, minting eight tranches of vault shares against a single SpiritSwap BTC/WFTM LP deposit before burning them all in withdrawAll to drain the vault.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -95,30 +92,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 250,
       "transactionHash": "0x19315e5b150d0a83e797203bb9c957ec1fa8a6f404f4f761d970cb29a74a5dd6"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://rekt.news/grim-finance-rekt/"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2021-12/Grim_exp.sol"
@@ -126,13 +110,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T18:39:22Z",
       "note": "Reviewed the successful exploit receipt, replayed execution trace, direct creation receipt, archive runtime at deployment and immediately before the exploit, pre-exploit trace state, commit-pinned reproduction, Rekt analysis, and Beefy's incident report. The trace calls GrimBoostVault.depositFor recursively eight times through the attacker-controlled token callback, mints 316.434974081378761303 shares against one real BTC/WFTM LP transfer, and burns those shares in withdrawAll. GrimBoostVault is a direct 8,488-byte runtime with hash 0x753e4cd9dd083db2dc40f090d11ad54008e2db79a6a1212ca3d096ae39556c89 at deployment and immediately before the exploit; its disassembly contains no DELEGATECALL, SELFDESTRUCT, or CREATE2. The creation transaction is a successful top-level EOA deployment. Published incident analyses attribute approximately $30 million to $32 million of aggregate Grim vault losses to the same depositFor defect."
@@ -140,19 +117,11 @@
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://beefy.finance/articles/incident-report-grim-holiday-hack-beefy-whitehat-response/"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 250,
       "transactionHash": "0x163c49f8dcfc3c3242f6ff30b64445497b808c46e2f2c0e85c433314b678d9e0"
     }

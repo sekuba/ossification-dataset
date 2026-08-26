@@ -268,8 +268,7 @@ function compareTransactionOrder(a, b) {
   return a.blockNumber - b.blockNumber || a.transactionIndex - b.transactionIndex
 }
 
-function verifyReviewSources(label, reviewSourceIds, requiredClaims, sourceById, errors) {
-  const supported = new Set()
+function verifyReviewSources(label, reviewSourceIds, sourceById, errors) {
   for (const sourceId of reviewSourceIds ?? []) {
     const source = sourceById.get(sourceId)
     if (!source) {
@@ -284,11 +283,6 @@ function verifyReviewSources(label, reviewSourceIds, requiredClaims, sourceById,
       errors.push(`${label}: linked review note ${sourceId} has no reviewer`)
     if (!source.reviewedAt)
       errors.push(`${label}: linked review note ${sourceId} has no reviewedAt`)
-    for (const claim of source.supports ?? []) supported.add(claim)
-  }
-  for (const claim of requiredClaims) {
-    if (!supported.has(claim))
-      errors.push(`${label}: linked review notes do not attest ${claim}`)
   }
 }
 
@@ -320,7 +314,6 @@ function verifyIncident(record, state, errors) {
   for (const candidateId of incident.discovery ?? [])
     state.discoveryRefs.set(candidateId, [...(state.discoveryRefs.get(candidateId) ?? []), label])
   for (const source of incident.sources ?? []) {
-    if (!source.supports?.includes('loss')) continue
     const hashes = source.transactionHashes ?? (source.transactionHash ? [source.transactionHash] : [])
     for (const hash of hashes) {
       const key = `eip155:${source.chainId}:${hash}`
@@ -348,10 +341,6 @@ function verifyIncident(record, state, errors) {
   const transactionKeys = sourceTransactionKeys(incident)
   if (!transactionKeys.has(txKey))
     errors.push(`${label}: sources must include the exact exploit transaction on chain ${chainId}`)
-  else if (!(incident.sources.find((source) =>
-    source.type === 'onchain-transaction' && source.chainId === chainId &&
-    source.transactionHash === exploit.transactionHash)?.supports ?? []).includes('incident-anchor'))
-    errors.push(`${label}: exact exploit transaction source must declare incident-anchor support`)
 
   const realizedAt = incident.loss?.realizedAt
   if (realizedAt !== undefined && realizedAt < exploit?.timestamp)
@@ -363,8 +352,6 @@ function verifyIncident(record, state, errors) {
     if (incidentReviewed && usd.sourceIds.length === 0) errors.push(`${label}: reviewed loss.usd must cite loss evidence`)
     for (const sourceId of usd.sourceIds) {
       if (!sourceIds.has(sourceId)) errors.push(`${label}: loss.usd cites unknown source id ${sourceId}`)
-      else if (!(incident.sources.find((source) => source.id === sourceId)?.supports ?? []).includes('loss'))
-        errors.push(`${label}: loss.usd source ${sourceId} does not declare loss support`)
     }
     if (usd.valuationTimestamp > valuationLimit)
       errors.push(
@@ -378,8 +365,6 @@ function verifyIncident(record, state, errors) {
     if (minimumUsd.sourceIds.length === 0) errors.push(`${label}: loss.minimumUsd must cite inclusion evidence`)
     for (const sourceId of minimumUsd.sourceIds) {
       if (!sourceIds.has(sourceId)) errors.push(`${label}: loss.minimumUsd cites unknown source id ${sourceId}`)
-      else if (!(incident.sources.find((source) => source.id === sourceId)?.supports ?? []).includes('loss'))
-        errors.push(`${label}: loss.minimumUsd source ${sourceId} does not declare loss support`)
     }
   }
   for (const [assetIndex, asset] of (incident.loss?.assets ?? []).entries()) {
@@ -396,8 +381,6 @@ function verifyIncident(record, state, errors) {
     ]
     for (const sourceId of assetSourceIds) {
       if (!sourceIds.has(sourceId)) errors.push(`${label}: loss.assets[${assetIndex}] cites unknown source id ${sourceId}`)
-      else if (!(incident.sources.find((source) => source.id === sourceId)?.supports ?? []).includes('loss'))
-        errors.push(`${label}: loss.assets[${assetIndex}] source ${sourceId} does not declare loss support`)
     }
   }
 
@@ -413,7 +396,6 @@ function verifyIncident(record, state, errors) {
     verifyReviewSources(
       `${label}: verification`,
       incident.verification.reviewSourceIds,
-      ['incident-anchor', 'root-cause', 'loss'],
       sourceById,
       errors,
     )
@@ -485,15 +467,10 @@ function verifyIncident(record, state, errors) {
       localPairs.add(pair)
     }
 
-    for (const [field, claim] of [
-      ['identitySourceIds', 'target-identity'],
-      ['codeHistorySourceIds', 'code-history'],
-    ]) {
+    for (const field of ['identitySourceIds', 'codeHistorySourceIds']) {
       for (const sourceId of target.evidence?.[field] ?? []) {
-        const source = sourceById.get(sourceId)
-        if (!source) errors.push(`${targetLabel}: evidence.${field} cites unknown source id ${sourceId}`)
-        else if (!source.supports.includes(claim))
-          errors.push(`${targetLabel}: evidence.${field} source ${sourceId} does not declare ${claim} support`)
+        if (!sourceById.has(sourceId))
+          errors.push(`${targetLabel}: evidence.${field} cites unknown source id ${sourceId}`)
       }
     }
 
@@ -501,14 +478,13 @@ function verifyIncident(record, state, errors) {
       verifyReviewSources(
         `${targetLabel}: verification`,
         target.verification.reviewSourceIds,
-        ['target-identity', 'code-history'],
         sourceById,
         errors,
       )
     }
 
     if (targetEligible && !incidentReviewed)
-      errors.push(`${targetLabel}: target curve eligibility requires reviewed incident classification and loss`)
+      errors.push(`${targetLabel}: target curve eligibility requires a reviewed incident`)
     if (targetEligible && targetTier !== 'reviewed')
       errors.push(`${targetLabel}: target curve eligibility requires reviewed target verification`)
 
@@ -533,8 +509,6 @@ function verifyIncident(record, state, errors) {
             source.transactionHash === anchor.transactionHash)
           if (!anchorSource)
             errors.push(`${targetLabel}: ${anchorName} transaction must have an onchain source entry`)
-          else if (!anchorSource.supports.includes('code-history'))
-            errors.push(`${targetLabel}: ${anchorName} transaction source must declare code-history support`)
           else if (!(target.evidence?.codeHistorySourceIds ?? []).includes(anchorSource.id))
             errors.push(`${targetLabel}: ${anchorName} transaction source must be linked in target evidence`)
         }

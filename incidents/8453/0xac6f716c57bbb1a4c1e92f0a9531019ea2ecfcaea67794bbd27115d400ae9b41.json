@@ -19,10 +19,7 @@
       "0x5cc162c556092fe1d993b95d1b9e9ce58a11dbc9"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "unwrapWETH(uint256,address) released the caller-supplied amount of ether to the caller-supplied recipient without checking it against what the caller had actually deposited, so a flash-loaned 100.85 WETH transfer was redeemed for 104.83 ETH."
-  },
+  "summary": "unwrapWETH(uint256,address) released the caller-supplied amount of ether to the caller-supplied recipient without checking it against what the caller had actually deposited, so a flash-loaned 100.85 WETH transfer was redeemed for 104.83 ETH.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,19 +91,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0xac6f716c57bbb1a4c1e92f0a9531019ea2ecfcaea67794bbd27115d400ae9b41"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-05/Unwarp_exp.sol"
@@ -114,11 +104,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: proxy 0x8bEfC1d90d03011a7d0b35B3a00eC50f8E014802 created 2025-04-25T08:02:09Z by 0x29eb782b8707227fac7620ee7b3ab8c6a34f074b, not the attack-tx sender 0x5cc162c556092fe1d993b95d1b9e9ce58a11dbc9; four EIP-1967 Upgraded events, the last at block 29865499 on 2025-05-06T08:32:25Z installing 0xd971fd39d9714d5eb1b54b931790170a0630f131, so the executing code was 7.98 days old. The PoC transfers 100.852657473363426325 WETH in and calls unwrapWETH for 104.833984375 ETH out. Reported loss ~9k USDT."
     }
   ],

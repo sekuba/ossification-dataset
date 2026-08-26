@@ -19,10 +19,7 @@
       "0xdb731450e065ea7f6bef6d27e88dd07d6e2d1af5"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "AccountLiquidator.liquidateUser() accepted an arbitrary caller-supplied HouseOfReserve, so a fake reserve that reused the real accounting token ids while reporting a price that rounded the liquidation cost to zero moved victims' collateral records to the attacker, who then withdrew the real cbETH and WETH."
-  },
+  "summary": "AccountLiquidator.liquidateUser() accepted an arbitrary caller-supplied HouseOfReserve, so a fake reserve that reused the real accounting token ids while reporting a price that rounded the liquidation cost to zero moved victims' collateral records to the attacker, who then withdrew the real cbETH and WETH.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -92,27 +89,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0x950f32324039be29007b158c321edf58c0b6742b01ba8d31a8b9a198a1dbbb4c"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://t.me/defimon_alerts/2834"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-03/XocolatlLiquidator_exp.sol"
@@ -120,11 +107,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: AccountLiquidator proxy 0x4b75Fb5B0D323672fc6Eac5Afbf487AE4c2ff6de created 2024-06-09T19:57:59Z by 0x3ae24b06715729ea45208d3c5ef581b260c427bc, not the attack-tx sender 0xdb731450e065ea7f6bef6d27e88dd07d6e2d1af5; a single EIP-1967 Upgraded event at deployment installs implementation 0xeab948ec7ce3f403b63787ba3884aaf43d07ca9c (the address the PoC header names), so the executing code was 653.1 days old. 3.25 cbETH plus 0.22 WETH is 3.47 ETH-equivalent x $2,143.94 at the incident timestamp (DefiLlama) = $7,439."
     }
   ],

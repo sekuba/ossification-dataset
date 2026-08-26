@@ -21,10 +21,7 @@
       "0xfd8043814f72a500f01ddcbbb375a1d56bb1ee17"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The staking contract 0x431abb27dab05f4e7cdeaa18390fe39364197500 accrues each staker a reward denominated in USD and settles it in FCN at a price it derives, inside the paying transaction, from two raw balanceOf reads on the PancakeSwap V2 FCN/BSC-USD pair 0xacb496dd4a8b6b9d1b99d422b8700f6ef932bc10. In the anchor transaction the claim entry point, selector 0xd9574d4c, reads the caller's stored 10e18 USD entitlement from slot 0x9c6375cda627d083cbb712ee89f8748935cee8e2ed0be5ca571a2fdf7ae3eba3, reads BSC-USD.balanceOf(pair) = 0.02 and FCN.balanceOf(pair) = 0.501971077397338362, and pays out 10 / (0.02 / 0.501971077397338362) = 250.985538698669186971 FCN. Those pair balances are what the caller had just set: the same transaction is a PancakeSwap flash swap that removed 512963.341056079475662703 BSC-USD from that exact pair before calling the claim. The invariant violated is that a fixed USD liability may not be settled at an instantaneous, caller-controllable AMM quote; there is no TWAP, no minimum-reserve or deviation guard, no getReserves-versus-balance check and no re-entrancy or flash-loan protection on the read. No parameter value repairs it: the reward rate, the priced pair and the fee split are configuration, and at any non-zero entitlement a claimer who can move the pair's balances within the transaction converts that entitlement into an arbitrary quantity of FCN."
-  },
+  "summary": "The staking contract 0x431abb27dab05f4e7cdeaa18390fe39364197500 accrues each staker a reward denominated in USD and settles it in FCN at a price it derives, inside the paying transaction, from two raw balanceOf reads on the PancakeSwap V2 FCN/BSC-USD pair 0xacb496dd4a8b6b9d1b99d422b8700f6ef932bc10. In the anchor transaction the claim entry point, selector 0xd9574d4c, reads the caller's stored 10e18 USD entitlement from slot 0x9c6375cda627d083cbb712ee89f8748935cee8e2ed0be5ca571a2fdf7ae3eba3, reads BSC-USD.balanceOf(pair) = 0.02 and FCN.balanceOf(pair) = 0.501971077397338362, and pays out 10 / (0.02 / 0.501971077397338362) = 250.985538698669186971 FCN. Those pair balances are what the caller had just set: the same transaction is a PancakeSwap flash swap that removed 512963.341056079475662703 BSC-USD from that exact pair before calling the claim. The invariant violated is that a fixed USD liability may not be settled at an instantaneous, caller-controllable AMM quote; there is no TWAP, no minimum-reserve or deviation guard, no getReserves-versus-balance check and no re-entrancy or flash-loan protection on the read. No parameter value repairs it: the reward rate, the priced pair and the fee split are configuration, and at any non-zero entitlement a claimer who can move the pair's balances within the transaction converts that entitlement into an arbitrary quantity of FCN.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -119,29 +116,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xbeea4ff215b15870e22ed0e4d36ccd595974ffd55c3d75dad2230196cc379a52"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1730625352953901123"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-12/UnverifiedContr_0x431abb_exp.sol"
@@ -149,13 +134,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Root cause replaced. The legacy summary said any address could call buy() and bindParent() to be its own referrer and farm referral rewards; the trace does not support that. What the anchor actually executes is a price manipulation. The attacker's helper 0x791626eb05e60fac973646ac8d67b008b939fe88 opens a PancakeSwap V2 flash swap on the FCN/BSC-USD pair 0xacb496dd4a8b6b9d1b99d422b8700f6ef932bc10, taking 512963.341056079475662703 BSC-USD and leaving the pair with 0.02 BSC-USD against 0.501971077397338362 FCN, and from inside pancakeCall it calls selector 0xd9574d4c on the staking contract 0x431abb27dab05f4e7cdeaa18390fe39364197500. That call makes exactly two reads for pricing, both captured in the callTracer output with their return data: BSC-USD.balanceOf(0xacb496dd...) returning 0x470de4df820000 and FCN.balanceOf(0xacb496dd...) returning 0x6f75c090bc9d8fa, and prestateTracer shows the only storage it touches is slot 0x9c6375cda627d083cbb712ee89f8748935cee8e2ed0be5ca571a2fdf7ae3eba3 holding 0x8ac7230489e80000 = 10e18. It then transfers 225.886984828802268274 FCN to the caller and 25.098553869866918697 FCN to the fee address 0x19c4a6b4abfe88161f07c4fa2229a4120acfd7d5; the sum 250.985538698669186971 equals 10 * 0.501971077397338362 / 0.02 to the wei, which fixes the formula as USD entitlement divided by the pair's live balance ratio. Boundary test applied and failed: no configured value makes a fixed USD liability safe to settle at a quote the claimer can move inside the same transaction, so this is a code defect, treated the same way as Whalebit and the other spot-quote redemption rows. Anchor kept. The attacker EOA 0xa9edec4496bd013dac805fb221edefc53cbfaf05 has 94 BSC transactions; the only ones that reach 0x431abb27 are nonce 30, transaction 0xb650e9f4b9eb023ea65b55ca4d088323e3d5bda377880dedb149a7fd3fd5c15f at block 33972112, which buys an NFT and calls selectors 0x1f6b08a4 and 0x61b761d5 twice at honest, unmanipulated pair balances to create the entitlement, and nonce 31, this transaction, which is the only execution of the defective 0xd9574d4c conversion in the whole campaign. All 666 external transactions the contract ever received are 0x1f6b08a4, 0x61b761d5 and 0xd9574d4c from ordinary users; the 458 non-attacker FCN payouts total 0.253 FCN with a maximum of 0.041 FCN, against the attacker's single 250.99 FCN, and the attacker's 200e18 stake argument is the modal value among the 98 users who used it, which independently rules out the reward simply scaling with stake. Target: the contract is unverified but direct - its EIP-1967 implementation slot is zero at block 33972130 and the exploit trace shows no DELEGATECALL from it - created by a top-level creation from 0x1abeab1ab075a7188d23dded842b2c7f41cf3e11 in 0x915773440ce6cde56acba4ed06104cb415924a93b9a3bc53e0c38d2ca52bbc6e at block 33936242 index 42; runtime hash 0x792ee11bff922205f25d997d5ca9e1e947faa1c6fad59f93eabf832b17243102 holds at 33936242, 33972130 and 33990000 and the address is empty at 33936241, giving 107,995 s or 1.25 days. Loss: the pair's BSC-USD balance fell 512963.361056079475662703 to 10000.02 and the helper forwarded 503468.345335579475662703 BSC-USD to the EOA in the same transaction; the staking contract's FCN reward pool fell 252.989548188125072069 to 2.004009489455885098, and the project had funded it with exactly 253 FCN at block 33943758, so a single claim took 99.2 percent of it."
@@ -163,19 +141,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x915773440ce6cde56acba4ed06104cb415924a93b9a3bc53e0c38d2ca52bbc6e"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "root-cause"
-      ],
       "chainId": 56,
       "transactionHash": "0xb650e9f4b9eb023ea65b55ca4d088323e3d5bda377880dedb149a7fd3fd5c15f"
     }

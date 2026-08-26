@@ -19,10 +19,7 @@
       "0x4efd5f0749b1b91afdcd2ecf464210db733150e0"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "uniswapV3SwapCallback lacks access control and transfers all USDC to a caller-specified address."
-  },
+  "summary": "uniswapV3SwapCallback lacks access control and transfers all USDC to a caller-specified address.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0x6be0c4b5414883a933639c136971026977df4737b061f864a4a04e4bd7f07106"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-08/0x8d2e_exp.sol"

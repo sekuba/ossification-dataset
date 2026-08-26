@@ -19,10 +19,7 @@
       "0x35700c4a7bd65048f01d6675f09d15771c0facd5"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Moo CAKE CTX vault derives its share price from the StrategySyrup balance, which counts CAKE that anyone can donate to the underlying SmartChef, so a donation followed by depositAll()/withdrawAll() returned more CAKE than was put in."
-  },
+  "summary": "The Moo CAKE CTX vault derives its share price from the StrategySyrup balance, which counts CAKE that anyone can donate to the underlying SmartChef, so a donation followed by depositAll()/withdrawAll() returned more CAKE than was put in.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -92,19 +89,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x03d363462519029cf9a544d44046cad0c7e64c5fb1f2adf5dd5438a9a0d2ec8e"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-11/MooCAKECTX_exp.sol"
@@ -112,27 +102,16 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BeosinAlert/status/1589501207181393920"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: vault 0x489afbAED0Ea796712c9A6d366C16CA3876D8184 created 2020-10-27T18:44:49Z (block 1717330, tx 0x4d92d7691edbd013f3ac32cc4c300efe19fbb3f312bfc2d208351525ceb235bd) by 0xc362fa359031a081d21cb9d57c29e055fecbcb06, unrelated to attack sender 0x35700c4a7bd65048f01d6675f09d15771c0facd5; no EIP-1967 Upgraded events, age measured from deployment. lossUsd uses the ~$140k reported by DeFiHackLabs; the exploit transaction moved ~53,786 CAKE out of the SmartChef and 37.5 WBNB to the attacker's addresses."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x4d92d7691edbd013f3ac32cc4c300efe19fbb3f312bfc2d208351525ceb235bd"
     }

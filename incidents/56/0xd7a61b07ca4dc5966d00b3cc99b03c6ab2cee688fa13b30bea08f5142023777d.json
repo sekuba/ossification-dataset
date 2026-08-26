@@ -19,10 +19,7 @@
       "0xd75652ada2f6a140f2ffcd7cd20f34c21fbc3fbc"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The unverified contract's unlockSlot(uint256) opens a slot for a 0.6 BNB payment and the follow-up function 0x2dad6442 then pays 10.8 BNB back, so the reward is not bounded by the amount actually paid in."
-  },
+  "summary": "The unverified contract's unlockSlot(uint256) opens a slot for a 0.6 BNB payment and the follow-up function 0x2dad6442 then pays 10.8 BNB back, so the reward is not bounded by the amount actually paid in.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xd7a61b07ca4dc5966d00b3cc99b03c6ab2cee688fa13b30bea08f5142023777d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/1893333680417890648"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-02/unverified_35bc_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xde91e6e937ec344e5a3c800539c41979c2d85278 created 2021-07-14T07:55:00Z by 0xe07e75861166b78c0c1571bf243d88e312d6aa89, which is not the attack-tx sender 0xd75652ada2f6a140f2ffcd7cd20f34c21fbc3fbc; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

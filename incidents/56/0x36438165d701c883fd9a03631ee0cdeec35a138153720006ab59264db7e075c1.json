@@ -19,10 +19,7 @@
       "0xe2336b08a43f87a4ac8de7707ab7333ba4dbaf7c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "_incrementUplineTeamCount used totalInvested (including withdrawn) instead of active investments, letting chained accounts farm referral/milestone bonuses."
-  },
+  "summary": "_incrementUplineTeamCount used totalInvested (including withdrawn) instead of active investments, letting chained accounts farm referral/milestone bonuses.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x36438165d701c883fd9a03631ee0cdeec35a138153720006ab59264db7e075c1"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-08/Grizzifi_exp.sol"

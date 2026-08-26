@@ -19,10 +19,7 @@
       "0x306174b707ebf6d7301a0bcd898ae1666ec176ae"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MARS distributes transfer-tax reflections to the MARS/WBNB pair itself, so the attacker used a PancakeV3 flash loan to repeatedly swap and sync the pair and monetise the reflected balance."
-  },
+  "summary": "MARS distributes transfer-tax reflections to the MARS/WBNB pair itself, so the attacker used a PancakeV3 flash loan to repeatedly swap and sync the pair and monetise the reflected balance.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x25e2af0a55581d5629a933af9fedd3c70e6d0c320f0b72700ca80e5cdd36c80b"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1780150315603701933"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/MARS_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x436D3629888B50127EC4947D54Bb0aB1120962A0 created 2024-04-15T03:20:14Z by 0xb61caff7e185eb0815a6c738a999ab47a2fe7c52, which is not the attack-tx sender 0x306174b707ebf6d7301a0bcd898ae1666ec176ae; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

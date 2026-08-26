@@ -19,10 +19,7 @@
       "0xbbcc139933d1580e7c40442e09263e90e6f1d66d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Elephant Status contract exposes an unprotected sweep() that pushes its accumulated WBNB into the reserve and moves the ELEPHANT price, which the attacker cycled inside PancakeV3 flash loans."
-  },
+  "summary": "The Elephant Status contract exposes an unprotected sweep() that pushes its accumulated WBNB into the reserve and moves the ELEPHANT price, which the attacker cycled inside PancakeV3 flash loans.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xd423ae0e95e9d6c8a89dcfed243573867e4aad29ee99a9055728cbbe0a523439"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1732354930529435940"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-12/ElephantStatus_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x8cf0a553ab3896e4832ebcc519a7a60828ab5740 created 2022-09-23T23:47:32Z by 0x16e76819ac1f0dfbecc48dfe93b198830e0c85eb, which is not the attack-tx sender 0xbbcc139933d1580e7c40442e09263e90e6f1d66d; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

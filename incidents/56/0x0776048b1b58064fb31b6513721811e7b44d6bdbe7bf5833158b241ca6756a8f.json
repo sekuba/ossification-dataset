@@ -23,10 +23,7 @@
       "0xec6b16576ecac384d40df8af4522fc9614f67ea2"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MokeRelease.settle() allowed any EOA to overwrite settledMokePrice with the instantaneous MOKE/WBNB and WBNB/USDT AMM spot price. The attacker distorted the WBNB/USDT reserve ratio, settled the manipulated price, and then claimed 43.86 million MOKE against genuine stored release quotas; claim()'s deviation check compared the live price to the just-manipulated settled price and therefore did not protect the reserve."
-  },
+  "summary": "MokeRelease.settle() allowed any EOA to overwrite settledMokePrice with the instantaneous MOKE/WBNB and WBNB/USDT AMM spot price. The attacker distorted the WBNB/USDT reserve ratio, settled the manipulated price, and then claimed 43.86 million MOKE against genuine stored release quotas; claim()'s deviation check compared the live price to the just-manipulated settled price and therefore did not protect the reserve.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -122,21 +119,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x0776048b1b58064fb31b6513721811e7b44d6bdbe7bf5833158b241ca6756a8f"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
       "path": "src/test/2026-07/MOKE_exp.sol"
@@ -144,28 +132,18 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x2b2808c23625b7af17e41ded67aa6daf9d79e40fe3bda619ee3b42d74dc33939"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity"
-      ],
       "chainId": 56,
       "transactionHash": "0xc0f1df63183ee27313797d2b92efb392a033ec3c0f79518e637e470137e26154"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1785703811/coingecko:binancecoin",
       "observedAt": 1787651541
@@ -173,13 +151,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T09:52:21Z",
       "note": "Anchor kept. The attacker EOA 0xe454a9bac1a44868e4a9cbe1a4b5ac231d0dcf8a installed an EIP-7702 delegation to attacker implementation 0xc7fdea027feb41c8f3a45ec284280ce68f4e6ff7 in type-4 transaction 0xc0f1df63 at block 113652442: cast recover-authority recovers the same EOA from the authorization, and its code immediately before the exploit is 0xef0100c7fdea027feb41c8f3a45ec284280ce68f4e6ff7. The exploit itself is a type-2 self-call from and to that EOA, so the delegation is attacker packaging, not a victim upgrade or code-age anchor; the following type-4 transaction 0xb873f350 revokes it. No other surrounding attacker transaction calls MokeRelease. BscScan's verified MokeRelease source shows the actual defect: settle() admits any msg.sender == tx.origin and directly assigns getMokeUsdtPrice(), which multiplies instantaneous MOKE/WBNB and WBNB/USDT pair reserve ratios, to settledMokePrice. In the exploit trace the attacker distorts the WBNB/USDT reserve ratio, calls settle(), which emits PriceSettled(594140821297791), and then calls claim() from the EOA and three identical helper contracts. claim() is not entitlement-free: all four callers have stored totalQuotaUsdt and pendingUsdt, but its maxPriceDeviation check compares the live manipulated price to the just-manipulated settled price. The four claims release exactly 43860308.980417278429035188 MOKE from reserve pair 0x89715a0768e95942071ed52b37a90c6d53019b5a; the amount is routed through MokeLPDividend and sold into the MOKE/WBNB pair. The pair's Swap event records 43860308.980417278429035188 MOKE in and 1664.616180024096154954 WBNB out. Its additional 28.129086340978628606 WBNB outflow is separately identified by the preceding Burn event and redeems attacker-owned LP, so the raw reserve delta of 1692.745266365074783560 WBNB is not all defect-caused loss. Code history: MokeRelease is a direct top-level creation by 0xf5aa24b07be11b53498bd4cf311e68f15ac3653e in 0x2b2808c2 at block 111423896 index 112; runtime hash 0x4abe91cc475b04c64bac7b7d7b783bfc6388884db171cc41aa86665ce2916f9d matches at creation and immediately before the exploit, and both EIP-1967 code-selection slots are zero. The executed defect-bearing code is therefore 1003445 seconds old. DefiLlama's BNB observation is 588.2809941793458 USD at timestamp 1785703804, seven seconds before the exploit."

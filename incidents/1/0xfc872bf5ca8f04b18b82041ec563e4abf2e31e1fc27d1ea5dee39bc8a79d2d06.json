@@ -19,10 +19,7 @@
       "0x000000915f1b10b0ef5c4efe696ab65f13f36e74"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "tokenAllowAll(token, spender) was public with no owner check, so the attacker had the staking contract approve them for unlimited USDT and then transferred out the whole deposit balance."
-  },
+  "summary": "tokenAllowAll(token, spender) was public with no owner check, so the attacker had the staking contract approve them for unlimited USDT and then transferred out the whole deposit balance.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xfc872bf5ca8f04b18b82041ec563e4abf2e31e1fc27d1ea5dee39bc8a79d2d06"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-07/USDTStakingContract28_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/DecurityHQ/status/1680117291013267456"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: USDTStakingContract28 0x800cfD4A2ba8CE93eA2cc814Fce26c3635169017 created 2023-07-11T12:53:59Z by 0xdcbeefb14ba39092711d62cf3ea19af643f2c155, unrelated to the attack sender; no EIP-1967 events, age from deployment - 316,860 seconds (3.7 days). Loss read from the tx receipt: 20,999.92 USDT (USD-pegged at 1:1)."
     }
   ],

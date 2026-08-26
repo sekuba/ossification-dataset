@@ -20,10 +20,7 @@
       "0x700a7002484f2f3b4516e4f3c550fb8d9b080ac1"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MO Loan accepted zero-duration borrows that could be redeemed immediately while each borrow also removed and burned MO from the MO/USDT pair and synchronized its reserves. Reusing the returned MO across borrow/redeem cycles collapsed the pair's MO reserve, after which a final borrow drained Loan USDT and swaps drained the pair's USDT."
-  },
+  "summary": "MO Loan accepted zero-duration borrows that could be redeemed immediately while each borrow also removed and burned MO from the MO/USDT pair and synchronized its reserves. Reusing the returned MO across borrow/redeem cycles collapsed the pair's MO reserve, after which a final borrow drained Loan USDT and swaps drained the pair's USDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -117,22 +114,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 10,
       "transactionHash": "0x4ec3061724ca9f0b8d400866dd83b92647ad8c943a1c0ae9ae6c9bd1ef789417"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-03/MO_exp.sol"
@@ -140,13 +127,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:59:16Z",
       "note": "Reviewed the exploit receipt and call trace, Loan creation receipt, bytecode at deployment and immediately before the incident, runtime disassembly, verified Loan source, onchain configuration, and the commit-pinned reproduction. Loan 0xae7b6514af26bcb2332fea53b8dd57bc13a7838e is a direct contract whose runtime is byte-identical at both anchors and contains no DELEGATECALL or SELFDESTRUCT. The trace executes borrow(uint256,uint256) 57 times and redeem(uint256) 55 times. borrowRates[0]=80 permits zero-duration orders; redeem allows duration zero immediately. Each borrow transfers USDT to the borrower, directs the MO/USDT pair to burn 90% of the borrowed MO amount and send 10% to Loan, then syncs the pair. Reusing returned MO collapses the pair's MO reserve. Exact receipt deltas establish gross losses of 331,465.404544 USDT from Loan and 413,837.515343 USDT from the pair."
@@ -154,10 +134,6 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 10,
       "transactionHash": "0xabd36d08e716df33eb83837cb296c1bb06c83e1fd46e71eacb9275b9e4b2d54d"
     }

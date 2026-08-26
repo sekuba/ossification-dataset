@@ -19,10 +19,7 @@
       "0x71b216bd593c215cf3d1617718e3649087554769"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "SyscoinRelay.parseFirstAssetCommitmentInTx() reads the asset GUID and the burned output value only for the commitment at assetIndex == 0; every later commitment in the same OP_RETURN payload is parsed for position and discarded. Syscoin Core's asset loader instead iterates all commitments and lets a later one overwrite vout[nOut].assetInfo for the same output index. A burn carrying two commitments on the same output - assetGuid 123456 (native SYS) and assetGuid 4 (the attacker's own TEST2 asset), both for 5,000,000,000 SYS - therefore resolves as a worthless custom-asset burn on the UTXO side while relayTx() passes assetGuid 123456 to SyscoinVaultManager.processTransaction(), which special-cases that GUID as native SYS and released 5,000,000,000 SYS from the vault. The relay code is wrong for any registered asset set: no parameter or registry value makes discarding the trailing commitments agree with Core's last-writer-wins interpretation."
-  },
+  "summary": "SyscoinRelay.parseFirstAssetCommitmentInTx() reads the asset GUID and the burned output value only for the commitment at assetIndex == 0; every later commitment in the same OP_RETURN payload is parsed for position and discarded. Syscoin Core's asset loader instead iterates all commitments and lets a later one overwrite vout[nOut].assetInfo for the same output index. A burn carrying two commitments on the same output - assetGuid 123456 (native SYS) and assetGuid 4 (the attacker's own TEST2 asset), both for 5,000,000,000 SYS - therefore resolves as a worthless custom-asset burn on the UTXO side while relayTx() passes assetGuid 123456 to SyscoinVaultManager.processTransaction(), which special-cases that GUID as native SYS and released 5,000,000,000 SYS from the vault. The relay code is wrong for any registered asset set: no parameter or registry value makes discarding the trailing commitments agree with Core's last-writer-wins interpretation.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": null,
@@ -115,51 +112,29 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 57,
       "transactionHash": "0x0021cc76a64e69eb81ec2c9a0aded3285d5cc372acd6f62a103fee3cfe0a7868"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 57,
       "transactionHash": "0xa9e692c32e2028137429325d6c89050714f93b74c954c30b4b6b3b6dd8f3c416"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://syscoin.org/news/technical-postmortem-syscoin-bridge-incident-recovery-and-remediation"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 57,
       "transactionHash": "0xff79086a52045eb035383221c00f3e190f734b94baeda128e833449eea3b852c"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1780820383/coingecko:syscoin",
       "observedAt": 1787716310
@@ -167,9 +142,6 @@
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://api.coingecko.com/api/v3/coins/syscoin/market_chart/range?vs_currency=usd&from=1780560000&to=1781000000",
       "observedAt": 1787718344
@@ -177,13 +149,6 @@
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T05:20:00Z",
       "note": "Reviewed onchain against https://rpc.syscoin.org (eth_chainId 57, archive: eth_getBalance and eth_getCode answer at block 1) and the Blockscout API https://explorer.syscoin.org/api, plus the Syscoin UTXO indexer https://explorer-blockbook.syscoin.org/api/v2 for the recovery leg. Anchor: 0x0021cc76a64e69eb81ec2c9a0aded3285d5cc372acd6f62a103fee3cfe0a7868 is the only transaction in block 934686, index 0, timestamp 1780820383 (2026-06-07T08:19:43Z, so the discovery lead's 2026-06-08 date is wrong), receipt status 1, from 0x71b216bd593c215cf3d1617718e3649087554769 to the relay 0xd714e7915362ff89388025f584726e6df26d20f9, calldata selector 0xbc60df53 = relayTx(uint64,bytes,uint256,uint256[],bytes). It is the earliest successful transaction of the campaign that executes the defect: the attacker's full transaction list shows sixteen earlier relayTx attempts in blocks 934651-934674, every one of them isError=1, and the preceding activity is two ERC-20 deployments plus freezeBurn calls that register the custom assets and never touch the relay. Root cause reproduced from the raw payload rather than from the post-mortem. The txBytes argument starts 0x8d000000, little-endian version 141 = SYSCOIN_TX_VERSION_ALLOCATION_BURN_TO_NEVM; the second output is the OP_RETURN so getOpReturnPos returns opIndex 1; the 40-byte push decodes as numAssets=02, then commitment 0 = varint 86 c3 40 -> 123456 with one output entry (index 01, compressed value 91 cf 96 e3 00 -> 5000000000, DecompressAmount -> 500000000000000000 satoshis), then commitment 1 = varint 04 with the identical output index 01 and the identical value, then 0x14 and the 20-byte destination 71b216bd593c215cf3d1617718e3649087554769. parseFirstAssetCommitmentInTx keeps only the assetIndex == 0 branch, so the second commitment is consumed and thrown away. cast call parseBurnTx(bytes) on the relay at block 934685 with that exact payload returns (0, 500000000000000000, 0x71b216BD593c215CF3D1617718E3649087554769, 123456), which is the defect executing deterministically against pre-exploit state. syscoinVaultManager() reads 0x7904299b3D3dC1b03d1DdEb45E9fDF3576aCBd5f at the same block, and the anchor's single log is that vault's TokenUnfreeze, topic0 0xb27598a6740f5e57c905fdf107266796e030a0739a6e06cee3b5b74c69d0545e, topic1 0x1e240 = 123456, topic2 the attacker, data 500000000000000000. Target: the relay is not a proxy (Blockscout reports IsProxy false and no implementations; it has no delegatecall path and its only mutable pointer, syscoinVaultManager, is write-once behind the initialized flag). It was created by top-level CREATE from 0x7e3f03e687977b7f2096be55c08c3b1438dd1def in 0xa9e692c32e2028137429325d6c89050714f93b74c954c30b4b6b3b6dd8f3c416, block 679801 index 0, timestamp 1742092301 (2025-03-16T08:31:41Z); eth_getCode is empty at block 679800 and 7,568 bytes from 679801 onward, hashing to 0x57b3d9455f7786427c2030714b5ac2e9aa20b8299b8745fb0c6d40e8141d8094 at the deployment block, at block 934685 and at head, and eth_getProof at block 934685 returns the same codeHash. Code age 1780820383 - 1742092301 = 38728082 s = 448.24 d. The creator is not the attacker and is the same deployer that created the vault manager. Loss: the vault balance falls by exactly 5000000000000000000000000000 wei between blocks 934685 and 934686 and is restored at block 934688 by the attacker's own freezeBurn 0xff79086a52045eb035383221c00f3e190f734b94baeda128e833449eea3b852c (value 5e27 wei, TokenFreeze to sys1qgaelv690g7wwp2xchfdh0enf5uewzq5sm9wvcw), which moved the fabricated amount to the UTXO chain rather than returning it to Syscoin. Blockbook shows the official recovery address sys1qdytsq5am9a7y6hweenl925g3yxtlrvl9fls0yg with totalReceived 500000000017220749 satoshis, i.e. the full 5,000,000,000 SYS plus dust, so nothing was sold and realised proceeds are zero; the post-mortem records the subsequent OP_RETURN burn. Valuation: DefiLlama's SYS observation nearest the anchor is USD 0.0018791613783355947 at 1780819135 and CoinGecko's hourly series gives USD 0.001882, market cap USD 1,676,872 and 24-hour volume USD 99,625 at 2026-06-07T08:00Z against a circulating supply of 910,330,629.722158 SYS. Marking 5e9 SYS at spot yields USD 9.41 million, 5.6 times the whole market capitalisation, so the record carries the exact quantity plus a USD 99,625 lower bound instead and the target is not curve-eligible."

@@ -19,10 +19,7 @@
       "0x172dca3e72e4643ce8b7932f4947347c1e49ba6d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "buyFor lets any caller spend a third party's LINK allowance and mutate pool dividend accounting, enabling forced buys plus a same-tx buy/sell/withdraw cycle."
-  },
+  "summary": "buyFor lets any caller spend a third party's LINK allowance and mutate pool dividend accounting, enabling forced buys plus a same-tx buy/sell/withdraw cycle.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0x8905a0aca5849626c0de026c2d2894ddfa8060a27725221f01aac9fb0b3d6629"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-06/BankrollStackPlus_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x8d9062ee603843adefcec8529ef064f36d124d844ebcff57a9ffa8e8e0c51dfc"
     }

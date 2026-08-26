@@ -19,10 +19,7 @@
       "0xdd309ea4e99b772c1e6a798a6b159211bb95b22c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ARK.autoBurnLiquidityPairTokens() can be called by anyone to burn ARK held by the ARK/WBNB pair and sync it, so the attacker repeatedly shrank the pool and sold into the inflated price."
-  },
+  "summary": "ARK.autoBurnLiquidityPairTokens() can be called by anyone to burn ARK held by the ARK/WBNB pair and sync it, so the attacker repeatedly shrank the pool and sold into the inflated price.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xe8b0131fa14d0a96327f6b5690159ffa7650d66376db87366ba78d91f17cd677"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1771728823534375249"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-03/ARK_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xde698B5BBb4A12DDf2261BbdF8e034af34399999 created 2024-03-11T16:12:47Z by 0x3b7b478d9fe6c76629d317e5708fc39a3ab9d097, which is not the attack-tx sender 0xdd309ea4e99b772c1e6a798a6b159211bb95b22c; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). ~348 BNB x $559.7/BNB at the incident timestamp 1711199895 (DefiLlama coingecko:binancecoin) = $194,776."
     }
   ],

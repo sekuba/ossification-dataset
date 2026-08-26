@@ -23,10 +23,7 @@
       "0x99423d4dfce26c7228238aa17982fd7719fb6d7f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "SimplePriceOracle 0xd55f01b4b51b7f48912cd8ca3cdd8070a1a9dba5, the price oracle of the Rikkei Finance Cointroller, declares `function setOracleData(address rToken, oracleChainlink _oracle) external { oracleData[rToken] = _oracle; }` with no owner, admin, or any other caller restriction, so any address can repoint any market's feed. getUnderlyingPrice then reads decimals() and latestRoundData() straight from whatever contract that mapping holds. The attacker deposited 0.0001 BNB into rBNB, called setOracleData(rBNB, ownContract) to make the rBNB feed return 4.16881147930e32 with 18 decimals instead of the Chainlink BNB/USD 416.24753868 with 8 decimals, and borrowed the entire cash of the rUSDC, rBTC, rDAI, rUSDT and rBUSD markets against the resulting 2.918e28 account liquidity, then restored the original feed. A second transaction in the same block repeated the pattern in the opposite direction, repointing the rBNB feed at a second attacker contract so that BNB was priced low enough to borrow the whole rBNB market against a dust rBUSD deposit."
-  },
+  "summary": "SimplePriceOracle 0xd55f01b4b51b7f48912cd8ca3cdd8070a1a9dba5, the price oracle of the Rikkei Finance Cointroller, declares `function setOracleData(address rToken, oracleChainlink _oracle) external { oracleData[rToken] = _oracle; }` with no owner, admin, or any other caller restriction, so any address can repoint any market's feed. getUnderlyingPrice then reads decimals() and latestRoundData() straight from whatever contract that mapping holds. The attacker deposited 0.0001 BNB into rBNB, called setOracleData(rBNB, ownContract) to make the rBNB feed return 4.16881147930e32 with 18 decimals instead of the Chainlink BNB/USD 416.24753868 with 8 decimals, and borrowed the entire cash of the rUSDC, rBTC, rDAI, rUSDT and rBUSD markets against the resulting 2.918e28 account liquidity, then restored the original feed. A second transaction in the same block repeated the pattern in the opposite direction, repointing the rBNB feed at a second attacker contract so that BNB was priced low enough to borrow the whole rBNB market against a dust rBUSD deposit.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -227,22 +224,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x93a9b022df260f1953420cd3e18789e7d1e095459e36fe2eb534918ed1687492"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-04/Rikkei_exp.sol"
@@ -250,27 +237,17 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://rikkeifinance.medium.com/rikkei-finance-incident-investigation-report-b5b1745b0155"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xa5e9f72ca3f235455257dccd978ca3dd035abfa7272872d70bc155923a9e71b3"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x93a9b022df260f1953420cd3e18789e7d1e095459e36fe2eb534918ed1687492",
@@ -280,9 +257,6 @@
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1649992718/bsc:0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
       "observedAt": 1787647663
@@ -290,9 +264,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1649992718/coingecko:binancecoin",
       "observedAt": 1787647663
@@ -300,13 +271,6 @@
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T12:10:00Z",
       "note": "The defect is in the oracle's own code, not in the lending market that consumed the price, so the target is SimplePriceOracle 0xd55f01b4b51b7f48912cd8ca3cdd8070a1a9dba5 and the age basis is that contract. It is verified on BscScan as SimplePriceOracle (solc 0.5.16, standard-json, contracts/SimplePriceOracle.sol) and its whole body is a prices mapping, an oracleData mapping, an unguarded external setOracleData(address,oracleChainlink) writer, and a getUnderlyingPrice reader; there is no owner, no admin, no modifier and no delegatecall or selfdestruct anywhere in it. The trace of the anchor transaction shows the attack contract 0xe6df12a9f33605f2271d2a2ddc92e509e54e6b5f calling setOracleData(0x157822ac5fa0efe98daa4b0a55450f4a182c10ca, 0xa36f6f78b2170a29359c74cefcb8751e452116f9) with no revert, after which getUnderlyingPrice(rBNB) returns 416881147930000000000000000000000 instead of the Chainlink EACAggregatorProxy 0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee value, and Cointroller getAccountLiquidity jumps from 29137327582548960 to 29181680230147386998020193924. It is not a proxy: EIP-1967 implementation and beacon slots, the EIP-1822 slot and the legacy OpenZeppelin slot all read zero at block 16956474, storage slots 0-5 are zero, the address is empty at block 15341134, and the runtime code hash 0xe57bae111f926347b290fa23499ce2258e3c04d6a7a4836d5fda47d2b7435510 is identical at the creation block 15341135 and at blocks 16000000, 16500000 and 16956474. Etherscan getLogs over the full range 15341135-16956474 returns no records, so the address emitted no upgrade or other event before the exploit; the code age is 4872983s (56d 9h 36m 23s). Creator 0xedf1acba4396cfc98483fd25769df48926771d54 is the Rikkei deployer, unrelated to the attacker EOA 0x803e0930357ba577dc414b552402f71656c093ab. Anchor kept: the attacker's earlier transactions in blocks 16955246-16955259 only deploy and fund the two exploit contracts, and the campaign's two exploit transactions are both in block 16956475, so 0x93a9b022 at transaction index 3 is the earliest one that executes the defect. Loss is the exact cash of all six markets, confirmed by their underlying balances at blocks 16956474 and 16956475; the previous provisional note's 'about 346k USDC, 297k USDT, 300k BUSD and 3.03 BTCB' missed the 52275.87 DAI and the 101.47 BNB of the second transaction. The project's own incident report at rikkeifinance.medium.com could not be retrieved during this review (HTTP 403) and is cited only as background."

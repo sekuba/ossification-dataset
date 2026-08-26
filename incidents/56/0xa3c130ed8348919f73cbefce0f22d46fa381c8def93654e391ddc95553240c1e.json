@@ -19,10 +19,7 @@
       "0x106016cdc3878c7ff2b386303000db0001d838eb"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "CFC's transfer path removes tokens from the liquidity pair's own balance without a sync(), so the attacker repeatedly skim()ed the surplus and swapped it out for the pair's USDT."
-  },
+  "summary": "CFC's transfer path removes tokens from the liquidity pair's own balance without a sync(), so the attacker repeatedly skim()ed the surplus and swapped it out for the pair's USDT.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,19 +88,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xa3c130ed8348919f73cbefce0f22d46fa381c8def93654e391ddc95553240c1e"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-06/CFC_exp.sol"
@@ -111,18 +101,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/hexagate_/status/1669280632738906113"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: CFC 0xdd9b223aec6ea56567a62f21ff89585ff125632c created 2023-05-29T13:12:14Z by 0x7c0cddc5aa0c835dd7f27781b81a59dec05f4fc3, unrelated to attack sender 0x106016cdc3878c7ff2b386303000db0001d838eb; no EIP-1967 Upgraded events, age measured from deployment. This transaction moved 6,124.40 USDT to the attack contract 0x8213e87bb381919b292ace364d97d3a1ee38caa4; lossUsd uses the ~$16k reported across the two attack transactions."
     }
   ],

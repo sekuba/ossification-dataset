@@ -19,10 +19,7 @@
       "0xbdce6bdd52baceadd1fc91bf01f3bc6ab24df17a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Selector 0x42be3129 exposed an unauthenticated arbitrary call and token sweep, letting anyone spend the owner's pre-granted WETH allowance through the victim and receive the proceeds."
-  },
+  "summary": "Selector 0x42be3129 exposed an unauthenticated arbitrary call and token sweep, letting anyone spend the owner's pre-granted WETH allowance through the victim and receive the proceeds.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0xe831f3991132cbaffbb4a3738da7d1e254a6c02f0adce605a333229a61e27ad7"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
       "path": "src/test/2026-07/UnprotectedArbBot_exp.sol"

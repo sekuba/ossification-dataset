@@ -20,10 +20,7 @@
       "0x6653d9bcbc28fc5a2f5fb5650af8f2b2e1695a15"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "TcrToken.burnFrom checked and reduced _allowances[msg.sender][from] instead of _allowances[from][msg.sender]. A caller could therefore approve the pool as a spender of the caller's balance, burn TCR directly from the pool without the pool's authorization, synchronize the depleted TCR reserve, and exchange previously acquired TCR for the pool's USDT."
-  },
+  "summary": "TcrToken.burnFrom checked and reduced _allowances[msg.sender][from] instead of _allowances[from][msg.sender]. A caller could therefore approve the pool as a spender of the caller's balance, burn TCR directly from the pool without the pool's authorization, synchronize the depleted TCR reserve, and exchange previously acquired TCR for the pool's USDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -120,22 +117,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x81e9918e248d14d78ff7b697355fd9f456c6d7881486ed14fdfb69db16631154"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-02/TecraSpace_exp.sol"
@@ -143,21 +130,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://app.blocksec.com/explorer/tx/eth/0x81e9918e248d14d78ff7b697355fd9f456c6d7881486ed14fdfb69db16631154"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:46:33Z",
       "note": "Anchor review: the retained transaction is a successful top-level creation of attack helper 0x6653d9bcbc28fc5a2f5fb5650af8f2b2e1695a15 by EOA 0xb19b7f59c08ea447f82b587c058ecbf5fde9c299. It is nonce zero and the EOA transaction count immediately before the incident is zero, so there is no earlier successful transaction in this campaign. Root-cause review: Etherscan's verified TcrToken source at https://etherscan.io/address/0xe38b72d6595fd3885d1d2f770aa23e94757f91a1#code shows burnFrom reading _allowances[msg.sender][from], then reducing the same reversed entry through _approve(msg.sender, from, ...), before _burn(from, amount). The exploit trace shows the helper first sets _allowances[helper][pair], then burnFrom(pair, 58017069442472) succeeds without any allowance granted by the pair; the burn is followed by pair.sync and the final swap. This is an authorization-indexing defect in the direct TcrToken runtime, not a free-mint path. Code-history review: creation transaction 0x5dd19668301c310ddbad4ac5dc2ecd90bc288babc187d40174309379dce94c0f deployed TcrToken at block 12231755 index 127 from 0xd0d82531f85d9ee7ee5bb6c96e01445a0b911d4d. Archival code is absent at block 12231754 and has hash 0x5936633a992a28ec4c8685b5d4e7e0f10ac1fd7cee088c0e07b2eb043e6757a8 at creation and pre-exploit. The custom deprecated flag is false and upgradedAddress is zero pre-exploit. Loss review: receipt Transfer logs show 639222.253258 USDT leaving the victim pair for the helper; excluding the helper's identifiable 112.863254 USDT initial route input gives exact pre-recovery victim depletion of 639109.390004 USDT, valued at par."
@@ -165,10 +142,6 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x5dd19668301c310ddbad4ac5dc2ecd90bc288babc187d40174309379dce94c0f"
     }

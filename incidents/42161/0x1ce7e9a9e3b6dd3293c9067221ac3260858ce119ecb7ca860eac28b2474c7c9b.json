@@ -20,10 +20,7 @@
       "0x39519c027b503f40867548fb0c890b11728faa8f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Aave-v2-derived rUSDCn implementation rounded scaled balances during burns. By repeatedly manipulating the fresh reserve's liquidity index with flash loans, deposits, donations, and withdrawals, the attacker withdrew more USDC than the shares burned and used the inflated position to borrow WETH."
-  },
+  "summary": "The Aave-v2-derived rUSDCn implementation rounded scaled balances during burns. By repeatedly manipulating the fresh reserve's liquidity index with flash loans, deposits, donations, and withdrawals, the attacker withdrew more USDC than the shares burned and used the inflated position to borrow WETH.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -99,23 +96,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHash": "0x1ce7e9a9e3b6dd3293c9067221ac3260858ce119ecb7ca860eac28b2474c7c9b"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-01/RadiantCapital_exp.sol"
@@ -123,55 +109,29 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://neptunemutual.com/blog/how-was-radiant-capital-exploited/"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0x0e5330ad77b9b806cb9f6ea595d58552f341dbad0691e0599ab5f1caf214c247"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHash": "0x2af556386c023f7ebe7c662fd5d1c6cc5ed7fba4723cbd75e00faaa98cd14243"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHash": "0xc5c4bbddec70edb58efba60c1f27bce6515a45ffcab4236026a5eeb3e877fc6d"
     },
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T06:13:23Z",
       "note": "Reviewed the live Arbitrum receipts and call traces for the three consecutive exploit transactions, the rUSDCn creation receipt and trace, its pre-exploit implementation slot and runtimes, the pinned exploit reproduction, and the cited technical analysis. The first exploit calls LendingPool 0xf4b1486dd74d07706052a33d31d7c0aafd0659e1, which repeatedly calls rUSDCn proxy 0x3a2d44e354f2d88ef6da7a5a4646fd70182a7f55; that proxy delegates the scaled-balance burn path to implementation 0xc0249d743a17ed44b4f9ee611b51d26ab2e26444. The proxy was created internally by 0xe51dfe7188d0b9a84141ff47d04ab07aeb82b89d in transaction 0x0e5330ad77b9b806cb9f6ea595d58552f341dbad0691e0599ab5f1caf214c247 at 166405628:2, only 15 seconds before the first exploit. Its implementation slot already selected the declared artifact, its runtime was absent in the prior block, and no Upgraded event occurred through the exploit. The pre-exploit implementation runtime hashes to the declared value. The inherited nine-second timestamp is discarded: block 166405650 is the attacker's contract creation, not a protocol code change. The same EOA then called the same exploit contract in two further successful transactions at blocks 166405720 and 166405731; the reported $4.5 million is retained as their coherent gross campaign loss."

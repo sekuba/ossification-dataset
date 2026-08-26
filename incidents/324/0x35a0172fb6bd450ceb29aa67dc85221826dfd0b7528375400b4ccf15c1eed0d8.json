@@ -19,10 +19,7 @@
       "0x16be708e257a0df0f4275ecd9b0f70ce4b45430c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The newly listed vUSDM market had a near-empty supply, so donating wUSDM directly to it inflated the exchange rate enough that a rounding-truncated position could be liquidated and the vWETH market's collateral seized."
-  },
+  "summary": "The newly listed vUSDM market had a near-empty supply, so donating wUSDM directly to it inflated the exchange rate enough that a rounding-truncated position could be liquidated and the vWETH market's collateral seized.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 324,
       "transactionHash": "0x35a0172fb6bd450ceb29aa67dc85221826dfd0b7528375400b4ccf15c1eed0d8"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://community.venus.io/t/post-mortem-wusdm-donation-attack-on-venus-zksync/5004"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-02/Venus_ZKSync_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review over the zkSync Era RPC (Etherscan has no creation API for this chain): binary search over eth_getCode places vUSDM 0x183dE3C349fCf546aAe925E1c7F364EA6FB4033c first having code at block 53902189, 2025-01-17T14:42:49Z, and the attack-tx sender is 0x16be708e257a0df0f4275ecd9b0f70ce4b45430c. It is a BeaconProxy: the EIP-1967 implementation slot is empty and the beacon slot holds 0x53523537aa330640b80400eb8b309ff5896e7eb5; cast logs finds no Upgraded event on that beacon between block 53000000 and the incident block 56669987, so the executing code has been unchanged since the proxy was created, 40.5 days before the incident. 86.72 WETH x $2,334.28 at the incident timestamp (DefiLlama) = $202,428. Recheck (deployment basis confirmed, storage rather than events): at the incident block the vUSDM proxy's EIP-1967 beacon slot held 0x53523537aa330640b80400eb8b309ff5896e7eb5 and that beacon's implementation (its storage slot 1) held 0x6829ff2937f780ed01a4ce3fda3d0ba63b1bd771; binary-searching eth_getStorageAt on both slots over [53902189, 56669986] found no change, and keccak(eth_getCode) on the proxy is identical at the two blocks, so the executing code is unchanged since the proxy was created."
     }
   ],

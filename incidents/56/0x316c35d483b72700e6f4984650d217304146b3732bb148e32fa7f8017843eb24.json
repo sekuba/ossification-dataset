@@ -19,10 +19,7 @@
       "0x1703062d657c1ca439023f0993d870f4707a37ff"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MIC's unrestricted swapManual() paid LP fees according only to msg.sender's current LP-token balance and reduced a global fee pool without recording which LP position had already claimed. Transferring the same LP position between addresses therefore allowed repeated claims against the remaining accrued fees."
-  },
+  "summary": "MIC's unrestricted swapManual() paid LP fees according only to msg.sender's current LP-token balance and reduced a global fee pool without recording which LP position had already claimed. Transferring the same LP position between addresses therefore allowed repeated claims against the remaining accrued fees.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -121,31 +118,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x316c35d483b72700e6f4984650d217304146b3732bb148e32fa7f8017843eb24"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/MetaSec_xyz/status/1742484748239536173"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-01/MIC_exp.sol"
@@ -153,13 +136,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T12:26:24Z",
       "note": "Reviewed BNB Smart Chain block 34905162, the successful transaction receipt and complete call trace, the MIC creation transaction, pre-exploit and current runtime, verified MICToken source, the commit-pinned reproduction, all LP-fee events and stablecoin transfers, and the pre-transaction PancakeSwap V2 pool state. The attacker EOA has only the anchored transaction in the block, and that transaction contains the complete repeated-claim campaign. The trace directly executes MIC 0xb38c2d2d6a168d41aa8eb4cead47e01badbdcf57, whose prestate runtime hash is 0xb49ce47b1c2ff38f7e7e0ebc17d8ff8034bb99901e31336e2febcace7b4890f2. It matches current state; executable bytecode before the Solidity metadata boundary contains no DELEGATECALL, SELFDESTRUCT, or CREATE2 instruction, establishing deployment as the complete code history. Verified source shows that unrestricted swapManual passes msg.sender to swapAndSendLPFee; that function calculates a share from the caller's current LP balance and decrements only global amountLPFee, without binding a claim to the LP position. Eleven events transfer claims to the main attack contract and ten transaction-created helpers, totaling exactly 178.988781874161943857 MIC. The exact prestate reserves of MIC/BSC-USD pair 0xb3611b1cbddb14bc847906bfb9c443ac724a54dc are 1,774,999.9281271318376792 BSC-USD and 88,921.274156593938885675 MIC at reserve timestamp 1704236948. The resulting spot valuation is $19.961476541612367 per MIC and $3,572.8803705928563 gross. Attacker-controlled claim recipients receive 2,445.239989071637839369 BSC-USD after fee-swap slippage. No reviewed onchain or primary evidence reconciles the migrated approximately $500,000 estimate, so it is superseded rather than preserved as loss."
@@ -167,19 +143,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x98147a14ad59bc5beaf5f4ae80d39ebd14a95911085df2e8ea757d013af7e7c9"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "PancakeSwap V2 MIC/BSC-USD pre-transaction pool state",
       "url": "https://bscscan.com/address/0xb3611b1cbddb14bc847906bfb9c443ac724a54dc",
       "observedAt": 1787660784

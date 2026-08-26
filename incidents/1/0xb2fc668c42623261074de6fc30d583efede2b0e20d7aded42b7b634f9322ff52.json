@@ -19,10 +19,7 @@
       "0x0000000000037e625b2502c26029aea237f102af"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Flash-loaned WETH deposited as CrocSwapDex native surplus collateral, then a tick-by-tick walk of the ETH/USDC curve with a narrow mint-and-harvest let the attacker disburse more surplus than was deposited, exposing a surplus-collateral accounting flaw in the dex."
-  },
+  "summary": "Flash-loaned WETH deposited as CrocSwapDex native surplus collateral, then a tick-by-tick walk of the ETH/USDC curve with a narrow mint-and-harvest let the attacker disburse more surplus than was deposited, exposing a surplus-collateral accounting flaw in the dex.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -139,30 +136,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xb2fc668c42623261074de6fc30d583efede2b0e20d7aded42b7b634f9322ff52"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/2063816231023427861"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-06/AmbientCrocSwapDex_exp.sol"
@@ -170,13 +154,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T13:12:00Z",
       "note": "Reviewed the exploit receipt and call trace, CrocSwapDex creation trace and exploit-time bytecode, every sidecar-install event from deployment through the incident, the callpath-1 installation transaction, and the commit-pinned reproduction. The exploit's repeated swap and surplus-accounting calls execute at CrocSwapDex 0xaaaaaaaaa24eeeb8d57d431224f73832bc34f688 and delegate to WarmPath 0xa9dd587ad17aed82cac5596b16dcc9defec885cb. The complete install-event history contains two callpath-1 selections; the final one is log 419 of transaction 0x8619bd...f2b3 and selects that artifact. The receipt establishes net post-flash-loan proceeds of 33.721988711712491517 WETH and 55,913.808223 USDC."
@@ -184,29 +161,18 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x11f2acc5882e7a6903bcbb39d1af7cd6cad99afd7e421197f48a537ae73a7f3a"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x8619bd3a1cce5c3a0a16288d0ebece5ad07cd1b7d6308a9ffe00dce77328f2b3"
     },
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1780845995/coingecko:ethereum",
       "observedAt": 1787577120

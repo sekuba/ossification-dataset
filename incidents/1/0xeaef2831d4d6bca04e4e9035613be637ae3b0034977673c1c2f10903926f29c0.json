@@ -19,10 +19,7 @@
       "0x6fa00a7324dc293ea8ecf56fe3143104494c4213"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Brahma TOPG zapper executed a caller-supplied swap target and calldata without validation, so the attacker made it transferFrom USDC out of every address that had approved the zapper."
-  },
+  "summary": "The Brahma TOPG zapper executed a caller-supplied swap target and calldata without validation, so the attacker made it transferFrom USDC out of every address that had approved the zapper.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,19 +91,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xeaef2831d4d6bca04e4e9035613be637ae3b0034977673c1c2f10903926f29c0"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-11/BrahTOPG_exp.sol"
@@ -114,28 +104,16 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://medium.com/neptune-mutual/decoding-brahma-brahtopg-smart-contract-vulnerability-7b7c364b79d8"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: zapper 0xD248B30A3207A766d318C7A87F5Cf334A439446D created 2022-11-07T15:45:35Z by 0x5262691ccf2c816e6c3d819fb99d8f1a3dad04d8, unrelated to the attack sender; no EIP-1967 events, age from deployment - only 177,012 seconds (2.05 days). Loss read from the tx receipt: 89,343.76 USDC reached the attacker EOA, 79,679.66 of it from the single largest victim 0xa19789f57d0e0225a82eeff0fecb9f3776f276a3 (USDC at 1:1)."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x8b24f31f2c3b48e6463b57c5fa871c3ed508b12c2ea2ede077454f2f6f3a48a7"
     }

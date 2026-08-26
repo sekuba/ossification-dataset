@@ -20,10 +20,7 @@
       "0x6ed2175bc502f45499d233ea47e1201c1ad537de"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ShadowFi's SDF token declares burn(address account, uint256 _amount) public with no owner check, no allowance check and no msg.sender == account check; it simply calls _transferFrom(account, DEAD, _amount). The attacker deployed a one-shot contract that bought 0.010354936721195452 SDF from the PancakeSwap SDF/WBNB pair 0xf9e3151e813cd6729d52d9a0c3ee69f22cce650a with 0.001 WBNB, called SDF.burn(pair, 10354936721195451) to destroy the pair's entire SDF reserve except one wei, called pair.sync() so the reserves became 1 wei SDF against 1,078.615699417903036883 WBNB, and then swapped 8.461538283 SDF for 1,078.616699290110670619 WBNB before selfdestructing."
-  },
+  "summary": "ShadowFi's SDF token declares burn(address account, uint256 _amount) public with no owner check, no allowance check and no msg.sender == account check; it simply calls _transferFrom(account, DEAD, _amount). The attacker deployed a one-shot contract that bought 0.010354936721195452 SDF from the PancakeSwap SDF/WBNB pair 0xf9e3151e813cd6729d52d9a0c3ee69f22cce650a with 0.001 WBNB, called SDF.burn(pair, 10354936721195451) to destroy the pair's entire SDF reserve except one wei, called pair.sync() so the reserves became 1 wei SDF against 1,078.615699417903036883 WBNB, and then swapped 8.461538283 SDF for 1,078.616699290110670619 WBNB before selfdestructing.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -119,22 +116,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xe30dc75253eecec3377e03c532aa41bae1c26909bc8618f21fb83d4330a01018"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-09/Shadowfi_exp.sol"
@@ -142,27 +129,17 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/PeckShieldAlert/status/1565549688509861888"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x121f3729666d5a1a231659553d701a2d33d00d032168853842b6ba966f9dd642"
     },
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1662087762/bsc:0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "observedAt": 1787718087
@@ -170,13 +147,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T04:32:37Z",
       "note": "Root cause read from the verified BscScan source of ShadowFi 0x10bc28d2810dd462e16facff18f78783e859351b (solc 0.8.4, ContractName ShadowFi): 'function burn(address account, uint256 _amount) public { _transferFrom(account, DEAD, _amount); emit burnTokens(account, _amount); }' with no modifier and no caller check. The callTracer trace of the anchor reproduces it end to end: frame 0.1 sends 0.001 WBNB to the pair, frame 0.4 swaps out 0.010354936721195452 SDF, frame 0.6 is burn(0xf9e3151e..., 10354936721195451) on the SDF token from the attacker's helper contract, frame 0.7 is pair.sync() leaving reserves of 1 wei SDF and 1078.616699417903036883 WBNB, frames 0.9 and 0.12 sell 8.461538283 SDF for 1078.616699290110670619 WBNB, and frame 0.13 selfdestructs the helper to the attacker EOA. Anchor completeness: an eth_getLogs sweep for burnTokens(address,uint256), topic 0x0d1118ceb88d86cb9ff639076ac70b6cddd26abdc13ed1b4828081928fa6089a, over blocks 20771762 to 20971096 returns 11 events. The ten that precede the anchor were all sent by 0x0274d474e3e85cb09babe23a41eab16f34274cc1 and each burned either that address's own balance or the balance of its own contract 0x0843d8ac766a9520506e3a3efe7925fb779ed644, so none violates the invariant and none belongs to this campaign; the anchor is the first burn of a third party's balance. The attacker EOA 0x4daa3135b016ac37c46ed03423d314caea89ff5e used nonce 115 for the exploit, nonce 116 to unwrap the WBNB and nonces 117 onward only to move funds, so the campaign is one transaction. Target: the token is a plain non-proxy contract; its 18,501-byte runtime hashes to 0x13df3be9b5b07fdfdb356431cc9006d81c09d634276995f6901298ffe4041ac7 at both its deployment block 20771762 and block 20969095. It was created top-level by 0x5671e238bee4cd57a5722038f846f35d8ca35ed7 in transaction 0x121f3729... at 20771762:78, timestamp 1661494816, which is not the exploit sender, giving codeAgeSeconds 1662087762 - 1661494816 = 592946 (6.86 days). Loss recomputed from the pair's WBNB balance before and after and cross-checked against the attacker's receipt: 1,078.615699290110670619 WBNB, priced at 276.8891114854036 USD by DefiLlama at the incident timestamp for 298,656.94 USD. The migrated review note's 276.60 USD and 298,347 USD figure is superseded; the target, anchor and code age it recorded were correct."

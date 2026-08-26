@@ -19,10 +19,7 @@
       "0x28a8cb85d9d2c9ee536931de22fe80e3efea3bd6"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "buyGamesFrom self-funds purchases from the proxy balance instead of requiring msg.value, letting a vendor drain vendor/referrer cuts."
-  },
+  "summary": "buyGamesFrom self-funds purchases from the proxy balance instead of requiring msg.value, letting a vendor drain vendor/referrer cuts.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -119,22 +116,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x3cecc3f347edff1d27a0c929f2e7a4c04522afb3a74e24db94684cb6b51b1d65"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-06/PegaBall_exp.sol"
@@ -142,13 +129,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T11:42:26Z",
       "note": "Reviewed the exploit call trace, proxy creation and constructor log, pre-exploit implementation slot and runtimes, a complete Upgraded-event query, and the commit-pinned reproduction. The exploit calls buyGamesFrom through proxy 0xb8fcabf7bd88a2489fafbafa5f9a05a0e068cb5e, which delegates to implementation 0x29003dd6b9970ad658314fffb61e42f352c41630. Its constructor emitted the only Upgraded event through the exploit, selecting that implementation at log 69. The exploit made 258 real outward ETH calls totaling 0.581178 ETH; self-calls and DELEGATECALL frame values were excluded."
@@ -156,19 +136,12 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x863b95b439b13cc5fe59f7cc85c9baf5a7d2b5037a4a0404f645659f1ad714f1"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1748980931&to=1748988131",
       "observedAt": 1787571746

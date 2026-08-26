@@ -21,10 +21,7 @@
       "0x3811765a53c3188c24d412daec3f60faad5f119b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Harvest Vault implementation 0x9b3be0cc5dd26fd0254088d03d8206792715588b, shared by the fUSDC and fUSDT vault proxies, converts between shares and underlying at both ends using underlyingBalanceWithInvestment(), which is underlyingBalanceInVault() plus IStrategy(strategy()).investedUnderlyingBalance(). For the CRVStrategyStableMainnet strategies that number is the strategy's yCRV position marked through IPriceConvertor.yCrvToUnderlying, i.e. the Curve yDAI/yUSDC/yUSDT/yTUSD pool's instantaneous calc_withdraw_one_coin. _deposit therefore mints amount.mul(totalSupply()).div(underlyingBalanceWithInvestment()) and withdraw pays underlyingBalanceWithInvestment().mul(numberOfShares).div(totalSupply) off a quantity any caller can move inside a single transaction by swapping through that pool. The only mitigation is the strategy's depositArbCheck(), which compares the same manipulable mark against curvePriceCheckpoint, a lagged copy of itself refreshed at doHardWork, with a three percent arbTolerance; withdraw() consults no check at all, so no value of arbTolerance makes the deployed code correct and the defect is not a parameter choice. Inside each of thirty transactions the attacker flash-swapped USDC and USDT out of Uniswap V2, pushed the y-pool off balance so the vault's underlying mark fell, deposited to mint shares at the depressed price, restored the pool and withdrew at the recovered price, repeating seventeen rounds against fUSDC and thirteen against fUSDT."
-  },
+  "summary": "The Harvest Vault implementation 0x9b3be0cc5dd26fd0254088d03d8206792715588b, shared by the fUSDC and fUSDT vault proxies, converts between shares and underlying at both ends using underlyingBalanceWithInvestment(), which is underlyingBalanceInVault() plus IStrategy(strategy()).investedUnderlyingBalance(). For the CRVStrategyStableMainnet strategies that number is the strategy's yCRV position marked through IPriceConvertor.yCrvToUnderlying, i.e. the Curve yDAI/yUSDC/yUSDT/yTUSD pool's instantaneous calc_withdraw_one_coin. _deposit therefore mints amount.mul(totalSupply()).div(underlyingBalanceWithInvestment()) and withdraw pays underlyingBalanceWithInvestment().mul(numberOfShares).div(totalSupply) off a quantity any caller can move inside a single transaction by swapping through that pool. The only mitigation is the strategy's depositArbCheck(), which compares the same manipulable mark against curvePriceCheckpoint, a lagged copy of itself refreshed at doHardWork, with a three percent arbTolerance; withdraw() consults no check at all, so no value of arbTolerance makes the deployed code correct and the defect is not a parameter choice. Inside each of thirty transactions the attacker flash-swapped USDC and USDT out of Uniswap V2, pushed the y-pool off balance so the vault's underlying mark fell, deposited to mint shares at the depressed price, restored the pool and withdrew at the recovered price, repeating seventeen rounds against fUSDC and thirteen against fUSDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -148,25 +145,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x35f8d2f572fceaac9288e5d462117850ef2694786992a8c3f6d02612277b0877"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T00:00:00Z",
       "note": "Reviewed the attacker's full transaction list, the callTracer trace of the anchor, receipts for all thirty-two campaign transactions, the verified Vault and CRVStrategyStableMainnet sources, the proxies' implementation history, and historical runtimes. Anchor: 0x35f8d2f572fceaac9288e5d462117850ef2694786992a8c3f6d02612277b0877 is successful at 11129474:0, timestamp 1603680838. The two earlier campaign transactions are the attacker contract's creation (0x117f502fb08f575c8e1dc11d80094d177e2cdcf09b12a8bc121e49fd32f9c6d1) and an init() whose trace contains only ERC-20 approvals, including approve() on both vault proxies, so neither executes the defect. In the anchor trace the attacker contract 0xc6028a9fa486f52efd2b95b949ac630d287ce0af calls 0xf0358e8c3cd5fa238a29301d0bea3d63a17bedbe with deposit(uint256) 0xb6b55f25 and withdraw(uint256) 0x2e1a7d4d, each DELEGATECALLed to 0x9b3be0cc5dd26fd0254088d03d8206792715588b, and the vault's pricing path STATICCALLs strategy 0xd55ada00494d96ce1029c201425249f9dfd216cc for depositArbCheck 0xc2a2a07b and investedUnderlyingBalance 0x45d01e4a, which reaches the Curve y-pool zap 0xbbc81d23ea2c3ec7e56d39296f0cbb648873a5d3 and the pool 0x45f783cce6b7ff23b2ab2d70e416cdb7d6055f51. Incident unit: classifying receipts by emitting vault shows seventeen consecutive fUSDC transactions from 11129474 to 11129499 and thirteen consecutive fUSDT transactions from 11129500 to 11129514, then two cleanup transactions. The fUSDC proxy 0xf0358e8c3cd5fa238a29301d0bea3d63a17bedbe and the fUSDT proxy 0x053c80ea73dc6941f518a68e2fc52ac45bde7c9c have byte-identical 1,017-byte runtimes hashing to 0x3e408b75132df407ac61afab386591da3856df41d255a08712f8085e890ff6f2 and both hold 0x9b3be0cc5dd26fd0254088d03d8206792715588b in EIP-1967 slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc at block 11129473, so they are code-identical deployments failing the same way. Under the representative-target rule they are one target, the fUSDC vault being the execution context the anchored campaign reaches first; a second target would also duplicate the (codeHash, failureModeId) pair. Code history: the Vault implementation was created at block 10997712, timestamp 1601927184, by 0xf00dd244228f51547f0563e60bca65a30fbf5f7f in 0xfe526475768576fcaf283a38bfb97d6589d4bcd84d48d3a9f2ab3935fcc0e9f3, and its 17,195-byte runtime hashes to 0x4e8057b2768da668363d0d4467b3d6d02b1ef49ef9e580a57c4f6f9d51920608 at that block, at the proxy's deployment block 11086842 and at 11129473, and is the empty-code hash at 10997711. An Upgraded-topic query over 11086000 to 11129474 returns no records for either proxy, and the implementation slot already reads 0x9b3be0cc at block 11086842, so the implementation was fixed by the proxy constructor and never changed. codeAgeSeconds = 1603680838 - 1603116154 = 564,684. The vault's strategy pointer did move before the exploit, from the zero address to 0x76f9dde616a7a00fbb6ca2b3650332fa8e80d58b and then to 0xd55ada00494d96ce1029c201425249f9dfd216cc, but the strategy is reached by CALL, not DELEGATECALL, so those setStrategy writes changed configuration and not the target's executable code and are recorded as context. Target scope: the strategy is not added as a second target because investedUnderlyingBalance() honestly reports the current value of the position it holds; the defect is that the vault converts that instantaneous value into shares on deposit and back into underlying on withdrawal, and the withdrawal path applies no manipulation check whatsoever. Loss: exact netted depletion of both vaults over the campaign, cross-checked against the 13,000,000 USDC and 11,000,000 USDT the attacker forwarded and the 1,761,898.396474 USDC and 718,914.048541 USDT returned to the deployer."
@@ -174,29 +158,18 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xacd0a8e96cd869e0cc7eb5b96c125e665b58275dfdb58edf33792b6cfff78bca"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xfe526475768576fcaf283a38bfb97d6589d4bcd84d48d3a9f2ab3935fcc0e9f3"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x35f8d2f572fceaac9288e5d462117850ef2694786992a8c3f6d02612277b0877",
@@ -236,29 +209,16 @@
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/harvest-finance/harvest-flashloan-economic-attack-post-mortem-3cf900d65217"
     },
     {
       "id": "source-7",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://rekt.news/harvest-finance-rekt/"
     },
     {
       "id": "source-8",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/harvest-finance/harvest",
       "commit": "807bb88fa273d6f28d6bc49cd6aaaac7f96f772f",
       "path": "contracts/Vault.sol"
@@ -266,19 +226,12 @@
     {
       "id": "source-9",
       "type": "onchain-transaction",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x0fc6d2ca064fc841bc9b1c1fad1fbb97bcea5c9a1b2b66ef837f1227e06519a6"
     },
     {
       "id": "source-10",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity"
-      ],
       "chainId": 1,
       "transactionHash": "0x7bafa93b78f26adb245446f90d7625da6d980a8f8f1566d99a6dd36b6e10e981"
     }

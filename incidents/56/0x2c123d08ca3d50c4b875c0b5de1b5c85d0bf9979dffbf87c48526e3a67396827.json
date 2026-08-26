@@ -21,14 +21,11 @@
       "0x5766d1f03378f50c7c981c014ed5e5a8124f38a4"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "CUT 0x7057f3b0f4d0649b428f0d8378a8a0e7d21d36a7 routes every transfer through the deal-type logic contract 0x7b2e7cb89824236cb7096cde7a153af30f3ecbaf, whose valuePreservationByRemoveLP(address,uint256) (selector 0x70f88861) tops up a liquidity remover with extra CUT so that the USDT value of the withdrawn position is preserved. It computes that top-up from a USDT-denominated pool value held in registry 0x0917914b0a70ee7f1f2460fcd487696856e31154 and converts it to CUT at the instantaneous reserve ratio of the PancakeSwap USDT/CUT pair 0x83681f67069a154815a0c6c2c97e2daca6ed3249, which it reads through token0(), token1() and getReserves() in the same call, with no averaging, deviation bound, or same-transaction guard. The conversion is therefore algebraically a constant times the pair's live CUT reserve: across all ten invocations inside the anchor transaction the excess paid over the amount passed in equals 0.283287608274 times the CUT reserve read in that same call, constant to twelve significant figures while the reserve grows from 757,225.933923 to 5,083,077.535048 CUT and the spot price falls from 2.3384 to 0.0538 USDT per CUT. The attacker exploits exactly that: inside one transaction it adds liquidity asymmetrically, dumps CUT into the pair to crush the price, and removes liquidity, so a fixed USDT obligation is settled in 4.54 times more CUT than it was worth, and the freshly issued CUT is sold back into the pair for the LPs' USDT. The violated invariant is that a payout denominated in one asset must not be converted at a price the payee can set in the same transaction. No parameter value restores it: an identical eth_call against the same deployed bytecode at block 42131696 returns the amount unchanged, and the defect is the unguarded spot conversion itself, not any configured value."
-  },
+  "summary": "CUT 0x7057f3b0f4d0649b428f0d8378a8a0e7d21d36a7 routes every transfer through the deal-type logic contract 0x7b2e7cb89824236cb7096cde7a153af30f3ecbaf, whose valuePreservationByRemoveLP(address,uint256) (selector 0x70f88861) tops up a liquidity remover with extra CUT so that the USDT value of the withdrawn position is preserved. It computes that top-up from a USDT-denominated pool value held in registry 0x0917914b0a70ee7f1f2460fcd487696856e31154 and converts it to CUT at the instantaneous reserve ratio of the PancakeSwap USDT/CUT pair 0x83681f67069a154815a0c6c2c97e2daca6ed3249, which it reads through token0(), token1() and getReserves() in the same call, with no averaging, deviation bound, or same-transaction guard. The conversion is therefore algebraically a constant times the pair's live CUT reserve: across all ten invocations inside the anchor transaction the excess paid over the amount passed in equals 0.283287608274 times the CUT reserve read in that same call, constant to twelve significant figures while the reserve grows from 757,225.933923 to 5,083,077.535048 CUT and the spot price falls from 2.3384 to 0.0538 USDT per CUT. The attacker exploits exactly that: inside one transaction it adds liquidity asymmetrically, dumps CUT into the pair to crush the price, and removes liquidity, so a fixed USDT obligation is settled in 4.54 times more CUT than it was worth, and the freshly issued CUT is sold back into the pair for the LPs' USDT. The violated invariant is that a payout denominated in one asset must not be converted at a price the payee can set in the same transaction. No parameter value restores it: an identical eth_call against the same deployed bytecode at block 42131696 returns the amount unchanged, and the defect is the unguarded spot conversion itself, not any configured value.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
-      "amount": 1439563.6329389653,
+      "amount": 1439563.6329389652,
       "valuationTimestamp": 1725972052,
       "method": "stablecoin-par",
       "sourceIds": [
@@ -45,7 +42,7 @@
           "symbol": "USDT"
         },
         "amount": "1439563.632938965392877836",
-        "usdValue": 1439563.6329389653,
+        "usdValue": 1439563.6329389652,
         "valuation": {
           "method": "stablecoin-par",
           "timestamp": 1725972052,
@@ -123,25 +120,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x2c123d08ca3d50c4b875c0b5de1b5c85d0bf9979dffbf87c48526e3a67396827"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T20:05:00Z",
       "note": "Reviewed the 2558-frame callTracer trace of the anchor, the receipts of all three campaign transactions, the attacker EOA's complete transaction list, the deployed runtime of the unverified logic contract, historical runtime hashes, and CertiK's incident analysis. Anchor 0x2c123d08ca3d50c4b875c0b5de1b5c85d0bf9979dffbf87c48526e3a67396827 is status 1 at block 42131697, transaction index 4, timestamp 1725972052, and is the earliest of the campaign: EOA 0x560a77bc06dcc77eee687acb65d46b580a63eb45 has exactly five transactions ever, a funding transfer at block 42131562 and the three exploit calls to helper 0x87efb39a716860ecd2324a944cb40ec5128e56dd at blocks 42131697, 42131710 and 42132018, plus one later transfer, so the legacy anchor is retained. Target identity: 0x7b2e7cb89824236cb7096cde7a153af30f3ecbaf appears in 80 frames of the anchor trace, always as a plain CALL from the CUT token 0x7057f3b0f4d0649b428f0d8378a8a0e7d21d36a7 and never through DELEGATECALL in either direction, so the relationship is direct; the four selectors it receives are 0xdafa54c6, 0x0e0824a3, 0x2c19d593 and 0x70f88861, and 0x70f88861 is keccak('valuePreservationByRemoveLP(address,uint256)'), the function CertiK names. Root cause reproduced numerically: in each of the ten 0x70f88861 calls the contract reads pair 0x83681f67069a154815a0c6c2c97e2daca6ed3249 token0 (USDT 0x55d398326f99059ff775485246999027b3197955), token1 (CUT) and getReserves, and a record from 0x0917914b0a70ee7f1f2460fcd487696856e31154 whose USDT-denominated value equals reserve0 divided by 2.254872744 in every call; the returned CUT minus the CUT passed in equals 0.283287608274 times reserve1 in all ten calls (spread below 1e-11), while reserve1 rises from 757,225.933923 to 5,083,077.535048 CUT and the price falls from 2.338351 to 0.053808 USDT per CUT, exactly the behaviour of a fixed USDT obligation divided by the live spot price. Independent control: eth_call of the identical first-call calldata with from set to the CUT token against the same deployed runtime at block 42131696 returns 0x0e1f2ab1c4, i.e. the input amount 60,652,433,860 unchanged, versus 275,165,157,604 inside the manipulated transaction; the pre-transaction pair state was 1,454,183.768693813451905 USDT / 777,631.983294 CUT, a price of 1.87 USDT per CUT. Code history: created by 0x714254c993a42e427b16f18c2541cb188c3ee978 in 0xafc9268939df584a318bc8c07b073d99edbce5508e8f45bab8191e492f4245a7 at block 40875691 index 29, timestamp 1722193748; the runtime hashes to 0x8a03774e2eb5085562b4b79047db87835258292de837c4b61e5e1b0bbcf2aa3b identically at block 40875691, block 42131696 and today, and the contract has no proxy slot or upgrade mechanism, so deployment is the code-age basis and the age is 1725972052 - 1722193748 = 3778304 seconds. Loss: summing USDT Transfer logs over the three transactions, the pair loses exactly 1,439,563.632938965392877836 USDT and gains 955,130,899.07835 CUT; 1,416,033.632938965392877836 USDT reaches 0x5766d1f03378f50c7c981c014ed5e5a8124f38a4 and 23,530 USDT stays with the flash-swap pair 0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae."
@@ -149,19 +133,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xafc9268939df584a318bc8c07b073d99edbce5508e8f45bab8191e492f4245a7"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x2c123d08ca3d50c4b875c0b5de1b5c85d0bf9979dffbf87c48526e3a67396827",
@@ -172,19 +149,11 @@
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.certik.com/resources/blog/caterpillar-coin-cut-token-incident-analysis"
     },
     {
       "id": "source-6",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-09/Caterpillar_Coin_CUT_exp.sol"

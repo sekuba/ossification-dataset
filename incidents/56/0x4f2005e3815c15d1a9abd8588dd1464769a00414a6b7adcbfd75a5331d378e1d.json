@@ -19,10 +19,7 @@
       "0x962f8b446de3e524cf99042149ebecc0130bcdbf"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The WDOGE token's _transfer() deducts a burn/fee from the PancakeSwap pair's own balance without calling sync(), so the attacker could repeatedly transfer in, skim() the resulting surplus and swap out the pair's WBNB."
-  },
+  "summary": "The WDOGE token's _transfer() deducts a burn/fee from the PancakeSwap pair's own balance without calling sync(), so the attacker could repeatedly transfer in, skim() the resulting surplus and swap out the pair's WBNB.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x4f2005e3815c15d1a9abd8588dd1464769a00414a6b7adcbfd75a5331d378e1d"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-04/Wdoge_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/solid_group_1/status/1519034573354676224"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: WDOGE 0x46bA8a59f4863Bd20a066Fd985B163235425B5F9 created 2021-06-03T02:12:43Z by 0x7e03eddc5a3fe778b4eb2a333728f3fa45d30933, unrelated to attack sender 0x962f8b446de3e524cf99042149ebecc0130bcdbf; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 78.66 WBNB left the WDOGE/WBNB pair to the attack contract in the exploit transaction, comfortably above the $1,000 floor at April 2022 BNB prices. Loss converted: 78.6584 WBNB x $384.40 at incidentTimestamp 1650875635 (DefiLlama coingecko:binancecoin) = $30,236."
     }
   ],

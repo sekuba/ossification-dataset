@@ -19,10 +19,7 @@
       "0x586094fcafb76c3d9a209c58301802ce243269b8"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Thena reward pool's unstake(address,uint256,address,bool) accepts an arbitrary token and pool from any caller and transfers the balance out without checking the caller's stake, so a freshly deployed contract could call it and take the pool's BUSD."
-  },
+  "summary": "The Thena reward pool's unstake(address,uint256,address,bool) accepts an arbitrary token and pool from any caller and transfers the balance out without checking the caller's stake, so a freshly deployed contract could call it and take the pool's BUSD.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,19 +91,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xdf6252854362c3e96fd086d9c3a5397c303d265649aee0b023176bb49cf00d4b"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-03/Thena_exp.sol"
@@ -114,19 +104,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/LTV888/status/1640563457094451214"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: reward pool 0x39E29f4FB13AeC505EF32Ee6Ff7cc16e2225B11F created 2023-03-18T21:24:49Z by 0x564b06d31f2ae2745cae60be2ce4bf92477002c4, unrelated to attack sender 0x586094fcafb76c3d9a209c58301802ce243269b8; it is an EIP-1967 proxy with four Upgraded events, the last at 1679934660 (2023-03-27T16:31:00Z), about 65 minutes before the incident, which is the basis for the age. Loss verified onchain: the attacker netted 10,197.89 USDT."
     }
   ],

@@ -20,10 +20,7 @@
       "0x77ab960503659711498a4c0bc99a84e8d0a47589"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "DCF._transfer gives the sender authority over the liquidity pool's own balance. On any transfer whose destination is pairAddress it computes deadAmount = (amount - 5% fee) / deadCfg from the sender's transfer size and, if the pair still holds more than that, calls burnPair, which executes _burn(pairAddress, deadAmount) and IUniswapV2Pair.sync(). Destroying reserve tokens that belong to the pool's liquidity providers on the strength of a third party's transfer amount violates the invariant that an ERC-20 transfer may only move the sender's own balance, and the same _transfer path then routes the 5% fee through swapExactTokensForTokensSupportingFeeOnTransferTokens with amountOutMin = 0 against the pool it has just repriced. No deadCfg value repairs this: deadCfg is only a divisor, setCfg requires it to be non-zero, and for any divisor d an attacker sizes the transfer at roughly d times the pair's balance to burn the whole reserve, so the deployed code is wrong at every configuration."
-  },
+  "summary": "DCF._transfer gives the sender authority over the liquidity pool's own balance. On any transfer whose destination is pairAddress it computes deadAmount = (amount - 5% fee) / deadCfg from the sender's transfer size and, if the pair still holds more than that, calls burnPair, which executes _burn(pairAddress, deadAmount) and IUniswapV2Pair.sync(). Destroying reserve tokens that belong to the pool's liquidity providers on the strength of a third party's transfer amount violates the invariant that an ERC-20 transfer may only move the sender's own balance, and the same _transfer path then routes the 5% fee through swapExactTokensForTokensSupportingFeeOnTransferTokens with amountOutMin = 0 against the pool it has just repriced. No deadCfg value repairs this: deadCfg is only a divisor, setCfg requires it to be non-zero, and for any divisor d an attacker sizes the transfer at roughly d times the pair's balance to burn the whole reserve, so the deployed code is wrong at every configuration.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -116,21 +113,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xb375932951c271606360b6bf4287d080c5601f4f59452b0484ea6c856defd6fd"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-03/DCFToken_exp.sol"
@@ -138,13 +126,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Target corrected. The legacy row and the DeFiHackLabs PoC both name the PancakeSwap V2 pair 0x8487f846d59f8fb4f1285c64086b47e2626c01b6 as the vulnerable contract; the pair runs stock PancakePair code and the defect is in the DCF token 0xa7e92345ddf541aa5cf60fee2a0e721c50ca1adb, whose verified Solidity 0.8.27 source I read. In DCF._transfer, a transfer to pairAddress takes a 5 percent fee, computes deadAmount = (amount - fee) / deadCfg with deadCfg = 2, and when balanceOf(pairAddress) exceeds deadAmount calls burnPair, which is _burn(pairAddress, deadAmount) followed by sync(). Anchor kept. The attacker EOA 0x00c58434f247dfdca49b9ee82f3013bac96f60ff opened the campaign at nonce 84 by unwrapping WBNB, deployed the helper 0x77ab960503659711498a4c0bc99a84e8d0a47589 at nonce 85, made a self-transfer of 8 DCF and an approval at nonces 86 and 87, and executed at nonce 88, this transaction, status 1 at block 44290970 index 20, timestamp 1732453676; nonce 89 only sweeps the proceeds. The two earlier transactions touch DCF but neither sends to the pair, so this is the earliest transaction of the campaign that executes the defect. Mechanics reproduced from the receipt: fifteen nested BSC-USD borrows, nine DODO flashLoan calls and six PancakeSwap flash swaps, fund an 80,435,691.245080307237888143 BSC-USD buy that leaves the pair holding 35.171529414641592714 DCF; the attacker then sells 82.756539699156688738 DCF, whose 4.137826984957834436 fee leg is swapped back into the pair and lifts its balance to 39.309356399599427150, just over the deadAmount of 39.309356357099427151, so burnPair fires and leaves the pair with 42,499,999,999 wei of DCF; the fee swap alone extracted 8,521,346.645853764783089690 BSC-USD at the manipulated price and the following sell of 78.618712714198854302 DCF took 72,612,978.985490861981525879 more. Code history: DCF was created by a top-level creation from 0xa1f0254f01809ae58cc8a4e776ce1f2580c3f855, not an attacker address, in 0x71e7a766a9a8587e1fc4f1112d2646f2255d7562d6eaef1ebd2db3c22cc8e96e at block 44228584 index 135; the runtime hash 0x5a1265d17dd177b01a67f042cf26bd866bddbe7c75cec5734a0666f3ef4b89f0 holds at blocks 44228584, 44250000 and 44290969 and the address is empty at 44228583, giving 187,163 s or 2.17 days. Loss: the pair's BSC-USD balance fell 698634.425616096796822251 -> 0.039351777270094825 and its DCF 4074.442371848803073636 -> 78.618712756698854301; the exploit contract ended the transaction holding 442,028.607465892649035455 BSC-USD, the figure the legacy row reports. Boundary test applied: deadCfg is a divisor the owner can only set non-zero, and for any divisor an attacker sizes the transfer to burn the entire pair reserve, so this is a code defect and not a configuration."
@@ -152,29 +133,18 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x71e7a766a9a8587e1fc4f1112d2646f2255d7562d6eaef1ebd2db3c22cc8e96e"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xe8cd91d9135d98988b8ab8197d70d7fd0ece57b79c5149e40fbd4e574b7234a0"
     },
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://lunaray.medium.com/dcf-hack-analysis-dbcd3589c6fc"
     }
   ],

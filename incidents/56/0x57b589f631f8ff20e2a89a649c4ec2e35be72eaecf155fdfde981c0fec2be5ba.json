@@ -19,10 +19,7 @@
       "0xd771dfa8fa59bd2d1251a0481fca0cf216276dd7"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The closed-source LCTExchange exposes a privileged transfer/settlement entry point without an owner check, so the attacker called it directly and moved the exchange's BNB and LCT out."
-  },
+  "summary": "The closed-source LCTExchange exposes a privileged transfer/settlement entry point without an owner check, so the attacker called it directly and moved the exchange's BNB and LCT out.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,19 +91,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x57b589f631f8ff20e2a89a649c4ec2e35be72eaecf155fdfde981c0fec2be5ba"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/LocalTrader_exp.sol"
@@ -114,10 +104,6 @@
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/LocalTrader2_exp.sol"
@@ -125,19 +111,11 @@
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/numencyber/status/1661213691893944320"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: LCTExchange 0xcE3e12bD77DD54E20a18cB1B94667F3E697bea06 created 2023-05-11T10:36:27Z by 0xdc02a3b51d86d7a19ad24082c0c82affe8412913, unrelated to attack sender 0xd771dfa8fa59bd2d1251a0481fca0cf216276dd7; no EIP-1967 Upgraded events, age measured from deployment. DeFiHackLabs carries two PoCs (LocalTrader_exp and LocalTrader2_exp) for the same four-transaction incident; one row is recorded. lossUsd converts the 384 BNB reported: 384 BNB x $313.66 at incidentTimestamp 1684841942 (DefiLlama coingecko:binancecoin) = $120,445."
     }
   ],

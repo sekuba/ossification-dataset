@@ -19,10 +19,7 @@
       "0x9bbd94506398a1459f0cd3b2638512627390255e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The OmniEstate contract's invest() accepts a caller-supplied amount without checking it against the tokens actually transferred in, so the attacker booked a large investment for nothing and withdrew the ORT proceeds."
-  },
+  "summary": "The OmniEstate contract's invest() accepts a caller-supplied amount without checking it against the tokens actually transferred in, so the attacker booked a large investment for nothing and withdrew the ORT proceeds.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -95,19 +92,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x49bed801b9a9432728b1939951acaa8f2e874453d39c7d881a62c2c157aa7613"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-01/OmniEstate_exp.sol"
@@ -115,19 +105,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1615232012834705408"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: OmniEstate 0x6f40A3d0c89cFfdC8A1af212A019C220A295E9bB created 2021-12-14T01:19:59Z by 0xd993af5263dcd70b6991fa31e1fe247f9cd3208f, unrelated to attack sender 0x9bbd94506398a1459f0cd3b2638512627390255e; three EIP-1967 Upgraded events, the last at 1647953316 (2022-03-22T11:28:36Z), which is the basis for the age. Loss converted from the reported 236 BNB: 236 BNB x $297.87 at incidentTimestamp 1673916860 (DefiLlama coingecko:binancecoin) = $70,297."
     }
   ],

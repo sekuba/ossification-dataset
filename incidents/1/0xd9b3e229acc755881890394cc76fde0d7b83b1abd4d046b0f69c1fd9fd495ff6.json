@@ -19,10 +19,7 @@
       "0x2c903f97ea69b393ea03e7fab8d64d722b3f5559"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ParticleExchange trusted caller-supplied ERC721 callback and lien data, letting a malicious collection fabricate NFT ownership and credit an unbacked ETH balance."
-  },
+  "summary": "ParticleExchange trusted caller-supplied ERC721 callback and lien data, letting a malicious collection fabricate NFT ownership and credit an unbacked ETH balance.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -120,22 +117,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xd9b3e229acc755881890394cc76fde0d7b83b1abd4d046b0f69c1fd9fd495ff6"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-02/ParticleTrade_exp.sol"
@@ -143,21 +130,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1758028270770250134"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss",
-        "incident-anchor"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:30:55Z",
       "note": "Reviewed the exploit receipt and call trace, accountBalance state before and after the exploit, the deployment transaction, the exploit-time implementation slot, the commit-pinned reproduction, and a complete Upgraded-event query from deployment through the exploit. The exploit calls proxy 0x7c5c9afecf4013c43217fb6a626a4687381f080d, which delegates both forged onERC721Received callbacks to 0xe4764f9cd8ecc9659d3abf35259638b20ac536e4. The malicious collection controls ownerOf and safeTransferFrom, allowing caller-supplied lien data to create an unbacked credit. Two Upgraded events exist; the final event is log 165 of 0x1113e0f43e3f062e91aac24b2901c67bf59d51145078ad668e7de8340d223f24 and selects the recorded implementation. The exploit raises the attack contract's accountBalance from zero to exactly 50.126827091960426151 ETH, the full exchange balance."
@@ -165,19 +142,12 @@
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x1113e0f43e3f062e91aac24b2901c67bf59d51145078ad668e7de8340d223f24"
     },
     {
       "id": "source-9",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1707890927&to=1707980927",
       "observedAt": 1787574655
@@ -185,10 +155,6 @@
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x8eaeff4ba07549b29ce9a2e73c87db369387bd2dacd7870ca7347e32c67ac3dc"
     }

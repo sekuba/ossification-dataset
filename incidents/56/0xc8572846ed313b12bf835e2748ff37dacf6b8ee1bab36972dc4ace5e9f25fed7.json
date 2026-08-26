@@ -19,10 +19,7 @@
       "0x8efb9311700439d70025d2b372fb54c61a60d5df"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The contract holding the WBNB/HORS LP tokens exposes a function (selector 0xf78283c7) that accepts a caller-supplied router and recipient without validation, so the attacker passed its own contract and had the LP transferred out, then removed the liquidity."
-  },
+  "summary": "The contract holding the WBNB/HORS LP tokens exposes a function (selector 0xf78283c7) that accepts a caller-supplied router and recipient without validation, so the attacker passed its own contract and had the LP transferred out, then removed the liquidity.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xc8572846ed313b12bf835e2748ff37dacf6b8ee1bab36972dc4ace5e9f25fed7"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/TenArmorAlert/status/1877032470098428058"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-01/HORS_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x6f3390c6C200e9bE81b32110CE191a293dc0eaba created 2021-05-12T02:56:01Z by 0x6298194afa16862870521908caa7e9d138360858, which is not the attack-tx sender 0x8efb9311700439d70025d2b372fb54c61a60d5df; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 14.8 WBNB x $696.54/BNB at the incident timestamp 1736345084 (DefiLlama coingecko:binancecoin) = $10,309."
     }
   ],

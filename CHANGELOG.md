@@ -6,8 +6,8 @@ V2 defines a new incident-and-target interface for audited code age and loss.
 
 - Replaced protocol buckets with one stable incident per
   `eip155:<chainId>:<exploitTx>`.
-- Assigned classification and loss to incidents and code age to independent
-  targets.
+- Assigned the defect summary and loss to incidents and code age to
+  independent targets.
 - Distinguished execution context from defect-bearing code artifacts, and aged
   shared code from artifact activation, so a clone instantiated after the
   template was wired in does not reset the age.
@@ -27,5 +27,12 @@ V2 defines a new incident-and-target interface for audited code age and loss.
 - Pinned the production discovery cohort to complete source inventories through
   July 2026.
 - Located analytical scoring and model policy in downstream consumers.
+
+- Published reviewed incidents only in the release; unreviewed legacy rows stay
+  in `incidents/` for review rather than beside reviewed losses.
+- Recorded the valuation basis in `loss.usd.method`, including
+  `realised-proceeds`.
+- Dropped `classification.rootCause`, a constant, and the `supports` declaration
+  on sources, which restated what the per-claim references already say.
 
 `research/raw/legacy-v1.json` is the hashed migration input.

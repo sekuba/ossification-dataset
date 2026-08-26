@@ -19,10 +19,7 @@
       "0x935d6cf073eab37ca2b5878af21329d5dbf4f4a5"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The launchpad's addLiquidity() migration did not check that the PancakeSwap V3 pool for the graduating token was still uninitialized, so the attacker created and initialized the pool at a manipulated sqrtPriceX96 beforehand and swapped out the BNB the launchpad then deposited."
-  },
+  "summary": "The launchpad's addLiquidity() migration did not check that the PancakeSwap V3 pool for the graduating token was still uninitialized, so the attacker created and initialized the pool at a manipulated sqrtPriceX96 beforehand and swapped out the BNB the launchpad then deposited.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x2902f93a0e0e32893b6d5c907ee7bb5dabc459093efa6dbc6e6ba49f85c27f61"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://securrtech.medium.com/the-four-meme-exploit-a-deep-dive-into-the-183-000-hack-6f45369029be"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-02/FourMeme_exp.sol"
@@ -119,9 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity"
-      ],
       "note": "onchain review of the BSC sequence: attacker contract creates+initializes the V3 pool in block 46555725 (tx 0x4235b006...), the Four.meme launchpad 0x5c9520...762b executes addLiquidity (selector 0x55110640) from its own operator 0x74d86638f359bdff6ec55d78a97f294747f8f5b3 in block 46555731 (tx 0xe0daa3bf...), attacker takes profit in block 46555732; launchpad creator 0xe096774fef711a0b28cb7bc9839b892bd5e2f603 is unrelated to the attacker"
     }
   ],

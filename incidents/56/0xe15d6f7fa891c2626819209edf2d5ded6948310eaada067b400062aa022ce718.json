@@ -19,10 +19,7 @@
       "0x0740100ad48d22bc648901520a313b46557f8ada"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The GFA reward contract exposes unauthenticated functions (selectors 0x5f7938f1 and 0x3890ec92) that credit and release arbitrary GFA amounts to the caller, which the attacker then sold into the GFA/BUSD pair."
-  },
+  "summary": "The GFA reward contract exposes unauthenticated functions (selectors 0x5f7938f1 and 0x3890ec92) that credit and release arbitrary GFA amounts to the caller, which the attacker then sold into the GFA/BUSD pair.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xe15d6f7fa891c2626819209edf2d5ded6948310eaada067b400062aa022ce718"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/ChainAegis/status/1779809931962827055"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/GFA_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xbCbCb0e7E28414e084c4a40C1cCC30B75629a7DE created 2024-04-13T16:06:54Z by 0x970be9ac13acc788dae720c1078cd09b11fa1407, which is not the attack-tx sender 0x0740100ad48d22bc648901520a313b46557f8ada; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

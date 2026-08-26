@@ -19,10 +19,7 @@
       "0x910175f3fee798add5fabd3e9cbb63d0a785482c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Settings.setBatchAddress()/setContractAddress() lacked the onlyOwner modifier, so the attacker repointed the StakingManager and RewardsDistributor registry entries at their own helper, which then passed Staking's address-based authorization checks and moved the Staking proxy's 218M SQT out via unbondCommission()/withdrawARequest()."
-  },
+  "summary": "Settings.setBatchAddress()/setContractAddress() lacked the onlyOwner modifier, so the attacker repointed the StakingManager and RewardsDistributor registry entries at their own helper, which then passed Staking's address-based authorization checks and moved the Staking proxy's 218M SQT out via unbondCommission()/withdrawARequest().",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -92,27 +89,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0xd063b3848a6b8c67f46990ab166665d454147855819acb60c083c0aea0180b2d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://subquery.ghost.io/subquery-network-security-incident-report/"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-04/SubQuerySettings_exp.sol"
@@ -120,11 +107,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim is the Settings TransparentUpgradeableProxy created 2024-02-13 by 0x70d0afee4a6a314d71046da9b4bbcfb8fd1722ce (not the attacker); its only pre-incident Upgraded event is the deployment-block one pointing at implementation 0xf282737992da4217bf5f8b6ae621181e84d7d3b9, the flawed Settings code named in the PoC. SubQuery's own report states ~$134,000 USD."
     }
   ],

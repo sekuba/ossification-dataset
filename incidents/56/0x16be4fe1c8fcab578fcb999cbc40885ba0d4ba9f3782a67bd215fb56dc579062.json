@@ -19,10 +19,7 @@
       "0x2723e1f6a9a3cd003fd395cc46882e4573cb249f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The QIXI token's unchecked fee arithmetic in transfer() underflows the liquidity pair's balance, letting the attacker inflate their own holding and swap it for the pair's WBNB."
-  },
+  "summary": "The QIXI token's unchecked fee arithmetic in transfer() underflows the liquidity pair's balance, letting the attacker inflate their own holding and swap it for the pair's WBNB.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x16be4fe1c8fcab578fcb999cbc40885ba0d4ba9f3782a67bd215fb56dc579062"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2022-08/Qixi_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/8olidity/status/1555366421693345792"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: QIXI 0x65F11B2de17c4af7A8f70858D6CcB63AAC215697 created 2022-08-03T11:44:12Z by 0xe7ce2d402d5d6fb42471183b71d8c167bba9374b, unrelated to attack sender 0x2723e1f6a9a3cd003fd395cc46882e4573cb249f; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 6.8944 WBNB left the QIXI pair to the attack contract; 6.8944 WBNB x $294.61 at incidentTimestamp 1659539632 (DefiLlama coingecko:binancecoin) = $2,031."
     }
   ],

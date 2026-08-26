@@ -21,10 +21,7 @@
       "0x551f3110f12c763d1611d5a63b5f015d1c1a954c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "KiloEx's BSC MinimalForwarder exposes a public execute((address,address,uint256,uint256,uint256,bytes),bytes) entry point that relays any request with a valid signature but omits the keeper and approved-router authorization enforced by its other relay entry point. Because the request chooses its own signer and the downstream delegate trusts msg.sender == the forwarder without checking the appended ERC-2771 sender, the attacker used a self-generated signer to reach the privileged price-and-trade path, set artificial prices, and trade against KiloEx's USDT vault."
-  },
+  "summary": "KiloEx's BSC MinimalForwarder exposes a public execute((address,address,uint256,uint256,uint256,bytes),bytes) entry point that relays any request with a valid signature but omits the keeper and approved-router authorization enforced by its other relay entry point. Because the request chooses its own signer and the downstream delegate trusts msg.sender == the forwarder without checking the appended ERC-2771 sender, the attacker used a self-generated signer to reach the privileged price-and-trade path, set artificial prices, and trade against KiloEx's USDT vault.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -121,39 +118,24 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 56,
       "transactionHash": "0x1aaf5d1dc3cd07feb5530fbd6aa09d48b02cbd232f78a40c6ce8e12c55927d03"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xc9c9916f05610dda2123049f3e9059a8231e5bd668d9e4480ef459c03846275e"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x1d96b8a03565d8ef5ad133e7e57d27fe66f240e5e4eda0f9cd304f6d9839ca3d"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x1aaf5d1dc3cd07feb5530fbd6aa09d48b02cbd232f78a40c6ce8e12c55927d03",
@@ -164,21 +146,11 @@
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://blog.solidityscan.com/kiloex-vault-hack-analysis-123a086ccae3/"
     },
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T09:51:30Z",
       "note": "Anchor kept as the first of the three BSC campaign transactions. Attacker EOA 0x00fac92881556a90fdb19eae9f23640b95b4bcbd created exploit contract 0xcc6a5784194bd516db29aa505179857025d8bef4 at block 48357841, then called it twice at blocks 48358304 and 48358423; it called the vulnerable forwarder directly at block 48359406. callTracer on the anchor shows exploit contract -> KiloEx router 0x298e94d5494e7c461a05903dcf41910e0125d019 -> forwarder proxy 0xad37c86c06be706466ee70cbbf58f20655e7efb1 selector 0x47153f82 -> DELEGATECALL implementation 0xd8240094e57bf5f893420ffc1e750c94de4a4177 -> delegate collection 0xaf457b72fff6712641c5f1843515a6e114b2ecde selector 0xac9fd279. At block 48358303, forged signer 0x551f3110f12c763d1611d5a63b5f015d1c1a954c has isKeeper=false and nonce=0, while approvedRouters(0xaf457b72fff6712641c5f1843515a6e114b2ecde)=true. The implementation runtime hash is exactly 0xca3ef4513e1e310d392809cc65aab1738b466192d2ea96f7ed1ca2f0d76fa10e, identical to the reviewed Base implementation and therefore assigned the same bytecode-level failure identity. The proxy was created by 0x1d568fc08a1d3978985bc3e896a22abd1222abcf at block 47272034, tx index 74. Its two pre-exploit Upgraded logs were enumerated: creation selected 0xde6f7616d7a18831445ca064a0351c4b603aad2b, and block 47331739 tx 0x1d96b8a03565d8ef5ad133e7e57d27fe66f240e5e4eda0f9cd304f6d9839ca3d index 117 log 402 selected 0xd8240094e57bf5f893420ffc1e750c94de4a4177. The EIP-1967 slot confirms that transition and retains 0xd8240094e57bf5f893420ffc1e750c94de4a4177 through block 48358303; its runtime hash is unchanged from activation through the exploit, establishing age 3079913 seconds. Loss was recomputed from USDT Transfer logs in the three campaign receipts: KiloEx vault 0xef7af0804aab3885da59a8236fabfa19ddc6cf48 loses net 954921.832122660000000000 USDT in the two price-manipulation transactions, and the forwarder loses 4306.800000000000000000 accumulated fee USDT in the final direct relay. The attacker EOA receives 959217.079253360000000000 USDT; 11.552869300000000000 USDT of the victim outflow is retained as flash-loan and protocol fees. USDT is valued at par. Base is a separate record and opBNB is excluded from this corpus, so neither is counted here."

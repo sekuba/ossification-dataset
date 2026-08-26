@@ -20,10 +20,7 @@
       "0x464073f659591507d9255b833d163ef1af5ccc2c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "A partial withdrawal reduced the full LP liability despite insufficient cash, allowing repeated coverage-ratio and slippage manipulation across deposits, withdrawals, and swaps."
-  },
+  "summary": "A partial withdrawal reduced the full LP liability despite insufficient cash, allowing repeated coverage-ratio and slippage manipulation across deposits, withdrawals, and swaps.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -126,21 +123,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 43114,
       "transactionHash": "0x4425f757715e23d392cda666bc0492d9e5d5848ff89851a1821eab5ed12bb867"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-10/Platypus03_exp.sol"
@@ -148,13 +136,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss",
-        "incident-anchor"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:30:55Z",
       "note": "Reviewed the selected exploit receipt and call trace, the commit-pinned reproduction, the deployment transaction, the exploit-time implementation slot, and a complete Upgraded-event query from proxy deployment through the exploit. Calls to pool proxy 0x4658ea7e9960d6158a261104aaa160cc953bb6ba delegate to 0xe5c84c7630a505b6adf69b5594d0ff7fedd5f447. The vulnerable accounting reduces full liability when a withdrawal is only partly paid from available cash, which lets the attacker distort coverage ratios and receive favorable slippage in both swap directions. Three Upgraded events exist; the final event is log 18 of 0x53ac2df1a06dbc6406aceb9ace784c8530c2b279bb6b04de77e7da6537bbefdb and selects the recorded implementation. The selected transaction nets the attack contract 23,564.213231457049370005 WAVAX and 20,873.980832851904983452 sAVAX; the incident loss records CertiK's $2.23 million aggregate across all three related exploit transactions."
@@ -162,29 +143,17 @@
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.certik.com/ko/blog/platypus-defi-incident-analysis"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 43114,
       "transactionHash": "0x53ac2df1a06dbc6406aceb9ace784c8530c2b279bb6b04de77e7da6537bbefdb"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 43114,
       "transactionHash": "0x9d82ae049b90ac306dc4bd7d98d930c93b97e29d9ab403122b01d2de5df5422b"
     }

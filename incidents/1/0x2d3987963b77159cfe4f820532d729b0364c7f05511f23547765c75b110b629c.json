@@ -19,10 +19,7 @@
       "0x8d3d13cac607b7297ff61a5e1e71072758af4d01"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Meter's ChainBridge fork added a wrapped-native path to ERC20Handler.deposit(bytes32,uint8,uint64,address,bytes) that skips the token movement entirely for the configured wtoken: `// ether case, the weth already in handler, do nothing` guards `if (tokenAddress != _wtokenAddress) { burnERC20 | lockERC20 }`. That assumption only holds for Bridge.depositETH, which requires `amount == msg.value - fee` and performs the wrap itself. Bridge.deposit stayed callable for the same resourceID and only requires `msg.value == _getFee(destinationChainID)`, so any caller could write a DepositRecord and emit Deposit for an arbitrary WETH amount without transferring anything, and the relayer set released or minted that amount on the destination chain. On the Ethereum deployment the wtoken is WETH 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 and the handler is 0xde4fc7c3c5e7be3f16506fcc790a8d93f8ca0b40."
-  },
+  "summary": "Meter's ChainBridge fork added a wrapped-native path to ERC20Handler.deposit(bytes32,uint8,uint64,address,bytes) that skips the token movement entirely for the configured wtoken: `// ether case, the weth already in handler, do nothing` guards `if (tokenAddress != _wtokenAddress) { burnERC20 | lockERC20 }`. That assumption only holds for Bridge.depositETH, which requires `amount == msg.value - fee` and performs the wrap itself. Bridge.deposit stayed callable for the same resourceID and only requires `msg.value == _getFee(destinationChainID)`, so any caller could write a DepositRecord and emit Deposit for an arbitrary WETH amount without transferring anything, and the relayer set released or minted that amount on the destination chain. On the Ethereum deployment the wtoken is WETH 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 and the handler is 0xde4fc7c3c5e7be3f16506fcc790a8d93f8ca0b40.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -167,49 +164,30 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x2d3987963b77159cfe4f820532d729b0364c7f05511f23547765c75b110b629c"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xdfea6413c7eb3068093dcbbe65bcc9ba635e227c35e57fe482bb5923c89e31f7"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xd619ace8a8cca2f7eb72dbc0a896fc2d4d8b20aa11f4d747f1a5333305bbb875"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x519a6630d377d89d57a49bedeffc5606c1089c9844bfc3d10ddc230a41a52b4d"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0xe045c40c51250ef611f06c4f11ab4ea11486cd8f6827ed03eb06ad4c8c6cf53e",
@@ -219,9 +197,6 @@
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1644071232/coingecko:ethereum",
       "observedAt": 1787700230
@@ -229,9 +204,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1644071232/ethereum:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
       "observedAt": 1787700230
@@ -239,32 +211,17 @@
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://rekt.news/meter-rekt"
     },
     {
       "id": "source-9",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x37b5ea54d235eee8babc29ed586e55fa733f4c93d57e5c876efb751bd54a4920"
     },
     {
       "id": "source-10",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Anchor: Etherscan txlist for EOA 0x8d3d13cac607b7297ff61a5e1e71072758af4d01 shows exactly two calls to the Ethereum Passport Bridge 0xa2a22b46b8df38cd7c55e6bf32ea5a32637cf2b1, both selector 0x05e2ca17 (deposit(uint8,bytes32,bytes)). The earlier one, 0x2d3987963b77159cfe4f820532d729b0364c7f05511f23547765c75b110b629c at 14146530:603, timestamp 1644071232, status 1, is the anchor; it carries destinationChainID 1, resourceID 0x0000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc201 and calldata amount 0x16e77c77f5de41f3a4 = 422508708639363167140. cast run --quick renders the whole trace as Bridge::deposit -> ERC20Handler 0xde4fc7c3c5e7be3f16506fcc790a8d93f8ca0b40 ::deposit with no inner token call at all, then emit Deposit(1, resourceID, 1). Read the Etherscan-verified sources of both contracts: the handler's wrapped-native branch is `if (tokenAddress != _wtokenAddress) { ... }` under the comment `ether case, the weth already in handler, do nothing`, Bridge.deposit requires only `msg.value == _getFee(destinationChainID)` while Bridge.depositETH requires `amount == msg.value - fee` and wraps the value itself. Handler state read at block 14146529: _wtokenAddress = 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2, _resourceIDToTokenContractAddress[resourceID] = the same WETH address, _burnList[WETH] = false, so the skipped branch would otherwise have been lockERC20. The second deposit paid only 1e15 wei because getFee(3) is 1e15 while getFee(1) is the 5e15 default _fee, which is why both fee requires passed. Boundary test: with _wtokenAddress set to any real wrapped-native token the function is wrong for every caller and every amount, and the only configuration that makes it safe is unsetting the feature, so this is an executable-code defect and not a parameter. Code history: Etherscan getcontractcreation puts the handler at 12533441:59 in 0x37b5ea54d235eee8babc29ed586e55fa733f4c93d57e5c876efb751bd54a4920 from 0xbb245d5c1d504dd5295b12b90963fd26b06bc743, block timestamp 1622347065 read from the chain; eth_getCode at block 12533441 and at block 14146529 both hash to 0x051166e9379a6663dc05e5fd97aec94411bd05cb1aeea836046d12df2b02efa3 and the contract is not a proxy, so codeAgeSeconds = 1644071232 - 1622347065 = 21724167 (251.4 d). This deployment is independent of the BSC one: different creation transaction, different block, timestamp 1426 s later, although the runtime bytes are identical to the BSC handler, so curve deduplication by (codeHash, failureModeId) will keep only the earlier BSC observation. Loss reconstructed from receipts: the Ethereum handler's WETH balance was exactly 422508708639363167140 wei at block 14146529 and 0 from block 14146583, where relayer transaction 0xd619ace8a8cca2f7eb72dbc0a896fc2d4d8b20aa11f4d747f1a5333305bbb875 (executeProposal chainID 1, depositNonce 1, WETH resourceID) sent that exact wei of native ETH to the attacker. The second deposit's 1500 WETH landed on Meter (eip155:82): eth_getLogs on rpc.meter.io shows a 1500e18 mint of 0x79a61d3a28f8c8537a3df63092927cfa1150fb3c from the zero address to the attacker at Meter block 20646662, nine sales totalling 992e18 into pair 0xe81171e3e984285caf2e2a89ffedb92f4e424125 returning 52268.251602278605250604 + 42779.395414901966293649 + 42219.562103595900834609 + 39713.582710860866224396 + 26460.733695427523169741 + 30430.232472494505314265 + 24213.471499459773400750 + 22386.083236017924482016 + 118378.868960546682951818 = 398850.181695583747921848 BUSD.bsc, one sale of 508e18 into 0x3d0ca02704d45ba2966c0be7a4f3c6cd4163569e returning 274068396 units of WBTC.eth, and burns of all of both. The Meter transactions are, in order, the mint 0xa3ccada567ecfbb1250bf4c02676d366bfd047ae74bd674b7e184a5b89c8f5fb, the largest BUSD.bsc sale 0x5a59eb552057480fa86c84482914e1597bf7732ca412739db7836f1020449894, the WBTC.eth sale 0x55fd4effdfde6657b38b3089f2611134688adf9430253f777964538a6a76db2a, and the three Passport burns 0x12e0c6d00e45038fbbfb1c22d64c7a4b6bc8c6ba3678833a2039a0425f19fac6, 0xcbb825d48f53339d478771bfbe36f27d6af5d410f6ca52eecf890899b5c31f33 and 0x7e60549295b35d135ba8005a2c2b9f37866ecc324b79f126b1cbcfd8c370cc30; they are cited in prose rather than as a structured source because scripts/verify.mjs has no eip155:82 endpoint. The BSC Passport handler then released 280471.312735037064970030 + 118378.868960546682951818 BUSD in the two chain-3 proposals 0xe045c40c51250ef611f06c4f11ab4ea11486cd8f6827ed03eb06ad4c8c6cf53e and 0x3fb520c6b44dcbf18fcd75757883a158e6b075420225e01b6761b6a2645157eb, and the Ethereum handler released 274068396 units of WBTC in 0x519a6630d377d89d57a49bedeffc5606c1089c9844bfc3d10ddc230a41a52b4d (handler WBTC balance 14728379115 -> 14454310719). The four Celer cBridge relays totalling 630.829743049062048095 ETH were decoded from their PbBridge.Relay payloads and carry srcChainId 56, so they are BSC-leg proceeds and are excluded here."

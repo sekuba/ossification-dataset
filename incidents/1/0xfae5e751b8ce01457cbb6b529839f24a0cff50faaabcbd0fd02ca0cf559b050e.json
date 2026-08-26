@@ -19,10 +19,7 @@
       "0xb92b2e47680c89da8f951b8963ef469f461a50fc"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "USM.defund() prices a FUM redemption off the mean of the current and post-redemption sell price and contracts adjShrinkFactor per call, so redeeming one position in 64 slices paid strictly more ETH than one call - a pure rounding/split-invariance flaw with identical oracle reads throughout the trace."
-  },
+  "summary": "USM.defund() prices a FUM redemption off the mean of the current and post-redemption sell price and contracts adjShrinkFactor per call, so redeeming one position in 64 slices paid strictly more ETH than one call - a pure rounding/split-invariance flaw with identical oracle reads throughout the trace.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xfae5e751b8ce01457cbb6b529839f24a0cff50faaabcbd0fd02ca0cf559b050e"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-08/USM_exp.sol"
@@ -113,11 +103,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x2a7FFf44C19f39468064ab5e5c304De01D591675 created 2021-10-10 by 0xc89234ddc6fec3eb20beec3da67bd183c3a4be06, unrelated to attack sender 0xb92b2e47680c89da8f951b8963ef469f461a50fc; no EIP-1967 upgrade events; ~70.8 ETH drained"
     }
   ],

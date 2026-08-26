@@ -20,10 +20,7 @@
       "0x55f5aac4466eb9b7bbeee8c05b365e5b18b5afcc"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "SCROLL's transfer(address,uint256) blocks ordinary holder-to-holder transfers with a bare \"Err\" revert but exempts the Uniswap UniversalRouter, and on that exempt path it debits the sender without any balance-sufficiency check. Because UniversalRouter.execute is permissionless and its TRANSFER command (0x05) moves the router's own token balance, the attacker made the zero-balance router send 1 wei of SCROLL, underflowing the router's SCROLL balance to 2^256-1, then routed 136,275,915 SCROLL from that fabricated balance into the SCROLL/WETH Uniswap V2 pair and swapped it out for the pair's entire WETH reserve."
-  },
+  "summary": "SCROLL's transfer(address,uint256) blocks ordinary holder-to-holder transfers with a bare \"Err\" revert but exempts the Uniswap UniversalRouter, and on that exempt path it debits the sender without any balance-sufficiency check. Because UniversalRouter.execute is permissionless and its TRANSFER command (0x05) moves the router's own token balance, the attacker made the zero-balance router send 1 wei of SCROLL, underflowing the router's SCROLL balance to 2^256-1, then routed 136,275,915 SCROLL from that fabricated balance into the SCROLL/WETH Uniswap V2 pair and swapped it out for the pair's entire WETH reserve.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -118,22 +115,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x661505c39efe1174da44e0548158db95e8e71ce867d5b7190b9eabc9f314fe91"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-05/SCROLL_exp.sol"
@@ -141,19 +128,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xca4c50dcbdcbcaaaef88c3f90ff74224778f034631e0526da67a0ced215ac41e"
     },
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1716938495/ethereum:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
       "observedAt": 1787705720
@@ -161,13 +141,6 @@
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T01:05:00Z",
       "note": "Reviewed the anchor receipt and full call trace, the token's complete Transfer log history, the deployment receipt, historical runtime bytecode, and a mainnet fork reproduction at block 19971610. The anchor 0x661505c3... is a contract creation at 19971611:4 whose constructor performs the attack; status 1. Its trace calls SCROLL 0xe51d3de9b81916d383ef97855c271250852ec7b7 directly in 13 frames (no DELEGATECALL), so the defect-bearing runtime is the token itself and not the UniversalRouter, the pair, or the router library. Root cause reproduced on a fork of block 19971610: an arbitrary zero-balance EOA calling transfer(randomAddress, 1) reverts with \"Err\", while the same call from the Uniswap UniversalRouter 0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad succeeds and leaves the router's balanceOf at 115792089237316195423570985008687907853269984665640564039457584007913129639935 = 2^256-1, proving the exempt path subtracts the sender's balance with no sufficiency check. In the anchor the attacker uses UniversalRouter.execute(0x24856bc3) with command 0x05 three times: 1 wei to owner 0x72c509b0... (log 37), 136,275,915.391323680414683 SCROLL to the pair 0xa718aa1b3f61c2b90a01ab244597816a7ee69fd2 (log 38), and the residual 2^256-1 minus that amount to the exploit contract (log 43); the pair's Swap (log 41) returns 76.360109345510532175 WETH. Anchor minimality: scanning every Transfer log of the token from its deployment block 19956149 to the present shows this transaction is the first with a value above the 1e27 total supply, i.e. the first underflow; the six later underflow transactions come from five different senders after the pair was drained and take 0.0406 WETH in total. Code history: the token was created by top-level CREATE in 0xca4c50dc... at 19956149:7 by 0x72c509b05a44c4bb53373efc2e76fb75fa8108a6, an address distinct from the exploit sender 0x55db954f0121e09ec838a20c216eabf35ca32cdd; keccak of the runtime is 0x4d5a9119af62ea7854842f78b3951fed458c5945aeb8319a588a091a5f2543c3 at both block 19956149 and block 19971610, the contract is not a proxy and emitted no upgrade events, so lastCodeChange is the deployment and the code was 186,684 s (2.16 days) old."
@@ -175,10 +148,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "legacy migration note retained for provenance: onchain review: SCROLL 'Scroll Network' 0xe51D3dE9b81916D383eF97855C271250852eC7B7 created 2024-05-26T19:30:11Z by 0x72c509b05a44c4bb53373efc2e76fb75fa8108a6, not the attack-tx sender 0x55db954f0121e09ec838a20c216eabf35ca32cdd; no EIP-1967 events, unverified source, so age runs from deployment (2.16 days). Verified at block 19971610 that UniversalRouter 0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD held 0 SCROLL and the WETH pair held 1.363e23, confirming the router's balance was created by the exploit's first TRANSFER rather than pre-existing. The legacy 292,583 USD figure rounded the drain to 76 ETH; this review replaces it with the exact 76.360109345510532175 WETH depletion."
     }
   ],

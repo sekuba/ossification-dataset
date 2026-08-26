@@ -19,10 +19,7 @@
       "0x5384b34c74024d6563b323351a4bbfa18432161b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "JUDAO's sell transfer hook (sync mining + isBurnPair reserve burns) credited excess JUDAO to the pair, which the attacker then swapped out for USDT."
-  },
+  "summary": "JUDAO's sell transfer hook (sync mining + isBurnPair reserve burns) credited excess JUDAO to the pair, which the attacker then swapped out for USDT.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x956e38b8ddb40ba080c8042c685ae52ee5c1b096f1d7f0c4a6c59be3eb4265bd"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-04/JUDAO_exp.sol"

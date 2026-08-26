@@ -19,10 +19,7 @@
       "0x506eebd8d6061202a8e8fc600bb3d5d41f475ee1"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "swapXSDForETH() sends ETH with TransferHelper.safeTransferETH() before it updates the pool's accounting, letting the attacker re-enter burnpoolXSD() from the receive hook and drain the pool."
-  },
+  "summary": "swapXSDForETH() sends ETH with TransferHelper.safeTransferETH() before it updates the pool's accounting, letting the attacker re-enter burnpoolXSD() from the receive hook and drain the pool.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xbdf76f22c41fe212f07e24ca7266d436ef4517dc1395077fabf8125ebe304442"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/CertiKAlert/status/1706765042916450781"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-09/XSDWETHpool_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0xfadda925e10d07430f5d7461689fd90d3d81bb48 created 2023-06-24T13:03:45Z by 0x03e33bab8414bdb433e883785f91ede95f0f4dfe, which is not the attack-tx sender 0x506eebd8d6061202a8e8fc600bb3d5d41f475ee1; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 56.9 BNB x $211.832899/BNB at the incident timestamp 1695753432 (DefiLlama coingecko:binancecoin) = $12,053."
     }
   ],

@@ -19,10 +19,7 @@
       "0xa8c83b1b30291a3a1a118058b5445cc83041cd9d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Replica proxy: a beacon upgrade + re-initialization on 2022-06-21T18:39:29Z set committedRoot to 0x00, making every unproven message 'proven'. Nomad's UpgradeBeaconProxy emits no EIP-1967 Upgraded event; the change is the Upgrade(address) event on the hard-coded UpgradeBeacon."
-  },
+  "summary": "Replica proxy: a beacon upgrade + re-initialization on 2022-06-21T18:39:29Z set committedRoot to 0x00, making every unproven message 'proven'. Nomad's UpgradeBeaconProxy emits no EIP-1967 Upgraded event; the change is the Upgrade(address) event on the hard-coded UpgradeBeacon.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -125,34 +122,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xa5fe9d044e4f3e5aa5bc4c0709333cd2190cba0f4e7f16bcf73f49f83e4a5460"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "url": "https://medium.com/nomad-xyz-blog/nomad-bridge-hack-root-cause-analysis-875ad2e5aacd"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T14:00:30Z",
       "note": "Reviewed the exploit receipt and call trace, proxy and implementation creation receipts, runtime bytecode at historical anchors, the complete Upgrade(address) log history of the immutable beacon through the incident, and Nomad's root-cause report. The exploit calls process(bytes) on Replica 0x5d94309e5a0090b165fa4181519701637b6daeba, which delegates to implementation 0xb92336759618f55bd0f8313bd843604592e27bd8. The proxy runtime embeds beacon 0x0876dfe4acae0e1c0a43302716483f5752298b71; exactly two Upgrade events precede the incident, and the final one is log 55 in transaction 0x7bccd6...56b1 selecting that implementation. Its pre-incident runtime hash is 0x66029d...0c49. The selected exploit receipt transfers 10,000,000,000 WBTC base units, exactly 100 WBTC, from BridgeRouter 0x88a69b4e698a4b090df6cf5bd7b2d47325ad30a3 to the transaction sender."
@@ -160,40 +140,24 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x7bccd64f4c4d5f6f545c2edf904857e6ddb460532fc0ac7eb5ac175cd21e56b1"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x99662dacfb4b963479b159fc43c2b4d048562104fe154a4d0c2519ada72e50bf"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xaf05a8c0b2d8c9e795329ab6e05044d016ee9a355d6eb49b082ce0789363f715"
     },
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1659389551/ethereum:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
       "observedAt": 1787580030
@@ -201,17 +165,11 @@
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://github.com/nomad-xyz/hack-data"
     },
     {
       "id": "source-9",
       "type": "post-mortem",
-      "supports": [
-        "loss"
-      ],
       "url": "https://cloud.google.com/blog/topics/threat-intelligence/dissecting-nomad-bridge-hack"
     }
   ],

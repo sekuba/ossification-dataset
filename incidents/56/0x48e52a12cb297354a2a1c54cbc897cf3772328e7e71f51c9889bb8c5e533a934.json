@@ -19,10 +19,7 @@
       "0x286e09932b8d096cba3423d12965042736b8f850"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "An upgrade pushed hours before the incident made burn(address,uint256) callable by anyone, so the attacker burned nearly all SFM held by the SafeMoon/WBNB PancakeSwap pair, sync()'d the pool to the inflated SFM price and sold its own SFM back into the drained reserve."
-  },
+  "summary": "An upgrade pushed hours before the incident made burn(address,uint256) callable by anyone, so the attacker burned nearly all SFM held by the SafeMoon/WBNB PancakeSwap pair, sync()'d the pool to the inflated SFM price and sold its own SFM back into the drained reserve.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -117,32 +114,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.zellic.io/blog/safemoon-exploit-explained/"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-03/safeMoon_exp.sol"
@@ -150,13 +132,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T19:32:00Z",
       "note": "Reviewed the successful BNB Chain exploit receipt and call trace, proxy creation trace, all pre-incident Upgraded logs, EIP-1967 implementation state, implementation creation trace and runtime, victim-pair reserves, technical analyses, and the commit-pinned reproduction. The attack contract directly calls burn(address,uint256) on SFM proxy 0x42981d0bfbaf196529376ee702f2a9eb9092fcb5, which delegates to 0xeb11a0a0bef1ac028b8c2d4cd64138dd5938ca7a. The proxy was created by SafeMoon deployer 0x678ee23173dce625a90ed651e91ca5138149f590 in block 13160203. The final pre-incident upgrade is log 217 of transaction 0x71273e731752457892f73d2ad8b89060bd4f0bf131ed403d5dfc149319c1c01d in block 26857448 and selects the traced implementation; its EIP-1967 slot is unchanged immediately before the exploit. That implementation was directly deployed by the same SafeMoon deployer in block 26857407, and its 24,563-byte runtime hash is 0x5552c0f1e8b7e2d9f4f00c84f0de535190e11031b4a85da8dad14e39411edc4d before the exploit. The vulnerable upgrade permitted any caller to burn another address's SFM, letting the attacker burn the pair balance, synchronize the manipulated reserves, and drain WBNB. The victim pair's WBNB reserve fell exactly from 27,457.888285296037562844 WBNB before the incident to 0.105232206489495217 WBNB afterward, a gross decrease of 27,457.783053089548067627 WBNB."
@@ -164,39 +139,23 @@
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.certik.com/blog/post-mortem-safemoon"
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x3084cd77bfe3b92fe461a786a9f55fb91e419aae0a335360f04517c5aa382e41"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x71273e731752457892f73d2ad8b89060bd4f0bf131ed403d5dfc149319c1c01d"
     },
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x1cf1d586a9438b3fa328cb51c8e84fcd008ffa91c3881ac1589a98e85cc4b591"
     }

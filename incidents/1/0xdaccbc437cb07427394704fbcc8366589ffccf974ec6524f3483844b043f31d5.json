@@ -19,10 +19,7 @@
       "0x38f887a0fe01b9e4960d5c727519408fa7f32f70"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "V3Utils executed a caller-supplied swap target and calldata without validating it, so the attacker made the helper call transferFrom on tokens and pull balances from users who had approved it."
-  },
+  "summary": "V3Utils executed a caller-supplied swap target and calldata without validating it, so the attacker made the helper call transferFrom on tokens and pull balances from users who had approved it.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,19 +91,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xdaccbc437cb07427394704fbcc8366589ffccf974ec6524f3483844b043f31d5"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-02/RevertFinance_exp.sol"
@@ -114,28 +104,16 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://mirror.xyz/revertfinance.eth/3sdpQ3v9vEKiOjaHXUi3TdEfhleAXXlAEWeODrRHJtU"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: V3Utils 0x531110418d8591C92e9cBBFC722Db8FFb604FAFD creation resolved over RPC to 2023-02-03T18:41:11Z (block 16550113) by 0x8df57e3d9ddde355dce1adb19ebce93419ffa0fb, unrelated to the attack sender; no EIP-1967 events, age from deployment (14.4 days). lossUsd is the stablecoin leg observed in this transaction's receipt (19,305.58 + 500 USDC + 4,106.32 USDT, USD-pegged at 1:1); the attacker ran several such txs against different approvals, so the incident total is larger."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x4db1d0406e9500abe6c28e0b68704ddf55b97c4e5747d527719d1b76f31ae321"
     }

@@ -19,10 +19,7 @@
       "0x8d3d13cac607b7297ff61a5e1e71072758af4d01"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Meter's ChainBridge fork added a wrapped-native path to ERC20Handler.deposit(bytes32,uint8,uint64,address,bytes) that skips the token movement entirely for the configured wtoken: `// ether case, the weth already in handler, do nothing` guards `if (tokenAddress != _wtokenAddress) { burnERC20 | lockERC20 }`. That assumption only holds for Bridge.depositETH, which requires `amount == msg.value - fee` and wraps the value itself. Bridge.deposit stayed callable for the same resourceID and requires only `msg.value == fee`, so any caller could write a DepositRecord and emit Deposit for an arbitrary WBNB amount without transferring anything, and the relayer set released or minted that amount on the destination chain."
-  },
+  "summary": "Meter's ChainBridge fork added a wrapped-native path to ERC20Handler.deposit(bytes32,uint8,uint64,address,bytes) that skips the token movement entirely for the configured wtoken: `// ether case, the weth already in handler, do nothing` guards `if (tokenAddress != _wtokenAddress) { burnERC20 | lockERC20 }`. That assumption only holds for Bridge.depositETH, which requires `amount == msg.value - fee` and wraps the value itself. Bridge.deposit stayed callable for the same resourceID and requires only `msg.value == fee`, so any caller could write a DepositRecord and emit Deposit for an arbitrary WBNB amount without transferring anything, and the relayer set released or minted that amount on the destination chain.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -144,30 +141,18 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x63f37aff7e40b85b0a6b3fd414389f6011cc09b276dc8e13b6afa19061f7ed8e"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xf70b4aa715c0a04079c56cd9036cc63cdb6101e400520a8f2c019ad2ced5358e"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0xc7eb98e00d21ec2025fd97b8a84af141325531c0b54aacc37633514f2fd8ffdc",
@@ -177,9 +162,6 @@
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1644070960/bsc:0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
       "observedAt": 1787687969
@@ -187,9 +169,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1644074718/coingecko:ethereum",
       "observedAt": 1787687969
@@ -197,32 +176,17 @@
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://rekt.news/meter-rekt"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x3b9b52026a374f5c3e115df18e88c120efba7503c25f42a0837046b429dba52d"
     },
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T20:33:40Z",
       "note": "Chain established from the attacker's own transactions: EOA 0x8d3d13cac607b7297ff61a5e1e71072758af4d01 made four Bridge.deposit calls on BSC Bridge 0xfd55ebc7bbde603a048648c6eab8775c997c1001, each paying only the 0.008 BNB fee. The first, 0xc4d7e160c7652f2db22681aa2777c5b37937bf30375c5b2c6b2bd172ae984950 at 14990769:105, used the MTRG resource and correctly burned 136.0992633577453 MTRG, so it does not execute the defect. The anchor 0x63f37aff7e40b85b0a6b3fd414389f6011cc09b276dc8e13b6afa19061f7ed8e at 14992190:112, timestamp 1644070960, status 1, is the first deposit using the WBNB resource 0x0000000000000000000000bb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c01 with a calldata amount of 3632795971816270126503; its callTracer shows Bridge -> ERC20Handler 0x5945241bbb68b4454bb67bd2b069e74c09ac3d51 with no inner token call at all, against the MTRG deposit whose trace contains a burnFrom. Read the Etherscan-verified ERC20Handler source: the wrapped-native branch is `if (tokenAddress != _wtokenAddress) { ... }` with the comment `ether case, the weth already in handler, do nothing`, and Bridge.deposit only requires `msg.value == fee` while Bridge.depositETH requires `amount == msg.value - fee` and performs the wrap itself. Boundary test: with _wtokenAddress set to any real wrapped-native token the function is wrong for every caller and every amount, and the only configuration that makes it safe is disabling the feature, so this is an executable-code defect and not a parameter. Code history: Etherscan getcontractcreation puts the handler at 7848927:96 in 0x3b9b52026a374f5c3e115df18e88c120efba7503c25f42a0837046b429dba52d from 0xbb245d5c1d504dd5295b12b90963fd26b06bc743, timestamp 1622345639; eth_getCode at block 7848927 and at block 14992189 both hash to 0x051166e9379a6663dc05e5fd97aec94411bd05cb1aeea836046d12df2b02efa3 and the contract is not a proxy, so codeAgeSeconds = 1644070960 - 1622345639 = 21725321 (251.4 d). Loss reconstructed from receipts: internal transfer of 3632795971816270126503 wei native BNB from the handler to the attacker in 0xf70b4aa715c0a04079c56cd9036cc63cdb6101e400520a8f2c019ad2ced5358e at block 14992203; two further BSC deposits of 15000 WBNB each to Passport chain 5 followed by two 15000 BNB.bsc mints from the zero address on Moonriver at blocks 1442439 and 1442487, and six SushiSwap sales on Moonriver returning 272376308003477609054 + 7538526063981057562 + 15283568631316749045 + 14960274174613810125 + 23299408459100801796 + 4723343881998057574 = 338181429214488085156 wei of ETH, of which 338.181 was bridged out. Passport chain ids read from the contracts: BSC Bridge _chainID() = 4, Ethereum Bridge 0xa2a22b46b8df38cd7c55e6bf32ea5a32637cf2b1 _chainID() = 1."

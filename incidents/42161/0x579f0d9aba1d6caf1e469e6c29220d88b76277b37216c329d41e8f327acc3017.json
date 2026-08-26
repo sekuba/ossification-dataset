@@ -19,10 +19,7 @@
       "0x6eb3731b52c8556073baa13d9e35d5a6713fc8ab"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "A clandestine UUPS upgrade path installed attacker-controlled K-token implementations without reliable Upgraded events, culminating in an off-books balance write used to mint and monetize unbacked K."
-  },
+  "summary": "A clandestine UUPS upgrade path installed attacker-controlled K-token implementations without reliable Upgraded events, culminating in an off-books balance write used to mint and monetize unbacked K.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -140,42 +137,22 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 42161,
       "transactionHash": "0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/mamori-finance/%EF%B8%8F-post-mortem-k-proxy-hack-our-path-forward-c2c3809882c6"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://rekt.news/just-bad-luck"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:30:55Z",
       "note": "Reviewed the exploit receipt and trace, K-token balances and totalSupply across the exploit block, the proxy deployment, every Upgraded event, implementation-slot values across the full deployment-to-exploit interval, both silent upgrade transactions, and downstream loss reconstruction. The exploit enters K proxy 0x010700ab046dd8e92b0e3587842080df36364ed3 and delegates to 0xe343c368c483da30a84d845eb3d2a209fbf6a683, writing 999999999999999983222784 K directly into 0x6eb3731b52c8556073baa13d9e35d5a6713fc8ab's balance without a Transfer event or totalSupply change. The implementation slot moved through 0x7382bcbd6b361e218e1c1c3180201c2da6f3d210 and 0x95fa23bb5e88ebc4a5fcf1210ccc526938e7dc58 despite misleading or absent events. Its final pre-incident write is transaction 0x77e667de79f6987cf4bfc152aa32dbfceb640fc94dc93d26e48de5c25b5be69a at block 324296892, from 0x95fa23bb5e88ebc4a5fcf1210ccc526938e7dc58 to the recorded artifact. The loss reconstruction separates 790,148 USDC forwarded from unpaid Morpho borrowing and approximately 282.84 ETH of pool proceeds, excluding ETH obtained by swapping that same USDC."
@@ -183,19 +160,12 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0x77e667de79f6987cf4bfc152aa32dbfceb640fc94dc93d26e48de5c25b5be69a"
     },
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "CoinGecko",
       "url": "https://pro-api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=1752049991&to=1752139991",
       "observedAt": 1787574655
@@ -203,10 +173,6 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0x35d5fc347c0ae0bd2cee08b2007455e118e89f297cc1faf8f5caf53808e3737a"
     }

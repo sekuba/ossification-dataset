@@ -19,10 +19,7 @@
       "0x4645863205b47a0a3344684489e8c446a437d66c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Transfers to the zero address trigger the token's _MakeDonation path, which debits the sender's balance a second time; repeatedly sending iVest to the PancakeSwap pair and calling skim/sync shrank the pair's token reserve and let the attacker swap the reserve out for WBNB."
-  },
+  "summary": "Transfers to the zero address trigger the token's _MakeDonation path, which debits the sender's balance a second time; repeatedly sending iVest to the PancakeSwap pair and calling skim/sync shrank the pair's token reserve and let the attacker swap the reserve out for WBNB.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x12f27e81e54684146ec50973ea94881c535887c2e2f30911b3402a55d67d121d"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://www.tradingview.com/news/cointelegraph:62f377c83094b:0-weird-null-address-ivest-hack-millions-of-pcs-still-vulnerable-to-sinkclose-malware-crypto-sec/"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-08/IvestDao_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: iVest token 0x786fcf76... created by 0x3421d514fcd2cf1303bc13d88bcb3e75e8032642 on 2024-06-15, no upgrade events; attack sender 0x46458632... unrelated to the creator; loss uses the $156k QuillAudits figure"
     }
   ],

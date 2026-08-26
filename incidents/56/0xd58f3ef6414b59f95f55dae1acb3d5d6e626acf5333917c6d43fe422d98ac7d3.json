@@ -19,10 +19,7 @@
       "0x17f9132e66a78b93195b4b186702ad18fdcd6e3d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LAXO token's transfer/liquidity mechanics let the attacker collapse the busd_pair LAXO reserve and swap out inflated USDT, a flaw in the token's pair-balance handling."
-  },
+  "summary": "LAXO token's transfer/liquidity mechanics let the attacker collapse the busd_pair LAXO reserve and swap out inflated USDT, a flaw in the token's pair-balance handling.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xd58f3ef6414b59f95f55dae1acb3d5d6e626acf5333917c6d43fe422d98ac7d3"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-02/LAXO_Token_exp.sol"

@@ -20,10 +20,7 @@
       "0x2fa6fe6b5c8e372fabfc6eb8fa8118cb8ffc3f60"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Univ3CollateralToken stored deposited Uni V3 positions under the vault minter and balanceOf(vault) valued that minter-wide list. One position deposited for vault 40 therefore supplied borrowing power to every vault owned by the same minter."
-  },
+  "summary": "Univ3CollateralToken stored deposited Uni V3 positions under the vault minter and balanceOf(vault) valued that minter-wide list. One position deposited for vault 40 therefore supplied borrowing power to every vault owned by the same minter.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -141,22 +138,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 10,
       "transactionHash": "0x18e34ce214211afedb6008c0cd00d476ce71222643521dbff5e2b65cdb2ccb80"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-03/Univ3CollateralToken_exp.sol"
@@ -164,23 +151,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 10,
       "transactionHash": "0xaadaddb9db7425944088586fd4bcefa1f1f08bd73c78d074b7df38d48ed2dbff"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:59:16Z",
       "note": "Reviewed the exploit receipt and call trace, proxy and implementation creation receipts, exploit-time bytecode, verified implementation source, complete Upgraded-event history, final EIP-1967 slot, and the commit-pinned reproduction. Calls execute at proxy 0x7131ff92a3604966d7d96ccc9d596f7e9435195c and delegate to 0x833a17fa29bc2772e4302823b7d39edd7c4bb79a. The trace contains the attack deposit plus 112 delegated balanceOf calls. deposit() indexes the NFT under vault.minter(), while balanceOf(vault) values every NFT indexed to that vault's minter; the same position is consequently counted for each same-minter vault. The proxy emitted exactly one Upgraded event from creation through the incident, selecting 0x833a...b79a, and its EIP-1967 slot still selected that artifact immediately before the exploit. Receipt transfers establish 44,218.394393 USDC plus 7,019.930123 USDC.e lost from the reserves."
@@ -188,10 +164,6 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 10,
       "transactionHash": "0xe2821820301c1e17debb4e259a59117f942f65bd881d683d8039ffb1bf94aa13"
     }

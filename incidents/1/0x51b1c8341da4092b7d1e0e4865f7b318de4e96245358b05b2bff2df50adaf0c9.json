@@ -19,10 +19,7 @@
       "0xbda71b58cec0b1c20a8f87ccd52fa0679747855c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "NotarizationSerializer used the last Verus proof-root entry when duplicate system IDs were present, while Verus consensus kept the first. Two signed notarizations therefore installed and confirmed an attacker-chosen root that authorized a later unbacked import."
-  },
+  "summary": "NotarizationSerializer used the last Verus proof-root entry when duplicate system IDs were present, while Verus consensus kept the first. Two signed notarizations therefore installed and confirmed an attacker-chosen root that authorized a later unbacked import.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -265,54 +262,29 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x51b1c8341da4092b7d1e0e4865f7b318de4e96245358b05b2bff2df50adaf0c9"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x8f21bd8f0fce72ac959caa93a9923d85f902dfc6eddac2785ac5bc49c3b28d8f"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.certik.com/blog/verus-incident-analysis"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T19:22:57Z",
       "note": "Reviewed both Ethereum setLatestData transactions, their receipts, full call traces and state diffs; the later drain receipt and trace; the Delegator creation; all five pre-incident upgrade calls; the exact contracts[9] storage transition; the selected NotarizationSerializer creation and historical runtime; CertiK's cross-chain reconstruction; and incident-time prices. Both notarization calls delegate from 0x71518580f36feceffe0721f06ba4703218cd7f63 through VerusNotarizer 0x9ce91aa0f6d1d316a9535a36951143bc141318b8 into NotarizationSerializer 0x95b8005c4d9fe80f0aee5b7adce53766080600fb selector 0x24f2cf86. The first call installs the poisoned candidate; the anchored second call confirms it and is therefore the failure-finalizing execution. The serializer loop overwrites stateRoot for every matching system ID, unlike Verus's first-entry map semantics. contracts[9], at keccak256(slot 13)+9, changed from 0x0a8c5a442b5f1aa7933e4db401ed1824a3423932 to the selected artifact in transaction 0xb29f45f3c788cc635fe746754dfe79b00f36758cbd9f418e69866e72c08e192d and remained unchanged through the anchor. The artifact was created at block 25501813 in transaction 0xbb17d79661c5458cab5aea108c71645530a1e3889d6787387e63348d33fefef4:3; its 11,750-byte runtime hashes to 0x7af074381469f2eeb4d02cfbd6bfdf966b26d6d3cc220a9c79b6c47515dfb711. The payout transaction moves exactly 1,137.45281584 ETH, 71.5045915 tBTC, 220,357.02707298 DAI, 59.42954384 MKR, 149,275.074098 USDC, 78,300.537681 USDT, 31,475.664323 EURC and 92,784.36027725 scrvUSD to the attacker's receiver."
@@ -320,38 +292,24 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xb29f45f3c788cc635fe746754dfe79b00f36758cbd9f418e69866e72c08e192d"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x7bd34b417fd69a0df81dffb4b29c318ce1d3a337ef86a794f6a7e3b10692a428"
     },
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xbb17d79661c5458cab5aea108c71645530a1e3889d6787387e63348d33fefef4"
     },
     {
       "id": "source-9",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1784778107/coingecko:ethereum,ethereum:0x18084fba666a33d37592fa2633fd49a74dd93a88,ethereum:0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2,ethereum:0x0655977feb2f289a4ab78af67bab0d17aab84367",
       "observedAt": 1787599377

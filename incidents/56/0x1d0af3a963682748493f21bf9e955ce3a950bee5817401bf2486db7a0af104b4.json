@@ -19,10 +19,7 @@
       "0xc9fbcf3eb24385491f73bbf691b13a6f8be7c339"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BurnsBuild.burnToHolder() credits the caller with rewards proportional to a burn it does not otherwise account for, so a flash-loan-funded burn/receiveRewards cycle drained the reward pool."
-  },
+  "summary": "BurnsBuild.burnToHolder() credits the caller with rewards proportional to a burn it does not otherwise account for, so a flash-loan-funded burn/receiveRewards cycle drained the reward pool.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x1d0af3a963682748493f21bf9e955ce3a950bee5817401bf2486db7a0af104b4"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/pennysplayer/status/1754342573815238946"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-02/BurnsDefi_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x4fb9657Ac5d311dD54B37A75cFB873b127Eb21FD created 2024-02-04T18:46:42Z by 0xf59fc943f22e976bc74b29fffe1fc711dfab5600, which is not the attack-tx sender 0xc9fbcf3eb24385491f73bbf691b13a6f8be7c339; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

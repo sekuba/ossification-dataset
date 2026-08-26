@@ -22,10 +22,7 @@
       "0x9838d25126514981c1fbe2ac1b8b13ebe6781a47"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The direct Unibot router's externally callable function 0xb2bd16ab accepted an unvalidated external target and calldata without binding the token owner to the caller or an authorized Unibot operator. It therefore made attacker-selected transferFrom calls as the approved router, allowing the original exploiter to pull tokens from wallets that had approved it."
-  },
+  "summary": "The direct Unibot router's externally callable function 0xb2bd16ab accepted an unvalidated external target and calldata without binding the token owner to the caller or an authorized Unibot operator. It therefore made attacker-selected transferFrom calls as the approved router, allowing the original exploiter to pull tokens from wallets that had approved it.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -127,30 +124,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x9c0503217d453905bf30f16317c1ed93292d7494dfe3765aa972d7bdea108a00"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://revoke.cash/exploits/unibot"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-10/UniBot_exp.sol"
@@ -158,28 +142,17 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xca799f946e2de6fd45085b9d680d14188e3532c0c9672cc01e6e1b127715724b"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.certik.com/blog/maestro-and-unibot"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1698727235/coingecko:ethereum",
       "observedAt": 1787654940
@@ -187,13 +160,6 @@
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:49:00Z",
       "note": "Reviewed the original exploiter's complete Ethereum account history, all 22 successful drain-transaction receipts and call traces, the immediately preceding helper deployment trace, router creation transaction and receipt, historical runtime bytecode, EIP-1967 slots, pinned reproduction, technical reports, official project response, all subsequent sale transactions, and the 18 Tornado deposits. Helper deployment 0x86f0f4...fedf makes no router call. Transaction 0x9c0503...8a00 is the next transaction and the earliest successful one that executes the defect: its helper calls router 0x126c9fbab3a2fca24edfd17322e71a5e36e91865 17 times through selector 0xb2bd16ab, and the router makes 17 successful transferFrom calls. Across the full campaign, traces and receipts contain 299 successful pulls from 254 unique victim addresses across 22 token contracts; the last is 0x3efea1...9fc0 at block 18468232:28. The direct router was created at block 18450358:92 by 0x40800a492a04ae99c7fa6a0c2b52e3beb6675a0d, has no code in the preceding block, has unchanged runtime hash 0x16524eee2f99bba009889f1a947067c967bc360f1c321d16b2a070d71525521c through the pre-anchor block, and performs no DELEGATECALL in the exploit trace. After selling the stolen tokens, the exploiter deposited exactly 355.5 ETH into Tornado Cash in 18 transactions; this matches CertiK's independent proceeds figure."
@@ -201,37 +167,24 @@
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x3efea1eeb8394ff3158a8e40a2ef96b9ca43e3ca31fd1b9ae94e126e338b9fc0"
     },
     {
       "id": "source-9",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x30508db6cffcfd6572b7d3aa6f081567bf33e829b4304df1900261754622e308"
     },
     {
       "id": "source-10",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x0ff9f986a41a7c35f9c9986612435e0bf615da0214467fa8385a4ef1e58f08ab"
     },
     {
       "id": "source-11",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://x.com/TeamUnibot/status/1719239188514844735"
     }
   ],

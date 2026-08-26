@@ -19,10 +19,7 @@
       "0xd4e11065267421f88c0cf7a7791d84d8fdd7d42b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "FlyLong exposes tokenMarketing() and tradingTake() to any low-BNB-balance caller, letting the attacker forge the pair's FlyLong balance inside a Pancake flash-swap callback and satisfy the pair's K check without repaying."
-  },
+  "summary": "FlyLong exposes tokenMarketing() and tradingTake() to any low-BNB-balance caller, letting the attacker forge the pair's FlyLong balance inside a Pancake flash-swap callback and satisfy the pair's K check without repaying.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x45f6a7df540933b3d2b1a275fcbfc146bbd48934ffb6635c4839d8590a9efc88"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://t.me/defimon_alerts/968"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-04/flylong_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x9cA66a67dC3d77bEb59DC11cAf96677843797c08 created 2023-11-28T19:17:34Z by 0x09dd0143103203110b69e2b07ef4f7bc8be6be5b, which is not the attack-tx sender 0xd4e11065267421f88c0cf7a7791d84d8fdd7d42b; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). 1.73 BNB x $606.17/BNB at the incident timestamp 1745886459 (DefiLlama coingecko:binancecoin) = $1,049."
     }
   ],

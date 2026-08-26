@@ -21,10 +21,7 @@
       "0x837962b686fd5a407fb4e5f92e8be86a230484bd"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Exchange.depositAsset() carries no reentrancy guard and credits the caller with the exchange's own token balance delta, while swapThroughOrionPool() settles a caller-supplied token path by crediting the balance delta of the path's output token. The attacker put a fake ERC-20 in the middle of the path whose transfer hook re-entered depositAsset() with flash-loaned USDT, so the same 2.84M USDT was credited twice and withdrawn once."
-  },
+  "summary": "Exchange.depositAsset() carries no reentrancy guard and credits the caller with the exchange's own token balance delta, while swapThroughOrionPool() settles a caller-supplied token path by crediting the balance delta of the path's output token. The attacker put a fake ERC-20 in the middle of the path whose transfer hook re-entered depositAsset() with flash-loaned USDT, so the same 2.84M USDT was credited twice and withdrawn once.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -123,30 +120,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xa6f63fcb6bec8818864d96a5b1bb19e8bd85ee37b2cc916412e720988440b2aa"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://www.numencyber.com/analysis-of-orionprotocol-reentrancy-attack-with-poc/"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-02/Orion_exp.sol"
@@ -154,29 +138,18 @@
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x8823319d0fbb5b3139587924896972fe113f1fa7f35d9a8df78bb1fe1c4c119b"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xe27672754583fdc23107d7e67425a88fb23afb8f7d7a2ac653bac03b12e833ef"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1675353395/coingecko:tether",
       "observedAt": 1787642149
@@ -184,13 +157,6 @@
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:20:00Z",
       "note": "Anchor confirmed, not moved. The attacker EOA 0x837962b686fd5a407fb4e5f92e8be86a230484bd sent 20 Ethereum transactions; all 16 that precede 0xa6f63fcb44 are setup (funding, 1inch swaps, deployment of the fake ATK token 0x64acd987a8603eeaf1ee8e87addd512908599aec, two OrionPool pair creations, liquidity seeding, and deployment of the exploit contract 0x5061f7e6dfc1a867d945d0ec39ea2a33f772380a at block 16542121), and the two that follow are ETH transfers to 0x3dabf5e36df28f6064a7c5638d0c4e01539e35f1. 0xa6f63fcb44 is therefore the only and earliest defect-executing transaction on Ethereum. Its trace: depositAsset(USDC, 0.5) opens an in-contract position, a Uniswap V2 WETH/USDT flash swap hands the exploit contract 2,844,766.426325 USDT, and from uniswapV2Call the contract calls swapThroughOrionPool(10000, 0, [USDC, ATK, USDT], true) on the proxy 0xb5599f568d3f3e6113b286d010d2bca40a7745aa. Every exchange entry point in the trace delegatecalls implementation 0x98a877bb507f19eb43130b688f522a13885cf604 (ExchangeWithAtomic, solc 0.7.4), which further delegatecalls the linked library LibPool 0x79f774095a33071f6172ab0832ed20adb44df992; LibPool.doSwapThroughOrionPool routes through OrionPool router 0x420a50a62b17c18b36c64478784536ba980feac8, whose transfer of the fake ATK token re-enters exchange.depositAsset(USDT, 2844766426326). Exchange.depositAsset is declared external with no nonReentrant modifier while swapThroughOrionPool is nonReentrant only against itself, so the deposit credits the flash-loaned USDT once and LibPool.creditUserAssets credits the same balance delta again on return, leaving a withdrawable balance of 5,689,532.852749 USDT. Code history: the proxy was created at block 11400442 tx 0x8823319d0f index 148 by the Orion deployer 0x33459acd9ca8493c0e0163eac92a928e293b2218 and emitted exactly 11 Upgraded events before the exploit, at blocks 11483871, 12363116, 12630313, 13206002, 13676213, 14092716, 14114464, 14338319, 15389561, 16082147 and 16177733. The last, log 234 of tx 0xe276727545 at index 112, carries 0x98a877bb507f19eb43130b688f522a13885cf604 in topic 1; the EIP-1967 slot 0x360894...bbc reads that address at block 16542147 and the artifact's runtime hash there is 0x800b51026025b1ceba8629d0c96c3a9e4b39af704d742db0cee6a6d877137746, so the exploited code is 4,395,252 s (50 d 21 h) old. Loss is the exchange's exact net USDT movement in the exploit receipt, 2,844,766.426324, valued at par; the parallel BSC leg is a separate chain with no record and is excluded."

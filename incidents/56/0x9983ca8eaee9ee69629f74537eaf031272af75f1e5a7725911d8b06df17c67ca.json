@@ -19,10 +19,7 @@
       "0xff61ba33ed51322bb716eab4137adf985644b94d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "VUN's internal _swap(address,bytes) was left public, so any caller could make the vault execute an arbitrary 1inch unoswapTo call and route the vault's ALP_APO holdings to itself before redeeming them."
-  },
+  "summary": "VUN's internal _swap(address,bytes) was left public, so any caller could make the vault execute an arbitrary 1inch unoswapTo call and route the vault's ALP_APO holdings to itself before redeeming them.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://app.blocksec.com/explorer/tx/bsc/0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-03/ALP_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xD188492217F09D18f2B0ecE3F8948015981e961a created 2023-12-19T03:01:30Z by 0x78000b0605e81ea9df54b33f72ebc61b5f5c8077, which is not the attack-tx sender 0xff61ba33ed51322bb716eab4137adf985644b94d; 1 EIP-1967 Upgraded events on the victim before the incident; code age measured from last of 1 upgrade events (onchain)."
     }
   ],

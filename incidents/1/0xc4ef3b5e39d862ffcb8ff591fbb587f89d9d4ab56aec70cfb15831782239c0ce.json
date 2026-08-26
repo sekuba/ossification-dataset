@@ -19,10 +19,7 @@
       "0x5d4430d14ae1d11526ddac1c1ef01da3b1dae455"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "AaveBoost.proxyDeposit(token, onBehalfOf, amount) is permissionless and, when called with amount 0, deposits a fixed slice of the helper contract's own AAVE holdings into the Aave pool crediting the caller-supplied beneficiary, so 163 repeated calls transferred the contract's AAVE balance into aAAVE owned by the attacker, who then withdrew it."
-  },
+  "summary": "AaveBoost.proxyDeposit(token, onBehalfOf, amount) is permissionless and, when called with amount 0, deposits a fixed slice of the helper contract's own AAVE holdings into the Aave pool crediting the caller-supplied beneficiary, so 163 repeated calls transferred the contract's AAVE balance into aAAVE owned by the attacker, who then withdrew it.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,27 +91,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xc4ef3b5e39d862ffcb8ff591fbb587f89d9d4ab56aec70cfb15831782239c0ce"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/CertiKAlert/status/1933011428157563188"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2025-06/AAVEBoost_exp.sol"
@@ -122,20 +109,11 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: AaveBoost 0xd2933c86216dC0c938FfAFEca3C8a2D6e633e2cA created 2022-02-15T10:49:38Z by 0xcb7d8a80c3d7d3ebd7fbd0fa6b644c8a536c9269, not the attack-tx sender 0x5d4430d14ae1d11526ddac1c1ef01da3b1dae455; no EIP-1967 events, 1212.6 days old. Reported loss 14.8k USD in AAVE."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xeb38c6a1c475909f806ca3d0fe2c3b39152f8cc207ae969f027b3bea698cf985"
     }

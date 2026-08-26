@@ -20,10 +20,7 @@
       "0xe2307837524db8961c4541f943598654240bd62f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "SavingsModule.deposit(address,address[],uint256[]) accepts any token address the caller names: it never checks the token against the pool's registered token set, and its amount normalisation falls through to an identity case for tokens it does not know. It then calls that token's transferFrom while the caller's pool-token balance is still unadjusted, with no reentrancy guard. An attacker-controlled ERC20 could therefore reenter deposit() from inside its own transferFrom and deposit real DAI in the inner frame, so the outer frame credited the fake token's nominal amount on top of the real deposit and minted roughly twice the pool tokens the DAI justified; withdrawing them returned real DAI for value that was never delivered."
-  },
+  "summary": "SavingsModule.deposit(address,address[],uint256[]) accepts any token address the caller names: it never checks the token against the pool's registered token set, and its amount normalisation falls through to an identity case for tokens it does not know. It then calls that token's transferFrom while the caller's pool-token balance is still unadjusted, with no reentrancy guard. An attacker-controlled ERC20 could therefore reenter deposit() from inside its own transferFrom and deposit real DAI in the inner frame, so the outer frame credited the fake token's nominal amount on top of the real deposit and minted roughly twice the pool tokens the DAI justified; withdrawing them returned real DAI for value that was never delivered.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -125,41 +122,24 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xddf8c15880a20efa0f3964207d345ff71fbb9400032b5d33b9346876bd131dc2"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x1c2cf30aba46c2706b69fa88337525de9a79c422060b4288c0a5d99060d06f88"
     },
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x5f13d7e36c95f4bb0adfc4fea81d7c311a20461e08700cef9b61ad04cd0e0a2f"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x270836213a621d9f43159439065ddeb54cb9a69fec07fbb63d7f22edd9be5103",
@@ -184,30 +164,16 @@
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://peckshield.medium.com/akropolis-incident-root-cause-analysis-c11ee59e05d4"
     },
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://github.com/ethereumvex/Akropolis-delphi-exploit"
     },
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T20:33:40Z",
       "note": "Anchor: attacker EOA 0x9f26ae5cd245bfeeb5926d61497550f79d9c6c1c deploys 0xe2307837524db8961c4541f943598654240bd62f at 11242622 and then calls it 26 times. The first two calls, 0x4ec646d40205bb9caf92f86da911350abd764de51e154fce2771ea431020091c (selector 0x0dbe671f) and 0xd143af3180c4e0ca060394bfb0e5ea3070246aed98e25dd1681a6a1c76b683d0 (0x4df7e3d0), are ordinary 2 DAI deposits: I walked both callTracer traces and neither contains a call from the SavingsModule proxy back into the attacker contract, so neither exercises the fake-token path. The next call 0x924017c6770ced6242f50ee779213ecdb384c6edb874a52e1eaa08fc68d59489 reverts. 0xddf8c15880a20efa0f3964207d345ff71fbb9400032b5d33b9346876bd131dc2 at 11242635:3, timestamp 1605181841, status 1, is therefore the earliest successful defect-executing transaction: it borrows 800000 DAI from dYdX SoloMargin, calls SavingsModule.deposit (selector 0x562fa0df) on proxy 0x73fc3038b4cd8ffd07482b92a52ea806505e5748, and inside that call the proxy invokes transferFrom (0x23b872dd) on the attacker contract itself, which reenters deposit. Seventeen such transactions succeed. Target: the proxy DELEGATECALLs 0x1cec0e358f882733c5ecc028d8a0c24baee02004 in the anchor trace; its runtime hashes to 0xb37008e439675a541038c37ebe3f68d00eef1a7d50dc82165fad0a7458c7a3b4 at both the upgrade block 11124829 and block 11242634. Code history: a complete eth_getLogs sweep of the proxy over blocks 10000000-11242635 returns 7588 logs of which exactly six carry the Upgraded topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b; the last, at 11124829:139 log 167 in transaction 0x5f13d7e36c95f4bb0adfc4fea81d7c311a20461e08700cef9b61ad04cd0e0a2f, timestamp 1603618921, has topic1 0x0000000000000000000000001cec0e358f882733c5ecc028d8a0c24baee02004. codeAgeSeconds = 1605181841 - 1603618921 = 1562920 (18.09 d), aged from the implementation change rather than the 2020-08-12 proxy deployment. Loss: netted every DAI Transfer log involving the attacker contract over blocks 11242620-11242700, giving 1276753.689692559845800164 DAI net out of the sUSD pool and 764051.328033013301747370 DAI net out of the yCurve pool, 2040805.017725573147547534 DAI in total, against 2030850.530534188306235972 DAI finally swept to the attacker EOA."

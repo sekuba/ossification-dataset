@@ -20,10 +20,7 @@
       "0xea8f89f47f3d4293897b4fe8cb69b5c233b9f560"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LeetSwapV2Pair exposed its fee-transfer helper publicly without caller, token, or amount authorization. An unprivileged caller could move a pair's counterpart-token balance into its fees contract, synchronize the depleted reserve, and drain WETH through the resulting reserve distortion."
-  },
+  "summary": "LeetSwapV2Pair exposed its fee-transfer helper publicly without caller, token, or amount authorization. An unprivileged caller could move a pair's counterpart-token balance into its fees contract, synchronize the depleted reserve, and drain WETH through the resulting reserve distortion.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -120,22 +117,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 8453,
       "transactionHash": "0x5005ac22398b82d22d89f3f4e55ebf62bb2e437b21482c0de581f69b1cdb6a94"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-08/Leetswap_exp.sol"
@@ -143,9 +130,6 @@
     {
       "id": "source-3",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1690853243/coingecko:ethereum",
       "observedAt": 1787656423
@@ -153,13 +137,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:57:08Z",
       "note": "Campaign boundary: calldata enumeration of the original EOA's successful transactions shows 0x5005ac22398b82d22d89f3f4e55ebf62bb2e437b21482c0de581f69b1cdb6a94 is the sole defect-executing drain transaction against pair 0x83cd3371e01db36ea760d2541ab397de39793ad9; other LeetSwap pair deployments are separate records with separate losses and ages. Verified LeetSwapV2Pair source exposes _transferFeesSupportingTaxTokens(address,uint256) as a public function with no caller, token, or amount authorization. The transaction trace calls it for the counterpart-token balance, calls sync(), and then swaps the setup tokens for WETH at the corrupted reserves. Code history: factory 0x169c06b4cfb09bfd73a81e6f2bb1eb514d75bb19 CREATE2-deployed the pair in 0x00d6982ab87ab4e27af83fadb4df4ac4e5afc05cfb859e2b42133a893f7f19c5 at block 1967090:10; archival code is empty in the preceding block and the immutable-bearing direct runtime hashes to 0x0f5ef9c858ac6a18a8ba1bec9eb648a6229cdf205a409108c6ace9e97f6bb85b at creation and before the anchor. Loss: receipt Transfer logs show exactly 11.360785525333188388 WETH leaving this pair for helper 0xea8f89f47f3d4293897b4fe8cb69b5c233b9f560. The counterpart-token transfer goes to the pair's own fees contract and is not valued because its claim allocation/recoverability is not isolated."
@@ -167,10 +144,6 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0x00d6982ab87ab4e27af83fadb4df4ac4e5afc05cfb859e2b42133a893f7f19c5"
     }

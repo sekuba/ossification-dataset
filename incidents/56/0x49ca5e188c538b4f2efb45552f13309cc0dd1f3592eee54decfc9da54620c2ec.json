@@ -19,10 +19,7 @@
       "0x322696471792440499b1979e0a440491e870667a"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Yiedl vault's redeem path forwards caller-supplied 1inch unoswapTo calldata without validating the swap recipient, so the attacker set itself as the destination and drained the vault's USDC, BTCB and BETH."
-  },
+  "summary": "The Yiedl vault's redeem path forwards caller-supplied 1inch unoswapTo calldata without validating the swap recipient, so the attacker set itself as the destination and drained the vault's USDC, BTCB and BETH.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,27 +90,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x49ca5e188c538b4f2efb45552f13309cc0dd1f3592eee54decfc9da54620c2ec"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/Phalcon_xyz/status/1782966566042181957"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/YIEDL_exp.sol"
@@ -121,11 +108,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: victim 0x4eDda16AB4f4cc46b160aBC42763BA63885862a4 created 2024-04-23T07:57:48Z by 0xc0aacf2a87bbdfff6e582762a7c4259ead5aee30, which is not the attack-tx sender 0x322696471792440499b1979e0a440491e870667a; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). Loss measured from the exploit transaction: the vault loses 75,635.14 USDC, 0.5214 BTCB and 8.3338 BETH, roughly USD 135K in total."
     }
   ],

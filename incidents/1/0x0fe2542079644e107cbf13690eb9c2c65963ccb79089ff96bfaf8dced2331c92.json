@@ -21,10 +21,7 @@
       "0xf701426b8126bc60530574cecdcb365d47973284"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Cream's PriceOracleProxy priced every registered Yearn-vault collateral as getYvTokenPrice(token) = underlyingPrice * pricePerShare(), reading the vault's live share price with no bound, time-average or sanity check. A bare yCRV transfer into the yUSD vault doubled pricePerShare in the same transaction, so the oracle reported twice the true value for crYUSD collateral and the Comptroller authorised borrows against collateral that did not exist. The contract's own getLPFairPrice and getCrvTokenPrice branches avoid spot quantities for exactly this reason; no value of the only yVault parameters (isYvToken, version) bounds the multiplier, so the defect is in the executed code rather than in a configured value."
-  },
+  "summary": "Cream's PriceOracleProxy priced every registered Yearn-vault collateral as getYvTokenPrice(token) = underlyingPrice * pricePerShare(), reading the vault's live share price with no bound, time-average or sanity check. A bare yCRV transfer into the yUSD vault doubled pricePerShare in the same transaction, so the oracle reported twice the true value for crYUSD collateral and the Comptroller authorised borrows against collateral that did not exist. The contract's own getLPFairPrice and getCrvTokenPrice branches avoid spot quantities for exactly this reason; no value of the only yVault parameters (isYvToken, version) bounds the multiplier, so the defect is in the executed code rather than in a configured value.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -1383,25 +1380,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x0fe2542079644e107cbf13690eb9c2c65963ccb79089ff96bfaf8dced2331c92"
     },
     {
       "id": "source-2",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T15:00:29Z",
       "note": "Reproduced the anchor receipt and its 3,338-frame callTracer trace: transaction 0x0fe2542079644e107cbf13690eb9c2c65963ccb79089ff96bfaf8dced2331c92 succeeds at block 13499798 index 5, timestamp 1635342850, sent by 0x24354d31bc9d90f62fe5f2454709c32049cf866b to attacker contract 0x961d2b694d9097f35cfffa363ef98823928a330d (created 160 blocks earlier in 0xd253e3b5...; the second helper 0xf701426b8126bc60530574cecdcb365d47973284 is created inside that same creation transaction). It is the earliest successful transaction of the campaign that executes the defective code; the eight later successful borrowAll / withdrawTokens / withdrawAllUnderlying transactions are carried as the loss transaction set and the one reverted borrowAll at block 13499890 is excluded. Boundary test: the deployed contract that turns a manipulable share price into a collateral price is Cream's PriceOracleProxy 0x338eee1f7b89ce6272f302bdc4b952c13b221f1d, reached 164 times in the anchor trace and confirmed as Unitroller 0x3d5bc3c8d13dcb8bf317092d84783c2697ae9258's oracle() at block 13499797. Its verified Solidity 0.5.17 source computes getYvTokenPrice(token) as underlyingPrice * pricePerShare() with no bound, no time-averaging and no sanity check; yvTokens(0x4b5bfd52124784745c1071dcb244c6688d2533d3) reads (true, V2) at block 13499797, so the yUSD leg used the live Yearn v2 pricePerShare. Only two parameters exist for that path - the isYvToken flag and the version enum - and neither bounds the multiplier, so no parameter value makes the function correct; the same contract's getLPFairPrice uses the Alpha Finance fair-LP formula and getCrvTokenPrice uses get_virtual_price precisely because spot quantities are manipulable, which evidences the invariant the yVault branch violates. This is a defect in executed EVM code, not a configuration value. Measured the manipulation directly: yUSD pricePerShare is 1.000996623491813646 at block 13499797 and 2.001993246983627292 at block 13499798, and the oracle's getUnderlyingPrice(crYUSD 0x4baa77013ccd6705ab0522853cb0e9d453579dd4) doubles from 279300989046321 to 558660503801998 wei of ETH across the same boundary. Log index 70 of the anchor receipt is the manipulation: a bare yCRV (0xdf5e0e81dff6faf3a7e52ba697820c5e32d806a8) transfer of 8,431,514.81679698041016119 tokens from the attacker helper straight into the vault after log index 68 burned 449,780,371.451055492855538317 yUSD shares, so the donation equalled the vault's remaining assets and doubled the ratio. Code history: 0x338eee1f7b89ce6272f302bdc4b952c13b221f1d is a plain non-delegating deployment created by top-level CREATE from 0x11df15f0c90524d3644843e1a137095373138f5a in 0x25331fe01bc87ff5e13e3f56c23535b0918341bc5acae557023b294e644f6028 at block 13041315 index 258, timestamp 1629184465; the address is empty at block 13041314 and its 12,444-byte runtime hashes to 0x08c1d3f60de85443343b4c4340761352aab2e922ddc68fe459c96158d94b8c18 both at the deployment block and at block 13499797, and the same hash comes back from the prestateTracer entry for the anchor transaction, so the deployment is the last code change and codeAgeSeconds is 1635342850 - 1629184465 = 6158385 (71.3 days). Loss was reconstructed from receipts, not from reporting: for all 92 markets in the Comptroller's getAllMarkets() at block 13499797 I summed every ERC-20 Transfer in the nine successful campaign transactions where the market is sender or recipient and the token is that market's underlying(), and took native-ETH value flows for crETH 0xd06527d5e56a3495252a528c4987003b712860ee from the call traces. Fifty-seven ERC-20 markets plus crETH are net negative and every outflow recipient is one of the two attacker contracts. Net depletion is 5,105.84555170411376766 ETH plus 57 ERC-20 balances, of which the largest are 12,266.463816009145730493 CRETH2, 623,760.529988486822779519 xSUSHI, 447,222.593590652214743874 PERP and 135,402.944541301517084130 wNXM; the recursive crYUSD leg nets to only 1,424.188372514512394279 yUSD because the attacker borrowed back everything it supplied. Valued at DefiLlama historical prices for timestamp 1635342850 (ETH 4010.4744815924887) this is USD 144,401,589, above the ~130 million commonly reported; six underlyings with no DefiLlama series (yvCurve-stETH, HBTC, vVSP, yvCurve-IronBank, ibBTC, yUSD) are valued instead from Cream's own unmanipulated getUnderlyingPrice at block 13499797 converted with the same ETH price. That protocol-internal basis was cross-checked against DefiLlama on the two tokens where both exist: it gives RUNE 12.2015 against DefiLlama 12.2209 (0.16 per cent) and ibBTC 58,660.5 against DefiLlama 57,700.8 (1.66 per cent). This incident is distinct from the August 2021 crAMP reentrancy already recorded as eip155:1:0xa9a1b8ea288eb9ad315088f17f7c7386b9989c95b4d13c81b69d5ddad7ffe61e."
@@ -1409,28 +1393,17 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x25331fe01bc87ff5e13e3f56c23535b0918341bc5acae557023b294e644f6028"
     },
     {
       "id": "source-4",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/immunefi/hack-analysis-cream-finance-oct-2021-fc222d913fc5"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x5189ac29b4d7ed7c1e78423f679f376ac0a2b32158349db84b01677f0608aac8",
@@ -1446,9 +1419,6 @@
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1635342850/coingecko:ethereum,coingecko:thorchain-erc20,ethereum:0xcbc1065255cbc3ab41a6868c22d1f1c573ab89fd,ethereum:0x8798249c2e607446efb7ad49ec89dd1865ff4272,ethereum:0xbc396689893d065f41bc2c6ecbee5e0085233447,ethereum:0x0d438f3b5175bebc262bf23753c1e53d03432bde,ethereum:0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b,ethereum:0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48,ethereum:0x1f9840a85d5af5bf1d1762f925bdaddc4201f984,ethereum:0x956f47f50a910163d8bf957cf5846d573e7f87ca,ethereum:0xdac17f958d2ee523a2206206994597c13d831ec7,ethereum:0x6810e776880c02933d47db1b9fc05908e5386b96,ethereum:0x50d1c9771902476076ecfc8b2a83ad6b9355a4c9,ethereum:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599,ethereum:0xc581b735a1688071a1746c968e0798d642ede491,ethereum:0x25f8087ead173b73d6e8b84329989a8eea16cf73,ethereum:0x19d97d8fa813ee2f51ad4b4e04ea08baf4dffc28,ethereum:0xeb4c2781e4eba804ce9a9803c67d0893436bb27d,ethereum:0x6b175474e89094c44da98b954eedeac495271d0f,ethereum:0x6b3595068778dd592e39a122f4f5a5cf09c90fe2,ethereum:0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e,ethereum:0x967da4048cd07ab37855c090aaf366e4ce1b9f48,ethereum:0x8207c1ffc5b6804f6024322ccf34f29c3541ae26,ethereum:0xa47c8bf37f92abed4a126bda807a7b7498661acd,ethereum:0x4691937a7508860f876c9c0a2a617e7d9e945d4b,ethereum:0x853d955acef822db058eb8505911ed77f175b99e,ethereum:0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9,ethereum:0x476c5e26a75bd202a9683ffd34359c0cc15be0ff,ethereum:0xd533a949740bb3306d119cc777fa900ba034cd52,ethereum:0xba100000625a3754423978a60c9317c58a424e3d,ethereum:0x4fabb145d64652a948d72533023f6e7a623c7c53,ethereum:0x4e15361fd6b4bb609fa63c81a2be19d873717870,ethereum:0x111111111117dc0aa78b770fa6a738034120c302,ethereum:0x514910771af9ca656af840dff83e8264ecf986ca,ethereum:0x1ceb5cb57c4d4e2b2433641b95dd330a33185a44,ethereum:0x1337def16f9b486faed0293eb623dc8395dfe46a,ethereum:0x9afb950948c2370975fb91a441f36fdc02737cd4,ethereum:0xaaaebe6fe48e54f431b0c390cfaf0b017d09d42d,ethereum:0xa3bed4e1c75d00fa6f4e5e6922db7261b5e9acd2,ethereum:0xa1faa113cbe53436df28ff0aee54275c13b40975,ethereum:0x8ab7404063ec4dbcfd4598215992dc3f8ec853d7,ethereum:0xd26114cd6ee289accf82350c8d8487fedb8a0c07,ethereum:0xc00e94cb662c3520282e6f5717214004a7f26888,ethereum:0xcc4304a31d09258b0029ea7fe63d032f52e44efe,ethereum:0x36f3fd68e7325a35eb768f1aedaae9ea0689d723,ethereum:0x584bc13c7d411c00c01a62e8019472de68768430,ethereum:0x0f5d2fb29fb7d3cfee444a200298f468908cc942,ethereum:0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c,ethereum:0x0391d2021f89dc339f60fff84546ea23e337750f,ethereum:0x1b40183efb4dd766f11bda7a7c3ad8982e998421,ethereum:0x3845badade8e6dff049820680d1f14bd3903a5d0,ethereum:0x429881672b9ae42b8eba0e26cd9c73711b891ca5",
       "observedAt": 1787663821
@@ -1456,9 +1426,6 @@
     {
       "id": "source-7",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2021-10/Cream_2_exp.sol"
@@ -1466,9 +1433,6 @@
     {
       "id": "source-8",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://mudit.blog/cream-hack-analysis/"
     }
   ],

@@ -20,10 +20,7 @@
       "0x90fa57d23b85cdd52c46b85636f44c47926ee2e3"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "CS stores the current sell size in a global sellAmount variable, then lets a later qualifying transfer consume that stale value to burn 80% of it directly from the CS/USDT pair before calling pair.sync(). The attacker repeatedly paired a sale with a self-transfer to contract the CS reserve and drain USDT."
-  },
+  "summary": "CS stores the current sell size in a global sellAmount variable, then lets a later qualifying transfer consume that stale value to burn 80% of it directly from the CS/USDT pair before calling pair.sync(). The attacker repeatedly paired a sale with a self-transfer to contract the CS reserve and drain USDT.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -118,22 +115,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0x906394b2ee093720955a7d55bff1666f6cf6239e46bea8af99d6352b9687baa4"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/CS_exp.sol"
@@ -141,31 +128,17 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/BlockSecTeam/status/1661098394130198528"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x5b67a37abf45b11964ee3ff8bdd96c27f9e14220baac75f83bb424ad50b314b3"
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:21:40Z",
       "note": "The attacker EOA's only successful call into its final helper is transaction 0x906394b2...baa4 at block 28466977 index 32; its six earlier nonce transactions are helper deployments or a self-transfer, and their receipts contain no CS-token or CS/USDT-pair logs. The anchor trace directly enters CS 1,686 times: 595 state-changing CALLs and 1,091 STATICCALLs, with no DELEGATECALL. Verified CS source shows _transfer storing sellAmount on a sell, a later qualifying transfer calling sync(), and sync() burning sellAmount * 800 / 1000 from the pair before pair.sync(); the exploit repeatedly sells 3,000 CS and self-transfers 2 wei to consume the stale global value. The direct CS contract was created by 0x0ea934e6...fb46 in transaction 0x5b67a37a...14b3 at block 28431614 index 76. Its code is empty one block earlier, and the 21,408-byte runtime hash 0x98906396...0bd7 is identical at creation and immediately before the exploit; the EIP-1967 implementation, beacon and admin slots are zero. Code age is 106,214 seconds. Summing all 515 USDT Transfer logs in the exploit receipt by address gives the CS/USDT pair a net -954,285.001826338883421706 USDT, the flash pair +240,000 USDT, the attacker helper zero, and the attacker EOA +714,285.001826338883421706 USDT. The flash leg was 80,000,000 USDT out and 80,240,000 USDT back: 240,000 is the fee, not the loan principal."

@@ -19,10 +19,7 @@
       "0x09039e2082a0a815908e68bd52b86f96573768e8"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The unverified DEXRouter exposes update() and functionCallWithValue() without access control, so the attacker made the router perform an arbitrary external call carrying its entire BNB balance."
-  },
+  "summary": "The unverified DEXRouter exposes update() and functionCallWithValue() without access control, so the attacker made the router perform an arbitrary external call carrying its entire BNB balance.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xf77c5904da98d3d4a6e651d0846d35545ef5ca0b969132ae81a9c63e1efc2113"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/DecurityHQ/status/1707851321909428688"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-09/DEXRouter_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x1f7cf218b46e613d1ba54cac11dc1b5368d94fb7 created 2021-07-15T13:36:57Z by 0xe720988061c9be1e0c3519b12d9a1cc422be1fe8, which is not the attack-tx sender 0x09039e2082a0a815908e68bd52b86f96573768e8; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

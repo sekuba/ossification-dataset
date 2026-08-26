@@ -22,10 +22,7 @@
       "0x48880b3dd87638e5ea75905c3a150e8a3aa6cda9"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Whalebit's staking proxy 0x40465755eb5846d655bbcc8c186a477469f9ce36 runs implementation 0x9153e149b0d90dea634ed9f7df6ff71c2109b654, whose deposit(level) and withdraw(amount) both convert between CES and an internal point balance at a price read from the CES/USDT Algebra pool 0xd3a9331a654444f9fe7ddbaec6678c2dc9113197 at call time, through pricer 0xb5ea1d17f3d8da34a6d6a1d2acc2a148e1411868 and price source 0xa293baf403299d3d5723e8fa3f9f946752aecf9a. The point balance credited on deposit is fixed by the level table, but the CES charged on deposit and the CES paid on withdrawal are each divided by a fresh price, and nothing ties the redemption price to the price the position was opened at: no price is stored with the position, there is no withdrawal delay, no deviation guard between the two legs and no minimum holding period. In the anchor transaction the pricer answers 1.085562 for five deposits of 5979.492113764512759291 CES each crediting 6491.109418002432000001 points, the attacker then swaps 7240.741153581361260699 CES into the Algebra pool, and the same five positions redeem the same 6491.109418002432000001 points for 6002.255702326453957437 CES each at the new price 1.081445. The contract's own nominally averaged source does not help: getAveragePrice(120) and getActualPrice() return the identical word in every read of the trace, before and after each swap, so the redemption rate follows the pool tick inside one transaction. No parameter value makes this correct - the level price, the priced pool and the averaging argument are configuration, but a deposit and a redemption quoted at two independently sampled market prices is extractable under all of them."
-  },
+  "summary": "Whalebit's staking proxy 0x40465755eb5846d655bbcc8c186a477469f9ce36 runs implementation 0x9153e149b0d90dea634ed9f7df6ff71c2109b654, whose deposit(level) and withdraw(amount) both convert between CES and an internal point balance at a price read from the CES/USDT Algebra pool 0xd3a9331a654444f9fe7ddbaec6678c2dc9113197 at call time, through pricer 0xb5ea1d17f3d8da34a6d6a1d2acc2a148e1411868 and price source 0xa293baf403299d3d5723e8fa3f9f946752aecf9a. The point balance credited on deposit is fixed by the level table, but the CES charged on deposit and the CES paid on withdrawal are each divided by a fresh price, and nothing ties the redemption price to the price the position was opened at: no price is stored with the position, there is no withdrawal delay, no deviation guard between the two legs and no minimum holding period. In the anchor transaction the pricer answers 1.085562 for five deposits of 5979.492113764512759291 CES each crediting 6491.109418002432000001 points, the attacker then swaps 7240.741153581361260699 CES into the Algebra pool, and the same five positions redeem the same 6491.109418002432000001 points for 6002.255702326453957437 CES each at the new price 1.081445. The contract's own nominally averaged source does not help: getAveragePrice(120) and getActualPrice() return the identical word in every read of the trace, before and after each swap, so the redemption rate follows the pool tick inside one transaction. No parameter value makes this correct - the level price, the priced pool and the averaging argument are configuration, but a deposit and a redemption quoted at two independently sampled market prices is extractable under all of them.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -133,21 +130,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 137,
       "transactionHash": "0x940ce704f1d21274219746e00b8dcb7d334515d39402358cf34ba40920821431"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 137,
       "transactionHashes": [
         "0x940ce704f1d21274219746e00b8dcb7d334515d39402358cf34ba40920821431",
@@ -308,38 +296,24 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 137,
       "transactionHash": "0x3348ff8792992851f01922ddea78167edb2cc791ef8a5ea27e96e11df0b6908a"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 137,
       "transactionHash": "0xe3ac3598c8ff6d53df9da87c8e0acd2ea1ac38a37757ff6d26f3a866bb87183d"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "code-history"
-      ],
       "chainId": 137,
       "transactionHash": "0x5dbba1a06fa3868998583af6ab699021f1d345103b992d253e92410507d7da04"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1774997749/polygon:0x1Bdf71EDe1a4777dB1EebE7232BcdA20d6FC1610",
       "observedAt": 1787663821
@@ -347,10 +321,6 @@
     {
       "id": "source-7",
       "type": "source-code",
-      "supports": [
-        "root-cause",
-        "target-identity"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-03/WhalebitOracleManipulation_exp.sol"
@@ -358,18 +328,12 @@
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 137,
       "transactionHash": "0x312dec48abb5be2520317366cb8271f770476ece0fa4ee327d7202319b24a2fd"
     },
     {
       "id": "source-9",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 137,
       "transactionHashes": [
         "0x3ded0b52c2c803357bbbb2b5074ce8342012a26b71f0b642a65dd1e045dfe6e0",
@@ -381,13 +345,6 @@
     {
       "id": "source-10",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T00:00:00Z",
       "note": "Boundary test applied to a legacy oracle-manipulation row, and the row re-anchored. Anchor: the legacy exploit transaction 0x5d54fa839821e370b020d13a9b11b6f4f8cadc4eaed0a404ea17ad1bd725dbde is nonce 72 of 0xe66b37de57b65691b9f4ac48de2c2b7be53c5c6f and sits in the middle of the campaign. Listing every transaction to the attack contract 0xb5a8d7a37d60aa662f4dc9b3ef4c32a3fe21fadf gives 153 successful calls of selector 0x2512b5d8 - 110 from 0xe66b37de and 43 from a second EOA 0xc41c52039d7bf7a895b013031a259570a91802e4 - spanning blocks 84938856 to 84938891, seventy seconds, plus 87 reverted attempts. The earliest success is 0x940ce704f1d21274219746e00b8dcb7d334515d39402358cf34ba40920821431 at block 84938856 index 165, status 1, timestamp 1774997749, and it executes the defect in full, so the record is re-anchored to it. Root cause reproduced in that anchor trace: proxy 0x40465755 delegatecalls 0x9153e149; deposit(12) reads getPriceForLevel(12) from the verified level table (constant storage, 6426.8410079232e18 original / 5784.15690713088e18 final), reads pricer getPrice() and getActualPrice() which both return 0x0f10b0e32fa9a000 = 1.085562, pulls 5979.492113764512759291 CES and credits 6491.109418002432000001 points (Deposit event); the attacker then calls Algebra pool 0xd3a9331a swap(zeroToOne=true, 7240.741153581361260699 CES); withdraw(6491109418002432000001) then reads getPrice() and getActualPrice(), both now 0x0f02107f6d1f5000 = 1.081445, and pays out 6002.255702326453957437 CES (Withdraw event) - 22.76 CES more than went in, repeated five helpers by three rounds per transaction and 153 transactions, with the margin widening as the price fell. The averaging is cosmetic: in every read of both traces getAveragePrice(120) and getActualPrice() return the identical word, and the underlying AlgebraBasePluginV1.getSingleTimepoint(0)/(300) pair yields an average tick exactly 1024 above the live globalState tick, so the window contributes nothing and the redemption rate is the instantaneous pool price. There is no parameter value at which quoting the deposit and the redemption from two independent market samples is correct, so the boundary test fails and the row is admitted, consistent with the treatment of Polter Finance and Rodeo. Code history: the proxy was created by 0x0142a01d48964619a33200f40133adf346ed095a in 0x3348ff87... at block 69852042 index 74; eth_getLogs over the Upgraded topic for the whole life of the proxy returns four events, the last pre-exploit one selecting 0x9153e149 at block 76904623 index 62 log 398 (1758847783); the EIP-1967 slot holds 0xfd28a6e4 at 76904622 and 0x9153e149 at 84938855; the implementation runtime hash is 0x42b0e9fb7741fa038dbf6c64f2167c84c9136502f2364afb0c7514caa35bea2a at its own deployment block 76904619, at the activation block and at the pre-exploit block. codeAgeSeconds = 1774997749 - 1758847783 = 16149966 (186.92 days); the legacy row computed 16149998 from the old mid-campaign anchor. Loss: the pricer's CES reserve fell from 3860529.112155042786446303 to 3764.900981724002319963 across the campaign, an exact 3856764.211173318784126340 CES; Transfer-log netting over blocks 84938856-84938891 accounts for every wei of it. The attacker's cash-out address liquidated 3480230.179742374772846706 CES for 824209.751493127488882569 USD of DAI, USDC and USDT through helper 0x63242a4e in 43 tranches finishing at 1775001435, an average 0.2368262180733517 USD per CES, which is the valuation applied here because the CES/USDT pool held only 506592.192894 USDT and the spot mark of 1.0794181571885721 was unrealisable. The reported 824000 USD is exactly that realised figure."

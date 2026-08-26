@@ -24,10 +24,7 @@
       "0xea09ea354009818776d41f8e2a9dcdfc9c4e7beb"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The exchange implementation's position accounting behind changePosition(int256,int256,int256) fabricated collateral. Two helper accounts first opened longs of 0.1 and 0.324678582642240534 WETH, exactly cancelling the exchange's -0.424678582642240534 WETH net asset, a third added 0.001 WETH and a fourth opened a 68 WETH short. The first helper's stored long then read back as 324,518,553,658,423,603,970,963,131,354,509 asset units, which is 2^108 minus 3.12e18 - the unsigned image of a small negative asset - with the mirror-image negative written onto the exchange's own pool position. A follow-up changePosition whose deltaAsset was zero settled against that fabricated position and paid the exchange's entire 894,992.852305 USDC.e balance to the attacker. No parameter value makes a position balance wrap, so the defect is in the deployed implementation, not in configuration."
-  },
+  "summary": "The exchange implementation's position accounting behind changePosition(int256,int256,int256) fabricated collateral. Two helper accounts first opened longs of 0.1 and 0.324678582642240534 WETH, exactly cancelling the exchange's -0.424678582642240534 WETH net asset, a third added 0.001 WETH and a fourth opened a 68 WETH short. The first helper's stored long then read back as 324,518,553,658,423,603,970,963,131,354,509 asset units, which is 2^108 minus 3.12e18 - the unsigned image of a small negative asset - with the mirror-image negative written onto the exchange's own pool position. A follow-up changePosition whose deltaAsset was zero settled against that fabricated position and paid the exchange's entire 894,992.852305 USDC.e balance to the attacker. No parameter value makes a position balance wrap, so the defect is in the deployed implementation, not in configuration.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -146,21 +143,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 42161,
       "transactionHash": "0xe1e6aa5332deaf0fa0a3584113c17bedc906148730cbbc73efae16306121687b"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2026-01/futureswap_exp.sol"
@@ -168,19 +156,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0xf4299d1225d46bc8981a74842d851726ac48eeadf6fc8631ec829b0c27453f3c"
     },
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1768033835/arbitrum:0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
       "observedAt": 1787702900
@@ -188,13 +169,6 @@
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:40:00Z",
       "note": "Full re-review of the migrated Futureswap row. Anchor confirmed and left in place: attacker EOA 0xbf6ec059f519b668a309e1b6ecb9a8ea62832d95 has nonce 0 on this transaction, its Arbiscan transaction list shows no earlier activity, and eth_getTransactionByHash/eth_getTransactionReceipt put it at block 419829771 index 3, timestamp 1768033835, status 0x1, with to=null (the whole exploit runs in the constructor of 0x21eda2e3ad975fde9c81769e15ed8e1532eb08a4). Root cause re-written: the snapshot row claimed a fee value forwarded to FeeManager.addFee() was read as basis points. I decoded every addFee(address,uint256) call in the callTracer trace and the values are ordinary USDC.e trade fees (154462, 501676, 1545, 99438237, 0), roughly 0.05 percent of notional at the 3089.24 USDC oracle price recorded in the same events, so that story is not what the chain shows. What the chain shows: the receipt's first victim event (logIndex 4) records the exchange's net asset as -424678582642240534 before any trade; helper contracts 0xf1b426708d6ecf02274a789bbc10a94a1b5a6635 and 0x8c6be2e20306dd1ec40a7e76f40310943953ba7f then call changePosition(int256,int256,int256) (selector 0xa442c8be) with deltaAsset 100000000000000000 and 324678582642240534, which sum exactly to that magnitude and drive the net to zero; 0xea09ea354009818776d41f8e2a9dcdfc9c4e7beb adds 1000000000000000; and 0x348df930e825da25552d8b3dc44e871c67846cb5 opens a -68000000000000000000 short. The first helper's position event at logIndex 15 records totalAsset 100000000000000000; its next event at logIndex 51, for a changePosition whose deltaAsset is 0, records startAsset and totalAsset of 324518553658423603970963131354509. That is 2^108 minus 3122812192889221747, i.e. the unsigned reading of a small negative asset, and prestateTracer diffMode confirms it in storage: slot 0x3dd8c9da0140a9765763eaa8eff59c44a703e70233d78179e99c13dcffce6301 goes from zero to 0x00000fffffffffffd4a98adb1e944d8d in both 128-bit halves while the exchange's own pool slot 0x869e0f71bb9d8ea19ec8511dea8cdd7221fc96f4f09f6704715b26b81e1bc2ed goes from 0xb80bc906ef1a396a to the mirror-image 0xfffff000000000002b5a02a386323273. The exchange settled the zero-deltaAsset withdrawal against that fabricated position and paid out 894992852305 USDC.e. Target: executionAddress is the exchange proxy 0xf7ca7384cc6619866749955065f17bedd3ed80bc, which DELEGATECALLs 0x010659727ad7716c239e206acd3ebee0fdc9e207 on every one of those calls in the trace; its EIP-1967 implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc reads that same implementation at block 419829770. Code history: I scanned eth_getLogs for topic 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b on the proxy from block 1 to the exploit block and found exactly three Upgraded events - block 2191102 (0x9bbc2890239bd144dd6f6f0b65cda56c597fb88b), block 3474055 (0xf3141e7d7b069e38c539342394c0279bfa03df36) and block 3928151 index 1 logIndex 1 in transaction 0xf4299d1225d46bc8981a74842d851726ac48eeadf6fc8631ec829b0c27453f3c, timestamp 1639789717, selecting 0x010659727ad7716c239e206acd3ebee0fdc9e207 in topic1 - and no later one, so codeAgeSeconds = 1768033835 - 1639789717 = 128244118 (1484.3 days). The implementation runtime is 49334 hex characters and keccaks to 0x0c1816fc2f6b0dd845aa0f78a863c59ab4295806bdc4222ab81e5ad0c6b1394e at its creation block 3883880, at the upgrade block 3928151, at block 419829770, and in the anchor transaction's prestateTracer entry. Deployment: Etherscan's getcontractcreation names transaction 0x6f44f5b337ac7d8c63c745fd4f3c75fedc1aa3dfb4a8fa4e4a8f45519ee04247, but that transaction is at index 3 and only touches the ArbRetryableTx precompile, while the proxy's code first appears in block 2191102 and the proxy already emits Upgraded at index 2 logIndex 10 of transaction 0x9b6ddc770ac66bae358452c1e0d1f512b26f601fc735461ef9ee50963ed03a9f; that transaction is the real creation. Its CREATE parent cannot be traced (this is pre-Nitro Arbitrum Classic; debug_traceTransaction returns an empty array and arbtrace_transaction reports 'found no trace' on every endpoint available here), so I derived it instead: keccak(rlp([0xa8e324540873dfdb5905dca1c9d074643a168dc6, 8])) yields exactly 0xf7ca7384cc6619866749955065f17bedd3ed80bc, which matches the contractFactory Etherscan reports and the deployer that emits at logIndex 19 of the same transaction. The creator is therefore the ExchangeDeployer, not the sender 0x5ed35ea85fad2f578685a4d8e404c12164ea516c the snapshot row recorded. Loss: exchange proxy balances measured by eth_call balanceOf at blocks 419829770 and 419829771 fall from 197436.748947 to 0 USDC.e and from 99.85267275162134 to 32.278351334263576 WETH, so gross victim depletion is 197436.748947 USDC.e and 67.574321417357764 WETH, already net of the 500000 USDC.e the attacker deposited through the four position openings. The attacker EOA's own USDC.e balance rises from 0 to 394742.852305 in the same block, which is that depletion minus the 250 USDC.e Aave premium and plus the proceeds of the WETH the exchange sold into Uniswap V3 pool 0xc31e54c7a869b9fcbecc14363cf510d1c41fa443 during the trade."
@@ -202,10 +176,6 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 42161,
       "transactionHash": "0x9b6ddc770ac66bae358452c1e0d1f512b26f601fc735461ef9ee50963ed03a9f"
     }

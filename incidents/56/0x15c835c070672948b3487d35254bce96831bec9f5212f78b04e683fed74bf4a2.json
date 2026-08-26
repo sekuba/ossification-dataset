@@ -19,10 +19,7 @@
       "0xe1582248c593df4b367e131922438fec9d76e787"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "cliamRewred's recoverSigner never rejected ecrecover's address(0) return, and admin was set to zero, so a (r=0,s=0,v=27) signature passed verify() and drained the MON balance."
-  },
+  "summary": "cliamRewred's recoverSigner never rejected ecrecover's address(0) return, and admin was set to zero, so a (r=0,s=0,v=27) signature passed verify() and drained the MON balance.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x15c835c070672948b3487d35254bce96831bec9f5212f78b04e683fed74bf4a2"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-05/LegendaryMoneyMonNft_exp.sol"

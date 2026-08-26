@@ -19,10 +19,7 @@
       "0x3f9bd963641e969fc0c9ddf1c67e210e84915b7d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "After blockhash(betBlock+2) expired, settlement fell back to keccak256(prevrandao,betId,timestamp), predictable randomness the attacker could evaluate before settling a winning bet."
-  },
+  "summary": "After blockhash(betBlock+2) expired, settlement fell back to keccak256(prevrandao,betId,timestamp), predictable randomness the attacker could evaluate before settling a winning bet.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -88,19 +85,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xb74a572967ce997afa5920811e6a9dc8b82a6e41ee31fa4d1a24a85aec89e342"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-03/ATMBlindBox_exp.sol"

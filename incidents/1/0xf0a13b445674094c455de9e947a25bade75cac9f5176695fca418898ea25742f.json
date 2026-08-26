@@ -19,10 +19,7 @@
       "0x7021c1b142eb634fa0749cda270c7aff74dc3b7f"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The DEPUSDT vault proxy exposed an approval/authorisation entry point with no access control, so the attacker granted itself an allowance over the vault's USDT and transferred the deposits out."
-  },
+  "summary": "The DEPUSDT vault proxy exposed an approval/authorisation entry point with no access control, so the attacker granted itself an allowance over the vault's USDT and transferred the deposits out.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -118,22 +115,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xf0a13b445674094c455de9e947a25bade75cac9f5176695fca418898ea25742f"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-06/DEPUSDT_LEVUSDC_exp.sol"
@@ -141,21 +128,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/numencyber/status/1669278694744150016"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T11:42:26Z",
       "note": "Reviewed the exploit receipt and call trace, proxy creation and constructor log, pre-exploit implementation slot and runtimes, a complete Upgraded-event query, and the commit-pinned reproduction. The attacker calls unrestricted approveToken through DEPUSDT proxy 0x7b190a928aa76eece5cb3e0f6b3bdb24fcdd9b4f, delegated to implementation 0x94290106d2a32bc89be9f1c3a3f3394f64578aa6, then transfers 69,961.509697 USDT from the proxy. The constructor emitted the only Upgraded event through the exploit, selecting that implementation at log 262."
@@ -163,10 +140,6 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x527c2cda04772fa7d156739c85d07ae25bf0665d68bea98a88e8d67f807c99ae"
     }

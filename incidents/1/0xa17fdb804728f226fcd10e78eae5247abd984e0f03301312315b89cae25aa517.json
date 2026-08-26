@@ -20,10 +20,7 @@
       "0xc793113f1548b97e37c409f39244ee44241bf2b3"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "ClaimCampaigns did not validate claimLockup.tokenLocker, allowing an attacker-controlled locker to receive a token allowance that remained spendable after campaign cancellation."
-  },
+  "summary": "ClaimCampaigns did not validate claimLockup.tokenLocker, allowing an attacker-controlled locker to receive a token allowance that remained spendable after campaign cancellation.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -96,21 +93,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0xa17fdb804728f226fcd10e78eae5247abd984e0f03301312315b89cae25aa517"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-04/HedgeyFinance_exp.sol"
@@ -118,50 +106,28 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x2606d459a50ca4920722a111745c2eeced1d8a01ff25ee762e22d5d4b1595739"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x49716bc8be54164fde7964d1284cd2a69058f39dc22b5dfd1bb3e515bcfbeb22"
     },
     {
       "id": "source-5",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://medium.com/hedgey/hedgey-exploit-post-mortem-784e9860fd8d"
     },
     {
       "id": "source-6",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://www.halborn.com/blog/post/explained-the-hedgey-finance-hack-april-2024"
     },
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T15:00:00Z",
       "note": "Re-anchored the incident from the later transferFrom to the defect-executing transaction. Receipt and call-trace review confirms that 0xa17fdb804728f226fcd10e78eae5247abd984e0f03301312315b89cae25aa517 succeeds at block 19687887 index 23 and calls ClaimCampaigns.createLockedCampaign and cancelCampaign through attack contract 0xc793113f1548b97e37c409f39244ee44241bf2b3. Its USDC logs show the campaign flow creates an allowance from ClaimCampaigns to that attack contract. Transaction 0x2606d459a50ca4920722a111745c2eeced1d8a01ff25ee762e22d5d4b1595739 then transfers 1,303,910.12 USDC from ClaimCampaigns to attacker 0xded2b1a426e1b7d415a40bcad44e98f47181dda2. The direct ClaimCampaigns contract was top-level-created by 0x5a4bc2bda1f6b9929b6efdcef4728246bec4c635 in the recorded deployment transaction; its 7,555-byte runtime hashes to 0x725bc4ce48b9a71a4fd491b1f7bdcf29c772d92f8ee7a5cd6c3264f570f70db4 both at deployment and immediately before the incident. The project post-mortem reports approximately $45 million notional value taken across Ethereum and Arbitrum; Halborn reports $44.7 million and a $2.1 million/$42.6 million chain split."

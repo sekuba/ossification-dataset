@@ -19,10 +19,7 @@
       "0xc468d9a3a5557bff457586438c130e3afbec2ff9"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MetaDragon's _transfer branch `if (to == address(this) || to == erc721) { transform(value); }` lets any caller mint by transferring to the token itself, which the attacker used to print and dump MetaDragon."
-  },
+  "summary": "MetaDragon's _transfer branch `if (to == address(this) || to == erc721) { transform(value); }` lets any caller mint by transferring to the token itself, which the attacker used to print and dump MetaDragon.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x3ad998a01ad1f1bbe6dba6a08e658c1749dabfa4a07da20ded3c73bcd6970d20"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/Phalcon_xyz/status/1795746828064854497"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-05/MetaDragon_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xEF1f39d8391cdDcaee62b8b383cB992F46a6ce4f created 2024-05-03T06:22:10Z by 0x27851617ac8fd50a8328a16f864912905c4cb4fb, which is not the attack-tx sender 0xc468d9a3a5557bff457586438c130e3afbec2ff9; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

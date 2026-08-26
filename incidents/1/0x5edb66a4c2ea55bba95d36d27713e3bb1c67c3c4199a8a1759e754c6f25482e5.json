@@ -20,10 +20,7 @@
       "0x81fe3d7d35dfefa15b9e6800b6aefc3358e7b156"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "GiddyVaultV3.compound() authenticates the caller with an EIP-712 signature whose digest binds only keccak256 of each SwapInfo.data field, leaving the accompanying fromToken, toToken, amount and aggregator addresses outside the signed scope. The attacker replayed a signature the operator had already produced, substituted its own token and aggregator parameters, and had the vault route the strategies’ balances out through an aggregator it controlled."
-  },
+  "summary": "GiddyVaultV3.compound() authenticates the caller with an EIP-712 signature whose digest binds only keccak256 of each SwapInfo.data field, leaving the accompanying fromToken, toToken, amount and aggregator addresses outside the signed scope. The attacker replayed a signature the operator had already produced, substituted its own token and aggregator parameters, and had the vault route the strategies\u2019 balances out through an aggregator it controlled.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -158,21 +155,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 1,
       "transactionHash": "0x5edb66a4c2ea55bba95d36d27713e3bb1c67c3c4199a8a1759e754c6f25482e5"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2026-04/giddyvaultv3_compound_auth_exp.sol"
@@ -180,9 +168,6 @@
     {
       "id": "source-3",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 1,
       "transactionHashes": [
         "0x06fae7531e279885d63e9f88860e71d2feb69515637f44dc42146dbafb252e8a",
@@ -197,9 +182,6 @@
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1776945467/ethereum:0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf,ethereum:0x2260fac5e5542a773aa44fbcfedf7c193bc2c599,ethereum:0x18084fba666a33d37592fa2633fd49a74dd93a88",
       "observedAt": 1787645696
@@ -207,26 +189,15 @@
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xdd4c062770002783962b8ad80bcefaac670568bfb2162cf1bfae80284cf1f3f8"
     },
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T12:30:00Z",
-      "note": "The anchor is the attacker’s exploit-contract creation whose constructor calls GiddyVaultV3.compound() at 0x5f0ad32c00641d1d2bb628ff341e0d4bb4494318 with an operator signature and three SwapInfo entries naming aggregator 0x7326a1ab0d696ae317958d136d6e4c693ea34528 and attacker-chosen tokens; it is the earliest transaction the attacker EOA sent against Giddy. The vault is not upgradeable: identical runtime code hash at the deployment block 24923987 and at block 24942491 with a zero EIP-1967 slot, so the exploited code is 2.58 days old, deployed by 0x16bcac66daa7c866192512a0eb157bb0486e3183, which is not an attacker address. The loss is traced end to end: the three g-share balances credited in the anchor are redeemed one for one into yb-tBTC, yb-cbBTC and yb-WBTC and then unwrapped into 3.435705122670142444 tBTC, 6.70925926 cbBTC and 6.04749743 WBTC, which is what the components record."
+      "note": "The anchor is the attacker\u2019s exploit-contract creation whose constructor calls GiddyVaultV3.compound() at 0x5f0ad32c00641d1d2bb628ff341e0d4bb4494318 with an operator signature and three SwapInfo entries naming aggregator 0x7326a1ab0d696ae317958d136d6e4c693ea34528 and attacker-chosen tokens; it is the earliest transaction the attacker EOA sent against Giddy. The vault is not upgradeable: identical runtime code hash at the deployment block 24923987 and at block 24942491 with a zero EIP-1967 slot, so the exploited code is 2.58 days old, deployed by 0x16bcac66daa7c866192512a0eb157bb0486e3183, which is not an attacker address. The loss is traced end to end: the three g-share balances credited in the anchor are redeemed one for one into yb-tBTC, yb-cbBTC and yb-WBTC and then unwrapped into 3.435705122670142444 tBTC, 6.70925926 cbBTC and 6.04749743 WBTC, which is what the components record."
     }
   ],
   "verification": {

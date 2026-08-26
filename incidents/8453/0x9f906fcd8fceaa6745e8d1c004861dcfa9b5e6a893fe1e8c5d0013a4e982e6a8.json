@@ -19,10 +19,7 @@
       "0x2419432344b0b892e592b2601b98eae702ba360e"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "CCTPTokenMessenger credited an attested generic Circle message from its untrusted body without verifying a USDC mint or recipient, enabling a phantom deposit to pass the Router's solvency check."
-  },
+  "summary": "CCTPTokenMessenger credited an attested generic Circle message from its untrusted body without verifying a USDC mint or recipient, enabling a phantom deposit to pass the Router's solvency check.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -89,19 +86,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0x9f906fcd8fceaa6745e8d1c004861dcfa9b5e6a893fe1e8c5d0013a4e982e6a8"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "48c978bb245f8b624a28903267ce0ae887f15504",
       "path": "src/test/2026-08/AllbridgeCCTP_exp.sol"
@@ -109,9 +99,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity"
-      ],
       "note": "onchain review: victim creator 0xfa00c78931f236949d1b52e60d9dbe762a632641 via 0x1685d88033341bdcc3afc1b9790b76654a0c5abfe61e545a06e3d17430bc5261; not attacker"
     }
   ],

@@ -20,10 +20,7 @@
       "0x9e0259437804c7bf175421a451bc80611a0b93c3"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "CheesePriceOracle.fetchLPAnchorPrice() values a Uniswap V2 LP token as `wETH.balanceOf(pair) * 2 * ethPrice / pair.totalSupply()`, a single-block spot read of the pair's WETH balance. Every non-LP asset in the same contract is priced through fetchAnchorPrice(), which reads Uniswap's cumulative-price accumulator over a TWAP window; the LP branch has no accumulator, no window and no sanity band. refresh() is permissionless, so an attacker could swap 20,000 ETH into the CHEESE/WETH pair, call refresh in the same transaction to write the inflated LP price into `prices`, and then borrow against LP collateral through the Comptroller's ordinary borrow() checks."
-  },
+  "summary": "CheesePriceOracle.fetchLPAnchorPrice() values a Uniswap V2 LP token as `wETH.balanceOf(pair) * 2 * ethPrice / pair.totalSupply()`, a single-block spot read of the pair's WETH balance. Every non-LP asset in the same contract is priced through fetchAnchorPrice(), which reads Uniswap's cumulative-price accumulator over a TWAP window; the LP branch has no accumulator, no window and no sanity band. refresh() is permissionless, so an attacker could swap 20,000 ETH into the CHEESE/WETH pair, call refresh in the same transaction to write the inflated LP price into `prices`, and then borrow against LP collateral through the Comptroller's ordinary borrow() checks.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -160,44 +157,23 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0x600a869aa3a259158310a233b815ff67ca41eab8961a49918c2031297a02f1cc"
     },
     {
       "id": "source-2",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0xe43a7dba24b95680f60c1ab82531705b86b63f38f8c7d5596dabcd84ab35c286"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://peckshield.medium.com/cheese-bank-incident-root-cause-analysis-d076bf87a1e7"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T20:33:40Z",
       "note": "Anchor: EOA 0x882d72aaae187f54e85c7a0cb19dfec5316cd9aa has exactly three mainnet transactions; the first deploys the attack contract 0x9e0259437804c7bf175421a451bc80611a0b93c3 at block 11205639 and the second, 0x600a869aa3a259158310a233b815ff67ca41eab8961a49918c2031297a02f1cc at 11205648:106, timestamp 1604690541, status 1, is the whole campaign in one transaction, so it is both the earliest and the only defect-executing success. Root cause read from the Etherscan-verified CheesePriceOracle source at 0x833e440332caa07597a5116fbb6163f0e15f743d: fetchLPAnchorPrice computes `wEthBalance = wETH.balanceOf(config.uniswapMarket); pairBalance = wEthBalance * 2; totalValue = pairBalance * ethPrice; anchorPrice = totalValue / pair.totalSupply()`, whereas fetchAnchorPrice for every non-LP asset goes through pokeWindowValues and Uniswap's price accumulator. Boundary test applied explicitly: the manipulable quantity is the pair's live WETH balance, which is read inside the same transaction as the borrow, so no value of any TokenConfig field, anchor period, collateral factor or reporter set makes the LP branch correct; the only configuration that avoids the loss is not listing an LP market at all. The defect is therefore executable code and not a parameter. The oracle is called 13 times in the anchor trace, once by CALL (refresh) and twelve times by STATICCALL from the Unitroller/Comptroller path 0xde2289695220531dfcf481fe3554d1c9c3156ba3 -> 0x3c7274679ff9d090889ed8131218bdc871020391. Code history: Etherscan getcontractcreation puts the oracle at 11061144:63 in 0xe43a7dba24b95680f60c1ab82531705b86b63f38f8c7d5596dabcd84ab35c286 created by 0xf3a40b251d5b0b0eb2908b10bbf5dd7e717f897e, timestamp 1602775046; eth_getCode at block 11061144 and at block 11205647 both hash to 0xa648fc87e532b50bfa445cb5ac06ee5d0a7a41f68abaec48c48d4a6d98edc500, the contract exposes no upgrade path, so codeAgeSeconds = 1604690541 - 1602775046 = 1915495 (22.17 d). Loss taken from the receipt's ERC20 Transfer logs out of the three borrow markets, totalling 3393834.917744785145669360 dollars of par-valued stablecoins."

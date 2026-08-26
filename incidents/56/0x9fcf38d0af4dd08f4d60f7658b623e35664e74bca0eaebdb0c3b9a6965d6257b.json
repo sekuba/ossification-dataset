@@ -19,10 +19,7 @@
       "0x418038cd60d7ad3006075411765c34048907e7e7"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "SquidSwap's public swapTokens()/sellSwappedTokens() sell the contract's own SQUID holdings through PancakeSwap with no minimum-output check, so the attacker skewed the pool inside a PancakeV3 flash loan and sandwiched the contract's swap."
-  },
+  "summary": "SquidSwap's public swapTokens()/sellSwappedTokens() sell the contract's own SQUID holdings through PancakeSwap with no minimum-output check, so the attacker skewed the pool inside a PancakeV3 flash loan and sandwiched the contract's swap.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x9fcf38d0af4dd08f4d60f7658b623e35664e74bca0eaebdb0c3b9a6965d6257b"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://app.blocksec.com/explorer/tx/bsc/0x9fcf38d0af4dd08f4d60f7658b623e35664e74bca0eaebdb0c3b9a6965d6257b"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/SQUID_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0xd309f0Fd5C3b90ecFb7024eDe7D329d9582492c5 created 2024-03-10T10:33:06Z by 0xff00d2d6210a537b517138389c29c8a6bb56dad7, which is not the attack-tx sender 0x418038cd60d7ad3006075411765c34048907e7e7; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

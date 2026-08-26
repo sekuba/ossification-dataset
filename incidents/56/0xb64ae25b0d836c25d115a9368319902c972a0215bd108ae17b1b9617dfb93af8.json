@@ -19,10 +19,7 @@
       "0x3b6e77722e2bbe97c1cfa337b42c0939aeb83671"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The SPARTA/WBNB pool's removeLiquidity() path asked the selected Utils.calcLiquidityShare() module to value LP units from the pool's live token balances rather than its recorded reserves. Donating assets before burning LP units therefore inflated the redemption, while the pool's reserve bookkeeping let the attacker reclaim the donated assets afterward."
-  },
+  "summary": "The SPARTA/WBNB pool's removeLiquidity() path asked the selected Utils.calcLiquidityShare() module to value LP units from the pool's live token balances rather than its recorded reserves. Donating assets before burning LP units therefore inflated the redemption, while the pool's reserve bookkeeping let the attacker reclaim the donated assets afterward.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -104,38 +101,22 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause"
-      ],
       "chainId": 56,
       "transactionHash": "0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "url": "https://www.ambergroup.io/news/id/237"
     },
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause",
-        "loss"
-      ],
       "url": "https://rekt.news/spartan-rekt/"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0xb64ae25b0d836c25d115a9368319902c972a0215bd108ae17b1b9617dfb93af8",
@@ -147,13 +128,6 @@
     {
       "id": "source-5",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T18:26:56Z",
       "note": "Reviewed the four exploit receipts and anchor trace, pool creation trace, module deployment and selection transactions, runtime at activation and immediately before the exploit, the complete DAO NewProposal history through the incident, the commit-pinned reproduction, Amber Group's technical analysis, and Rekt's loss report. The successful anchor is transaction index 27 of block 7048833. Its SPARTA/WBNB pool 0x3de669c4f1f167a8afbc9993e4753b84b576426f calls removeLiquidity() 16 times and directly calls Utils 0xcaf0366af95e8a03e269e52ddb3dbb8a00295f91 for calcLiquidityShare() 32 times. The three later campaign transactions are also successful and call the same Utils function. Utils was directly deployed in transaction 0x974e9db8d42992e6f36b7cf1878fc2a20c6051bc7ed0d166e6aa306f90f33430 at block 847218, then selected by setGenesisAddresses(address,address) in transaction 0xcd7c807a6b29653a30930b8a9f9d62fe0d6005d7e9096da90e66b21de6d5a7a4 at block 847352. PoolFactory 0xafce5da566377d293a8e681cf2824f7dc0c733c6 later created the victim pool in transaction 0xceac4a640ae112f2a5ae67c4fa27ece1b7d0865d2c04d952b032f6d453c3fbdd. The SPARTA DAO and DAO Utils pointers match at pool deployment and immediately before the exploit; a complete NewProposal-log scan found only three GRANT proposals and one MINT proposal, with no DAO or UTILS change. The 14,109-byte Utils runtime has hash 0xf1d7b704da0354f81734fda090fce75b3e0e8b2ac5d7c6e1bc1914fbce339d5 at module deployment and immediately before the exploit."
@@ -161,41 +135,24 @@
     {
       "id": "source-6",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xceac4a640ae112f2a5ae67c4fa27ece1b7d0865d2c04d952b032f6d453c3fbdd"
     },
     {
       "id": "source-7",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x974e9db8d42992e6f36b7cf1878fc2a20c6051bc7ed0d166e6aa306f90f33430"
     },
     {
       "id": "source-8",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xcd7c807a6b29653a30930b8a9f9d62fe0d6005d7e9096da90e66b21de6d5a7a4"
     },
     {
       "id": "source-9",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2021-05/Spartan_exp.sol"

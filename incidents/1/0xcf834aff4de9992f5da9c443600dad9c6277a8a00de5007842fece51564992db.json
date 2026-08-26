@@ -19,10 +19,7 @@
       "0x24a0c66f185874b251eb70bee2c2e35e39848419"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "MainPool.calcStepIncome(id, amount, step) was callable by anyone with arbitrary arguments and credited the caller's withdrawable income directly, so the attacker joined the game and then wrote itself an income entry it withdrew as ETH."
-  },
+  "summary": "MainPool.calcStepIncome(id, amount, step) was callable by anyone with arbitrary arguments and credited the caller's withdrawable income directly, so the attacker joined the game and then wrote itself an income entry it withdrew as ETH.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -94,19 +91,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-02/ADC_exp.sol"
@@ -114,28 +104,16 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/EXVULSEC/status/1753294675971313790"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: MainPool 0xdE46fcF6aB7559E4355b8eE3D7fBa0f2730CDdd8 created 2020-05-16T01:31:35Z by 0x25fd6a8ffad09b691777ce17e99f9b23956251a9, unrelated to the attack sender; no EIP-1967 events, age from deployment (1357.2 days). ~20 ETH x $2,297.54 at incidentTimestamp 1706851727 (DefiLlama) = $45,951."
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x5dd5960c7d5095b4ebacef00a18951dcd765635cf28b2f6241ddb1354af9a011"
     }

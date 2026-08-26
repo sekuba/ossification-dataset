@@ -19,10 +19,7 @@
       "0xf4c11ac8040936da701015e196bc62e645592e6d"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "When sender, recipient and pair are the same address, Hackathon's _transfer credits the recipient balance twice (once in each branch), so the attacker inflated the pair's balance and skimmed it out."
-  },
+  "summary": "When sender, recipient and pair are the same address, Hackathon's _transfer credits the recipient balance twice (once in each branch), so the attacker inflated the pair's balance and skimmed it out.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -91,27 +88,17 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0xea181f730886ece947e255ab508f5af1d0f569fee3368b651d5dbb28549087b5"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://x.com/EXVULSEC/status/1779519508375613827"
     },
     {
       "id": "source-3",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2024-04/Hackathon_exp.sol"
@@ -119,10 +106,6 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "onchain review: victim 0x11cee747Faaf0C0801075253ac28aB503C888888 created 2024-04-14T12:47:39Z by 0xa2290a63685fe501f1eb53591a82d0ca33a03ea9, which is not the attack-tx sender 0xf4c11ac8040936da701015e196bc62e645592e6d; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain)."
     }
   ],

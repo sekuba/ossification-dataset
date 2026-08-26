@@ -15,7 +15,7 @@ schema/incident.schema.json           source schema
 schema/release-*.schema.json          generated-interface schemas
 research/candidates.json              discovery-lead coverage ledger
 research/raw/                         hashed discovery and migration inputs
-dist/latest/incidents.json            per-incident classification and loss
+dist/latest/incidents.json            reviewed incidents: summary and loss
 dist/latest/curve.json                curve observations and exclusions
 dist/latest/manifest.json             cohort rules, counts, and source hashes
 scripts/check.mjs                     schema and cross-record validation
@@ -28,9 +28,11 @@ scripts/build-candidates.mjs          deterministic research-ledger builder
 ## Consuming the release
 
 Each curve observation carries one `codeAgeSeconds` and resolves its
-incident-level classification and loss through `incidentId` in
-`dist/latest/incidents.json`, which carries those fields only — evidence,
-targets and verification stay in `incidents/` and are hashed in the manifest. An incident that contributes several
+incident-level summary and loss through `incidentId` in
+`dist/latest/incidents.json`. That file lists **reviewed incidents only** —
+evidence, targets, verification and the unreviewed legacy backlog stay in
+`incidents/` and are hashed in the manifest, so a published figure is never a
+legacy row nobody has checked. An incident that contributes several
 observations owns one loss, so aggregate per `incidentId` rather than summing
 per observation. `ageKnots` is the sorted age of every selected observation.
 

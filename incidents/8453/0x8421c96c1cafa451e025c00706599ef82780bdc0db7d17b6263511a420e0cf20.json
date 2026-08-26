@@ -19,10 +19,7 @@
       "0x2a49c6fd18bd111d51c4fffa6559be1d950b8eff"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "BentoBox-style vault's setMasterContractApproval accepts a zero (v,r,s) signature, letting the attacker approve itself for a user and withdraw the user's RICE."
-  },
+  "summary": "BentoBox-style vault's setMasterContractApproval accepts a zero (v,r,s) signature, letting the attacker approve itself for a user and withdraw the user's RICE.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -90,19 +87,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 8453,
       "transactionHash": "0x8421c96c1cafa451e025c00706599ef82780bdc0db7d17b6263511a420e0cf20"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2025-05/RICE_exp.sol"
@@ -110,10 +100,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "note": "Onchain review: RICE vault 0xcfe0de4a50c80b434092f87e106dfa40b71a5563 created 2025-03-13T05:33:51Z (Base block 27527342) by 0x6f6f8b3b1f9ee48e315a1b7cfdb03e5550e94106, not the attack-tx sender 0x2a49c6fd18bd111d51c4fffa6559be1d950b8eff. keccak(eth_getCode) is identical at the creation and incident blocks, no EIP-1967/beacon or other implementation slot is set (slot 0, the owner, is the only non-zero slot in 0-25), and the exploit trace contains no DELEGATECALL out of the victim: the single delegatecall site in the runtime is the BoringBatchable self-call reached from batch(bytes[],bool) (selector 0xd2423b51 present; the runtime holds no address constant other than the 0xff..ff mask). Deployment basis is exact."
     }
   ],

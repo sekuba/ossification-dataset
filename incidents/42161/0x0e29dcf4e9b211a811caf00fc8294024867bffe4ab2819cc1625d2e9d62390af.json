@@ -19,10 +19,7 @@
       "0x014abff04e5c441b2ceaa62d843bbc5ae49e5504"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "The Paribus native-ETH market sent ether to the redeemer before the comptroller's collateral bookkeeping was updated, so the receive hook re-entered the protocol and borrowed against collateral that had already been withdrawn."
-  },
+  "summary": "The Paribus native-ETH market sent ether to the redeemer before the comptroller's collateral bookkeeping was updated, so the receive hook re-entered the protocol and borrowed against collateral that had already been withdrawn.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -92,19 +89,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 42161,
       "transactionHash": "0x0e29dcf4e9b211a811caf00fc8294024867bffe4ab2819cc1625d2e9d62390af"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-04/Paribus_exp.sol"
@@ -112,11 +102,6 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: pETH 0x375Ae76F0450293e50876D0e5bDC3022CAb23198 created 2023-03-27T15:21:40Z by 0x8acd5764d8edef0558dbdf40ae64c7ffb6531160, not the attack-tx sender 0x014abff04e5c441b2ceaa62d843bbc5ae49e5504. Compound-fork delegator, so NewImplementation(address,address) logs were queried in addition to EIP-1967: the only one is at the creation block 74259357, so the executing code was 14.8 days old. Loss ~86k per the DeFiHackLabs 2023 index entry for this PoC. Distinct from the 2025-01 Paribus row already in this file. Recheck of the deployment basis (DELEGATECALL audit): the victim is a Compound-fork PEtherDelegator keeping its implementation in plain storage slot 18; a binary search of eth_getStorageAt on slot 18 over [74259357, 79308098] finds 0x5b0ec471565e36e5a33c35b861dd752e16f3a8e7 unchanged from creation to the incident, the delegator runtime is byte-identical at both blocks, and that implementation contains no DELEGATECALL, so deployment is the right basis."
     }
   ],

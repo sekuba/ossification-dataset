@@ -19,10 +19,7 @@
       "0x9bf2c7c21f3c488a1855dcd49158841c23e5c35b"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "A MEL function that moves tokens out of the liquidity pair has no access control, so the attacker called it to strip the pair and swapped the imbalance for its USDT."
-  },
+  "summary": "A MEL function that moves tokens out of the liquidity pair has no access control, so the attacker called it to strip the pair and swapped the imbalance for its USDT.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -93,19 +90,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 56,
       "transactionHash": "0x3f1973fe56de5ecd59a815d3b14741cf48385903b0ccfe248f7f10c2765061f7"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/Melo_exp.sol"
@@ -113,19 +103,11 @@
     {
       "id": "source-3",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://twitter.com/peckshield/status/1654667621139349505"
     },
     {
       "id": "source-4",
       "type": "review-note",
-      "supports": [
-        "target-identity",
-        "code-history",
-        "loss"
-      ],
       "note": "onchain review: MEL 0x9A1aEF8C9ADA4224aD774aFdaC07C24955C92a54 created 2023-05-05T14:56:28Z by 0x09ceac97ae16d86126edc0cdf12acb81efd7e15d, unrelated to attack sender 0x9bf2c7c21f3c488a1855dcd49158841c23e5c35b; no EIP-1967 Upgraded events, age measured from deployment. Loss verified onchain: 90,488.67 USDT left the MEL/USDT pair 0x6a8C4448763C08aDEb80ADEbF7A29b9477Fa0628 to the attacker."
     }
   ],

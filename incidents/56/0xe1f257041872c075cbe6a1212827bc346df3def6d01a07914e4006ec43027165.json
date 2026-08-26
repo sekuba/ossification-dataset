@@ -23,10 +23,7 @@
       "0x70319d1c09e1373fc7b10403c852909e5b20a9d5"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "LevelReferralControllerV2.claimMultiple() iterates a caller-supplied epoch array without rejecting duplicates and overwrites the claim ledger with an assignment, users[epoch][msg.sender].claimed = reward, where claim() correctly accumulates with +=. Because claimable() returns fullReward - claimed, repeating one epoch makes claimed oscillate between c and fullReward - c and pays out the full epoch reward every two iterations forever. The attacker first earned epoch-13 referral points with self-referred flash-loan swaps, called claim() once to make claimed non-zero, then called claimMultiple() with the same epoch thousands of times per transaction and drained the controller's LVL reward reserve."
-  },
+  "summary": "LevelReferralControllerV2.claimMultiple() iterates a caller-supplied epoch array without rejecting duplicates and overwrites the claim ledger with an assignment, users[epoch][msg.sender].claimed = reward, where claim() correctly accumulates with +=. Because claimable() returns fullReward - claimed, repeating one epoch makes claimed oscillate between c and fullReward - c and pays out the full epoch reward every two iterations forever. The attacker first earned epoch-13 referral points with self-referred flash-loan swaps, called claim() once to make claimed non-zero, then called claimMultiple() with the same epoch thousands of times per transaction and drained the controller's LVL reward reserve.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -127,22 +124,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 56,
       "transactionHash": "0xe1f257041872c075cbe6a1212827bc346df3def6d01a07914e4006ec43027165"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
       "path": "src/test/2023-05/Level_exp.sol"
@@ -150,29 +137,18 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0x2336652951700210bdc4a2ffc9c13c253a0cec3d4944772ad187a1c718c0af50"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 56,
       "transactionHash": "0xe0a8e635f4778f6cc935873d8c17a92979eb9adfa77b249dec1d4a15b3e82909"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0xcb2c525c588390add11e0ce497761b9aafae5ed9ee02eccc4d4f6d40e4e6a5f4",
@@ -196,9 +172,6 @@
     {
       "id": "source-6",
       "type": "onchain-transaction-set",
-      "supports": [
-        "loss"
-      ],
       "chainId": 56,
       "transactionHashes": [
         "0x86cf474a050960233d4ec04ef026eadeb2bb66edc8c32949ea75435802887c93",
@@ -216,9 +189,6 @@
     {
       "id": "source-7",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1682963441/coingecko:binancecoin",
       "observedAt": 1787647083
@@ -226,13 +196,6 @@
     {
       "id": "source-8",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T10:50:00Z",
       "note": "Re-anchored. The v1 snapshot anchored this incident to 0x6aef8bb501a53e290837d4398b34d5d4d881267512cfe78eb9ba7e59f41dad04, which is the setup: 95 BNB of flash-loaned wash swaps through the Level pools that legitimately credit epoch-13 referral points via updatePoint() and steal nothing. The next transaction 0xcb2c525c is two honest claim() calls that leave users[13][attacker].claimed at 0.177254716362039277 LVL each. Neither executes the defect. The defect is claimMultiple(), which does users[epoch][msg.sender].claimed = reward instead of += reward while claimable() returns fullReward - claimed, so a repeated epoch alternates the ledger between c and fullReward - c and pays the whole epoch reward every two iterations; the deliberate honest claim beforehand is what makes c non-zero and the oscillation profitable. The earliest transaction that executes it is 0xe1f257041872c075cbe6a1212827bc346df3def6d01a07914e4006ec43027165 at block 27835718 index 5, whose receipt carries 4000 Claimed events from the proxy 0x977087422c008233615b572fbc3f209ed300063a with rewards alternating 5.729812096377727494 and 0.177254716362039277 LVL, and which sends 11814.488134912257620554 LVL out. Fourteen further identical transactions follow. Code history: the proxy is a standard OpenZeppelin TransparentUpgradeableProxy created at block 25805166 index 49 by 0x6442b001c5acce8cb71986ad65b22684821a927a. eth_getLogs over [25805166, 27835717] on the proxy returns exactly two Upgraded events, block 25805166 index 49 log 105 selecting 0xeb3e6e2a30b2c23ac3442fbb25d6fe2fe495e3c3 and block 27450541 index 118 log 305 selecting 0x9f00fbd6c095d2c542687ed5afb68d9c3fb2f464, plus two AdminChanged events (blocks 25805166 and 25849024) and zero BeaconUpgraded events. The EIP-1967 implementation slot reads 0xeb3e6e2a at blocks 25805166, 27429089 and 27450540 and 0x9f00fbd6 at blocks 27450541, 27830139, 27835717 and 27837124, so the flawed implementation was active from the upgrade to past the end of the campaign. Its runtime hash is 0xac2c0edf37372b3c0baeb68193dc2a5cf4b14878bf09b660446f90271b6fc75e at its own creation block 27429090 and unchanged at 27450541, 27830139 and 27835717. The upgrade transaction 0xe0a8e635 was sent by 0xeef108eb8be5674cc82f78cc65fcb433ea9de316 through the Level multisig 0x6023c6afa26a68e05672f111fdbb1de93cbac621 and its timelock, not by the attacker. Code age is 1682963441 - 1681805771 = 1157670 s (13 d 9 h 34 m 30 s). This supersedes the two earlier curated review notes on this record: the first claimed a deployment basis from the implementation's own creation because it scanned the implementation address rather than the proxy for Upgraded logs, and the second gave the correct proxy and upgrade block but measured the age against the old anchor. Loss is the 214084.756853317598928554 LVL the proxy paid the attacker across the 16 campaign transactions, valued at the 3344.095796628300937646 BNB the attacker actually realised selling all of it on PancakeSwap rather than at the spot LVL price."

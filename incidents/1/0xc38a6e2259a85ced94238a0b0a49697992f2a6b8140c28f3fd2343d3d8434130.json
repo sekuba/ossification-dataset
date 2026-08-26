@@ -19,10 +19,7 @@
       "0x84da7a5e2315eb798f04b75554aeb15047269cce"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "DaiDripsHub.give() cast an unbounded caller-supplied uint128 to int128 before negation, so a value above int128.max flipped the transfer direction and withdrew the DAI reserve."
-  },
+  "summary": "DaiDripsHub.give() cast an unbounded caller-supplied uint128 to int128 before negation, so a value above int128.max flipped the transfer direction and withdrew the DAI reserve.",
   "loss": {
     "kind": "legacy-unspecified",
     "usd": {
@@ -89,35 +86,22 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor"
-      ],
       "chainId": 1,
       "transactionHash": "0xc38a6e2259a85ced94238a0b0a49697992f2a6b8140c28f3fd2343d3d8434130"
     },
     {
       "id": "source-2",
       "type": "post-mortem",
-      "supports": [
-        "root-cause"
-      ],
       "url": "https://blog.verichains.io/p/drips-network-when-giving-became"
     },
     {
       "id": "source-3",
       "type": "review-note",
-      "supports": [
-        "target-identity"
-      ],
       "note": "onchain review: 24,882.995421947667857715 DAI moved reserve -> hub -> attacker contract; proxy creator 0xabadefe1ce7bb6f1d5146f3f476701f791b18c6c"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x48ab581165bc3890e34c7c2ace7cdf2824478c4748b2271710a15ac7addc02a4"
     }

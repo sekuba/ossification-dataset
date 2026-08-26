@@ -21,10 +21,7 @@
       "0xff32d7182f60a107f662af3486929cb63b1d4c9c"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "Sumer Money's CEther market sdrETH implements repayBorrowBehalf(address) by refunding any excess msg.value with a gas-forwarding msg.sender.call before it calls the nonReentrant repayBorrowBehalfInternal. During that callback the repaid ETH is already part of getCashPrior() while totalBorrows still carries the debt it settles, so exchangeRateStoredInternal() = (totalCash + totalBorrows - totalReserves) / totalSupply double-counts the same ETH. The attacker drained the market's cash with borrow(), repaid it with one wei of excess, and inside the refund callback the sdrETH exchange rate stood at 2.000000282255694646 instead of the 1.000000141462699840 the market carried a moment earlier: they redeemed their full 150 ETH deposit for half their sdrETH and, with the other half still valued at the doubled rate as Comptroller collateral, borrowed 310,000 USDC from sdrUSDC and 10.877 cbETH from sdrcbETH that were never repaid."
-  },
+  "summary": "Sumer Money's CEther market sdrETH implements repayBorrowBehalf(address) by refunding any excess msg.value with a gas-forwarding msg.sender.call before it calls the nonReentrant repayBorrowBehalfInternal. During that callback the repaid ETH is already part of getCashPrior() while totalBorrows still carries the debt it settles, so exchangeRateStoredInternal() = (totalCash + totalBorrows - totalReserves) / totalSupply double-counts the same ETH. The attacker drained the market's cash with borrow(), repaid it with one wei of excess, and inside the refund callback the sdrETH exchange rate stood at 2.000000282255694646 instead of the 1.000000141462699840 the market carried a moment earlier: they redeemed their full 150 ETH deposit for half their sdrETH and, with the other half still valued at the doubled rate as Comptroller collateral, borrowed 310,000 USDC from sdrUSDC and 10.877 cbETH from sdrcbETH that were never repaid.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -145,22 +142,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 8453,
       "transactionHash": "0x619c44af9fedb8f5feea2dcae1da94b6d7e5e0e7f4f4a99352b6c4f5e43a4661"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2024-04/SumerMoney_exp.sol"
@@ -168,39 +155,24 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0x6277d9d9b658f2c54a4edca4d39ea423dca2614f83f37bc9c768b6be27acdc77"
     },
     {
       "id": "source-4",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0x03eb10b1951f0d7c6516ec9fa548ab0a9dfdb1c31aaeabe86c7cb81126b92cc6"
     },
     {
       "id": "source-5",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 8453,
       "transactionHash": "0x0e582d28316dd7f456868657ca75071d08324dc38f255f2b127db925e2effa7a"
     },
     {
       "id": "source-6",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1712942885/base:0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22",
       "observedAt": 1787702581
@@ -208,13 +180,6 @@
     {
       "id": "source-7",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:10:00Z",
       "note": "Anchor: attacker EOA 0xbb344544ad328b5492397e967fe81737855e7e77 sent nonce 0 (deployment of exploit contract 0x13d27a2d66ea33a4bc581d5fefb0b2a8defe9fe7), nonce 1 (a 1e10-wei funding call whose callTracer output is a single frame with no Sumer contact) and nonce 2, the anchor, so the anchor is the earliest successful Sumer-executing transaction; its nonces 3 onward are Universal Router sales of the proceeds and transfers to 0x2f59e9086ec8130e21bd052065a9e6b2497bb102 and 0x80c67432656d59144ceff962e8faf8926599bcf8, none of which touch Sumer. Root cause read from the Etherscan-verified CEther source of implementation 0x23811c17bac40500decd5fb92d4feb972ae1e607: repayBorrowBehalf(address) refunds msg.value minus the borrow balance through msg.sender.call{value: ...}('') with all gas forwarded, outside the nonReentrant modifier that only guards repayBorrowBehalfInternal. The receipt confirms the arithmetic exactly: sdrETH cash before the campaign was 0.358797170664290045 ETH (AccrueInterest log 3), the helper borrowed 150.358797170664290045 ETH (Borrow log 31), repaid 150.358797170664290046 so the refund was 1 wei, and inside that callback Redeem log 43 returned 150.000000000000000000 ETH for 74.999989415412944554 sdrETH, an exchange rate of 2.000000282255694646 against the 1.000000141462699840 implied by the mint at log 6 moments earlier. Targeting: the delegatecall in the anchor trace runs 0x23811c17... under proxy 0x7b5969bb51fa3b002579d7ee41a454ac691716dc, whose EIP-1967 slot 0x360894a1...382bbc holds 0x23811c17... at block 13076768; the implementation runtime hashes to 0x4b8a9f06d0d9c4f5cf43ebb5b4069775d1b2c67a670fd62aaf7d127238af8821 both at its creation block 9370325 and at block 13076768. eth_getLogs for topic0 0xbc7cd75a...c2d3b on the proxy from genesis to the exploit block returns exactly two Upgraded events, at blocks 8981022 and 9370330; the later one is lastCodeChange, giving 1712942885 - 1705530007 = 7,412,878 s. Loss reconstructed from the receipt's Transfer logs and a diffMode prestateTracer run: sdrUSDC -309,999.999999 USDC and sdrcbETH -10.877097943908610977 cbETH to the attacker EOA, sdrETH ETH delta zero, flash loan repaid in full. Both borrows still read on-chain at block 13076770 as 310000000000 and 10877097943908610977 against 0x13d27a2d. USD 349,248.70 at DefiLlama cbETH 3,608.38 plus USDC at par."

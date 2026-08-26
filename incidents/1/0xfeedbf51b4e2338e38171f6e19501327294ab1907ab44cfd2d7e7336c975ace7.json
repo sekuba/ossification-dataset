@@ -21,10 +21,7 @@
       "0xc1f2b71a502b551a65eee9c96318afdd5fd439fa"
     ]
   },
-  "classification": {
-    "rootCause": "code-bug",
-    "summary": "InterestRatePositionManager.liquidate() closes the liquidated position and then calls _updateDebtAndCollateralIndex, which resets the raft collateral token index to collateralToken.balanceOf(address(this)) divided by the remaining share supply. The attacker donated 6,001.45 flash-loaned cbETH to the manager and liquidated the only other cbETH position, leaving 89 shares backing 6,003.44 cbETH, so the stored index became 6.745e19 wei of cbETH per share. ERC20Indexable.mint then mints amount.divUp(storedIndex) shares, so each subsequent 1-wei managePosition collateral deposit rounded up to a full share worth 67.45 cbETH. Repeating the 1-wei deposit inside the same transaction inflated the attacker position's collateral claim far past the manager's real cbETH holdings and let it borrow 6,705,028.47 R against it."
-  },
+  "summary": "InterestRatePositionManager.liquidate() closes the liquidated position and then calls _updateDebtAndCollateralIndex, which resets the raft collateral token index to collateralToken.balanceOf(address(this)) divided by the remaining share supply. The attacker donated 6,001.45 flash-loaned cbETH to the manager and liquidated the only other cbETH position, leaving 89 shares backing 6,003.44 cbETH, so the stored index became 6.745e19 wei of cbETH per share. ERC20Indexable.mint then mints amount.divUp(storedIndex) shares, so each subsequent 1-wei managePosition collateral deposit rounded up to a full share worth 67.45 cbETH. Repeating the 1-wei deposit inside the same transaction inflated the attacker position's collateral claim far past the manager's real cbETH holdings and let it borrow 6,705,028.47 R against it.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -140,22 +137,12 @@
     {
       "id": "source-1",
       "type": "onchain-transaction",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "root-cause",
-        "loss"
-      ],
       "chainId": 1,
       "transactionHash": "0xfeedbf51b4e2338e38171f6e19501327294ab1907ab44cfd2d7e7336c975ace7"
     },
     {
       "id": "source-2",
       "type": "source-code",
-      "supports": [
-        "target-identity",
-        "root-cause"
-      ],
       "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
       "commit": "ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
       "path": "src/test/2023-11/Raft_exp.sol"
@@ -163,19 +150,12 @@
     {
       "id": "source-3",
       "type": "onchain-transaction",
-      "supports": [
-        "target-identity",
-        "code-history"
-      ],
       "chainId": 1,
       "transactionHash": "0x72be611ae1ade09242d9fc9c950a73d076f6c23514564a7b9ac730400dbaf2c0"
     },
     {
       "id": "source-4",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1699642763/coingecko:dai",
       "observedAt": 1787640862
@@ -183,9 +163,6 @@
     {
       "id": "source-5",
       "type": "price-data",
-      "supports": [
-        "loss"
-      ],
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1699642763/coingecko:usd-coin",
       "observedAt": 1787640862
@@ -193,13 +170,6 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "supports": [
-        "incident-anchor",
-        "target-identity",
-        "code-history",
-        "root-cause",
-        "loss"
-      ],
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T07:40:00Z",
       "note": "Anchor kept at 0xfeedbf51b4, block 18543486 index 1, the transaction in which the defect produced the loss. The campaign was enumerated from the attacker EOA 0xc1f2b71a's transaction list: contract deployment 0xb5bf9e2e at block 18543411, position setup 0x123977da, 0x67fc36e9 and 0xf9101f30, then six successful ratchet transactions 0xa5233e3b (18543462), 0x05d6a951 (18543464), 0x8c4b1b7b (18543465), 0x57ee18b5 (18543467), 0x28a3afd3 (18543468) and 0xa1378a4d (18543484). The ratchets already touch the defect (0xa5233e3b is the earliest, driving ERC20Indexable 0xD0Db3147's index to 5.313e20 and minting 1 wei) but each nets at most 8.54 R, so 0xfeedbf51b4 is the earliest suitable anchor; using 0xa5233e3b instead would only shorten the code age by 288 seconds. Execution and defect context is InterestRatePositionManager 0x9AB6b21cDF116f611110b048987E58894786C244 (cbETH market, R token 0x183015a9), the contract DeFiHackLabs names as the vulnerable contract. It is a plain contract, not a proxy: EIP-1967 slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc reads 0x0 at block 18543485 and the trace shows liquidate/managePosition executing directly on the address. Runtime code hash 0x6cb99346de6e61fd74d21a40459ce84a5c45a564d72ca9bc82aef096332f6ba3 is identical at the deployment block 18127534 and at 18200000, 18300000, 18400000, 18500000, 18543400 and 18543485, and the account is empty at 18127533, so the deployment transaction 0x72be611ae1 (block 18127534, index 1, creator 0x603d50bad151da8becf405e51a8c4abc8ba1c95e, the Raft deployer and not an attacker) is the latest pre-exploit executable-code change; code age is 5,032,824 s, 58d 6h 0m 24s. Mechanism confirmed in the trace: liquidate(0x011992114806E2c3770df73fa0D19884215db85F) closed the only other cbETH position and _updateDebtAndCollateralIndex called ERC20Indexable(0xD0Db31473CaAd65428ba301D2174390d11D0C788).setIndex(6003441032036096684181) over an 89-share supply, giving IndexUpdated 67454393618383108811022471910112359551, after which each managePosition(cbETH, attacker, 1, true, 0, true) call minted divUp(1, index) = 1 whole share worth 6.745e19 wei of cbETH; the manager's own cbETH balance fell only 4 cbETH while 6,705,028.472545484664692489 R was borrowed and 6,701,624.445698 R net was minted. Loss was computed from the exploit receipt's transfer logs (Balancer 0xBA12222222228d8Ba445958a75a0704d566BF2C8 paid 2,009,226.625525958210315125 sDAI and 1,159,396.050215284713094612 DAI; the sDAI redeemed to 2,094,243.762271227103719829 DAI; Uniswap V3 0x190Ed02A paid 86,430.564918 USDC), priced with DefiLlama DAI 0.998852 and USDC 0.99995. The 1,583.410453811108267443 ETH the attacker sent to the zero address in the same transaction is an attacker error, not a Raft recovery, and is not netted out; the 140.324 ETH later realised from dumping the residual 3,315,056.943449 R is excluded as post-incident realisation."
