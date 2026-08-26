@@ -26,7 +26,7 @@
     "usd": {
       "amount": 2349942.089502233,
       "valuationTimestamp": 1665493715,
-      "method": "other",
+      "method": "realised-proceeds",
       "sourceIds": [
         "source-4",
         "source-5",
@@ -44,7 +44,7 @@
         "amount": "321154.865567124596801893",
         "usdValue": 2349942.089502233,
         "valuation": {
-          "method": "other",
+          "method": "realised-proceeds",
           "timestamp": 1665493715,
           "unitPriceUsd": 7.317161723059965,
           "sourceIds": [
@@ -60,7 +60,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The exploit transaction moves the staking contract\u2019s entire StaxLP balance, 321154.865567124596801893 xFraxTempleLP, to the attacker. Within 41 blocks the attacker unwound that position through three further transactions and ended holding 1830.122796124022576955 WETH and nothing else, so the realised proceeds are used as the unit valuation, priced at the DefiLlama ETH observation nearest the incident timestamp. That is a realisation value including the attacker\u2019s own market impact, not a mark-to-model LP value, hence method \u201cother\u201d. Nothing was recovered."
+    "notes": "The exploit transaction moves the staking contract\u2019s entire StaxLP balance, 321154.865567124596801893 xFraxTempleLP, to the attacker. Within 41 blocks the attacker unwound that position through three further transactions and ended holding 1830.122796124022576955 WETH and nothing else, so the realised proceeds are used as the unit valuation, priced at the DefiLlama ETH observation nearest the incident timestamp. That is a realisation value including the attacker\u2019s own market impact, not a mark-to-model LP value. Nothing was recovered."
   },
   "targets": [
     {

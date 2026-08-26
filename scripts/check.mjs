@@ -389,6 +389,19 @@ function verifyIncident(record, state, errors) {
     }
   }
 
+  const valuedAssetMethods = new Set(
+    (incident.loss?.assets ?? [])
+      .filter((asset) => asset.usdValue !== null)
+      .map((asset) => asset.valuation?.method),
+  )
+  if (valuedAssetMethods.has('realised-proceeds')) {
+    const expected = valuedAssetMethods.size === 1 ? 'realised-proceeds' : 'other'
+    if (usd?.method !== expected)
+      errors.push(`${label}: loss.usd.method must be ${expected} for its realised-proceeds asset components`)
+  } else if (usd?.method === 'realised-proceeds') {
+    errors.push(`${label}: loss.usd.method is realised-proceeds but no valued asset component uses that basis`)
+  }
+
   if (incidentReviewed) {
     if (incident.loss.kind === 'legacy-unspecified')
       errors.push(`${label}: reviewed incident requires a reviewed loss kind`)

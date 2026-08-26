@@ -175,11 +175,12 @@ post-mortems, and reputable published analysis. Reported estimates state their
 scope and valuation method.
 
 Reviewed asset components identify the chain and token, decimal quantity, USD
-value, valuation timestamp and method, and evidence IDs. `method` records the
-basis: `realised-proceeds` when the figure is what the assets actually sold for,
-which is required wherever the attacker's own selling moved the price. Stable
-assets may use 1:1 valuation. Liquid assets use a timestamped price source.
-Illiquid assets use an evidenced lower bound when it establishes cohort
+value, valuation timestamp and method, and evidence IDs. Use
+`realised-proceeds` when the measured quantity or effective unit value comes
+from the attacker's disposal; it is required when that disposal moved the price.
+An aggregate that combines realised proceeds with another basis uses `other`.
+Stable assets may use 1:1 valuation. Liquid assets use a timestamped price
+source. Illiquid assets use an evidenced lower bound when it establishes cohort
 admission. `price-data` sources record provider, URL, and evidence-retrieval time
 in `observedAt`; the asset valuation's `timestamp` is the historical price time.
 
