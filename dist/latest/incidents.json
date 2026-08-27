@@ -19892,6 +19892,61 @@
       }
     },
     {
+      "id": "eip155:56:0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99",
+      "protocol": {
+        "name": "RANT",
+        "slug": "rant-token"
+      },
+      "name": "RANT pair-reserve burn and sync",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99",
+        "blockNumber": 52974382,
+        "transactionIndex": 4,
+        "timestamp": 1751728596
+      },
+      "summary": "A transfer of RANT to the token contract invoked _sellBurnLiquidityPairTokens(amount), which removed an attacker-sized amount of RANT directly from the RANT/WBNB pair and called sync() without removing WBNB. The resulting reserve collapse let rant_center sell the attacker's remaining RANT into the manipulated pair and extract its WBNB reserve.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 204314.29575155015,
+          "valuationTimestamp": 1751728497,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-7",
+            "source-4"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "311.858804474624363840",
+            "usdValue": 204314.29575155015,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1751728497,
+              "unitPriceUsd": 655.15,
+              "sourceIds": [
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The exploit transaction's WBNB transfer logs show 2,813.769505544453342436 WBNB entering the RANT/WBNB pair and 3,125.628310019077706276 WBNB leaving it across the manipulated swaps. The pair's exact transaction-local depletion was therefore 311.858804474624363840 WBNB. This gross loss exceeds the attacker's final BNB because the attacker separately paid the flash fee and a validator transfer. DefiLlama observed BNB at $655.15 at timestamp 1751728497, 99 seconds before the exploit."
+      }
+    },
+    {
       "id": "eip155:56:0x31262f15a5b82999bf8d9d0f7e58dcb1656108e6031a2797b612216a95e1670e",
       "protocol": {
         "name": "Wault Finance",
@@ -23443,6 +23498,60 @@
         ],
         "confidence": "high",
         "notes": "The exploit receipt records 16,000 WBNB entering BankrollNetworkStack and 16,412.459593848661728154 WBNB leaving it. The exact transaction-local reserve depletion is therefore 412.459593848661728154 WBNB; the attacker's 404.459593848661728154 WBNB receipt is lower because 8 WBNB repaid the flash-loan fee. DefiLlama observed BNB at $580.89 at timestamp 1727023800, 58 seconds before the exploit."
+      }
+    },
+    {
+      "id": "eip155:56:0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed",
+      "protocol": {
+        "name": "ULME",
+        "slug": "ulme"
+      },
+      "name": "ULME arbitrary approved-user spending",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed",
+        "blockNumber": 22476696,
+        "transactionIndex": 22,
+        "timestamp": 1666685919
+      },
+      "summary": "buyMiner(user, usdt) was public and passed its caller-supplied user directly to USDT.transferFrom without requiring user == msg.sender or another authorization. The attacker invoked it for 100 holders who had approved ULME, forcing their USDT through the ULME/USDT pair while sandwiching those trades.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 250817.77074265096,
+          "valuationTimestamp": 1666685919,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-4"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "250817.770742650963321153",
+            "usdValue": 250817.77074265096,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1666685919,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The exploit receipt contains 100 USDT transfers from distinct approved users to ULME totaling 250,817.770742650963321153 USDT, followed by the same total from ULME to the pair. The users received no asset in return. The pair's 200,170.825418687386914428 USDT transaction-local net inflow and the attacker's roughly $50,000 sandwich profit are consequences of these forced trades, not alternative measures of the users' gross loss."
       }
     },
     {

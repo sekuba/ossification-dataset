@@ -30,25 +30,25 @@
   "counts": {
     "sourceIncidents": 692,
     "sourceTargets": 727,
-    "eligibleBeforeDeduplication": 353,
-    "curveObservations": 324,
+    "eligibleBeforeDeduplication": 355,
+    "curveObservations": 326,
     "deduplicatedObservations": 29,
-    "provisionalObservations": 371,
+    "provisionalObservations": 369,
     "otherExcludedObservations": 3,
     "incidentsByVerificationTier": {
-      "provisional": 371,
-      "reviewed": 321
+      "provisional": 369,
+      "reviewed": 323
     },
     "targetsByVerificationTier": {
-      "provisional": 371,
-      "reviewed": 356
+      "provisional": 369,
+      "reviewed": 358
     },
     "exclusionReasons": {
       "age-reset:unknown": 2,
-      "incident-verification-tier:provisional": 371,
+      "incident-verification-tier:provisional": 369,
       "loss:no-usd-valuation": 1,
-      "target-verification-tier:provisional": 371,
-      "target-verification:not-curve-eligible": 374
+      "target-verification-tier:provisional": 369,
+      "target-verification:not-curve-eligible": 372
     }
   },
   "observations": [
@@ -989,6 +989,24 @@
       "codeAgeSeconds": 179976
     },
     {
+      "observationId": "eip155:56:0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99#target-1",
+      "incidentId": "eip155:56:0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 52974382,
+        "transactionIndex": 4,
+        "timestamp": 1751728596
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:rant-pair-reserve-burn-and-sync",
+      "codeArtifactCodeHash": "0xd18c3b8a0a284a08553e5d503432f78413bf032c20636561eb84add70d360261",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 185301
+    },
+    {
       "observationId": "eip155:1:0x661505c39efe1174da44e0548158db95e8e71ce867d5b7190b9eabc9f314fe91#target-1",
       "incidentId": "eip155:1:0x661505c39efe1174da44e0548158db95e8e71ce867d5b7190b9eabc9f314fe91",
       "targetId": "target-1",
@@ -1491,6 +1509,24 @@
       "codeArtifactCodeHash": "0x1d509901e91df00f976a926bd2ff06a9bd0f9bd46cb399409a9165970cd91f82",
       "ageResetKind": "deployment",
       "codeAgeSeconds": 485004
+    },
+    {
+      "observationId": "eip155:56:0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed#target-1",
+      "incidentId": "eip155:56:0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 22476696,
+        "transactionIndex": 22,
+        "timestamp": 1666685919
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:ulme-arbitrary-approved-user-spend",
+      "codeArtifactCodeHash": "0x28db6b9fb2bdb50711740449a157c2af3b532fcdc55614c3486854bfe33b058e",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 493850
     },
     {
       "observationId": "eip155:1:0xf7c21600452939a81b599017ee24ee0dfd92aaaccd0a55d02819a7658a6ef635#target-1",
@@ -5938,6 +5974,7 @@
     170938,
     173999,
     179976,
+    185301,
     186684,
     187163,
     194469,
@@ -5966,6 +6003,7 @@
     446480,
     468900,
     485004,
+    493850,
     496836,
     513144,
     516325,
@@ -10748,29 +10786,6 @@
       ]
     },
     {
-      "observationId": "eip155:56:0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99#target-1",
-      "incidentId": "eip155:56:0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 52974382,
-        "transactionIndex": 4,
-        "timestamp": 1751728596
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x2d9c1a00cf3d2fda268d0d11794ad2956774b156355e16441d6edb9a448e5a99:failure-1",
-      "codeArtifactCodeHash": null,
-      "ageResetKind": "deployment",
-      "codeAgeSeconds": 185336,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:56:0x2f1c33eaaaace728f6101ff527793387341021ef465a4a33f53a0037f5bd1626#target-1",
       "incidentId": "eip155:56:0x2f1c33eaaaace728f6101ff527793387341021ef465a4a33f53a0037f5bd1626",
       "targetId": "target-1",
@@ -14007,29 +14022,6 @@
       "codeArtifactCodeHash": null,
       "ageResetKind": "deployment",
       "codeAgeSeconds": 187822,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:56:0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed#target-1",
-      "incidentId": "eip155:56:0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 22476696,
-        "transactionIndex": 22,
-        "timestamp": 1666685919
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed:failure-1",
-      "codeArtifactCodeHash": null,
-      "ageResetKind": "deployment",
-      "codeAgeSeconds": 495146,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",

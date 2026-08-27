@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦴</text></svg>">
+<title>The Ossification Curve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --plane:#f9f9f7; --surface:#fcfcfb;
+  --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --s1deep:#1c5cab; --ghost:#c3c2b7;
+  --wash1:rgba(42,120,214,.10); --wash2:rgba(235,104,52,.10);
+  --dim:rgba(137,135,129,.38);
+  --chip:#f0efec; --chip-on:#0b0b0b; --chip-on-ink:#fcfcfb;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --plane:#0d0d0d; --surface:#1a1a19;
+    --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --s1deep:#86b6ef; --ghost:#52514e;
+    --wash1:rgba(57,135,229,.14); --wash2:rgba(217,89,38,.14);
+    --dim:rgba(137,135,129,.30);
+    --chip:#242423; --chip-on:#ffffff; --chip-on-ink:#0d0d0d;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --plane:#0d0d0d; --surface:#1a1a19;
+  --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --s1deep:#86b6ef; --ghost:#52504e;
+  --wash1:rgba(57,135,229,.14); --wash2:rgba(217,89,38,.14);
+  --dim:rgba(137,135,129,.30);
+  --chip:#242423; --chip-on:#ffffff; --chip-on-ink:#0d0d0d;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0; background:var(--plane); color:var(--ink);
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:14px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1160px;margin:0 auto;padding:28px 20px 64px}
+header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-bottom:6px}
+h1{font-size:22px;font-weight:700;letter-spacing:-.01em;margin:0}
+.sub{color:var(--muted);font-size:12.5px;font-weight:500}
+.mono{font-family:"Spline Sans Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+.filters{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:12px 16px;margin:14px 0 18px;
+}
+.filters .flabel{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.thval{font-size:16px;font-weight:600;min-width:74px;font-variant-numeric:tabular-nums}
+input[type=range]{
+  appearance:none;-webkit-appearance:none;width:min(300px,44vw);height:22px;background:transparent;cursor:pointer;
+}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--grid)}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--s1);border:2px solid var(--surface);box-shadow:0 0 0 1px var(--border);margin-top:-6px;
+}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:var(--grid)}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--s1);border:2px solid var(--surface)}
+input[type=range]:focus-visible{outline:2px solid var(--s1);outline-offset:2px;border-radius:4px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{
+  font:inherit;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;
+  border:1px solid var(--border);background:var(--chip);color:var(--ink2);cursor:pointer;
+}
+.chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:var(--chip-on)}
+.chip:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.kpi .kl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kpi .kv{font-size:26px;font-weight:600;margin-top:2px}
+.kpi .kd{font-size:12px;color:var(--ink2);margin-top:1px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 16px 8px;min-width:0}
+.card.full{grid-column:1 / -1}
+.ct{font-size:14.5px;font-weight:700;margin:0 0 1px}
+.cs{font-size:12px;color:var(--muted);margin:0 0 10px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink2);margin:0 0 6px}
+.legend .li{display:inline-flex;align-items:center;gap:6px;font-weight:500}
+.lkey{width:16px;height:0;border-top:3px solid;border-radius:2px}
+.lswatch{width:10px;height:10px;border-radius:3px}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:"Archivo",system-ui,sans-serif}
+.tick{font-size:11px;fill:var(--muted);font-family:"Spline Sans Mono",ui-monospace,monospace}
+.axl{font-size:11px;font-weight:600;letter-spacing:.07em;fill:var(--muted)}
+.dlabel{font-size:11.5px;font-weight:600;fill:var(--ink2);paint-order:stroke;stroke:var(--surface);stroke-width:3.5px;stroke-linejoin:round}
+.gl{stroke:var(--grid);stroke-width:1}
+.ax{stroke:var(--axis);stroke-width:1}
+
+#tip{
+  position:fixed;pointer-events:none;z-index:50;display:none;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);padding:8px 10px;font-size:12px;max-width:280px;
+}
+#tip .tt{font-weight:700;font-size:12.5px;margin-bottom:3px}
+#tip .tr{display:flex;align-items:center;gap:7px;margin-top:2px;color:var(--ink2)}
+#tip .tr b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+#tip .tk{width:12px;height:0;border-top:3px solid;border-radius:2px;flex:none}
+
+details.tbl{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0}
+details.tbl summary{
+  cursor:pointer;padding:13px 16px;font-weight:700;font-size:14px;list-style:none;display:flex;gap:10px;align-items:center
+}
+details.tbl summary::before{content:"▸";color:var(--muted);transition:transform .15s}
+details.tbl[open] summary::before{transform:rotate(90deg)}
+@media (prefers-reduced-motion:reduce){details.tbl summary::before{transition:none}}
+.tblwrap{overflow-x:auto;padding:0 16px 16px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:left;font-weight:600;padding:6px 12px 6px 0;border-bottom:1px solid var(--axis)}
+td{padding:5px 12px 5px 0;border-bottom:1px solid var(--grid);color:var(--ink2);white-space:nowrap}
+td.num{font-family:"Spline Sans Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+th.num{text-align:right}
+td.pn{color:var(--ink);font-weight:600}
+@media (max-width:820px){
+  .grid{grid-template-columns:1fr}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>The Ossification Curve</h1>
+    <span class="sub">EVM code age at exploit × onchain-measured loss · <span id="subdyn"></span></span>
+  </header>
+
+  <div class="filters" role="group" aria-label="Loss admission threshold">
+    <span class="flabel">Loss threshold</span>
+    <span class="thval mono" id="thval">$1K</span>
+    <input type="range" id="thslider" min="0" max="120" step="1" value="0" aria-label="Minimum loss in USD, logarithmic">
+    <span class="chips" id="chips"></span>
+    <span class="flabel">Age axis</span>
+    <span class="chips" id="axchips"></span>
+    <span class="sub mono" id="thcount"></span>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid">
+    <div class="card full">
+      <p class="ct">Cumulative share by code age</p>
+      <p class="cs">share of exploits vs share of stolen USD occurring at or below each code age</p>
+      <div class="legend">
+        <span class="li"><span class="lkey" style="border-color:var(--s1)"></span>share of exploits</span>
+        <span class="li"><span class="lkey" style="border-color:var(--s2)"></span>share of loss</span>
+        <span class="li" id="ghostli" hidden><span class="lkey" style="border-color:var(--ghost)"></span>exploits at $1K baseline</span>
+      </div>
+      <div id="c-ecdf"></div>
+    </div>
+
+    <div class="card full">
+      <p class="ct">Every exploit</p>
+      <p class="cs">loss × code age, one dot per observation · below-threshold dots dimmed</p>
+      <div class="legend">
+        <span class="li"><span class="lswatch" style="background:var(--s1)"></span>observation</span>
+        <span class="li"><span class="lkey" style="border-color:var(--s2)"></span>least-squares fit, log loss on log age</span>
+      </div>
+      <div id="c-scatter"></div>
+    </div>
+
+    <div class="card full">
+      <p class="ct">Threshold sweep</p>
+      <p class="cs">median code age and interquartile band as the admission floor rises · click to set the threshold</p>
+      <div id="c-sweep"></div>
+    </div>
+
+    <div class="card">
+      <p class="ct">By age-reset kind</p>
+      <p class="cs">cumulative share of exploits · what last reset the clock</p>
+      <div class="legend" id="kindlegend"></div>
+      <div id="c-kinds"></div>
+    </div>
+
+    <div class="card">
+      <p class="ct">Code age through time</p>
+      <p class="cs">exploit date × code age · yearly median highlighted</p>
+      <div class="legend">
+        <span class="li"><span class="lswatch" style="background:var(--dim)"></span>observation</span>
+        <span class="li"><span class="lkey" style="border-color:var(--s1)"></span>yearly median</span>
+      </div>
+      <div id="c-time"></div>
+    </div>
+
+    <div class="card">
+      <p class="ct">Exploits by age band</p>
+      <p class="cs">observation count per code-age band</p>
+      <div id="c-bandn"></div>
+    </div>
+
+    <div class="card">
+      <p class="ct">Loss by age band</p>
+      <p class="cs">stolen USD per code-age band</p>
+      <div id="c-bandl"></div>
+    </div>
+
+    <div class="card full">
+      <p class="ct">From dataset to curve</p>
+      <p class="cs" id="funnelsub"></p>
+      <div id="c-funnel"></div>
+    </div>
+
+    <details class="tbl">
+      <summary>Observation table <span class="sub mono" id="tblcount"></span></summary>
+      <div class="tblwrap">
+        <table>
+          <thead><tr>
+            <th>Protocol</th><th>Chain</th><th>Date</th><th>Age reset</th>
+            <th class="num">Code age</th><th class="num">Incident loss</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</div>
+<div id="tip" role="status"></div>
+
+<script>
+"use strict";
+/* rows: [ageSeconds, lossUsd, kindIdx, chainId, ts, protocol, nObsInIncident] */
+const RAW = /*__ROWS__*/[];
+const META = /*__META__*/{};
+const KINDS = ["deployment","implementation-change","module-change","configuration-change"];
+const KINDCOL = ["--s1","--s2","--s3","--s4"];
+const CHAINS = {1:"Ethereum",10:"OP Mainnet",56:"BNB Chain",100:"Gnosis",137:"Polygon",250:"Fantom",5000:"Mantle",8453:"Base",42161:"Arbitrum",43114:"Avalanche",59144:"Linea",81457:"Blast",534352:"Scroll"};
+const D = RAW.map(r=>({a:r[0],l:r[1],k:r[2],c:r[3],t:r[4],p:r[5],n:r[6]}));
+
+const YEAR=31557600, DAY=86400;
+const AMIN=3600;
+const MAXA=Math.max(...D.map(d=>d.a)),MAXL=Math.max(...D.map(d=>d.l));
+const YRMIN=new Date(Math.min(...D.map(d=>d.t))*1000).getUTCFullYear(),YRMAX=new Date(Math.max(...D.map(d=>d.t))*1000).getUTCFullYear();
+const AMAX=MAXA<=10*YEAR?10*YEAR:30*YEAR;
+const clampA = a => Math.max(AMIN, Math.min(a, AMAX));
+let TH = 1000;
+
+/* ---------- formatting ---------- */
+const fmtUsd = v=>{
+  const u=[["B",1e9],["M",1e6],["K",1e3]];
+  for(const [s,m] of u) if(v>=m){
+    const x=v/m;
+    let str=x>=100?String(Math.round(x)):x>=10?x.toFixed(1):x.toFixed(2);
+    str=str.includes(".")?str.replace(/0+$/,"").replace(/\.$/,""):str;
+    return "$"+str+s;
+  }
+  return "$"+Math.round(v).toLocaleString();
+};
+const fmtUsdTick = v=>{
+  if(v>=1e9)return "$"+(v/1e9)+"B"; if(v>=1e6)return "$"+(v/1e6)+"M"; if(v>=1e3)return "$"+(v/1e3)+"K"; return "$"+v;
+};
+const fmtAge = s=>{
+  if(s<2*3600) return Math.max(1,Math.round(s/60))+" min";
+  if(s<2*DAY) return Math.round(s/3600)+" h";
+  if(s<90*DAY) return Math.round(s/DAY)+" d";
+  if(s<2*365.25*DAY) return Math.round(s/(30.44*DAY))+" mo";
+  return (s/YEAR).toFixed(1)+" y";
+};
+const fmtDate = ts=>{
+  const d=new Date(ts*1000);
+  return d.toLocaleDateString("en-GB",{year:"numeric",month:"short",day:"numeric",timeZone:"UTC"});
+};
+const css = n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ---------- svg helpers ---------- */
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  for(const k in attrs) e.setAttribute(k,attrs[k]);
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function txt(parent,x,y,str,cls,anchor){
+  const t=el("text",{x,y,class:cls||"tick","text-anchor":anchor||"start"},parent);
+  t.textContent=str; return t;
+}
+function mkSvg(mount,W,H){
+  const m=document.getElementById(mount); m.textContent="";
+  const s=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img"},m);
+  return s;
+}
+const logS=(v,d0,d1,r0,r1)=> r0+(Math.log(v)-Math.log(d0))/(Math.log(d1)-Math.log(d0))*(r1-r0);
+const logInv=(px,d0,d1,r0,r1)=> Math.exp(Math.log(d0)+(px-r0)/(r1-r0)*(Math.log(d1)-Math.log(d0)));
+
+const AGE_TICKS=[[3600,"1h"],[6*3600,"6h"],[DAY,"1d"],[7*DAY,"1w"],[30*DAY,"1mo"],[90*DAY,"3mo"],[YEAR,"1y"],[3*YEAR,"3y"],[10*YEAR,"10y"]].concat(AMAX>10*YEAR?[[30*YEAR,"30y"]]:[]);
+let AGELIN=false;
+const ALINMAX=(Math.ceil(MAXA/YEAR)+0.5)*YEAR;
+const ageX=(v,r0,r1)=> AGELIN ? r0+Math.min(v,ALINMAX)/ALINMAX*(r1-r0) : logS(clampA(v),AMIN,AMAX,r0,r1);
+const ageInv=(px,r0,r1)=> AGELIN ? Math.max(0,(px-r0)/(r1-r0)*ALINMAX) : logInv(px,AMIN,AMAX,r0,r1);
+const ageEnd=()=> AGELIN?ALINMAX:AMAX;
+const ageFrac=v=> AGELIN ? Math.min(v,ALINMAX)/ALINMAX : (Math.log(clampA(v))-Math.log(AMIN))/(Math.log(AMAX)-Math.log(AMIN));
+const LINSTEP=Math.ceil(MAXA/YEAR)>12?2:1;
+const AGE_TICKS_LIN=Array.from({length:Math.floor(Math.ceil(MAXA/YEAR)/LINSTEP)+1},(_,i)=>[i*LINSTEP*YEAR,i?i*LINSTEP+"y":"0"]);
+const AGE_TICKS_LIN_SPARSE=AGE_TICKS_LIN.filter((_,i)=>i%2===0);
+const ageTicks=()=> AGELIN?AGE_TICKS_LIN:AGE_TICKS;
+const USD_TICKS=[[1e3,"$1K"],[1e4,"$10K"],[1e5,"$100K"],[1e6,"$1M"],[1e7,"$10M"],[1e8,"$100M"],[1e9,"$1B"]];
+
+/* ---------- tooltip ---------- */
+const tip=document.getElementById("tip");
+function tipShow(evt,title,rows){
+  tip.textContent="";
+  const tt=document.createElement("div");tt.className="tt";tt.textContent=title;tip.appendChild(tt);
+  for(const r of rows){
+    const d=document.createElement("div");d.className="tr";
+    if(r.color){const k=document.createElement("span");k.className="tk";k.style.borderTopColor=r.color;d.appendChild(k);}
+    const b=document.createElement("b");b.textContent=r.value;d.appendChild(b);
+    const lbl=document.createElement("span");lbl.textContent=r.label;d.appendChild(lbl);
+    tip.appendChild(d);
+  }
+  tip.style.display="block";
+  const pad=14, w=tip.offsetWidth, h=tip.offsetHeight;
+  let x=evt.clientX+pad, y=evt.clientY+pad;
+  if(x+w>innerWidth-8)x=evt.clientX-w-pad;
+  if(y+h>innerHeight-8)y=evt.clientY-h-pad;
+  tip.style.left=x+"px"; tip.style.top=y+"px";
+}
+const tipHide=()=>{tip.style.display="none";};
+function svgPt(svg,evt,W,H){
+  const r=svg.getBoundingClientRect();
+  return [(evt.clientX-r.left)/r.width*W,(evt.clientY-r.top)/r.height*H];
+}
+
+/* ---------- derived ---------- */
+function filtered(th){ return D.filter(d=>d.l>=th); }
+function incidentLosses(rows){
+  const m=new Map();
+  for(const d of rows) m.set(d.p+"|"+d.t+"|"+d.l, d.l); /* incident keyed by identity fields */
+  return m;
+}
+function quant(sorted,q){
+  if(!sorted.length)return NaN;
+  const i=(sorted.length-1)*q, lo=Math.floor(i), hi=Math.ceil(i);
+  return sorted[lo]+(sorted[hi]-sorted[lo])*(i-lo);
+}
+
+/* ================= KPIs ================= */
+function renderKpis(rows){
+  const box=document.getElementById("kpis"); box.textContent="";
+  const incs=new Map();
+  for(const d of rows){const key=d.p+d.t+d.l; if(!incs.has(key))incs.set(key,d.l);}
+  const total=[...incs.values()].reduce((a,b)=>a+b,0);
+  const ages=rows.map(d=>d.a).sort((a,b)=>a-b);
+  const med=quant(ages,.5);
+  const items=[
+    ["Observations", rows.length.toLocaleString(), "of "+D.length+" at $1K"],
+    ["Incidents", incs.size.toLocaleString(), "each owns one loss"],
+    ["Total loss", fmtUsd(total), "gross, onchain-measured"],
+    ["Median code age", rows.length?fmtAge(med):"—", rows.length?("P25 "+fmtAge(quant(ages,.25))+" · P75 "+fmtAge(quant(ages,.75))):""],
+  ];
+  for(const [l,v,dsc] of items){
+    const k=document.createElement("div");k.className="kpi";
+    const a=document.createElement("div");a.className="kl";a.textContent=l;
+    const b=document.createElement("div");b.className="kv";b.textContent=v;
+    const c=document.createElement("div");c.className="kd";c.textContent=dsc;
+    k.append(a,b,c);box.appendChild(k);
+  }
+}
+
+/* ================= main ECDF ================= */
+function ecdfPoints(rows, weightFn){
+  const pts=rows.map(d=>({x:clampA(d.a), w:weightFn(d)})).sort((p,q)=>p.x-q.x);
+  const tot=pts.reduce((a,p)=>a+p.w,0);
+  let c=0; const out=[];
+  for(const p of pts){c+=p.w; out.push([p.x,c/tot]);}
+  return out;
+}
+function stepPath(pts,X,Y){
+  if(!pts.length)return "";
+  let d=`M${X(pts[0][0])},${Y(0)}`;
+  let py=0;
+  for(const [x,y] of pts){ d+=`L${X(x)},${Y(py)}L${X(x)},${Y(y)}`; py=y; }
+  d+=`L${X(ageEnd())},${Y(py)}`;
+  return d;
+}
+function drawAgeAxis(svg,X,Y0,H,pl,pr,W){
+  for(const [v,lab] of ageTicks()){
+    const x=X(v);
+    el("line",{x1:x,y1:26,x2:x,y2:Y0,class:"gl"},svg);
+    txt(svg,x,Y0+16,lab,"tick","middle");
+  }
+  el("line",{x1:pl,y1:Y0,x2:W-pr,y2:Y0,class:"ax"},svg);
+}
+let ecdfState=null;
+function renderEcdf(rows){
+  const W=1120,H=380,pl=52,pr=24,pt=26,pb=34;
+  const svg=mkSvg("c-ecdf",W,H);
+  const X=v=>ageX(v,pl,W-pr);
+  const Y=v=>H-pb-(v)*(H-pt-pb);
+  for(let p=0;p<=100;p+=25){
+    el("line",{x1:pl,y1:Y(p/100),x2:W-pr,y2:Y(p/100),class:"gl"},svg);
+    txt(svg,pl-8,Y(p/100)+4,p+"%","tick","end");
+  }
+  drawAgeAxis(svg,X,Y(0),H,pl,pr,W);
+  txt(svg,W-pr,H-4,"code age at exploit →","axl","end");
+
+  const cPts=ecdfPoints(rows,()=>1);
+  const lPts=ecdfPoints(rows,d=>d.l/d.n);
+  if(TH>1000){
+    document.getElementById("ghostli").hidden=false;
+    el("path",{d:stepPath(ecdfPoints(D,()=>1),X,Y),fill:"none",stroke:css("--ghost"),"stroke-width":2,"stroke-linejoin":"round"},svg);
+  } else document.getElementById("ghostli").hidden=true;
+  if(rows.length){
+    el("path",{d:stepPath(lPts,X,Y),fill:"none",stroke:css("--s2"),"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"},svg);
+    el("path",{d:stepPath(cPts,X,Y),fill:"none",stroke:css("--s1"),"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"},svg);
+    /* direct labels where curves separate most */
+    const at=(pts,x)=>{let y=0;for(const[px,py] of pts){if(px<=x)y=py;else break;}return y;};
+    let bestX=30*DAY,bestGap=-1;
+    for(let px=pl+50;px<=W-pr-50;px+=8){
+      const x=ageInv(px,pl,W-pr),g=Math.abs(at(cPts,x)-at(lPts,x));
+      if(g>bestGap){bestGap=g;bestX=x;}
+    }
+    const cy=at(cPts,bestX), ly=at(lPts,bestX);
+    txt(svg,X(bestX),Y(cy)-(cy>=ly?9:-16),"exploits","dlabel",cy>=ly?"middle":"middle").style.fill=css("--s1");
+    txt(svg,X(bestX),Y(ly)+(cy>=ly?16:-9),"loss","dlabel","middle").style.fill=css("--s2");
+  }
+  /* crosshair */
+  const cross=el("line",{x1:0,y1:pt,x2:0,y2:Y(0),class:"ax",visibility:"hidden"},svg);
+  const hit=el("rect",{x:pl,y:pt,width:W-pl-pr,height:H-pt-pb,fill:"transparent"},svg);
+  const at=(pts,x)=>{let y=0;for(const[px,py] of pts){if(px<=x)y=py;else break;}return y;};
+  const move=evt=>{
+    const [mx]=svgPt(svg,evt,W,H);
+    const x=Math.max(pl,Math.min(W-pr,mx));
+    cross.setAttribute("x1",x);cross.setAttribute("x2",x);cross.setAttribute("visibility","visible");
+    const age=ageInv(x,pl,W-pr);
+    const cv=at(cPts,age),lv=at(lPts,age);
+    tipShow(evt,"code age ≤ "+fmtAge(age),[
+      {color:css("--s1"),value:Math.round(cv*100)+"%",label:"of exploits ("+Math.round(cv*rows.length)+" of "+rows.length+")"},
+      {color:css("--s2"),value:Math.round(lv*100)+"%",label:"of stolen USD"},
+    ]);
+  };
+  hit.addEventListener("pointermove",move);
+  hit.addEventListener("pointerleave",()=>{cross.setAttribute("visibility","hidden");tipHide();});
+}
+
+/* ================= scatter ================= */
+function renderScatter(){
+  const W=1120,H=430,pl=64,pr=24,pt=30,pb=34;
+  const svg=mkSvg("c-scatter",W,H);
+  const X=v=>ageX(v,pl,W-pr);
+  const LMIN=1e3,LMAX=MAXL<=1e9?1e9:1e10;
+  const Y=v=>H-pb-(Math.log(Math.max(LMIN,Math.min(v,LMAX)))-Math.log(LMIN))/(Math.log(LMAX)-Math.log(LMIN))*(H-pt-pb);
+  for(const [v,lab] of USD_TICKS.concat(LMAX>1e9?[[1e10,"$10B"]]:[])){
+    el("line",{x1:pl,y1:Y(v),x2:W-pr,y2:Y(v),class:"gl"},svg);
+    txt(svg,pl-8,Y(v)+4,lab,"tick","end");
+  }
+  drawAgeAxis(svg,X,H-pb,H,pl,pr,W);
+  txt(svg,W-pr,H-4,"code age at exploit →","axl","end");
+  txt(svg,pl,12,"incident loss","axl");
+  /* threshold line */
+  if(TH>1000){
+    el("line",{x1:pl,y1:Y(TH),x2:W-pr,y2:Y(TH),stroke:css("--ink2"),"stroke-width":1.5,"stroke-dasharray":"5 4"},svg);
+    txt(svg,W-pr-4,Y(TH)-6,"threshold "+fmtUsd(TH),"dlabel","end");
+  }
+  const pts=[];
+  const dim=css("--dim"), blue=css("--s1"), surf=css("--surface");
+  for(const d of D){
+    const sel=d.l>=TH;
+    const c=el("circle",{cx:X(d.a),cy:Y(d.l),r:4.5,fill:sel?blue:dim,stroke:surf,"stroke-width":2,"fill-opacity":sel?.85:1},svg);
+    pts.push({x:X(d.a),y:Y(d.l),d,c});
+  }
+  /* OLS fit of log(loss) on log(age), drawn only across the admitted age range */
+  const sel=D.filter(d=>d.l>=TH);
+  if(sel.length>=10){
+    const lx=sel.map(d=>Math.log(Math.max(d.a,1))),ly=sel.map(d=>Math.log(d.l));
+    const mx=lx.reduce((a,b)=>a+b)/lx.length,my=ly.reduce((a,b)=>a+b)/ly.length;
+    const slope=lx.reduce((q,x,i)=>q+(x-mx)*(ly[i]-my),0)/lx.reduce((q,x)=>q+(x-mx)**2,0);
+    const fit=age=>Math.exp(my+slope*(Math.log(Math.max(age,1))-mx));
+    const x0=ageX(Math.min(...sel.map(d=>d.a)),pl,W-pr),x1=ageX(Math.max(...sel.map(d=>d.a)),pl,W-pr);
+    const path=[];
+    for(let px=x0;px<=x1;px+=10)path.push(px+","+Y(fit(ageInv(px,pl,W-pr))));
+    el("path",{d:"M"+path.join("L"),fill:"none",stroke:css("--s2"),"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"},svg);
+  }
+  /* selective labels: max loss + oldest selected */
+  const selPts=pts.filter(p=>p.d.l>=TH);
+  if(selPts.length){
+    const top=selPts.reduce((a,b)=>b.d.l>a.d.l?b:a);
+    txt(svg,top.x,top.y-9,top.d.p,"dlabel","middle");
+    const old=selPts.reduce((a,b)=>b.d.a>a.d.a?b:a);
+    if(old!==top) txt(svg,old.x-8,old.y+4,old.d.p+" · "+fmtAge(old.d.a),"dlabel","end");
+  }
+  const hit=el("rect",{x:0,y:0,width:W,height:H,fill:"transparent"},svg);
+  let hov=null;
+  hit.addEventListener("pointermove",evt=>{
+    const [mx,my]=svgPt(svg,evt,W,H);
+    let best=null,bd=26*26;
+    for(const p of pts){const dx=p.x-mx,dy=p.y-my,dd=dx*dx+dy*dy;if(dd<bd){bd=dd;best=p;}}
+    if(hov&&hov!==best){hov.c.setAttribute("r",4.5);hov=null;}
+    if(best){
+      hov=best;best.c.setAttribute("r",6.5);
+      tipShow(evt,best.d.p,[
+        {value:fmtUsd(best.d.l),label:"incident loss"},
+        {value:fmtAge(best.d.a),label:"code age · "+KINDS[best.d.k]},
+        {value:fmtDate(best.d.t),label:CHAINS[best.d.c]||("chain "+best.d.c)},
+      ]);
+    } else tipHide();
+  });
+  hit.addEventListener("pointerleave",()=>{if(hov){hov.c.setAttribute("r",4.5);hov=null;}tipHide();});
+}
+
+/* ================= threshold sweep ================= */
+function renderSweep(){
+  const W=1120,H1=280,GAP=14,H2=110,H=H1+GAP+H2+34,pl=64,pr=24,pt=18;
+  const svg=mkSvg("c-sweep",W,H);
+  const TMIN=1e3,TMAX=1e9;
+  const X=v=>logS(v,TMIN,TMAX,pl,W-pr);
+  const Y=v=>H1-ageFrac(v)*(H1-pt);
+  const steps=[];
+  for(let e=3;e<=9.0001;e+=0.05){
+    const th=Math.pow(10,e);
+    const ages=D.filter(d=>d.l>=th).map(d=>d.a).sort((a,b)=>a-b);
+    steps.push({th,n:ages.length,p25:quant(ages,.25),p50:quant(ages,.5),p75:quant(ages,.75)});
+  }
+  /* upper panel: age grid */
+  for(const [v,lab] of (AGELIN?AGE_TICKS_LIN_SPARSE:AGE_TICKS)){
+    if(!AGELIN&&v<DAY)continue;
+    el("line",{x1:pl,y1:Y(v),x2:W-pr,y2:Y(v),class:"gl"},svg);
+    txt(svg,pl-8,Y(v)+4,lab,"tick","end");
+  }
+  txt(svg,pl,12,"median code age (IQR band)","axl");
+  const band=steps.filter(s=>s.n>=3);
+  let d="M"+band.map(s=>X(s.th)+","+Y(s.p75)).join("L");
+  d+="L"+band.slice().reverse().map(s=>X(s.th)+","+Y(s.p25)).join("L")+"Z";
+  el("path",{d,fill:css("--wash1")},svg);
+  el("path",{d:"M"+band.map(s=>X(s.th)+","+Y(s.p50)).join("L"),fill:"none",stroke:css("--s1"),"stroke-width":2,"stroke-linejoin":"round"},svg);
+  el("line",{x1:pl,y1:H1,x2:W-pr,y2:H1,class:"ax"},svg);
+  /* lower panel: n */
+  const Y2=v=>H1+GAP+H2-(v/D.length)*(H2-6);
+  el("line",{x1:pl,y1:Y2(0),x2:W-pr,y2:Y2(0),class:"ax"},svg);
+  for(let g=100;g<D.length;g+=100){
+    el("line",{x1:pl,y1:Y2(g),x2:W-pr,y2:Y2(g),class:"gl"},svg);
+    txt(svg,pl-8,Y2(g)+4,String(g),"tick","end");
+  }
+  txt(svg,W-pr,H1+GAP+8,"observations admitted","axl","end");
+  let ad="M"+X(steps[0].th)+","+Y2(0)+"L"+steps.map(s=>X(s.th)+","+Y2(s.n)).join("L")+"L"+X(steps[steps.length-1].th)+","+Y2(0)+"Z";
+  el("path",{d:ad,fill:css("--wash1")},svg);
+  el("path",{d:"M"+steps.map(s=>X(s.th)+","+Y2(s.n)).join("L"),fill:"none",stroke:css("--s1"),"stroke-width":2},svg);
+  /* shared x axis */
+  for(const [v,lab] of USD_TICKS){
+    txt(svg,X(v),H-8,lab,"tick","middle");
+    el("line",{x1:X(v),y1:H-22,x2:X(v),y2:H-26,class:"ax"},svg);
+  }
+  /* current threshold marker */
+  const cx=X(TH);
+  el("line",{x1:cx,y1:pt,x2:cx,y2:H-26,stroke:css("--ink2"),"stroke-width":1.5,"stroke-dasharray":"5 4"},svg);
+  const cur=steps.reduce((a,b)=>Math.abs(Math.log(b.th/TH))<Math.abs(Math.log(a.th/TH))?b:a);
+  if(cur.n>=3){
+    el("circle",{cx,cy:Y(cur.p50),r:5,fill:css("--s1"),stroke:css("--surface"),"stroke-width":2},svg);
+    txt(svg,cx+8,Y(cur.p50)-8,fmtAge(cur.p50)+" median at "+fmtUsd(TH),"dlabel");
+  }
+  /* interaction: hover readout + click to set */
+  const hit=el("rect",{x:pl,y:pt,width:W-pl-pr,height:H-pt-30,fill:"transparent",style:"cursor:crosshair"},svg);
+  const probe=el("line",{x1:0,y1:pt,x2:0,y2:H-26,class:"ax",visibility:"hidden"},svg);
+  hit.addEventListener("pointermove",evt=>{
+    const [mx]=svgPt(svg,evt,W,H);
+    const x=Math.max(pl,Math.min(W-pr,mx));
+    probe.setAttribute("x1",x);probe.setAttribute("x2",x);probe.setAttribute("visibility","visible");
+    const th=logInv(x,TMIN,TMAX,pl,W-pr);
+    const s=steps.reduce((a,b)=>Math.abs(Math.log(b.th/th))<Math.abs(Math.log(a.th/th))?b:a);
+    tipShow(evt,"threshold "+fmtUsd(s.th),[
+      {color:css("--s1"),value:s.n?fmtAge(s.p50):"—",label:"median code age"},
+      {value:s.n?fmtAge(s.p25)+" – "+fmtAge(s.p75):"—",label:"interquartile range"},
+      {value:String(s.n),label:"observations admitted"},
+    ]);
+  });
+  hit.addEventListener("pointerleave",()=>{probe.setAttribute("visibility","hidden");tipHide();});
+  hit.addEventListener("pointerdown",evt=>{
+    const [mx]=svgPt(svg,evt,W,H);
+    const th=logInv(Math.max(pl,Math.min(W-pr,mx)),TMIN,TMAX,pl,W-pr);
+    setThreshold(th,true);
+  });
+}
+
+/* ================= kinds ECDF ================= */
+function renderKinds(rows){
+  const W=540,H=300,pl=44,pr=16,pt=20,pb=32;
+  const svg=mkSvg("c-kinds",W,H);
+  const X=v=>ageX(v,pl,W-pr);
+  const Y=v=>H-pb-v*(H-pt-pb);
+  for(let p=0;p<=100;p+=50){
+    el("line",{x1:pl,y1:Y(p/100),x2:W-pr,y2:Y(p/100),class:"gl"},svg);
+    txt(svg,pl-6,Y(p/100)+4,p+"%","tick","end");
+  }
+  const AX=AGELIN?AGE_TICKS_LIN_SPARSE:[[3600,"1h"],[DAY,"1d"],[30*DAY,"1mo"],[YEAR,"1y"],[10*YEAR,"10y"]];
+  for(const [v,lab] of AX){
+    el("line",{x1:X(v),y1:pt,x2:X(v),y2:Y(0),class:"gl"},svg);
+    txt(svg,X(v),Y(0)+16,lab,"tick","middle");
+  }
+  el("line",{x1:pl,y1:Y(0),x2:W-pr,y2:Y(0),class:"ax"},svg);
+  const leg=document.getElementById("kindlegend");leg.textContent="";
+  const series=[];
+  KINDS.forEach((name,ki)=>{
+    const sub=rows.filter(d=>d.k===ki);
+    const li=document.createElement("span");li.className="li";
+    const k=document.createElement("span");k.className="lkey";k.style.borderColor=css(KINDCOL[ki]);
+    li.appendChild(k);li.appendChild(document.createTextNode(name+" ("+sub.length+")"));
+    leg.appendChild(li);
+    if(sub.length<2)return;
+    const pts=ecdfPoints(sub,()=>1);
+    el("path",{d:stepPath(pts,X,Y),fill:"none",stroke:css(KINDCOL[ki]),"stroke-width":2,"stroke-linejoin":"round"},svg);
+    series.push({name,ki,pts,n:sub.length});
+  });
+  /* staggered direct labels */
+  const anchors=[0.30,0.52,0.70,0.86];
+  series.forEach((s,i)=>{
+    const x=ageInv(pl+anchors[i%4]*(W-pl-pr),pl,W-pr);
+    let y=0;for(const [px,py] of s.pts){if(px<=x)y=py;else break;}
+    txt(svg,X(x),Y(y)-7,s.name.replace("-change",""),"dlabel","middle").style.fill=css(KINDCOL[s.ki]);
+  });
+  const cross=el("line",{x1:0,y1:pt,x2:0,y2:Y(0),class:"ax",visibility:"hidden"},svg);
+  const hit=el("rect",{x:pl,y:pt,width:W-pl-pr,height:H-pt-pb,fill:"transparent"},svg);
+  hit.addEventListener("pointermove",evt=>{
+    const [mx]=svgPt(svg,evt,W,H);
+    const x=Math.max(pl,Math.min(W-pr,mx));
+    cross.setAttribute("x1",x);cross.setAttribute("x2",x);cross.setAttribute("visibility","visible");
+    const age=ageInv(x,pl,W-pr);
+    tipShow(evt,"code age ≤ "+fmtAge(age),series.map(s=>{
+      let y=0;for(const [px,py] of s.pts){if(px<=age)y=py;else break;}
+      return {color:css(KINDCOL[s.ki]),value:Math.round(y*100)+"%",label:s.name+" (n="+s.n+")"};
+    }));
+  });
+  hit.addEventListener("pointerleave",()=>{cross.setAttribute("visibility","hidden");tipHide();});
+}
+
+/* ================= timeline ================= */
+function renderTime(rows){
+  const W=540,H=300,pl=44,pr=16,pt=14,pb=32;
+  const svg=mkSvg("c-time",W,H);
+  const T0=Date.UTC(YRMIN,0,1)/1000, T1=Date.UTC(YRMAX+1,0,1)/1000;
+  const X=t=>pl+(t-T0)/(T1-T0)*(W-pl-pr);
+  const Y=v=>H-pb-ageFrac(v)*(H-pt-pb);
+  for(const [v,lab] of (AGELIN?AGE_TICKS_LIN_SPARSE:[[3600,"1h"],[DAY,"1d"],[30*DAY,"1mo"],[YEAR,"1y"],[10*YEAR,"10y"]])){
+    el("line",{x1:pl,y1:Y(v),x2:W-pr,y2:Y(v),class:"gl"},svg);
+    txt(svg,pl-6,Y(v)+4,lab,"tick","end");
+  }
+  for(let y=YRMIN;y<=YRMAX;y+=2){
+    const x=X(Date.UTC(y,0,1)/1000);
+    txt(svg,x,H-pb+16,"'"+String(y).slice(2),"tick","middle");
+    el("line",{x1:x,y1:H-pb,x2:x,y2:H-pb+4,class:"ax"},svg);
+  }
+  el("line",{x1:pl,y1:H-pb,x2:W-pr,y2:H-pb,class:"ax"},svg);
+  const dim=css("--dim");
+  const pts=[];
+  for(const d of rows){
+    const c=el("circle",{cx:X(d.t),cy:Y(d.a),r:3.5,fill:dim,stroke:css("--surface"),"stroke-width":1.5},svg);
+    pts.push({x:X(d.t),y:Y(d.a),d,c});
+  }
+  /* yearly median step */
+  const byYear=new Map();
+  for(const d of rows){
+    const y=new Date(d.t*1000).getUTCFullYear();
+    if(!byYear.has(y))byYear.set(y,[]);
+    byYear.get(y).push(d.a);
+  }
+  let path="",started=false;
+  for(let y=YRMIN;y<=YRMAX;y++){
+    const arr=(byYear.get(y)||[]).sort((a,b)=>a-b);
+    if(arr.length<3){started=false;continue;}
+    const m=Y(quant(arr,.5));
+    const x0=X(Date.UTC(y,0,1)/1000), x1=X(Math.min(T1,Date.UTC(y+1,0,1)/1000));
+    path+=(started?`L${x0},${m}`:`M${x0},${m}`)+`L${x1},${m}`;
+    started=true;
+  }
+  el("path",{d:path,fill:"none",stroke:css("--s1"),"stroke-width":2.5,"stroke-linejoin":"round"},svg);
+  const hit=el("rect",{x:0,y:0,width:W,height:H,fill:"transparent"},svg);
+  let hov=null;
+  hit.addEventListener("pointermove",evt=>{
+    const [mx,my]=svgPt(svg,evt,W,H);
+    let best=null,bd=24*24;
+    for(const p of pts){const dx=p.x-mx,dy=p.y-my,dd=dx*dx+dy*dy;if(dd<bd){bd=dd;best=p;}}
+    if(hov&&hov!==best){hov.c.setAttribute("r",3.5);hov=null;}
+    if(best){
+      hov=best;best.c.setAttribute("r",5.5);
+      tipShow(evt,best.d.p,[
+        {value:fmtAge(best.d.a),label:"code age"},
+        {value:fmtUsd(best.d.l),label:"incident loss"},
+        {value:fmtDate(best.d.t),label:CHAINS[best.d.c]||("chain "+best.d.c)},
+      ]);
+    } else tipHide();
+  });
+  hit.addEventListener("pointerleave",()=>{if(hov){hov.c.setAttribute("r",3.5);hov=null;}tipHide();});
+}
+
+/* ================= age bands ================= */
+const BANDS=[["under 1 day",0,DAY],["1 – 7 days",DAY,7*DAY],["1 – 4 weeks",7*DAY,30*DAY],["1 – 3 months",30*DAY,90*DAY],["3 – 12 months",90*DAY,YEAR],["1 – 3 years",YEAR,3*YEAR],["over 3 years",3*YEAR,Infinity]];
+function renderBands(rows,mount,valueFn,fmt,color,wash){
+  const W=540,rowH=34,pl=112,pr=64,pt=6;
+  const H=pt+BANDS.length*rowH+8;
+  const svg=mkSvg(mount,W,H);
+  const vals=BANDS.map(([,lo,hi])=>{
+    const sub=rows.filter(d=>d.a>=lo&&d.a<hi);
+    return valueFn(sub);
+  });
+  const mx=Math.max(...vals,1);
+  el("line",{x1:pl,y1:pt,x2:pl,y2:H-8,class:"ax"},svg);
+  BANDS.forEach(([name],i)=>{
+    const y=pt+i*rowH, bh=22;
+    const w=Math.max(vals[i]>0?3:0,(vals[i]/mx)*(W-pl-pr));
+    txt(svg,pl-8,y+bh/2+4.5,name,"tick","end");
+    if(w>0){
+      const r=el("path",{d:`M${pl},${y}h${Math.max(0,w-4)}a4,4 0 0 1 4,4v${bh-8}a4,4 0 0 1 -4,4h${-Math.max(0,w-4)}Z`,fill:css(color)},svg);
+      r.addEventListener("pointermove",evt=>{
+        const sub=rows.filter(d=>d.a>=BANDS[i][1]&&d.a<BANDS[i][2]);
+        tipShow(evt,name,[
+          {color:css(color),value:fmt(vals[i]),label:mount==="c-bandn"?"exploits":"stolen"},
+          {value:String(sub.length),label:"observations"},
+        ]);
+        r.setAttribute("fill-opacity",".8");
+      });
+      r.addEventListener("pointerleave",()=>{tipHide();r.setAttribute("fill-opacity","1");});
+    }
+    const t=txt(svg,pl+w+7,y+bh/2+4.5,fmt(vals[i]),"tick");
+    t.style.fill="var(--ink2)";t.style.fontWeight="600";
+  });
+}
+
+/* ================= funnel ================= */
+function renderFunnel(){
+  const items=[
+    ["selected for the curve",META.counts.selected,"--s1"],
+    ["provisional — review pending",META.counts.provisional,"--ghost"],
+    ["deduplicated — template or byte-identical sibling",META.counts.deduplicated,"--ghost"],
+    ["other exclusions — unknown reset or no USD valuation",META.counts.other,"--ghost"],
+  ];
+  document.getElementById("funnelsub").textContent="disposition of all "+items.reduce((t,i)=>t+i[1],0).toLocaleString()+" recorded targets in the release";
+  const W=1120,rowH=36,pl=380,pr=70,pt=4;
+  const H=pt+items.length*rowH+6;
+  const svg=mkSvg("c-funnel",W,H);
+  const mx=Math.max(...items.map(i=>i[1]));
+  el("line",{x1:pl,y1:pt,x2:pl,y2:H-6,class:"ax"},svg);
+  items.forEach(([name,v,col],i)=>{
+    const y=pt+i*rowH,bh=24;
+    const w=Math.max(3,(v/mx)*(W-pl-pr));
+    txt(svg,pl-10,y+bh/2+4.5,name,"tick","end");
+    el("path",{d:`M${pl},${y}h${Math.max(0,w-4)}a4,4 0 0 1 4,4v${bh-8}a4,4 0 0 1 -4,4h${-Math.max(0,w-4)}Z`,fill:css(col)},svg);
+    const t=txt(svg,pl+w+8,y+bh/2+4.5,v.toLocaleString(),"tick");
+    t.style.fill="var(--ink2)";t.style.fontWeight="600";
+  });
+}
+
+/* ================= table ================= */
+function renderTable(rows){
+  const tb=document.getElementById("tbody");tb.textContent="";
+  const sorted=rows.slice().sort((a,b)=>b.l-a.l);
+  document.getElementById("tblcount").textContent=sorted.length+" rows · sorted by loss";
+  const frag=document.createDocumentFragment();
+  for(const d of sorted){
+    const tr=document.createElement("tr");
+    const cells=[
+      ["pn",d.p],["",CHAINS[d.c]||("chain "+d.c)],["",fmtDate(d.t)],["",KINDS[d.k]],
+      ["num",fmtAge(d.a)],["num",fmtUsd(d.l)],
+    ];
+    for(const [cls,val] of cells){
+      const td=document.createElement("td");
+      if(cls)td.className=cls;
+      td.textContent=val;tr.appendChild(td);
+    }
+    frag.appendChild(tr);
+  }
+  tb.appendChild(frag);
+}
+
+/* ================= threshold control ================= */
+const slider=document.getElementById("thslider");
+const thval=document.getElementById("thval");
+const PRESETS=[1e3,1e4,1e5,1e6,1e7,1e8];
+const chipbox=document.getElementById("chips");
+PRESETS.forEach(v=>{
+  const b=document.createElement("button");
+  b.className="chip";b.type="button";b.textContent=fmtUsdTick(v);
+  b.setAttribute("aria-pressed",v===1e3?"true":"false");
+  b.addEventListener("click",()=>setThreshold(v,true));
+  chipbox.appendChild(b);
+});
+const axbox=document.getElementById("axchips");
+[["log",false],["linear",true]].forEach(([lab,lin])=>{
+  const b=document.createElement("button");
+  b.className="chip";b.type="button";b.textContent=lab;
+  b.setAttribute("aria-pressed",lin===AGELIN?"true":"false");
+  b.addEventListener("click",()=>{
+    if(AGELIN===lin)return;
+    AGELIN=lin;
+    [...axbox.children].forEach((c,i)=>c.setAttribute("aria-pressed",(i===1)===AGELIN?"true":"false"));
+    renderAll();
+  });
+  axbox.appendChild(b);
+});
+function sliderToTh(v){ return Math.pow(10, 3 + v/20); }   /* 0..120 → 1e3..1e9 */
+function thToSlider(th){ return Math.round((Math.log10(th)-3)*20); }
+function roundTh(th){
+  const m=Math.pow(10,Math.floor(Math.log10(th)));
+  return Math.round(th/(m/10))*(m/10);
+}
+let raf=0;
+function setThreshold(th,fromOutside){
+  TH=Math.max(1000,Math.min(1e9,roundTh(th)));
+  if(fromOutside) slider.value=thToSlider(TH);
+  thval.textContent=fmtUsd(TH);
+  [...chipbox.children].forEach((c,i)=>c.setAttribute("aria-pressed",PRESETS[i]===TH?"true":"false"));
+  cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(renderAll);
+}
+slider.addEventListener("input",()=>setThreshold(sliderToTh(+slider.value),false));
+
+function renderAll(){
+  const rows=filtered(TH);
+  document.getElementById("thcount").textContent=rows.length+" / "+D.length+" observations";
+  renderKpis(rows);
+  renderEcdf(rows);
+  renderScatter();
+  renderSweep();
+  renderKinds(rows);
+  renderTime(rows);
+  renderBands(rows,"c-bandn",sub=>sub.length,v=>v.toLocaleString(),"--s1");
+  renderBands(rows,"c-bandl",sub=>{
+    const incs=new Map();
+    for(const d of sub) incs.set(d.p+d.t+d.l,(incs.get(d.p+d.t+d.l)||0)+d.l/d.n);
+    return [...incs.values()].reduce((a,b)=>a+b,0);
+  },fmtUsd,"--s2");
+  renderFunnel();
+  renderTable(rows);
+}
+if(/\blin\b/i.test(location.hash)){AGELIN=true;[...axbox.children].forEach((c,i)=>c.setAttribute("aria-pressed",i===1?"true":"false"));}
+document.getElementById("subdyn").textContent=D.length+" reviewed observations · "+YRMIN+"–"+YRMAX+(META.generatedAt?" · data "+META.generatedAt:"");
+const hashTh=parseFloat((location.hash.match(/min=([\d.e+]+)/i)||[])[1]);
+if(hashTh>=1000) setThreshold(hashTh,true); else renderAll();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",renderAll);
+new MutationObserver(renderAll).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+</script>
+</body>
+</html>
