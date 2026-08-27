@@ -130,6 +130,8 @@ td{padding:5px 12px 5px 0;border-bottom:1px solid var(--grid);color:var(--ink2);
 td.num{font-family:"Spline Sans Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
 th.num{text-align:right}
 td.pn{color:var(--ink);font-weight:600}
+td.pn a{color:inherit;text-decoration:underline;text-decoration-color:var(--axis);text-underline-offset:2px}
+td.pn a:hover{text-decoration-color:var(--ink2)}
 @media (max-width:820px){
   .grid{grid-template-columns:1fr}
   .kpis{grid-template-columns:repeat(2,1fr)}
@@ -242,7 +244,9 @@ const META = /*__META__*/{};
 const KINDS = ["deployment","implementation-change","module-change","configuration-change"];
 const KINDCOL = ["--s1","--s2","--s3","--s4"];
 const CHAINS = {1:"Ethereum",10:"OP Mainnet",56:"BNB Chain",100:"Gnosis",137:"Polygon",250:"Fantom",5000:"Mantle",8453:"Base",42161:"Arbitrum",43114:"Avalanche",59144:"Linea",81457:"Blast",534352:"Scroll"};
-const D = RAW.map(r=>({a:r[0],l:r[1],k:r[2],c:r[3],t:r[4],p:r[5],n:r[6]}));
+const D = RAW.map(r=>({a:r[0],l:r[1],k:r[2],c:r[3],t:r[4],p:r[5],n:r[6],h:r[7]}));
+const REPO=META.repo||"https://github.com/sekuba/ossification-dataset";
+const incUrl=d=>REPO+"/blob/main/incidents/"+d.c+"/"+d.h+".json";
 
 const YEAR=31557600, DAY=86400;
 const AMIN=3600;
@@ -502,14 +506,19 @@ function renderScatter(){
     let best=null,bd=26*26;
     for(const p of pts){const dx=p.x-mx,dy=p.y-my,dd=dx*dx+dy*dy;if(dd<bd){bd=dd;best=p;}}
     if(hov&&hov!==best){hov.c.setAttribute("r",4.5);hov=null;}
+    hit.style.cursor=best?"pointer":"";
     if(best){
       hov=best;best.c.setAttribute("r",6.5);
       tipShow(evt,best.d.p,[
         {value:fmtUsd(best.d.l),label:"incident loss"},
         {value:fmtAge(best.d.a),label:"code age · "+KINDS[best.d.k]},
         {value:fmtDate(best.d.t),label:CHAINS[best.d.c]||("chain "+best.d.c)},
+        {value:"↗",label:"click to open the incident JSON"},
       ]);
     } else tipHide();
+  });
+  hit.addEventListener("click",()=>{
+    if(hov)window.open(incUrl(hov.d),"_blank","noopener");
   });
   hit.addEventListener("pointerleave",()=>{if(hov){hov.c.setAttribute("r",4.5);hov=null;}tipHide();});
 }
@@ -762,8 +771,12 @@ function renderTable(rows){
   const frag=document.createDocumentFragment();
   for(const d of sorted){
     const tr=document.createElement("tr");
+    const pn=document.createElement("td");pn.className="pn";
+    const link=document.createElement("a");
+    link.href=incUrl(d);link.target="_blank";link.rel="noopener";link.textContent=d.p;
+    pn.appendChild(link);tr.appendChild(pn);
     const cells=[
-      ["pn",d.p],["",CHAINS[d.c]||("chain "+d.c)],["",fmtDate(d.t)],["",KINDS[d.k]],
+      ["",CHAINS[d.c]||("chain "+d.c)],["",fmtDate(d.t)],["",KINDS[d.k]],
       ["num",fmtAge(d.a)],["num",fmtUsd(d.l)],
     ];
     for(const [cls,val] of cells){

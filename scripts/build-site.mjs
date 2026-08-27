@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 
 const KIND_INDEX = {
   deployment: 0,
@@ -28,6 +28,9 @@ const rows = curve.observations.map((o) => {
   if (kind === undefined) throw new Error(`unknown ageResetKind: ${o.ageResetKind}`)
   const timestamp = o.exploit.timestamp
   if (!timestamp) throw new Error(`curve observation without exploit timestamp: ${o.incidentId}`)
+  const txHash = incident.exploit.transactionHash
+  const sourceFile = `incidents/${o.chainId}/${txHash}.json`
+  if (!existsSync(sourceFile)) throw new Error(`source record missing: ${sourceFile}`)
   return [
     o.codeAgeSeconds,
     Math.round(usd * 100) / 100,
@@ -36,6 +39,7 @@ const rows = curve.observations.map((o) => {
     timestamp,
     incident.protocol.name,
     observationsPerIncident.get(o.incidentId),
+    txHash,
   ]
 })
 if (rows.length !== curve.counts.curveObservations) {
@@ -43,6 +47,7 @@ if (rows.length !== curve.counts.curveObservations) {
 }
 
 const meta = {
+  repo: `https://github.com/${process.env.GITHUB_REPOSITORY ?? 'sekuba/ossification-dataset'}`,
   generatedAt: new Date().toISOString().slice(0, 10),
   commit: (process.env.GITHUB_SHA ?? '').slice(0, 7),
   counts: {
