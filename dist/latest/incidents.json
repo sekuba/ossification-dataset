@@ -6614,6 +6614,62 @@
       }
     },
     {
+      "id": "eip155:1:0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5",
+      "protocol": {
+        "name": "Makina Finance",
+        "slug": "makina"
+      },
+      "name": "Makina DUSD manipulable Curve accounting instruction",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5",
+        "blockNumber": 24273362,
+        "transactionIndex": 0,
+        "timestamp": 1768880435
+      },
+      "summary": "Makina approved a permissionlessly callable accounting instruction that valued its Curve MIM/3CRV position through the pool's manipulable calc_withdraw_one_coin quote. A MEV searcher flash-manipulated that pool, invoked the approved instruction to inflate Caliber and Machine AUM, and synchronously propagated the false DUSD exchange rate into the DUSD/USDC Curve pool. Two cycles then removed nearly all of that pool's USDC.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 5108973.342628,
+          "valuationTimestamp": 1768880435,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-7"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "5108973.342628",
+            "usdValue": 5108973.342628,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1768880435,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross pre-recovery depletion of the DUSD/USDC Curve pool in the anchored transaction. USDC.balanceOf(pool) fell from 5,127,936.124721 at block 24273361 to 18,962.782093 at block 24273362, an exact 5,108,973.342628 USDC. The pool's DUSD token balance was unchanged. This measures victim assets rather than the searcher's smaller proceeds after flash-loan fees, manipulation costs and builder payment; later recoveries do not reduce gross loss.",
+        "realizedAt": 1768880435
+      }
+    },
+    {
       "id": "eip155:1:0x56e09abb35ff12271fdb38ff8a23e4d4a7396844426a94c4d3af2e8b7a0a2813",
       "protocol": {
         "name": "Penpie",
@@ -14714,6 +14770,85 @@
       }
     },
     {
+      "id": "eip155:1:0xec62e8b1c9f47c73825cab1c680c18cf27c41b66c77433aa5ae178455187336a",
+      "protocol": {
+        "name": "Pundi AI",
+        "slug": "pundi-ai"
+      },
+      "name": "Pundi AI uninitialized swap proxy takeover",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xec62e8b1c9f47c73825cab1c680c18cf27c41b66c77433aa5ae178455187336a",
+        "blockNumber": 21892111,
+        "transactionIndex": 117,
+        "timestamp": 1740109499
+      },
+      "summary": "Pundi AI deployed its swap proxy with empty initialization data, leaving initialize(address,address) callable by anyone. Twelve seconds later the attacker initialized the proxy, became its owner, and used the original UUPS implementation to install attacker code. That retained authority later minted one million unbacked PUNDIAI.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 90467.78433947908,
+          "valuationTimestamp": 1752314999,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-5",
+            "source-6",
+            "source-7"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "symbol": "WETH"
+            },
+            "amount": "22.550224439317992269",
+            "usdValue": 67050.49683947909,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1752314999,
+              "unitPriceUsd": 2973.3849,
+              "sourceIds": [
+                "source-5",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-5",
+              "source-6"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+              "symbol": "USDT"
+            },
+            "amount": "23417.2875",
+            "usdValue": 23417.2875,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1752314999,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-5",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-5",
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Ethereum token-transfer receipts reconstruct 22.550224439317992269 WETH and 23,427.2875 USDT received from monetization, less 10 USDT supplied by the attacker in the same campaign. The resulting $90,467.78 is an exact Ethereum-only loss; it excludes recovered or locked tokens and additional BSC proceeds from the official approximately $260,000 cross-chain total.",
+        "realizedAt": 1752314999
+      }
+    },
+    {
       "id": "eip155:1:0xf0464b01d962f714eee9d4392b2494524d0e10ce3eb3723873afd1346b8b06e4",
       "protocol": {
         "name": "Blueberry Protocol",
@@ -15893,6 +16028,113 @@
         "confidence": "high",
         "realizedAt": 1651117552,
         "notes": "The anchor minted 17,246,885.701212305622476302 unbacked DEI to the attacker. Because that quantity is larger than the entire DEI/USDC pool and the attacker's own selling set the price, the loss is measured as realised proceeds rather than a spot mark on DEI: within 66 minutes the attacker sold 15,818,000 DEI into the Solidly pair 0x5821573d8f04947952e76d94f3abc6d7b43bf8d0 for 4,748,593.702757 + 4,258,677.329129 + 2,811,448.853343 + 1,928,951.245729 + 803,884.255646 = 14,551,555.386604 USDC, and redeemed 1,501,091.6098773733 DEI through the DEUS redemption contract 0x9bd5cc542bc922e95ba41c0702555e830f2c1cb4 for 792,000.0 + 396,864.555022 = 1,188,864.555022 USDC, a total of 15,740,419.941626 USDC valued at par. A 500,322.5909182056 DEI round trip through 0xfa9eacdc763500ba4ab6ba2bfcf154d5a4b19ed7 returned 495,601.431539 USDC against 496,363.193858 USDC sent and is excluded as a wash. Flash-loan fees of roughly 329,148.62 USDC paid to the lending Solidly pairs inside the anchor are financing cost and do not reduce gross depletion. The lender keeps the attacker's 0.929182265419947290 Solidex deposit tokens, worth 1,859,129.03 USD at the unmanipulated oracle price of 2,000,822.763556768631327287 USD per unit that the same oracle returned 43 minutes earlier in transaction 0xdb5c3a873ae601eeec0a83d015f90d6e58858945df31372cf940bad7ee20194a; that retained collateral is a recovery and is not netted here, which is why published estimates of about 13.0 to 13.4 million USD sit below this gross figure."
+      }
+    },
+    {
+      "id": "eip155:250:0x3fb9d16bc81ffca7f66a19fed0994dc4aaa9127d2f03e97dd5844524bd908b69",
+      "protocol": {
+        "name": "Scream",
+        "slug": "scream"
+      },
+      "name": "Scream fUSD collateral priced through the USDC feed",
+      "chainId": 250,
+      "exploit": {
+        "transactionHash": "0x3fb9d16bc81ffca7f66a19fed0994dc4aaa9127d2f03e97dd5844524bd908b69",
+        "blockNumber": 38267162,
+        "transactionIndex": 0,
+        "timestamp": 1652586223
+      },
+      "summary": "Scream configured the scFUSD market to read Chainlink's USDC/USD feed and then enabled it as 85% collateral. The oracle therefore kept valuing fUSD near one dollar after fUSD traded below par. Campaign accounts supplied discounted fUSD and borrowed liquid USDC, WFTM, WETH and WBTC against the false value; the anchor account supplied 461,109.4376 fUSD and borrowed 390,000 USDC 59 blocks later.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 2106269.472773399,
+          "valuationTimestamp": 1652586223,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-9",
+            "source-10",
+            "source-11",
+            "source-12",
+            "source-13",
+            "source-14"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 250,
+              "tokenAddress": "0x04068da6c83afcfa0e13ba15a6696662335d5b75",
+              "symbol": "USDC"
+            },
+            "amount": "24480.522463",
+            "usdValue": 24480.522463,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1652586223,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-14"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-11",
+              "source-14"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 250,
+              "tokenAddress": "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
+              "symbol": "WFTM"
+            },
+            "amount": "2875037.15399598130912478",
+            "usdValue": 1043143.1467492793,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1652586223,
+              "unitPriceUsd": 0.36282771,
+              "sourceIds": [
+                "source-14"
+              ]
+            },
+            "sourceIds": [
+              "source-9",
+              "source-10",
+              "source-13",
+              "source-14"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 250,
+              "tokenAddress": "0x74b23882a30290451a17c44f4f05243b6b58c76d",
+              "symbol": "WETH"
+            },
+            "amount": "516.974432907347463696",
+            "usdValue": 1038645.8035611196,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1652586223,
+              "unitPriceUsd": 2009.08543527,
+              "sourceIds": [
+                "source-14"
+              ]
+            },
+            "sourceIds": [
+              "source-9",
+              "source-11",
+              "source-12",
+              "source-14"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Conservative onchain lower bound from three accounts that each supplied at least 461,109 fUSD during the campaign. For each account and borrowed market, every Borrow amount after its first large fUSD supply was summed and every later RepayBorrow amount, including liquidation repayments and accrued interest, was subtracted through Fantom block 123055284. Positive residual principal is 24,480.522463 USDC, 2,875,037.153995981309124780 WFTM and 516.974432907347463696 WETH; the WBTC leg was fully repaid and is excluded. Subtracting interest-bearing repayments makes this lower than the unrecovered principal. It also excludes every other affected account. USDC is valued at par; Chainlink FTM/USD and ETH/USD returned $0.36282771 and $2,009.08543527 immediately before the anchor.",
+        "realizedAt": 1652964743
       }
     },
     {

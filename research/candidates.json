@@ -25,15 +25,15 @@
       },
       "byDisposition": {
         "excluded": 25,
-        "included": 1267,
+        "included": 1269,
         "out-of-scope": 53,
-        "pending": 166,
+        "pending": 164,
         "unresolved": 96
       },
       "openByReason": {
         "incident-anchors": 1,
         "loss-evidence": 18,
-        "semantic-research": 243
+        "semantic-research": 241
       }
     }
   },
@@ -50,7 +50,7 @@
     },
     "adjudications": {
       "file": "research/raw/adjudications.json",
-      "sha256": "b0ddcd73b5e24e9eada357faa63ae3be7b9bf69740823201c1ff515ebbe6cb32"
+      "sha256": "fc82a610d58c6eba82cb6082fcc6ebc61f927390c74f865233cac7fef481f440"
     },
     "legacyV1": {
       "file": "research/raw/legacy-v1.json",
@@ -65,8 +65,8 @@
     },
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
-      "files": 689,
-      "sha256": "ebf3b8e3696cb06403c9d4fdae4c7735d76d08ddd8a7e3567db2aa09f7d4a302"
+      "files": 692,
+      "sha256": "09a7ba602953b4e5db6ce3c00fb7882038e4102cac77a4e6eedfb3bb0696929a"
     }
   },
   "counts": {
@@ -78,11 +78,11 @@
       "web-list": 483
     },
     "byDisposition": {
-      "excluded": 227,
-      "included": 785,
+      "excluded": 233,
+      "included": 792,
       "out-of-scope": 54,
-      "pending": 161,
-      "unresolved": 376
+      "pending": 149,
+      "unresolved": 375
     },
     "defihacklabsCoverage": {
       "total": 869,
@@ -727,8 +727,11 @@
         "exploitTx": "0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5"
       },
       "disposition": {
-        "status": "pending",
-        "reason": "CAUSAL_CONFIGURATION: Caliber accepted the vulnerable Curve valuation instruction because it was committed by the timelocked allowedInstrRoot; accountForPosition later verified and executed that approved instruction. Reopened because the root is persistent code-selecting state. Review must still identify its activation transaction and decide whether the 1,299.179984426144193670 WETH depleted from the external Curve DUSD/USDC pool is attributable to this execution context without duplicating another incident."
+        "status": "included",
+        "reason": "CAUSAL_CONFIGURATION: transaction 0xc6e9dadea6f222a1cd8763077d9823c88d65ed450ff11f3cf36d6823916bc895 scheduled allowed-instruction root 0xbb37df0ffb37a060429c68fd57b4224d3a679ab0adc95b1990898a653e608296 with a 48-hour timelock. The exploit instruction and proof reconstruct that exact root, so permissionless accountForPosition calls accepted its manipulable MIM/3CRV calc_withdraw_one_coin valuation, inflated Machine AUM and synchronously mispriced DUSD in the external Curve pool. The reviewed incident ages the root schedule and measures exact gross pre-recovery depletion of 5,108,973.342628 USDC from the DUSD/USDC pool; 1,299.179984426144193670 WETH was the searcher's smaller post-cost proceeds, not the asset depleted from the victim pool.",
+        "incidentIds": [
+          "eip155:1:0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5"
+        ]
       }
     },
     {
@@ -907,8 +910,8 @@
         "exploitTx": "0x1ae232da212c45f35c1525f851e4c41d529bf18af862d9ce9fd40bf709db4222"
       },
       "disposition": {
-        "status": "pending",
-        "reason": "CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: EndpointV2 configuration required one DVN, 0x589dedbd617e0cbcb916a9223f4d1300c294236b, and no optional DVN. After that verifier attested a forged nonce-308 packet, permissionless commitVerification and lzReceive released 116,500 rsETH although the Unichain outbound nonce was 307. Reopened because the persistent 1-of-1 verifier set made one compromised service sufficient; review must anchor its activation and separate configuration causality from the offchain trigger."
+        "status": "excluded",
+        "reason": "OFFCHAIN_VERIFIER_COMPROMISE: Kelp set the Ethereum receive route for source eid 30320 in transaction 0x2d48d9331d96c46f8b4a9f7a7bdcf256d2034dadb42f039d27dc28077d520592 to require DVN 0x589dedbd617e0cbcb916a9223f4d1300c294236b with 42 confirmations and no optional DVN. The setting persisted through the incident. In transaction 0xfe575668f895e10f8496fca3bb928fa53bebbea3e1de567d61bcd12d935f0d6f, that DVN's execute path accepted its own multisig authorization and called ReceiveUln302.verify for the forged nonce-308 packet. ReceiveUln302 then correctly counted the configured DVN, and permissionless commitVerification and lzReceive released 116,500 rsETH. A one-DVN route makes one verifier compromise sufficient, but it is the explicit trust model, not an EVM code or causal-configuration defect; the verifier authorized false offchain data while every onchain authorization check held."
       }
     },
     {
@@ -1673,11 +1676,14 @@
         "chain": "fantom",
         "date": "2022-05-12T22:14:52Z",
         "candidateVictim": "0x260e596dabe3afc463e75b6cc05d8c46acacfb09",
-        "exploitTx": "0x2834828184166a609ffe24c496f9047ca37bcdb8a16a8226098debab98c9bce3"
+        "exploitTx": "0x3fb9d16bc81ffca7f66a19fed0994dc4aaa9127d2f03e97dd5844524bd908b69"
       },
       "disposition": {
-        "status": "pending",
-        "reason": "CAUSAL_CONFIGURATION: scDEI, scFUSD, scTUSD, scDOLA, and scFRAX returned the same changing value as the USDC feed, showing that distinct stablecoins were aliased to persistent USDC pricing state while DEI traded below par. The largest DEI supply, 10,425,082.84 DEI in transaction 0x2834828184166a609ffe24c496f9047ca37bcdb8a16a8226098debab98c9bce3, preceded later borrows and roughly 35 million USD of bad debt. Reopened pending the original feed-assignment anchor, a coherent exploit anchor, and victim-depletion evidence."
+        "status": "included",
+        "reason": "CAUSAL_CONFIGURATION: Scream assigned scFUSD to Chainlink's USDC/USD aggregator at block 15846647, then set its collateral factor from zero to 0.85 at block 15846790. Both values persisted while fUSD traded below par. The first reviewed campaign borrow is 0x3fb9d16bc81ffca7f66a19fed0994dc4aaa9127d2f03e97dd5844524bd908b69: after supplying 461,109.4376 fUSD, the account borrowed 390,000 USDC against the aliased price. Three accounts' post-fUSD-supply Borrow amounts less every later RepayBorrow through block 123055284 leave an exact onchain lower bound of 24,480.522463 USDC, 2,875,037.153995981309124780 WFTM and 516.974432907347463696 WETH, valued at $2,106,269.47. This excludes the prearranged DEI exposure and all other affected accounts.",
+        "incidentIds": [
+          "eip155:250:0x3fb9d16bc81ffca7f66a19fed0994dc4aaa9127d2f03e97dd5844524bd908b69"
+        ]
       }
     },
     {
@@ -2283,8 +2289,8 @@
         "exploitTx": "0x37e53b15cb7f298bd8c45fcbbd914ba90feb3946f5511fc55bc986b7472956df"
       },
       "disposition": {
-        "status": "pending",
-        "reason": "CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: Ionic's deployer created ionLBTC in transaction 0x0b867a1dfd937981202cef46d533bbf66b4f737ba38a37d7fc633647e96d4e6d with attacker-controlled token 0x964dd444e3192f636322229080a576077b06fba3 as underlying collateral. After 250 fake LBTC was minted, later permissionless supplies and borrows depleted real assets. Reopened because social engineering caused a persistent listing later exercised by ordinary callers; review must anchor every listing and risk write and reconcile the 8.6 million versus 12.3 million USD loss reports."
+        "status": "excluded",
+        "reason": "OFFCHAIN_SOCIAL_ENGINEERING and ATTACKER_INTRODUCED_ASSET: Ionic's postmortem says the exploiter impersonated Lombard through weeks of business-development talks, supplied a market and oracle for an imitation LBTC, and induced Ionic to approve it as collateral; it identifies no contract or authorization bypass. Onchain, the imitation LBTC proxy 0x964dd444e3192f636322229080a576077b06fba3 was created in 0x9b90a303f8f40f5c9157ecb17c439841eb46885eec98589c485762cf0836051f at Mode block 18135008 on 2025-01-09. Ionic's Safe 0x8fba84867ba458e7c6e2c024d2de3d0b5c3ea1c2 then deliberately routed that exact token to oracle 0x04ffa53a90a8ded9ae83f64596c5783397c1cfb0 in 0xf0d10fcdb3c385bda3d3df040b2c0c7cb68d5babbd1e89bb41910581d1206a0d, created and listed ionLBTC 0xade794534c05f79981337e73dc2a987cdff1958d with that token as underlying in 0x0b867a1dfd937981202cef46d533bbf66b4f737ba38a37d7fc633647e96d4e6d, set its 250-LBTC supply cap in 0x147d6c137e52f88b0ced1fb2b11d752be9f2598b136869f8a54fc9add56030f7, and set its 50 percent collateral factor in 0x4204bddeba37cc0674f552247fa68904faae2d947b12a7d57de47f291681abaa. All four Safe transactions succeeded. The attacker later minted the imitation token in 0x9aa3fd43a6b0f85b4f1bf74f0c9e79773f238591d9c6fe666287bd2c8ac19009 and supplied it through ordinary ionLBTC mint calls beginning with the candidate transaction. The listing is the victim's execution of an attacker-authored social-engineering plan, not a latent code or causal authorization defect whose age predicts battle-tested security; assigning age from the listing would age attack machinery and offchain due diligence."
       }
     },
     {
@@ -2336,8 +2342,8 @@
         "exploitTx": "0xed932cf2d55dce38ac9d16a7bbeae1d7ba74895e05d6933493f3a0d800637e9b"
       },
       "disposition": {
-        "status": "pending",
-        "reason": "CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: threshold-authorized Safe transactions added attacker owner 0x2ef43c1d0c88c071d242b6c2d0430e1751607b87, removed the three prior owners, and set threshold 1. The next day that persistent owner state authorized six UXLINK mints. Reopened because the owner takeover created a condition exercised by later transactions even though social engineering supplied the original signatures; review must anchor the final owner change and measure actual victim depletion rather than nominal mint value."
+        "status": "excluded",
+        "reason": "SIGNING_PLANE_COMPROMISE and ATTACKER_INTRODUCED_CONFIGURATION: Safe transaction 0xed932cf2d55dce38ac9d16a7bbeae1d7ba74895e05d6933493f3a0d800637e9b at Arbitrum block 381858847 was confirmed by two existing EOA owners, 0x423f62a367088236c2b330f1bc0b082ce499c421 and 0x69522621e79eff14b0a58a8ffaef98dfba388767. It successfully called addOwnerWithThreshold(0x2ef43c1d0c88c071d242b6c2d0430e1751607b87,1) on the Safe; AddedOwner, ChangedThreshold(1), and ExecutionSuccess all confirm that the required authorization held. Four seconds later the new owner alone executed 0x371ca7462cbcbb5d7a40a9390b82f3cba0c01694270b1db18e291302c438ccae, removing all three prior owners. The following day the one-owner Safe made six successful ordinary mint(address,uint256) calls to UXLINK token 0x1a6b3a62391eccaaa992ade44cd4afe6bec8cff1. Whether the original signatures were obtained by social engineering or stolen keys, no Safe or token authorization check failed. The owner replacement was the attack itself and the resulting state was attacker-controlled attack machinery, not a latent victim-code or causal-configuration vulnerability to age."
       }
     },
     {
@@ -23064,11 +23070,11 @@
         }
       ],
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:19"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
     },
     {
@@ -29257,11 +29263,11 @@
         ]
       },
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:19"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -33919,11 +33925,11 @@
         "adjudication:64"
       ],
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:64"
+        "status": "included",
+        "incidentIds": [
+          "eip155:250:0x3fb9d16bc81ffca7f66a19fed0994dc4aaa9127d2f03e97dd5844524bd908b69"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -37645,11 +37651,11 @@
         "adjudication:94"
       ],
       "disposition": {
-        "status": "pending",
+        "status": "excluded",
         "adjudicationIds": [
           "adjudication:94"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -38420,8 +38426,11 @@
         "mechanism": "deployment front-running and unauthorized mint"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0xec62e8b1c9f47c73825cab1c680c18cf27c41b66c77433aa5ae178455187336a"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -38768,11 +38777,11 @@
         "adjudication:97"
       ],
       "disposition": {
-        "status": "pending",
+        "status": "excluded",
         "adjudicationIds": [
           "adjudication:97"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -39518,11 +39527,11 @@
         "adjudication:19"
       ],
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:19"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x569733b8016ef9418f0b6bde8c14224d9e759e79301499908ecbcd956a0651f5"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -40388,11 +40397,11 @@
         "adjudication:27"
       ],
       "disposition": {
-        "status": "pending",
+        "status": "excluded",
         "adjudicationIds": [
           "adjudication:27"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
