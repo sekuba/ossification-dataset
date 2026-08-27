@@ -140,6 +140,10 @@ state continued through the exploit. Suitable evidence depends on architecture
 and can combine runtime hashes, implementation or beacon slots, custom events,
 storage history, and execution traces.
 
+When historical internal-creation traces are unavailable, a CREATE creator can
+be established by address derivation, creator nonce bounds, code appearance in
+the deployment block, and a deployment-receipt witness from the created address.
+
 ## Verification
 
 Verification follows the ownership of each claim:

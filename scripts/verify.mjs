@@ -167,6 +167,22 @@ function eventCodeAddress(log, location) {
   return null
 }
 
+function createAddressInput(creatorAddress, nonce) {
+  const addressItem = `94${creatorAddress.slice(2)}`
+  let nonceItem
+  if (nonce === 0) nonceItem = '80'
+  else {
+    let value = nonce.toString(16)
+    if (value.length % 2 !== 0) value = `0${value}`
+    const length = value.length / 2
+    nonceItem = nonce < 128 ? value : `${(0x80 + length).toString(16)}${value}`
+  }
+  const payload = `${addressItem}${nonceItem}`
+  const length = payload.length / 2
+  if (length >= 56) throw new Error('CREATE proof RLP payload is too long')
+  return `0x${(0xc0 + length).toString(16)}${payload}`
+}
+
 async function transactionAnchor(chainId, anchor, label, report, { requireSuccess = true } = {}) {
   if (anchor.blockNumber === null || anchor.transactionHash === null || anchor.transactionIndex === null) {
     incomplete(report, label, 'blockNumber, transactionHash, and transactionIndex are required')
@@ -342,6 +358,66 @@ async function verifyCodeHash(chainId, target, exploitAnchor, report) {
   else pass(report, `${target.id}:code-hash`, `${expected} (${method})`)
 }
 
+async function verifyCreateNonceProof(chainId, target, anchored, report) {
+  const deployment = target.deployment
+  const proof = deployment.creatorProof
+  const label = `${target.id}:creator`
+  if (deployment.blockNumber === 0) {
+    fail(report, label, 'CREATE nonce proof cannot precede block zero')
+    return
+  }
+
+  const encoded = createAddressInput(deployment.creatorAddress, proof.nonce)
+  const derivedHash = await rpc(chainId, 'web3_sha3', [encoded])
+  const derivedAddress = `0x${derivedHash.slice(-40)}`.toLowerCase()
+  if (derivedAddress !== target.executionAddress) {
+    fail(report, label, `CREATE nonce ${proof.nonce} derives ${derivedAddress}`)
+    return
+  }
+
+  const beforeBlock = blockTag(deployment.blockNumber - 1)
+  const atBlock = blockTag(deployment.blockNumber)
+  const nonceBefore = hexInt(
+    await rpc(chainId, 'eth_getTransactionCount', [deployment.creatorAddress, beforeBlock]),
+  )
+  const nonceAfter = hexInt(
+    await rpc(chainId, 'eth_getTransactionCount', [deployment.creatorAddress, atBlock]),
+  )
+  if (nonceBefore > proof.nonce || nonceAfter <= proof.nonce) {
+    fail(
+      report,
+      label,
+      `creator nonce bounds ${nonceBefore} -> ${nonceAfter} do not contain ${proof.nonce}`,
+    )
+    return
+  }
+
+  const codeBefore = await rpc(chainId, 'eth_getCode', [target.executionAddress, beforeBlock])
+  const codeAfter = await rpc(chainId, 'eth_getCode', [target.executionAddress, atBlock])
+  if (codeBefore !== '0x' || codeAfter === '0x') {
+    fail(report, label, 'execution-address code does not appear in the deployment block')
+    return
+  }
+
+  const witness = anchored.receipt.logs.find(
+    (log) => hexInt(log.logIndex) === proof.witnessLogIndex,
+  )
+  if (
+    !witness ||
+    lower(witness.address) !== target.executionAddress ||
+    lower(witness.topics?.[0]) !== proof.eventTopic
+  ) {
+    fail(report, label, 'deployment receipt does not contain the declared execution-address witness')
+    return
+  }
+
+  pass(
+    report,
+    label,
+    `${deployment.creatorAddress} (CREATE nonce ${proof.nonce}, code appearance and receipt witness)`,
+  )
+}
+
 async function verifyDeployment(chainId, target, report) {
   const deployment = target.deployment
   const anchored = await transactionAnchor(chainId, deployment, `${target.id}:deployment`, report)
@@ -357,6 +433,13 @@ async function verifyDeployment(chainId, target, report) {
       )
     else if (receiptAddress === target.executionAddress)
       pass(report, `${target.id}:creator`, deployment.creatorAddress)
+    else if (deployment.creatorProof) {
+      try {
+        await verifyCreateNonceProof(chainId, target, anchored, report)
+      } catch (error) {
+        inconclusive(report, `${target.id}:creator`, error.message)
+      }
+    }
     else {
       try {
         const trace = await rpc(chainId, 'debug_traceTransaction', [

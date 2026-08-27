@@ -21388,6 +21388,64 @@
       }
     },
     {
+      "id": "eip155:56:0x6759db55a4edec4f6bedb5691fc42cf024be3a1a534ddcc7edd471ef205d4047",
+      "protocol": {
+        "name": "BRA Token",
+        "slug": "bra-token"
+      },
+      "name": "BRA pair self-transfer tax inflation",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x6759db55a4edec4f6bedb5691fc42cf024be3a1a534ddcc7edd471ef205d4047",
+        "blockNumber": 24655772,
+        "transactionIndex": 5,
+        "timestamp": 1673325640
+      },
+      "summary": "BRA's _transfer() applied both buy and sell branches when the BRA/USDT pair transferred BRA to itself. With both 3% tax destinations configured to that pair, the function subtracted one tax but credited two, increasing the pair's BRA balance by 3% per skim(pair) call. Repeated skims created an unreserved BRA balance that the attacker swapped for the pair's USDT.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 228296.595370773,
+          "valuationTimestamp": 1673325640,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-5",
+            "source-4"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "228296.595370773005266829",
+            "usdValue": 228296.595370773,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1673325640,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-5",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The BRA/USDT pair received 271,699.541664092338012248 USDT and paid 458,917.996365062737064211 USDT in the anchor transaction, then received 272,015.801163809386555704 USDT and paid 313,093.941833611992770570 USDT in the second campaign transaction. Its exact transaction-local reserve depletions were 187,218.454700970399051963 and 41,078.140669802606214866 USDT. Their sum, 228,296.595370773005266829 USDT, is valued at stablecoin par; downstream WBNB proceeds are attacker profit rather than the gross victim loss.",
+        "realizedAt": 1673326802
+      }
+    },
+    {
       "id": "eip155:56:0x6a50fea9a44cf8c1bd288fb1857da942dd601a1a062aff9598b755f3e7580ff4",
       "protocol": {
         "name": "Pro Token",
@@ -23333,6 +23391,61 @@
       }
     },
     {
+      "id": "eip155:56:0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0",
+      "protocol": {
+        "name": "Bankroll Network",
+        "slug": "bankroll-network"
+      },
+      "name": "BankrollNetworkStack self-funded buyFor inflation",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xd4c7c11c46f81b6bf98284e4921a5b9f0ff97b4c71ebade206cb10507e4503b0",
+        "blockNumber": 42481611,
+        "transactionIndex": 0,
+        "timestamp": 1727023858
+      },
+      "summary": "buyFor() accepted the pool itself as the beneficiary. WBNB.transferFrom(pool, pool, amount) was balance-neutral, but purchaseTokens() still minted internal stake and allocated virtual fees. Repeating that self-funded buy inflated dividends owed to the attacker's real stake, which sell() and withdraw() paid from the pool's WBNB reserve.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 239593.6534707491,
+          "valuationTimestamp": 1727023800,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-6",
+            "source-4"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "412.459593848661728154",
+            "usdValue": 239593.6534707491,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1727023800,
+              "unitPriceUsd": 580.89,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The exploit receipt records 16,000 WBNB entering BankrollNetworkStack and 16,412.459593848661728154 WBNB leaving it. The exact transaction-local reserve depletion is therefore 412.459593848661728154 WBNB; the attacker's 404.459593848661728154 WBNB receipt is lower because 8 WBNB repaid the flash-loan fee. DefiLlama observed BNB at $580.89 at timestamp 1727023800, 58 seconds before the exploit."
+      }
+    },
+    {
       "id": "eip155:56:0xe1f257041872c075cbe6a1212827bc346df3def6d01a07914e4006ec43027165",
       "protocol": {
         "name": "Level Finance",
@@ -23697,6 +23810,64 @@
         "confidence": "high",
         "notes": "Exact BSC-USD depletion of the pool across the three-transaction campaign, taken from the receipts: 1,119,165.577404063032213426 left the pool and 600,296.101490916296932929 of attacker-supplied buy input went in, leaving 518,869.475913146788810743. Of that, 398,848.920802613110227784 is the attacker's realised take, which is exactly the balance its EOA 0x4b44b52ef15f7aab9a0a6cfdfa8d2c5eeeb6d8c3 holds after the campaign having started at zero, and 120,020.555110533678582959 accrued to the pool's own fee wallet 0xf037a9f7e7ee68a011ab3e4fa8667dd350370b04, which is stored in pool slot 1 from deployment and is not attacker-controlled; it is counted because it left the drained pool and is not a recovery to the reserve backing SVT. The DODO flash loan of 600,296.101490916296932929 BSC-USD was repaid in full in each transaction and is not loss. The SVT leg is not separately valued: the pool's SVT inventory is its own token, and the 2,068,867.337245240376360201 SVT the attacker still held after the anchor transaction was sold back into the same pool in the two follow-up transactions for a combined 1,066.459898994375177222 BSC-USD, which is already inside the figure above and shows the residual had no independent value. The legacy figure of 397,782 is the attacker's take in the anchor transaction alone. A block-boundary check gives 521,020.643056518743156196 BSC-USD in the pool at block 31178237 and 2,153.137734371954345453 at block 31178423; the 2.000600000000000000 difference from the receipt sum is unrelated user trading in the 185 intervening blocks.",
         "realizedAt": 1693018206
+      }
+    },
+    {
+      "id": "eip155:56:0xf78a85eb32a193e3ed2e708803b57ea8ea22a7f25792851e3de2d7945e6d02d5",
+      "protocol": {
+        "name": "OpenLeverage",
+        "slug": "openleverage"
+      },
+      "name": "OpBorrowing liquidation clears shared LToken debt",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xf78a85eb32a193e3ed2e708803b57ea8ea22a7f25792851e3de2d7945e6d02d5",
+        "blockNumber": 37470329,
+        "transactionIndex": 37,
+        "timestamp": 1711948733
+      },
+      "summary": "OPBorrowing and OpenLevV1 shared one LPool debt balance per borrower. During marginTrade(), attacker-controlled 1inch callback data opened a dust-collateral OPBorrowing position under the margin trader's address. OPBorrowing.liquidate() then treated the trader's full margin debt as that position's debt and called repayBorrowEndByOpenLev(), which wrote off the unpaid balance. The attacker closed the now debt-free margin trade in the next transaction.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 19696.847618499596,
+          "valuationTimestamp": 1711948592,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-9",
+            "source-10",
+            "source-11"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "33.112849873074429985",
+            "usdValue": 19696.847618499596,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1711948592,
+              "unitPriceUsd": 594.84,
+              "sourceIds": [
+                "source-10"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-9",
+              "source-11"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The LPool's transaction-local Borrow event records 33.127662613057717773 WBNB sent for the margin trade. Its later RepayBorrow event records 0.014812739983287788 WBNB repaid, 33.112849873074429985 WBNB of bad debt, and the borrower's debt reset to zero. The bad-debt value is the exact lender depletion net of the attacker's same-transaction repayment; the inherited $234,000 estimate is unsupported by the onchain amount.",
+        "realizedAt": 1711948739
       }
     },
     {

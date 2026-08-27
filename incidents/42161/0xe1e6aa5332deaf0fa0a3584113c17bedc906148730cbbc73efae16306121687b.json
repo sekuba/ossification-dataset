@@ -99,7 +99,13 @@
         "blockNumber": 2191102,
         "transactionHash": "0x9b6ddc770ac66bae358452c1e0d1f512b26f601fc735461ef9ee50963ed03a9f",
         "transactionIndex": 2,
-        "creatorAddress": null
+        "creatorAddress": "0xa8e324540873dfdb5905dca1c9d074643a168dc6",
+        "creatorProof": {
+          "type": "create-nonce",
+          "nonce": 8,
+          "witnessLogIndex": 10,
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b"
+        }
       },
       "ageReset": {
         "kind": "implementation-change",
@@ -126,15 +132,19 @@
         "ageSourceIds": [
           "source-3",
           "source-6",
-          "source-5"
+          "source-5",
+          "source-7"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
+        "tier": "reviewed",
+        "curveEligible": true,
         "limitations": [
-          "The proxy was created by an internal CREATE inside transaction 0x9b6ddc770ac66bae358452c1e0d1f512b26f601fc735461ef9ee50963ed03a9f in pre-Nitro Arbitrum Classic block 2191102, for which no available provider serves execution traces: debug_traceTransaction returns an empty array and arbtrace_transaction reports 'found no trace'. deployment.creatorAddress is therefore left null so the verifier reports the gap rather than a contradiction. Review independently derived the creator as 0xa8e324540873dfdb5905dca1c9d074643a168dc6 from keccak(rlp([deployer, nonce 8])), matching the contractFactory Etherscan reports, but that derivation is not a check the onchain verifier can reproduce, so the target is not promoted.",
           "The exchange implementation 0x010659727ad7716c239e206acd3ebee0fdc9e207 is not source-verified on Arbiscan, so the defective statement is characterised from execution, event and storage evidence rather than from source."
+        ],
+        "reviewSourceIds": [
+          "source-5",
+          "source-7"
         ]
       }
     }
@@ -178,13 +188,19 @@
       "type": "onchain-transaction",
       "chainId": 42161,
       "transactionHash": "0x9b6ddc770ac66bae358452c1e0d1f512b26f601fc735461ef9ee50963ed03a9f"
+    },
+    {
+      "id": "source-7",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-27T07:28:00Z",
+      "note": "Reviewed the deployment proof and promoted the target. Pre-Nitro Arbitrum Classic providers return no internal trace for transaction 0x9b6ddc770ac66bae358452c1e0d1f512b26f601fc735461ef9ee50963ed03a9f, but its receipt is successful at block 2191102:2 and the exchange proxy emits Upgraded from its own address at logIndex 10. The proxy has no code at block 2191101 and has code at block 2191102. ExchangeDeployer 0xa8e324540873dfdb5905dca1c9d074643a168dc6 has nonce 5 at block 2191101 and nonce 9 at block 2191102; keccak256(rlp([deployer, 8])) derives exactly 0xf7ca7384cc6619866749955065f17bedd3ed80bc. These independent onchain checks establish the internal CREATE creator and deployment block while the receipt witness binds the created address to the declared transaction. The existing implementation selection, code hash, age history, exploit execution and loss review remain unchanged."
     }
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [
-      "The exchange implementation 0x010659727ad7716c239e206acd3ebee0fdc9e207 has no verified source on Arbiscan. The classification names the executed entry point and the invariant broken, both reproduced from the anchor transaction's events and prestateTracer storage diff, but not the offending source statement.",
-      "No target is curve-eligible: the pre-Nitro Arbitrum Classic creation of the exchange proxy cannot be traced by any available provider, so the deployment creator anchor is unverifiable here."
+      "The exchange implementation 0x010659727ad7716c239e206acd3ebee0fdc9e207 has no verified source on Arbiscan. The classification names the executed entry point and the invariant broken, both reproduced from the anchor transaction's events and prestateTracer storage diff, but not the offending source statement."
     ],
     "reviewSourceIds": [
       "source-5"

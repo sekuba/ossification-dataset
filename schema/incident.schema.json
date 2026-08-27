@@ -360,7 +360,32 @@
         "blockNumber": { "type": ["integer", "null"], "minimum": 0 },
         "transactionHash": { "$ref": "#/$defs/nullableHash" },
         "transactionIndex": { "type": ["integer", "null"], "minimum": 0 },
-        "creatorAddress": { "$ref": "#/$defs/nullableAddress" }
+        "creatorAddress": { "$ref": "#/$defs/nullableAddress" },
+        "creatorProof": { "$ref": "#/$defs/createNonceProof" }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["creatorProof"] },
+          "then": {
+            "properties": {
+              "blockNumber": { "type": "integer", "minimum": 0 },
+              "transactionHash": { "$ref": "#/$defs/hash" },
+              "transactionIndex": { "type": "integer", "minimum": 0 },
+              "creatorAddress": { "$ref": "#/$defs/address" }
+            }
+          }
+        }
+      ]
+    },
+    "createNonceProof": {
+      "type": "object",
+      "required": ["type", "nonce", "witnessLogIndex", "eventTopic"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "create-nonce" },
+        "nonce": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "witnessLogIndex": { "type": "integer", "minimum": 0 },
+        "eventTopic": { "$ref": "#/$defs/hash" }
       }
     },
     "ageResetAnchor": {
@@ -406,7 +431,8 @@
         "blockNumber": { "type": "integer", "minimum": 0 },
         "transactionHash": { "$ref": "#/$defs/hash" },
         "transactionIndex": { "type": "integer", "minimum": 0 },
-        "creatorAddress": { "$ref": "#/$defs/address" }
+        "creatorAddress": { "$ref": "#/$defs/address" },
+        "creatorProof": { "$ref": "#/$defs/createNonceProof" }
       }
     },
     "completeAgeReset": {
