@@ -285,8 +285,7 @@
       "date": "2024-07-18T06:17:47Z",
       "candidateVictim": "0x27fd43babfbe83a81d14665b1a6fb8030a60c9b4",
       "exploitTx": "0x48164d3adbab78c2cb9876f6e17f88e321097fcd14cadd57556866e4ef3e185d",
-      "disposition": "included",
-      "reason": "INCLUDED_CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: the reviewed incident reproduces the Safe singleton write from 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 to attacker code, the first drain 96 seconds later, the malicious runtime and creation traces, and a $52,465,724.27 onchain ETH-only loss floor.",
+      "reason": "SIGNING_PLANE_COMPROMISE: the Safe required four signatures and accepted four threshold-authorized signatures over an execTransaction delegatecall that installed attacker-authored singleton code. WazirX reports that three WazirX and one Liminal signature authorized the malicious transaction. The Safe's authorization checks held, and the later calls used the installed code's privileged drain path; no victim-code or causal-configuration vulnerability was exercised. The 96-second interval ages attack machinery, not battle-tested victim code.",
       "candidateIds": [
         "web:2024-07-18:wazirx"
       ]

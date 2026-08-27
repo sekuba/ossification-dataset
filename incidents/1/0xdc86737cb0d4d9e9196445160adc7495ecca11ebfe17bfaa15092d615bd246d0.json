@@ -7,10 +7,6 @@
     "name": "WazirX",
     "slug": "wazirx"
   },
-  "discovery": [
-    "adjudication:30",
-    "web:2024-07-18:wazirx"
-  ],
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -130,8 +126,10 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Excluded from the curve: threshold signatures installed attacker-authored drain code, and the later calls were authorized by that code rather than exploiting a victim-code or configuration vulnerability."
+        ],
         "reviewSourceIds": [
           "source-7"
         ]
@@ -185,13 +183,19 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-26T18:36:44Z",
-      "note": "The Safe was created by factory 0xa6b71e26c5e0845f74c812102ca7114b6a896ab2 at block 16132578:90. Safe v1.3.0 source places the singleton in slot 0. Transaction 0x48164d3adbab78c2cb9876f6e17f88e321097fcd14cadd57556866e4ef3e185d at block 20331565:21 delegatecalled helper 0xfbffef83b1c172fe3bc86c1ccb036ab9f3efcaf2 and changed that slot from 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 to 0xef279c2ab14960aa319008cbea384b9f8ac35fc6. The latter was deployed at block 20274652:174 and its runtime hashes to 0x032920c4cf440ec3fe6d4e40ea5e9006387b1be67adf3393c2b12d3e2094800b both there and in the anchor prestate. The first later call to its 0x2d8a122e drain function is the anchor at block 20331573:46; its trace delegatecalls the declared singleton and transfers 4.104646231600560442 GNO to 0x04b21735e93fa3f8df70e2da89e6922616891a88. An Etherscan account scan found 203 successful attacker calls after the reset, ending with source-2's final transaction. Before the ETH drain at block 20331578:25, the Safe held exactly 15,298.162196710885193018 ETH; afterward it held zero and the trace sends that amount to the same receiver. Chainlink feed 0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419 returned 342954425473 with 8 decimals and updatedAt 1721282147 at that block."
+      "note": "The Safe was created by factory 0xa6b71e26c5e0845f74c812102ca7114b6a896ab2 at block 16132578:90. Safe v1.3.0 source places the singleton in slot 0. Immediately before the reset, getThreshold() returned 4 and getOwners() returned six owners. Transaction 0x48164d3adbab78c2cb9876f6e17f88e321097fcd14cadd57556866e4ef3e185d called execTransaction with four 65-byte signatures and a delegatecall to helper 0xfbffef83b1c172fe3bc86c1ccb036ab9f3efcaf2; the Safe accepted the threshold authorization and the helper changed slot 0 from 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 to attacker code 0xef279c2ab14960aa319008cbea384b9f8ac35fc6. WazirX's report independently states that three WazirX and one Liminal signature authorized the malicious transaction. The attacker runtime was deployed at block 20274652:174 and hashes to 0x032920c4cf440ec3fe6d4e40ea5e9006387b1be67adf3393c2b12d3e2094800b there and in the anchor prestate. The first later call to its 0x2d8a122e drain function is the anchor at block 20331573:46; its trace delegatecalls the declared singleton and transfers 4.104646231600560442 GNO to 0x04b21735e93fa3f8df70e2da89e6922616891a88. An Etherscan account scan found 203 successful attacker calls after the reset, ending with source-2's final transaction. Before the ETH drain at block 20331578:25, the Safe held exactly 15,298.162196710885193018 ETH; afterward it held zero and the trace sends that amount to the same receiver. Chainlink feed 0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419 returned 342954425473 with 8 decimals and updatedAt 1721282147 at that block. The Safe's signature and privileged execution checks held; the only drain logic was attacker-authored, so this is signing-plane compromise rather than a victim-code or causal-configuration vulnerability."
+    },
+    {
+      "id": "source-8",
+      "type": "post-mortem",
+      "url": "https://wazirx.com/blog/wazirx-cyber-attack-key-insights-and-learnings/"
     }
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [
-      "The USD total values only the exact ETH leg; the GNO and other ERC-20 drains make it a conservative floor."
+      "The USD total values only the exact ETH leg; the GNO and other ERC-20 drains make it a conservative floor.",
+      "The campaign is signing-plane compromise followed by attacker-installed privileged drains, so it is retained as context but excluded from the code-age curve."
     ],
     "reviewSourceIds": [
       "source-7"

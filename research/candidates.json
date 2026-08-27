@@ -50,7 +50,7 @@
     },
     "adjudications": {
       "file": "research/raw/adjudications.json",
-      "sha256": "45092a82542f8421ce53d6b34a229ed2dacb1ebb7a024e682f846ffeb039c7f4"
+      "sha256": "b0ddcd73b5e24e9eada357faa63ae3be7b9bf69740823201c1ff515ebbe6cb32"
     },
     "legacyV1": {
       "file": "research/raw/legacy-v1.json",
@@ -66,7 +66,7 @@
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
       "files": 689,
-      "sha256": "c3ad91faca6207bacf4aa878f1e84b5b0d687c7bb8585876bf36a22f0a0626f0"
+      "sha256": "ebf3b8e3696cb06403c9d4fdae4c7735d76d08ddd8a7e3567db2aa09f7d4a302"
     }
   },
   "counts": {
@@ -78,8 +78,8 @@
       "web-list": 483
     },
     "byDisposition": {
-      "excluded": 225,
-      "included": 787,
+      "excluded": 227,
+      "included": 785,
       "out-of-scope": 54,
       "pending": 161,
       "unresolved": 376
@@ -987,11 +987,8 @@
         "exploitTx": "0x48164d3adbab78c2cb9876f6e17f88e321097fcd14cadd57556866e4ef3e185d"
       },
       "disposition": {
-        "status": "included",
-        "reason": "INCLUDED_CAUSAL_CONFIGURATION_WITH_OFFCHAIN_TRIGGER: the reviewed incident reproduces the Safe singleton write from 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 to attacker code, the first drain 96 seconds later, the malicious runtime and creation traces, and a $52,465,724.27 onchain ETH-only loss floor.",
-        "incidentIds": [
-          "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0"
-        ]
+        "status": "excluded",
+        "reason": "SIGNING_PLANE_COMPROMISE: the Safe required four signatures and accepted four threshold-authorized signatures over an execTransaction delegatecall that installed attacker-authored singleton code. WazirX reports that three WazirX and one Liminal signature authorized the malicious transaction. The Safe's authorization checks held, and the later calls used the installed code's privileged drain path; no victim-code or causal-configuration vulnerability was exercised. The 96-second interval ages attack machinery, not battle-tested victim code."
       }
     },
     {
@@ -36706,11 +36703,11 @@
         "adjudication:30"
       ],
       "disposition": {
-        "status": "included",
-        "incidentIds": [
-          "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0"
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:30"
         ],
-        "reason": "An admitted incident declares this discovery lead."
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -38404,9 +38401,9 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:42161:0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017"
+          "eip155:42161:0xd17330df683adeec26a67ff6972a74ab60a1e5577c73d0e074d8e890fab5279c"
         ],
-        "reason": "Exact normalized project name and UTC date match one primary incident."
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {

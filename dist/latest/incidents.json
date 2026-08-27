@@ -16792,79 +16792,6 @@
       }
     },
     {
-      "id": "eip155:42161:0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017",
-      "protocol": {
-        "name": "Kinto",
-        "slug": "kinto"
-      },
-      "name": "Kinto K token clandestine proxy initialization",
-      "chainId": 42161,
-      "exploit": {
-        "transactionHash": "0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017",
-        "blockNumber": 356168984,
-        "transactionIndex": 4,
-        "timestamp": 1752136391
-      },
-      "summary": "A clandestine UUPS upgrade path installed attacker-controlled K-token implementations without reliable Upgraded events, culminating in an off-books balance write used to mint and monetize unbacked K.",
-      "loss": {
-        "kind": "gross-assets-lost",
-        "usd": {
-          "amount": 1550000,
-          "valuationTimestamp": 1752136391,
-          "method": "reported",
-          "sourceIds": [
-            "source-2",
-            "source-3"
-          ]
-        },
-        "minimumUsd": null,
-        "assets": [
-          {
-            "asset": {
-              "chainId": 42161,
-              "tokenAddress": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
-              "symbol": "USDC"
-            },
-            "amount": "790148",
-            "usdValue": 790148,
-            "valuation": {
-              "method": "stablecoin-par",
-              "timestamp": 1752136391,
-              "unitPriceUsd": 1,
-              "sourceIds": [
-                "source-4"
-              ]
-            },
-            "sourceIds": [
-              "source-4"
-            ]
-          },
-          {
-            "asset": {
-              "chainId": 42161,
-              "tokenAddress": null,
-              "symbol": "ETH"
-            },
-            "amount": "282.84",
-            "usdValue": 789559.576956837,
-            "valuation": {
-              "method": "incident-price",
-              "timestamp": 1752134400,
-              "unitPriceUsd": 2791.54142609545,
-              "sourceIds": [
-                "source-7"
-              ]
-            },
-            "sourceIds": [
-              "source-4"
-            ]
-          }
-        ],
-        "confidence": "medium",
-        "notes": "The canonical $1.55 million figure is the reported gross loss. An independent component reconstruction covers 790,148 USDC borrowed from Morpho Blue without repayment plus approximately 282.84 ETH drained from K liquidity pools and values to about $1.58 million because the published asset quantities are rounded."
-      }
-    },
-    {
       "id": "eip155:42161:0x57e555328b7def90e1fc2a0f7aa6df8d601a8f15803800a5aaf0a20382f21fbd",
       "protocol": {
         "name": "WOOFi",
@@ -17970,6 +17897,80 @@
         ],
         "confidence": "high",
         "notes": "Components are exact ERC-20 Transfer nettings from the single anchor receipt, summed over the depleted victim addresses: the Lava aToken reserves aUSDC 0x16cb622cae7ad9fd2b0780b2026ed301414781fe, aUSDC.e 0x16cba9a6a9bb38e339d4250da0afd919c6bdbdfe, aUSDT 0x8da6bc74b2534030cd38c996c395b914990fa684, aWETH 0xec9b99c8262b72d846f0f80fce76af7d3c7c6af6 and awstETH 0xcb1332663a39f238bcd1cc7621e3e24a50251b94, plus the wrapper's own Uniswap V3 position in pool 0x8e295789c9465487074a65b1ae9ce0351172393f (25,644.648649 USDC and 49,038.308971 USDC.e) and the wrapper contract balance (1.278268 USDC), which the attacker redeemed with the LP shares he borrowed uncollateralised. Every one of the five reserves was drained to exactly zero. The 923.684256 USDC and 1,350.185377 USDC.e retained by the Uniswap V3 flash pools are financing fees paid out of the stolen funds and are therefore included in gross depletion rather than netted off; the attacker's own end balances were 77,477.425666 USDC, 96,215.533581 USDC.e, 60,349.016947 USDT, 8.525476552027716376 wstETH and 20.332763573538003060 ETH after gas. Flash-loan principals from Balancer, Aave V3 and the Uniswap V3 pools were repaid inside the transaction and are not counted. Stables are valued at par; WETH uses the DefiLlama ETH price and wstETH the DefiLlama mainnet wstETH price at the incident timestamp, both transferred in kind rather than sold, so no price impact applies."
+      }
+    },
+    {
+      "id": "eip155:42161:0xd17330df683adeec26a67ff6972a74ab60a1e5577c73d0e074d8e890fab5279c",
+      "protocol": {
+        "name": "Kinto",
+        "slug": "kinto"
+      },
+      "name": "Kinto K token unprotected initializer takeover",
+      "chainId": 42161,
+      "exploit": {
+        "transactionHash": "0xd17330df683adeec26a67ff6972a74ab60a1e5577c73d0e074d8e890fab5279c",
+        "blockNumber": 317434602,
+        "transactionIndex": 3,
+        "timestamp": 1742415882
+      },
+      "summary": "The K proxy was deployed with its implementation active but initialize() still callable by anyone. Two seconds later an attacker initialized it, assigned the administrative roles to its helper, and upgraded to a clandestine implementation. The retained authority later installed code that wrote unbacked K directly into an attacker balance for monetization.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 1550000,
+          "valuationTimestamp": 1752136391,
+          "method": "reported",
+          "sourceIds": [
+            "source-2",
+            "source-3"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+              "symbol": "USDC"
+            },
+            "amount": "790148",
+            "usdValue": 790148,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1752136391,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-4"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "282.84",
+            "usdValue": 789559.576956837,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1752134400,
+              "unitPriceUsd": 2791.54142609545,
+              "sourceIds": [
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "medium",
+        "notes": "The canonical $1.55 million figure is the reported gross loss. An independent component reconstruction covers 790,148 USDC borrowed from Morpho Blue without repayment plus approximately 282.84 ETH drained from K liquidity pools and values to about $1.58 million because the published asset quantities are rounded.",
+        "realizedAt": 1752136391
       }
     },
     {

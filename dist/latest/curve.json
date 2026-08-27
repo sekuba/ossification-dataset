@@ -30,11 +30,11 @@
   "counts": {
     "sourceIncidents": 689,
     "sourceTargets": 724,
-    "eligibleBeforeDeduplication": 347,
-    "curveObservations": 318,
+    "eligibleBeforeDeduplication": 346,
+    "curveObservations": 317,
     "deduplicatedObservations": 29,
     "provisionalObservations": 375,
-    "otherExcludedObservations": 2,
+    "otherExcludedObservations": 3,
     "incidentsByVerificationTier": {
       "provisional": 374,
       "reviewed": 315
@@ -48,7 +48,7 @@
       "incident-verification-tier:provisional": 374,
       "loss:no-usd-valuation": 1,
       "target-verification-tier:provisional": 375,
-      "target-verification:not-curve-eligible": 377
+      "target-verification:not-curve-eligible": 378
     }
   },
   "observations": [
@@ -69,6 +69,24 @@
       "codeArtifactCodeHash": "0x71bd27bf1769455c19a40556cd1d3bee966615d5c3c0b9c87f659e31179b57fe",
       "ageResetKind": "configuration-change",
       "codeAgeSeconds": 0
+    },
+    {
+      "observationId": "eip155:42161:0xd17330df683adeec26a67ff6972a74ab60a1e5577c73d0e074d8e890fab5279c#target-1",
+      "incidentId": "eip155:42161:0xd17330df683adeec26a67ff6972a74ab60a1e5577c73d0e074d8e890fab5279c",
+      "targetId": "target-1",
+      "chainId": 42161,
+      "exploit": {
+        "blockNumber": 317434602,
+        "transactionIndex": 3,
+        "timestamp": 1742415882
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:kinto-k-token-unprotected-initializer",
+      "codeArtifactCodeHash": "0x64e607ba1c96946a4f1329a5c02b9f040b2a44f7f0ffc8aca41a0fe253be5340",
+      "ageResetKind": "implementation-change",
+      "codeAgeSeconds": 2
     },
     {
       "observationId": "eip155:1:0x5b99165fb07881590fab962185b5dee877f2978fac83f5f76c88639edcba827d#target-1",
@@ -177,24 +195,6 @@
       "codeArtifactCodeHash": "0x382670aef0b31165479a3040b4b19e7a6e7c4954586c5206fdc15fa3d25b50ea",
       "ageResetKind": "configuration-change",
       "codeAgeSeconds": 77
-    },
-    {
-      "observationId": "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0#target-1",
-      "incidentId": "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 20331573,
-        "transactionIndex": 46,
-        "timestamp": 1721283563
-      },
-      "incidentVerificationTier": "reviewed",
-      "targetVerificationTier": "reviewed",
-      "targetCurveEligible": true,
-      "failureModeId": "failure:wazirx-safe-attacker-singleton",
-      "codeArtifactCodeHash": "0x032920c4cf440ec3fe6d4e40ea5e9006387b1be67adf3393c2b12d3e2094800b",
-      "ageResetKind": "implementation-change",
-      "codeAgeSeconds": 96
     },
     {
       "observationId": "eip155:1:0xcc36283cee837a8a0d4af0357d1957dc561913e44ad293ea9da8acf15d874ed5#target-1",
@@ -3725,24 +3725,6 @@
       "codeAgeSeconds": 7910954
     },
     {
-      "observationId": "eip155:42161:0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017#target-1",
-      "incidentId": "eip155:42161:0x579f0d9aba1d6caf1e469e6c29220d88b76277b37216c329d41e8f327acc3017",
-      "targetId": "target-1",
-      "chainId": 42161,
-      "exploit": {
-        "blockNumber": 356168984,
-        "transactionIndex": 4,
-        "timestamp": 1752136391
-      },
-      "incidentVerificationTier": "reviewed",
-      "targetVerificationTier": "reviewed",
-      "targetCurveEligible": true,
-      "failureModeId": "failure:kinto-clandestine-proxy-backdoor-mint",
-      "codeArtifactCodeHash": "0x7a88cdae0c575ec916f25f77fd7cdaca7f84b71b7a09d0abdd523640310cdf45",
-      "ageResetKind": "implementation-change",
-      "codeAgeSeconds": 8000269
-    },
-    {
       "observationId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3#target-1",
       "incidentId": "eip155:1:0x485e08dc2b6a4b3aeadcb89c3d18a37666dc7d9424961a2091d6b3696792f0f3",
       "targetId": "target-1",
@@ -5779,13 +5761,13 @@
   ],
   "ageKnots": [
     0,
+    2,
     12,
     12,
     12,
     15,
     24,
     77,
-    96,
     900,
     4180,
     5712,
@@ -5982,7 +5964,6 @@
     7412878,
     7810142,
     7910954,
-    8000269,
     8055252,
     8056096,
     8807413,
@@ -15395,6 +15376,27 @@
     }
   ],
   "otherExcludedObservations": [
+    {
+      "observationId": "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0#target-1",
+      "incidentId": "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 20331573,
+        "transactionIndex": 46,
+        "timestamp": 1721283563
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": false,
+      "failureModeId": "failure:wazirx-safe-attacker-singleton",
+      "codeArtifactCodeHash": "0x032920c4cf440ec3fe6d4e40ea5e9006387b1be67adf3393c2b12d3e2094800b",
+      "ageResetKind": "implementation-change",
+      "codeAgeSeconds": 96,
+      "exclusionReasons": [
+        "target-verification:not-curve-eligible"
+      ]
+    },
     {
       "observationId": "eip155:57:0x0021cc76a64e69eb81ec2c9a0aded3285d5cc372acd6f62a103fee3cfe0a7868#target-1",
       "incidentId": "eip155:57:0x0021cc76a64e69eb81ec2c9a0aded3285d5cc372acd6f62a103fee3cfe0a7868",

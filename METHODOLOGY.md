@@ -106,6 +106,12 @@ before exploit execution. Attacker-installed exploit machinery receives
 explicit attribution. A qualifying reset must strictly precede the exploit
 transaction.
 
+Code introduced shortly before a later drain is presumed attack machinery when
+it directs assets to a fixed attacker or exposes an attacker-only drain. Its
+introduction is the attack, not an age reset for the later payout. Admit the
+incident only if an independent victim-code or causal-configuration defect made
+that introduction possible, and age that defect to its first successful use.
+
 An unprotected initializer left reachable on a deployed proxy is a defect in
 that deployed code, exploitable and publicly visible from the moment it is
 installed. Such an incident anchors on the earliest transaction that calls the
