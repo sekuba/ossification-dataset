@@ -16,6 +16,7 @@
  * proof that the declared reset was the latest relevant code or state change.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -79,6 +80,18 @@ async function rpc(chainId, method, params) {
   })
   if (body.error) throw new Error(`${method}: ${body.error.message ?? JSON.stringify(body.error)}`)
   return body.result
+}
+
+async function keccak256(chainId, value) {
+  try {
+    return lower(await rpc(chainId, 'web3_sha3', [value]))
+  } catch (rpcError) {
+    try {
+      return lower(execFileSync('cast', ['keccak', value], { encoding: 'utf8' }).trim())
+    } catch {
+      throw rpcError
+    }
+  }
 }
 
 const hexInt = (value) => (value === null || value === undefined ? null : Number.parseInt(value, 16))
@@ -323,7 +336,7 @@ async function verifyCodeHash(chainId, target, exploitAnchor, report) {
     const matchingKey = Object.keys(prestate ?? {}).find((key) => lower(key) === address)
     const account = prestate?.[address] ?? prestate?.[matchingKey]
     if (account?.code) {
-      actual = lower(await rpc(chainId, 'web3_sha3', [account.code]))
+      actual = await keccak256(chainId, account.code)
       method = 'pre-exploit transaction state'
     }
   } catch {
@@ -331,16 +344,22 @@ async function verifyCodeHash(chainId, target, exploitAnchor, report) {
     // exact only for the first transaction in a block.
   }
   if (!actual && exploitAnchor.transactionIndex === 0 && exploitAnchor.blockNumber > 0) {
+    const previousBlock = blockTag(exploitAnchor.blockNumber - 1)
     try {
-      const proof = await rpc(chainId, 'eth_getProof', [
-        address,
-        [],
-        blockTag(exploitAnchor.blockNumber - 1),
-      ])
+      const proof = await rpc(chainId, 'eth_getProof', [address, [], previousBlock])
       actual = lower(proof?.codeHash)
       method = 'previous block (exploit is transaction index 0)'
     } catch {
-      // Report one fail-closed result below.
+      // Some chains do not implement eth_getProof.
+    }
+    if (!actual) {
+      try {
+        const runtime = await rpc(chainId, 'eth_getCode', [address, previousBlock])
+        actual = await keccak256(chainId, runtime)
+        method = 'previous-block runtime (exploit is transaction index 0)'
+      } catch {
+        // Report one fail-closed result below.
+      }
     }
   }
   if (!actual) {
@@ -368,7 +387,7 @@ async function verifyCreateNonceProof(chainId, target, anchored, report) {
   }
 
   const encoded = createAddressInput(deployment.creatorAddress, proof.nonce)
-  const derivedHash = await rpc(chainId, 'web3_sha3', [encoded])
+  const derivedHash = await keccak256(chainId, encoded)
   const derivedAddress = `0x${derivedHash.slice(-40)}`.toLowerCase()
   if (derivedAddress !== target.executionAddress) {
     fail(report, label, `CREATE nonce ${proof.nonce} derives ${derivedAddress}`)
@@ -631,7 +650,7 @@ async function verifyAgeResetMechanism(chainId, target, anchored, report) {
         fail(report, label, 'redeployment trace does not return runtime code')
         return
       }
-      const runtimeHash = lower(await rpc(chainId, 'web3_sha3', [runtime]))
+      const runtimeHash = await keccak256(chainId, runtime)
       if (target.codeArtifact.address !== mechanism.address) {
         fail(report, label, 'metamorphic runtime is not the declared code artifact')
         return
