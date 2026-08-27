@@ -29,26 +29,26 @@
   },
   "counts": {
     "sourceIncidents": 692,
-    "sourceTargets": 727,
-    "eligibleBeforeDeduplication": 355,
-    "curveObservations": 326,
+    "sourceTargets": 728,
+    "eligibleBeforeDeduplication": 359,
+    "curveObservations": 330,
     "deduplicatedObservations": 29,
-    "provisionalObservations": 369,
+    "provisionalObservations": 366,
     "otherExcludedObservations": 3,
     "incidentsByVerificationTier": {
-      "provisional": 369,
-      "reviewed": 323
+      "provisional": 366,
+      "reviewed": 326
     },
     "targetsByVerificationTier": {
-      "provisional": 369,
-      "reviewed": 358
+      "provisional": 366,
+      "reviewed": 362
     },
     "exclusionReasons": {
-      "age-reset:unknown": 2,
-      "incident-verification-tier:provisional": 369,
+      "age-reset:unknown": 1,
+      "incident-verification-tier:provisional": 366,
       "loss:no-usd-valuation": 1,
-      "target-verification-tier:provisional": 369,
-      "target-verification:not-curve-eligible": 372
+      "target-verification-tier:provisional": 366,
+      "target-verification:not-curve-eligible": 369
     }
   },
   "observations": [
@@ -2735,6 +2735,24 @@
       "codeAgeSeconds": 2479546
     },
     {
+      "observationId": "eip155:1:0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1#target-1",
+      "incidentId": "eip155:1:0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 15741333,
+        "transactionIndex": 1,
+        "timestamp": 1665689975
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:mevbot-a47b-unauthenticated-callback-delegatecall",
+      "codeArtifactCodeHash": "0x39d1ea2f6ba18431166364920ccbcd6eaea9b37faabd10e550b7f3529095c347",
+      "ageResetKind": "implementation-change",
+      "codeAgeSeconds": 2541184
+    },
+    {
       "observationId": "eip155:250:0x2906c8e15b53ec1fcb1af64a416643e15404339adbf7aa0d2bfa3fc993cbda0a#target-1",
       "incidentId": "eip155:250:0x2906c8e15b53ec1fcb1af64a416643e15404339adbf7aa0d2bfa3fc993cbda0a",
       "targetId": "target-1",
@@ -3219,6 +3237,24 @@
       "codeArtifactCodeHash": "0x8a03774e2eb5085562b4b79047db87835258292de837c4b61e5e1b0bbcf2aa3b",
       "ageResetKind": "deployment",
       "codeAgeSeconds": 3778304
+    },
+    {
+      "observationId": "eip155:1:0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b#target-1",
+      "incidentId": "eip155:1:0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 20956052,
+        "transactionIndex": 137,
+        "timestamp": 1728815255
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:morpho-paxg-usdc-oracle-decimal-misconfiguration",
+      "codeArtifactCodeHash": "0xbfeb2c1a6d5f4910b4a7de578d38807053ad757978879ce404b9b9cc699f506b",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 3793008
     },
     {
       "observationId": "eip155:1:0xbf5b2d22fa88965ddfc6e6d685fc7cfc683340c49e126386759ed9e4027b1415#target-1",
@@ -4227,6 +4263,42 @@
       "codeArtifactCodeHash": "0x62b1a1586e4b27d6c6fac09e72d0c5d2a3b8f640fb5a636ad81be479c3fa38b6",
       "ageResetKind": "deployment",
       "codeAgeSeconds": 13169064
+    },
+    {
+      "observationId": "eip155:56:0xcd5395f8181d70e702e7a90e9c1ee5d2e347d5ad504cd97a0deaf81901e3333b#target-1",
+      "incidentId": "eip155:56:0xcd5395f8181d70e702e7a90e9c1ee5d2e347d5ad504cd97a0deaf81901e3333b",
+      "targetId": "target-1",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 102068601,
+        "transactionIndex": 35,
+        "timestamp": 1780487830
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:atm-staking-permissionless-expired-reward-burn",
+      "codeArtifactCodeHash": "0xa2ee78704337a67180efcda486f03869e063ff0107c7e7baae0f10965e856862",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 13207707
+    },
+    {
+      "observationId": "eip155:56:0xcd5395f8181d70e702e7a90e9c1ee5d2e347d5ad504cd97a0deaf81901e3333b#target-2",
+      "incidentId": "eip155:56:0xcd5395f8181d70e702e7a90e9c1ee5d2e347d5ad504cd97a0deaf81901e3333b",
+      "targetId": "target-2",
+      "chainId": 56,
+      "exploit": {
+        "blockNumber": 102068601,
+        "transactionIndex": 35,
+        "timestamp": 1780487830
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:atm-token-recycle-removes-amm-reserves",
+      "codeArtifactCodeHash": "0x18e6f9ac0b026fa34a04813a8e0c3339de08890e8bb4c43e3b84ec326101906d",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 13207744
     },
     {
       "observationId": "eip155:1:0xab486012f21be741c9e674ffda227e30518e8a1e37a5f1d58d0b0d41f6e76530#target-1",
@@ -6071,6 +6143,7 @@
     2431668,
     2469828,
     2479546,
+    2541184,
     2564438,
     2570563,
     2572388,
@@ -6098,6 +6171,7 @@
     3652369,
     3674315,
     3778304,
+    3793008,
     3864204,
     3869980,
     4153910,
@@ -6154,6 +6228,8 @@
     12637742,
     12841308,
     13169064,
+    13207707,
+    13207744,
     13604305,
     13786344,
     14174508,
@@ -7334,29 +7410,6 @@
       ]
     },
     {
-      "observationId": "eip155:1:0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b#target-1",
-      "incidentId": "eip155:1:0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 20956052,
-        "transactionIndex": 137,
-        "timestamp": 1728815255
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x256979ae169abb7fbbbbc14188742f4b9debf48b48ad5b5207cadcc99ccb493b:failure-1",
-      "codeArtifactCodeHash": null,
-      "ageResetKind": "deployment",
-      "codeAgeSeconds": 25060692,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "observationId": "eip155:1:0x260d5eb9151c565efda80466de2e7eee9c6bd4973d54ff68c8e045a26f62ea73#target-1",
       "incidentId": "eip155:1:0x260d5eb9151c565efda80466de2e7eee9c6bd4973d54ff68c8e045a26f62ea73",
       "targetId": "target-1",
@@ -7492,30 +7545,6 @@
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",
         "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:1:0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1#target-1",
-      "incidentId": "eip155:1:0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1",
-      "targetId": "target-1",
-      "chainId": 1,
-      "exploit": {
-        "blockNumber": 15741333,
-        "transactionIndex": 1,
-        "timestamp": 1665689975
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:1:0x35ecf595864400696853c53edf3e3d60096639b6071cadea6076c9c6ceb921c1:failure-1",
-      "codeArtifactCodeHash": null,
-      "ageResetKind": "unknown",
-      "codeAgeSeconds": 2541184,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible",
-        "age-reset:unknown"
       ]
     },
     {
@@ -10940,29 +10969,6 @@
       "codeArtifactCodeHash": null,
       "ageResetKind": "deployment",
       "codeAgeSeconds": 116255,
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "observationId": "eip155:56:0x37b90a337075cd2feea93b12780abe9f953dad476e1c1418a02447aaa6dcfd86#target-1",
-      "incidentId": "eip155:56:0x37b90a337075cd2feea93b12780abe9f953dad476e1c1418a02447aaa6dcfd86",
-      "targetId": "target-1",
-      "chainId": 56,
-      "exploit": {
-        "blockNumber": 102072357,
-        "transactionIndex": 25,
-        "timestamp": 1780489523
-      },
-      "incidentVerificationTier": "provisional",
-      "targetVerificationTier": "provisional",
-      "targetCurveEligible": false,
-      "failureModeId": "legacy:eip155:56:0x37b90a337075cd2feea93b12780abe9f953dad476e1c1418a02447aaa6dcfd86:failure-1",
-      "codeArtifactCodeHash": null,
-      "ageResetKind": "deployment",
-      "codeAgeSeconds": 744,
       "exclusionReasons": [
         "incident-verification-tier:provisional",
         "target-verification-tier:provisional",

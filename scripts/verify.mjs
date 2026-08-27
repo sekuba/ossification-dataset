@@ -603,7 +603,65 @@ async function verifyAgeResetMechanism(chainId, target, anchored, report) {
     return
   }
   if (mechanism.type === 'metamorphic-redeployment') {
-    incomplete(report, label, 'metamorphic redeployment requires architecture-specific trace review')
+    if (!mechanism.address) {
+      incomplete(report, label, 'metamorphic redeployment requires an address')
+      return
+    }
+    if (mechanism.address !== target.executionAddress) {
+      fail(report, label, 'metamorphic redeployment address is not the executionAddress')
+      return
+    }
+    try {
+      const trace = await rpc(chainId, 'debug_traceTransaction', [
+        reset.transactionHash,
+        { tracer: 'callTracer', tracerConfig: { onlyTopCall: false, withLog: false } },
+      ])
+      const creation = collectTraceFrames(trace).find(
+        ({ frame }) =>
+          ['CREATE', 'CREATE2'].includes(String(frame.type).toUpperCase()) &&
+          lower(frame.to) === mechanism.address,
+      )?.frame
+      if (!creation) {
+        fail(report, label, 'redeployment trace does not create the declared address')
+        return
+      }
+
+      const runtime = lower(creation.output)
+      if (!runtime || runtime === '0x') {
+        fail(report, label, 'redeployment trace does not return runtime code')
+        return
+      }
+      const runtimeHash = lower(await rpc(chainId, 'web3_sha3', [runtime]))
+      if (target.codeArtifact.address !== mechanism.address) {
+        fail(report, label, 'metamorphic runtime is not the declared code artifact')
+        return
+      }
+      if (runtimeHash !== target.codeArtifact.codeHash) {
+        fail(
+          report,
+          label,
+          `redeployed runtime hash ${runtimeHash} != ${target.codeArtifact.codeHash}`,
+        )
+        return
+      }
+
+      const prestate = await rpc(chainId, 'debug_traceTransaction', [
+        reset.transactionHash,
+        { tracer: 'prestateTracer', tracerConfig: { diffMode: false } },
+      ])
+      const account = keyedCaseInsensitive(prestate, mechanism.address)
+      if (account?.code && account.code !== '0x') {
+        fail(report, label, 'declared address still had code at transaction start')
+        return
+      }
+      pass(
+        report,
+        label,
+        `${String(creation.type).toUpperCase()} by ${lower(creation.from)} installed ${runtimeHash} at an empty address`,
+      )
+    } catch (error) {
+      inconclusive(report, label, error.message)
+    }
     return
   }
   incomplete(report, label, `mechanism ${mechanism.type} requires legacy/manual revalidation`)
