@@ -1876,6 +1876,63 @@
       }
     },
     {
+      "id": "eip155:1:0x0cfa357e9e4db1540246f17cb6bfa0634ff8727d7cf241b63fb22605021c8844",
+      "protocol": {
+        "name": "NovaBox",
+        "slug": "novabox"
+      },
+      "name": "NovaBox uninitialised dividend checkpoints",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x0cfa357e9e4db1540246f17cb6bfa0634ff8727d7cf241b63fb22605021c8844",
+        "blockNumber": 25281768,
+        "transactionIndex": 1,
+        "timestamp": 1781030939
+      },
+      "summary": "NovaBox adds new dual ETH/NOVA depositors to the dividend list without initialising their dividend checkpoints, and its extcodesize guard is bypassed from a constructor, so a fresh depositor could immediately withdraw and collect the whole stale historical ETH dividend.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 93470.32648434088,
+          "valuationTimestamp": 1781028000,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-4",
+            "source-6"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "56.942794338375078272",
+            "usdValue": 93470.32648434088,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1781028000,
+              "unitPriceUsd": 1641.4776895019543,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross loss is the 56.942794338375078272 ETH paid above the attacker's 427.5 ETH campaign input. NovaBox's larger 65.022544338375078272 ETH balance decrease also includes 8.07975 ETH in transaction-generated owner fees sourced from that input, so those fees are not victim loss. The latest CoinGecko ETH observation before the transaction values the stolen ETH at $93,470.33."
+      }
+    },
+    {
       "id": "eip155:1:0x0ec3f2488a93839524add10ea229e773f6bc891b4eb4794c3337d4495263790b",
       "protocol": {
         "name": "The DAO",
@@ -7226,6 +7283,62 @@
       }
     },
     {
+      "id": "eip155:1:0x578a195e05f04b19fd8af6358dc6407aa1add87c3167f053beb990d6b4735f26",
+      "protocol": {
+        "name": "ERC20TokenBank",
+        "slug": "erc20tokenbank"
+      },
+      "name": "ERC20TokenBank",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x578a195e05f04b19fd8af6358dc6407aa1add87c3167f053beb990d6b4735f26",
+        "blockNumber": 17376907,
+        "transactionIndex": 0,
+        "timestamp": 1685512463
+      },
+      "summary": "ExchangeBetweenPools.doExchange(uint256) is permissionless and sends the selected ERC20TokenBank balance through Curve with min_dy = 0. The attacker distorted the USDC/USDT yPool, invoked doExchange to force the bank's 119,023.523157 USDC through the manipulated price for 47.391213 USDT, then reversed the distortion and captured the difference.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 119023.523157,
+          "valuationTimestamp": 1685512463,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-5"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "119023.523157",
+            "usdValue": 119023.523157,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1685512463,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-5"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross victim depletion is the exact USDC balance decrease of from_bank 0x9ab872a34139015da07ee905529a8842a6142971, from 119,023.523157 USDC immediately before the transaction to zero afterward. The manipulated exchange returned only 47.391213 USDT to to_bank 0x21a3dbee594a3419d6037d6d8cee0b1e10bf345c. The attacker's exact 111,500.389841 USDC proceeds are smaller because Curve execution and the 120,000 USDC flash-loan fee are attacker costs; they do not reduce gross victim depletion."
+      }
+    },
+    {
       "id": "eip155:1:0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
       "protocol": {
         "name": "Punk Protocol",
@@ -10017,6 +10130,61 @@
       }
     },
     {
+      "id": "eip155:1:0x90b468608fbcc7faef46502b198471311baca3baab49242a4a85b73d4924379b",
+      "protocol": {
+        "name": "CoW",
+        "slug": "cow"
+      },
+      "name": "CoW Protocol solver SwapGuard unprotected call",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x90b468608fbcc7faef46502b198471311baca3baab49242a4a85b73d4924379b",
+        "blockNumber": 16574049,
+        "transactionIndex": 32,
+        "timestamp": 1675738391
+      },
+      "summary": "A whitelisted solver's SwapGuard helper exposed an entry point that executed caller-supplied interactions with no access control, so the attacker routed a settlement through it and moved GPv2Settlement's DAI buffer to itself.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 114824.89080716071,
+          "valuationTimestamp": 1675738391,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-3",
+            "source-7"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+              "symbol": "DAI"
+            },
+            "amount": "114824.890807160711319588",
+            "usdValue": 114824.89080716071,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1675738391,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross loss is the exact DAI Transfer from GPv2Settlement to the attacker in the exploit receipt, valued at stablecoin par. This record does not substitute the larger contemporary headline estimate for the reproduced onchain amount."
+      }
+    },
+    {
       "id": "eip155:1:0x90f40d3c3b60370f7287d51d972ef54596c46e98f21af91b03a4e84c5e410f64",
       "protocol": {
         "name": "Projekt Reward Vault",
@@ -12752,6 +12920,110 @@
       }
     },
     {
+      "id": "eip155:1:0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec",
+      "protocol": {
+        "name": "Thetanuts",
+        "slug": "thetanuts"
+      },
+      "name": "Thetanuts",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xbba9f138fe39503bfd1aa62932dbd6ab35d37d23d48e4b7bf2988a9d5dc39fec",
+        "blockNumber": 25323329,
+        "transactionIndex": 0,
+        "timestamp": 1781531639
+      },
+      "summary": "Thetanuts IndexVault.mint() computes each required component-vault transfer with truncating integer division and accepts zero amounts. After claiming flash-borrowed index shares reduced totalSupply to three, the attacker made 37 sub-supply mints whose component transfers all rounded to zero, reminted the shares needed to repay Aave, and kept the five component-vault balances.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 105471.499078,
+          "valuationTimestamp": 1781531639,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-3",
+            "source-5"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "105471.499078",
+            "usdValue": 105471.499078,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1781531639,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-2",
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-5"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x248038fdb6f00f4b636812ca6a7f06b81a195ab8",
+              "symbol": "TN-CSCPv1-AVAXUSD"
+            },
+            "amount": "6378.688541",
+            "usdValue": null,
+            "valuation": null,
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-5"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xe5e8caa04c4b9e1c9bd944a2a78a48b05c3ef3af",
+              "symbol": "TN-CSCPv1-BNBUSD"
+            },
+            "amount": "17186.382409",
+            "usdValue": null,
+            "valuation": null,
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-5"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xad57221ae9897da08656aaabd5b1d4673d4ede71",
+              "symbol": "TN-CSCPv1-MATICUSD"
+            },
+            "amount": "10028.704387",
+            "usdValue": null,
+            "valuation": null,
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-5"
+            ]
+          }
+        ],
+        "confidence": "medium",
+        "notes": "The exploit receipt measures exact net proceeds of 105,471.499078 USDC plus 33,593.775337 residual AVAXUSD, BNBUSD, and MATICUSD component-vault shares. Gross IndexVault depletion was also exact: 49,716.431047 BTCUSD, 23,955.277333 ETHUSD, and those three residual balances. The attacker disposed of the BTCUSD and ETHUSD shares through initWithdraw to obtain the USDC; the USD total uses those realised proceeds and conservatively excludes the unvalued residual shares. The approximately $2.1 million cited for the incident was value at risk, not realised loss, because a whitehat rescued approximately $2 million."
+      }
+    },
+    {
       "id": "eip155:1:0xbc08860cd0a08289c41033bdc84b2bb2b0c54a51ceae59620ed9904384287a38",
       "protocol": {
         "name": "Unverified router 0x05f0",
@@ -12914,6 +13186,62 @@
         ],
         "confidence": "high",
         "notes": "The receipt records exactly 685,000 FLIX leaving the victim and the immediate FLIX/USDT swap returning 169,577.736489 USDT; the realized stablecoin proceeds provide the onchain valuation."
+      }
+    },
+    {
+      "id": "eip155:1:0xbeefd8faba2aa82704afe821fd41b670319203dd9090f7af8affdf6bcfec2d61",
+      "protocol": {
+        "name": "DeezNutz404",
+        "slug": "deeznutz404"
+      },
+      "name": "DeezNutz404",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xbeefd8faba2aa82704afe821fd41b670319203dd9090f7af8affdf6bcfec2d61",
+        "blockNumber": 19277803,
+        "transactionIndex": 0,
+        "timestamp": 1708539971
+      },
+      "summary": "DN404Reflect._transfer() snapshots the sender and recipient reflection balances, then writes them through two storage references without rejecting from == to. On a self-transfer both references alias the same account, so the recipient credit overwrites the sender debit and inflates the balance; the attacker repeated this before selling the unbacked tokens into the WETH pair.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 169979.59612962443,
+          "valuationTimestamp": 1708538400,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-5",
+            "source-6"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "symbol": "WETH"
+            },
+            "amount": "58.64533702471550784",
+            "usdValue": 169979.59612962443,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1708538400,
+              "unitPriceUsd": 2898.4332728446625,
+              "sourceIds": [
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross victim depletion is the exact WETH balance decrease of the DeezNutz/WETH pair 0x1fb4904b26de8c043959201a63b4b23c414251e2, from 59.087960396039603932 WETH immediately before the transaction to 0.442623371324096092 WETH afterward. The 2,000 WETH Balancer flash principal and 1 WETH fee were repaid and do not reduce the pool's loss. CoinGecko's last ETH observation before the transaction values the 58.64533702471550784 WETH at $169,979.60."
       }
     },
     {
@@ -16591,6 +16919,63 @@
         ],
         "confidence": "medium",
         "notes": "MetaTrust reports approximately 1,156.9 ETH-equivalent ($2.088 million) from the anchor transaction and another $60,000 of MATIC, UNI, APE, USDP, and WETH in the follow-up transaction, for approximately $2.14 million gross across the incident. The structured WETH component records the anchor transaction's post-swap profit; exact per-token amounts for the follow-up are not published."
+      }
+    },
+    {
+      "id": "eip155:1:0xfae5e751b8ce01457cbb6b529839f24a0cff50faaabcbd0fd02ca0cf559b050e",
+      "protocol": {
+        "name": "USM",
+        "slug": "usm"
+      },
+      "name": "USM FUM defund split-invariance",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xfae5e751b8ce01457cbb6b529839f24a0cff50faaabcbd0fd02ca0cf559b050e",
+        "blockNumber": 25716150,
+        "transactionIndex": 1193,
+        "timestamp": 1786263167
+      },
+      "summary": "USM.defund() prices a FUM redemption off the mean of the current and post-redemption sell price and contracts adjShrinkFactor per call, so redeeming one position in 64 slices paid strictly more ETH than one call - a pure rounding/split-invariance flaw with identical oracle reads throughout the trace.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 135809.89859339708,
+          "valuationTimestamp": 1786262400,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-3",
+            "source-5",
+            "source-6"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "70.830977367697708372",
+            "usdValue": 135809.89859339708,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1786262400,
+              "unitPriceUsd": 1917.3799888201577,
+              "sourceIds": [
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-3",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross loss is the exact USM balance decrease in the exploit transaction after excluding the flash-loan round trip. The latest CoinGecko ETH observation before the transaction values it at $135,809.90."
       }
     },
     {
