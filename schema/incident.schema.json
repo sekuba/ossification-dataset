@@ -69,7 +69,7 @@
         "properties": {
           "incident": {
             "properties": {
-              "exploit": { "$ref": "#/$defs/completeExploitAnchor" }
+              "exploit": { "required": ["transactionHash", "blockNumber", "transactionIndex", "timestamp"] }
             }
           },
           "loss": { "$ref": "#/$defs/reviewedLoss" },
@@ -122,9 +122,6 @@
     "nullableAddress": {
       "oneOf": [{ "$ref": "#/$defs/address" }, { "type": "null" }]
     },
-    "nullableHash": {
-      "oneOf": [{ "$ref": "#/$defs/hash" }, { "type": "null" }]
-    },
     "protocol": {
       "type": "object",
       "required": ["name", "slug"],
@@ -142,12 +139,12 @@
         "chainId": { "type": "integer", "minimum": 1 },
         "exploit": {
           "type": "object",
-          "required": ["transactionHash", "blockNumber", "transactionIndex", "timestamp"],
+          "required": ["transactionHash", "timestamp"],
           "additionalProperties": false,
           "properties": {
             "transactionHash": { "$ref": "#/$defs/hash" },
-            "blockNumber": { "type": ["integer", "null"], "minimum": 0 },
-            "transactionIndex": { "type": ["integer", "null"], "minimum": 0 },
+            "blockNumber": { "type": "integer", "minimum": 0 },
+            "transactionIndex": { "type": "integer", "minimum": 0 },
             "timestamp": { "type": "integer", "minimum": 1 }
           }
         },
@@ -160,53 +157,43 @@
     },
     "loss": {
       "type": "object",
-      "required": ["kind", "usd", "minimumUsd", "assets", "confidence", "notes"],
+      "required": ["kind", "assets", "confidence", "notes"],
       "additionalProperties": false,
       "properties": {
         "kind": {
           "enum": ["gross-assets-lost", "net-loss", "permanently-locked", "unspecified"]
         },
         "usd": {
-          "oneOf": [
-            { "type": "null" },
-            {
-              "type": "object",
-              "required": ["amount", "valuationTimestamp", "method", "sourceIds"],
-              "additionalProperties": false,
-              "properties": {
-                "amount": { "type": "number", "minimum": 1000 },
-                "valuationTimestamp": { "type": "integer", "minimum": 1 },
-                "method": {
-                  "enum": ["incident-price", "realised-proceeds", "stablecoin-par", "reported", "unspecified", "other"]
-                },
-                "sourceIds": {
-                  "type": "array",
-                  "uniqueItems": true,
-                  "items": { "type": "string", "minLength": 1 }
-                }
-              }
+          "type": "object",
+          "required": ["amount", "valuationTimestamp", "method", "sourceIds"],
+          "additionalProperties": false,
+          "properties": {
+            "amount": { "type": "number", "minimum": 1000 },
+            "valuationTimestamp": { "type": "integer", "minimum": 1 },
+            "method": {
+              "enum": ["incident-price", "realised-proceeds", "stablecoin-par", "reported", "unspecified", "other"]
+            },
+            "sourceIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/sourceId" }
             }
-          ]
+          }
         },
         "minimumUsd": {
-          "oneOf": [
-            { "type": "null" },
-            {
-              "type": "object",
-              "required": ["amount", "basis", "sourceIds"],
-              "additionalProperties": false,
-              "properties": {
-                "amount": { "type": "number", "minimum": 1000 },
-                "basis": { "enum": ["asset-valuation", "reported-lower-bound", "other"] },
-                "sourceIds": {
-                  "type": "array",
-                  "uniqueItems": true,
-                  "items": { "type": "string", "minLength": 1 }
-                }
-              }
+          "type": "object",
+          "required": ["amount", "basis", "sourceIds"],
+          "additionalProperties": false,
+          "properties": {
+            "amount": { "type": "number", "minimum": 1000 },
+            "basis": { "enum": ["asset-valuation", "reported-lower-bound", "other"] },
+            "sourceIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/sourceId" }
             }
-          ],
-          "description": "Explicit lower bound used to establish inclusion when an exact USD valuation is unavailable."
+          },
+          "description": "Explicit lower bound used to establish inclusion when an exact USD valuation is unavailable; omit when loss.usd exists."
         },
         "assets": {
           "type": "array",
@@ -226,12 +213,10 @@
         }
       },
       "anyOf": [
-        { "properties": { "usd": { "type": "object" } } },
+        { "required": ["usd"] },
         {
-          "properties": {
-            "minimumUsd": { "type": "object" },
-            "assets": { "minItems": 1 }
-          }
+          "required": ["minimumUsd"],
+          "properties": { "assets": { "minItems": 1 } }
         }
       ]
     },
@@ -240,28 +225,15 @@
       "properties": {
         "kind": { "enum": ["gross-assets-lost", "net-loss", "permanently-locked"] },
         "usd": {
-          "oneOf": [
-            { "type": "null" },
-            {
-              "type": "object",
-              "properties": {
-                "method": { "enum": ["incident-price", "realised-proceeds", "stablecoin-par", "reported", "other"] },
-                "sourceIds": { "minItems": 1 }
-              }
-            }
-          ]
+          "properties": {
+            "method": { "enum": ["incident-price", "realised-proceeds", "stablecoin-par", "reported", "other"] },
+            "sourceIds": { "minItems": 1 }
+          }
         },
         "minimumUsd": {
-          "oneOf": [
-            { "type": "null" },
-            {
-              "type": "object",
-              "properties": {
-                "basis": { "enum": ["asset-valuation", "reported-lower-bound", "other"] },
-                "sourceIds": { "minItems": 1 }
-              }
-            }
-          ]
+          "properties": {
+            "sourceIds": { "minItems": 1 }
+          }
         },
         "assets": {
           "items": { "$ref": "#/$defs/assetComponent" }
@@ -338,40 +310,23 @@
         }
       }
     },
-    "completeExploitAnchor": {
-      "type": "object",
-      "required": ["transactionHash", "blockNumber", "transactionIndex", "timestamp"],
-      "additionalProperties": false,
-      "properties": {
-        "transactionHash": { "$ref": "#/$defs/hash" },
-        "blockNumber": { "type": "integer", "minimum": 0 },
-        "transactionIndex": { "type": "integer", "minimum": 0 },
-        "timestamp": { "type": "integer", "minimum": 1 }
-      }
-    },
     "deploymentAnchor": {
+      "description": "Anchor fields not yet established onchain are omitted, never null.",
       "type": "object",
-      "required": ["timestamp", "blockNumber", "transactionHash", "transactionIndex", "creatorAddress"],
+      "required": ["timestamp"],
       "additionalProperties": false,
       "properties": {
         "timestamp": { "type": "integer", "minimum": 1 },
-        "blockNumber": { "type": ["integer", "null"], "minimum": 0 },
-        "transactionHash": { "$ref": "#/$defs/nullableHash" },
-        "transactionIndex": { "type": ["integer", "null"], "minimum": 0 },
-        "creatorAddress": { "$ref": "#/$defs/nullableAddress" },
+        "blockNumber": { "type": "integer", "minimum": 0 },
+        "transactionHash": { "$ref": "#/$defs/hash" },
+        "transactionIndex": { "type": "integer", "minimum": 0 },
+        "creatorAddress": { "$ref": "#/$defs/address" },
         "creatorProof": { "$ref": "#/$defs/createNonceProof" }
       },
       "allOf": [
         {
           "if": { "required": ["creatorProof"] },
-          "then": {
-            "properties": {
-              "blockNumber": { "type": "integer", "minimum": 0 },
-              "transactionHash": { "$ref": "#/$defs/hash" },
-              "transactionIndex": { "type": "integer", "minimum": 0 },
-              "creatorAddress": { "$ref": "#/$defs/address" }
-            }
-          }
+          "then": { "required": ["blockNumber", "transactionHash", "transactionIndex", "creatorAddress"] }
         }
       ]
     },
@@ -387,22 +342,40 @@
       }
     },
     "ageResetAnchor": {
+      "description": "With kind deployment the reset is the deployment: anchor fields and mechanism derive from `deployment` and are omitted, keeping only kind and an optional description. Other kinds anchor the change themselves; fields not yet established are omitted, never null.",
       "type": "object",
-      "required": ["kind", "timestamp", "blockNumber", "transactionHash", "transactionIndex", "logIndex", "mechanism", "description"],
+      "required": ["kind"],
       "additionalProperties": false,
       "properties": {
         "kind": {
           "enum": ["deployment", "implementation-change", "module-change", "configuration-change", "unknown"]
         },
         "timestamp": { "type": "integer", "minimum": 1 },
-        "blockNumber": { "type": ["integer", "null"], "minimum": 0 },
-        "transactionHash": { "$ref": "#/$defs/nullableHash" },
-        "transactionIndex": { "type": ["integer", "null"], "minimum": 0 },
-        "logIndex": { "type": ["integer", "null"], "minimum": 0 },
+        "blockNumber": { "type": "integer", "minimum": 0 },
+        "transactionHash": { "$ref": "#/$defs/hash" },
+        "transactionIndex": { "type": "integer", "minimum": 0 },
+        "logIndex": { "type": "integer", "minimum": 0 },
         "mechanism": { "$ref": "#/$defs/ageResetMechanism" },
-        "description": { "type": ["string", "null"] }
+        "description": { "type": "string", "minLength": 1 }
       },
       "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "deployment" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "timestamp": false,
+              "blockNumber": false,
+              "transactionHash": false,
+              "transactionIndex": false,
+              "logIndex": false,
+              "mechanism": false
+            }
+          },
+          "else": { "required": ["timestamp", "mechanism"] }
+        },
         {
           "if": {
             "properties": { "kind": { "const": "configuration-change" } },
@@ -413,56 +386,9 @@
               "mechanism": {
                 "properties": { "type": { "enum": ["storage-write", "view-call"] } },
                 "required": ["type"]
-              },
-              "description": { "type": "string", "minLength": 1 }
-            }
-          }
-        }
-      ]
-    },
-    "completeAnchor": {
-      "type": "object",
-      "required": ["timestamp", "blockNumber", "transactionHash", "transactionIndex", "creatorAddress"],
-      "additionalProperties": false,
-      "properties": {
-        "timestamp": { "type": "integer", "minimum": 1 },
-        "blockNumber": { "type": "integer", "minimum": 0 },
-        "transactionHash": { "$ref": "#/$defs/hash" },
-        "transactionIndex": { "type": "integer", "minimum": 0 },
-        "creatorAddress": { "$ref": "#/$defs/address" },
-        "creatorProof": { "$ref": "#/$defs/createNonceProof" }
-      }
-    },
-    "completeAgeReset": {
-      "type": "object",
-      "required": ["kind", "timestamp", "blockNumber", "transactionHash", "transactionIndex", "logIndex", "mechanism", "description"],
-      "additionalProperties": false,
-      "properties": {
-        "kind": {
-          "enum": ["deployment", "implementation-change", "module-change", "configuration-change", "unknown"]
-        },
-        "timestamp": { "type": "integer", "minimum": 1 },
-        "blockNumber": { "type": "integer", "minimum": 0 },
-        "transactionHash": { "$ref": "#/$defs/hash" },
-        "transactionIndex": { "type": "integer", "minimum": 0 },
-        "logIndex": { "type": ["integer", "null"], "minimum": 0 },
-        "mechanism": { "$ref": "#/$defs/ageResetMechanism" },
-        "description": { "type": ["string", "null"] }
-      },
-      "allOf": [
-        {
-          "if": {
-            "properties": { "kind": { "const": "configuration-change" } },
-            "required": ["kind"]
-          },
-          "then": {
-            "properties": {
-              "mechanism": {
-                "properties": { "type": { "enum": ["storage-write", "view-call"] } },
-                "required": ["type"]
-              },
-              "description": { "type": "string", "minLength": 1 }
-            }
+              }
+            },
+            "required": ["description"]
           }
         }
       ]
@@ -543,7 +469,6 @@
         "id",
         "executionAddress",
         "relationship",
-        "codeArtifact",
         "deployment",
         "ageReset",
         "codeAgeSeconds",
@@ -560,11 +485,11 @@
         },
         "codeArtifact": {
           "type": "object",
-          "required": ["address", "codeHash"],
+          "minProperties": 1,
           "additionalProperties": false,
           "properties": {
-            "address": { "$ref": "#/$defs/nullableAddress" },
-            "codeHash": { "$ref": "#/$defs/nullableHash" }
+            "address": { "$ref": "#/$defs/address" },
+            "codeHash": { "$ref": "#/$defs/hash" }
           }
         },
         "deployment": { "$ref": "#/$defs/deploymentAnchor" },
@@ -585,28 +510,22 @@
             }
           },
           "then": {
+            "required": ["codeArtifact"],
             "properties": {
-              "deployment": { "$ref": "#/$defs/completeAnchor" },
-              "ageReset": { "$ref": "#/$defs/completeAgeReset" }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "verification": {
-                "properties": { "tier": { "const": "reviewed" } },
-                "required": ["tier"]
-              }
-            }
-          },
-          "then": {
-            "properties": {
-              "codeArtifact": {
-                "properties": {
-                  "address": { "$ref": "#/$defs/address" },
-                  "codeHash": { "$ref": "#/$defs/hash" }
+              "deployment": {
+                "required": ["timestamp", "blockNumber", "transactionHash", "transactionIndex", "creatorAddress"]
+              },
+              "ageReset": {
+                "if": {
+                  "properties": { "kind": { "const": "deployment" } },
+                  "required": ["kind"]
+                },
+                "else": {
+                  "required": ["kind", "timestamp", "blockNumber", "transactionHash", "transactionIndex", "mechanism"]
                 }
+              },
+              "codeArtifact": {
+                "required": ["address", "codeHash"]
               },
               "relationship": {
                 "enum": ["direct", "proxy", "beacon-proxy", "minimal-proxy", "diamond", "module-router", "library"]

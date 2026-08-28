@@ -19,6 +19,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { normalizeIncident } from './build.mjs'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const EMPTY_CODE_HASH = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
@@ -730,7 +731,7 @@ async function verifyTarget(incident, target, exploitAnchor, report) {
 }
 
 async function verifyFile(file) {
-  const incident = JSON.parse(readFileSync(file, 'utf8'))
+  const incident = normalizeIncident(JSON.parse(readFileSync(file, 'utf8')))
   const report = createReport(file, incident)
   const chainId = incident.incident.chainId
   if (!rpcUrl(chainId)) {

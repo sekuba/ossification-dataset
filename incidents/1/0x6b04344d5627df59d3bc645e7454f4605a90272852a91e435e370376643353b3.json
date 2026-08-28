@@ -31,7 +31,6 @@
         "source-3"
       ]
     },
-    "minimumUsd": null,
     "assets": [
       {
         "asset": {
@@ -76,15 +75,6 @@
       },
       "ageReset": {
         "kind": "deployment",
-        "timestamp": 1773932555,
-        "blockNumber": 24692301,
-        "transactionHash": "0x241de4abe766c3dce8c418af0baf3b3789a22eccaabbf636367a0e28c232a337",
-        "transactionIndex": 67,
-        "logIndex": null,
-        "mechanism": {
-          "type": "deployment",
-          "address": "0xb9c7c84a1aa0dd40b5b38aae815ad0cdd2e5f88a"
-        },
         "description": "The exploited execution context is the EIP-1167 clone 0xb9c7c84a1aa0dd40b5b38aae815ad0cdd2e5f88a, whose 45-byte runtime 0x363d3d373d3d3d363d73317aa10528ff675ef4c358ea6a5b7b54943257335af43d82803e903d91602b57fd5bf3 hard-codes the defect-bearing RWAVault implementation 0x317aa10528ff675ef4c358ea6a5b7b5494325733 and cannot be repointed. The clone was created by CREATE from the RWAVault factory 0x475984eb4672eb45bdf8750848b91fb113fdd8de inside 0x241de4abe766c3dce8c418af0baf3b3789a22eccaabbf636367a0e28c232a337 at block 24692301 index 67 and initialised in the same transaction, so this is the only change to the executable code the context uses. The implementation itself is older: the factory's constructor created it in 0x268b273c6e89c11cb6f5a3a352206846d8750996db10d3e0f70aa93dd60c5f2a at block 24381124 index 208, timestamp 1770179579, which would give 7,208,832 s if the shared template rather than the clone were the age basis."
       },
       "codeAgeSeconds": 3455856,

@@ -13,7 +13,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { buildArtifacts, ROOT, sha256 } from './build.mjs'
+import { buildArtifacts, normalizeIncident, ROOT, sha256 } from './build.mjs'
 
 const INCIDENT_ID = /^eip155:([1-9][0-9]*):(0x[0-9a-f]{64})$/
 const REVIEWED_FAILURE_ID = /^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$/
@@ -448,16 +448,6 @@ function verifyIncident(record, state, errors) {
     if (deploymentVsExploit !== null && deploymentVsExploit >= 0)
       errors.push(`${targetLabel}: deployment transaction does not precede exploit transaction`)
 
-    if (reset.kind === 'deployment') {
-      for (const key of ['timestamp', 'blockNumber', 'transactionHash', 'transactionIndex']) {
-        if (deployment[key] !== reset[key])
-          errors.push(`${targetLabel}: deployment-basis ageReset.${key} differs from deployment.${key}`)
-      }
-      if (reset.mechanism?.type !== 'deployment')
-        errors.push(`${targetLabel}: deployment-basis ageReset must use deployment mechanism`)
-      else if (reset.mechanism.address !== target.executionAddress)
-        errors.push(`${targetLabel}: deployment mechanism address must equal executionAddress`)
-    }
     if (
       reset.kind === 'configuration-change' &&
       !['storage-write', 'view-call'].includes(reset.mechanism?.type)
@@ -481,6 +471,13 @@ function verifyIncident(record, state, errors) {
       if (localPairs.has(pair))
         errors.push(`${targetLabel}: duplicate (codeArtifact.codeHash, failureModeId) within one incident`)
       localPairs.add(pair)
+      if (REVIEWED_FAILURE_ID.test(target.failureModeId)) {
+        const failures = state.failuresByCodeHash.get(target.codeArtifact.codeHash) ?? new Map()
+        const labels = failures.get(target.failureModeId) ?? new Set()
+        labels.add(label)
+        failures.set(target.failureModeId, labels)
+        state.failuresByCodeHash.set(target.codeArtifact.codeHash, failures)
+      }
     }
 
     for (const field of ['identitySourceIds', 'ageSourceIds']) {
@@ -778,6 +775,7 @@ export function checkDataset(root = ROOT) {
     discoveryRefs: new Map(),
     lossTransactions: new Map(),
     exploitTransactions: new Map(),
+    failuresByCodeHash: new Map(),
   }
   for (const file of files) {
     const record = {
@@ -792,7 +790,7 @@ export function checkDataset(root = ROOT) {
     if (record.incident.id && record.incident.incident?.exploit &&
         Array.isArray(record.incident.targets) && Array.isArray(record.incident.sources) &&
         record.incident.loss && record.incident.verification) {
-      verifyIncident(record, state, errors)
+      verifyIncident({ ...record, incident: normalizeIncident(record.incident) }, state, errors)
     }
   }
 
@@ -802,6 +800,20 @@ export function checkDataset(root = ROOT) {
   // disjoint, so surface it rather than blocking on it.
   for (const [key, ids] of state.lossTransactions) {
     if (ids.size > 1) notes.push(`loss evidence ${key} is cited by ${[...ids].sort().join(', ')}`)
+  }
+
+  // The curve deduplicates by (codeHash, failureModeId), so the failure id is
+  // the only thing keeping observations on identical bytecode apart. Distinct
+  // ids on one hash are legitimate for genuinely distinct defects; surface
+  // them so a human confirms it is not one defect named twice.
+  for (const [codeHash, failures] of state.failuresByCodeHash) {
+    if (failures.size < 2) continue
+    const listed = [...failures]
+      .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+      .map(([failureModeId, labels]) => `${failureModeId} (${[...labels].sort().join(', ')})`)
+    notes.push(
+      `code hash ${codeHash} carries ${failures.size} failure ids: ${listed.join('; ')} - confirm these are distinct defects, not one defect named twice`,
+    )
   }
 
   validateCandidates(root, state.incidentIds, state.discoveryRefs, errors, notes)

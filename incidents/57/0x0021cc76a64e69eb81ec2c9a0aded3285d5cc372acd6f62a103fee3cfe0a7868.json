@@ -21,7 +21,6 @@
   "summary": "SyscoinRelay.parseFirstAssetCommitmentInTx() reads the asset GUID and the burned output value only for the commitment at assetIndex == 0; every later commitment in the same OP_RETURN payload is parsed for position and discarded. Syscoin Core's asset loader instead iterates all commitments and lets a later one overwrite vout[nOut].assetInfo for the same output index. A burn carrying two commitments on the same output - assetGuid 123456 (native SYS) and assetGuid 4 (the attacker's own TEST2 asset), both for 5,000,000,000 SYS - therefore resolves as a worthless custom-asset burn on the UTXO side while relayTx() passes assetGuid 123456 to SyscoinVaultManager.processTransaction(), which special-cases that GUID as native SYS and released 5,000,000,000 SYS from the vault. The relay code is wrong for any registered asset set: no parameter or registry value makes discarding the trailing commitments agree with Core's last-writer-wins interpretation.",
   "loss": {
     "kind": "gross-assets-lost",
-    "usd": null,
     "minimumUsd": {
       "amount": 99625,
       "basis": "asset-valuation",
@@ -69,15 +68,6 @@
       },
       "ageReset": {
         "kind": "deployment",
-        "timestamp": 1742092301,
-        "blockNumber": 679801,
-        "transactionHash": "0xa9e692c32e2028137429325d6c89050714f93b74c954c30b4b6b3b6dd8f3c416",
-        "transactionIndex": 0,
-        "logIndex": null,
-        "mechanism": {
-          "type": "deployment",
-          "address": "0xd714e7915362ff89388025f584726e6df26d20f9"
-        },
         "description": "SyscoinRelay is a plain non-proxy contract deployed by top-level CREATE in this transaction. Its 7,568-byte runtime is byte-identical at the deployment block, at block 934685 immediately before the exploit, and today, all hashing to 0x57b3d9455f7786427c2030714b5ac2e9aa20b8299b8745fb0c6d40e8141d8094, so the deployment is the only executable-code change."
       },
       "codeAgeSeconds": 38728082,

@@ -73,6 +73,73 @@ function compareText(a, b) {
   return a < b ? -1 : a > b ? 1 : 0
 }
 
+// Source files store unresolved anchor fields as absent, and a deployment-kind
+// ageReset as {kind, description?} with its anchor derived from `deployment`.
+// Scripts work on the normalized form, where unresolved is null and every
+// ageReset carries explicit anchors and mechanism.
+export function normalizeIncident(incident) {
+  const exploit = incident.incident?.exploit
+  if (exploit) {
+    exploit.blockNumber ??= null
+    exploit.transactionIndex ??= null
+  }
+  if (incident.loss) {
+    incident.loss.usd ??= null
+    incident.loss.minimumUsd ??= null
+  }
+  for (const target of incident.targets ?? []) {
+    target.codeArtifact ??= {}
+    target.codeArtifact.address ??= null
+    target.codeArtifact.codeHash ??= null
+    const deployment = target.deployment ?? {}
+    for (const key of ['blockNumber', 'transactionHash', 'transactionIndex', 'creatorAddress'])
+      deployment[key] ??= null
+    const reset = target.ageReset
+    if (!reset) continue
+    if (reset.kind === 'deployment') {
+      for (const key of ['timestamp', 'blockNumber', 'transactionHash', 'transactionIndex'])
+        reset[key] = deployment[key] ?? null
+      reset.logIndex = null
+      reset.mechanism = { type: 'deployment', address: target.executionAddress }
+    } else {
+      for (const key of ['blockNumber', 'transactionHash', 'transactionIndex', 'logIndex'])
+        reset[key] ??= null
+    }
+    reset.description ??= null
+  }
+  return incident
+}
+
+// Inverse of normalizeIncident: the canonical on-disk form.
+export function incidentToDisk(incident) {
+  const clone = structuredClone(incident)
+  const exploit = clone.incident.exploit
+  if (exploit.blockNumber === null) delete exploit.blockNumber
+  if (exploit.transactionIndex === null) delete exploit.transactionIndex
+  if (clone.loss.usd === null) delete clone.loss.usd
+  if (clone.loss.minimumUsd === null) delete clone.loss.minimumUsd
+  for (const target of clone.targets) {
+    if (target.codeArtifact) {
+      if (target.codeArtifact.address === null) delete target.codeArtifact.address
+      if (target.codeArtifact.codeHash === null) delete target.codeArtifact.codeHash
+      if (Object.keys(target.codeArtifact).length === 0) delete target.codeArtifact
+    }
+    for (const key of ['blockNumber', 'transactionHash', 'transactionIndex', 'creatorAddress'])
+      if (target.deployment[key] === null) delete target.deployment[key]
+    const reset = target.ageReset
+    if (reset.kind === 'deployment') {
+      target.ageReset = {
+        kind: 'deployment',
+        ...(reset.description ? { description: reset.description } : {}),
+      }
+    } else {
+      for (const key of ['blockNumber', 'transactionHash', 'transactionIndex', 'logIndex', 'description'])
+        if (reset[key] === null) delete reset[key]
+    }
+  }
+  return clone
+}
+
 export function readIncidentSources(root = ROOT) {
   const directory = path.join(root, 'incidents')
   const files = walkJsonFiles(directory)
@@ -90,7 +157,7 @@ export function readIncidentSources(root = ROOT) {
       path: `incidents/${relative}`,
       raw,
       sha256: sha256(raw),
-      incident,
+      incident: normalizeIncident(incident),
     }
   })
 }

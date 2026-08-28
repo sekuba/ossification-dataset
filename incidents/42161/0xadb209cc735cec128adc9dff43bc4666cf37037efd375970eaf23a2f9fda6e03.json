@@ -30,7 +30,6 @@
         "source-3"
       ]
     },
-    "minimumUsd": null,
     "assets": [],
     "confidence": "medium",
     "notes": "Gamma's project post-mortem assigns approximately $1.313M to the USDC-USDC.e Ramses vault 0x80709a760ff54112bd3e0ce31c104d912ba51774. This record includes only that vault's repeated campaign through Ramses Clearing 0xcfb851b1b1345fe6c643e71f98b36ad887fa7db6 and excludes the separately recorded gDAI-DAI and Camelot vault losses through two other Clearing deployments. Gamma marks the figure as approximate and does not publish an exact asset-level decomposition or valuation method, so the reported point estimate is medium confidence. The successful transactions in source-5 delimit the included campaign; no recovery is netted out.",
@@ -54,15 +53,6 @@
       },
       "ageReset": {
         "kind": "deployment",
-        "timestamp": 1687817849,
-        "blockNumber": 105238473,
-        "transactionHash": "0x30d74c827c99facf7bf27e5634c052d2a421368c5fcc092624d8ead8496eaa58",
-        "transactionIndex": 1,
-        "logIndex": null,
-        "mechanism": {
-          "type": "deployment",
-          "address": "0xcfb851b1b1345fe6c643e71f98b36ad887fa7db6"
-        },
         "description": "Ramses Clearing v1.2.3 is a plain non-upgradeable contract deployed directly by Gamma deployer 0x71e7d05be74ff748c45402c06a941c822d756dc5 in transaction 0x30d74c827c99facf7bf27e5634c052d2a421368c5fcc092624d8ead8496eaa58 at Arbitrum block 105238473. The account is empty at block 105238472, and runtime hash 0x89bfcde972bb307625f1260a630bdcc77fdec5232b798632efd3d98e22a250a1 is identical at the deployment block, block 136056012 and block 166873552 immediately before the anchor. The EIP-1967 implementation slot is zero at block 166873552 and the verified runtime exposes no upgrade mechanism, so deployment is the only executable-code change. Mutable thresholds and per-vault settings are configuration context rather than the code-age basis."
       },
       "codeAgeSeconds": 16521253,

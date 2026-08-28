@@ -32,7 +32,6 @@
         "source-6"
       ]
     },
-    "minimumUsd": null,
     "assets": [
       {
         "asset": {
@@ -99,15 +98,6 @@
       },
       "ageReset": {
         "kind": "deployment",
-        "timestamp": 1649430239,
-        "blockNumber": 13156135,
-        "transactionHash": "0x21f5b88161c4ad47ec1c0cba286eb1eaebc25bddc26ee31d6d3c3b41ef1e8210",
-        "transactionIndex": 12,
-        "logIndex": null,
-        "mechanism": {
-          "type": "deployment",
-          "address": "0x4ae1da57f2d6b2e9a23d07e264aa2b3bbcaed19a"
-        },
         "description": "Non-upgradeable TIC/USDC.e Exchange created by ElasticSwap ExchangeFactory 0x8b3d780db8842593d8b61632a2f76c4d4f31d7c3 in one CREATE frame. The address has no code at block 13156134 and runtime hash 0x882f35b4aef687a2c0d2c52b72e96b3f9174538b0f85a737c368a7789c24f37c at both block 13156135 and immediately before exploitation at block 23563709. EIP-1967 implementation and beacon slots are zero. The defect is in Exchange.removeLiquidity itself; its DELEGATECALLs are compiler-generated external-library calls to link-time-hardcoded MathLib 0xe3c08c95aa81474f44bee23f8c45d470ddad37be, whose code hash 0xb1f05f46b2061d2cd5a62d70d233d4bf60110a6abe62a0fd7057f30d9178ff59 is unchanged at deployment and pre-exploit."
       },
       "codeAgeSeconds": 21467946,

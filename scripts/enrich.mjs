@@ -13,6 +13,7 @@
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { incidentToDisk, normalizeIncident } from './build.mjs'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const EMPTY_CODE_HASH = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
@@ -262,7 +263,7 @@ async function prestateCodeHash(chainId, transactionHash, address) {
 
 async function enrichFile(file, useExplorer) {
   const original = readFileSync(file, 'utf8')
-  const incident = JSON.parse(original)
+  const incident = normalizeIncident(JSON.parse(original))
   const chainId = incident.incident.chainId
   const exploitHash = incident.incident.exploit.transactionHash
   const changes = []
@@ -423,7 +424,7 @@ async function enrichFile(file, useExplorer) {
     ) changes.push(`${target.id}:anchor-limitation`)
   }
 
-  const serialized = `${JSON.stringify(incident, null, 2)}\n`
+  const serialized = `${JSON.stringify(incidentToDisk(incident), null, 2)}\n`
   return { incident, serialized, changed: serialized !== original, changes: [...new Set(changes)] }
 }
 

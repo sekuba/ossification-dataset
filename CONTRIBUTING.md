@@ -40,6 +40,11 @@ For each target, establish:
 - identity and age-history source IDs;
 - reviewed `failure:<namespace>` identity when available.
 
+Record only established values: omit an unresolved anchor field rather than
+writing null. A deployment-basis `ageReset` stores only `kind` and an optional
+`description`; its anchor and mechanism derive from `deployment`. `npm run
+enrich` fills resolvable anchors mechanically.
+
 Claims begin as `provisional`. Reproducing anchors with the verifier is not
 semantic review. Set incident or target `reviewed` only after linking a
 `review-note` with `reviewer` and `reviewedAt` through
