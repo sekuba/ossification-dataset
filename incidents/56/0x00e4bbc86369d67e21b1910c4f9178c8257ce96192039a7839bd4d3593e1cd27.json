@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x00e4bbc86369d67e21b1910c4f9178c8257ce96192039a7839bd4d3593e1cd27",
   "protocol": {
     "name": "AIRBTC",
@@ -21,17 +20,17 @@
   },
   "summary": "The AIRBTC helper's process(address,address) is unauthenticated and swaps a caller-chosen token pair using the contract's own balances, so the attacker directed it against the PandaToken/BSC-USD path and took the output.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 6800,
       "valuationTimestamp": 1726049880,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0x12050e4355a392162698c6cf30eb8c9e0777300d"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 1033906,
-      "failureModeId": "legacy:eip155:56:0x00e4bbc86369d67e21b1910c4f9178c8257ce96192039a7839bd4d3593e1cd27:failure-1",
+      "failureModeId": "provisional:eip155:56:0x00e4bbc86369d67e21b1910c4f9178c8257ce96192039a7839bd4d3593e1cd27:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -77,7 +76,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/airbtc.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -112,18 +111,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/airbtc.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/airbtc.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-09-11T10:18:00Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

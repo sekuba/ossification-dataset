@@ -11,6 +11,7 @@ const checkOnly = process.argv.includes('--check')
 const COHORT_ID = 'evm-production-2026-07'
 const COHORT_CUTOFF = '2026-07-31T23:59:59Z'
 const COHORT_DFHL_MONTH = '2026-07'
+const SEED_ROW_COUNT = 757
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'))
@@ -48,7 +49,7 @@ function jsonFiles(directory) {
 function slug(value) {
   return value
     .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
@@ -121,7 +122,7 @@ function parsePrimaryIncidents(paths) {
   return records
 }
 
-function dfhlPathsFromLegacy(incident) {
+function dfhlPathsFromSeedRow(incident) {
   return (incident.sources ?? [])
     .filter((source) => source.type === 'defihacklabs')
     .map((source) => parseDefiHackLabsPath(source.ref))
@@ -131,7 +132,7 @@ const rawDirectory = join(root, 'research', 'raw')
 const dfhlPath = join(rawDirectory, 'defihacklabs-coverage.json')
 const webPath = join(rawDirectory, 'web-candidates.md')
 const adjudicationsPath = join(rawDirectory, 'adjudications.json')
-const legacyV1Path = join(rawDirectory, 'legacy-v1.json')
+const seedPath = join(rawDirectory, 'seed-incidents.json')
 const primaryPaths = jsonFiles(join(root, 'incidents'))
 
 const dfhl = readJson(dfhlPath)
@@ -146,7 +147,7 @@ if (
 ) {
   throw new Error('research/raw/adjudications.json has an unsupported disposition')
 }
-const legacyV1 = readJson(legacyV1Path)
+const seed = readJson(seedPath)
 const primaryRecords = parsePrimaryIncidents(primaryPaths)
 
 const adjudicationIdsByExploitTx = new Map()
@@ -162,9 +163,9 @@ for (const [index, entry] of adjudications.entries()) {
 
 const primaryByTx = new Map()
 const primaryByDfhlPath = new Map()
-const primaryByLegacyRow = new Map()
-// Incidents declare the discovery leads they answer. This is the only link that
-// works for records outside the legacy migration, and it is exact by construction.
+// Incidents declare the discovery leads they answer. Together with exploit-tx
+// matching this is the only incident-to-lead link, and it is exact by
+// construction.
 const primaryByDiscoveryId = new Map()
 for (const { incident } of primaryRecords) {
   const tx = incident.incident.exploit.transactionHash
@@ -174,11 +175,6 @@ for (const { incident } of primaryRecords) {
       ...(primaryByDiscoveryId.get(candidateId) ?? []),
       incident.id,
     ])
-  }
-  const legacy = incident.verification?.legacy
-  if (legacy) {
-    const key = `${legacy.originalFile}#${legacy.originalIncidentIndex}`
-    primaryByLegacyRow.set(key, [...(primaryByLegacyRow.get(key) ?? []), incident.id])
   }
   for (const source of incident.sources ?? []) {
     if (
@@ -193,39 +189,45 @@ for (const { incident } of primaryRecords) {
   }
 }
 
-if (
-  legacyV1.schemaVersion !== 1 ||
-  legacyV1.source.files !== 721 ||
-  legacyV1.source.incidents !== 757 ||
-  legacyV1.rows.length !== 757
-) {
-  throw new Error('research/raw/legacy-v1.json must contain the complete 721-file / 757-row corpus')
+if (seed.rows.length !== SEED_ROW_COUNT) {
+  throw new Error(`research/raw/seed-incidents.json must contain the complete ${SEED_ROW_COUNT}-row inventory`)
 }
 
-const legacyRows = legacyV1.rows.map(({ source, protocol, incident }, contextIndex) => ({
-  contextIndex,
-  originalSource: source,
-  protocolSlug: protocol.slug,
-  protocolName: protocol.name,
-  name: incident.name,
-  date: incident.date,
-  category: incident.category,
-  measurementStatus: incident.measurement.status,
-  exploitTx: incident.exploitTx,
-  victimAddresses: incident.victimContract ? [incident.victimContract.toLowerCase()] : [],
-  dfhlPaths: dfhlPathsFromLegacy(incident),
-  adjudicationIds: adjudicationIdsByExploitTx.get(incident.exploitTx?.toLowerCase()) ?? [],
-  incidentIds: unique([
-    ...(incident.exploitTx ? primaryByTx.get(incident.exploitTx.toLowerCase()) ?? [] : []),
-    ...(primaryByLegacyRow.get(`${source.file}#${source.incidentIndex}`) ?? []),
-  ]).sort(),
-  protocol,
-  incident,
-}))
+function declaredIncidentIds(candidateId) {
+  return primaryByDiscoveryId.get(candidateId) ?? []
+}
 
-const sourceRows = legacyRows
+const seedIdCounts = new Map()
+const seedRows = seed.rows.map(({ source, protocol, incident }, contextIndex) => {
+  const baseId = `seed:${protocol.slug}:${incident.date.slice(0, 10)}:${slug(incident.name)}`
+  const ordinal = (seedIdCounts.get(baseId) ?? 0) + 1
+  seedIdCounts.set(baseId, ordinal)
+  const id = ordinal === 1 ? baseId : `${baseId}:${ordinal}`
+  return {
+    id,
+    contextIndex,
+    originalSource: source,
+    protocolSlug: protocol.slug,
+    protocolName: protocol.name,
+    name: incident.name,
+    date: incident.date,
+    category: incident.category,
+    measurementStatus: incident.measurement.status,
+    exploitTx: incident.exploitTx,
+    victimAddresses: incident.victimContract ? [incident.victimContract.toLowerCase()] : [],
+    dfhlPaths: dfhlPathsFromSeedRow(incident),
+    adjudicationIds: adjudicationIdsByExploitTx.get(incident.exploitTx?.toLowerCase()) ?? [],
+    incidentIds: unique([
+      ...(incident.exploitTx ? primaryByTx.get(incident.exploitTx.toLowerCase()) ?? [] : []),
+      ...(primaryByDiscoveryId.get(id) ?? []),
+    ]).sort(),
+    protocol,
+    incident,
+  }
+})
+
 const directDfhlRows = new Map()
-for (const row of sourceRows) {
+for (const row of seedRows) {
   for (const path of row.dfhlPaths) {
     directDfhlRows.set(path, [...(directDfhlRows.get(path) ?? []), row])
   }
@@ -235,11 +237,11 @@ const otherIdentifierByPoc = new Map(
   dfhl.coveredOtherIdentifier.map((entry) => [entry.poc, entry]),
 )
 const noDatasetRowByPoc = new Map(dfhl.noDatasetRow.map((entry) => [entry.poc, entry]))
-// A legacy category settles scope only when it names a cause outside executed
+// A seed category settles scope only when it names a cause outside executed
 // EVM code.
 // An adjudication may name the discovery leads it settles, the mirror of an
 // incident's `discovery`. Without it an adjudication only reaches a lead that
-// happens to share a legacy row.
+// happens to share a seed row.
 const adjudicationIdsByCandidateId = new Map()
 for (const [index, entry] of adjudications.entries()) {
   for (const candidateId of entry.candidateIds ?? []) {
@@ -264,10 +266,6 @@ const UNDECIDED_CATEGORIES = new Set([
   'oracle-manipulation',
 ])
 
-function declaredIncidentIds(candidateId) {
-  return primaryByDiscoveryId.get(candidateId) ?? []
-}
-
 const dfhlAdjudications = [
   ...(dfhl.adjudications?.lossBelowUsd1000 ?? []).map((poc) => ({
     poc,
@@ -281,11 +279,11 @@ const dfhlAdjudications = [
     reason,
     evidence: { kind: 'source-hint' },
   })),
-  ...(dfhl.adjudications?.legacyMatches ?? []).map(({ poc, entryIndex }) => ({
+  ...(dfhl.adjudications?.seedMatches ?? []).map(({ poc, entryIndex }) => ({
     poc,
     status: 'out-of-scope',
-    reason: legacyDisposition(legacyRows[entryIndex], null).reason,
-    evidence: { kind: 'legacy-v1', entryIndex },
+    reason: seedDisposition(seedRows[entryIndex]).reason,
+    evidence: { kind: 'seed', entryIndex },
   })),
 ]
 const dfhlAdjudicationByPoc = new Map()
@@ -321,7 +319,7 @@ function rowsForOtherIdentifier(entry) {
   const tx = entry.matchedBy.match(/^tx (0x[0-9a-f]{64})$/)?.[1]
   const victim = entry.matchedBy.match(/^victim (0x[0-9a-f]{40}) /)?.[1]
   const expectedSlug = basename(entry.datasetFile, '.json')
-  const rows = sourceRows.filter((row) => {
+  const rows = seedRows.filter((row) => {
     if (row.protocolSlug !== expectedSlug) return false
     if (tx) return row.exploitTx?.toLowerCase() === tx
     if (victim) return row.victimAddresses.includes(victim)
@@ -334,9 +332,9 @@ function rowsForOtherIdentifier(entry) {
   return rows
 }
 
-function legacyCoordinates(row) {
+function seedCoordinates(row) {
   return {
-    file: relative(root, legacyV1Path),
+    file: relative(root, seedPath),
     entryIndex: row.contextIndex,
     originalFile: row.originalSource.file,
     incidentIndex: row.originalSource.incidentIndex,
@@ -345,7 +343,7 @@ function legacyCoordinates(row) {
 }
 
 // A victim-address or transaction match that several PoCs share cannot prove
-// which campaign a legacy row describes. Those rows stay context: only a PoC
+// which campaign a seed row describes. Those rows stay context: only a PoC
 // path an incident cites, or a lead it declares, resolves such a candidate.
 function ambiguousOtherIdentifier(otherMatch, rows) {
   const frequency = Number(/freq=([0-9]+)/.exec(otherMatch?.matchedBy ?? '')?.[1] ?? 1)
@@ -408,7 +406,7 @@ function dfhlDisposition(rows, poc, ambiguous = false) {
     return {
       status: 'pending',
       reason:
-        'The pinned PoC matches its legacy row only through an identifier several PoCs share, so the row cannot show which campaign this PoC reproduces. An incident must cite this PoC path or declare the lead.',
+        'The pinned PoC matches its seed row only through an identifier several PoCs share, so the row cannot show which campaign this PoC reproduces. An incident must cite this PoC path or declare the lead.',
     }
   }
 
@@ -420,27 +418,26 @@ function dfhlDisposition(rows, poc, ambiguous = false) {
     return allOutsidePrimaryScope
       ? {
           status: 'out-of-scope',
-          reason: 'The linked legacy row is outside the primary code-bug dataset or was scope-only.',
+          reason: 'The linked seed row is outside the primary code-bug dataset or was scope-only.',
         }
       : {
           status: 'pending',
-          reason: 'A linked legacy code-bug row exists, but no matching primary incident id was found.',
+          reason: 'A linked seed code-bug row exists, but no matching primary incident id was found.',
         }
   }
 
   return {
     status: 'unresolved',
-    reason: 'The source snapshot has no dataset row or explicit adjudication.',
+    reason: 'The source snapshot has no seed row or explicit adjudication.',
   }
 }
 
-function legacyDisposition(row, id) {
-  const declared = declaredIncidentIds(id)
-  const incidentIds = unique([...declared, ...row.incidentIds]).sort()
-  if (incidentIds.length > 0) {
+function seedDisposition(row) {
+  const declared = declaredIncidentIds(row.id)
+  if (row.incidentIds.length > 0) {
     return {
       status: 'included',
-      incidentIds,
+      incidentIds: row.incidentIds,
       reason:
         declared.length > 0
           ? 'An admitted incident declares this discovery lead.'
@@ -450,21 +447,21 @@ function legacyDisposition(row, id) {
 
   const adjudicated = explicitAdjudication([
     ...row.adjudicationIds,
-    ...(adjudicationIdsByCandidateId.get(id) ?? []),
+    ...(adjudicationIdsByCandidateId.get(row.id) ?? []),
   ])
   if (adjudicated) return adjudicated
 
   if (CATEGORIES_OUTSIDE_COHORT.has(row.category)) {
     return {
       status: 'out-of-scope',
-      reason: `The legacy category ${row.category} is outside the EVM code-bug cohort.`,
+      reason: `The seed row category ${row.category} is outside the EVM code-bug cohort.`,
     }
   }
 
   if (NON_EVM_CHAINS.has(row.incident.chain)) {
     return {
       status: 'out-of-scope',
-      reason: `The cohort measures EVM chains; this legacy row records a ${row.incident.chain} incident.`,
+      reason: `The cohort measures EVM chains; this seed row records a ${row.incident.chain} incident.`,
     }
   }
 
@@ -479,18 +476,18 @@ function legacyDisposition(row, id) {
   if (UNDECIDED_CATEGORIES.has(row.category)) {
     return {
       status: 'pending',
-      reason: `Legacy labelled this row ${row.category}, which names a mechanism rather than a cause. Review whether executed code violated an invariant or a persistent onchain configuration change created the vulnerable state.`,
+      reason: `The seed inventory labelled this row ${row.category}, which names a mechanism rather than a cause. Review whether executed code violated an invariant or a persistent onchain configuration change created the vulnerable state.`,
     }
   }
 
   return {
     status: 'pending',
     reason:
-      'The legacy row is classified as an EVM code bug, but its primary incident claims are incomplete.',
+      'The seed row is classified as an EVM code bug, but its primary incident claims are incomplete.',
   }
 }
 
-function legacyOpenReason(row) {
+function seedOpenReason(row) {
   if (!row.exploitTx || row.victimAddresses.length === 0) return 'incident-anchors'
   if (row.incident.lossUsd === null || row.incident.lossUsd === undefined) {
     return 'loss-evidence'
@@ -519,10 +516,10 @@ for (const adjudication of dfhlAdjudicationByPoc.values()) {
     if (!source || source.hint === '(no header comment)') {
       throw new Error(`DFHL source-hint evidence is unavailable for ${adjudication.poc}`)
     }
-  } else if (adjudication.evidence.kind === 'legacy-v1') {
-    const row = legacyRows[adjudication.evidence.entryIndex]
+  } else if (adjudication.evidence.kind === 'seed') {
+    const row = seedRows[adjudication.evidence.entryIndex]
     if (!row || row.contextIndex !== adjudication.evidence.entryIndex) {
-      throw new Error(`DFHL legacy evidence is unavailable for ${adjudication.poc}`)
+      throw new Error(`DFHL seed evidence is unavailable for ${adjudication.poc}`)
     }
   } else {
     throw new Error(`Unsupported DFHL adjudication evidence for ${adjudication.poc}`)
@@ -534,8 +531,8 @@ const dfhlCandidates = allDfhlPaths.map((poc) => {
   const directRows = directDfhlRows.get(poc) ?? []
   const adjudication = dfhlAdjudicationByPoc.get(poc)
   const adjudicationRows =
-    adjudication?.evidence.kind === 'legacy-v1'
-      ? [legacyRows[adjudication.evidence.entryIndex]]
+    adjudication?.evidence.kind === 'seed'
+      ? [seedRows[adjudication.evidence.entryIndex]]
       : []
   const rows = unique([
     ...(otherMatch ? rowsForOtherIdentifier(otherMatch) : directRows),
@@ -547,7 +544,6 @@ const dfhlCandidates = allDfhlPaths.map((poc) => {
   const coverage = otherMatch
     ? {
         kind: 'other-identifier',
-        legacyDatasetFile: otherMatch.datasetFile,
         matchedBy: otherMatch.matchedBy,
         ...(directRows.length > 0 ? { alsoHasDirectReference: true } : {}),
       }
@@ -570,7 +566,7 @@ const dfhlCandidates = allDfhlPaths.map((poc) => {
     coverage,
     ...(relatedAdjudicationIds.length > 0 ? { relatedAdjudicationIds } : {}),
     ...(rows.length > 0
-      ? { matchedRows: rows.map(legacyCoordinates).sort((a, b) => compareStrings(a.file, b.file)) }
+      ? { matchedRows: rows.map(seedCoordinates).sort((a, b) => compareStrings(a.file, b.file)) }
       : {}),
     disposition: adjudication
       ? { status: adjudication.status, reason: adjudication.reason }
@@ -622,7 +618,7 @@ const webCandidates = webRows.map((web) => {
   webIdCounts.set(baseId, ordinal)
   const id = ordinal === 1 ? baseId : `${baseId}:${ordinal}`
   const candidateName = normalizedName(web.project)
-  const exactSourceRows = sourceRows.filter((row) => {
+  const exactSeedRows = seedRows.filter((row) => {
     if (row.date.slice(0, 10) !== web.date) return false
     return [row.protocolName, row.protocolSlug, row.name]
       .filter(Boolean)
@@ -630,11 +626,11 @@ const webCandidates = webRows.map((web) => {
   })
   const declared = declaredIncidentIds(id)
   const incidentIds = unique([
-    ...exactSourceRows.flatMap((row) => row.incidentIds),
+    ...exactSeedRows.flatMap((row) => row.incidentIds),
     ...declared,
   ]).sort()
   const adjudicationIds = unique([
-    ...exactSourceRows.flatMap((row) => row.adjudicationIds),
+    ...exactSeedRows.flatMap((row) => row.adjudicationIds),
     ...(adjudicationIdsByCandidateId.get(id) ?? []),
   ]).sort()
   const adjudicated = explicitAdjudication(adjudicationIds)
@@ -658,8 +654,8 @@ const webCandidates = webRows.map((web) => {
           reason:
             incidentIds.length > 1
               ? 'Exact name/date matching is ambiguous across multiple primary incidents.'
-              : exactSourceRows.length > 0
-                ? 'An exact legacy name/date match exists, but it is not admitted to the primary dataset.'
+              : exactSeedRows.length > 0
+                ? 'An exact seed-row name/date match exists, but it is not admitted to the primary dataset.'
                 : 'No exact normalized project name and UTC date match was found; fuzzy matching was not used.',
         }
 
@@ -676,8 +672,8 @@ const webCandidates = webRows.map((web) => {
       reportedLoss: web.reportedLoss,
       mechanism: web.candidateMechanism,
     },
-    ...(exactSourceRows.length > 0
-      ? { matchedRows: exactSourceRows.map(legacyCoordinates) }
+    ...(exactSeedRows.length > 0
+      ? { matchedRows: exactSeedRows.map(seedCoordinates) }
       : {}),
     ...(adjudicationIds.length > 0 ? { relatedAdjudicationIds: adjudicationIds } : {}),
     disposition,
@@ -721,48 +717,36 @@ const adjudicationCandidates = adjudications.map((entry, index) => {
   }
 })
 
-const legacyIdCounts = new Map()
-const legacyCandidates = legacyRows
-  .filter(
-    (row) => row.category !== 'code-bug' || row.measurementStatus === 'SCOPE_ONLY',
-  )
-  .map((row) => {
-    const date = row.date.slice(0, 10)
-    const baseId = `legacy:${row.protocolSlug}:${date}:${slug(row.name)}`
-    const ordinal = (legacyIdCounts.get(baseId) ?? 0) + 1
-    legacyIdCounts.set(baseId, ordinal)
-    const id = ordinal === 1 ? baseId : `${baseId}:${ordinal}`
-    return {
-      id,
-      source: {
-        kind: 'legacy',
-        file: relative(root, legacyV1Path),
-        entryIndex: row.contextIndex,
-        original: row.originalSource,
-      },
-      legacyRecord: {
-        protocol: row.protocol,
-        name: row.incident.name,
-        date: row.incident.date,
-        chain: row.incident.chain,
-        category: row.incident.category,
-        measurementStatus: row.incident.measurement.status,
-        ...(row.incident.lossUsd !== undefined ? { lossUsd: row.incident.lossUsd } : {}),
-        ...(row.incident.lossOther !== undefined ? { lossOther: row.incident.lossOther } : {}),
-        victimContract: row.incident.victimContract,
-        exploitTx: row.incident.exploitTx,
-        notes: row.incident.notes,
-        sources: row.incident.sources ?? [],
-      },
-      disposition: legacyDisposition(row, id),
-    }
-  })
+const seedCandidates = seedRows.map((row) => ({
+  id: row.id,
+  source: {
+    kind: 'seed',
+    file: relative(root, seedPath),
+    entryIndex: row.contextIndex,
+    original: row.originalSource,
+  },
+  candidate: {
+    protocol: row.protocol,
+    name: row.incident.name,
+    date: row.incident.date,
+    chain: row.incident.chain,
+    category: row.incident.category,
+    measurementStatus: row.incident.measurement.status,
+    ...(row.incident.lossUsd !== undefined ? { lossUsd: row.incident.lossUsd } : {}),
+    ...(row.incident.lossOther !== undefined ? { lossOther: row.incident.lossOther } : {}),
+    victimContract: row.incident.victimContract,
+    exploitTx: row.incident.exploitTx,
+    notes: row.incident.notes,
+    sources: row.incident.sources ?? [],
+  },
+  disposition: seedDisposition(row),
+}))
 
 const candidates = [
   ...dfhlCandidates,
   ...webCandidates,
   ...adjudicationCandidates,
-  ...legacyCandidates,
+  ...seedCandidates,
 ].sort((a, b) => compareStrings(a.id, b.id))
 
 const ids = candidates.map((candidate) => candidate.id)
@@ -787,28 +771,28 @@ const cohortDfhl = dfhlCandidates.filter((candidate) => {
   if (!month) throw new Error(`DFHL path has no calendar month: ${candidate.source.path}`)
   return month <= COHORT_DFHL_MONTH
 })
-const cohortLegacy = legacyRows.filter((row) => row.date <= COHORT_CUTOFF)
+const cohortSeed = seedRows.filter((row) => row.date <= COHORT_CUTOFF)
 const cohortRecords = [
   ...cohortDfhl.map((candidate) => {
-    const matchedLegacy = candidate.matchedRows?.[0]
+    const matchedSeed = candidate.matchedRows?.[0]
     const row =
-      matchedLegacy?.file === relative(root, legacyV1Path)
-        ? legacyRows[matchedLegacy.entryIndex]
+      matchedSeed?.file === relative(root, seedPath)
+        ? seedRows[matchedSeed.entryIndex]
         : undefined
     return {
       disposition: candidate.disposition.status,
       ...(candidate.disposition.status === 'pending'
-        ? { openReason: row ? legacyOpenReason(row) : 'semantic-research' }
+        ? { openReason: row ? seedOpenReason(row) : 'semantic-research' }
         : candidate.disposition.status === 'unresolved'
           ? { openReason: 'semantic-research' }
           : {}),
     }
   }),
-  ...cohortLegacy.map((row) => {
-    const disposition = row.incidentIds.length > 0 ? 'included' : legacyDisposition(row).status
+  ...cohortSeed.map((row) => {
+    const disposition = seedDisposition(row).status
     return {
       disposition,
-      ...(disposition === 'pending' ? { openReason: legacyOpenReason(row) } : {}),
+      ...(disposition === 'pending' ? { openReason: seedOpenReason(row) } : {}),
     }
   }),
 ]
@@ -830,7 +814,6 @@ const cohortOpenByReason = Object.fromEntries(
 
 const result = {
   $schema: '../schema/candidate.schema.json',
-  schemaVersion: 2,
   description:
     'Deterministic, source-addressed candidate dispositions. Overlapping source entries remain distinct.',
   cohort: {
@@ -843,8 +826,8 @@ const result = {
         dateField: 'path-month',
         through: COHORT_DFHL_MONTH,
       },
-      legacyV1: {
-        generatedFrom: 'legacyV1',
+      seed: {
+        generatedFrom: 'seed',
         dateField: 'incident.date',
       },
     },
@@ -852,7 +835,7 @@ const result = {
       sourceRecords: cohortRecords.length,
       bySource: {
         defihacklabs: cohortDfhl.length,
-        legacyV1: cohortLegacy.length,
+        seed: cohortSeed.length,
       },
       byDisposition: cohortByDisposition,
       openByReason: cohortOpenByReason,
@@ -873,11 +856,10 @@ const result = {
       file: relative(root, adjudicationsPath),
       sha256: sha256(readFileSync(adjudicationsPath)),
     },
-    legacyV1: {
-      file: relative(root, legacyV1Path),
-      rows: legacyV1.rows.length,
-      sha256: sha256(readFileSync(legacyV1Path)),
-      originalSource: legacyV1.source,
+    seed: {
+      file: relative(root, seedPath),
+      rows: seed.rows.length,
+      sha256: sha256(readFileSync(seedPath)),
     },
     primaryIncidents: {
       glob: 'incidents/**/*.json',

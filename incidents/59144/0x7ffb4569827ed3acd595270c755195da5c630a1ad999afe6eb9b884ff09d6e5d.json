@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:59144:0x7ffb4569827ed3acd595270c755195da5c630a1ad999afe6eb9b884ff09d6e5d",
   "protocol": {
     "name": "Malda",
@@ -277,7 +276,7 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "note": "legacy migration note retained for provenance: onchain review on Linea: the Migrator 0xa0dc62A8eE34bcd7c9a08852C980Ed78E0Cf99c0 was created 2025-05-29 by 0xb819a871d20913839c37f316dc914b0570bfc0ee (Malda deployer), 34.8 hours before the attack tx sent by 0x370a8db1f020ce70e8eab2502c739844ca2c2910; the attack tx is itself a contract-creation deploying the exploit contract 0xb1e2c543035dc0ca845f91aec68f8a891ea5d74f and the fake Comptroller"
+      "note": "seed-inventory note retained for provenance: onchain review on Linea: the Migrator 0xa0dc62A8eE34bcd7c9a08852C980Ed78E0Cf99c0 was created 2025-05-29 by 0xb819a871d20913839c37f316dc914b0570bfc0ee (Malda deployer), 34.8 hours before the attack tx sent by 0x370a8db1f020ce70e8eab2502c739844ca2c2910; the attack tx is itself a contract-creation deploying the exploit contract 0xb1e2c543035dc0ca845f91aec68f8a891ea5d74f and the fake Comptroller"
     },
     {
       "id": "source-5",
@@ -360,16 +359,7 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-15"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/malda.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-05-30T18:51:54Z"
-    }
+    ]
   },
   "notes": [
     "deployment.creatorAddress is the ephemeral CREATE2 proxy 0xa701f98fe45d7d3df62420e2427175a5f6038f63 that a CREATE3-style Deployer used to CREATE the Migrator, because that is the immediate creator the execution trace exposes. The transaction was sent by the Malda deployer EOA 0xb819a871d20913839c37f316dc914b0570bfc0ee."

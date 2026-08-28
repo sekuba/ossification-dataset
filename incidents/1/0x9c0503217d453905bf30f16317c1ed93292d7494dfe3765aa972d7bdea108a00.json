@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x9c0503217d453905bf30f16317c1ed93292d7494dfe3765aa972d7bdea108a00",
   "protocol": {
     "name": "Unibot",
@@ -64,7 +63,7 @@
       }
     ],
     "confidence": "medium",
-    "notes": "This record covers only the original 0x413e4f... exploiter's Ethereum campaign; later copycats are not added. Its 22 successful drain transactions run from the anchor through 0x3efea1... at block 18468232:28. Receipt and call-trace enumeration finds 299 successful victim-to-attacker transferFrom calls and matching Transfer logs, spanning 254 unique victim addresses and 22 token contracts. The often-reported 364-victim/42-token counts therefore appear to include attempted entries or broader activity and are not used as exact loss components. The attacker sold the stolen tokens through block 18468489 and then made 18 Tornado Cash deposits totaling exactly 355.5 ETH: three 100 ETH, five 10 ETH, five 1 ETH, and five 0.1 ETH deposits. CertiK independently reports 355.5 ETH of realized proceeds. This conservative realized-extraction measure avoids inventing incident prices for 22 mostly illiquid source tokens; swaps, copycat proceeds, and the team's later victim reimbursements are not added or netted against gross loss. DefiLlama's ETH observation 28 seconds before the anchor is 1800.0036569996832 USD, giving 639901.3000633874 USD and explaining the rounded legacy 640000 USD figure.",
+    "notes": "This record covers only the original 0x413e4f... exploiter's Ethereum campaign; later copycats are not added. Its 22 successful drain transactions run from the anchor through 0x3efea1... at block 18468232:28. Receipt and call-trace enumeration finds 299 successful victim-to-attacker transferFrom calls and matching Transfer logs, spanning 254 unique victim addresses and 22 token contracts. The often-reported 364-victim/42-token counts therefore appear to include attempted entries or broader activity and are not used as exact loss components. The attacker sold the stolen tokens through block 18468489 and then made 18 Tornado Cash deposits totaling exactly 355.5 ETH: three 100 ETH, five 10 ETH, five 1 ETH, and five 0.1 ETH deposits. CertiK independently reports 355.5 ETH of realized proceeds. This conservative realized-extraction measure avoids inventing incident prices for 22 mostly illiquid source tokens; swaps, copycat proceeds, and the team's later victim reimbursements are not added or netted against gross loss. DefiLlama's ETH observation 28 seconds before the anchor is 1800.0036569996832 USD, giving 639901.3000633874 USD and explaining the seed row's rounded 640000 USD figure.",
     "realizedAt": 1698735683
   },
   "targets": [
@@ -188,22 +187,14 @@
       "url": "https://x.com/TeamUnibot/status/1719239188514844735"
     }
   ],
+  "discovery": [
+    "seed:unibot:2023-10-31:unibot-router-approval-drain"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-7"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/unibot.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-10-31T04:43:59Z",
-      "reanchored": true
-    }
-  },
-  "notes": []
+    ]
+  }
 }

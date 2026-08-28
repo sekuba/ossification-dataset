@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xed5f932a136ef95b943951ce103b3edbe600bf2c2607edff7b6ea9ada35ca300",
   "protocol": {
     "name": "ParaSwap",
@@ -21,11 +20,11 @@
   },
   "summary": "AugustusSwapper.simpleSwap() executes caller-supplied callee/exchangeData sequences as the router itself, so an attacker who flash-borrowed 1000 wei of WETH as the nominal fromToken could have the router run DAI.move against an account that still held a ParaSwap authorisation and forward the proceeds to an attacker-chosen beneficiary.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 2299,
       "valuationTimestamp": 1750817123,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -59,12 +58,12 @@
         "transactionIndex": null,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "documented"
         },
         "description": "2023-06-13T15:45:23Z (block 17472047): the AugustusSwapper V5 route entry for the exploited selector 0x54e3f31b (simpleSwap) was last repointed to 0x66c1c25d7d2bd4a32ed33501e202b275030f402c"
       },
       "codeAgeSeconds": 64146000,
-      "failureModeId": "legacy:eip155:1:0xed5f932a136ef95b943951ce103b3edbe600bf2c2607edff7b6ea9ada35ca300:failure-1",
+      "failureModeId": "provisional:eip155:1:0xed5f932a136ef95b943951ce103b3edbe600bf2c2607edff7b6ea9ada35ca300:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -79,7 +78,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/paraswap.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -118,21 +117,12 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/paraswap.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/paraswap.json",
-      "originalIncidentIndex": 1,
-      "status": "OK",
-      "basis": "documented",
-      "upgradeEventCount": 0,
-      "date": "2025-06-25T02:05:23Z"
-    }
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
   },
   "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2023-06-13T15:45:23Z (block 17472047): the AugustusSwapper V5 route entry for the exploited selector 0x54e3f31b (simpleSwap) was last repointed to 0x66c1c25d7d2bd4a32ed33501e202b275030f402c"
+    "Seed-inventory flag: nonStandardUpgradeArchitecture=true.",
+    "Seed-inventory documentedLastChange: 2023-06-13T15:45:23Z (block 17472047): the AugustusSwapper V5 route entry for the exploited selector 0x54e3f31b (simpleSwap) was last repointed to 0x66c1c25d7d2bd4a32ed33501e202b275030f402c"
   ]
 }

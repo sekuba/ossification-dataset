@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x5058c820fa0bb0daff2bd1b30151cf84c618dffe123546223b7089c8c2e18331",
   "protocol": {
     "name": "Thoreum Finance",
@@ -58,7 +57,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The coherent campaign is 36 successful calls from the same EOA to the same helper, from block 24912667 through block 24913336. Receipt Transfer-log netting gives the THOREUM/WBNB BiSwap pair 0xd822e1737b1180f72368b2a9eb2de22805b67e34 an exact aggregate delta of -3194.414045570313325194 WBNB after already subtracting 1.7735 WBNB of identifiable campaign inputs. Of the gross WBNB outputs, 2261.490132565026795779 WBNB went to attacker beneficiary 0x1285fe345523f00ab1a66acd18d9e23d18d2e35c and 934.697413005286529415 WBNB went through the BiSwap router as the token's transfer-fee machinery. The legacy ~2,000/2,260 BNB reports measure attacker proceeds rather than the pair's exact pre-recovery depletion. No recovery was identified.",
+    "notes": "The coherent campaign is 36 successful calls from the same EOA to the same helper, from block 24912667 through block 24913336. Receipt Transfer-log netting gives the THOREUM/WBNB BiSwap pair 0xd822e1737b1180f72368b2a9eb2de22805b67e34 an exact aggregate delta of -3194.414045570313325194 WBNB after already subtracting 1.7735 WBNB of identifiable campaign inputs. Of the gross WBNB outputs, 2261.490132565026795779 WBNB went to attacker beneficiary 0x1285fe345523f00ab1a66acd18d9e23d18d2e35c and 934.697413005286529415 WBNB went through the BiSwap router as the token's transfer-fee machinery. The seed row's ~2,000/2,260 BNB reports measure attacker proceeds rather than the pair's exact pre-recovery depletion. No recovery was identified.",
     "realizedAt": 1674106514
   },
   "targets": [
@@ -257,25 +256,15 @@
     }
   ],
   "discovery": [
-    "dfhl:src/test/2023-01/ThoreumFinance_exp.sol"
+    "dfhl:src/test/2023-01/ThoreumFinance_exp.sol",
+    "seed:thoreum-finance:2023-01-19:thoreum-v2-transfer-business-logic-flaw"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/thoreum-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 9,
-      "date": "2023-01-19T05:27:02Z",
-      "reanchored": true
-    },
     "reviewSourceIds": [
       "source-10",
       "source-15"
     ]
-  },
-  "notes": []
+  }
 }

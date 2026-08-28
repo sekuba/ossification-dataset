@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:250:0x5118df23e81603a64c7676dd6b6e4f76a57e4267e67507d34b0b26dd9ee10eac",
   "protocol": {
     "name": "Polter Finance",
@@ -256,7 +255,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T16:10:00Z",
-      "note": "Reviewed the anchor receipt and its 1,106-frame callTracer trace, the adapter creation transaction, historical runtimes and pool balances, and the Polter oracle call chain. The anchor 0x5118df23e81603a64c7676dd6b6e4f76a57e4267e67507d34b0b26dd9ee10eac is status 1 at block 97508839 index 3, timestamp 1731780030, sent by 0x511f427cdf0c4e463655856db382e05d79ac44a6 to attack contract 0xa21451ac32372c123191b3a4fc01deb69f91533a. It is the only campaign transaction: an eth_getLogs scan of Aave Borrow events on the pool 0x867faa51b3a437b4e2e699945590ef4f2be2a6d5 over blocks 97480000-97560000 returns 36 events, and only this transaction carries more than one, carrying eight. The trace shows lending pool 0x867faa51b3a437b4e2e699945590ef4f2be2a6d5 delegating to implementation 0xd47ae558623638f676c1e38dad71b53054f54273 and calling oracle 0x6808b5ce79d44e89883c5393b487c4296abb69fe getAssetPrice(0x841fad6eae12c286d1fd18d1d525dffa75c7effe) selector 0xb3596f07, the oracle calling BOO feed 0x80663edff11e99e8e0b34cb9c3e1ff32e82a80fe selector 0x0fdb11cf, and that feed reading two byte-identical adapters, 0x875d564a6a86f6154592b88f7a107a517f00cc17 over SpookySwap pool 0xec7178f4c41f346b2721907f5cf7628e388a7a58 and 0x2ceca12a53e428d37a62448fc818bf2e15b7e462 over pool 0xed23be0cc3912808ec9863141b96a9748bc4bd89. Each adapter reads WFTM.balanceOf(pool), BOO.balanceOf(pool) and the Chainlink FTM/USD proxy 0xf4766552d15ae4d256ad41b6cf2933482b0680dc, and I reproduced its answer exactly by integer arithmetic: 1828570941372594816969307 wei WFTM times 75128777 divided by 1000000 wei BOO equals 137378298483061759618513154, the value the trace returns, and the twin returns 29774727250792768470538102 from 396315878412246300000000 wei WFTM over the same 1000000 wei BOO. At block 97508838 those pools still held 1,154,788.112860552 and 269,042.228515627 BOO with unchanged WFTM balances, so BOO stood near 1.58 and 1.47 WFTM; the flash loan left 0.000000000001 BOO in each while the WFTM balances did not move at all. The feed then reports 1373782984830617596185131540000000000 for BOO in 18 decimals. The two adapters share codeHash 0x35c3a370d450d608534856fa964eaad4d4c697e3019f420a477cd7ed03ad5263 for a 2,095-byte runtime at block 97508838, so the representative-target rule applies and 0x875d564a6a86f6154592b88f7a107a517f00cc17, the one the trace reaches first, is the target. Code history: eth_getCode binary search places first code for it at block 97491949; that block holds two transactions and 0xd50cd2b9ca600e8839cccc5d4139cb782d253b6de40346cbd78848abaad34de9 at index 1 has no `to` and a receipt contractAddress equal to the adapter, created top level by 0x0159f847e62ee65b7e11ba3210ec767eedbced25, timestamp 1731761652, unrelated to the attacker; the runtime hash is identical at blocks 97491949 and 97508838 and the runtime holds no DELEGATECALL, CALLCODE, CREATE, CREATE2 or SELFDESTRUCT opcode, so deployment is the last code change and the defect-bearing code was 18,378 seconds, about 5.1 hours, old. This corrects the legacy row, which measured the 292-day-old lending-pool proxy rather than the code that computed the manipulated price. Loss was taken from the anchor receipt's ERC-20 Transfer logs into the attacker EOA plus the 4,000 WFTM the pool paid to SpookySwap, and valued with DefiLlama historical prices at the anchor for 8,719,125.23 USD excluding the unpriceable bridged SOL component."
+      "note": "Reviewed the anchor receipt and its 1,106-frame callTracer trace, the adapter creation transaction, historical runtimes and pool balances, and the Polter oracle call chain. The anchor 0x5118df23e81603a64c7676dd6b6e4f76a57e4267e67507d34b0b26dd9ee10eac is status 1 at block 97508839 index 3, timestamp 1731780030, sent by 0x511f427cdf0c4e463655856db382e05d79ac44a6 to attack contract 0xa21451ac32372c123191b3a4fc01deb69f91533a. It is the only campaign transaction: an eth_getLogs scan of Aave Borrow events on the pool 0x867faa51b3a437b4e2e699945590ef4f2be2a6d5 over blocks 97480000-97560000 returns 36 events, and only this transaction carries more than one, carrying eight. The trace shows lending pool 0x867faa51b3a437b4e2e699945590ef4f2be2a6d5 delegating to implementation 0xd47ae558623638f676c1e38dad71b53054f54273 and calling oracle 0x6808b5ce79d44e89883c5393b487c4296abb69fe getAssetPrice(0x841fad6eae12c286d1fd18d1d525dffa75c7effe) selector 0xb3596f07, the oracle calling BOO feed 0x80663edff11e99e8e0b34cb9c3e1ff32e82a80fe selector 0x0fdb11cf, and that feed reading two byte-identical adapters, 0x875d564a6a86f6154592b88f7a107a517f00cc17 over SpookySwap pool 0xec7178f4c41f346b2721907f5cf7628e388a7a58 and 0x2ceca12a53e428d37a62448fc818bf2e15b7e462 over pool 0xed23be0cc3912808ec9863141b96a9748bc4bd89. Each adapter reads WFTM.balanceOf(pool), BOO.balanceOf(pool) and the Chainlink FTM/USD proxy 0xf4766552d15ae4d256ad41b6cf2933482b0680dc, and I reproduced its answer exactly by integer arithmetic: 1828570941372594816969307 wei WFTM times 75128777 divided by 1000000 wei BOO equals 137378298483061759618513154, the value the trace returns, and the twin returns 29774727250792768470538102 from 396315878412246300000000 wei WFTM over the same 1000000 wei BOO. At block 97508838 those pools still held 1,154,788.112860552 and 269,042.228515627 BOO with unchanged WFTM balances, so BOO stood near 1.58 and 1.47 WFTM; the flash loan left 0.000000000001 BOO in each while the WFTM balances did not move at all. The feed then reports 1373782984830617596185131540000000000 for BOO in 18 decimals. The two adapters share codeHash 0x35c3a370d450d608534856fa964eaad4d4c697e3019f420a477cd7ed03ad5263 for a 2,095-byte runtime at block 97508838, so the representative-target rule applies and 0x875d564a6a86f6154592b88f7a107a517f00cc17, the one the trace reaches first, is the target. Code history: eth_getCode binary search places first code for it at block 97491949; that block holds two transactions and 0xd50cd2b9ca600e8839cccc5d4139cb782d253b6de40346cbd78848abaad34de9 at index 1 has no `to` and a receipt contractAddress equal to the adapter, created top level by 0x0159f847e62ee65b7e11ba3210ec767eedbced25, timestamp 1731761652, unrelated to the attacker; the runtime hash is identical at blocks 97491949 and 97508838 and the runtime holds no DELEGATECALL, CALLCODE, CREATE, CREATE2 or SELFDESTRUCT opcode, so deployment is the last code change and the defect-bearing code was 18,378 seconds, about 5.1 hours, old. This corrects the seed row, which measured the 292-day-old lending-pool proxy rather than the code that computed the manipulated price. Loss was taken from the anchor receipt's ERC-20 Transfer logs into the attacker EOA plus the 4,000 WFTM the pool paid to SpookySwap, and valued with DefiLlama historical prices at the anchor for 8,719,125.23 USD excluding the unpriceable bridged SOL component."
     },
     {
       "id": "source-3",
@@ -327,27 +326,17 @@
     }
   ],
   "discovery": [
-    "legacy:polter-finance:2024-11-16:polter-finance-boo-spot-price-manipulation"
+    "seed:polter-finance:2024-11-16:polter-finance-boo-spot-price-manipulation"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [
       "Fantom has no Etherscan v2 explorer API, so contract source is unavailable and the root cause rests on the executed call trace, the deployed runtimes, reproduced adapter arithmetic and the DeFiHackLabs reproduction; the deployment anchor was located by eth_getCode binary search plus a per-transaction receipt scan of the deployment block rather than by an explorer creation endpoint.",
-      "The legacy snapshot measured the Aave-fork lending-pool proxy 0x867faa51b3a437b4e2e699945590ef4f2be2a6d5 and reported a 292-day code age. That proxy and its implementation 0xd47ae558623638f676c1e38dad71b53054f54273 are correct for any sound oracle, so the boundary test places the defect in the price adapter instead and the measured age drops to 18,378 seconds.",
+      "The seed inventory measured the Aave-fork lending-pool proxy 0x867faa51b3a437b4e2e699945590ef4f2be2a6d5 and reported a 292-day code age. That proxy and its implementation 0xd47ae558623638f676c1e38dad71b53054f54273 are correct for any sound oracle, so the boundary test places the defect in the price adapter instead and the measured age drops to 18,378 seconds.",
       "475.247372561 units of the Multichain-bridged SOL token 0xd99021c2a33e4cf243010539c9e9b7c52e0236c1 were also drained but have no evidenced sellable price and are excluded from loss.usd."
     ],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/polter-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-11-16T18:00:30Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

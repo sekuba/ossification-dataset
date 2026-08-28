@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xf68ba761158dd37a7cb5a12a688364998c41a38e3a400ad9ad2a08c59067ed30",
   "protocol": {
     "name": "ANCH",
@@ -21,11 +20,11 @@
   },
   "summary": "The ANCH token's transfer logic moves tokens out of the liquidity pair's own balance without calling sync(), so the attacker repeatedly skim()ed the surplus and swapped it against the pair's USDT.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 16244,
       "valuationTimestamp": 1660085343,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0xa4f5d4afd6b9226b3004dd276a9f778eb75f2e9e"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 1609580,
-      "failureModeId": "legacy:eip155:56:0xf68ba761158dd37a7cb5a12a688364998c41a38e3a400ad9ad2a08c59067ed30:failure-1",
+      "failureModeId": "provisional:eip155:56:0xf68ba761158dd37a7cb5a12a688364998c41a38e3a400ad9ad2a08c59067ed30:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -79,7 +78,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/anch.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -114,18 +113,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/anch.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/anch.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-08-09T22:49:03Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

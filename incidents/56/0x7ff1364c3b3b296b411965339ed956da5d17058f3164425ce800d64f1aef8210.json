@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x7ff1364c3b3b296b411965339ed956da5d17058f3164425ce800d64f1aef8210",
   "protocol": {
     "name": "Allbridge",
@@ -196,7 +195,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T20:35:00Z",
-      "note": "Reviewed the exploit receipt and call trace, the verified Pool sources of both Allbridge pools, their creation receipts and historical runtimes, the pools' pre- and post-exploit accounting state, and the DeFiHackLabs reproductions. Anchor 0x7ff1364c3b3b296b411965339ed956da5d17058f3164425ce800d64f1aef8210 is status 1 at block 26982068, transaction index 0, timestamp 1680386222, and is the only transaction of the campaign; both DeFiHackLabs proofs of concept reference this single hash. Contract identification corrects the legacy snapshot: 0x312bc7eaaf93f1c60dc5afc115fccde161055fb0 is not an Allbridge contract but a Wombat Exchange pool proxy (implementation 0x2c3c340233338d875637304b06f4f6faf9bebd20, verified as wombat-core Pool) that the attacker used only to swap BUSD for USDT, so the legacy 213-day upgrade-events measurement is on the wrong code. The Allbridge contracts in the trace are Bridge 0x7e6c2522fee4e74a0182b9c6159048361bc3260a and the two non-upgradeable Pools 0x179aad597399b9ae078acfe2b746c09117799ca0 (BUSD, reached first, 7 frames) and 0xb19cd6ab3890f18b662904fd7a40c003703d2554 (USDT, 7 frames), both created by 0x86aac4b7821a5d6e709ed27c152fc33cc558d5e8 and both with runtime hashes identical at deployment, at block 26982067 and today. Root cause reproduced arithmetically from the pools' own formulas. Pre-exploit the BUSD pool reads tokenBalance 322,629,245, vUsdBalance 306,461,333, d 629,085,507, totalLpAmount 314,335,602, a 20, feeShareBP 15. Re-implementing _updateD, getY and _preWithdrawSwap over that state reproduces the chain to rounding: the 5,000,000 BUSD deposit mints 4,996,709,468 LP against the logged 4,996,709,485; the SwappedFromVUsd of 492,669,980 vUsd releases 491,586,447 system-precision BUSD, matching the logged 490,849.0673295 BUSD plus 737.3796705 BUSD fee exactly; withdraw(4,830,262,616) then pays 4,830,999,074 and subtracts that same figure from both legs, taking the pool from 4,831,042,798 / 5,799,131,313 (ratio 1.2004) to 43,724 / 968,132,239 (ratio 22,142); and the following 40,000 BUSD swapToVUsd yields 789,402,791 vUsd in the model against the logged 789,378,078, a 0.003 percent difference attributable to the cube-root rounding in the reimplementation. The logged SwappedFromVUsd on the USDT pool then pays 789,632.1174825 USDT for that credit. A control on the same code confirms the defect is the equal-leg reduction and not the deposit or the curve: deposit followed immediately by withdrawal of the minted LP, with no swap between, returns 4,999,919 of 5,000,000 at the real pre-exploit state and less at every imbalanced state tested, so the extraction comes entirely from the price reset that withdraw performs. Post-exploit the BUSD pool is left with tokenBalance 39,983,740 against vUsdBalance 178,754,177 and a totalLpAmount that has grown from 314,335,602 to 480,782,471. Loss: summing the transaction's ERC-20 Transfer logs, the BUSD pool loses 282,403.115457925324692409 BUSD and the USDT pool 290,278.553842307020179247 USDT, the attacker EOA gains 549,874.391584307393758024 BUSD, and the PancakeSwap flash-swap pair keeps 22,500 BUSD."
+      "note": "Reviewed the exploit receipt and call trace, the verified Pool sources of both Allbridge pools, their creation receipts and historical runtimes, the pools' pre- and post-exploit accounting state, and the DeFiHackLabs reproductions. Anchor 0x7ff1364c3b3b296b411965339ed956da5d17058f3164425ce800d64f1aef8210 is status 1 at block 26982068, transaction index 0, timestamp 1680386222, and is the only transaction of the campaign; both DeFiHackLabs proofs of concept reference this single hash. Contract identification corrects the seed inventory: 0x312bc7eaaf93f1c60dc5afc115fccde161055fb0 is not an Allbridge contract but a Wombat Exchange pool proxy (implementation 0x2c3c340233338d875637304b06f4f6faf9bebd20, verified as wombat-core Pool) that the attacker used only to swap BUSD for USDT, so the seed row's 213-day upgrade-events measurement is on the wrong code. The Allbridge contracts in the trace are Bridge 0x7e6c2522fee4e74a0182b9c6159048361bc3260a and the two non-upgradeable Pools 0x179aad597399b9ae078acfe2b746c09117799ca0 (BUSD, reached first, 7 frames) and 0xb19cd6ab3890f18b662904fd7a40c003703d2554 (USDT, 7 frames), both created by 0x86aac4b7821a5d6e709ed27c152fc33cc558d5e8 and both with runtime hashes identical at deployment, at block 26982067 and today. Root cause reproduced arithmetically from the pools' own formulas. Pre-exploit the BUSD pool reads tokenBalance 322,629,245, vUsdBalance 306,461,333, d 629,085,507, totalLpAmount 314,335,602, a 20, feeShareBP 15. Re-implementing _updateD, getY and _preWithdrawSwap over that state reproduces the chain to rounding: the 5,000,000 BUSD deposit mints 4,996,709,468 LP against the logged 4,996,709,485; the SwappedFromVUsd of 492,669,980 vUsd releases 491,586,447 system-precision BUSD, matching the logged 490,849.0673295 BUSD plus 737.3796705 BUSD fee exactly; withdraw(4,830,262,616) then pays 4,830,999,074 and subtracts that same figure from both legs, taking the pool from 4,831,042,798 / 5,799,131,313 (ratio 1.2004) to 43,724 / 968,132,239 (ratio 22,142); and the following 40,000 BUSD swapToVUsd yields 789,402,791 vUsd in the model against the logged 789,378,078, a 0.003 percent difference attributable to the cube-root rounding in the reimplementation. The logged SwappedFromVUsd on the USDT pool then pays 789,632.1174825 USDT for that credit. A control on the same code confirms the defect is the equal-leg reduction and not the deposit or the curve: deposit followed immediately by withdrawal of the minted LP, with no swap between, returns 4,999,919 of 5,000,000 at the real pre-exploit state and less at every imbalanced state tested, so the extraction comes entirely from the price reset that withdraw performs. Post-exploit the BUSD pool is left with tokenBalance 39,983,740 against vUsdBalance 178,754,177 and a totalLpAmount that has grown from 314,335,602 to 480,782,471. Loss: summing the transaction's ERC-20 Transfer logs, the BUSD pool loses 282,403.115457925324692409 BUSD and the USDT pool 290,278.553842307020179247 USDT, the attacker EOA gains 549,874.391584307393758024 BUSD, and the PancakeSwap flash-swap pair keeps 22,500 BUSD."
     },
     {
       "id": "source-3",
@@ -229,9 +228,9 @@
     }
   ],
   "discovery": [
-    "legacy:allbridge:2023-04-01:allbridge-bsc-pool-spot-price-manipulation",
     "dfhl:src/test/2023-04/Allbridge_exp.sol",
     "dfhl:src/test/2023-04/Allbridge_exp2.sol",
+    "seed:allbridge:2023-04-01:allbridge-bsc-pool-spot-price-manipulation",
     "web:2023-04-02:allbridge"
   ],
   "verification": {
@@ -239,19 +238,10 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/allbridge.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2023-04-01T21:57:02Z"
-    }
+    ]
   },
   "notes": [
-    "verification.legacy records the v1 snapshot's own measurement verbatim. That measurement is superseded here: it aged 0x312bc7eaaf93f1c60dc5afc115fccde161055fb0, a Wombat Exchange pool proxy the attacker merely swapped through, and reported 213 days from its 2022-08-31 implementation upgrade. The targets in this record are the two Allbridge Core pools that were actually drained, both non-upgradeable, aged from their own deployments at 209.5 and 129.4 days.",
+    "The seed row's own measurement is superseded here: it aged 0x312bc7eaaf93f1c60dc5afc115fccde161055fb0, a Wombat Exchange pool proxy the attacker merely swapped through, and reported 213 days from its 2022-08-31 implementation upgrade. The targets in this record are the two Allbridge Core pools that were actually drained, both non-upgradeable, aged from their own deployments at 209.5 and 129.4 days.",
     "Allbridge's relaunch removed the ability to hold more than one pool per chain, which prevents this particular composition rather than correcting the withdraw accounting. The defect measured here is the accounting itself, which is present in the deployed bytecode independently of how many pools a chain hosts."
   ]
 }

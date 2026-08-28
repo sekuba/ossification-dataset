@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x8b74995d1d61d3d7547575649136b8765acb22882960f0636941c44ec7bbe146",
   "protocol": {
     "name": "Conic Finance",
@@ -175,25 +174,16 @@
     }
   ],
   "discovery": [
-    "legacy:conic:2023-07-21:conic",
     "dfhl:src/test/2023-07/Conic_exp.sol",
-    "dfhl:src/test/2023-07/Conic_exp2.sol"
+    "dfhl:src/test/2023-07/Conic_exp2.sol",
+    "seed:conic:2023-07-21:conic"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/conic.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 2,
-      "date": "2023-07-21T10:35:11Z"
-    }
+    ]
   },
   "notes": [
     "The deployment anchor is ConicEthPool's creation because the verifier ties the deployment anchor to the execution address; the defect-bearing artifact is the installed CurveHandlerV3 module recorded in codeArtifact.",

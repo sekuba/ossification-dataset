@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca",
   "protocol": {
     "name": "ALP / APO",
@@ -21,17 +20,17 @@
   },
   "summary": "VUN's internal _swap(address,bytes) was left public, so any caller could make the vault execute an arbitrary 1inch unoswapTo call and route the vault's ALP_APO holdings to itself before redeeming them.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 10000,
       "valuationTimestamp": 1709713838,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0xd188492217f09d18f2b0ece3f8948015981e961a"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "Unreviewed seed-inventory basis: latest of 1 pre-incident Upgraded event(s)."
       },
       "codeAgeSeconds": 6758948,
-      "failureModeId": "legacy:eip155:56:0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca:failure-1",
+      "failureModeId": "provisional:eip155:56:0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -77,7 +76,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/alp-apo.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -112,18 +111,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/alp-apo.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/alp-apo.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2024-03-06T08:30:38Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

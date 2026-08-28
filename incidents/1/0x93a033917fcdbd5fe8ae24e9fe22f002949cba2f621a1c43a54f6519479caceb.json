@@ -1,15 +1,11 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x93a033917fcdbd5fe8ae24e9fe22f002949cba2f621a1c43a54f6519479caceb",
   "protocol": {
     "name": "CIVNFT",
     "slug": "civnft"
   },
   "name": "CIVNFT unvalidated mint callback",
-  "discovery": [
-    "dfhl:src/test/2023-07/CIVNFT_exp.sol"
-  ],
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -150,7 +146,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Exact gross transfers from nine victim wallets to the attacker helper across the nine defect-executing transactions. USDC is valued at par; the other assets use historical DefiLlama observations before the attacker began disposing of them. The legacy $180,000 estimate is replaced because it is not reproduced by the onchain asset quantities and contemporaneous prices. Later transfers from the helper to the attacker EOA and swaps are movements or disposal of the same stolen assets and are not counted again.",
+    "notes": "Exact gross transfers from nine victim wallets to the attacker helper across the nine defect-executing transactions. USDC is valued at par; the other assets use historical DefiLlama observations before the attacker began disposing of them. The seed row's $180,000 estimate is replaced because it is not reproduced by the onchain asset quantities and contemporaneous prices. Later transfers from the helper to the attacker EOA and swaps are movements or disposal of the same stolen assets and are not counted again.",
     "realizedAt": 1688829779
   },
   "targets": [
@@ -284,24 +280,17 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-27T13:07:34Z",
-      "note": "Re-reviewed the entire same-actor campaign rather than only the legacy anchor. Attacker EOA 0xbf9df575670c739d9bf1424d4913e7244ed3ff66 deployed helper 0x1ae3929e1975043e5443868be91cac12d8cc25ec at block 17649870, then sent nine consecutive successful defect-executing transactions from block 17649876 through 17649907; the anchored transaction is therefore the first. I inspected every receipt and call trace. Each transaction calls selector 0x7ca06d68 on CIVNFT proxy 0xf169bd68ed72b2fdc3c9234833197171aa000580 with the attacker helper as a purported Uniswap V3 pool. The proxy delegates to 0x78bd317a87d2eab65b666e9402182a949ab4eeb9, queries attacker-controlled tickSpacing() and slot0(), and calls mint() on the helper. The helper reenters uniswapV3MintCallback(uint256,uint256,bytes), selector 0xd3487997. The same implementation trusts msg.sender's token0()/token1() responses and the encoded payer without authenticating the callback sender, then calls transferFrom from the victim to the fake pool. The nine receipts transfer exactly 869,686.365660270889580021 CIV, 50,000 USDC, 4,389.934344869340025291 ICE, 3,000,000,000 SHIB, and 65,029.578490963093499860 BMI from nine victim wallets to the helper. Historical prices of $0.01841732, $1.24, $0.00000739, and $0.0065112 respectively, plus USDC at par, value the gross loss at $94,054.23127511056; the snapshots precede the attacker's disposals. This replaces the unsupported legacy $180,000 estimate. Proxy history: deployment transaction 0xef4d9a4164b07646dba93725398eb618bdeec1b501f3db8e8b9c7a08d7bc6605 created the proxy directly at block 13796999 index 67, timestamp 1639400776, from 0xea729e930cbf56d9ff18aa1c77f2ff716d8369d8. A complete Upgraded-log query from deployment through the campaign returned two events. The second and latest is transaction 0xe0f2a9c00bff73c70314013bdfa661b74e0dc3a3e7db7d594556a7b55e8fb512 at block 13836025 index 62, log 132, timestamp 1639922565; it selected implementation 0x78bd317a87d2eab65b666e9402182a949ab4eeb9. The EIP-1967 slot still held that address immediately before the campaign, all nine traces delegatecalled it, and its pre-exploit runtime hash is 0x9744f50d3ebe4966daf9f45dd759b4ac40f9607e0bc7d4010bb0b0f8038c0c24. No stored configuration authenticates the caller supplied as the pool, so there is no later causal configuration reset. Code age is 1688829395 - 1639922565 = 48,906,830 seconds."
+      "note": "Re-reviewed the entire same-actor campaign rather than only the seed row's anchor. Attacker EOA 0xbf9df575670c739d9bf1424d4913e7244ed3ff66 deployed helper 0x1ae3929e1975043e5443868be91cac12d8cc25ec at block 17649870, then sent nine consecutive successful defect-executing transactions from block 17649876 through 17649907; the anchored transaction is therefore the first. I inspected every receipt and call trace. Each transaction calls selector 0x7ca06d68 on CIVNFT proxy 0xf169bd68ed72b2fdc3c9234833197171aa000580 with the attacker helper as a purported Uniswap V3 pool. The proxy delegates to 0x78bd317a87d2eab65b666e9402182a949ab4eeb9, queries attacker-controlled tickSpacing() and slot0(), and calls mint() on the helper. The helper reenters uniswapV3MintCallback(uint256,uint256,bytes), selector 0xd3487997. The same implementation trusts msg.sender's token0()/token1() responses and the encoded payer without authenticating the callback sender, then calls transferFrom from the victim to the fake pool. The nine receipts transfer exactly 869,686.365660270889580021 CIV, 50,000 USDC, 4,389.934344869340025291 ICE, 3,000,000,000 SHIB, and 65,029.578490963093499860 BMI from nine victim wallets to the helper. Historical prices of $0.01841732, $1.24, $0.00000739, and $0.0065112 respectively, plus USDC at par, value the gross loss at $94,054.23127511056; the snapshots precede the attacker's disposals. This replaces the seed row's unsupported $180,000 estimate. Proxy history: deployment transaction 0xef4d9a4164b07646dba93725398eb618bdeec1b501f3db8e8b9c7a08d7bc6605 created the proxy directly at block 13796999 index 67, timestamp 1639400776, from 0xea729e930cbf56d9ff18aa1c77f2ff716d8369d8. A complete Upgraded-log query from deployment through the campaign returned two events. The second and latest is transaction 0xe0f2a9c00bff73c70314013bdfa661b74e0dc3a3e7db7d594556a7b55e8fb512 at block 13836025 index 62, log 132, timestamp 1639922565; it selected implementation 0x78bd317a87d2eab65b666e9402182a949ab4eeb9. The EIP-1967 slot still held that address immediately before the campaign, all nine traces delegatecalled it, and its pre-exploit runtime hash is 0x9744f50d3ebe4966daf9f45dd759b4ac40f9607e0bc7d4010bb0b0f8038c0c24. No stored configuration authenticates the caller supplied as the pool, so there is no later causal configuration reset. Code age is 1688829395 - 1639922565 = 48,906,830 seconds."
     }
+  ],
+  "discovery": [
+    "dfhl:src/test/2023-07/CIVNFT_exp.sol"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-10"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/civnft.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 2,
-      "date": "2023-07-08T15:16:35Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

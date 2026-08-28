@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xd692f71de2768017390395db815d34033013136c378177c05d0d46ef3b6f0897",
   "protocol": {
     "name": "RADT DAO",
@@ -21,11 +20,11 @@
   },
   "summary": "The RADT wrapper's withdraw(address,address,uint256) let any caller move RADT out of an arbitrary account, so the attacker stripped the RADT/USDT pair, synced it and sold RADT into the drained reserves.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 94305,
       "valuationTimestamp": 1663905803,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -59,12 +58,12 @@
         "transactionIndex": 53,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "documented"
         },
         "description": "2022-08-21T06:21:16Z (BSC block 20627998, tx 0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b sent by the deployer 0xffa253745772f1c3b659583cd47a9858286b8e61): the proxy's implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb changed 0xe0d971450997bef4508abeae8082291c2658f2b8 -> 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 with no event emitted; found by binary-searching eth_getStorageAt on that slot"
       },
       "codeAgeSeconds": 2842927,
-      "failureModeId": "legacy:eip155:56:0xd692f71de2768017390395db815d34033013136c378177c05d0d46ef3b6f0897:failure-1",
+      "failureModeId": "provisional:eip155:56:0xd692f71de2768017390395db815d34033013136c378177c05d0d46ef3b6f0897:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -80,7 +79,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/radt-dao.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -120,21 +119,12 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/radt-dao.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/radt-dao.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "documented",
-      "upgradeEventCount": 0,
-      "date": "2022-09-23T04:03:23Z"
-    }
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
   },
   "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2022-08-21T06:21:16Z (BSC block 20627998, tx 0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b sent by the deployer 0xffa253745772f1c3b659583cd47a9858286b8e61): the proxy's implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb changed 0xe0d971450997bef4508abeae8082291c2658f2b8 -> 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 with no event emitted; found by binary-searching eth_getStorageAt on that slot"
+    "Seed-inventory flag: nonStandardUpgradeArchitecture=true.",
+    "Seed-inventory documentedLastChange: 2022-08-21T06:21:16Z (BSC block 20627998, tx 0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b sent by the deployer 0xffa253745772f1c3b659583cd47a9858286b8e61): the proxy's implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb changed 0xe0d971450997bef4508abeae8082291c2658f2b8 -> 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 with no event emitted; found by binary-searching eth_getStorageAt on that slot"
   ]
 }

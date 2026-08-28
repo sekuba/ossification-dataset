@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x556419e0a6ee8e6de6b3679605f9f62ad013007419a1b55c9f56590a824bfb52",
   "protocol": {
     "name": "INcufi",
@@ -21,17 +20,17 @@
   },
   "summary": "Ncufi.register() lets a caller name a referrer it also controls and STAKE() pays the referral commission out of the pool immediately, so 100 self-referred 10,000-BUSD stakes returned far more than they cost.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 59643,
       "valuationTimestamp": 1718744096,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0x80df77b2ae5828ff499a735ee823d6cd7cf95f5a"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 2868291,
-      "failureModeId": "legacy:eip155:56:0x556419e0a6ee8e6de6b3679605f9f62ad013007419a1b55c9f56590a824bfb52:failure-1",
+      "failureModeId": "provisional:eip155:56:0x556419e0a6ee8e6de6b3679605f9f62ad013007419a1b55c9f56590a824bfb52:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -77,7 +76,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/incufi.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -112,18 +111,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/incufi.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/incufi.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-06-18T20:54:56Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

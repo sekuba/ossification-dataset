@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:42161:0x09289efa2fd7f8c81ab66fc999894842f336d5348a5789c9a889a245bfb0738f",
   "protocol": {
     "name": "Lumi Finance",
@@ -307,8 +306,11 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
-      "note": "Reviewed the Etherscan-verified Sodium source at 0xb5bc46df04dee31d219e7664122e29eed9506b8b, the call traces of the attacker's first, fifth and seventy-third transactions, every EntryPoint UserOperationEvent in blocks 483353600-483410000, the victim wallets' runtime and implementation-pointer history, and all ERC20 transfers into the seven attacker addresses. Re-anchored: the migrated row used 0x630654fb1c8914405cf81bb02f091b049f19403a152f624f7b8a00c7724c6604 at the attacker's nonce 72, but nonce 1, transaction 0x09289efa2fd7f8c81ab66fc999894842f336d5348a5789c9a889a245bfb0738f at 483353617:4, already executes the same defect 9053 seconds earlier and is the first of 113 defect-executing transactions from the same EOA; nonce 0 is only the deployment of attacker contract 0xcb11e89a583e2468511bb8944965117700dfbd27. Re-targeted: the migrated row named the implementation itself as executionAddress, but the executing contexts are the Sodium wallet proxies, so the representative target is 0x178ff0eea283f322e855c97222557b6bd0fd2c0f, the first wallet in the anchor that delegates to the verified implementation. Root cause reproduced from the anchor: the userOp for that wallet carries signature 0x01cb11e89a583e2468511bb8944965117700dfbd2700, so checkValidSodiumSignature type 0x01 resolves the signer to the attacker contract through ERC-1271, callData selector 0x28f8aa4d is executeWithSodiumAuthSession, callData bytes 16..36 hold the same attacker address as the session key, and validateUserOp returned 0. The migrated summary called it an unauthorized session key plus a paymaster approval; the approval leg is real but only appears from the attacker's nonce 72 onward, and the primitive is the self-declared session key. callGasLimit is 0 in every userOp, so the EntryPoint's innerHandleOp always reverted out of gas while the validation-phase side effects stuck. Code history: the proxy resolves its implementation through ADDRESS SLOAD; the wallet's slot 0x000000000000000000000000178ff0eea283f322e855c97222557b6bd0fd2c0f is 0x0 at 225855008 and 0xb5bc46df04dee31d219e7664122e29eed9506b8b from 225855009 to 483353616, the proxy runtime hashes to 0x5b50b88c3767222ffbb152eddb5aa6ce3af2b2d3d210574a31752a2f64c0b221 at both ends, and the implementation runtime hashes to 0xdb623ea308ecc67d39239d5c89b2e529c5969161863b7521fa8a675e3ddf8994 at its own creation block 142595379 and pre-exploit, giving 1783929429-1719390923 = 64538506 s. The wallet was created by factory 0x5eb4bcaeb78a7a765fa3f7285ee6b3e08ccb2c09 inside EntryPoint handleOps transaction 0x0d4c4af9383e81c8b897a802121dd7c9c2747c437b4939de099d15c5c861d7c3. Loss corrected from the legacy round 264000 to measured victim depletion; see loss.notes for the LUA and LUAUSD valuation treatment."
+      "note": "Reviewed the Etherscan-verified Sodium source at 0xb5bc46df04dee31d219e7664122e29eed9506b8b, the call traces of the attacker's first, fifth and seventy-third transactions, every EntryPoint UserOperationEvent in blocks 483353600-483410000, the victim wallets' runtime and implementation-pointer history, and all ERC20 transfers into the seven attacker addresses. Re-anchored: the migrated row used 0x630654fb1c8914405cf81bb02f091b049f19403a152f624f7b8a00c7724c6604 at the attacker's nonce 72, but nonce 1, transaction 0x09289efa2fd7f8c81ab66fc999894842f336d5348a5789c9a889a245bfb0738f at 483353617:4, already executes the same defect 9053 seconds earlier and is the first of 113 defect-executing transactions from the same EOA; nonce 0 is only the deployment of attacker contract 0xcb11e89a583e2468511bb8944965117700dfbd27. Re-targeted: the migrated row named the implementation itself as executionAddress, but the executing contexts are the Sodium wallet proxies, so the representative target is 0x178ff0eea283f322e855c97222557b6bd0fd2c0f, the first wallet in the anchor that delegates to the verified implementation. Root cause reproduced from the anchor: the userOp for that wallet carries signature 0x01cb11e89a583e2468511bb8944965117700dfbd2700, so checkValidSodiumSignature type 0x01 resolves the signer to the attacker contract through ERC-1271, callData selector 0x28f8aa4d is executeWithSodiumAuthSession, callData bytes 16..36 hold the same attacker address as the session key, and validateUserOp returned 0. The migrated summary called it an unauthorized session key plus a paymaster approval; the approval leg is real but only appears from the attacker's nonce 72 onward, and the primitive is the self-declared session key. callGasLimit is 0 in every userOp, so the EntryPoint's innerHandleOp always reverted out of gas while the validation-phase side effects stuck. Code history: the proxy resolves its implementation through ADDRESS SLOAD; the wallet's slot 0x000000000000000000000000178ff0eea283f322e855c97222557b6bd0fd2c0f is 0x0 at 225855008 and 0xb5bc46df04dee31d219e7664122e29eed9506b8b from 225855009 to 483353616, the proxy runtime hashes to 0x5b50b88c3767222ffbb152eddb5aa6ce3af2b2d3d210574a31752a2f64c0b221 at both ends, and the implementation runtime hashes to 0xdb623ea308ecc67d39239d5c89b2e529c5969161863b7521fa8a675e3ddf8994 at its own creation block 142595379 and pre-exploit, giving 1783929429-1719390923 = 64538506 s. The wallet was created by factory 0x5eb4bcaeb78a7a765fa3f7285ee6b3e08ccb2c09 inside EntryPoint handleOps transaction 0x0d4c4af9383e81c8b897a802121dd7c9c2747c437b4939de099d15c5c861d7c3. Loss corrected from the seed row's rounded 264000 to measured victim depletion; see loss.notes for the LUA and LUAUSD valuation treatment."
     }
+  ],
+  "discovery": [
+    "seed:lumi-finance:2026-07-13:lumi-finance-paymaster-approval-drain"
   ],
   "verification": {
     "tier": "reviewed",
@@ -318,17 +320,6 @@
     ],
     "reviewSourceIds": [
       "source-13"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/lumi-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-07-13T10:28:02Z",
-      "reanchored": true
-    }
-  },
-  "notes": []
+    ]
+  }
 }

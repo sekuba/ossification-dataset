@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:42161:0x6116f311ac199d6f608c52e44c93a0e6961f10380fd379873b8bf27c92402462",
   "protocol": {
     "name": "Gamma Strategies",
@@ -189,25 +188,18 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T08:30:00Z",
-      "note": "Triaged sceptically against the legacy 'deposit price-change threshold misconfiguration' summary, and the misconfiguration reading is wrong: it is a code defect. Clearing 0xb8fb4031's positions(0x33985ca7...) at block 166875328 reads depositOverride=true, twapOverride=true, version=4, twapInterval=43200, priceThreshold=200, deposit0Max=279719.236478372108640000, deposit1Max=299700.299700299700300000, and the global twapCheck=true, twapInterval=3600, priceThreshold=100, depositDelta=1002, deltaScale=1000; the permissive 200 threshold is real but is only what let the 1033-to-2257 tick move (about 1.13x versus the 12h TWAP) pass checkPriceChange. What actually removed the deposit constraint is code: getDepositAmount returns amountStart=0 and amountEnd=depositNMax whenever totalSupply()==0 || total0==0 || total1==0, so clearDeposit's 'Improper ratio' requirement is vacuous for a single-sided vault. Every getTotalAmounts() observed by Clearing in the anchor trace is single-sided ((0, 3299168.315020330698173152) and (2924905.079545274376081981, 0)), and UniProxy.deposit was called with deposit0=270000e18, deposit1=1 wei, an extreme ratio the checker would otherwise reject. Gamma's own later security review names this exception as the deeper root cause. Re-anchored from 0xa96584f8ab, which is the fifth of seven exploit transactions against this vault. Enumerating the attacker EOA 0x5351536145610aa448a8bf85ba97c71caf31909c: 25 successful constructor transactions at blocks 166873292 to 166874738 consist of five USDT-USDC.e probes through Clearing 0x1f7792ed, eight Ramses USDC-USDC.e probes through Clearing 0xcfb851b1, and twelve wstETH-WETH probes through Clearing 0x1f7792ed; each ends with only a small net Hypervisor-share balance and zero net underlying-token gain. Then 0x6116f311ac at block 166874977 index 1 is the first transaction that executes the defect through Clearing 0xb8fb4031 and extracts value (+412,364.40 gDAI, +22,441.41 DAI), followed by 0xbbc005af95, 0x1d15941310, 0x2c323b4d94, 0xcbb7ba9aca, 0xa96584f8ab and 0x4024d44037; 0xeb998acf31 reverted. A second EOA 0xccc599f33c9e1635bb32d48c25a26e64451fbbdd later repeated the pattern against the two Camelot/Algebra vaults and the Ramses vault. Code history: Clearing 0xb8fb4031 is not a proxy (EIP-1967 slot zero at 166874976) and has no upgrade path; runtime hash 0x519823c3f9e3ec957571e4db9a367824c0a810284492374792fca48922f24d28 is identical at its creation block 106809192 and at 120000000, 140000000, 160000000 and 166874976, empty at 106809191, so the creation transaction 0x74d2b510da (index 7, creator 0x71e7d05be74ff748c45402c06a941c822d756dc5, the Gamma deployer) is the latest pre-exploit executable-code change and the code age is 16,120,025 s, 186d 13h 47m 5s. The gDAI vault routes through this one shared Clearing, so its repeated transactions are one coherent same-defect campaign for this artifact."
+      "note": "Triaged sceptically against the seed row's 'deposit price-change threshold misconfiguration' summary, and the misconfiguration reading is wrong: it is a code defect. Clearing 0xb8fb4031's positions(0x33985ca7...) at block 166875328 reads depositOverride=true, twapOverride=true, version=4, twapInterval=43200, priceThreshold=200, deposit0Max=279719.236478372108640000, deposit1Max=299700.299700299700300000, and the global twapCheck=true, twapInterval=3600, priceThreshold=100, depositDelta=1002, deltaScale=1000; the permissive 200 threshold is real but is only what let the 1033-to-2257 tick move (about 1.13x versus the 12h TWAP) pass checkPriceChange. What actually removed the deposit constraint is code: getDepositAmount returns amountStart=0 and amountEnd=depositNMax whenever totalSupply()==0 || total0==0 || total1==0, so clearDeposit's 'Improper ratio' requirement is vacuous for a single-sided vault. Every getTotalAmounts() observed by Clearing in the anchor trace is single-sided ((0, 3299168.315020330698173152) and (2924905.079545274376081981, 0)), and UniProxy.deposit was called with deposit0=270000e18, deposit1=1 wei, an extreme ratio the checker would otherwise reject. Gamma's own later security review names this exception as the deeper root cause. Re-anchored from 0xa96584f8ab, which is the fifth of seven exploit transactions against this vault. Enumerating the attacker EOA 0x5351536145610aa448a8bf85ba97c71caf31909c: 25 successful constructor transactions at blocks 166873292 to 166874738 consist of five USDT-USDC.e probes through Clearing 0x1f7792ed, eight Ramses USDC-USDC.e probes through Clearing 0xcfb851b1, and twelve wstETH-WETH probes through Clearing 0x1f7792ed; each ends with only a small net Hypervisor-share balance and zero net underlying-token gain. Then 0x6116f311ac at block 166874977 index 1 is the first transaction that executes the defect through Clearing 0xb8fb4031 and extracts value (+412,364.40 gDAI, +22,441.41 DAI), followed by 0xbbc005af95, 0x1d15941310, 0x2c323b4d94, 0xcbb7ba9aca, 0xa96584f8ab and 0x4024d44037; 0xeb998acf31 reverted. A second EOA 0xccc599f33c9e1635bb32d48c25a26e64451fbbdd later repeated the pattern against the two Camelot/Algebra vaults and the Ramses vault. Code history: Clearing 0xb8fb4031 is not a proxy (EIP-1967 slot zero at 166874976) and has no upgrade path; runtime hash 0x519823c3f9e3ec957571e4db9a367824c0a810284492374792fca48922f24d28 is identical at its creation block 106809192 and at 120000000, 140000000, 160000000 and 166874976, empty at 106809191, so the creation transaction 0x74d2b510da (index 7, creator 0x71e7d05be74ff748c45402c06a941c822d756dc5, the Gamma deployer) is the latest pre-exploit executable-code change and the code age is 16,120,025 s, 186d 13h 47m 5s. The gDAI vault routes through this one shared Clearing, so its repeated transactions are one coherent same-defect campaign for this artifact."
     }
+  ],
+  "discovery": [
+    "seed:gamma-strategies:2024-01-04:gamma-strategies"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-8"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/gamma-strategies.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-01-04T03:39:04Z",
-      "reanchored": true
-    }
+    ]
   },
   "notes": [
     "The Camelot/Algebra legs execute Clearing 0x1f7792ed527a399159583730017cdb5003d57f4f, while the Ramses leg executes a third Clearing 0xcfb851b1b1345fe6c643e71f98b36ad887fa7db6. Both contain the same v1.2.3 exception but are independently aged runtime artifacts with separate non-overlapping loss records."

@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xc12a4155c2c90707138e4aef8883c8f724371145823e2f661f19b93e5b3a9d6e",
   "protocol": {
     "name": "Unizen",
@@ -436,7 +435,7 @@
         "valuation": {
           "method": "incident-price",
           "timestamp": 1709928815,
-          "unitPriceUsd": 5.169e-05,
+          "unitPriceUsd": 0.00005169,
           "sourceIds": [
             "source-7"
           ]
@@ -856,7 +855,7 @@
         "valuation": {
           "method": "incident-price",
           "timestamp": 1709928815,
-          "unitPriceUsd": 9.11e-06,
+          "unitPriceUsd": 0.00000911,
           "sourceIds": [
             "source-7"
           ]
@@ -1007,7 +1006,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The 207 successful drain transactions between blocks 19392761 and 19394695, when Unizen rolled the proxy back to implementation 0xf92ecf887a30d9afde76f5c220cc6dead59df540, pull 245 approval balances from 191 distinct victim addresses across 57 ERC-20s and forward them to 31 receiver addresses. Each component is the exact sum of the Transfer events in which a victim address that receives nothing back in the transaction sends a token to the aggregator proxy and the same token leaves the proxy to a different address in the same transaction. USDT, USDC and DAI use par; every other component uses the DefiLlama observation nearest the incident timestamp, all of which lie between 2 seconds before and 105 seconds after it. Nine further drained tokens (0x102dc1840f0c3c179670f21fa63597e82df34e60, 0x6a7eff1e2c355ad6eb91bebb5ded49257f3fed98, 0x1bb9b64927e0c5e207c9db4093b3738eef5d8447, 0x12c51b8f1b8a98c70fe6ae45c158a78931423e4c, 0xe4b4c008ff36e3c50c4299c223504a480de9c833, 0x0f7b3f5a8fed821c5eb60049538a548db2d479ce, 0x1294f4183763743c7c9519bec51773fb3acd78fd, 0x1c001d1c9e8c7b8dc717c714d30b31480ab360f5, 0xe59b14e43479dc30d77f553e4b5c6fc67e1f6caf) have no DefiLlama observation and are excluded, so the total is a floor. Only the Ethereum aggregator is measured; Unizen\u2019s onchain recovery notice also named Polygon and Avalanche return addresses, and those chains are not covered here. Reported figures of roughly 2.0-2.1 million USD track the single largest drain, the 2,176,228.712449 USDT taken in the anchor transaction and immediately swapped to 2,179,859.64 DAI, and the amount Unizen said it reimbursed. Recovery is excluded from the exploit-time number: Unizen reimbursed affected users from its own funds and asked the exploiters onchain to return 80 percent within 48 hours; the anchor transaction\u2019s proceeds were not returned and left 0xb660cae1a59336676ea1887b15eb3c0badb90d78 in August 2024."
+    "notes": "The 207 successful drain transactions between blocks 19392761 and 19394695, when Unizen rolled the proxy back to implementation 0xf92ecf887a30d9afde76f5c220cc6dead59df540, pull 245 approval balances from 191 distinct victim addresses across 57 ERC-20s and forward them to 31 receiver addresses. Each component is the exact sum of the Transfer events in which a victim address that receives nothing back in the transaction sends a token to the aggregator proxy and the same token leaves the proxy to a different address in the same transaction. USDT, USDC and DAI use par; every other component uses the DefiLlama observation nearest the incident timestamp, all of which lie between 2 seconds before and 105 seconds after it. Nine further drained tokens (0x102dc1840f0c3c179670f21fa63597e82df34e60, 0x6a7eff1e2c355ad6eb91bebb5ded49257f3fed98, 0x1bb9b64927e0c5e207c9db4093b3738eef5d8447, 0x12c51b8f1b8a98c70fe6ae45c158a78931423e4c, 0xe4b4c008ff36e3c50c4299c223504a480de9c833, 0x0f7b3f5a8fed821c5eb60049538a548db2d479ce, 0x1294f4183763743c7c9519bec51773fb3acd78fd, 0x1c001d1c9e8c7b8dc717c714d30b31480ab360f5, 0xe59b14e43479dc30d77f553e4b5c6fc67e1f6caf) have no DefiLlama observation and are excluded, so the total is a floor. Only the Ethereum aggregator is measured; Unizen’s onchain recovery notice also named Polygon and Avalanche return addresses, and those chains are not covered here. Reported figures of roughly 2.0-2.1 million USD track the single largest drain, the 2,176,228.712449 USDT taken in the anchor transaction and immediately swapped to 2,179,859.64 DAI, and the amount Unizen said it reimbursed. Recovery is excluded from the exploit-time number: Unizen reimbursed affected users from its own funds and asked the exploiters onchain to return 80 percent within 48 hours; the anchor transaction’s proceeds were not returned and left 0xb660cae1a59336676ea1887b15eb3c0badb90d78 in August 2024."
   },
   "targets": [
     {
@@ -1325,22 +1324,14 @@
       "note": "Re-anchored. The v1 snapshot anchored this incident to 0x923d1d63a1165ebd3521516f6d22d015f2e1b4b22d5dc954152b6c089c765fcd at block 19393770, which is one drain among 207 and more than 1,000 blocks into the campaign; DeFiHackLabs itself labels it \"one of the transactions\". The earliest transaction that executes the defect is 0xc12a4155c2 at block 19392761 index 0, in which 0xb660cae1a59336676ea1887b15eb3c0badb90d78 deploys a helper and runs five swap calls that pull 2,176,228.712449 USDT from five approval holders through the aggregator; the swap entrypoint 0x1ef29a02 delegatecalls implementation 0xa051fc7d38baa0ace811ad9de4e9f7024e5d8a30 and executes the attacker-supplied (targetExchange, calldata) pair without any whitelist check, so targetExchange = the ERC-20 and calldata = transferFrom(victim, aggregator, amount) spends the victim allowance. Only two transactions touched the proxy between the upgrade at block 19391308 and this one: the upgrade transaction itself and a genuine 0x/ZeroEx-routed swap at block 19391733 that routed through 0xdef1c0ded9bec7f1a1670819833240f027b25eff, so the block-19392761 transaction is the first abuse. The execution context is a plain OpenZeppelin TransparentUpgradeableProxy administered by ProxyAdmin 0x1a8d485e038bf714363c9c79c57cfca5434d7dc0 behind a Gnosis Safe, not a diamond: the exploit trace shows a single delegatecall from the proxy to the implementation and there are no DiamondCut or facet events anywhere in the proxy log history. The proxy emitted exactly ten Upgraded events between its creation block 15624173 and the exploit, at blocks 15624173, 16318419, 16332653, 16790742, 16798922, 16946705, 17592218, 18621205, 18806748 and 19391308. The last of them, log 343 of transaction 0x43085d54f5 at block 19391308 index 150, selected 0xa051fc7d, and the EIP-1967 implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc reads that address at block 19392760. The artifact runtime code hash is 0x62f25c3a082bc1f978b17deb981dfe6535956a4ba96e43fb3e80d853ecd4f13c both at its own deployment block 19390499 and at block 19392760, so the exploited code is 17,520 seconds, 4h 52m, old. The upgrade is also the change that introduced the defect: the selector 0x1ef29a02 appears in the runtime of 0xa051fc7d and is absent from the runtime of the preceding implementation 0xf92ecf887a30d9afde76f5c220cc6dead59df540, which is exactly the implementation Unizen restored at block 19394696 to stop the drain. The implementation is unverified on Etherscan, so the defect is established from the execution traces and the calldata layout, corroborated by the pinned DeFiHackLabs reproduction and the SlowMist analysis. Both the proxy and the implementation were deployed by 0xdbc320a510bcf1a8368ca38fc3ad773e259ced26, the Unizen deployer, which is not an attacker address. Loss is the exploit-time gross value of every approval balance pulled through the defect on Ethereum: 245 pulls from 191 victims across 57 tokens, in 207 successful transactions sent by 18 distinct senders, all inside the 1,935-block window the vulnerable implementation was live. Forty-eight of those tokens have a DefiLlama observation within 105 seconds of the incident timestamp and sum to 3,654,454.98 USD; nine illiquid tokens have none and are excluded, so the figure is a floor. Unizen reimbursed users and publicly asked the exploiters to return 80 percent; those returns are reimbursement and recovery and are not netted out."
     }
   ],
+  "discovery": [
+    "seed:unizen:2024-03-08:unizen-trade-aggregator-arbitrary-call-in-swap"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-8"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/unizen.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 10,
-      "date": "2024-03-08T23:49:35Z",
-      "reanchored": true
-    }
-  },
-  "notes": []
+    ]
+  }
 }

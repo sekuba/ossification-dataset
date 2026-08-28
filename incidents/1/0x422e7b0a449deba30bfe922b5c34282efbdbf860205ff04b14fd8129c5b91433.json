@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x422e7b0a449deba30bfe922b5c34282efbdbf860205ff04b14fd8129c5b91433",
   "protocol": {
     "name": "XCarnival",
@@ -169,22 +168,14 @@
       "note": "Re-anchored. The v1 snapshot anchored this incident to 0x7cd094bc34c6700090f88950ab0095a95eb0d54c8e5012f1f46266c8871027ff, a bare BoredApeYachtClub transferFrom that never touches XCarnival; it executes no defect and finalizes no loss. The earliest transaction that executes the defect is 0x422e7b0a44, in which the attacker contract runs four pledgeAndBorrow/withdrawNFT cycles against the XNFT proxy 0xb14b3b9682990ccc16f52eb04146c3ceab01169a, each delegatecalling implementation 0x39360ac1239a0b98cb8076d4135d0f72b7fd9909 and leaving the order borrowable after the BAYC leaves the proxy. The proxy emitted exactly one Upgraded event, log 302 of its own creation transaction 0x7650071a93 at block 14909176, and the EIP-1967 implementation slot still reads 0x39360ac1 at block 15028860, so the exploited code is 20d 23h 10m 59s old. Its creator 0xc087629431256745e6e3d87b3ec14e8b42d47e48 is the XCarnival deployer, unrelated to the attacker. Loss is the 2,988 ETH drained from the xETH pool across six borrow transactions, confirmed by pool balance before and after and by the four exploit contracts' forwarding totals."
     }
   ],
+  "discovery": [
+    "seed:xcarnival:2022-06-26:xcarnival-xnft-pledged-nft-withdrawal"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-7"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/xcarnival.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2022-06-26T11:53:44Z",
-      "reanchored": true
-    }
-  },
-  "notes": []
+    ]
+  }
 }

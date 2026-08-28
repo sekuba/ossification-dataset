@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x2040a481c933b50ee31aba257c2041c48bb7a0b4bf4b4fad1ac165f19c4269e8",
   "protocol": {
     "name": "WECO",
@@ -21,17 +20,17 @@
   },
   "summary": "WECOStaking.deposit() returns more WECOIN to the depositor than it takes in, so the attacker looped 1-token deposits until the staking contract's WECOIN balance was drained.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 18000,
       "valuationTimestamp": 1700158589,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0xd672b766d66662f5c6fd798a999e1193a7945451"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 8372576,
-      "failureModeId": "legacy:eip155:56:0x2040a481c933b50ee31aba257c2041c48bb7a0b4bf4b4fad1ac165f19c4269e8:failure-1",
+      "failureModeId": "provisional:eip155:56:0x2040a481c933b50ee31aba257c2041c48bb7a0b4bf4b4fad1ac165f19c4269e8:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -77,7 +76,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/weco.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -112,18 +111,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/weco.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/weco.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-11-16T18:16:29Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

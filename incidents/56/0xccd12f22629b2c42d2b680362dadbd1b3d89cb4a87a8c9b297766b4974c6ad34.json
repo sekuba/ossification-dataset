@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xccd12f22629b2c42d2b680362dadbd1b3d89cb4a87a8c9b297766b4974c6ad34",
   "protocol": {
     "name": "MetaPoint",
@@ -136,7 +135,7 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T09:50:32Z",
-      "note": "Re-anchored from the legacy PoC transaction 0xdb01fa33...e7995 to the first successful defect-executing campaign transaction 0xccd12f22...6ad34 at block 27263530 index 27. Its trace first calls approve() on 0x0f6c39efa4db888ff9f73175dff0129d4b7166cb, whose direct runtime then calls POT.approve(0xefa208b619099146de85f1dfedf0e9dcbb8defe1, uint256.max). The per-user contract was created by factory 0x71a0c153f52cefcf6d26253f67b10dabed5556ff in transaction 0xc3d6da64...2b420 at block 26963008 index 30. Its 370-byte runtime hashes to 0x08e4f6d3d509f87b6758fa77e7fb5cc0fd01b92bfce1d5783dbd2848b67fa973 at deployment, immediately before the campaign, and currently, giving an age of 914214 seconds. The same EOA used 0xefa208b619099146de85f1dfedf0e9dcbb8defe1 for 13 campaign calls and 0xc6e451c8fa3418b703121ac23e44803d143c5d5c for 29, spanning blocks 27263530-27265182; 25 calls granted allowances and 17 drained balances. The drain receipts record 466 unique victim POT transfers to pair 0x9117df9aa33b23c0a9c2c913ad0739273c3930b3 totaling 209431.616898011367571955 POT. All 466 victims have the exact same runtime immediately before the campaign, and their creation records all identify factory 0x71a0c153f52cefcf6d26253f67b10dabed5556ff. The pool paid 823417.781370262268552996 USDT to the two attack contracts; every unit was forwarded to the USDT/WBNB pair, which paid 2515.786571418808574992 WBNB to the attacker EOA. The exact realized USDT proceeds at par supersede the legacy 2500-BNB estimate. The first executed code-identical deployment is the deterministic campaign representative; adding the other 465 contexts would produce redundant observations under code-hash/failure-mode deduplication."
+      "note": "Re-anchored from the seed row's PoC transaction 0xdb01fa33...e7995 to the first successful defect-executing campaign transaction 0xccd12f22...6ad34 at block 27263530 index 27. Its trace first calls approve() on 0x0f6c39efa4db888ff9f73175dff0129d4b7166cb, whose direct runtime then calls POT.approve(0xefa208b619099146de85f1dfedf0e9dcbb8defe1, uint256.max). The per-user contract was created by factory 0x71a0c153f52cefcf6d26253f67b10dabed5556ff in transaction 0xc3d6da64...2b420 at block 26963008 index 30. Its 370-byte runtime hashes to 0x08e4f6d3d509f87b6758fa77e7fb5cc0fd01b92bfce1d5783dbd2848b67fa973 at deployment, immediately before the campaign, and currently, giving an age of 914214 seconds. The same EOA used 0xefa208b619099146de85f1dfedf0e9dcbb8defe1 for 13 campaign calls and 0xc6e451c8fa3418b703121ac23e44803d143c5d5c for 29, spanning blocks 27263530-27265182; 25 calls granted allowances and 17 drained balances. The drain receipts record 466 unique victim POT transfers to pair 0x9117df9aa33b23c0a9c2c913ad0739273c3930b3 totaling 209431.616898011367571955 POT. All 466 victims have the exact same runtime immediately before the campaign, and their creation records all identify factory 0x71a0c153f52cefcf6d26253f67b10dabed5556ff. The pool paid 823417.781370262268552996 USDT to the two attack contracts; every unit was forwarded to the USDT/WBNB pair, which paid 2515.786571418808574992 WBNB to the attacker EOA. The exact realized USDT proceeds at par supersede the seed row's 2500-BNB estimate. The first executed code-identical deployment is the deterministic campaign representative; adding the other 465 contexts would produce redundant observations under code-hash/failure-mode deduplication."
     },
     {
       "id": "source-5",
@@ -169,6 +168,9 @@
       ]
     }
   ],
+  "discovery": [
+    "seed:metapoint:2023-04-11:metapoint-user-contract-unrestricted-approve"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [
@@ -176,17 +178,7 @@
     ],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/metapoint.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-04-11T20:32:59Z",
-      "reanchored": true
-    }
+    ]
   },
   "notes": [
     "This campaign drained 466 code-identical direct per-user deployments. Target-1 deterministically represents the first context executed in the earliest defect-executing transaction; the other contexts would be redundant under exact code-hash and failure-mode curve grouping."

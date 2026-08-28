@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xd17266bcdf30cbcbd7d0b5a006f43141981aeee2e1f860f68c9a1805ecacbc68",
   "protocol": {
     "name": "GHT",
@@ -21,17 +20,17 @@
   },
   "summary": "GHT.transferFrom() moved tokens without checking the caller's allowance, so the attacker emptied the WETH/GHT Uniswap V2 pair's GHT reserve, called sync(), pushed the GHT back in and swapped the resulting imbalance out for WETH.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 57000,
       "valuationTimestamp": 1709786267,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 2 pre-incident Upgraded event(s)."
+        "description": "Unreviewed seed-inventory basis: latest of 2 pre-incident Upgraded event(s)."
       },
       "codeAgeSeconds": 48036,
-      "failureModeId": "legacy:eip155:1:0xd17266bcdf30cbcbd7d0b5a006f43141981aeee2e1f860f68c9a1805ecacbc68:failure-1",
+      "failureModeId": "provisional:eip155:1:0xd17266bcdf30cbcbd7d0b5a006f43141981aeee2e1f860f68c9a1805ecacbc68:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -81,7 +80,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/ght.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -105,7 +104,7 @@
     {
       "id": "source-3",
       "type": "review-note",
-      "note": "onchain review: ERC1967Proxy 0x528e046ACfb52bD3f9c400e7A5c79A8a2c2863d0 created 2024-03-05T14:11:47Z by 0x2aa1eccb2dcb0c1ffd44abc6c92fcdd4d26fdc10, not the attack-tx sender 0x096f0f03e4be68d7e6dd39b22a3846b8ce9849a3; two EIP-1967 Upgraded events, the last at block 19376972 on 2024-03-06T15:17:11Z installing 0x17dfb09194ab77dcf318839cfdd01f587a73a77e \u2014 13.3 hours before the exploit."
+      "note": "onchain review: ERC1967Proxy 0x528e046ACfb52bD3f9c400e7A5c79A8a2c2863d0 created 2024-03-05T14:11:47Z by 0x2aa1eccb2dcb0c1ffd44abc6c92fcdd4d26fdc10, not the attack-tx sender 0x096f0f03e4be68d7e6dd39b22a3846b8ce9849a3; two EIP-1967 Upgraded events, the last at block 19376972 on 2024-03-06T15:17:11Z installing 0x17dfb09194ab77dcf318839cfdd01f587a73a77e — 13.3 hours before the exploit."
     },
     {
       "id": "source-4",
@@ -117,18 +116,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/ght.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/ght.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 2,
-      "date": "2024-03-07T04:37:47Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

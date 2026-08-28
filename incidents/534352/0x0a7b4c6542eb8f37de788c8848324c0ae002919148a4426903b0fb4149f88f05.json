@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05",
   "protocol": {
     "name": "Rho Markets",
@@ -60,7 +59,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The seven campaign receipts show rwstETH 0xe4fc4c444effb5eca80274c021f652980794eae6 transferring exactly 1,233.956023308315527280 wstETH to the attack helper. In the same transactions the helper sold that wstETH through pool 0x05dff4a55473562dd26bdbe4f74410a7307175bf for 1,443.560249567875793338 WETH. Valuing the realised WETH at the legitimate ETH/USD Chainlink answer of $3,384.18 immediately before the bad feed write gives $4,885,267.725382613902298592. Attacker-supplied flash loans and ETH collateral are excluded. The later return of funds does not reduce gross pre-recovery loss. The legacy $7.6m report is not retained because it does not reconcile with the victim's complete wstETH outflow during the mispricing window.",
+    "notes": "The seven campaign receipts show rwstETH 0xe4fc4c444effb5eca80274c021f652980794eae6 transferring exactly 1,233.956023308315527280 wstETH to the attack helper. In the same transactions the helper sold that wstETH through pool 0x05dff4a55473562dd26bdbe4f74410a7307175bf for 1,443.560249567875793338 WETH. Valuing the realised WETH at the legitimate ETH/USD Chainlink answer of $3,384.18 immediately before the bad feed write gives $4,885,267.725382613902298592. Attacker-supplied flash loans and ETH collateral are excluded. The later return of funds does not reduce gross pre-recovery loss. The seed row's $7.6m report is not retained because it does not reconcile with the victim's complete wstETH outflow during the mispricing window.",
     "realizedAt": 1721379962
   },
   "targets": [
@@ -170,16 +169,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/rho-markets.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 1,
-      "date": "2024-07-19T08:59:49Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

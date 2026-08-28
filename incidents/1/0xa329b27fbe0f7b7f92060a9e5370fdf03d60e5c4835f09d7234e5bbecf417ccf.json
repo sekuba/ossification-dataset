@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xa329b27fbe0f7b7f92060a9e5370fdf03d60e5c4835f09d7234e5bbecf417ccf",
   "protocol": {
     "name": "Floor Protocol (Flooring Lab)",
@@ -234,22 +233,15 @@
       "note": "Re-anchored and re-targeted. The v1 snapshot anchored to 0xec8f6d8e11 and named 0xc538d17a6aacc5271be5f51b891e2e92c8187edd as a directly deployed victim with no EIP-1967 events; both are wrong. The trace of every campaign transaction shows the attacker contract calling the periphery PROXY 0x49ad262c49c7aa708cc2df262ed53b64a17dd5ee with selector 0x97e4ee2a extMulticall((address,bytes)[]), the proxy DELEGATECALLing 0xc538d17a6aacc5271be5f51b891e2e92c8187edd, and the token pulls then issuing from the proxy's own context; 0xc538d17a is the implementation, not the execution context, and the EIP-1967 implementation slot of the proxy reads 0xc538d17a at block 18802260 while its beacon and admin slots are zero. The proxy emitted exactly six Upgraded events between its creation block 18341948 and block 18802288 - 0xfdd11b92 at 18341948 log 354, 0x36b05531 at 18349054 log 440, 0x8ad7892f at 18376076 log 107, 0x2823e35d at 18552894 log 180, 0x44533fbb at 18711582 log 116 and 0xc538d17a at 18719225 log 217 - so the last pre-exploit executable-code change is the UUPS upgradeToAndCall 0x74f4226252 at block 18719225 index 168, giving an age of 1,005,660 s (11 d 15 h 21 m). The artifact runtime hash is 0x66809080b25b91269a70fc189031e2e94d55dcc8561d4ff15e4fd99ace7e58e8 at both its creation block 18719162 and block 18802260. The extMulticall selector first appears in the third implementation 0x8ad7892f, so the defect predates this artifact, but the curve ages the artifact that actually executed. Anchor moved earlier: 0xa329b27f at block 18802261 index 49 is the first successful transaction that executes extMulticall and pulls victim assets; 0xec8f6d8e and 0xfb9942a1 follow in the same campaign, and the proxy was upgraded away to 0x2e43130b at block 18802671, closing it. Creator 0x43800c438f5d639c8b865396cb83a4efa220091b deployed both the proxy and the implementation and is unrelated to the attacker. Loss enumerated by trace_filter over every transferFrom/safeTransferFrom issued by the proxy from block 18341948 to 18830000, keeping the calls whose token owner is neither the transaction sender nor its entry contract: 14 BAYC, 36 Pudgy Penguins and 12.063212894780222877 WETH to the exploiter, plus 15 Azuki taken by two other senders and fully returned by block 18824263, which are excluded. Collection unit prices are medians of arm's-length Seaport and Blur v2 sales over blocks 18795000-18809000 with all campaign-address transactions removed."
     }
   ],
+  "discovery": [
+    "seed:floor-protocol:2023-12-17:flooringperiphery-extmulticall-arbitrary-call"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-10"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/floor-protocol.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-12-17T00:49:11Z",
-      "reanchored": true
-    }
+    ]
   },
   "notes": [
     "The 15 Azuki pulled through the same defect at blocks 18802605-18802671 by 0x4526250a2e18dbd7fdd2dd0e49d58d88dc25da4c and 0x0171837c6461f551ab1eb5937374f52d6cefe7bb were all returned to their original owners within a day and are treated as rescue rather than theft."

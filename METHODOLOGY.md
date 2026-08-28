@@ -194,8 +194,9 @@ source. Illiquid assets use an evidenced lower bound when it establishes cohort
 admission. `price-data` sources record provider, URL, and evidence-retrieval time
 in `observedAt`; the asset valuation's `timestamp` is the historical price time.
 
-Legacy asset prose remains a provisional migration representation. Reviewed
-records use structured components and high or medium confidence.
+Provisional records may carry an `unspecified` loss kind and prose asset
+descriptions imported from a discovery source. Reviewed records use structured
+components and high or medium confidence.
 
 An evidenced `minimumUsd` lower bound is enough for dataset admission when an
 exact valuation is unavailable. It is not enough for the comparable curve,

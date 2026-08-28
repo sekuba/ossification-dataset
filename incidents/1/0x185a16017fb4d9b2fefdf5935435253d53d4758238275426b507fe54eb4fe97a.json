@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x185a16017fb4d9b2fefdf5935435253d53d4758238275426b507fe54eb4fe97a",
   "protocol": {
     "name": "EquilibriaEPendle",
@@ -21,17 +20,17 @@
   },
   "summary": "VaultEPendle did not update reward debt on share transfers and public getReward(account) let fresh receivers re-claim the same native rewards repeatedly.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 62662,
       "valuationTimestamp": 1755948059,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0xd30d6fd662c0d92b49f3c3e478e125ba1d968059"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "Unreviewed seed-inventory basis: latest of 1 pre-incident Upgraded event(s)."
       },
       "codeAgeSeconds": 58768788,
-      "failureModeId": "legacy:eip155:1:0x185a16017fb4d9b2fefdf5935435253d53d4758238275426b507fe54eb4fe97a:failure-1",
+      "failureModeId": "provisional:eip155:1:0x185a16017fb4d9b2fefdf5935435253d53d4758238275426b507fe54eb4fe97a:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -79,7 +78,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/equilibriaependle.json; no semantic revalidation was inherited."
+          "Target identity and code history were imported from the seed inventory without independent review."
         ]
       }
     }
@@ -113,18 +112,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/equilibriaependle.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/equilibriaependle.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2025-08-23T11:20:59Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

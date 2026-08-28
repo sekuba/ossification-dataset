@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x04a1f0d1694242515ecb14faa71053901f11a1286cd21c27fe5542f9eeb62356",
   "protocol": {
     "name": "YYDS",
@@ -58,7 +57,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The YYDS/USDT pair 0xd5ca448b06f8eb5acc6921502e33912fa3d63b12 starts the exploit with 1186471.120130432957137499 USDT and 1656.938602269843892480 YYDS. Its Swap event records 1186469.920024032957137499 USDT out, then 444183.647236821385893095 USDT and 2787.048000000004191719 YYDS in, leaving 444184.847343221385893095 USDT. The causal net pair loss is therefore exactly 742286.272787211571244404 USDT, and the receipt transfers that exact remainder from the attacker contract to the attacker EOA. USDT is valued at par. The 2787.048000000004191719 YYDS released from consumptionReturnPool is the instrument sold to create this same recorded USDT loss and is not valued again, avoiding double-counting one economic loss. The legacy USD amount 742286 is a rounded version of the reproduced pair loss."
+    "notes": "The YYDS/USDT pair 0xd5ca448b06f8eb5acc6921502e33912fa3d63b12 starts the exploit with 1186471.120130432957137499 USDT and 1656.938602269843892480 YYDS. Its Swap event records 1186469.920024032957137499 USDT out, then 444183.647236821385893095 USDT and 2787.048000000004191719 YYDS in, leaving 444184.847343221385893095 USDT. The causal net pair loss is therefore exactly 742286.272787211571244404 USDT, and the receipt transfers that exact remainder from the attacker contract to the attacker EOA. USDT is valued at par. The 2787.048000000004191719 YYDS released from consumptionReturnPool is the instrument sold to create this same recorded USDT loss and is not valued again, avoiding double-counting one economic loss. The seed row's USD amount 742286 is a rounded version of the reproduced pair loss."
   },
   "targets": [
     {
@@ -143,7 +142,7 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T10:11:08Z",
-      "note": "Anchor retained after chronology review. Transaction 0x04a1f0d1 is successful at block 21157029 index 4 and atomically executes the defect and realizes the loss. The attacker EOA's preceding calls to its main contract are deployment, helper deployment/binding, and withdrawToken operations; a YYDS Transfer-log search from consumptionReturnPool over the attacker setup window through block 21157028 finds no payout to either attacker helper. The exploit trace is the first attacker transaction in that sequence to reach consumptionReturnPool. The requested alternative hash 0x198db4332ad92ce761be04a5027f4bd5f9f80dc86659710952a57ae1c07d7b3e is not returned as a BSC transaction and has no corpus file. Semantic review corrects the legacy access-control description: verified consumptionReturnPool source shows all three withdrawal functions iterate only msg.sender's consumers, users, or merchants arrays and revert when totalReturnAmount is zero. At block 21157028, getReturnAmountByReferral is 0.51 USDT-denominated units for helper 0xe70cdd37 and 0.51 for main attacker contract 0x586770e9; the main contract also has 0.663 merchant return, while both have zero consumer return. The defect is getPriceOfUSDT(), which reads raw USDT and YYDS balanceOf(pair), normalizes each with integer division, and uses the instantaneous ratio to convert those returns into YYDS. The trace records initial pair reserves of 1186471.120130432957137499 USDT / 1656.938602269843892480 YYDS, then flash-withdraws 1186469.920024032957137499 USDT, leaving 1.2 USDT. getPriceOfUSDT floors those live balances to 1 and 1656 whole tokens and returns 603864734299516, or 0.000603864734299516 USDT per YYDS. Successful referral, referral, and merchant withdrawals consequently release 844.560000000001270218 + 844.560000000001270218 + 1097.928000000001651283 = 2787.048000000004191719 YYDS. The attacker sells all of it to the pair and returns 444183.647236821385893095 USDT; Swap and Transfer logs independently show the pair and attacker net 742286.272787211571244404 USDT loss/profit. Target history was re-derived independently: creation transaction 0xce8c0ba1 is a direct top-level CREATE at block 18075331 index 158 by 0x17304f0e5a5b42242f0118715b8c28cfe987373b, not an attacker. The target has no code one block earlier and the same 9998-byte runtime hash 0xddfe3e1d2619c12409543651a0fa9897b81b50dec246feef0f3f0562c56fc9aa at deployment and block 21157028. Verified source and bytecode show no proxy or DELEGATECALL, and both EIP-1967 code-selection slots are zero, so deployment is the complete code-change anchor and code age is 9273474 seconds."
+      "note": "Anchor retained after chronology review. Transaction 0x04a1f0d1 is successful at block 21157029 index 4 and atomically executes the defect and realizes the loss. The attacker EOA's preceding calls to its main contract are deployment, helper deployment/binding, and withdrawToken operations; a YYDS Transfer-log search from consumptionReturnPool over the attacker setup window through block 21157028 finds no payout to either attacker helper. The exploit trace is the first attacker transaction in that sequence to reach consumptionReturnPool. The requested alternative hash 0x198db4332ad92ce761be04a5027f4bd5f9f80dc86659710952a57ae1c07d7b3e is not returned as a BSC transaction and has no corpus file. Semantic review corrects the seed row's access-control description: verified consumptionReturnPool source shows all three withdrawal functions iterate only msg.sender's consumers, users, or merchants arrays and revert when totalReturnAmount is zero. At block 21157028, getReturnAmountByReferral is 0.51 USDT-denominated units for helper 0xe70cdd37 and 0.51 for main attacker contract 0x586770e9; the main contract also has 0.663 merchant return, while both have zero consumer return. The defect is getPriceOfUSDT(), which reads raw USDT and YYDS balanceOf(pair), normalizes each with integer division, and uses the instantaneous ratio to convert those returns into YYDS. The trace records initial pair reserves of 1186471.120130432957137499 USDT / 1656.938602269843892480 YYDS, then flash-withdraws 1186469.920024032957137499 USDT, leaving 1.2 USDT. getPriceOfUSDT floors those live balances to 1 and 1656 whole tokens and returns 603864734299516, or 0.000603864734299516 USDT per YYDS. Successful referral, referral, and merchant withdrawals consequently release 844.560000000001270218 + 844.560000000001270218 + 1097.928000000001651283 = 2787.048000000004191719 YYDS. The attacker sells all of it to the pair and returns 444183.647236821385893095 USDT; Swap and Transfer logs independently show the pair and attacker net 742286.272787211571244404 USDT loss/profit. Target history was re-derived independently: creation transaction 0xce8c0ba1 is a direct top-level CREATE at block 18075331 index 158 by 0x17304f0e5a5b42242f0118715b8c28cfe987373b, not an attacker. The target has no code one block earlier and the same 9998-byte runtime hash 0xddfe3e1d2619c12409543651a0fa9897b81b50dec246feef0f3f0562c56fc9aa at deployment and block 21157028. Verified source and bytecode show no proxy or DELEGATECALL, and both EIP-1967 code-selection slots are zero, so deployment is the complete code-change anchor and code age is 9273474 seconds."
     }
   ],
   "verification": {
@@ -151,16 +150,7 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/yyds.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-09-08T16:00:27Z"
-    }
+    ]
   },
   "notes": [
     "The measured loss is the stablecoin removed from the YYDS/USDT pair. The manipulated YYDS reserve payout is not added again because it was immediately sold to cause that same pair loss."

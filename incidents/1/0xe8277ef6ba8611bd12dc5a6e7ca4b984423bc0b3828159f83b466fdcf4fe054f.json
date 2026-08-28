@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xe8277ef6ba8611bd12dc5a6e7ca4b984423bc0b3828159f83b466fdcf4fe054f",
   "protocol": {
     "name": "JokInTheBox",
@@ -21,11 +20,11 @@
   },
   "summary": "JokInTheBox staking's unstake(stakeIndex) paid out principal plus lock-period bonus without clearing or marking the stake record, so the same index 0 could be unstaked repeatedly until the contract's JOK balance was exhausted.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 33730,
       "valuationTimestamp": 1718064767,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-3"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0xa6447f6156effd23ec3b57d5edd978349e4e192d"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 2295972,
-      "failureModeId": "legacy:eip155:1:0xe8277ef6ba8611bd12dc5a6e7ca4b984423bc0b3828159f83b466fdcf4fe054f:failure-1",
+      "failureModeId": "provisional:eip155:1:0xe8277ef6ba8611bd12dc5a6e7ca4b984423bc0b3828159f83b466fdcf4fe054f:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -81,7 +80,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/jok-in-the-box.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
@@ -116,18 +115,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/jok-in-the-box.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/jok-in-the-box.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-06-11T00:12:47Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

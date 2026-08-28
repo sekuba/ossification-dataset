@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:100:0xa262141abcf7c127b88b4042aee8bf601f4f3372c9471dbd75cb54e76524f18e",
   "protocol": {
     "name": "Agave",
@@ -20,7 +19,7 @@
       "0xf98169301b06e906af7f9b719204aa10d1f160d6"
     ]
   },
-  "summary": "Agave\u2019s Aave fork burns the collateral aToken and sends the underlying to the liquidator before it finishes updating the borrower\u2019s accounting. Gnosis bridged tokens are ERC-677, so that transfer calls onTokenTransfer on the liquidator, who re-entered borrow() while the position still looked healthy and drew LINK, WETH, USDC, WBTC, GNO and WXDAI against collateral that had already been seized.",
+  "summary": "Agave’s Aave fork burns the collateral aToken and sends the underlying to the liquidator before it finishes updating the borrower’s accounting. Gnosis bridged tokens are ERC-677, so that transfer calls onTokenTransfer on the liquidator, who re-entered borrow() while the position still looked healthy and drew LINK, WETH, USDC, WBTC, GNO and WXDAI against collateral that had already been seized.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -260,16 +259,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/agave.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-03-15T10:25:40Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x31262f15a5b82999bf8d9d0f7e58dcb1656108e6031a2797b612216a95e1670e",
   "protocol": {
     "name": "Wault Finance",
@@ -126,7 +125,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T20:05:00Z",
-      "note": "Reviewed the anchor receipt and its 802 logs, the Etherscan-verified WUSDMaster source, the live pre-exploit parameter values, the creation transaction, historical runtimes and the attacker's full transaction list. The anchor 0x31262f15a5b82999bf8d9d0f7e58dcb1656108e6031a2797b612216a95e1670e is status 1 at block 9728756 index 6, timestamp 1628041745; it is a contract creation from 0x886358f9296de461d12e791bc9ef6f5a03410c64 whose constructor runs the whole exploit and deploys 0xaa895873a268a387e38bd841c51d2804071197a1. It is the earliest successful defect-executing transaction: the sender's only earlier attempts are a reverted creation at block 9728661 and a successful but log-free attack-contract deployment at block 9728718 that never touches WUSDMaster, and every later transaction only launders the proceeds. WUSDMaster 0xa79fe386b88fbee6e492eeb76ec48517d1ec759a emits exactly one Redeem for 16,839,004.009795997 WUSD and 68 Stake events inside the anchor. Its state before the exploit at block 9728755 is maxStakeAmount 250000e18, wexPermille 100, treasuryPermille 7, feePermille 0, treasury 0x9d83728e7552f3e9f2ac90e81e117ca0c119dbed, and the WaultSwap USDT/WEX pair 0x50e8d9aa83ebde9608074ec1faadfd2e792d9b81 holds 11,740,520.220497909455619647 USDT against 782,853,295.192672429820266117 WEX. Across the transaction the contract receives 17,000,000 USDT and 12,334,530.242676107 WEX and pays out 16,855,103.6088164 USDT and 106,502,606.0093368 WEX, so its balances move from 15,331,103.209233676240437287 USDT and 107,739,444.54141636554395014 WEX to 15,475,999.600417277742428592 USDT and 13,571,368.774755662847316589 WEX while WUSD supply rises from 17,034,559.121370751378263637 to 17,195,555.111574753047142864. WUSDMaster was created by top-level CREATE from 0x8beca4a43148213b57e650a24ab7562b79dd5448 in 0xc6af3503f42a2d2744045c949b3afb0a4f570284479459a8a9b1331be5a7a4cd at block 9710147 index 0, timestamp 1627983863, an address unrelated to the attacker; the account is empty at block 9710146 and hashes to 0xad6a391f7800d21a11ecc5557e205b5d7fa6a6151e2ad50f8eee60a8ccec2e7a at the creation block, at block 9720000, at block 9728755 and in the anchor prestate, giving codeAgeSeconds 1628041745 - 1627983863 = 57,882 (16.08 hours). Loss taken from the receipt's Transfer logs as the 370.191870506716646228 Binance-Peg ETH the attacker EOA ends with, valued at the DefiLlama ETH price 2516.332697941139 observed at 1628038918, the nearest sample at or before the anchor; the legacy row's 390 ETH at 2523.91 is close but is not the receipt figure."
+      "note": "Reviewed the anchor receipt and its 802 logs, the Etherscan-verified WUSDMaster source, the live pre-exploit parameter values, the creation transaction, historical runtimes and the attacker's full transaction list. The anchor 0x31262f15a5b82999bf8d9d0f7e58dcb1656108e6031a2797b612216a95e1670e is status 1 at block 9728756 index 6, timestamp 1628041745; it is a contract creation from 0x886358f9296de461d12e791bc9ef6f5a03410c64 whose constructor runs the whole exploit and deploys 0xaa895873a268a387e38bd841c51d2804071197a1. It is the earliest successful defect-executing transaction: the sender's only earlier attempts are a reverted creation at block 9728661 and a successful but log-free attack-contract deployment at block 9728718 that never touches WUSDMaster, and every later transaction only launders the proceeds. WUSDMaster 0xa79fe386b88fbee6e492eeb76ec48517d1ec759a emits exactly one Redeem for 16,839,004.009795997 WUSD and 68 Stake events inside the anchor. Its state before the exploit at block 9728755 is maxStakeAmount 250000e18, wexPermille 100, treasuryPermille 7, feePermille 0, treasury 0x9d83728e7552f3e9f2ac90e81e117ca0c119dbed, and the WaultSwap USDT/WEX pair 0x50e8d9aa83ebde9608074ec1faadfd2e792d9b81 holds 11,740,520.220497909455619647 USDT against 782,853,295.192672429820266117 WEX. Across the transaction the contract receives 17,000,000 USDT and 12,334,530.242676107 WEX and pays out 16,855,103.6088164 USDT and 106,502,606.0093368 WEX, so its balances move from 15,331,103.209233676240437287 USDT and 107,739,444.54141636554395014 WEX to 15,475,999.600417277742428592 USDT and 13,571,368.774755662847316589 WEX while WUSD supply rises from 17,034,559.121370751378263637 to 17,195,555.111574753047142864. WUSDMaster was created by top-level CREATE from 0x8beca4a43148213b57e650a24ab7562b79dd5448 in 0xc6af3503f42a2d2744045c949b3afb0a4f570284479459a8a9b1331be5a7a4cd at block 9710147 index 0, timestamp 1627983863, an address unrelated to the attacker; the account is empty at block 9710146 and hashes to 0xad6a391f7800d21a11ecc5557e205b5d7fa6a6151e2ad50f8eee60a8ccec2e7a at the creation block, at block 9720000, at block 9728755 and in the anchor prestate, giving codeAgeSeconds 1628041745 - 1627983863 = 57,882 (16.08 hours). Loss taken from the receipt's Transfer logs as the 370.191870506716646228 Binance-Peg ETH the attacker EOA ends with, valued at the DefiLlama ETH price 2516.332697941139 observed at 1628038918, the nearest sample at or before the anchor; the seed row's 390 ETH at 2523.91 is close but is not the receipt figure."
     },
     {
       "id": "source-3",
@@ -155,8 +154,8 @@
     }
   ],
   "discovery": [
-    "legacy:wault-finance:2021-08-04:wault-finance-wusdmaster-wex-spot-price-manipulation",
-    "dfhl:src/test/2021-08/WaultFinance_exp.sol"
+    "dfhl:src/test/2021-08/WaultFinance_exp.sol",
+    "seed:wault-finance:2021-08-04:wault-finance-wusdmaster-wex-spot-price-manipulation"
   ],
   "verification": {
     "tier": "reviewed",
@@ -165,16 +164,6 @@
     ],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/wault-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2021-08-04T01:49:05Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

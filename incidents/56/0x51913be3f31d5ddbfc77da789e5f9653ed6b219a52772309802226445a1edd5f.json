@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x51913be3f31d5ddbfc77da789e5f9653ed6b219a52772309802226445a1edd5f",
   "protocol": {
     "name": "Bearn DAO",
@@ -20,7 +19,7 @@
       "0xe1997bc971d5986aa57e9cdb8ce87c6f4c1b1c1e"
     ]
   },
-  "summary": "BvaultsStrategy.convertDustToEarned() is callable by anyone and swaps the strategy\u2019s holdings through PancakeSwap with no minimum-output argument and no slippage bound. The attacker flash-loaned the BUSD/ALPACA pool out of balance, called the function so the strategy sold 768,358.95 BUSD into the skewed pool for 513.35 ALPACA, and took the difference when the pool re-balanced.",
+  "summary": "BvaultsStrategy.convertDustToEarned() is callable by anyone and swaps the strategy’s holdings through PancakeSwap with no minimum-output argument and no slippage bound. The attacker flash-loaned the BUSD/ALPACA pool out of balance, called the function so the strategy sold 768,358.95 BUSD into the skewed pool for 513.35 ALPACA, and took the difference when the pool re-balanced.",
   "loss": {
     "kind": "net-loss",
     "usd": {
@@ -148,7 +147,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T15:30:00Z",
-      "note": "The attacker EOA sent sixteen transactions in the campaign window; the anchor is the only one that touches the strategy, the rest being exploit-contract creations, WBNB wrapping and disposal swaps. The strategy is not upgradeable: identical runtime code hash at the deployment block 5324911 and at block 34099688 with a zero EIP-1967 slot, so the exploited code is 1008.6 days old, deployed by 0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36, which is not an attacker address. Loss is measured net because the strategy did receive consideration for the BUSD it sold, just at a price the caller controlled inside the transaction; the ALPACA received is recorded as a negative component so the total is the strategy\u2019s actual shortfall."
+      "note": "The attacker EOA sent sixteen transactions in the campaign window; the anchor is the only one that touches the strategy, the rest being exploit-contract creations, WBNB wrapping and disposal swaps. The strategy is not upgradeable: identical runtime code hash at the deployment block 5324911 and at block 34099688 with a zero EIP-1967 slot, so the exploited code is 1008.6 days old, deployed by 0x4c4871e1c48bc7c1e86d9cf3d41846e9a2c24c36, which is not an attacker address. Loss is measured net because the strategy did receive consideration for the BUSD it sold, just at a price the caller controlled inside the transaction; the ALPACA received is recorded as a negative component so the total is the strategy’s actual shortfall."
     }
   ],
   "verification": {
@@ -156,16 +155,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/bearn-dao.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-12-05T21:53:03Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

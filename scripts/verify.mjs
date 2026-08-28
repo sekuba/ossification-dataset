@@ -1,5 +1,5 @@
 /**
- * Fail-closed onchain verifier for v2 incident records.
+ * Fail-closed onchain verifier for incident records.
  *
  * This script checks stored anchors and machine-verifiable mechanism evidence.
  * It does not promote records or pretend to review root-cause/loss semantics.
@@ -683,7 +683,7 @@ async function verifyAgeResetMechanism(chainId, target, anchored, report) {
     }
     return
   }
-  incomplete(report, label, `mechanism ${mechanism.type} requires legacy/manual revalidation`)
+  incomplete(report, label, `mechanism ${mechanism.type} requires manual revalidation`)
 }
 
 async function verifyTarget(incident, target, exploitAnchor, report) {

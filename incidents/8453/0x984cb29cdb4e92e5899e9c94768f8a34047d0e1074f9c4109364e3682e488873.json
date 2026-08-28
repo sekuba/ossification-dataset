@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:8453:0x984cb29cdb4e92e5899e9c94768f8a34047d0e1074f9c4109364e3682e488873",
   "protocol": {
     "name": "Bizness",
@@ -21,17 +20,17 @@
   },
   "summary": "splitLock's ETH refund triggers receive() reentrancy into withdrawLock, double-spending the locked tokens (state-changing reentrancy).",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 15700,
       "valuationTimestamp": 1735353775,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0x80b9c9c883e376c4aa43d72413ab1bd6a64a0654"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "Unreviewed seed-inventory basis: latest of 1 pre-incident Upgraded event(s)."
       },
       "codeAgeSeconds": 4315194,
-      "failureModeId": "legacy:eip155:8453:0x984cb29cdb4e92e5899e9c94768f8a34047d0e1074f9c4109364e3682e488873:failure-1",
+      "failureModeId": "provisional:eip155:8453:0x984cb29cdb4e92e5899e9c94768f8a34047d0e1074f9c4109364e3682e488873:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -79,7 +78,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/bizness.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -113,18 +112,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/bizness.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/bizness.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2024-12-28T02:42:55Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

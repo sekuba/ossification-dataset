@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xa0408770d158af99a10c60474d6433f4c20f3052e54423f4e590321341d4f2a4",
   "protocol": {
     "name": "TGBS",
@@ -21,17 +20,17 @@
   },
   "summary": "TGBS exposes _burnBlock(), which burns TGBS held by the TGBS/WBNB pair, so the attacker burned the pool down inside a DODO flash loan and sold its TGBS into the inflated reserves.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 150000,
       "valuationTimestamp": 1709710075,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0xedecfa18cae067b2489a2287784a543069f950f4"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 2228520,
-      "failureModeId": "legacy:eip155:56:0xa0408770d158af99a10c60474d6433f4c20f3052e54423f4e590321341d4f2a4:failure-1",
+      "failureModeId": "provisional:eip155:56:0xa0408770d158af99a10c60474d6433f4c20f3052e54423f4e590321341d4f2a4:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -77,7 +76,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/tgbs.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -112,18 +111,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/tgbs.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/tgbs.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-03-06T07:27:55Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

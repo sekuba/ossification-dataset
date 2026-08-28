@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x5cf050cba486ec48100d5e5ad716380660e8c984d80f73ba888415bb540851a4",
   "protocol": {
     "name": "AIRWA",
@@ -21,11 +20,11 @@
   },
   "summary": "AIRWA.setBurnRate(uint256) has no owner check, so the attacker set the burn rate to 98%, triggered it with a zero-value transfer to the LP to destroy the pair's AIRWA, reset it and sold into the inflated price.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 33552,
       "valuationTimestamp": 1743733985,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x3af7da38c9f68df9549ce1980eef4ac6b635223a"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 37239,
-      "failureModeId": "legacy:eip155:56:0x5cf050cba486ec48100d5e5ad716380660e8c984d80f73ba888415bb540851a4:failure-1",
+      "failureModeId": "provisional:eip155:56:0x5cf050cba486ec48100d5e5ad716380660e8c984d80f73ba888415bb540851a4:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -79,7 +78,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/airwa.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -114,18 +113,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/airwa.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/airwa.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-04-04T02:33:05Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

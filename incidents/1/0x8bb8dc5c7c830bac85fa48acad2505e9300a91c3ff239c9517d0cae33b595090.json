@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x8bb8dc5c7c830bac85fa48acad2505e9300a91c3ff239c9517d0cae33b595090",
   "protocol": {
     "name": "Warp Finance",
@@ -164,25 +163,16 @@
     }
   ],
   "discovery": [
-    "legacy:warp-finance:2020-12-17:warp-finance-lp-collateral-valuation-manipulation"
+    "seed:warp-finance:2020-12-17:warp-finance-lp-collateral-valuation-manipulation"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/warp-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2020-12-17T22:24:41Z"
-    }
+    ]
   },
   "notes": [
-    "The legacy snapshot aged this row from WarpControl 0xba539b9a5c2d412cb10e5770435f362094f9541c. WarpControl applied the price it was given as designed; the defect-bearing artifact is UniswapLPOracleFactory 0x4a224cd0517f08b26608a2f73bf390b01a6618c8, which computed it, so the target and the code age were moved there. The two contracts were deployed 261 seconds apart, so the change in basis moves the age by less than five minutes."
+    "The seed inventory aged this row from WarpControl 0xba539b9a5c2d412cb10e5770435f362094f9541c. WarpControl applied the price it was given as designed; the defect-bearing artifact is UniswapLPOracleFactory 0x4a224cd0517f08b26608a2f73bf390b01a6618c8, which computed it, so the target and the code age were moved there. The two contracts were deployed 261 seconds apart, so the change in basis moves the age by less than five minutes."
   ]
 }

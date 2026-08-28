@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x5edb66a4c2ea55bba95d36d27713e3bb1c67c3c4199a8a1759e754c6f25482e5",
   "protocol": {
     "name": "giddyvaultv3_compound_auth",
@@ -20,7 +19,7 @@
       "0x81fe3d7d35dfefa15b9e6800b6aefc3358e7b156"
     ]
   },
-  "summary": "GiddyVaultV3.compound() authenticates the caller with an EIP-712 signature whose digest binds only keccak256 of each SwapInfo.data field, leaving the accompanying fromToken, toToken, amount and aggregator addresses outside the signed scope. The attacker replayed a signature the operator had already produced, substituted its own token and aggregator parameters, and had the vault route the strategies\u2019 balances out through an aggregator it controlled.",
+  "summary": "GiddyVaultV3.compound() authenticates the caller with an EIP-712 signature whose digest binds only keccak256 of each SwapInfo.data field, leaving the accompanying fromToken, toToken, amount and aggregator addresses outside the signed scope. The attacker replayed a signature the operator had already produced, substituted its own token and aggregator parameters, and had the vault route the strategies’ balances out through an aggregator it controlled.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -197,7 +196,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T12:30:00Z",
-      "note": "The anchor is the attacker\u2019s exploit-contract creation whose constructor calls GiddyVaultV3.compound() at 0x5f0ad32c00641d1d2bb628ff341e0d4bb4494318 with an operator signature and three SwapInfo entries naming aggregator 0x7326a1ab0d696ae317958d136d6e4c693ea34528 and attacker-chosen tokens; it is the earliest transaction the attacker EOA sent against Giddy. The vault is not upgradeable: identical runtime code hash at the deployment block 24923987 and at block 24942491 with a zero EIP-1967 slot, so the exploited code is 2.58 days old, deployed by 0x16bcac66daa7c866192512a0eb157bb0486e3183, which is not an attacker address. The loss is traced end to end: the three g-share balances credited in the anchor are redeemed one for one into yb-tBTC, yb-cbBTC and yb-WBTC and then unwrapped into 3.435705122670142444 tBTC, 6.70925926 cbBTC and 6.04749743 WBTC, which is what the components record."
+      "note": "The anchor is the attacker’s exploit-contract creation whose constructor calls GiddyVaultV3.compound() at 0x5f0ad32c00641d1d2bb628ff341e0d4bb4494318 with an operator signature and three SwapInfo entries naming aggregator 0x7326a1ab0d696ae317958d136d6e4c693ea34528 and attacker-chosen tokens; it is the earliest transaction the attacker EOA sent against Giddy. The vault is not upgradeable: identical runtime code hash at the deployment block 24923987 and at block 24942491 with a zero EIP-1967 slot, so the exploited code is 2.58 days old, deployed by 0x16bcac66daa7c866192512a0eb157bb0486e3183, which is not an attacker address. The loss is traced end to end: the three g-share balances credited in the anchor are redeemed one for one into yb-tBTC, yb-cbBTC and yb-WBTC and then unwrapped into 3.435705122670142444 tBTC, 6.70925926 cbBTC and 6.04749743 WBTC, which is what the components record."
     }
   ],
   "verification": {
@@ -205,16 +204,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/giddyvaultv3-compound-auth.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-04-23T11:57:47Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

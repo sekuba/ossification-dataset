@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x614da880bd46e98131accd9a83917abf3d56dac94caf13ae98eeff504eea3704",
   "protocol": {
     "name": "WXETA",
@@ -21,17 +20,17 @@
   },
   "summary": "unprotected initialize plus public mint on WXeta diamond minted unlimited tokens",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 110000,
       "valuationTimestamp": 1726430224,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -57,12 +56,12 @@
         "transactionIndex": 10,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "documented"
         },
         "description": "2024-03-13T07:41:33Z (block 36927327, tx 0xe62285b2153aca90950043f507babe523ec3b0fc3dc3f8069a8e4de803285543): DiamondCut that Added facet 0x7c83dc9221cfd48ac760710b7f1cd7b76ff6fcc2, installing initialize(uint256) (0xfe4b84df) and mint(address,uint256) (0x40c10f19) - the unprotected initialize and public mint the exploit called"
       },
       "codeAgeSeconds": 16114531,
-      "failureModeId": "legacy:eip155:56:0x614da880bd46e98131accd9a83917abf3d56dac94caf13ae98eeff504eea3704:failure-1",
+      "failureModeId": "provisional:eip155:56:0x614da880bd46e98131accd9a83917abf3d56dac94caf13ae98eeff504eea3704:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -78,7 +77,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/wxeta.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -113,21 +112,12 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/wxeta.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/wxeta.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "documented",
-      "upgradeEventCount": 0,
-      "date": "2024-09-15T19:57:04Z"
-    }
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
   },
   "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2024-03-13T07:41:33Z (block 36927327, tx 0xe62285b2153aca90950043f507babe523ec3b0fc3dc3f8069a8e4de803285543): DiamondCut that Added facet 0x7c83dc9221cfd48ac760710b7f1cd7b76ff6fcc2, installing initialize(uint256) (0xfe4b84df) and mint(address,uint256) (0x40c10f19) - the unprotected initialize and public mint the exploit called"
+    "Seed-inventory flag: nonStandardUpgradeArchitecture=true.",
+    "Seed-inventory documentedLastChange: 2024-03-13T07:41:33Z (block 36927327, tx 0xe62285b2153aca90950043f507babe523ec3b0fc3dc3f8069a8e4de803285543): DiamondCut that Added facet 0x7c83dc9221cfd48ac760710b7f1cd7b76ff6fcc2, installing initialize(uint256) (0xfe4b84df) and mint(address,uint256) (0x40c10f19) - the unprotected initialize and public mint the exploit called"
   ]
 }

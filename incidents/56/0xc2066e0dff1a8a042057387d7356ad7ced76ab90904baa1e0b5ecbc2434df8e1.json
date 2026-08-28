@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xc2066e0dff1a8a042057387d7356ad7ced76ab90904baa1e0b5ecbc2434df8e1",
   "protocol": {
     "name": "NGP",
@@ -21,7 +20,7 @@
       "0x8618314270528e245fbbb6fba54e245bb61a8d47"
     ]
   },
-  "summary": "On every sell the NGP token\u2019s _update hook moves treasury and reward fees out of the PancakeSwap pair itself, with super._update(mainPair, treasuryAddress, ...) and super._update(mainPair, rewardPoolAddress, ...), and then calls IUniswapV2Pair(mainPair).sync(). Each sell therefore permanently shrinks the pair\u2019s NGP reserve and raises the NGP price. The attacker repeated small sells behind a flash loan until the price was inflated, then sold a large NGP position and took almost the whole USDT reserve.",
+  "summary": "On every sell the NGP token’s _update hook moves treasury and reward fees out of the PancakeSwap pair itself, with super._update(mainPair, treasuryAddress, ...) and super._update(mainPair, rewardPoolAddress, ...), and then calls IUniswapV2Pair(mainPair).sync(). Each sell therefore permanently shrinks the pair’s NGP reserve and raises the NGP price. The attacker repeated small sells behind a flash loan until the price was inflated, then sold a large NGP position and took almost the whole USDT reserve.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -57,7 +56,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The NGP/USDT PancakeSwap pair 0x20cab54946d070de7cc7228b62f213fccf3ffb1e holds 2212887.451145128834721055 USDT at block 61515894 and 9.156136012843449018 USDT at block 61515895; the difference is the loss to the pair\u2019s liquidity providers, who are left holding NGP. The whole loss is in the one exploit transaction. Of that outflow, 1896191.720695873504350698 USDT reaches 0x8618314270528e245fbbb6fba54e245bb61a8d47 and the remainder goes to the token\u2019s own fee recipients. DefiLlama prices USDT at exactly 1 at the incident timestamp. Nothing was recovered."
+    "notes": "The NGP/USDT PancakeSwap pair 0x20cab54946d070de7cc7228b62f213fccf3ffb1e holds 2212887.451145128834721055 USDT at block 61515894 and 9.156136012843449018 USDT at block 61515895; the difference is the loss to the pair’s liquidity providers, who are left holding NGP. The whole loss is in the one exploit transaction. Of that outflow, 1896191.720695873504350698 USDT reaches 0x8618314270528e245fbbb6fba54e245bb61a8d47 and the remainder goes to the token’s own fee recipients. DefiLlama prices USDT at exactly 1 at the incident timestamp. Nothing was recovered."
   },
   "targets": [
     {
@@ -144,7 +143,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:40:00Z",
-      "note": "The token source is verified on BscScan as contract \"Token\"; its _update override contains, on the sell branch, super._update(mainPair, treasuryAddress, treasuryAmount), super._update(mainPair, rewardPoolAddress, rewardAmount) and then IUniswapV2Pair(mainPair).sync(), which is the defect: fees are taken out of the pair\u2019s own balance and the reserve is resynchronised, so each sell lowers the NGP reserve and raises the price. The attacker EOA sent one exploit transaction against NGP; the surrounding transactions in its history are contract creations and unrelated activity. The token is not upgradeable: its runtime code hash is identical at the deployment block 60396646 and at block 61515894 and its EIP-1967 implementation slot is zero, so the exploited code is 9.72 days old. Its deployer 0x6a65e4558ecb7b3dcb4781ce65e5eb65d4eb0cf9 is not an attacker address. Loss is the NGP/USDT pair\u2019s USDT balance delta across the exploit block, which matches the sum of the transfer netting to the beneficiary and fee recipients."
+      "note": "The token source is verified on BscScan as contract \"Token\"; its _update override contains, on the sell branch, super._update(mainPair, treasuryAddress, treasuryAmount), super._update(mainPair, rewardPoolAddress, rewardAmount) and then IUniswapV2Pair(mainPair).sync(), which is the defect: fees are taken out of the pair’s own balance and the reserve is resynchronised, so each sell lowers the NGP reserve and raises the price. The attacker EOA sent one exploit transaction against NGP; the surrounding transactions in its history are contract creations and unrelated activity. The token is not upgradeable: its runtime code hash is identical at the deployment block 60396646 and at block 61515894 and its EIP-1967 implementation slot is zero, so the exploited code is 9.72 days old. Its deployer 0x6a65e4558ecb7b3dcb4781ce65e5eb65d4eb0cf9 is not an attacker address. Loss is the NGP/USDT pair’s USDT balance delta across the exploit block, which matches the sum of the transfer netting to the beneficiary and fee recipients."
     }
   ],
   "verification": {
@@ -152,16 +151,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/ngp.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-09-17T19:02:25Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

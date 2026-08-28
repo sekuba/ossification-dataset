@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x1751268e620767ff117c5c280e9214389b7c1961c42e77fc704fd88e22f4f77a",
   "protocol": {
     "name": "JulSwap",
@@ -60,7 +59,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Measured as the attacker's realised proceeds, which is the only quantity in this incident that can be marked honestly. The attack contract 0x7c591aab9429af81287951872595a17d5837ce03 was created with zero value 14 blocks earlier and supplied no capital: inside the anchor transaction it received 1,400.146882180525770269 BNB from selling the flash-swapped JULb, paid 515 BNB into addBNB and 362.308539269896531656 BNB into the buy-back, and ended holding exactly 522.838342910629238613 BNB, which transaction 0x9eb175efe70bbb7dd04c107f6a6c49d5615d3cc5b063828708875bc1c1dadb03 forwarded to the attacker EOA. Gross victim depletion is separable in token terms - JulProtocolV2's JULb balance fell from 148,525.223539050531686881 to 4,037.627713844892079006, a 144,487.595825205639607875 JULb outflow, against 6,781.768441209196495678 newly minted WBNB/JULb LP tokens received - but it cannot be valued: JULb has no DefiLlama price series, the only venue was a pool holding 1,703.55 WBNB before the attack, and marking the net position change at the pre-attack ratio gives about 7,472 BNB while marking it at the post-attack ratio gives about 263 BNB. The legacy row's 1,500,000 USD is the pre-attack spot mark of that treasury outflow and is not reproducible from receipts. The attacker's residual 100 JULb, swept in 0xb8adfe3579c8885c69bc036510f5136ee53b9c46bd9f097b1d41388fd01250bf, is unpriced and omitted. Flash-swap principal is netted inside the same transaction and gas is not deducted."
+    "notes": "Measured as the attacker's realised proceeds, which is the only quantity in this incident that can be marked honestly. The attack contract 0x7c591aab9429af81287951872595a17d5837ce03 was created with zero value 14 blocks earlier and supplied no capital: inside the anchor transaction it received 1,400.146882180525770269 BNB from selling the flash-swapped JULb, paid 515 BNB into addBNB and 362.308539269896531656 BNB into the buy-back, and ended holding exactly 522.838342910629238613 BNB, which transaction 0x9eb175efe70bbb7dd04c107f6a6c49d5615d3cc5b063828708875bc1c1dadb03 forwarded to the attacker EOA. Gross victim depletion is separable in token terms - JulProtocolV2's JULb balance fell from 148,525.223539050531686881 to 4,037.627713844892079006, a 144,487.595825205639607875 JULb outflow, against 6,781.768441209196495678 newly minted WBNB/JULb LP tokens received - but it cannot be valued: JULb has no DefiLlama price series, the only venue was a pool holding 1,703.55 WBNB before the attack, and marking the net position change at the pre-attack ratio gives about 7,472 BNB while marking it at the post-attack ratio gives about 263 BNB. The seed row's 1,500,000 USD is the pre-attack spot mark of that treasury outflow and is not reproducible from receipts. The attacker's residual 100 JULb, swept in 0xb8adfe3579c8885c69bc036510f5136ee53b9c46bd9f097b1d41388fd01250bf, is unpriced and omitted. Flash-swap principal is netted inside the same transaction and gas is not deducted."
   },
   "targets": [
     {
@@ -127,7 +126,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T19:10:00Z",
-      "note": "Reviewed the anchor receipt, the full replay trace, the Etherscan-verified JulProtocolV2 source, the creation transaction and the attacker's follow-up transactions. The anchor 0x1751268e620767ff117c5c280e9214389b7c1961c42e77fc704fd88e22f4f77a is status 1 at block 7785587 index 118, timestamp 1622155011, sent by 0xc3bc29941677db01b9645f7b8b72d27e3ba75372 to attack contract 0x7c591aab9429af81287951872595a17d5837ce03. It is the earliest and only successful execution of the defect: the attack contract's other successful calls are a reverted removeBNB attempt (0x5151f415), a 100 JULb sweep (0xb8adfe35) and a 522.838342910629238613 BNB sweep (0x9eb175ef); the remaining calls from third parties all failed. The legacy row named the JULb token 0x32dffc3fe8e3ef3571bf8a72c0d0015c5373f41d as the victim; the defect-bearing contract executed in the trace is JulProtocolV2 0x41a2f9ab325577f92e8653853c12823b35fb35c4, which the same legacy note already names in prose. Inside the anchor, 70,000 JULb are flash-swapped from pair 0x0242c5c11e3eaeb53298b45c7395dbadc8a120e7 and sold into the WBNB/JULb pair 0xccfe1a5b6e4ad16a4e41a9142673dec829f39402, moving its reserves from 15,123.221631350493276974 JULb / 1,703.553267273812456684 WBNB to 85,123.221631350493276974 / 303.406385093286686415; addBNB then quotes 144,487.595825205639607875 JULb against 515 BNB and transfers exactly that from the protocol's 148,525.223539050531686881 JULb balance into the pair, minting 6,781.768441209196495678 LP to the protocol. JulProtocolV2 was created by top-level CREATE from 0xe3b85525ef67a5f87b8f398fd77ae4d88155e507 in 0xe380f7a850d144c588eff2844a74779ac91c5bb782fb382b31a0382f6c7bf067 at block 1454079 index 5, timestamp 1603034019, an address unrelated to the attacker. It is not a proxy: cast code hashes to 0x96d59b4b8053cd5b356e4ac39bac1f0eab91334c2fc530541a1fe5200b7e5fbc at the creation block, at five intermediate blocks, at block 7785586, and in the prestateTracer output for the anchor, and the account is empty at block 1454078, giving codeAgeSeconds 1622155011 - 1603034019 = 19,120,992 (221.31 days). Loss reconstructed from the trace and the sweep receipt as 522.838342910629238613 BNB of realised attacker proceeds valued at the DefiLlama BNB price 371.62299850553967, not from the unreproducible 1.5 million USD blog figure."
+      "note": "Reviewed the anchor receipt, the full replay trace, the Etherscan-verified JulProtocolV2 source, the creation transaction and the attacker's follow-up transactions. The anchor 0x1751268e620767ff117c5c280e9214389b7c1961c42e77fc704fd88e22f4f77a is status 1 at block 7785587 index 118, timestamp 1622155011, sent by 0xc3bc29941677db01b9645f7b8b72d27e3ba75372 to attack contract 0x7c591aab9429af81287951872595a17d5837ce03. It is the earliest and only successful execution of the defect: the attack contract's other successful calls are a reverted removeBNB attempt (0x5151f415), a 100 JULb sweep (0xb8adfe35) and a 522.838342910629238613 BNB sweep (0x9eb175ef); the remaining calls from third parties all failed. The seed row named the JULb token 0x32dffc3fe8e3ef3571bf8a72c0d0015c5373f41d as the victim; the defect-bearing contract executed in the trace is JulProtocolV2 0x41a2f9ab325577f92e8653853c12823b35fb35c4, which the same seed-row note already names in prose. Inside the anchor, 70,000 JULb are flash-swapped from pair 0x0242c5c11e3eaeb53298b45c7395dbadc8a120e7 and sold into the WBNB/JULb pair 0xccfe1a5b6e4ad16a4e41a9142673dec829f39402, moving its reserves from 15,123.221631350493276974 JULb / 1,703.553267273812456684 WBNB to 85,123.221631350493276974 / 303.406385093286686415; addBNB then quotes 144,487.595825205639607875 JULb against 515 BNB and transfers exactly that from the protocol's 148,525.223539050531686881 JULb balance into the pair, minting 6,781.768441209196495678 LP to the protocol. JulProtocolV2 was created by top-level CREATE from 0xe3b85525ef67a5f87b8f398fd77ae4d88155e507 in 0xe380f7a850d144c588eff2844a74779ac91c5bb782fb382b31a0382f6c7bf067 at block 1454079 index 5, timestamp 1603034019, an address unrelated to the attacker. It is not a proxy: cast code hashes to 0x96d59b4b8053cd5b356e4ac39bac1f0eab91334c2fc530541a1fe5200b7e5fbc at the creation block, at five intermediate blocks, at block 7785586, and in the prestateTracer output for the anchor, and the account is empty at block 1454078, giving codeAgeSeconds 1622155011 - 1603034019 = 19,120,992 (221.31 days). Loss reconstructed from the trace and the sweep receipt as 522.838342910629238613 BNB of realised attacker proceeds valued at the DefiLlama BNB price 371.62299850553967, not from the unreproducible 1.5 million USD blog figure."
     },
     {
       "id": "source-3",
@@ -157,8 +156,8 @@
     }
   ],
   "discovery": [
-    "legacy:julswap:2021-05-27:julswap",
-    "dfhl:src/test/2021-05/JulSwap_exp.sol"
+    "dfhl:src/test/2021-05/JulSwap_exp.sol",
+    "seed:julswap:2021-05-27:julswap"
   ],
   "verification": {
     "tier": "reviewed",
@@ -167,18 +166,9 @@
     ],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/julswap.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2021-05-27T22:36:51Z"
-    }
+    ]
   },
   "notes": [
-    "The legacy snapshot recorded the JULb token 0x32dffc3fe8e3ef3571bf8a72c0d0015c5373f41d as the victim contract and aged it from that token's 2020-09-20 deployment. This record ages the contract that actually executes the defect, JulProtocolV2 0x41a2f9ab325577f92e8653853c12823b35fb35c4, deployed 2020-10-18."
+    "The seed inventory recorded the JULb token 0x32dffc3fe8e3ef3571bf8a72c0d0015c5373f41d as the victim contract and aged it from that token's 2020-09-20 deployment. This record ages the contract that actually executes the defect, JulProtocolV2 0x41a2f9ab325577f92e8653853c12823b35fb35c4, deployed 2020-10-18."
   ]
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xe2912b8bf34d561983f2ae95f34e33ecc7792a2905a3e317fcc98052bce66431",
   "protocol": {
     "name": "PikeFinance",
@@ -20,7 +19,7 @@
       "0x1da4bc596bfb1087f2f7999b0340fcba03c47fbd"
     ]
   },
-  "summary": "The implementation Pike installed on 2024-04-28 to fix an earlier incident left initialize() reachable on the proxy, so the first caller could set every privileged role. The attacker called initialize() to make itself owner and upgrader, then called upgradeToAndCall() through the same implementation to install its own logic and sweep the proxy\u2019s 479.39 ETH in the same transaction.",
+  "summary": "The implementation Pike installed on 2024-04-28 to fix an earlier incident left initialize() reachable on the proxy, so the first caller could set every privileged role. The attacker called initialize() to make itself owner and upgrader, then called upgradeToAndCall() through the same implementation to install its own logic and sweep the proxy’s 479.39 ETH in the same transaction.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -56,7 +55,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The exploit transaction sends 479.393838338750964434 ETH from the proxy to the attacker EOA and is the only transaction the attacker sent against Pike; the other three transactions in that EOA\u2019s history are the exploit-contract creation and two disposal swaps. Pike was hit on Arbitrum and Optimism in the same campaign at different addresses; this record covers the Ethereum leg only and does not carry those amounts. DefiLlama\u2019s nearest ETH observation is 57 seconds after the incident timestamp. Nothing was recovered."
+    "notes": "The exploit transaction sends 479.393838338750964434 ETH from the proxy to the attacker EOA and is the only transaction the attacker sent against Pike; the other three transactions in that EOA’s history are the exploit-contract creation and two disposal swaps. Pike was hit on Arbitrum and Optimism in the same campaign at different addresses; this record covers the Ethereum leg only and does not carry those amounts. DefiLlama’s nearest ETH observation is 57 seconds after the incident timestamp. Nothing was recovered."
   },
   "targets": [
     {
@@ -87,7 +86,7 @@
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "The proxy emitted four Upgraded events; the last legitimate one, log 276 of block 19756154, installed 0xb30c120eb92c120bf11b358b4b9961e6679b6ae7 by the operator 0xb1ea97c9f68978905fb1bf5089e71a073bc4f5c8. The fourth Upgraded is emitted inside the exploit transaction itself by the attacker\u2019s own upgradeToAndCall and is not a pre-exploit code change."
+        "description": "The proxy emitted four Upgraded events; the last legitimate one, log 276 of block 19756154, installed 0xb30c120eb92c120bf11b358b4b9961e6679b6ae7 by the operator 0xb1ea97c9f68978905fb1bf5089e71a073bc4f5c8. The fourth Upgraded is emitted inside the exploit transaction itself by the attacker’s own upgradeToAndCall and is not a pre-exploit code change."
       },
       "codeAgeSeconds": 179976,
       "failureModeId": "failure:pike-uninitialized-upgrade-implementation",
@@ -160,16 +159,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/pikefinance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 3,
-      "date": "2024-04-30T22:19:11Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

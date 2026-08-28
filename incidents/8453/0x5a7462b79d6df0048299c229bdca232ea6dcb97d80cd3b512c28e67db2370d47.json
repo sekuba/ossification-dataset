@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:8453:0x5a7462b79d6df0048299c229bdca232ea6dcb97d80cd3b512c28e67db2370d47",
   "protocol": {
     "name": "AIXBTForcedSwap",
@@ -21,17 +20,17 @@
   },
   "summary": "Victim selector accepts a hardcoded bytecode constant keccak256(\"1205060227\") as auth bypass, letting anyone force it to swap its full balance into attacker pools.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 13597,
       "valuationTimestamp": 1737909061,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0x32cd8541ccd275a70dda33a9fd490d948a78e1ff"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 1068050,
-      "failureModeId": "legacy:eip155:8453:0x5a7462b79d6df0048299c229bdca232ea6dcb97d80cd3b512c28e67db2370d47:failure-1",
+      "failureModeId": "provisional:eip155:8453:0x5a7462b79d6df0048299c229bdca232ea6dcb97d80cd3b512c28e67db2370d47:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2"
@@ -74,7 +73,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/aixbtforcedswap.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -99,18 +98,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/aixbtforcedswap.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/aixbtforcedswap.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-01-26T16:31:01Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

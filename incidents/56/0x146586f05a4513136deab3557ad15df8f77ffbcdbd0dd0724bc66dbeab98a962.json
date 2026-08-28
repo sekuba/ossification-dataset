@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x146586f05a4513136deab3557ad15df8f77ffbcdbd0dd0724bc66dbeab98a962",
   "protocol": {
     "name": "Starlink (STARL)",
@@ -21,11 +20,11 @@
   },
   "summary": "The Starlink token's transfer logic moves tokens out of the liquidity pair's own balance without a sync(), so the attacker collapsed the reserve and swapped a small holding out for the pair's WBNB.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 11809,
       "valuationTimestamp": 1676587683,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x518281f34dbf5b76e6cdd3908a6972e8ec49e345"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 31051603,
-      "failureModeId": "legacy:eip155:56:0x146586f05a4513136deab3557ad15df8f77ffbcdbd0dd0724bc66dbeab98a962:failure-1",
+      "failureModeId": "provisional:eip155:56:0x146586f05a4513136deab3557ad15df8f77ffbcdbd0dd0724bc66dbeab98a962:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -79,7 +78,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/starlink.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -114,18 +113,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/starlink.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/starlink.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-02-16T22:48:03Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

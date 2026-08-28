@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x1fea385acf7ff046d928d4041db017e1d7ead66727ce7aacb3296b9d485d4a26",
   "protocol": {
     "name": "NewFreeDAO",
@@ -20,7 +19,7 @@
       "0xa35ef9fa2f5e0527cb9fbb6f9d3a24cfed948863"
     ]
   },
-  "summary": "The NFD reward contract pays its bonus, selector 0x6811e3b9, to any caller in proportion to that caller\u2019s NFD balance and records the claim only against the caller\u2019s own address. The attacker looped: deploy a fresh claimer contract, move the same NFD into it, claim again. The payout multiplied without limit, and the accumulated NFD was sold into the NFD/WBNB pair for its WBNB.",
+  "summary": "The NFD reward contract pays its bonus, selector 0x6811e3b9, to any caller in proportion to that caller’s NFD balance and records the claim only against the caller’s own address. The attacker looped: deploy a fresh claimer contract, move the same NFD into it, claim again. The payout multiplied without limit, and the accumulated NFD was sold into the NFD/WBNB pair for its WBNB.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -56,7 +55,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Three of the attacker\u2019s transactions call the reward contract, at blocks 21140435, 21140481 and 21140498; netting them gives the attacker exactly 4481.324982360678881755 WBNB, which is what the NFD/WBNB pair lost to the dumping. The seven earlier transactions the attacker sent to other contracts of its own between blocks 21139097 and 21140296 never touch the reward contract and are excluded. The nominal NFD the claims minted is not valued: it only had worth to the extent the pair absorbed it, which the WBNB figure already measures. Nothing was recovered."
+    "notes": "Three of the attacker’s transactions call the reward contract, at blocks 21140435, 21140481 and 21140498; netting them gives the attacker exactly 4481.324982360678881755 WBNB, which is what the NFD/WBNB pair lost to the dumping. The seven earlier transactions the attacker sent to other contracts of its own between blocks 21139097 and 21140296 never touch the reward contract and are excluded. The nominal NFD the claims minted is not valued: it only had worth to the extent the pair absorbed it, which the WBNB figure already measures. Nothing was recovered."
   },
   "targets": [
     {
@@ -158,7 +157,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T14:00:00Z",
-      "note": "The attacker sent ten transactions to contracts of its own between blocks 21139097 and 21140498. Tracing each shows the reward contract 0x8b068e22e9a4a9bca3c321e0ec428abf32691d1e appearing only in the last three, so the anchor is the earliest defect-executing transaction; the seven earlier ones are rehearsals against other targets. The reward contract emits no events at all, so the code history rests on code hashes: identical at the deployment block 21113880 and at block 21140434 with a zero EIP-1967 slot, giving an exploited-code age of 0.92 days. Its deployer 0x5b711b7d9567291bbc1bb505536d79124b85cce8 is not an attacker address. Loss is the attacker\u2019s net WBNB gain across the three defect-executing transactions, which is what the NFD/WBNB pair paid out; the DeFiHackLabs header figure quotes a nominal NFD amount rather than realisable value."
+      "note": "The attacker sent ten transactions to contracts of its own between blocks 21139097 and 21140498. Tracing each shows the reward contract 0x8b068e22e9a4a9bca3c321e0ec428abf32691d1e appearing only in the last three, so the anchor is the earliest defect-executing transaction; the seven earlier ones are rehearsals against other targets. The reward contract emits no events at all, so the code history rests on code hashes: identical at the deployment block 21113880 and at block 21140434 with a zero EIP-1967 slot, giving an exploited-code age of 0.92 days. Its deployer 0x5b711b7d9567291bbc1bb505536d79124b85cce8 is not an attacker address. Loss is the attacker’s net WBNB gain across the three defect-executing transactions, which is what the NFD/WBNB pair paid out; the DeFiHackLabs header figure quotes a nominal NFD amount rather than realisable value."
     }
   ],
   "verification": {
@@ -166,16 +165,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-7"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/newfreedao.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-09-08T02:09:25Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

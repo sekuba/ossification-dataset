@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:10:0xd12016b25d7aef681ade3dc3c9d1a1cc12f35b2c99953ff0e0ee23a59454c4fe",
   "protocol": {
     "name": "Moonhacker",
@@ -148,7 +147,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T04:32:37Z",
-      "note": "Anchor: the exploit transaction is nonce 0 of EOA 0x36491840ebcf040413003df9fb65b6bc9a181f52, which has only eight transactions on Optimism in total; the transaction deploys 0x4e258f1705822c2565d54ec8795d303fdf9f768e, which in its constructor creates the exploit contract 0x3a6eaaf2b1b02ceb2da4a768cfeda86cff89b287 and calls it, so no earlier defect-executing transaction exists for this attacker and no later one repeats the attack. Root cause read from the verified MoonHacker source on Optimistic Etherscan (contracts/MoonHacker.sol, solc 0.8.27, ContractName MoonHacker): executeOperation(address,uint256,uint256,address,bytes) is external with no guard on msg.sender or initiator, and decodes (SmartOperation, mToken, amount) straight out of params. The callTracer trace shows the exploit contract calling 0x1b11d0ff twice on each of four vaults from inside its own Aave flashLoanSimple callback: the first call routes to the real Moonwell mUSDC 0x8e08617b0d66359d73aa11e11017834c29155525 with repayBorrow (0x0e752702), redeem (0xdb006a75) and Comptroller 0xca889f40aae37fff165bccf69aef1e82b5c511b9 claimReward (0xd279c191); the second call sets mToken to the exploit contract itself, whose mint (0xa0712d68) and borrow (0xc5ebeaec) stubs return 0 so the require checks pass, leaving an approve of the redeemed balance to the exploit contract, which then transferFrom's it. Target: 0xd9b45e2c389b6ad55dd3631abc1de6f2d2229847 is the first vault reached, at trace path 0.1.0.0.0.2.4. All four vaults carry the identical 15,411-byte runtime hashing to 0x3a9f9c23ba41cb5b48b7f761578a9424d63c0713f3d4c3a24bdec03f97776581, and that hash is the same at the vault's own deployment block 129439045 and at 129697250, so the code never changed; the contract is not a proxy and holds no upgrade path. It was created top-level by its owner 0xba38bf7d3bc6785c52cf17e2691b852a6260d93a in transaction 0xacc02fff... at 129439045:24, timestamp 1734476867, which is neither the exploit sender nor either exploit contract, giving codeAgeSeconds 1734993279 - 1734476867 = 516412 (5.98 days). Loss recomputed from the 19 USDC Transfer logs of the anchor receipt as detailed in loss.notes: 319,429.531352 USDC of vault equity destroyed, 318,987.572368 USDC retained by the attacker after the 441.958984 USDC Aave premium, priced at 0.999366 USD for 319,227.01 USD. The legacy row's 318,900 USD was the attacker's take rather than victim depletion and carried no provenance; the legacy classification prose was directionally right and has been rewritten with the exact functions and selectors."
+      "note": "Anchor: the exploit transaction is nonce 0 of EOA 0x36491840ebcf040413003df9fb65b6bc9a181f52, which has only eight transactions on Optimism in total; the transaction deploys 0x4e258f1705822c2565d54ec8795d303fdf9f768e, which in its constructor creates the exploit contract 0x3a6eaaf2b1b02ceb2da4a768cfeda86cff89b287 and calls it, so no earlier defect-executing transaction exists for this attacker and no later one repeats the attack. Root cause read from the verified MoonHacker source on Optimistic Etherscan (contracts/MoonHacker.sol, solc 0.8.27, ContractName MoonHacker): executeOperation(address,uint256,uint256,address,bytes) is external with no guard on msg.sender or initiator, and decodes (SmartOperation, mToken, amount) straight out of params. The callTracer trace shows the exploit contract calling 0x1b11d0ff twice on each of four vaults from inside its own Aave flashLoanSimple callback: the first call routes to the real Moonwell mUSDC 0x8e08617b0d66359d73aa11e11017834c29155525 with repayBorrow (0x0e752702), redeem (0xdb006a75) and Comptroller 0xca889f40aae37fff165bccf69aef1e82b5c511b9 claimReward (0xd279c191); the second call sets mToken to the exploit contract itself, whose mint (0xa0712d68) and borrow (0xc5ebeaec) stubs return 0 so the require checks pass, leaving an approve of the redeemed balance to the exploit contract, which then transferFrom's it. Target: 0xd9b45e2c389b6ad55dd3631abc1de6f2d2229847 is the first vault reached, at trace path 0.1.0.0.0.2.4. All four vaults carry the identical 15,411-byte runtime hashing to 0x3a9f9c23ba41cb5b48b7f761578a9424d63c0713f3d4c3a24bdec03f97776581, and that hash is the same at the vault's own deployment block 129439045 and at 129697250, so the code never changed; the contract is not a proxy and holds no upgrade path. It was created top-level by its owner 0xba38bf7d3bc6785c52cf17e2691b852a6260d93a in transaction 0xacc02fff... at 129439045:24, timestamp 1734476867, which is neither the exploit sender nor either exploit contract, giving codeAgeSeconds 1734993279 - 1734476867 = 516412 (5.98 days). Loss recomputed from the 19 USDC Transfer logs of the anchor receipt as detailed in loss.notes: 319,429.531352 USDC of vault equity destroyed, 318,987.572368 USDC retained by the attacker after the 441.958984 USDC Aave premium, priced at 0.999366 USD for 319,227.01 USD. The seed row's 318,900 USD was the attacker's take rather than victim depletion and carried no provenance; the seed row's classification prose was directionally right and has been rewritten with the exact functions and selectors."
     }
   ],
   "verification": {
@@ -156,16 +155,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/moonhacker.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-12-23T22:34:39Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

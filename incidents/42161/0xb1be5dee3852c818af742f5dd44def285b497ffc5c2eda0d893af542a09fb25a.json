@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:42161:0xb1be5dee3852c818af742f5dd44def285b497ffc5c2eda0d893af542a09fb25a",
   "protocol": {
     "name": "Rodeo Finance",
@@ -174,9 +173,9 @@
     }
   ],
   "discovery": [
-    "legacy:rodeofinance:2023-07-11:rodeofinance",
-    "legacy:rodeo-finance:2023-07-11:rodeo-finance",
-    "dfhl:src/test/2023-07/RodeoFinance_exp.sol"
+    "dfhl:src/test/2023-07/RodeoFinance_exp.sol",
+    "seed:rodeo-finance:2023-07-11:rodeo-finance",
+    "seed:rodeofinance:2023-07-11:rodeofinance"
   ],
   "verification": {
     "tier": "reviewed",
@@ -186,21 +185,11 @@
     ],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/rodeo-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-07-11T12:00:00Z",
-      "reanchored": true
-    }
+    ]
   },
   "notes": [
     "StrategyHelper 0x72f7101371201cefd43af026eef1403652f115ee derives the swap slippage floor from the same oracle it is meant to protect against, and InvestorActor 0x6ff76f4794e4a6122734a11d680dbb351533ae95 values the position with it as well. Both are described in the classification rather than carried as extra targets, so the incident's single loss is not attributed twice.",
     "The three pump-and-dump pairs that poisoned the oracle samples (blocks 110014595/110014925, 110025246/110025556 and 110032565/110032863) execute only Camelot code and are campaign context, not defect execution.",
-    "verification.legacy points at the protocols/rodeo-finance.json snapshot row, which carried no exploit transaction, so legacy.reanchored is set. The second snapshot row protocols/rodeofinance.json index 0 already carried this anchor and is claimed through discovery."
+    "The seed inventory carries two rows for this incident, one without an exploit transaction and one already anchored here; both are claimed through discovery."
   ]
 }

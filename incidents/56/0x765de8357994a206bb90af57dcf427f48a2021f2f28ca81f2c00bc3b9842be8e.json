@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x765de8357994a206bb90af57dcf427f48a2021f2f28ca81f2c00bc3b9842be8e",
   "protocol": {
     "name": "PancakeHunny",
@@ -21,11 +20,11 @@
   },
   "summary": "HunnyMinter.mintFor() sized the HUNNY reward from IBEP20(flip).balanceOf(address(this)) instead of the performance-fee amount actually transferred in, so a flash-loaned CakeFlipVault deposit minted an inflated HUNNY reward.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 1348,
       "valuationTimestamp": 1622687089,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -40,7 +39,7 @@
       }
     ],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -69,10 +68,10 @@
           "type": "deployment",
           "address": "0x109ea28dbdea5e6ec126fbc8c33845dfe812a300"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 168829,
-      "failureModeId": "legacy:eip155:56:0x765de8357994a206bb90af57dcf427f48a2021f2f28ca81f2c00bc3b9842be8e:failure-1",
+      "failureModeId": "provisional:eip155:56:0x765de8357994a206bb90af57dcf427f48a2021f2f28ca81f2c00bc3b9842be8e:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -86,7 +85,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/pancakehunny.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -121,18 +120,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/pancakehunny.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/pancakehunny.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2021-06-03T02:24:49Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

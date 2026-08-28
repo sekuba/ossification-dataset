@@ -1,15 +1,11 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xaa14164b3c0759274b9b430ffa88c56389aa6fd28602f3d8e81fcdd8365eb3cf",
   "protocol": {
     "name": "Juice (JUICE) Staking",
     "slug": "juice-staking"
   },
   "name": "Juice JuiceStaking unbounded stake multiplier",
-  "discovery": [
-    "dfhl:src/test/2024-03/Juice_exp.sol"
-  ],
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -165,22 +161,15 @@
       "note": "Re-anchored the incident from the first harvest to the transaction that first exercised the defect. In transaction 0xaa14164b3c0759274b9b430ffa88c56389aa6fd28602f3d8e81fcdd8365eb3cf at block 19395637 index 34, timestamp 1709964335, helper 0xa8b45dee8306b520465f1f8da7e11cd8cfd1bbc4 bought 2,603.521112903506075187 JUICE with 0.5 attacker-supplied ETH, then called JuiceStaking.stake three times for 1,000, 200, and 40 JUICE with stakingWeek 3,000,000,000. Verified source computes bonus as pending * (stakingWeek - 1) * 9 / 100 and imposes no upper bound. The next three harvest transactions paid exactly 894,773.055846326585466130, 230,084.500074761979119836, and 178,954.611169265317093226 JUICE, totaling 1,303,812.167090353881679192. Five subsequent sales disposed of those rewards plus 1,363.521112903506075187 unstaked attacker-owned JUICE. Their traces pay the attacker 14.338537044561715813 + 23.043334348231788649 + 8.450111052836301861 + 4.490492953989951884 + 3.604650790493870750 = 53.927126190113628957 ETH. The realized average, allocated only to stolen reward tokens, is 53.870788353159543383 ETH, worth $211,733.74654325828 at $3,930.40 per ETH immediately before the final sale. JuiceStaking 0x8584ddbd1e28bca4bc6fb96bafe39f850301940e was directly created by 0x181894edb3796bb68bf5e13ebf76c9ac4d2b790a in transaction 0xc8b596ee5c2becd5c9d128110f1cf112311900e82c4fa5f56d75ef969b3736cf at block 19391731 index 79, timestamp 1709916407. Its 5,176-byte direct runtime contains no delegatecall and hashes to 0x4e2ab0775e654e199be0673efb9bc90a5feb05fa1dfa6f91b934b3b917a7f6ee at deployment and immediately before the malicious stake. Code age is 1709964335 - 1709916407 = 47,928 seconds."
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2024-03/Juice_exp.sol",
+    "seed:juice-staking:2024-03-09:juice-juicestaking-unbounded-stake-multiplier"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/juice-staking.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-03-09T06:06:59Z",
-      "reanchored": true
-    }
-  },
-  "notes": []
+    ]
+  }
 }

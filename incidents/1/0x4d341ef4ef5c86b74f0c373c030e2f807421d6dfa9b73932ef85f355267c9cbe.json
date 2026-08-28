@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe",
   "protocol": {
     "name": "ParaSwap",
@@ -114,7 +113,7 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T12:30:00Z",
-      "note": "Reviewed the malicious exploit transaction and receipt, direct Augustus V6 callback call, creation transaction, core runtime at deployment and immediately before the exploit, all pre-exploit DiamondCut records, the official incident report, and the pinned white-hat reproduction. Transaction 0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe directly invokes the vulnerable callback and transfers an approved victim's tokens through the attacker-selected route. The legacy transaction 0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60 was sent by whitehat responder 0xfde0d1575ed8e06fbf36256bcdfa1f359281455a and is not used as the exploit anchor. The callback selector is served by Augustus V6's own runtime rather than a facet. That 22,508-byte runtime has hash 0x13fa9cc60a5a1f39501e40c8df5e725c304ef9af0b931a31935e3db50090bbdd at deployment and immediately before this exploit; the later facet cuts did not select or replace the vulnerable core code."
+      "note": "Reviewed the malicious exploit transaction and receipt, direct Augustus V6 callback call, creation transaction, core runtime at deployment and immediately before the exploit, all pre-exploit DiamondCut records, the official incident report, and the pinned white-hat reproduction. Transaction 0x4d341ef4ef5c86b74f0c373c030e2f807421d6dfa9b73932ef85f355267c9cbe directly invokes the vulnerable callback and transfers an approved victim's tokens through the attacker-selected route. The seed row's transaction 0x35a73969f582872c25c96c48d8bb31c23eab8a49c19282c67509b96186734e60 was sent by whitehat responder 0xfde0d1575ed8e06fbf36256bcdfa1f359281455a and is not used as the exploit anchor. The callback selector is served by Augustus V6's own runtime rather than a facet. That 22,508-byte runtime has hash 0x13fa9cc60a5a1f39501e40c8df5e725c304ef9af0b931a31935e3db50090bbdd at deployment and immediately before this exploit; the later facet cuts did not select or replace the vulnerable core code."
     },
     {
       "id": "source-5",
@@ -142,6 +141,5 @@
     "reviewSourceIds": [
       "source-4"
     ]
-  },
-  "notes": []
+  }
 }

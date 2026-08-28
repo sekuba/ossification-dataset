@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x33fed54de490797b99b2fc7a159e43af57e9e6bdefc2c2d052dc814cfe0096b9",
   "protocol": {
     "name": "BNO",
@@ -54,7 +53,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Exact pre-recovery victim depletion is the BNO balance change of pool 0xdca503449899d5649d32175a255a8835a03e4006 across the two successful campaign transactions: 1,563,370.168598147731548146 BNO immediately before the anchor and zero after the second transaction. The second receipt records 504,557.855800853399893084 USDT paid to campaign funds-holder 0xdc109426972ae14d5b3d7e91b47d42ff1fd3c8cc after the depleted BNO was sold; that exact stablecoin realization at par is used instead of the legacy rounded USD 505,000 headline or a thin-market spot mark. The attacker's flash liquidity and amounts returned to the pool are not counted separately. No recovery is netted.",
+    "notes": "Exact pre-recovery victim depletion is the BNO balance change of pool 0xdca503449899d5649d32175a255a8835a03e4006 across the two successful campaign transactions: 1,563,370.168598147731548146 BNO immediately before the anchor and zero after the second transaction. The second receipt records 504,557.855800853399893084 USDT paid to campaign funds-holder 0xdc109426972ae14d5b3d7e91b47d42ff1fd3c8cc after the depleted BNO was sold; that exact stablecoin realization at par is used instead of the seed row's rounded USD 505,000 headline or a thin-market spot mark. The attacker's flash liquidity and amounts returned to the pool are not counted separately. No recovery is netted.",
     "realizedAt": 1689641833
   },
   "targets": [
@@ -159,16 +158,6 @@
     ],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/bno.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-07-18T00:55:37Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

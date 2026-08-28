@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xee10553c26742bec9a4761fd717642d19012bab1704cbced048425070ee21a8a",
   "protocol": {
     "name": "ATM (0xa595)",
@@ -152,26 +151,17 @@
       "observedAt": 1787911640
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2024-04/ATM_exp.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/atm-a595.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-04-01T16:08:49Z"
-    }
+    ]
   },
-  "discovery": [
-    "dfhl:src/test/2024-04/ATM_exp.sol"
-  ],
   "notes": [
-    "Replaces the legacy rounded $182,000 attacker-profit estimate with the transaction-exact ATM/WBNB LP depletion and a pre-incident BNB price."
+    "Replaces the seed row's rounded $182,000 attacker-profit estimate with the transaction-exact ATM/WBNB LP depletion and a pre-incident BNB price."
   ]
 }

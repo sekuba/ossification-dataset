@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:250:0x9f40542ed53737b6aa0c17a2ab0c1f295b665ed83f9f8e3c66e9161a64d684cc",
   "protocol": {
     "name": "Reaper Farm",
@@ -21,7 +20,7 @@
       "0x8162a5e187128565ace634e76fdd083cb04d0145"
     ]
   },
-  "summary": "ReaperVaultV2 exposes the three-argument ERC-4626 exit path redeem(shares, receiver, owner) (and the matching withdraw) but never checks that msg.sender is owner or holds an allowance from owner, so any caller could burn an arbitrary holder\u2019s vault shares and have the underlying asset paid to an address of their choosing. The attacker contract called redeem with each depositor as owner and its own address as receiver; the three owners drained in the anchor transaction had an allowance of exactly 0 to the attacker contract at block 44045360.",
+  "summary": "ReaperVaultV2 exposes the three-argument ERC-4626 exit path redeem(shares, receiver, owner) (and the matching withdraw) but never checks that msg.sender is owner or holds an allowance from owner, so any caller could burn an arbitrary holder’s vault shares and have the underlying asset paid to an address of their choosing. The attacker contract called redeem with each depositor as owner and its own address as receiver; the three owners drained in the anchor transaction had an allowance of exactly 0 to the attacker contract at block 44045360.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -151,25 +150,17 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T13:40:00Z",
-      "note": "Re-anchored. The v1 snapshot anchored to 0xc929f3b9312ff26be0adb1c3ff832dbdafdcbcaad33d002744effd515e53c9d5, which is the third and last attacker transaction against this vault. Reading every Withdraw(address,address,address,uint256,uint256) log (topic 0xfbde797d201c681b91056529119e0b02407c7bb96a4a2c75c01fc9667232c8db) the vault emitted between its creation block 41839240 and block 44060000 gives 76 events, of which 27 have caller != owner and none before block 44045361; the first is log 144 of 0x9f40542ed53737b6aa0c17a2ab0c1f295b665ed83f9f8e3c66e9161a64d684cc at block 44045361 index 4, which is the new anchor. Root cause is confirmed onchain rather than only from the PoC: the three owners redeemed in the anchor transaction had allowance(owner, 0x8162a5e187128565ace634e76fdd083cb04d0145) == 0 at block 44045360, and the exploit contract itself only received code at block 44045179, four minutes earlier. The vault is a direct non-upgradeable contract, not a proxy: EIP-1967 implementation/beacon/admin slots and the legacy OpenZeppelin implementation slot all read zero at block 44045360, the anchor trace has no DELEGATECALL out of the vault, and keccak(eth_getCode) equals 0xd056c916021b116be7449251fe457147d6fcdc124a4a4fa604e271054ad0f085 at the creation block, at five sampled intermediate blocks, at block 44045360 and in the anchor prestate, while eth_getCode is empty at blocks 41839238 and 41839239, so the only executable-code change is the deployment and the code is 2,650,334 s (30d 16h 12m 14s) old. Creation is the top-level contract-creation transaction 0x1fef1cb729b5a6263de7b190b560130ff62ff86bc6bde3189b631c3b4856d514, index 1 of block 41839240, sender 0x6539519e69343535a2af6583d9bae3ad74c6a293, which is not an attacker address. Scope: Reaper\u2019s campaign hit six vaults, but only rfUSDC 0xcda5dea176f2df95082f4dadb96255bdb2bc7c7d executes in this anchor, the six vaults are separate deployments with different runtime code hashes, so the other five are neither targets nor loss of this record; the loss here is the 596,685.496653 USDC the attacker took out of rfUSDC across three transactions, cross-checked against the exact amount its receiver bridged out at block 44046708. Fantom note: fantom.drpc.org serves archive eth_getCode and eth_getStorageAt but frequently answers eth_getTransactionByHash and debug_traceTransaction from a pruned node; the traces and prestate here were taken from fantom.api.onfinality.io and the full-range eth_getLogs from rpcapi.fantom.network."
+      "note": "Re-anchored. The v1 snapshot anchored to 0xc929f3b9312ff26be0adb1c3ff832dbdafdcbcaad33d002744effd515e53c9d5, which is the third and last attacker transaction against this vault. Reading every Withdraw(address,address,address,uint256,uint256) log (topic 0xfbde797d201c681b91056529119e0b02407c7bb96a4a2c75c01fc9667232c8db) the vault emitted between its creation block 41839240 and block 44060000 gives 76 events, of which 27 have caller != owner and none before block 44045361; the first is log 144 of 0x9f40542ed53737b6aa0c17a2ab0c1f295b665ed83f9f8e3c66e9161a64d684cc at block 44045361 index 4, which is the new anchor. Root cause is confirmed onchain rather than only from the PoC: the three owners redeemed in the anchor transaction had allowance(owner, 0x8162a5e187128565ace634e76fdd083cb04d0145) == 0 at block 44045360, and the exploit contract itself only received code at block 44045179, four minutes earlier. The vault is a direct non-upgradeable contract, not a proxy: EIP-1967 implementation/beacon/admin slots and the legacy OpenZeppelin implementation slot all read zero at block 44045360, the anchor trace has no DELEGATECALL out of the vault, and keccak(eth_getCode) equals 0xd056c916021b116be7449251fe457147d6fcdc124a4a4fa604e271054ad0f085 at the creation block, at five sampled intermediate blocks, at block 44045360 and in the anchor prestate, while eth_getCode is empty at blocks 41839238 and 41839239, so the only executable-code change is the deployment and the code is 2,650,334 s (30d 16h 12m 14s) old. Creation is the top-level contract-creation transaction 0x1fef1cb729b5a6263de7b190b560130ff62ff86bc6bde3189b631c3b4856d514, index 1 of block 41839240, sender 0x6539519e69343535a2af6583d9bae3ad74c6a293, which is not an attacker address. Scope: Reaper’s campaign hit six vaults, but only rfUSDC 0xcda5dea176f2df95082f4dadb96255bdb2bc7c7d executes in this anchor, the six vaults are separate deployments with different runtime code hashes, so the other five are neither targets nor loss of this record; the loss here is the 596,685.496653 USDC the attacker took out of rfUSDC across three transactions, cross-checked against the exact amount its receiver bridged out at block 44046708. Fantom note: fantom.drpc.org serves archive eth_getCode and eth_getStorageAt but frequently answers eth_getTransactionByHash and debug_traceTransaction from a pruned node; the traces and prestate here were taken from fantom.api.onfinality.io and the full-range eth_getLogs from rpcapi.fantom.network."
     }
+  ],
+  "discovery": [
+    "seed:reaper-farm:2022-08-02:reaper-farm-vault-missing-access-control-on-deposit-for"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/reaper-farm.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-08-02T05:10:49Z",
-      "reanchored": true
-    }
-  },
-  "notes": []
+    ]
+  }
 }

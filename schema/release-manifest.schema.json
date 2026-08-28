@@ -6,7 +6,6 @@
   "required": [
     "$schema",
     "formatVersion",
-    "schemaVersion",
     "description",
     "cohortRules",
     "counts",
@@ -17,7 +16,6 @@
   "properties": {
     "$schema": { "const": "../../schema/release-manifest.schema.json" },
     "formatVersion": { "const": 1 },
-    "schemaVersion": { "const": "2.0.0" },
     "description": { "type": "string", "minLength": 1 },
     "cohortRules": { "$ref": "#/$defs/cohortRules" },
     "counts": { "$ref": "#/$defs/counts" },
@@ -118,12 +116,12 @@
         "researchCandidates": { "type": "integer", "minimum": 0 },
         "researchCandidatesBySource": {
           "type": "object",
-          "required": ["adjudication", "defihacklabs", "legacy", "web-list"],
+          "required": ["adjudication", "defihacklabs", "seed", "web-list"],
           "additionalProperties": false,
           "properties": {
             "adjudication": { "type": "integer", "minimum": 0 },
             "defihacklabs": { "type": "integer", "minimum": 0 },
-            "legacy": { "type": "integer", "minimum": 0 },
+            "seed": { "type": "integer", "minimum": 0 },
             "web-list": { "type": "integer", "minimum": 0 }
           }
         },

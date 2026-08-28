@@ -1,15 +1,11 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x44037ffc0993327176975e08789b71c1058318f48ddeff25890a577d6555b6ba",
   "protocol": {
     "name": "UniLend",
     "slug": "unilend"
   },
   "name": "UniLend V2 pool health-factor miscalculation",
-  "discovery": [
-    "dfhl:src/test/2025-01/Unilend_exp.sol"
-  ],
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -160,21 +156,14 @@
       "note": "Reviewed the exploit receipt and call trace, both setup transactions, the clone creation trace, historical runtimes, Etherscan-verified UnilendV2Pool source, and the commit-pinned reproduction. The setup transactions only lend 200 USDC and transfer position NFT 115 to attack contract 0x3f814e5fae74cd73a70a0ea38d85971dfa6fda21; the anchored transaction is the first one that executes the faulty borrow/redeem sequence. In the exploit, Morpho lends 60,000,000 USDC and 5.757882098882308991 wstETH, the latter unwraps to 6.853968499544955185 stETH, and both assets are lent into position 115. UnilendV2Pool.userBalanceOftoken0 values the position's lend shares from IERC20(token0).balanceOf(address(this)) plus totalBorrow, so the flash-loaned USDC inflates the collateral read by userHealthFactorLtv. borrow then records 60.672854887643676589 stETH debt and passes checkHealthFactorLtv1; later redeemUnderlying burns the USDC lend shares and returns all 60,000,000 USDC while the stETH debt remains. The pool's exact uncompensated transfer is 60.672854887643676589 stETH. At the nearest DefiLlama historical observation, timestamp 1736680500 and price $3,244.05, this is $196,825.77489826048. The clone was created by CREATE from UnilendV2Core 0x7f2e24d2394f2bdabb464b888cb02eba6d15b958 in transaction 0x9d16bc12fdd18de17061d7c0363348723af79a985939523b39c745c4d5a03108 at block 19213660 index 63, timestamp 1707761651; the top-level sender 0x99a221a87b3c2238c90650fa9be0f11e4c499d06 is not the immediate creator. Its runtime is the EIP-1167 bytecode 0x363d3d373d3d3d363d73c86d2555f8c360d3c5e8e4364f42c1f2d169330e5af43d82803e903d91602b57fd5bf3, which immutably pins master 0xc86d2555f8c360d3c5e8e4364f42c1f2d169330e. The master runtime hash is 0x2e00dffa57a73b8a55b02ecec52b55ddd004909c25e4b537680f9109c4ff37ae before the incident, and the exploit trace confirms the clone delegatecalls that master. Clone deployment is the age reset, giving 1736680799 - 1707761651 = 28,919,148 seconds."
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2025-01/Unilend_exp.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/unilend.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-01-12T11:19:59Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

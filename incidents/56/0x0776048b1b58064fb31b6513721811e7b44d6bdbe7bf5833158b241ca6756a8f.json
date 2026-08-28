@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x0776048b1b58064fb31b6513721811e7b44d6bdbe7bf5833158b241ca6756a8f",
   "protocol": {
     "name": "MOKE",
@@ -59,7 +58,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The MOKE/WBNB PancakeSwap pair 0xba6a49a97cc725b3c39d6c5ea6deffddb64fe6b8 paid 1664.616180024096154954 WBNB in the exploit's MOKE sale: its Swap event at log 209 records 43860308.980417278429035188 MOKE in and exactly that WBNB amount out. This is the defect-caused gross loss to liquidity providers. The pair's end-of-block WBNB reserve fell by the larger 1692.745266365074783560 WBNB, from 1849.174363661815743493 at block 113652608 to 156.429097296740959933 at block 113652609, but the other 28.129086340978628606 WBNB was paid in the separate Burn event at log 108 against LP tokens the attacker already owned, so it was a withdrawal of pre-positioned liquidity rather than loss caused by the defect. DefiLlama prices BNB at 588.2809941793458 USD seven seconds before the incident. The legacy USD 907,700 estimate tracks the attacker's lower post-financing proceeds rather than the pair's gross loss."
+    "notes": "The MOKE/WBNB PancakeSwap pair 0xba6a49a97cc725b3c39d6c5ea6deffddb64fe6b8 paid 1664.616180024096154954 WBNB in the exploit's MOKE sale: its Swap event at log 209 records 43860308.980417278429035188 MOKE in and exactly that WBNB amount out. This is the defect-caused gross loss to liquidity providers. The pair's end-of-block WBNB reserve fell by the larger 1692.745266365074783560 WBNB, from 1849.174363661815743493 at block 113652608 to 156.429097296740959933 at block 113652609, but the other 28.129086340978628606 WBNB was paid in the separate Burn event at log 108 against LP tokens the attacker already owned, so it was a withdrawal of pre-positioned liquidity rather than loss caused by the defect. DefiLlama prices BNB at 588.2809941793458 USD seven seconds before the incident. The seed row's USD 907,700 estimate tracks the attacker's lower post-financing proceeds rather than the pair's gross loss."
   },
   "targets": [
     {
@@ -161,16 +160,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/moke.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-08-02T20:50:11Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

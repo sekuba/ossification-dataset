@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:42161:0xc523c6307b025ebd9aef155ba792d1ba18d5d83f97c7a846f267d3d9a3004e8c",
   "protocol": {
     "name": "Lodestar Finance",
@@ -326,7 +325,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T00:00:00Z",
-      "note": "Reviewed the anchor receipt (334 logs) and its 8,882-frame callTracer trace, the verified GLPOracle and PriceOracleProxyETH sources, historical runtime hashes and archive eth_calls, the eleven Comptroller markets' balances before and after, and the three follow-up campaign receipts. The anchor is status 1 at block 45121904 index 1, timestamp 1670690606. In the trace, PriceOracleProxyETH 0x5947189d2d7765e4f629c803581ffd06bc57de9b (getUnderlyingPrice, 0xfc57d4df, 96 frames) STATICCALLs GLPOracle 0xba46f854a5b099fcea178c6e7ed047baffece5ac getPlvGLPPrice (0x731cf425) 42 times, and the oracle reads plvGLP 0x5326e71ff593ecc2cf7acae5fe57582d6e74cff1 totalAssets (0x01e1d114) and totalSupply (0x18160ddd) 42 times each; glpOracleAddress on the proxy resolves to 0xba46f854 at block 45121903. Boundary test: GLPOracle exposes no pricing parameters at all - only admin, GLP, GLPManager and plvGLP address setters - so there is no parameter value at which the deployed formula is correct; Lodestar's own post-mortem says the oracle design needed to be completely rethought, and the fix shipped as new code, PlvGLPOracle 0x5ba0828a5488c20a9c6521a90ecc9c49e5390604 with HistoricalIndices, a windowSize moving average and a MAX_SWING bound, deployed 2023-03-15 for a new Comptroller; the old oracle was never replaced in place (zero newGlpOracle events). GLPOracle was created by top-level CREATE from 0x67e57a0ec37768eaf99a364975ec4e1f98920d01 in 0x01612ff4a259f54c44e08778beb0ea28312d0b6ac956b3a61a52858656dc2d49 at block 43961659 index 1; no code exists at 43961658 and its runtime hashes to 0x29302c69c519e8bbba1a860091b70944d839f5564d1323cd1e91ffb50e3a5981 at the creation block, at block 45121903 and at head, so codeAgeSeconds is 1670690606 - 1670294017 = 396589 (4.59 days). getPlutusExchangeRate() returns 1079668824382448539 at block 45121903 and 1822433552033092528 at 45121904; getPlvGLPPrice() returns 917512181012688097 and 1548720260621492204 respectively; the rate is flat at about 1.0788-1.0797 from block 44684000 onward, so no earlier transaction in the attacker's day-long rehearsal series had donated. Market underlying balances fall to their 10-unit seeds: lUSDC 1678566.478687 to 10, lDAI 407129.894855655961773024 to 10, lUSDT 397850.679709 to 10, lFRAX 361336.024023817648655341 to 10, lMIM 204670.267753251313632099 to 10, lWBTC 12.52088803 to 0.001, lETH 124.693719452169514630 to 0.1, lplvGLP 3814451.161509835687601554 to 10, and in the later campaign transactions lMAGIC 244397.328847152656440708 to 0.1 and lDPX 414.620343767192446310 to 0.1. Campaign transfer sums attribute 280632.870029536866929986 MAGIC and 273.368900733130736421 DPX to the attacker; the remaining lDPX movement in the window is not attributable to a campaign transaction and is excluded. Legacy measured the lplvGLP CErc20Delegator at 18.9 days; the defect-bearing artifact is the immutable GLPOracle, which is why this record's age is 4.59 days."
+      "note": "Reviewed the anchor receipt (334 logs) and its 8,882-frame callTracer trace, the verified GLPOracle and PriceOracleProxyETH sources, historical runtime hashes and archive eth_calls, the eleven Comptroller markets' balances before and after, and the three follow-up campaign receipts. The anchor is status 1 at block 45121904 index 1, timestamp 1670690606. In the trace, PriceOracleProxyETH 0x5947189d2d7765e4f629c803581ffd06bc57de9b (getUnderlyingPrice, 0xfc57d4df, 96 frames) STATICCALLs GLPOracle 0xba46f854a5b099fcea178c6e7ed047baffece5ac getPlvGLPPrice (0x731cf425) 42 times, and the oracle reads plvGLP 0x5326e71ff593ecc2cf7acae5fe57582d6e74cff1 totalAssets (0x01e1d114) and totalSupply (0x18160ddd) 42 times each; glpOracleAddress on the proxy resolves to 0xba46f854 at block 45121903. Boundary test: GLPOracle exposes no pricing parameters at all - only admin, GLP, GLPManager and plvGLP address setters - so there is no parameter value at which the deployed formula is correct; Lodestar's own post-mortem says the oracle design needed to be completely rethought, and the fix shipped as new code, PlvGLPOracle 0x5ba0828a5488c20a9c6521a90ecc9c49e5390604 with HistoricalIndices, a windowSize moving average and a MAX_SWING bound, deployed 2023-03-15 for a new Comptroller; the old oracle was never replaced in place (zero newGlpOracle events). GLPOracle was created by top-level CREATE from 0x67e57a0ec37768eaf99a364975ec4e1f98920d01 in 0x01612ff4a259f54c44e08778beb0ea28312d0b6ac956b3a61a52858656dc2d49 at block 43961659 index 1; no code exists at 43961658 and its runtime hashes to 0x29302c69c519e8bbba1a860091b70944d839f5564d1323cd1e91ffb50e3a5981 at the creation block, at block 45121903 and at head, so codeAgeSeconds is 1670690606 - 1670294017 = 396589 (4.59 days). getPlutusExchangeRate() returns 1079668824382448539 at block 45121903 and 1822433552033092528 at 45121904; getPlvGLPPrice() returns 917512181012688097 and 1548720260621492204 respectively; the rate is flat at about 1.0788-1.0797 from block 44684000 onward, so no earlier transaction in the attacker's day-long rehearsal series had donated. Market underlying balances fall to their 10-unit seeds: lUSDC 1678566.478687 to 10, lDAI 407129.894855655961773024 to 10, lUSDT 397850.679709 to 10, lFRAX 361336.024023817648655341 to 10, lMIM 204670.267753251313632099 to 10, lWBTC 12.52088803 to 0.001, lETH 124.693719452169514630 to 0.1, lplvGLP 3814451.161509835687601554 to 10, and in the later campaign transactions lMAGIC 244397.328847152656440708 to 0.1 and lDPX 414.620343767192446310 to 0.1. Campaign transfer sums attribute 280632.870029536866929986 MAGIC and 273.368900733130736421 DPX to the attacker; the remaining lDPX movement in the window is not attributable to a campaign transaction and is excluded. The seed row measured the lplvGLP CErc20Delegator at 18.9 days; the defect-bearing artifact is the immutable GLPOracle, which is why this record's age is 4.59 days."
     },
     {
       "id": "source-3",
@@ -431,7 +430,7 @@
     }
   ],
   "discovery": [
-    "legacy:lodestar-finance:2022-12-10:lodestar-plvglp-exchange-rate-manipulation"
+    "seed:lodestar-finance:2022-12-10:lodestar-plvglp-exchange-rate-manipulation"
   ],
   "verification": {
     "tier": "reviewed",
@@ -441,16 +440,6 @@
     ],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/lodestar-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-12-10T16:43:26Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

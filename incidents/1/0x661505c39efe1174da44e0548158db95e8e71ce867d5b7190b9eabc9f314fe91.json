@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x661505c39efe1174da44e0548158db95e8e71ce867d5b7190b9eabc9f314fe91",
   "protocol": {
     "name": "Scroll Network (SCROLL) token",
@@ -148,7 +147,7 @@
     {
       "id": "source-6",
       "type": "review-note",
-      "note": "legacy migration note retained for provenance: onchain review: SCROLL 'Scroll Network' 0xe51D3dE9b81916D383eF97855C271250852eC7B7 created 2024-05-26T19:30:11Z by 0x72c509b05a44c4bb53373efc2e76fb75fa8108a6, not the attack-tx sender 0x55db954f0121e09ec838a20c216eabf35ca32cdd; no EIP-1967 events, unverified source, so age runs from deployment (2.16 days). Verified at block 19971610 that UniversalRouter 0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD held 0 SCROLL and the WETH pair held 1.363e23, confirming the router's balance was created by the exploit's first TRANSFER rather than pre-existing. The legacy 292,583 USD figure rounded the drain to 76 ETH; this review replaces it with the exact 76.360109345510532175 WETH depletion."
+      "note": "seed-inventory note retained for provenance: onchain review: SCROLL 'Scroll Network' 0xe51D3dE9b81916D383eF97855C271250852eC7B7 created 2024-05-26T19:30:11Z by 0x72c509b05a44c4bb53373efc2e76fb75fa8108a6, not the attack-tx sender 0x55db954f0121e09ec838a20c216eabf35ca32cdd; no EIP-1967 events, unverified source, so age runs from deployment (2.16 days). Verified at block 19971610 that UniversalRouter 0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD held 0 SCROLL and the WETH pair held 1.363e23, confirming the router's balance was created by the exploit's first TRANSFER rather than pre-existing. The seed row's 292,583 USD figure rounded the drain to 76 ETH; this review replaces it with the exact 76.360109345510532175 WETH depletion."
     }
   ],
   "verification": {
@@ -158,16 +157,6 @@
     ],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/scroll-network-token.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-05-28T23:21:35Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

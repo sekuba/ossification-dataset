@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:137:0x31957ecc43774d19f54d9968e95c69c882468b46860f921668f2c55fadd51b19",
   "protocol": {
     "name": "BonqDAO",
@@ -240,7 +239,7 @@
   ],
   "discovery": [
     "dfhl:src/test/2023-02/BonqDAO_exp.sol",
-    "legacy:bonqdao:2023-02-01:bonqdao-tellor-oracle-price-manipulation",
+    "seed:bonqdao:2023-02-01:bonqdao-tellor-oracle-price-manipulation",
     "web:2023-02-02:bonqdao-allianceblock"
   ],
   "verification": {
@@ -248,19 +247,10 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/bonqdao.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-02-01T18:29:18Z"
-    }
+    ]
   },
   "notes": [
-    "The legacy snapshot named TellorFlex 0x8f55d884cad66b79e1a131f6bcb0e66f4fd84d5b as the victim contract and aged the row from it. TellorFlex behaved exactly as designed: it accepted a staked reporter's submission. The defect is on the consumer side, in BonqDAO's own TellorPriceFeed, so the target and the age were moved there.",
+    "The seed inventory named TellorFlex 0x8f55d884cad66b79e1a131f6bcb0e66f4fd84d5b as the victim contract and aged the row from it. TellorFlex behaved exactly as designed: it accepted a staked reporter's submission. The defect is on the consumer side, in BonqDAO's own TellorPriceFeed, so the target and the age were moved there.",
     "The campaign has two legs in the same block range. The anchor 0x31957ecc mints against a self-reported high price; 0xa02d0c3d, 51 blocks later, reports a low price and liquidates 33 third-party troves. Both execute the same defect in the same feed, so they are one incident with one loss."
   ]
 }

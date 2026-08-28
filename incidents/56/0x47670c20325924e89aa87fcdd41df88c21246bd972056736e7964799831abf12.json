@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x47670c20325924e89aa87fcdd41df88c21246bd972056736e7964799831abf12",
   "protocol": {
     "name": "Beta Presale",
@@ -21,11 +20,11 @@
   },
   "summary": "PresaleBEP20.set(address) is public and deposit() enforces its 100 BNB cap only per msg.sender while forwarding deposits straight to the mutable withdrawAddress, so the attacker redirected withdrawals to itself and recycled a 100 WBNB flash loan through 70 fresh depositors.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 1287,
       "valuationTimestamp": 1747671130,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x760c2aaa22220f24b9343b2a91a62dd664953853"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 129279606,
-      "failureModeId": "legacy:eip155:56:0x47670c20325924e89aa87fcdd41df88c21246bd972056736e7964799831abf12:failure-1",
+      "failureModeId": "provisional:eip155:56:0x47670c20325924e89aa87fcdd41df88c21246bd972056736e7964799831abf12:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -79,7 +78,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/betapresale.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -114,18 +113,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/betapresale.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/betapresale.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-05-19T16:12:10Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:42161:0xa9ff2b587e2741575daf893864710a5cbb44bb64ccdc487a100fa20741e0f74d",
   "protocol": {
     "name": "Sentiment",
@@ -230,8 +229,8 @@
     }
   ],
   "discovery": [
-    "legacy:sentiment:2023-04-04:sentiment-balancer-lp-oracle-read-only-reentrancy",
-    "dfhl:src/test/2023-04/Sentiment_exp.sol"
+    "dfhl:src/test/2023-04/Sentiment_exp.sol",
+    "seed:sentiment:2023-04-04:sentiment-balancer-lp-oracle-read-only-reentrancy"
   ],
   "verification": {
     "tier": "reviewed",
@@ -240,16 +239,7 @@
     ],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/sentiment.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-04-04T17:50:29Z"
-    }
+    ]
   },
   "notes": [
     "The OracleFacade mapping that routes the BPT 0x64541216bafffeec8ea535bb71fbc927831d0595 to this oracle is protocol configuration and is not the age basis; the defect is in the oracle's own executable pricing logic."

@@ -1,14 +1,10 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:42161:0xd17330df683adeec26a67ff6972a74ab60a1e5577c73d0e074d8e890fab5279c",
   "protocol": {
     "name": "Kinto",
     "slug": "kinto"
   },
-  "discovery": [
-    "web:2025-07-10:kinto"
-  ],
   "name": "Kinto K token unprotected initializer takeover",
   "incident": {
     "chainId": 42161,
@@ -189,6 +185,10 @@
       "transactionHash": "0xd17330df683adeec26a67ff6972a74ab60a1e5577c73d0e074d8e890fab5279c"
     }
   ],
+  "discovery": [
+    "seed:kinto:2025-07-10:kinto-k-token-clandestine-proxy-initialization",
+    "web:2025-07-10:kinto"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [
@@ -196,17 +196,6 @@
     ],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/kinto.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "documented",
-      "upgradeEventCount": 4,
-      "reanchored": true,
-      "date": "2025-07-10T08:33:11Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

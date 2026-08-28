@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xc38a6e2259a85ced94238a0b0a49697992f2a6b8140c28f3fd2343d3d8434130",
   "protocol": {
     "name": "Drips Network",
@@ -21,17 +20,17 @@
   },
   "summary": "DaiDripsHub.give() cast an unbounded caller-supplied uint128 to int128 before negation, so a value above int128.max flipped the transfer direction and withdrew the DAI reserve.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 24883,
       "valuationTimestamp": 1784020595,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0x73043143e0a6418cc45d82d4505b096b802fd365"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "Unreviewed seed-inventory basis: latest of 1 pre-incident Upgraded event(s)."
       },
       "codeAgeSeconds": 144582332,
-      "failureModeId": "legacy:eip155:1:0xc38a6e2259a85ced94238a0b0a49697992f2a6b8140c28f3fd2343d3d8434130:failure-1",
+      "failureModeId": "provisional:eip155:1:0xc38a6e2259a85ced94238a0b0a49697992f2a6b8140c28f3fd2343d3d8434130:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -77,7 +76,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/drips-network.json; no semantic revalidation was inherited."
+          "Target identity and code history were imported from the seed inventory without independent review."
         ]
       }
     }
@@ -109,18 +108,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/drips-network.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/drips-network.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2026-07-14T09:16:35Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

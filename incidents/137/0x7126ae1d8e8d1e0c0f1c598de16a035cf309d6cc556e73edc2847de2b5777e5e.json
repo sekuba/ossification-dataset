@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:137:0x7126ae1d8e8d1e0c0f1c598de16a035cf309d6cc556e73edc2847de2b5777e5e",
   "protocol": {
     "name": "Huma Finance",
@@ -27,7 +26,11 @@
       "amount": 101390.301544,
       "valuationTimestamp": 1778509165,
       "method": "stablecoin-par",
-      "sourceIds": ["source-4", "source-5", "source-6"]
+      "sourceIds": [
+        "source-4",
+        "source-5",
+        "source-6"
+      ]
     },
     "minimumUsd": null,
     "assets": [
@@ -43,9 +46,14 @@
           "method": "stablecoin-par",
           "timestamp": 1778509165,
           "unitPriceUsd": 1,
-          "sourceIds": ["source-4"]
+          "sourceIds": [
+            "source-4"
+          ]
         },
-        "sourceIds": ["source-4", "source-6"]
+        "sourceIds": [
+          "source-4",
+          "source-6"
+        ]
       },
       {
         "asset": {
@@ -59,9 +67,14 @@
           "method": "stablecoin-par",
           "timestamp": 1778509165,
           "unitPriceUsd": 1,
-          "sourceIds": ["source-4"]
+          "sourceIds": [
+            "source-4"
+          ]
         },
-        "sourceIds": ["source-4", "source-6"]
+        "sourceIds": [
+          "source-4",
+          "source-6"
+        ]
       }
     ],
     "confidence": "high",
@@ -102,14 +115,25 @@
       "codeAgeSeconds": 90358155,
       "failureModeId": "failure:huma-credit-request-refresh-approval-bypass",
       "evidence": {
-        "identitySourceIds": ["source-1", "source-2", "source-4", "source-5", "source-6"],
-        "ageSourceIds": ["source-3", "source-6"]
+        "identitySourceIds": [
+          "source-1",
+          "source-2",
+          "source-4",
+          "source-5",
+          "source-6"
+        ],
+        "ageSourceIds": [
+          "source-3",
+          "source-6"
+        ]
       },
       "verification": {
         "tier": "reviewed",
         "curveEligible": true,
         "limitations": [],
-        "reviewSourceIds": ["source-6"]
+        "reviewSourceIds": [
+          "source-6"
+        ]
       }
     }
   ],
@@ -155,20 +179,15 @@
       "note": "Reviewed all three campaign transactions and traces, commit-pinned reproduction, reconstructed vulnerable source, proxy deployment and complete Upgraded history, historical implementation slots and runtimes, and stablecoin transfers. Transaction 0x0adf9953c4e2506ffd4526ceee962a9bb61c573eaef60f669605cca68d0ef5aa creates the borrower helper and calls requestCredit on all three pools. Anchor 0x7126ae1d8e8d1e0c0f1c598de16a035cf309d6cc556e73edc2847de2b5777e5e calls refreshAccount(borrower) on each pool, producing the first Requested-to-GoodStanding transitions without Evaluation Agent approval. Transaction 0x7b8d641d76affcc029fd0e0f06ab81ad675b1da21ef79b82e1343016040ba359 later calls drawdown on each pool and transfers exactly 82315.571143 USDC and 19074.730401 USDC.e to the attacker. The representative pool delegates to a 16,546-byte implementation whose runtime hash is 0x0bdbab48066bd5f42bb6aef5d687bd933a2a2bb804ee929cb4dac67ed6967ba9 at activation block 44526523 and pre-anchor block 86725371. Its creation-block Upgraded event is its only one before the anchor, and the EIP-1967 slot remains 0x57107d02c2b70e09ad77240dbde7ad77fe91ea1c. The two sibling pools execute the same failure and are covered by the representative-target rule. Code age is 90,358,155 seconds."
     }
   ],
-  "discovery": ["dfhl:src/test/2026-05/HumaCreditApprovalBypass_exp.sol"],
+  "discovery": [
+    "dfhl:src/test/2026-05/HumaCreditApprovalBypass_exp.sol",
+    "seed:humacreditapprovalbypass:2026-05-11:humacreditapprovalbypass"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
-    "reviewSourceIds": ["source-6"],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/humacreditapprovalbypass.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2026-05-11T14:19:25Z"
-    }
-  },
-  "notes": []
+    "reviewSourceIds": [
+      "source-6"
+    ]
+  }
 }

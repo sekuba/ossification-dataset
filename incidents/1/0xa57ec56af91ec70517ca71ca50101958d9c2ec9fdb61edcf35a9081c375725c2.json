@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xa57ec56af91ec70517ca71ca50101958d9c2ec9fdb61edcf35a9081c375725c2",
   "protocol": {
     "name": "Neemo (nrETH) StakingManagerL1",
@@ -56,7 +55,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The proxy's weETH balance was 106.929468097270451433 at the end of block 22855568 and zero at the end of block 22855569; the single anchor transaction moved the whole balance, so the campaign is one transaction and there is nothing left to drain. Valued at the DefiLlama weETH price four minutes before the exploit. The figure is corroborated by realised proceeds: the attacker sold the weETH into the weETH/WETH Uniswap V3 pool 0x202a6012894ae5c288ea824cbc8a9bfb26a49b93 for 114.534059890882021484 WETH, unwrapped it and forwarded the ETH to the sender EOA, which is 287,182.70 USD at the contemporaneous WETH price - 0.04 percent above the marked value, so the sale did not materially move the price and no realised-proceeds adjustment is needed. The legacy 285,700 USD figure was a reported estimate."
+    "notes": "The proxy's weETH balance was 106.929468097270451433 at the end of block 22855568 and zero at the end of block 22855569; the single anchor transaction moved the whole balance, so the campaign is one transaction and there is nothing left to drain. Valued at the DefiLlama weETH price four minutes before the exploit. The figure is corroborated by realised proceeds: the attacker sold the weETH into the weETH/WETH Uniswap V3 pool 0x202a6012894ae5c288ea824cbc8a9bfb26a49b93 for 114.534059890882021484 WETH, unwrapped it and forwarded the ETH to the sender EOA, which is 287,182.70 USD at the contemporaneous WETH price - 0.04 percent above the marked value, so the sale did not materially move the price and no realised-proceeds adjustment is needed. The seed row's 285,700 USD figure was a reported estimate."
   },
   "targets": [
     {
@@ -141,12 +140,12 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "note": "legacy migration note retained for provenance: onchain review: ERC1967 proxy 0x54Cd23460DF45559Fd5feEaaDA7ba25f89c13525 created 2025-01-13T03:03:35Z by 0xbde590921e7666b0dc88e3b1dd50931c5cd2fb3b, not the attack-tx sender 0xb750e3165de458eae09904cc7fad099632860b0f. Seven EIP-1967 Upgraded events; the last, installing implementation 0xbc4b1d58b28c497b7afda6fb90fe1471fa0672cc, is in block 22855568 at 2025-07-05T21:03:23Z and was sent by admin 0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d (tx 0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373) - a different party from the attacker. The drain lands in the very next block, so the executing code was 12 seconds old. Reported loss 285.7k USD."
+      "note": "seed-inventory note retained for provenance: onchain review: ERC1967 proxy 0x54Cd23460DF45559Fd5feEaaDA7ba25f89c13525 created 2025-01-13T03:03:35Z by 0xbde590921e7666b0dc88e3b1dd50931c5cd2fb3b, not the attack-tx sender 0xb750e3165de458eae09904cc7fad099632860b0f. Seven EIP-1967 Upgraded events; the last, installing implementation 0xbc4b1d58b28c497b7afda6fb90fe1471fa0672cc, is in block 22855568 at 2025-07-05T21:03:23Z and was sent by admin 0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d (tx 0xcd4a637da42ef5db0b7b6a1592c99a594530852f91e806d8c12ce0b587579373) - a different party from the attacker. The drain lands in the very next block, so the executing code was 12 seconds old. Reported loss 285.7k USD."
     },
     {
       "id": "source-5",
       "type": "review-note",
-      "note": "legacy migration note retained for provenance: attacker-event recheck: all 7 Upgraded events precede the exploit tx and none is sent by the attacker 0xb750e3165de458eae09904cc7fad099632860b0f; the final upgrade (block 22855568, 2025-07-05T21:03:23Z) was sent by the recurring operator 0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d, who had upgraded the proxy 4 times since May. The 12-second age is genuine: the operator installed an implementation exposing an unprotected selector and was drained 12s later"
+      "note": "seed-inventory note retained for provenance: attacker-event recheck: all 7 Upgraded events precede the exploit tx and none is sent by the attacker 0xb750e3165de458eae09904cc7fad099632860b0f; the final upgrade (block 22855568, 2025-07-05T21:03:23Z) was sent by the recurring operator 0x7e9b11d0aa215e0f1a7f62534c7c93fc340d493d, who had upgraded the proxy 4 times since May. The 12-second age is genuine: the operator installed an implementation exposing an unprotected selector and was drained 12s later"
     },
     {
       "id": "source-6",
@@ -188,18 +187,9 @@
     ],
     "reviewSourceIds": [
       "source-10"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/unverified-54cd.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 7,
-      "date": "2025-07-05T21:03:35Z"
-    }
+    ]
   },
   "notes": [
-    "protocol.slug stays unverified-54cd to match the legacy snapshot row, but this review identified the affected system: the proxy's previous implementation 0x9b1f03796ca66240a8a3f159b836c69f951261c9 is verified as neemo's StakingManagerL1 and the proxy's weETH() getter matches, so protocol.name has been corrected from unverified_0x54Cd2346."
+    "protocol.slug stays unverified-54cd to match the seed inventory row, but this review identified the affected system: the proxy's previous implementation 0x9b1f03796ca66240a8a3f159b836c69f951261c9 is verified as neemo's StakingManagerL1 and the proxy's weETH() getter matches, so protocol.name has been corrected from unverified_0x54Cd2346."
   ]
 }

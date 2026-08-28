@@ -1,16 +1,11 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x72f8dd2bcfe2c9fbf0d933678170417802ac8a0d8995ff9a56bfbabe3aa712d6",
   "protocol": {
     "name": "SHIDO",
     "slug": "shido"
   },
   "name": "SHIDO permissionless V1-to-V2 migration arbitrage",
-  "discovery": [
-    "dfhl:src/test/2023-06/SHIDO_exp.sol",
-    "dfhl:src/test/2023-06/SHIDO_exp2.sol"
-  ],
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -60,7 +55,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The SHIDO/WBNB pair transferred exactly 1,016.085297305562276696 WBNB to the attacker helper in the exploit transaction. DefiLlama's nearest preceding BNB observation prices that gross victim-asset outflow at $248,758.00248634774. The helper repaid the separate 40 WBNB flash loan and sent 976.975297305562276696 WBNB to the attacker EOA; financing is not netted from gross loss. The onchain measurement replaces the legacy $230,000 estimate."
+    "notes": "The SHIDO/WBNB pair transferred exactly 1,016.085297305562276696 WBNB to the attacker helper in the exploit transaction. DefiLlama's nearest preceding BNB observation prices that gross victim-asset outflow at $248,758.00248634774. The helper repaid the separate 40 WBNB flash loan and sent 976.975297305562276696 WBNB to the attacker EOA; financing is not netted from gross loss. The onchain measurement replaces the seed row's $230,000 estimate."
   },
   "targets": [
     {
@@ -158,21 +153,15 @@
       "note": "Reviewed the exploit receipt and call trace, both commit-pinned reproductions, direct contract creation, historical runtimes and storage, getter calls, migration-token decimals, pair outflow, flash-loan repayment, and historical BNB price. The attacker EOA called helper 0xcdb3d057ca0cfdf630baf3f90e9045ddeb9ea4cc, which borrowed 40 WBNB, used 39 WBNB to acquire V1 SHIDOINU, and finished with 10,436,986,704.133494387 V1 tokens. It called ShidoLock 0xaf0ca21363219c8f3d8050e7b61bb5f04e02f8d4 directly. Runtime bytecode shows lockTokens reads the caller's entire V1 balance, adds it to userShidoV1, and transfers it to rewardWallet; claimTokens only checks the single global lockTimestamp, multiplies the recorded raw V1 balance by 1,000,000,000, clears it, and transfers that raw V2 amount from rewardWallet. Onchain getters and storage identify the 9-decimal V1 token 0x733af324146dcfe743515d8d77dc25140a07f9e0, 18-decimal V2 token 0xa963ee460cf4b474c35ded8fff91c4ec011fb640, unlock timestamp 1687528800, and reward wallet 0x7ef6e527969054afbc0980e00c51d2e645b4a5ef. Thus a caller could acquire cheap V1 after the unlock and immediately convert the same token count into valuable V2; there is no snapshot, cutoff, per-user cap, price check, or holding-period check. The reward wallet transferred exactly 10,436,986,704.133494387 V2 to the helper, whose taxed sale made the SHIDO/WBNB pair transfer 1,016.085297305562276696 WBNB. The helper repaid 40 WBNB and sent 976.975297305562276696 WBNB to the attacker. The gross pair outflow is worth $248,758.00248634774 at the nearest preceding DefiLlama BNB observation of $244.82. ShidoLock was directly created by 0x01757124cc90a1aa116966191c623c994399a464 in transaction 0x8ff564c3a0308d727c6a30391a79f16ecdeb7d02bb7ce742cbb22d2f5499dc99, block 29347371 index 412, timestamp 1687507711. It has no code in the preceding block. Its 1,089-byte runtime hash is 0xbac1c9e3a7b5a23257ae4bfbf91544f26375719b63264a2ac394115024389636 at deployment and at block 29365171, and the exploit trace contains no delegatecall from it. Code age is 1687561240 - 1687507711 = 53,529 seconds."
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2023-06/SHIDO_exp.sol",
+    "dfhl:src/test/2023-06/SHIDO_exp2.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/shido.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-06-23T23:00:40Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

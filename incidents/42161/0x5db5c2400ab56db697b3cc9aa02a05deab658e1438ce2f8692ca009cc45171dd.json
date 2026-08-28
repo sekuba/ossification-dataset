@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:42161:0x5db5c2400ab56db697b3cc9aa02a05deab658e1438ce2f8692ca009cc45171dd",
   "protocol": {
     "name": "dForce",
@@ -147,7 +146,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T00:00:00Z",
-      "note": "Reviewed the anchor receipt (113 logs) and its 851-frame callTracer trace, the verified LPCurveGaugeAggregatorModel and LPCurveBaseAggregatorModel sources, historical runtime hashes, archive eth_calls on the Curve pool and the dForce market, and all four Arbitrum transactions of the campaign. The anchor is status 1 at block 59527634 index 2, timestamp 1675984222. The trace shows the reentrant path directly: Curve pool 0x6eb2dc694eb516b16dc9fbc678c60052bbdd7d80 remove_liquidity (0x5b36389c) CALLs the attacker contract 0xee29b6aee6e4783db176946e4e8f1e5fdcd446a7 with 62,125.420362800134 ETH of value, which re-enters Controller 0x61afb763bc265bd372e8af8dac00196c9a5ecea0 (0xc488847b), which STATICCALLs PriceOracleV2 0x15962427a9795005c640a6bf7f99c2ba1531ad6d getUnderlyingPrice (0xfc57d4df), which CALLs AggregatorProxy 0x0d535ca4c27f0c25a20e2d474ee3e99c1316bafe (0xaf9a6df8), which CALLs LPCurveGaugeAggregatorModel 0x9a0b57024ff206a658e46ffe9f60c7c14cf30b80 getAssetPrice (0xb3596f07), which STATICCALLs the same pool's get_virtual_price (0xbb7b8b80) while that pool is still inside remove_liquidity. The aggregator is reached by CALL, never DELEGATECALL, and appears in 14 frames. Boundary test: LPCurveGaugeAggregatorModel has no configurable parameters at all - the pool, LP token and quote coin are resolved from the asset at call time and the formula is fixed - so there is no parameter value at which the deployed code is correct. dForce's response was to pause mint and borrow on the affected markets 68 minutes later (block 59539644) and later set supplyCapacity to zero; the aggregator was never rewritten and is still wired to the retired market, so the product was withdrawn rather than reconfigured. The aggregator was created by top-level CREATE from 0xde6d6f23aabbdc9469c8907ece7c379f98e4cb75 in 0x88fce0d647f91014611d718b014a3f63a070d728361adac985d8d714f3c0179f at block 58758631 index 1; no code exists at 58758630 and its runtime hashes to 0x750361161bc48c1e68bd25c9e611a11c9c7303cfba9e8187c0806a25fb0fe3f6 at the creation block, at block 59527633 and at head, so codeAgeSeconds is 1675984222 - 1675764145 = 220077 (2.55 days). The earlier campaign transactions are not defect-executing: 0xe02227a0 only deploys the exploit contract, 0xb2b66de5 emits six Approval events, and 0x5f238693 stakes 0.5 ETH through 0x37f9ae2e without touching the dForce oracle. This aggregator is the artifact rather than the legacy row's iToken proxy 0x2ce498b79c499c6bb64934042eba487bd31f75ea, whose implementation 0x45b5636b01091336f02194d327374924d54a0772 is a stock dForce iToken; the two were listed together, which is why both are about 2.5 days old. Losses are recorded only for Arbitrum; the mirror aggregator 0xa3ffff751db57b30aabb847d8f3d70c5567ffe11 on Optimism was exploited in a separate transaction and belongs to a separate incident."
+      "note": "Reviewed the anchor receipt (113 logs) and its 851-frame callTracer trace, the verified LPCurveGaugeAggregatorModel and LPCurveBaseAggregatorModel sources, historical runtime hashes, archive eth_calls on the Curve pool and the dForce market, and all four Arbitrum transactions of the campaign. The anchor is status 1 at block 59527634 index 2, timestamp 1675984222. The trace shows the reentrant path directly: Curve pool 0x6eb2dc694eb516b16dc9fbc678c60052bbdd7d80 remove_liquidity (0x5b36389c) CALLs the attacker contract 0xee29b6aee6e4783db176946e4e8f1e5fdcd446a7 with 62,125.420362800134 ETH of value, which re-enters Controller 0x61afb763bc265bd372e8af8dac00196c9a5ecea0 (0xc488847b), which STATICCALLs PriceOracleV2 0x15962427a9795005c640a6bf7f99c2ba1531ad6d getUnderlyingPrice (0xfc57d4df), which CALLs AggregatorProxy 0x0d535ca4c27f0c25a20e2d474ee3e99c1316bafe (0xaf9a6df8), which CALLs LPCurveGaugeAggregatorModel 0x9a0b57024ff206a658e46ffe9f60c7c14cf30b80 getAssetPrice (0xb3596f07), which STATICCALLs the same pool's get_virtual_price (0xbb7b8b80) while that pool is still inside remove_liquidity. The aggregator is reached by CALL, never DELEGATECALL, and appears in 14 frames. Boundary test: LPCurveGaugeAggregatorModel has no configurable parameters at all - the pool, LP token and quote coin are resolved from the asset at call time and the formula is fixed - so there is no parameter value at which the deployed code is correct. dForce's response was to pause mint and borrow on the affected markets 68 minutes later (block 59539644) and later set supplyCapacity to zero; the aggregator was never rewritten and is still wired to the retired market, so the product was withdrawn rather than reconfigured. The aggregator was created by top-level CREATE from 0xde6d6f23aabbdc9469c8907ece7c379f98e4cb75 in 0x88fce0d647f91014611d718b014a3f63a070d728361adac985d8d714f3c0179f at block 58758631 index 1; no code exists at 58758630 and its runtime hashes to 0x750361161bc48c1e68bd25c9e611a11c9c7303cfba9e8187c0806a25fb0fe3f6 at the creation block, at block 59527633 and at head, so codeAgeSeconds is 1675984222 - 1675764145 = 220077 (2.55 days). The earlier campaign transactions are not defect-executing: 0xe02227a0 only deploys the exploit contract, 0xb2b66de5 emits six Approval events, and 0x5f238693 stakes 0.5 ETH through 0x37f9ae2e without touching the dForce oracle. This aggregator is the artifact rather than the seed row's iToken proxy 0x2ce498b79c499c6bb64934042eba487bd31f75ea, whose implementation 0x45b5636b01091336f02194d327374924d54a0772 is a stock dForce iToken; the two were listed together, which is why both are about 2.5 days old. Losses are recorded only for Arbitrum; the mirror aggregator 0xa3ffff751db57b30aabb847d8f3d70c5567ffe11 on Optimism was exploited in a separate transaction and belongs to a separate incident."
     },
     {
       "id": "source-3",
@@ -199,7 +198,7 @@
     }
   ],
   "discovery": [
-    "legacy:dforce:2023-02-09:dforce-itoken-curve-read-only-reentrancy"
+    "seed:dforce:2023-02-09:dforce-itoken-curve-read-only-reentrancy"
   ],
   "verification": {
     "tier": "reviewed",
@@ -209,16 +208,6 @@
     ],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/dforce.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-02-09T23:10:22Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

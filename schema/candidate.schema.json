@@ -6,7 +6,6 @@
   "type": "object",
   "required": [
     "$schema",
-    "schemaVersion",
     "description",
     "cohort",
     "generatedFrom",
@@ -16,7 +15,6 @@
   "additionalProperties": false,
   "properties": {
     "$schema": { "const": "../schema/candidate.schema.json" },
-    "schemaVersion": { "const": 2 },
     "description": { "type": "string", "minLength": 1 },
     "cohort": { "$ref": "#/$defs/cohort" },
     "generatedFrom": {
@@ -25,7 +23,7 @@
         "defihacklabs",
         "webList",
         "adjudications",
-        "legacyV1",
+        "seed",
         "primaryIncidents"
       ],
       "additionalProperties": false,
@@ -33,7 +31,7 @@
         "defihacklabs": { "$ref": "#/$defs/defihacklabsInput" },
         "webList": { "$ref": "#/$defs/webInput" },
         "adjudications": { "$ref": "#/$defs/fileInput" },
-        "legacyV1": { "$ref": "#/$defs/legacyV1Input" },
+        "seed": { "$ref": "#/$defs/seedInput" },
         "primaryIncidents": {
           "type": "object",
           "required": ["glob", "files", "sha256"],
@@ -95,7 +93,7 @@
         "cutoffBasis": { "const": "latest-complete-source-calendar-month" },
         "sources": {
           "type": "object",
-          "required": ["defihacklabs", "legacyV1"],
+          "required": ["defihacklabs", "seed"],
           "additionalProperties": false,
           "properties": {
             "defihacklabs": {
@@ -108,12 +106,12 @@
                 "through": { "const": "2026-07" }
               }
             },
-            "legacyV1": {
+            "seed": {
               "type": "object",
               "required": ["generatedFrom", "dateField"],
               "additionalProperties": false,
               "properties": {
-                "generatedFrom": { "const": "legacyV1" },
+                "generatedFrom": { "const": "seed" },
                 "dateField": { "const": "incident.date" }
               }
             }
@@ -127,11 +125,11 @@
             "sourceRecords": { "type": "integer", "minimum": 1 },
             "bySource": {
               "type": "object",
-              "required": ["defihacklabs", "legacyV1"],
+              "required": ["defihacklabs", "seed"],
               "additionalProperties": false,
               "properties": {
                 "defihacklabs": { "type": "integer", "minimum": 1 },
-                "legacyV1": { "type": "integer", "minimum": 1 }
+                "seed": { "type": "integer", "minimum": 1 }
               }
             },
             "byDisposition": { "$ref": "#/$defs/countMap" },
@@ -178,25 +176,14 @@
         "sha256": { "$ref": "#/$defs/sha256" }
       }
     },
-    "legacyV1Input": {
+    "seedInput": {
       "type": "object",
-      "required": ["file", "rows", "sha256", "originalSource"],
+      "required": ["file", "rows", "sha256"],
       "additionalProperties": false,
       "properties": {
-        "file": { "const": "research/raw/legacy-v1.json" },
+        "file": { "const": "research/raw/seed-incidents.json" },
         "rows": { "type": "integer", "minimum": 1 },
-        "sha256": { "$ref": "#/$defs/sha256" },
-        "originalSource": {
-          "type": "object",
-          "required": ["glob", "files", "incidents", "sha256"],
-          "additionalProperties": false,
-          "properties": {
-            "glob": { "type": "string", "minLength": 1 },
-            "files": { "type": "integer", "minimum": 1 },
-            "incidents": { "type": "integer", "minimum": 1 },
-            "sha256": { "$ref": "#/$defs/sha256" }
-          }
-        }
+        "sha256": { "$ref": "#/$defs/sha256" }
       }
     },
     "candidate": {
@@ -206,7 +193,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^(dfhl:|web:|adjudication:|legacy:).+"
+          "pattern": "^(dfhl:|web:|adjudication:|seed:).+"
         },
         "source": { "$ref": "#/$defs/source" },
         "coverage": { "$ref": "#/$defs/coverage" },
@@ -220,7 +207,6 @@
           "items": { "$ref": "#/$defs/matchedRow" }
         },
         "candidate": { "$ref": "#/$defs/rawCandidate" },
-        "legacyRecord": { "$ref": "#/$defs/legacyRecord" },
         "disposition": { "$ref": "#/$defs/disposition" }
       }
     },
@@ -229,7 +215,7 @@
         { "$ref": "#/$defs/defihacklabsSource" },
         { "$ref": "#/$defs/webSource" },
         { "$ref": "#/$defs/adjudicationSource" },
-        { "$ref": "#/$defs/legacySource" }
+        { "$ref": "#/$defs/seedSource" }
       ]
     },
     "defihacklabsSource": {
@@ -275,13 +261,13 @@
         }
       }
     },
-    "legacySource": {
+    "seedSource": {
       "type": "object",
       "required": ["kind", "file", "entryIndex", "original"],
       "additionalProperties": false,
       "properties": {
-        "kind": { "const": "legacy" },
-        "file": { "const": "research/raw/legacy-v1.json" },
+        "kind": { "const": "seed" },
+        "file": { "const": "research/raw/seed-incidents.json" },
         "entryIndex": { "type": "integer", "minimum": 0 },
         "original": {
           "type": "object",
@@ -302,7 +288,6 @@
         "kind": {
           "enum": ["direct-reference", "other-identifier", "no-dataset-row"]
         },
-        "legacyDatasetFile": { "type": "string", "minLength": 1 },
         "matchedBy": { "type": "string", "minLength": 1 },
         "alsoHasDirectReference": { "type": "boolean" },
         "hint": { "type": "string" }
@@ -344,10 +329,11 @@
             "candidateVictim": { "type": "string", "pattern": "^0x[0-9a-f]{40}$" },
             "exploitTx": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
           }
-        }
+        },
+        { "$ref": "#/$defs/seedRecord" }
       ]
     },
-    "legacyRecord": {
+    "seedRecord": {
       "type": "object",
       "required": ["protocol", "name", "date", "chain", "category", "measurementStatus", "victimContract", "notes", "sources"],
       "additionalProperties": false,

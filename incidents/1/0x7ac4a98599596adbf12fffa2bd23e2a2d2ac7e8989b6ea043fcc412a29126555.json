@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x7ac4a98599596adbf12fffa2bd23e2a2d2ac7e8989b6ea043fcc412a29126555",
   "protocol": {
     "name": "WiseLending",
@@ -226,7 +225,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Quantities are WiseLending's own ERC20 balance deltas between block 18342120 and block 18342121, so the aToken amounts already net out the interest that accrued inside the transaction. The 50 WBTC Balancer flash loan is attacker-supplied and is not loss; WiseLending in fact ended the transaction 0.01503674 WBTC richer than it started, and that surplus is not netted against the depletion. aEthWETH is valued at the ETH price because Aave v3 aTokens are redeemable one for one against their underlying and DefiLlama publishes no separate quote for aEthWETH. The executing searcher's own realised take was 169.402969354568854988 WETH, about 261805 USD at the same ETH price, which is the figure the legacy row rounded to 260000; the 262280.51 USD recorded here is the larger victim-side depletion. Every component is valued from a DefiLlama historical query taken at the anchor timestamp 1697207963; the datapoints DefiLlama returned for that query carry their own stamps between 1697207997 and 1697208522, all within ten minutes of the anchor. Recoveries after the fact, if any, do not reduce gross depletion under the methodology."
+    "notes": "Quantities are WiseLending's own ERC20 balance deltas between block 18342120 and block 18342121, so the aToken amounts already net out the interest that accrued inside the transaction. The 50 WBTC Balancer flash loan is attacker-supplied and is not loss; WiseLending in fact ended the transaction 0.01503674 WBTC richer than it started, and that surplus is not netted against the depletion. aEthWETH is valued at the ETH price because Aave v3 aTokens are redeemable one for one against their underlying and DefiLlama publishes no separate quote for aEthWETH. The executing searcher's own realised take was 169.402969354568854988 WETH, about 261805 USD at the same ETH price, which is the figure the seed row rounded to 260000; the 262280.51 USD recorded here is the larger victim-side depletion. Every component is valued from a DefiLlama historical query taken at the anchor timestamp 1697207963; the datapoints DefiLlama returned for that query carry their own stamps between 1697207997 and 1697208522, all within ten minutes of the anchor. Recoveries after the fact, if any, do not reduce gross depletion under the methodology."
   },
   "targets": [
     {
@@ -355,7 +354,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
-      "note": "Reviewed the 1739-frame callTracer trace and 136-log receipt of the anchor, the Etherscan-verified WiseLending sources, the contract's creation receipt, and its ERC20 balance history. Root cause reproduced from source and trace: the entry contract is 0x3aa228a80f50763045bdfc45012da124bd0a6809, whose top-level selector 0xf5c58cda is TyForTheMEV(); it creates helper 0x0d1693819f3ec064a1c6150e11f1b6fa33537ef4, flash-borrows 50 WBTC from Balancer 0xba12222222228d8ba445958a75a0704d566bf2c8, calls depositExactAmount 0xd30f6292 twice with one wei of WBTC for two freshly minted position NFTs, transfers 4999999998 WBTC straight to WiseLending with no deposit call, and then calls borrowExactAmount 0xc7c5c4a7 repeatedly. In the source, MainHelper._cleanUp lines 226-255 book amountContract minus totalPool minus bareToken into _increaseTotalAndPseudoTotalPool, and calculateLendingShares lines 31-45 short-circuit to the raw amount whenever totalDepositShares is at most 1, which is what turns the donation into collateral. This confirms and sharpens the migrated one-line summary rather than replacing it. Target confirmed: WiseLending 0x84524baa1951247b3a2617a843e6ece915bb9674 is a direct, non-proxy contract that appears as callee throughout the trace, created top-level by 0x641ad78baca220c5bd28b51ce8e0f495e85fe689 at 17865066:86, with runtime hash 0x7d311619daf40dc50ea5d54ce2b69d5479c4937c60f086f69c55a6e80489dceb identical at 17865066 and 18342120 and absent at 17865065, giving 1697207963-1691435639 = 5772324 s. Anchor confirmed: an Etherscan token-transfer scan of the WiseLending address over blocks 18280000-18360000 returns only six transactions with token flows, and this one at 18342121:1 is the first that carries the donation-and-borrow pattern; a separate actor 0xb296ef3b later repeated the same defect at block 18350052 for the 0.01503674 WBTC left behind, which is a different campaign and well under the admission threshold. Loss rebuilt from the contract's own balance deltas rather than the legacy round 260000; see loss.notes."
+      "note": "Reviewed the 1739-frame callTracer trace and 136-log receipt of the anchor, the Etherscan-verified WiseLending sources, the contract's creation receipt, and its ERC20 balance history. Root cause reproduced from source and trace: the entry contract is 0x3aa228a80f50763045bdfc45012da124bd0a6809, whose top-level selector 0xf5c58cda is TyForTheMEV(); it creates helper 0x0d1693819f3ec064a1c6150e11f1b6fa33537ef4, flash-borrows 50 WBTC from Balancer 0xba12222222228d8ba445958a75a0704d566bf2c8, calls depositExactAmount 0xd30f6292 twice with one wei of WBTC for two freshly minted position NFTs, transfers 4999999998 WBTC straight to WiseLending with no deposit call, and then calls borrowExactAmount 0xc7c5c4a7 repeatedly. In the source, MainHelper._cleanUp lines 226-255 book amountContract minus totalPool minus bareToken into _increaseTotalAndPseudoTotalPool, and calculateLendingShares lines 31-45 short-circuit to the raw amount whenever totalDepositShares is at most 1, which is what turns the donation into collateral. This confirms and sharpens the migrated one-line summary rather than replacing it. Target confirmed: WiseLending 0x84524baa1951247b3a2617a843e6ece915bb9674 is a direct, non-proxy contract that appears as callee throughout the trace, created top-level by 0x641ad78baca220c5bd28b51ce8e0f495e85fe689 at 17865066:86, with runtime hash 0x7d311619daf40dc50ea5d54ce2b69d5479c4937c60f086f69c55a6e80489dceb identical at 17865066 and 18342120 and absent at 17865065, giving 1697207963-1691435639 = 5772324 s. Anchor confirmed: an Etherscan token-transfer scan of the WiseLending address over blocks 18280000-18360000 returns only six transactions with token flows, and this one at 18342121:1 is the first that carries the donation-and-borrow pattern; a separate actor 0xb296ef3b later repeated the same defect at block 18350052 for the 0.01503674 WBTC left behind, which is a different campaign and well under the admission threshold. Loss rebuilt from the contract's own balance deltas rather than the seed row's rounded 260000; see loss.notes."
     }
   ],
   "verification": {
@@ -365,16 +364,6 @@
     ],
     "reviewSourceIds": [
       "source-11"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/wiselending.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-10-13T14:39:23Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

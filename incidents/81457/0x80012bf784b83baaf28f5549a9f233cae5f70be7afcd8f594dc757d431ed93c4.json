@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:81457:0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4",
   "protocol": {
     "name": "SSS",
@@ -147,8 +146,11 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T20:40:00Z",
-      "note": "Reviewed the live Blast transactions, receipts and call traces for campaign setup, balance inflation and pool cash-out; the exact direct-contract creation transaction; pre-exploit runtime and hash; explorer-verified source; the commit-pinned reproduction; and published security analysis. The legacy anchor was the cash-out 48 seconds after the defect ran. Reanchoring to 0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4 captures 25 direct transfer(self,balance) calls whose values double each time. In _update(), _postCheck reads the recipient's old balance before the sender reduction, then the final recipient write overwrites that reduction when both addresses are equal. The target is an immutable direct runtime created at 570927:3; the creation and pre-exploit hashes match and no delegation is present. The later cash-out transferred exactly 1,310.040494988573740722 WETH from the pool to the attack contract, reported at approximately $4.6 million and later returned for a bounty."
+      "note": "Reviewed the live Blast transactions, receipts and call traces for campaign setup, balance inflation and pool cash-out; the exact direct-contract creation transaction; pre-exploit runtime and hash; explorer-verified source; the commit-pinned reproduction; and published security analysis. The seed row's anchor was the cash-out 48 seconds after the defect ran. Reanchoring to 0x80012bf784b83baaf28f5549a9f233cae5f70be7afcd8f594dc757d431ed93c4 captures 25 direct transfer(self,balance) calls whose values double each time. In _update(), _postCheck reads the recipient's old balance before the sender reduction, then the final recipient write overwrites that reduction when both addresses are equal. The target is an immutable direct runtime created at 570927:3; the creation and pre-exploit hashes match and no delegation is present. The later cash-out transferred exactly 1,310.040494988573740722 WETH from the pool to the attack contract, reported at approximately $4.6 million and later returned for a bounty."
     }
+  ],
+  "discovery": [
+    "web:2024-03-22:super-sushi-samurai"
   ],
   "verification": {
     "tier": "reviewed",
@@ -158,9 +160,5 @@
     "reviewSourceIds": [
       "source-6"
     ]
-  },
-  "discovery": [
-    "web:2024-03-22:super-sushi-samurai"
-  ],
-  "notes": []
+  }
 }

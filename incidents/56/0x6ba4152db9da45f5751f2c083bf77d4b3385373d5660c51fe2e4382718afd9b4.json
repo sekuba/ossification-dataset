@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x6ba4152db9da45f5751f2c083bf77d4b3385373d5660c51fe2e4382718afd9b4",
   "protocol": {
     "name": "CCV",
@@ -21,17 +20,17 @@
   },
   "summary": "unprotected farming-proxy functions manipulated with flashloan to shift token balances and drain",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 3200,
       "valuationTimestamp": 1703740110,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0x37177ccc66ef919894cef37596bbebd76e7a40b2"
         },
-        "description": "Legacy basis: latest of 1 pre-incident Upgraded event(s)."
+        "description": "Unreviewed seed-inventory basis: latest of 1 pre-incident Upgraded event(s)."
       },
       "codeAgeSeconds": 69699,
-      "failureModeId": "legacy:eip155:56:0x6ba4152db9da45f5751f2c083bf77d4b3385373d5660c51fe2e4382718afd9b4:failure-1",
+      "failureModeId": "provisional:eip155:56:0x6ba4152db9da45f5751f2c083bf77d4b3385373d5660c51fe2e4382718afd9b4:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2"
@@ -74,7 +73,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/ccv.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -98,18 +97,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/ccv.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/ccv.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2023-12-28T05:08:30Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

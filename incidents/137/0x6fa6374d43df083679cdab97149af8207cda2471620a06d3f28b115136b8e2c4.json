@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:137:0x6fa6374d43df083679cdab97149af8207cda2471620a06d3f28b115136b8e2c4",
   "protocol": {
     "name": "Phoenix Finance",
@@ -21,17 +20,17 @@
   },
   "summary": "The Phoenix proxy exposed a function that executed a caller-supplied target and calldata with no access control, letting an arbitrary caller move the contract's USDC and leveraged-token holdings out.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 100000,
       "valuationTimestamp": 1678186254,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -57,12 +56,12 @@
         "transactionIndex": null,
         "logIndex": null,
         "mechanism": {
-          "type": "legacy-documented"
+          "type": "documented"
         },
         "description": "2021-09-16T13:23:04Z (block 19172145): the phxProxy module pointer at storage slot 14 was last repointed to 0x95620f30263ac0b0b4ffd9b7465838084e89cb84; the main implementation pointer had been repointed to 0x6d68beb09ea7e76d561ea8c4aac34a6611dd9821 two days earlier, at block 19095584"
       },
       "codeAgeSeconds": 46387670,
-      "failureModeId": "legacy:eip155:137:0x6fa6374d43df083679cdab97149af8207cda2471620a06d3f28b115136b8e2c4:failure-1",
+      "failureModeId": "provisional:eip155:137:0x6fa6374d43df083679cdab97149af8207cda2471620a06d3f28b115136b8e2c4:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -77,7 +76,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/phoenix-finance.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -111,21 +110,12 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/phoenix-finance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/phoenix-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "documented",
-      "upgradeEventCount": 0,
-      "date": "2023-03-07T10:50:54Z"
-    }
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
   },
   "notes": [
-    "Legacy flag: nonStandardUpgradeArchitecture=true.",
-    "Legacy documentedLastChange: 2021-09-16T13:23:04Z (block 19172145): the phxProxy module pointer at storage slot 14 was last repointed to 0x95620f30263ac0b0b4ffd9b7465838084e89cb84; the main implementation pointer had been repointed to 0x6d68beb09ea7e76d561ea8c4aac34a6611dd9821 two days earlier, at block 19095584"
+    "Seed-inventory flag: nonStandardUpgradeArchitecture=true.",
+    "Seed-inventory documentedLastChange: 2021-09-16T13:23:04Z (block 19172145): the phxProxy module pointer at storage slot 14 was last repointed to 0x95620f30263ac0b0b4ffd9b7465838084e89cb84; the main implementation pointer had been repointed to 0x6d68beb09ea7e76d561ea8c4aac34a6611dd9821 two days earlier, at block 19095584"
   ]
 }

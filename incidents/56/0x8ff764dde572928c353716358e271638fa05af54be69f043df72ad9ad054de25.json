@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x8ff764dde572928c353716358e271638fa05af54be69f043df72ad9ad054de25",
   "protocol": {
     "name": "NGFS",
@@ -140,24 +139,14 @@
       "note": "Reviewed the successful exploit receipt and full call trace, explorer-verified solc 0.8.24 NGFSToken source, the commit-pinned reproduction, archive token balances and code, creation transaction, proxy slots and pre-exploit direct-call history. The exploit EOA called helper 0xc73781107d086754314f7720ca14ab8c5ad035e4, which first called permissionless delegateCallReserves(). Verified code requires only that its private one-shot flag is false, then assigns _uniswapV2Proxy = msg.sender and consumes the flag; the successful call establishes that it remained unclaimed immediately before exploitation. The helper then passed setProxySync's only check because it had just become _uniswapV2Proxy, setting itself as _uniswapV2Library and fee-excluding itself. reserveMultiSync authorizes that mutable library address and performs _balances[syncAddr] = _balances[syncAddr].air(syncAmount) without debiting another balance or increasing totalSupply. The onchain helper supplied 191,955,211,775.067737892184621300 NGFS, exactly 100 times the pair's pre-transaction NGFS balance, received that unbacked balance, and sold all of it through PancakeSwap. The pair paid 190,138.757990310758328686 USDT to the helper, reducing its balance from 192,044.910952619638111430 to 1,906.152962308879782744 USDT; helper USDT rose from zero by the same exact amount. Artifact history: 0xa608985f5b40cdf6862bec775207f84280a91e3a was directly created by 0xf18c604dbed9bb0f94eb389237d5141b9586dd6b in block 38108028 index 33, timestamp 1713865554. Code is absent at block 38108027, and its 12,120-byte runtime hashes to 0x8c762803c5fc682129dc13bfd5d3dc14ac3d6f122757f8cb50243c1a0262cae2 at deployment and immediately before exploitation. Explorer metadata marks it non-proxy, both EIP-1967 implementation and beacon slots are zero, and its runtime contains no DELEGATECALL, CALLCODE, CREATE, CREATE2 or SELFDESTRUCT. Owner-set fees, lists and trading state neither authorize nor alter the public initializer and unbacked balance-credit path. The initializer's attacker claim occurred inside the anchored exploit and is attack machinery, so deployment is the latest victim-code age reset, 178,331 seconds before exploitation."
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2024-04/NGFS_exp.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/ngfs.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-04-25T11:18:05Z"
-    }
-  },
-  "discovery": [
-    "dfhl:src/test/2024-04/NGFS_exp.sol"
-  ],
-  "notes": []
+    ]
+  }
 }

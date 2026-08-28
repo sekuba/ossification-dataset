@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x33de1ed2d33f79e9b6dfccff8d4536ecda126f4eff18c295f16e9169b4ea5df1",
   "protocol": {
     "name": "UPENG",
@@ -21,11 +20,11 @@
   },
   "summary": "UPENG exposes burn(address,uint256) to any caller, so the attacker destroyed the Pancake pair's UPENG balance, synced the pair down to one wei and sold its own UPENG into the 1.5 WBNB reserve.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 1035,
       "valuationTimestamp": 1752406129,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x4303cddbef06b5820f10dbc00206f8bde6749e2f"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 1762,
-      "failureModeId": "legacy:eip155:56:0x33de1ed2d33f79e9b6dfccff8d4536ecda126f4eff18c295f16e9169b4ea5df1:failure-1",
+      "failureModeId": "provisional:eip155:56:0x33de1ed2d33f79e9b6dfccff8d4536ecda126f4eff18c295f16e9169b4ea5df1:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -79,7 +78,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/upeng.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -114,18 +113,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/upeng.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/upeng.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-07-13T11:28:49Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

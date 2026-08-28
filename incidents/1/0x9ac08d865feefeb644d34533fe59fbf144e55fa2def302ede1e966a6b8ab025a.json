@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x9ac08d865feefeb644d34533fe59fbf144e55fa2def302ede1e966a6b8ab025a",
   "protocol": {
     "name": "The Idols NFT",
@@ -147,7 +146,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
-      "note": "Re-anchored. The snapshot row pointed at 0x5e989304...5284c, the attacker EOA's nonce-24 transaction at block 21624240. Walking 0xe546480138d50bb841b204691c39cc514858d101 from nonce 0 shows the campaign starts twelve blocks earlier: 0x9ac08d865feefeb644d34533fe59fbf144e55fa2def302ede1e966a6b8ab025a, nonce 0, block 21624128, transactionIndex 151, timestamp 1736874575, status 1, creating exploit contract 0xd7447eb70e60cf6a88445e26684ebe03ee9936bb. Its 1,154-frame callTracer trace already executes the defect: 151 CALLs of safeTransferFrom(address,address,uint256) (0x42842e0e) on IdolMain 0x439cac149b935ae1d726569800972e1669d17094, every one with from == to == 0xd7447eb7...36bb and tokenId 940, interleaved with 5 updateRewardPerGod() calls and 169 stETH balance reads. Idol 940 had been moved to that counterfactual address at block 21623518 in 0x321c0038...71c12, while it was still codeless, so the ERC721 Transfer log at 21624128 is the first self-transfer. Root cause read from the Etherscan-verified IdolMain source (solc 0.8.9): _beforeTokenTransfer pays _claimEthRewards(_from), then deletes claimedSnapshots[_from] under 'if (balanceOf(_from) == 1)', then falls into the receiver branch where balanceOf(_to) > 0 and pays _claimEthRewards(_to) against the zeroed snapshot, so a self-transfer yields balanceOf * rewardPerGod a second time; the onlyAllowedContracts(_to) modifier is inert because Address.isContract returns false during the exploit contract's own construction. Target: relationship direct, no proxy and no delegatecall in the trace; the 24,062-byte runtime hashes to 0x50e83ed5daa99f894289865080daed9b0361e1f994eb2916f017dbe036180b65 identically at its creation block 14304371 and at block 21624127. Created by 0x1a898355c4939e1e4b15330d4da1fc028a8dad66 in 0x2bb22344...844d8 at 14304371:102, timestamp 1646180663; that address is not the attacker. Code age 1736874575 - 1646180663 = 90693912 s (1049.7 days). Loss recomputed from stETH Transfer logs rather than from the reported figure: 107.685747932188918815 stETH left IdolMain to the nineteen attacker-controlled addresses across 51 transactions between blocks 21624128 and 21626433 (campaign end timestamp 1736902487), against the legacy row's 97 stETH. IdolMain's own stETH balance fell from 2806.7176 to 2704.9313 over the same window, consistent after the positive Lido rebase. Priced at the DefiLlama stETH quote 3220.3 for 1736902487, giving 346,780.41 USD instead of the legacy 310,658. Outflows after block 21627000 (55.98 stETH) go to unrelated claimant addresses and are not counted."
+      "note": "Re-anchored. The snapshot row pointed at 0x5e989304...5284c, the attacker EOA's nonce-24 transaction at block 21624240. Walking 0xe546480138d50bb841b204691c39cc514858d101 from nonce 0 shows the campaign starts twelve blocks earlier: 0x9ac08d865feefeb644d34533fe59fbf144e55fa2def302ede1e966a6b8ab025a, nonce 0, block 21624128, transactionIndex 151, timestamp 1736874575, status 1, creating exploit contract 0xd7447eb70e60cf6a88445e26684ebe03ee9936bb. Its 1,154-frame callTracer trace already executes the defect: 151 CALLs of safeTransferFrom(address,address,uint256) (0x42842e0e) on IdolMain 0x439cac149b935ae1d726569800972e1669d17094, every one with from == to == 0xd7447eb7...36bb and tokenId 940, interleaved with 5 updateRewardPerGod() calls and 169 stETH balance reads. Idol 940 had been moved to that counterfactual address at block 21623518 in 0x321c0038...71c12, while it was still codeless, so the ERC721 Transfer log at 21624128 is the first self-transfer. Root cause read from the Etherscan-verified IdolMain source (solc 0.8.9): _beforeTokenTransfer pays _claimEthRewards(_from), then deletes claimedSnapshots[_from] under 'if (balanceOf(_from) == 1)', then falls into the receiver branch where balanceOf(_to) > 0 and pays _claimEthRewards(_to) against the zeroed snapshot, so a self-transfer yields balanceOf * rewardPerGod a second time; the onlyAllowedContracts(_to) modifier is inert because Address.isContract returns false during the exploit contract's own construction. Target: relationship direct, no proxy and no delegatecall in the trace; the 24,062-byte runtime hashes to 0x50e83ed5daa99f894289865080daed9b0361e1f994eb2916f017dbe036180b65 identically at its creation block 14304371 and at block 21624127. Created by 0x1a898355c4939e1e4b15330d4da1fc028a8dad66 in 0x2bb22344...844d8 at 14304371:102, timestamp 1646180663; that address is not the attacker. Code age 1736874575 - 1646180663 = 90693912 s (1049.7 days). Loss recomputed from stETH Transfer logs rather than from the reported figure: 107.685747932188918815 stETH left IdolMain to the nineteen attacker-controlled addresses across 51 transactions between blocks 21624128 and 21626433 (campaign end timestamp 1736902487), against the seed row's 97 stETH. IdolMain's own stETH balance fell from 2806.7176 to 2704.9313 over the same window, consistent after the positive Lido rebase. Priced at the DefiLlama stETH quote 3220.3 for 1736902487, giving 346,780.41 USD instead of the seed row's 310,658. Outflows after block 21627000 (55.98 stETH) go to unrelated claimant addresses and are not counted."
     },
     {
       "id": "source-6",
@@ -220,22 +219,15 @@
       "transactionHash": "0x321c0038331065107aea06985e0c2d5ebec5bcad6605cc74fc6840fe8de71c12"
     }
   ],
+  "discovery": [
+    "seed:idols-nft:2025-01-14:idols-nft-self-transfer-reward-double-credit"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/idols-nft.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-01-14T17:31:59Z",
-      "reanchored": true
-    }
+    ]
   },
   "notes": [
     "The snapshot row anchored on the attacker's thirteenth exploit transaction. The anchor here is the first one, twelve blocks earlier; the later transaction remains part of the campaign and appears in the loss transaction set."

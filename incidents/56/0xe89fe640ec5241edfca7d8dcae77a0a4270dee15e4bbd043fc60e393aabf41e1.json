@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xe89fe640ec5241edfca7d8dcae77a0a4270dee15e4bbd043fc60e393aabf41e1",
   "protocol": {
     "name": "AROS",
@@ -153,7 +152,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
-      "note": "Reviewed the 762-frame callTracer trace and 161-log receipt of the anchor, the Etherscan-verified AROS implementation source, the proxy's full Upgraded-event history, and the attacker EOA's complete BSC transaction list. Corrections to the migrated row: the legacy summary said reward logic let a flashloan-funded position claim principal and yield far exceeding real entitlement, which the chain contradicts. Both claims carry genuine EIP-712 signatures: the two ecrecover precompile frames return the configured claimSigner 0xa24198418bf2bfe264d087b891f91cd5a1e50c1d, and I independently reproduced the claimPrincipal digest 0x63ea7ff819225613d3e86d4bfc3344305e7be2ed3ba0a6db97cdad82552b7b13 from CLAIM_PRINCIPAL_TYPEHASH, msg.sender 0x6f548693937039c8c4343e01c5bd42c5986508f5, periodFrom 1, periodTo 3, amount 199269.156103688477492300 and deadline 1780166180 against the live domain separator 0xa029a38007cfa749fe494fe53126ef5d269ca66c15bb2d92896e87c172b0f039. The claimed totals (199269.156103688477492300 principal plus 568633.093525179856115100 user, 71079.136690647482014400 referral and 71079.136690647482014400 dividend yield) are within maxClaimPerTx 1e25 and the 8 percent daily drain cap, and the attacker EOA had six earlier purchaseProduct calls on the AROS sale contract 0x1575da54eebb56a1db13268a51d55c00ca0c9d60 plus a referral binding, so these are ordinary user entitlements, not a signer-key compromise. The real defect is that the claim path pays out of lpPair and then calls sync(): the pair's stored AROS reserve went 622846716.50 -> 910060.52 (buy) -> 710791.37 -> 0.00 across the two claims' Sync logs, after which 729507.137147434919290830 AROS extracted the pair's whole 206712181.771544840545053791 USDT balance because the k-check multiplies by a zero reserve. Target identity: executionAddress is the ERC1967 proxy 0xfec7d27525cc4efde5b785eeb5e37df90e9cd1d5, which the trace shows DELEGATECALLing 0xd948279f89bd3198d9e81f4bf3a44ea558225c68 for approve, balanceOf, transfer, transferFrom, claimPrincipal 0x4dfcd1ab and claimYield 0xcb4f8b0c; the PancakeSwap pair itself is stock code and is not the target. The implementation runtime is byte-identical at its creation block 100547397 and at 101353584 and hashes to 0x02876252788895e2f4ff3a5b36e381e3a9ec133cd8bb154f73324ff268afd05b. The proxy was created top-level by 0xc3a16304bf00ecb165d1aa83fd0db6a2ca6c9adc at 100547423:68 and emitted its single Upgraded event there at logIndex 251, giving 1780165447-1779802046 = 363401 s. Anchor: the attacker's transaction list shows nonces 17 to 25 are helper-contract creations and EIP-7702 self-sends and nonces 28 onward are USDT payouts, so this nonce-26 transaction is the earliest and only successful defect-executing transaction. Loss corrected from the legacy round 295000, which was the attacker's post-fee take, to the pair's exact USDT depletion 301279.552815887592509194."
+      "note": "Reviewed the 762-frame callTracer trace and 161-log receipt of the anchor, the Etherscan-verified AROS implementation source, the proxy's full Upgraded-event history, and the attacker EOA's complete BSC transaction list. Corrections to the migrated row: the seed row's summary said reward logic let a flashloan-funded position claim principal and yield far exceeding real entitlement, which the chain contradicts. Both claims carry genuine EIP-712 signatures: the two ecrecover precompile frames return the configured claimSigner 0xa24198418bf2bfe264d087b891f91cd5a1e50c1d, and I independently reproduced the claimPrincipal digest 0x63ea7ff819225613d3e86d4bfc3344305e7be2ed3ba0a6db97cdad82552b7b13 from CLAIM_PRINCIPAL_TYPEHASH, msg.sender 0x6f548693937039c8c4343e01c5bd42c5986508f5, periodFrom 1, periodTo 3, amount 199269.156103688477492300 and deadline 1780166180 against the live domain separator 0xa029a38007cfa749fe494fe53126ef5d269ca66c15bb2d92896e87c172b0f039. The claimed totals (199269.156103688477492300 principal plus 568633.093525179856115100 user, 71079.136690647482014400 referral and 71079.136690647482014400 dividend yield) are within maxClaimPerTx 1e25 and the 8 percent daily drain cap, and the attacker EOA had six earlier purchaseProduct calls on the AROS sale contract 0x1575da54eebb56a1db13268a51d55c00ca0c9d60 plus a referral binding, so these are ordinary user entitlements, not a signer-key compromise. The real defect is that the claim path pays out of lpPair and then calls sync(): the pair's stored AROS reserve went 622846716.50 -> 910060.52 (buy) -> 710791.37 -> 0.00 across the two claims' Sync logs, after which 729507.137147434919290830 AROS extracted the pair's whole 206712181.771544840545053791 USDT balance because the k-check multiplies by a zero reserve. Target identity: executionAddress is the ERC1967 proxy 0xfec7d27525cc4efde5b785eeb5e37df90e9cd1d5, which the trace shows DELEGATECALLing 0xd948279f89bd3198d9e81f4bf3a44ea558225c68 for approve, balanceOf, transfer, transferFrom, claimPrincipal 0x4dfcd1ab and claimYield 0xcb4f8b0c; the PancakeSwap pair itself is stock code and is not the target. The implementation runtime is byte-identical at its creation block 100547397 and at 101353584 and hashes to 0x02876252788895e2f4ff3a5b36e381e3a9ec133cd8bb154f73324ff268afd05b. The proxy was created top-level by 0xc3a16304bf00ecb165d1aa83fd0db6a2ca6c9adc at 100547423:68 and emitted its single Upgraded event there at logIndex 251, giving 1780165447-1779802046 = 363401 s. Anchor: the attacker's transaction list shows nonces 17 to 25 are helper-contract creations and EIP-7702 self-sends and nonces 28 onward are USDT payouts, so this nonce-26 transaction is the earliest and only successful defect-executing transaction. Loss corrected from the seed row's rounded 295000, which was the attacker's post-fee take, to the pair's exact USDT depletion 301279.552815887592509194."
     }
   ],
   "verification": {
@@ -163,16 +162,6 @@
     ],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/aros.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2026-05-30T18:24:07Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

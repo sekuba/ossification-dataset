@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xa05f047ddfdad9126624c4496b5d4a59f961ee7c091e7b4e38cee86f1335736f",
   "protocol": {
     "name": "LeverageSIR",
@@ -96,7 +95,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Components are the vault\u2019s net ERC-20 deltas in the single exploit transaction, and each equals the amount argument of one of the three direct uniswapV3SwapCallback calls. The v1 snapshot carried USD 1,781,486 for this row; that figure is not supported on chain and is about five times the measured loss, which matches the roughly USD 355,000 reported at the time. The attacker EOA sent nine transactions in total; only this one touches the vault, the rest being the exploit-contract creation and the subsequent disposal swaps. Nothing was recovered."
+    "notes": "Components are the vault’s net ERC-20 deltas in the single exploit transaction, and each equals the amount argument of one of the three direct uniswapV3SwapCallback calls. The v1 snapshot carried USD 1,781,486 for this row; that figure is not supported on chain and is about five times the measured loss, which matches the roughly USD 355,000 reported at the time. The attacker EOA sent nine transactions in total; only this one touches the vault, the rest being the exploit-contract creation and the subsequent disposal swaps. Nothing was recovered."
   },
   "targets": [
     {
@@ -125,7 +124,7 @@
           "type": "deployment",
           "address": "0xb91ae2c8365fd45030aba84a4666c4db074e53e7"
         },
-        "description": "Non-upgradeable contract. The runtime code hash is 0x2971ac1f91420fcea858d805fd103c96108db598cac898faa6430ce4df8a913b both at the deployment block 21888482 and at block 22157899, no EIP-1967 or beacon slot is set, and the two DELEGATECALLs the exploit takes go to 0x80f18b12a6dbd515c5ad01a2006abf30c5972158, a link-time constant in the vault\u2019s own runtime that cannot be repointed."
+        "description": "Non-upgradeable contract. The runtime code hash is 0x2971ac1f91420fcea858d805fd103c96108db598cac898faa6430ce4df8a913b both at the deployment block 21888482 and at block 22157899, no EIP-1967 or beacon slot is set, and the two DELEGATECALLs the exploit takes go to 0x80f18b12a6dbd515c5ad01a2006abf30c5972158, a link-time constant in the vault’s own runtime that cannot be repointed."
       },
       "codeAgeSeconds": 3250092,
       "failureModeId": "failure:sir-vault-stale-transient-callback-authorisation",
@@ -176,7 +175,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T10:10:00Z",
-      "note": "The trace shows the exploit contract creating a token and a Uniswap V3 pool, calling Vault.initialize and Vault.mint so that the vault records it, and then calling Vault.uniswapV3SwapCallback directly three times with amounts 17814862676, 140852920 and 119871037891574186422, each of which the vault pays out. The vault is not upgradeable: identical runtime code hash at the deployment block 21888482 and at block 22157899, no EIP-1967 or beacon slot, and the exploit\u2019s delegatecalls go to a library address that is a PUSH20 constant in the runtime, so the deployment basis is exact and the exploited code is 37.6 days old. Its deployer 0x5000ff6cc1864690d947b864b9fb0d603e8d1f1a is not the attacker. The loss is the vault\u2019s own token deltas in that transaction, USD 354,472.76, which contradicts the v1 snapshot figure of USD 1,781,486."
+      "note": "The trace shows the exploit contract creating a token and a Uniswap V3 pool, calling Vault.initialize and Vault.mint so that the vault records it, and then calling Vault.uniswapV3SwapCallback directly three times with amounts 17814862676, 140852920 and 119871037891574186422, each of which the vault pays out. The vault is not upgradeable: identical runtime code hash at the deployment block 21888482 and at block 22157899, no EIP-1967 or beacon slot, and the exploit’s delegatecalls go to a library address that is a PUSH20 constant in the runtime, so the deployment basis is exact and the exploited code is 37.6 days old. Its deployer 0x5000ff6cc1864690d947b864b9fb0d603e8d1f1a is not the attacker. The loss is the vault’s own token deltas in that transaction, USD 354,472.76, which contradicts the v1 snapshot figure of USD 1,781,486."
     },
     {
       "id": "source-5",
@@ -191,16 +190,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/leveragesir.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-03-30T06:21:11Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

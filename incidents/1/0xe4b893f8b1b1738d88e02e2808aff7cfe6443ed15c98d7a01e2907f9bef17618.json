@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xe4b893f8b1b1738d88e02e2808aff7cfe6443ed15c98d7a01e2907f9bef17618",
   "protocol": {
     "name": "Aevo (legacy Ribbon DOV vaults)",
@@ -240,22 +239,15 @@
       "note": "Re-anchored and re-attributed. The v1 snapshot and the migrated record blamed an 'unrestricted transferOwnership(address,address)' on 0x9d7b3586f361e3621bf4f099cbc9d155e8ae6b76. Disassembly of that contract's runtime shows the function is not unrestricted: it reads keccak256(tx.origin, slot 2) and reverts with 'ProxyOwner: address not authorized' otherwise, and its creation input 0xeb7a18428d hard-codes sstore(0xcd289dea5498740e065d241251d02bbaee26b73402c44a441f7b69f710894d49, 1), the exact slot for the attacker EOA 0x657cdefc. That contract is attacker-built machinery deployed by 0xb594f7e7ad548f63db49665ae4e3d3f8457cf6f5, an EOA funded from an exchange payout wallet six days earlier whose entire 24-transaction history is this campaign; it is not victim code and carries no defect. The actual victim defect is in Ribbon's Gamma fork of the Opyn Oracle at 0xb5711daec960c9487d95ba327c570a7cce4982c0, whose verified source declares setAssetPricer(address,address) external with no onlyOwner and only guards replacement (current pricer must not be whitelisted, new pricer must be whitelisted); when assetPricer[asset] is zero any caller may install any pricer. getPricer(stETH) reads 0x0 at block 23954876, and one block later the non-owner 0xb594f7e7 (owner() is 0x43a43d3404eac5fa1ec4f4bb0879495d500e390b at that block) succeeds in tx 0xe4b893f8b1 index 221, emitting only PricerUpdated. That is the earliest transaction of the campaign executing the defect and is the anchor; the three sibling setAssetPricer calls follow at blocks 23954881, 23954883 and 23954887, and the same fork also exposes Whitelist.whitelistProduct and Whitelist.whitelistCollateral without onlyOwner, which let the attacker create the four oToken series. On 2025-12-12 tx 0xb73e45948f drove the four pricer proxies through 0x9d7b3586 to write expiry prices 1e10 above spot into the Oracle, and 0x16eded2553 plus five further redeems burned dust oToken amounts for the shared MarginPool's collateral. Code history: the Oracle is not upgradeable, has a zero EIP-1967 implementation slot and no delegatecall path, and its runtime hash 0xf505194751 is identical at its creation block 14416610 (tx 0x47255641bb index 1, creator 0xa80163e183af5e7530d708dbc9080d90cefc60c7, the 2022 Ribbon Gamma deployer) and at blocks 23954876 and 23995263, so the exploited code is 117,347,168 s (1358 d) old. Loss is the MarginPool's net token movement across the eight campaign transactions, valued with DefiLlama prices at the anchor timestamp. Valuation revisited by the orchestrator after loss.realizedAt was added to the schema: the components are now priced at the 2025-12-12 drain rather than at the anchor six days earlier."
     }
   ],
+  "discovery": [
+    "seed:aevo:2025-12-12:pricer-ownership-manager-unrestricted-transferownership"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-9"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/aevo.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2025-12-12T08:06:35Z",
-      "reanchored": true
-    }
+    ]
   },
   "notes": [
     "Re-anchored from 0xb73e45948f4aabd77ca888710d3685dd01f1c81d24361d4ea0e4b4899d490e1e. That transaction is the price-poisoning step and executes only attacker-deployed machinery plus correctly behaving victim code; the defect executed for the first time six days earlier in the permissionless Oracle.setAssetPricer call used as the new anchor."

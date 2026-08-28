@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xf72f1d10fc6923f87279ce6c0aef46e372c6652a696f280b0465a301a92f2e26",
   "protocol": {
     "name": "Multi-Chain Capital",
@@ -21,11 +20,11 @@
   },
   "summary": "MCC used the same RFI reflection accounting as HODL: deliver() burned the caller's reflected balance and inflated every other holder's tokenFromReflection(), and the attacker skimmed the inflated MCC out of the MCC/WETH pair.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 18420,
       "valuationTimestamp": 1683617735,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x1a7981d87e3b6a95c1516eb820e223fe979896b3"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 46278748,
-      "failureModeId": "legacy:eip155:1:0xf72f1d10fc6923f87279ce6c0aef46e372c6652a696f280b0465a301a92f2e26:failure-1",
+      "failureModeId": "provisional:eip155:1:0xf72f1d10fc6923f87279ce6c0aef46e372c6652a696f280b0465a301a92f2e26:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -81,7 +80,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/multichain-capital.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
@@ -121,18 +120,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/multichain-capital.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/multichain-capital.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-05-09T07:35:35Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

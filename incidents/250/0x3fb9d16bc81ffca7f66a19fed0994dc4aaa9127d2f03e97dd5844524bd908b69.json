@@ -1,14 +1,10 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:250:0x3fb9d16bc81ffca7f66a19fed0994dc4aaa9127d2f03e97dd5844524bd908b69",
   "protocol": {
     "name": "Scream",
     "slug": "scream"
   },
-  "discovery": [
-    "web:2022-05-16:scream"
-  ],
   "name": "Scream fUSD collateral priced through the USDC feed",
   "incident": {
     "chainId": 250,
@@ -261,6 +257,9 @@
       "note": "Reviewed the 192-frame anchor call trace, the oracle and Comptroller configuration histories, the affected-account collateral and liquidity transitions, every Borrow and RepayBorrow log for the measured accounts through Fantom block 123055284, and the official Scream source. Root cause and age: transaction 0x826e7afd84b6f36960daed799ed5d3db6c7c81b87ba92a1995b53191f9dbae07 at block 15846647:9 set PriceOracleProxyFTM.aggregators(scFUSD) from zero to Chainlink USDC/USD 0x2553f4eeb82d5a26427b8d1106c51499cba5d99c; its AggregatorUpdated log is index 100. Transaction 0xc46ebdd67213ef27bcedbc87bf27cc13c7b6e52e760f8a1384d6c863e0a36372 at block 15846790:1 then changed Comptroller.markets(scFUSD).collateralFactor from zero to 850000000000000000, with NewCollateralFactor at log 13. The later factor change is the age reset because it made the already-aliased price usable to authorize borrowing. Exhaustive AggregatorUpdated and NewCollateralFactor log scans found no later pre-anchor change for scFUSD; at block 38267161 the feed remained USDC/USD, the factor remained 0.85, and getUnderlyingPrice(scFUSD) returned 1.00043669e18. The oracle was created directly by 0x1aebc84042d8fd415bba14d25597b4c2748d52eb in 0x9acd7b60d201471783930127100606f10b188e8612e036661685b948a1f2a7f5 at block 10843866:6. Its runtime hash is 0xdf2b810a46fe150f149afbe07cce901a96542f34a52c75d79f8bf84b8f0f38ba at deployment, reset and in the anchor prestate. The anchor trace enters the oracle 192 times while Comptroller evaluates account liquidity. The official PriceOracleProxyFTM source maps each market to an aggregator and returns that aggregator's answer from getUnderlyingPrice; Comptroller.borrowAllowed obtains each entered asset's price and collateral factor when calculating shortfall. Anchor: 0xb4fb31e7b1471a8e52dd1e962a281a732ead59c1 had only 1.080334556969627228 fUSD supplied at block 38267102, then supplied 461109.4376 fUSD in 0xaeec8ebe27256d68a6488729708489e2679875ad3632d162c95b844a1bcda0b7 at block 38267103. Its reported liquidity rose from 5.174565667167246564 to 392119.353778328671371077 USD because Scream valued the new fUSD near par. At block 38267162:0 the anchor's successful borrow(uint256) transferred exactly 390000 USDC from scUSDC to that account and emitted Borrow. Two later accounts supplied 4382569.1317 and 4165007.4382 fUSD in sources 7 and 8, then borrowed WETH/WFTM and WBTC/WFTM beginning in sources 9 and 10. Loss: after each account's first large fUSD supply, exhaustive per-market log scans through block 123055284 summed Borrow and subtracted all RepayBorrow values. The three accounts retain positive net extraction of 24480.522463 USDC, 2875037.153995981309124780 WFTM and 516.974432907347463696 WETH; WBTC nets to zero. The last WETH and WFTM repayments are sources 11-13 in May 2022 and no later repayment exists. Because repayment values include interest and liquidations, subtraction understates unrecovered principal. At the anchor, Chainlink FTM/USD 0xf4766552d15ae4d256ad41b6cf2933482b0680dc returned 0.36282771 with updatedAt 1652586112 and ETH/USD 0x11ddd3d147e5b83d01cee7070027092397d63658 returned 2009.08543527 with updatedAt 1652585986. Those prices plus USDC par value the measured lower bound at 2106269.47277339883827335471461172 USD."
     }
   ],
+  "discovery": [
+    "web:2022-05-16:scream"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [
@@ -269,6 +268,5 @@
     "reviewSourceIds": [
       "source-14"
     ]
-  },
-  "notes": []
+  }
 }

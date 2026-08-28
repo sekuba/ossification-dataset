@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x7f45428df558fba1d19ab115effef8ecd1e6e05b491f02202b0815e47b8d658b",
   "protocol": {
     "name": "ExchangeIssuance",
@@ -21,17 +20,17 @@
   },
   "summary": "ExchangeIssuance quoted attacker-supplied SetToken units without locking them, then settlement re-read units after the attacker inflated positionMultiplier, transferring the victim's own component inventory.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 9600,
       "valuationTimestamp": 1785401843,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0xc8c85a3b4d03fb3451e7248ff94f780c92f884fd"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 168840303,
-      "failureModeId": "legacy:eip155:1:0x7f45428df558fba1d19ab115effef8ecd1e6e05b491f02202b0815e47b8d658b:failure-1",
+      "failureModeId": "provisional:eip155:1:0x7f45428df558fba1d19ab115effef8ecd1e6e05b491f02202b0815e47b8d658b:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -77,7 +76,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/exchange-issuance.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
@@ -107,18 +106,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/exchange-issuance.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/exchange-issuance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-07-30T08:57:23Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

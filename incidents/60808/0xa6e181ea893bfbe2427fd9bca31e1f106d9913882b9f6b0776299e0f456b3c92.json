@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:60808:0xa6e181ea893bfbe2427fd9bca31e1f106d9913882b9f6b0776299e0f456b3c92",
   "protocol": {
     "name": "Shoebill Finance",
@@ -197,16 +196,7 @@
     ],
     "reviewSourceIds": [
       "source-8"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/shoebill-finance.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 2,
-      "date": "2024-10-31T08:48:41Z"
-    }
+    ]
   },
   "notes": [
     "The same configuration transaction also crossed the symbol-to-token mapping: tokenOf['sbSolvBTC'] holds SolvBTC.BBN 0xcc0966d8418d412c599a6421b760a847eb169a8c and tokenOf['sbSolvBTC.BBN'] holds SolvBTC 0x541fd749419ca806a8bc7da8ac23d346f2df8b77. It has no effect on the loss because the new implementation maps both onto the same WBTC reference price."

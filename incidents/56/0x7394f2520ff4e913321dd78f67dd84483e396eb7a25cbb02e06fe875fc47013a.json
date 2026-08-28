@@ -1,15 +1,11 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x7394f2520ff4e913321dd78f67dd84483e396eb7a25cbb02e06fe875fc47013a",
   "protocol": {
     "name": "SNK",
     "slug": "snk"
   },
   "name": "SNK retroactive referral reward accounting",
-  "discovery": [
-    "dfhl:src/test/2023-05/SNK_exp.sol"
-  ],
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -28,7 +24,7 @@
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
-      "amount": 197725.72789554213,
+      "amount": 197725.72789554214,
       "valuationTimestamp": 1683679602,
       "method": "stablecoin-par",
       "sourceIds": [
@@ -44,7 +40,7 @@
           "symbol": "USDT"
         },
         "amount": "197725.727895542134092738",
-        "usdValue": 197725.72789554213,
+        "usdValue": 197725.72789554214,
         "valuation": {
           "method": "stablecoin-par",
           "timestamp": 1683679602,
@@ -161,21 +157,14 @@
       "transactionHash": "0xace112925935335d0d7460a2470a612494f910467e263c7ff477221deee90a2c"
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2023-05/SNK_exp.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/snk.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-05-10T00:46:42Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

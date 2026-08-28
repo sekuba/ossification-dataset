@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x770bc9a1f7c32cb63a5002b9ceb5c7994cd3af0fc6b2309cb32d3c46f629daa0",
   "protocol": {
     "name": "Ekubo",
@@ -20,7 +19,7 @@
       "0xa911ff351b143634dbc5af3e204ea074583a83e3"
     ]
   },
-  "summary": "The Ekubo router takes the address whose tokens settle a Core debt from its own calldata and does not check it against the caller. The attacker locked Core, called withdraw to send 17 WBTC of Core-held liquidity to themselves, and then settled the resulting debt through pay(), whose payCallback ran transferFrom against a third party that still held a router approval. The debt was paid with the victim\u2019s tokens and the withdrawal kept.",
+  "summary": "The Ekubo router takes the address whose tokens settle a Core debt from its own calldata and does not check it against the caller. The attacker locked Core, called withdraw to send 17 WBTC of Core-held liquidity to themselves, and then settled the resulting debt through pay(), whose payCallback ran transferFrom against a third party that still held a router approval. The debt was paid with the victim’s tokens and the withdrawal kept.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -56,7 +55,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The whole loss is in the single exploit transaction: netting its ERC-20 transfers leaves exactly two non-zero positions, 17 WBTC out of the approval holder 0x765decf4fa157756e850c1079f60801b9219edd1 and 17 WBTC into the attacker EOA. Ekubo Core itself ends the transaction whole because the router repaid it with the victim\u2019s tokens, so the loss falls on the approval holder rather than on protocol-held liquidity. The attacker sent one exploit transaction and then 41 swap and mixer transactions. Nothing was recovered."
+    "notes": "The whole loss is in the single exploit transaction: netting its ERC-20 transfers leaves exactly two non-zero positions, 17 WBTC out of the approval holder 0x765decf4fa157756e850c1079f60801b9219edd1 and 17 WBTC into the attacker EOA. Ekubo Core itself ends the transaction whole because the router repaid it with the victim’s tokens, so the loss falls on the approval holder rather than on protocol-held liquidity. The attacker sent one exploit transaction and then 41 swap and mixer transactions. Nothing was recovered."
   },
   "targets": [
     {
@@ -136,7 +135,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T11:20:00Z",
-      "note": "The trace shows the attacker contract entering the router, the router locking Ekubo Core, Core.withdraw sending 20000000 WBTC units to the attacker EOA, and Core.pay calling back into the router, whose payCallback runs WBTC.transferFrom from 0x765decf4fa157756e850c1079f60801b9219edd1 into Core; that payer address comes from the attacker\u2019s own calldata and is never checked against the caller, which is the defect. The pattern repeats until 17 WBTC has moved. The router is not upgradeable: identical runtime code hash at the deployment block 23297576 and at block 25030408 with no delegatecall out of it in the exploit, so the exploited code is 242.1 days old, deployed by 0x00000c771f6176268d5a9846e0956c3ef58597a1, which is not an attacker address. The attacker EOA sent exactly one transaction against Ekubo."
+      "note": "The trace shows the attacker contract entering the router, the router locking Ekubo Core, Core.withdraw sending 20000000 WBTC units to the attacker EOA, and Core.pay calling back into the router, whose payCallback runs WBTC.transferFrom from 0x765decf4fa157756e850c1079f60801b9219edd1 into Core; that payer address comes from the attacker’s own calldata and is never checked against the caller, which is the defect. The pattern repeats until 17 WBTC has moved. The router is not upgradeable: identical runtime code hash at the deployment block 23297576 and at block 25030408 with no delegatecall out of it in the exploit, so the exploited code is 242.1 days old, deployed by 0x00000c771f6176268d5a9846e0956c3ef58597a1, which is not an attacker address. The attacker EOA sent exactly one transaction against Ekubo."
     },
     {
       "id": "source-5",
@@ -151,16 +150,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/ekubo.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-05-05T17:50:35Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

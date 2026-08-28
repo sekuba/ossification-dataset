@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xbc08860cd0a08289c41033bdc84b2bb2b0c54a51ceae59620ed9904384287a38",
   "protocol": {
     "name": "Unverified router 0x05f0",
@@ -20,7 +19,7 @@
       "0xeadf72fd4733665854c76926f4473389ff1b78b1"
     ]
   },
-  "summary": "The MEV bot contract exposed selector 0xf6ebebbb, an internal swap-execution entry point, with no caller check and no output validation. A flash-loan-funded attacker called it directly with pool and amount parameters of their own choosing and moved the contract\u2019s whole USDC, USDT, WETH and WBTC balance out through the pools it was told to trade against.",
+  "summary": "The MEV bot contract exposed selector 0xf6ebebbb, an internal swap-execution entry point, with no caller check and no output validation. A flash-loan-funded attacker called it directly with pool and amount parameters of their own choosing and moved the contract’s whole USDC, USDT, WETH and WBTC balance out through the pools it was told to trade against.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -116,7 +115,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Components are the victim contract\u2019s net ERC-20 balance deltas in the single exploit transaction, which is the first transaction of block 18523344. The attacker\u2019s later transaction to the same exploit contract at block 18537100 does not touch the victim. BlockSec\u2019s contemporaneous alert put the loss near USD 2 million; this exact netting at DefiLlama prices for the incident timestamp is higher. Nothing was recovered."
+    "notes": "Components are the victim contract’s net ERC-20 balance deltas in the single exploit transaction, which is the first transaction of block 18523344. The attacker’s later transaction to the same exploit contract at block 18537100 does not touch the victim. BlockSec’s contemporaneous alert put the loss near USD 2 million; this exact netting at DefiLlama prices for the incident timestamp is higher. Nothing was recovered."
   },
   "targets": [
     {
@@ -208,7 +207,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T09:10:00Z",
-      "note": "The attacker EOA sent exactly two transactions to its exploit contract; only the anchor touches the victim, so the anchor is both the earliest and the only defect-executing transaction. The victim is an unverified MEV bot contract, not a protocol, but the loss is a defect in deployed EVM code and is in cohort. It is not upgradeable: the runtime code hash is identical at the deployment block 18370467 and at block 18523343 and the EIP-1967 implementation slot is zero, so the exploited code is 21.4 days old, deployed by 0x1bda91e3a2e332428cf1a407821abecec0395427, which is unrelated to the attacker. Loss is the victim contract\u2019s own net ERC-20 deltas in the exploit receipt. Because the implementation is unverified, the defect is characterised from the trace and BlockSec\u2019s alert rather than from source; the code-age measurement does not depend on that characterisation."
+      "note": "The attacker EOA sent exactly two transactions to its exploit contract; only the anchor touches the victim, so the anchor is both the earliest and the only defect-executing transaction. The victim is an unverified MEV bot contract, not a protocol, but the loss is a defect in deployed EVM code and is in cohort. It is not upgradeable: the runtime code hash is identical at the deployment block 18370467 and at block 18523343 and the EIP-1967 implementation slot is zero, so the exploited code is 21.4 days old, deployed by 0x1bda91e3a2e332428cf1a407821abecec0395427, which is unrelated to the attacker. Loss is the victim contract’s own net ERC-20 deltas in the exploit receipt. Because the implementation is unverified, the defect is characterised from the trace and BlockSec’s alert rather than from source; the code-age measurement does not depend on that characterisation."
     }
   ],
   "verification": {
@@ -216,16 +215,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/unverified-05f0.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-11-07T23:24:23Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

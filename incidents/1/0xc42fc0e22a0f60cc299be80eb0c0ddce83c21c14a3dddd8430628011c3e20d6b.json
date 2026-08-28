@@ -1,15 +1,11 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xc42fc0e22a0f60cc299be80eb0c0ddce83c21c14a3dddd8430628011c3e20d6b",
   "protocol": {
     "name": "Civfund",
     "slug": "civfund"
   },
   "name": "Civfund attacker-supplied pool callback",
-  "discovery": [
-    "dfhl:src/test/2023-07/Civfund_exp.sol"
-  ],
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -235,7 +231,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Exact gross debits requested by the vulnerable contract's 31 transferFrom calls and reproduced by summing Transfer events from the 31 victim wallets. This includes the full victim debit for fee-on-transfer 0NE rather than only the amount received by the attacker. USDT and USDC are valued at par; all other assets use DefiLlama observations immediately before the transaction. The onchain result replaces the rounded legacy $165,000 estimate. Later attacker transfers and swaps dispose of the same assets and are excluded."
+    "notes": "Exact gross debits requested by the vulnerable contract's 31 transferFrom calls and reproduced by summing Transfer events from the 31 victim wallets. This includes the full victim debit for fee-on-transfer 0NE rather than only the amount received by the attacker. USDT and USDC are valued at par; all other assets use DefiLlama observations immediately before the transaction. The onchain result replaces the seed row's rounded $165,000 estimate. Later attacker transfers and swaps dispose of the same assets and are excluded."
   },
   "targets": [
     {
@@ -366,21 +362,14 @@
       "note": "Reviewed the complete exploit receipt and call trace, attacker timeline, target creation transaction, historical runtimes, and commit-pinned reproduction. Attacker EOA 0xc0ccff0b981b419e6e47560c3659c5f0b00e4985 deployed helper 0xf466f9f431aea853040ef837626b1c59cc963ce2 at block 17646141 and invoked it in the next block, making the recorded transaction the first and only defect execution in this campaign. Inside that transaction the helper calls unrestricted selector 0x5ffe72b7 on CivTrade target 0x7caec5e4a3906d0919895d113f7ed9b3a0cbf826 31 times, supplying itself as the purported pool. Each call makes the target invoke mint() on the helper. The helper reenters uniswapV3MintCallback(uint256,uint256,bytes), selector 0xd3487997; because the target's temporary callback-sender slot was populated directly from the attacker's unrestricted pool argument, the callback accepts the helper, trusts its token1() response, and calls transferFrom from the encoded victim to the helper. The trace contains exactly 31 such transferFrom calls. Their requested amounts equal the sums of receipt Transfer events from each victim, including all burn, fee, and recipient legs of fee-on-transfer 0NE. Aggregated loss is 104,935 USDT; 20,121.200201296387 BONE; 37,656,666 WOOF; 43.213205257076 LEASH; 2,460,968,380.949404909854552349 SANI; 2,584,625,207,128.3159732999 0NE; 10,966.052921140276 CELL; 1,900 USDC; and 238,807,361.821278282381 SHIB. DefiLlama observations immediately before the transaction price the non-stable assets at $1.38, $0.00033848, $334.52, $0.00000422, $0.000000002997, $0.307471, and $0.00000732; with stablecoins at par, exact gross loss is $185,055.1874676838. This campaign precedes the separate CIVNFT incident by about 12.6 hours, uses a different attacker and target, and none of its loss is duplicated there. Target 0x7caec5e4a3906d0919895d113f7ed9b3a0cbf826 was directly created by 0xf20c257b296539eb50cc4e097f46bee3075f79fc in transaction 0xcf8e9b4005763e5cbe8d5695a18b16005ab4e115894e203352bcad59e38705ae at block 14081385 index 173, timestamp 1643201887. Its runtime hash is 0xb7bc89d46edf583a285a1032e355c35ea4098fde7e93f14228241605f469e50e at deployment and immediately before the exploit, and the trace contains no delegatecall from the target. The flaw depends only on attacker-supplied call arguments, not mutable configuration, so deployment is the latest reset and code age is 1688784059 - 1643201887 = 45,582,172 seconds."
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2023-07/Civfund_exp.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-11"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/civfund.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-07-08T02:40:59Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

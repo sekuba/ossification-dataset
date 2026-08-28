@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:100:0x534b84f657883ddc1b66a314e8b392feb35024afdec61dfe8e7c510cfac1a098",
   "protocol": {
     "name": "Hundred Finance",
@@ -20,7 +19,7 @@
       "0xdbf225e3d626ec31f502d435b0f72d82b08e1bdd"
     ]
   },
-  "summary": "Hundred\u2019s Compound fork sends the underlying token to the borrower before it writes the new borrow balance. Gnosis bridged tokens are ERC-677, so the transfer hands control back to the borrower, who re-entered borrow() on the same and other markets while the accounting still showed no debt. The markets were drained of USDC, WBTC and WETH in one transaction. This is compound-finance/compound-protocol issue 141.",
+  "summary": "Hundred’s Compound fork sends the underlying token to the borrower before it writes the new borrow balance. Gnosis bridged tokens are ERC-677, so the transfer hands control back to the borrower, who re-entered borrow() on the same and other markets while the accounting still showed no debt. The markets were drained of USDC, WBTC and WETH in one transaction. This is compound-finance/compound-protocol issue 141.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -127,7 +126,7 @@
           "eventTopic": "0xd604de94d45953f9138079ec1b82d533cb2160c906d1076d1f7ed54befbca97a",
           "codeAddressLocation": "data-word-1-address"
         },
-        "description": "The delegator\u2019s only NewImplementation event, log 2 of its own creation transaction, moved the implementation from the zero address to 0xfcd8570ad81e6c77b8d252bebeba62ed980bd64d. The CErc20Delegator keeps the implementation in storage slot 18, which holds that address continuously from block 15722098 to the exploit block, and no EIP-1967 Upgraded event was ever emitted."
+        "description": "The delegator’s only NewImplementation event, log 2 of its own creation transaction, moved the implementation from the zero address to 0xfcd8570ad81e6c77b8d252bebeba62ed980bd64d. The CErc20Delegator keeps the implementation in storage slot 18, which holds that address continuously from block 15722098 to the exploit block, and no EIP-1967 Upgraded event was ever emitted."
       },
       "codeAgeSeconds": 27992200,
       "failureModeId": "failure:compound-fork-erc677-borrow-reentrancy",
@@ -198,16 +197,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/hundred-finance.json",
-      "originalIncidentIndex": 1,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-03-15T10:28:40Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x37acd17a80a5f95728459bfea85cb2e1f64b4c75cf4a4c8dcb61964e26860882",
   "protocol": {
     "name": "Conic Finance",
@@ -195,24 +194,15 @@
     }
   ],
   "discovery": [
-    "legacy:conic:2023-07-21:conic-crvusd-omnipool-spot-price-sandwich",
-    "dfhl:src/test/2023-07/Conic02_exp.sol"
+    "dfhl:src/test/2023-07/Conic02_exp.sol",
+    "seed:conic:2023-07-21:conic-crvusd-omnipool-spot-price-sandwich"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/conic.json",
-      "originalIncidentIndex": 1,
-      "status": "OK",
-      "basis": "documented",
-      "upgradeEventCount": 0,
-      "date": "2023-07-21T19:01:35Z"
-    }
+    ]
   },
   "notes": [
     "The deployment anchor is the crvUSD omnipool's creation because the verifier ties the deployment anchor to the execution address; the defect-bearing artifact recorded in codeArtifact is the delegatecalled CurveHandlerV3 module.",

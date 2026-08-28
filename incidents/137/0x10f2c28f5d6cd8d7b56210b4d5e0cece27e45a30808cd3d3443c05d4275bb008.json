@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:137:0x10f2c28f5d6cd8d7b56210b4d5e0cece27e45a30808cd3d3443c05d4275bb008",
   "protocol": {
     "name": "0VIX Protocol",
@@ -237,7 +236,7 @@
           "symbol": "stMATIC"
         },
         "amount": "120000.000000000000000000",
-        "usdValue": 128160.0,
+        "usdValue": 128160,
         "valuation": {
           "method": "incident-price",
           "timestamp": 1682678246,
@@ -319,7 +318,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T20:45:00Z",
-      "note": "Reviewed the anchor receipt and its 736 logs, the 8,184-frame callTracer trace, the prestateTracer output, the Etherscan-verified VGHSTOracle source, the oracle's creation transaction, historical runtimes, the vGHST rate before and after, and the attacker's full Polygon transaction list. The anchor 0x10f2c28f5d6cd8d7b56210b4d5e0cece27e45a30808cd3d3443c05d4275bb008 is status 1 at block 42054769 index 4, timestamp 1682678716, sent by 0x702ef63881b5241ffb412199547bcd0c6910a970 to attack contract 0x407feaec31c16b19f24a8a8846ab4939ed7d7d57. It is the earliest defect-executing transaction: the sender's only prior activity is the attack-contract creation at block 42054736 and a 26-frame approval-only call at block 42054754 that touches neither the oracle nor any 0VIX market. The trace shows 0VIX oracle 0x1c312b14c129eabc4796b0165a2c470b659e5f01 answering getUnderlyingPrice for the ovGHST market 0xe053a4014b50666ed388ab8cbb18d5834de0ab12 by calling latestRoundData on 0x738fe8a918d5e43b705fc5127450e2300f7b08ab, which in turn staticcalls vGHST.convertVGHST(1e18) and the Chainlink GHST/USD proxy 0xdd229ce42f11d8ee7fff29bdb71c7b81352e11be and multiplies the two; there are 101 such getUnderlyingPrice(ovGHST) calls in the transaction. Onchain the vault rate convertVGHST(1e18) is 1038332409239877123 at block 42054768 and 1786527556471688230 at block 42054769, and the DeFiHackLabs proof of concept reproduces the move with a bare GHST.transfer of 1,656,000e18 into the vault. VGHSTOracle was created by top-level CREATE from 0x8e1304ea39c47e791182ba39fdf362a8767d7e97 in 0x92bc5f3d8f0f6f7e2e155eb486cdb7bd26e91eb7d1c1d41725517f423897a675 at block 40442389 index 52, timestamp 1679037442, the 0VIX deployer and not the attacker; the account is empty at block 40442388 and hashes to 0x55f11e197231a224a8106031c0be11124b7daa31bffc9410ed39dc5ff1902e8b at the creation block, at blocks 41000000, 42000000 and 42054768, and in the anchor prestate, giving codeAgeSeconds 1682678716 - 1679037442 = 3,641,274 (42.14 days). This re-anchors the legacy row, which aged the 42-day-old ovGHST market proxy rather than the code that computed the manipulated price, as was done for Polter Finance. Loss reconstructed from receipts as the per-market underlying outflows totalling 4,379,114.55 USD, against the attacker's realised 2,048,704 USD; the ovGHST market's vGHST leg is marked at the pre-donation vault rate."
+      "note": "Reviewed the anchor receipt and its 736 logs, the 8,184-frame callTracer trace, the prestateTracer output, the Etherscan-verified VGHSTOracle source, the oracle's creation transaction, historical runtimes, the vGHST rate before and after, and the attacker's full Polygon transaction list. The anchor 0x10f2c28f5d6cd8d7b56210b4d5e0cece27e45a30808cd3d3443c05d4275bb008 is status 1 at block 42054769 index 4, timestamp 1682678716, sent by 0x702ef63881b5241ffb412199547bcd0c6910a970 to attack contract 0x407feaec31c16b19f24a8a8846ab4939ed7d7d57. It is the earliest defect-executing transaction: the sender's only prior activity is the attack-contract creation at block 42054736 and a 26-frame approval-only call at block 42054754 that touches neither the oracle nor any 0VIX market. The trace shows 0VIX oracle 0x1c312b14c129eabc4796b0165a2c470b659e5f01 answering getUnderlyingPrice for the ovGHST market 0xe053a4014b50666ed388ab8cbb18d5834de0ab12 by calling latestRoundData on 0x738fe8a918d5e43b705fc5127450e2300f7b08ab, which in turn staticcalls vGHST.convertVGHST(1e18) and the Chainlink GHST/USD proxy 0xdd229ce42f11d8ee7fff29bdb71c7b81352e11be and multiplies the two; there are 101 such getUnderlyingPrice(ovGHST) calls in the transaction. Onchain the vault rate convertVGHST(1e18) is 1038332409239877123 at block 42054768 and 1786527556471688230 at block 42054769, and the DeFiHackLabs proof of concept reproduces the move with a bare GHST.transfer of 1,656,000e18 into the vault. VGHSTOracle was created by top-level CREATE from 0x8e1304ea39c47e791182ba39fdf362a8767d7e97 in 0x92bc5f3d8f0f6f7e2e155eb486cdb7bd26e91eb7d1c1d41725517f423897a675 at block 40442389 index 52, timestamp 1679037442, the 0VIX deployer and not the attacker; the account is empty at block 40442388 and hashes to 0x55f11e197231a224a8106031c0be11124b7daa31bffc9410ed39dc5ff1902e8b at the creation block, at blocks 41000000, 42000000 and 42054768, and in the anchor prestate, giving codeAgeSeconds 1682678716 - 1679037442 = 3,641,274 (42.14 days). This re-anchors the seed row, which aged the 42-day-old ovGHST market proxy rather than the code that computed the manipulated price, as was done for Polter Finance. Loss reconstructed from receipts as the per-market underlying outflows totalling 4,379,114.55 USD, against the attacker's realised 2,048,704 USD; the ovGHST market's vGHST leg is marked at the pre-donation vault rate."
     },
     {
       "id": "source-3",
@@ -390,8 +389,8 @@
     }
   ],
   "discovery": [
-    "legacy:0vix:2023-04-28:0vix-vghst-collateral-price-manipulation",
     "dfhl:src/test/2023-04/0vix_exp.sol",
+    "seed:0vix:2023-04-28:0vix-vghst-collateral-price-manipulation",
     "web:2023-04-28:0vix"
   ],
   "verification": {
@@ -401,18 +400,9 @@
     ],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/0vix.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2023-04-28T10:45:16Z"
-    }
+    ]
   },
   "notes": [
-    "The legacy snapshot called this row a market working as designed and aged the ovGHST market proxy 0xe053a4014b50666ed388ab8cbb18d5834de0ab12. Review rejects that reading: the attacker did not move a market price, they wrote to the vGHST vault's own share-accounting ratio with a bare token transfer, and the contract that turned that ratio into a collateral price is VGHSTOracle 0x738fe8a918d5e43b705fc5127450e2300f7b08ab, which has no configurable state at all. The two contracts were deployed 640 seconds apart, so the age barely differs, but the artifact identity does."
+    "The seed inventory called this row a market working as designed and aged the ovGHST market proxy 0xe053a4014b50666ed388ab8cbb18d5834de0ab12. Review rejects that reading: the attacker did not move a market price, they wrote to the vGHST vault's own share-accounting ratio with a bare token transfer, and the contract that turned that ratio into a collateral price is VGHSTOracle 0x738fe8a918d5e43b705fc5127450e2300f7b08ab, which has no configurable state at all. The two contracts were deployed 640 seconds apart, so the age barely differs, but the artifact identity does."
   ]
 }

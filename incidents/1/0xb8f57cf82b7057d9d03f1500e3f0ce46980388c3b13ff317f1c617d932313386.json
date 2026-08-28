@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xb8f57cf82b7057d9d03f1500e3f0ce46980388c3b13ff317f1c617d932313386",
   "protocol": {
     "name": "SushiSwap",
@@ -28,7 +27,7 @@
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
-      "amount": 3347028.0,
+      "amount": 3347028,
       "valuationTimestamp": 1681007567,
       "method": "incident-price",
       "sourceIds": [
@@ -47,7 +46,7 @@
           "symbol": "WETH"
         },
         "amount": "1800",
-        "usdValue": 3347028.0,
+        "usdValue": 3347028,
         "valuation": {
           "method": "incident-price",
           "timestamp": 1681007567,
@@ -187,6 +186,7 @@
     }
   ],
   "discovery": [
+    "seed:sushiswap:2023-04-09:sushiswap-routeprocessor2-unvalidated-route-pool",
     "web:2023-04-09:sushiswap-routerprocessor2"
   ],
   "verification": {
@@ -195,17 +195,7 @@
     "reviewSourceIds": [
       "source-4",
       "source-8"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/sushiswap.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-04-09T02:35:59Z",
-      "reanchored": true
-    }
+    ]
   },
   "notes": [
     "The same defect was exploited against RouteProcessor2 deployments on other chains on the same day; those are separate deployments and separate campaigns."

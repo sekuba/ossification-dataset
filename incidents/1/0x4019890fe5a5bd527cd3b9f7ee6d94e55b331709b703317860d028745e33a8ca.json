@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x4019890fe5a5bd527cd3b9f7ee6d94e55b331709b703317860d028745e33a8ca",
   "protocol": {
     "name": "BBT",
@@ -21,11 +20,11 @@
   },
   "summary": "BBT.setRegistry(address) had no access control, so the attacker pointed the token at a registry contract of their own whose getContractAddress() returned the caller, passing the mint() authorization check and minting 1e31 BBT that was dumped on Uniswap V2.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 20102,
       "valuationTimestamp": 1710232319,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -64,10 +63,10 @@
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 3 pre-incident Upgraded event(s)."
+        "description": "Unreviewed seed-inventory basis: latest of 3 pre-incident Upgraded event(s)."
       },
       "codeAgeSeconds": 3688944,
-      "failureModeId": "legacy:eip155:1:0x4019890fe5a5bd527cd3b9f7ee6d94e55b331709b703317860d028745e33a8ca:failure-1",
+      "failureModeId": "provisional:eip155:1:0x4019890fe5a5bd527cd3b9f7ee6d94e55b331709b703317860d028745e33a8ca:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -81,7 +80,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/bbt.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -116,18 +115,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/bbt.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/bbt.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 3,
-      "date": "2024-03-12T08:31:59Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

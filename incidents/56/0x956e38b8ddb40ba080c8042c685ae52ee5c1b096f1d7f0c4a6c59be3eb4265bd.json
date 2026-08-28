@@ -1,15 +1,11 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x956e38b8ddb40ba080c8042c685ae52ee5c1b096f1d7f0c4a6c59be3eb4265bd",
   "protocol": {
     "name": "JUDAO",
     "slug": "judao"
   },
   "name": "JUDAO sell-hook pair-reserve desynchronization",
-  "discovery": [
-    "dfhl:src/test/2026-04/JUDAO_exp.sol"
-  ],
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -59,7 +55,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Within the exploit receipt the JUDAO/USDT pair receives 2,295,723.159642210185991282 USDT and sends 236,331.524657750233556859 USDT during JUDAO's fee processing plus 2,523,596.497552140965784945 USDT in the attacker's direct swap. Net victim-pair depletion is therefore exactly 464,204.862567681013350522 USDT. The attacker used 22,613.847147473753465178 USDT of those proceeds to buy 36 BNB, repaid the 2,295,723.159642210185991282 USDT flash loan, and forwarded 205,259.490762457026328485 residual USDT to the EOA. Those dispositions are already contained in the pair's net USDT loss and are not added again. The exact victim depletion replaces the legacy $205,259 figure, which recorded only residual attacker USDT and omitted both the BNB conversion and fee-recipient outflows."
+    "notes": "Within the exploit receipt the JUDAO/USDT pair receives 2,295,723.159642210185991282 USDT and sends 236,331.524657750233556859 USDT during JUDAO's fee processing plus 2,523,596.497552140965784945 USDT in the attacker's direct swap. Net victim-pair depletion is therefore exactly 464,204.862567681013350522 USDT. The attacker used 22,613.847147473753465178 USDT of those proceeds to buy 36 BNB, repaid the 2,295,723.159642210185991282 USDT flash loan, and forwarded 205,259.490762457026328485 residual USDT to the EOA. Those dispositions are already contained in the pair's net USDT loss and are not added again. The exact victim depletion replaces the seed row's $205,259 figure, which recorded only residual attacker USDT and omitted both the BNB conversion and fee-recipient outflows."
   },
   "targets": [
     {
@@ -142,21 +138,14 @@
       "note": "Reviewed the exploit receipt and full call trace, exact USDT transfer netting, JUDAO and pair balances, token metadata, commit-pinned reproduction, verified token logic, direct creation receipt, historical runtime, and EIP-1967 slot. The EOA creates orchestrator 0x3b9bc53af5012b12b6886a665bb22382211ae432, which creates exploit helper 0x530904b5b5ec86cca0528a682614f57f87e7f079 and invokes its attack in the same transaction. The helper borrows 2,295,723.159642210185991282 USDT and buys JUDAO. Its sale into pair 0x5d7b61e91cb59e90f7fae8d0fe2e73976161592f enters JUDAO's sell hook exactly at a new UTC day. sync(true) removes JUDAO from the pair for daily mining and synchronizes the lower balance; the isBurnPair branch removes additional JUDAO from the pair into the dead address and token contract and synchronizes again. Only afterwards does the outer transfer credit the seller's remaining JUDAO to the pair. The helper reads JUDAO.balanceOf(pair) minus the just-lowered reserve as  apparent input and calls pair.swap directly. This makes the pair send 2,523,596.497552140965784945 USDT to the helper. Across the complete transaction the pair receives 2,295,723.159642210185991282 USDT and sends that swap output plus 236,331.524657750233556859 USDT caused by the hook's fee processing, so exact net pair depletion is 464,204.862567681013350522 USDT. The 36 BNB purchase and 205,259.490762457026328485 USDT forwarded to the EOA are dispositions of that same output, not additional losses. JUDAO was directly created by 0xf254d25e1871e43bf2c8f76ae628cd4440dc5576 in transaction 0xd5cf67c8fdaa121c783d2ad4f4bdd9cbf49c97e988974c78c1bc279c4066f813 at block 75703141 index 44, timestamp 1768611125; it has no code in the preceding block. Its 20,188-byte runtime hash is 0xcd64894f2301a9b59339825254c039cac724503063d9ee8e4cb6cab1f8b932ba at creation and at block 95070973, and its EIP-1967 implementation slot is zero. The exploit trace calls it directly without delegatecall. Code age is 1777334400 - 1768611125 = 8,723,275 seconds."
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2026-04/JUDAO_exp.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-4"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/judao.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-04-28T00:00:00Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

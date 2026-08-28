@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xe29799cfe4b0e3a54915b6f8619207e69549c9988cf1ff140e688d36ae1a2bdf",
   "protocol": {
     "name": "Hinkal",
@@ -80,7 +79,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The loss is the exact Hinkal pool balance delta over the coherent onchain campaign, from immediately before block 25447059 through the final defect-enabled outflow in block 25448366: USDC fell from 773,098.032506 to 798.032506 and ETH fell from 10.891509399221825937 to 10.591509399221825937. This nets the attacker's 27,900 USDC and 0.02 ETH proofless deposits against 800,200 USDC and 0.32 ETH withdrawn; those deposits are campaign inputs, not later recovery. It corrects both the legacy 797,000 USD gross-withdrawal figure and published 772,000 USDC reconciliations that omit the earlier 300 USDC and 0.3 ETH net drain.",
+    "notes": "The loss is the exact Hinkal pool balance delta over the coherent onchain campaign, from immediately before block 25447059 through the final defect-enabled outflow in block 25448366: USDC fell from 773,098.032506 to 798.032506 and ETH fell from 10.891509399221825937 to 10.591509399221825937. This nets the attacker's 27,900 USDC and 0.02 ETH proofless deposits against 800,200 USDC and 0.32 ETH withdrawn; those deposits are campaign inputs, not later recovery. It corrects both the seed row's 797,000 USD gross-withdrawal figure and published 772,000 USDC reconciliations that omit the earlier 300 USDC and 0.3 ETH net drain.",
     "realizedAt": 1783037963
   },
   "targets": [
@@ -182,10 +181,11 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-25T12:00:00Z",
-      "note": "The legacy anchor 0xbf7252af is a later 25,000 USDC proofless deposit that transfers the declared amount into Hinkal and does not itself execute the nullifier defect. The campaign starts when 0x105ad144 proofless-deposits a 0.01 ETH legacy note in block 25447059. Transaction 0x6e58f3ab is its first transact spend; 0xe29799cf is the next successful transact with a fresh public nullifier and is therefore the earliest repeated spend in the published same-note exploit sequence. Its trace reaches verifier adapter 0x163fe0b0 and immutable generated verifier 0x2617f5b3. The campaign later moves to 0xbb3f01a1 and three funded receiver EOAs. The adapter was deployed in block 25281487 with 0x2617f5b3 encoded as its sole constructor argument, and Hinkal selected it in VerifierRegistered log 93 of transaction 0x58d7dede. Its runtime hash is unchanged at selection and immediately before the anchor. Complete transfer-log queries over blocks 25447059 through 25448366 show 27,900 USDC entering and 800,200 USDC leaving Hinkal in the campaign; internal traces show 0.02 ETH entering and 0.32 ETH leaving. Direct balance snapshots agree with the resulting 772,300 USDC and 0.3 ETH net loss."
+      "note": "The seed row's anchor 0xbf7252af is a later 25,000 USDC proofless deposit that transfers the declared amount into Hinkal and does not itself execute the nullifier defect. The campaign starts when 0x105ad144 proofless-deposits a 0.01 ETH legacy note in block 25447059. Transaction 0x6e58f3ab is its first transact spend; 0xe29799cf is the next successful transact with a fresh public nullifier and is therefore the earliest repeated spend in the published same-note exploit sequence. Its trace reaches verifier adapter 0x163fe0b0 and immutable generated verifier 0x2617f5b3. The campaign later moves to 0xbb3f01a1 and three funded receiver EOAs. The adapter was deployed in block 25281487 with 0x2617f5b3 encoded as its sole constructor argument, and Hinkal selected it in VerifierRegistered log 93 of transaction 0x58d7dede. Its runtime hash is unchanged at selection and immediately before the anchor. Complete transfer-log queries over blocks 25447059 through 25448366 show 27,900 USDC entering and 800,200 USDC leaving Hinkal in the campaign; internal traces show 0.02 ETH entering and 0.32 ETH leaving. Direct balance snapshots agree with the resulting 772,300 USDC and 0.3 ETH net loss."
     }
   ],
   "discovery": [
+    "seed:hinkal:2026-07-03:hinkal-legacy-note-nullifier-double-spend",
     "web:2026-07-02:hinkal"
   ],
   "verification": {
@@ -195,17 +195,7 @@
     ],
     "reviewSourceIds": [
       "source-7"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/hinkal.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "documented",
-      "upgradeEventCount": 0,
-      "date": "2026-07-03T00:07:23Z",
-      "reanchored": true
-    }
+    ]
   },
   "notes": [
     "Re-anchored from the later proofless-deposit transaction 0xbf7252af56be8867a12e27cc332f85e8f39e906756e559d6a076dc8bd9d50008.",

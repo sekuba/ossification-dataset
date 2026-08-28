@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:5000:0xb3c4c313a8d3e2843c9e6e313b199d7339211cdc70c2eca9f4d88b1e155fd6bd",
   "protocol": {
     "name": "Minterest",
@@ -76,7 +75,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Components are the attacker EOA\u2019s net token gain in the single exploit transaction, which is a contract creation whose constructor runs the whole attack. The four later transactions in that EOA\u2019s history only unwrap and swap the proceeds. The borrows backing the collateral were never repaid. DefiLlama observations are 127 and 103 seconds after the incident timestamp. Nothing was recovered."
+    "notes": "Components are the attacker EOA’s net token gain in the single exploit transaction, which is a contract creation whose constructor runs the whole attack. The four later transactions in that EOA’s history only unwrap and swap the proceeds. The borrows backing the collateral were never repaid. DefiLlama observations are 127 and 103 seconds after the incident timestamp. Nothing was recovered."
   },
   "targets": [
     {
@@ -172,7 +171,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T12:10:00Z",
-      "note": "The attacker EOA sent five Mantle transactions; the first is the exploit-contract creation whose constructor performs the whole attack, and it is therefore both the earliest and the only defect-executing transaction. The mUSDY market proxy emitted exactly two Upgraded events between its creation block 49704565 and the exploit, the second at block 57147116 installing 0x4b351368459ccc0024197d24ab7ba278e4c6f510, and its EIP-1967 slot still reads that address at block 66416576, so the exploited implementation is 142.9 days old. Its creator 0x66f850099e6d5dbd712d15244b65bd822f36be7e is not an attacker address. Loss is the attacker\u2019s net token gain in the exploit transaction: 223.640470785331714615 WETH and 204.486893253187905361 mETH."
+      "note": "The attacker EOA sent five Mantle transactions; the first is the exploit-contract creation whose constructor performs the whole attack, and it is therefore both the earliest and the only defect-executing transaction. The mUSDY market proxy emitted exactly two Upgraded events between its creation block 49704565 and the exploit, the second at block 57147116 installing 0x4b351368459ccc0024197d24ab7ba278e4c6f510, and its EIP-1967 slot still reads that address at block 66416576, so the exploited implementation is 142.9 days old. Its creator 0x66f850099e6d5dbd712d15244b65bd822f36be7e is not an attacker address. Loss is the attacker’s net token gain in the exploit transaction: 223.640470785331714615 WETH and 204.486893253187905361 mETH."
     },
     {
       "id": "source-7",
@@ -189,16 +188,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/minterest.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 2,
-      "date": "2024-07-14T13:24:26Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x9583e95d5c88c7966e269197f4b09022f26b7a27ad2c13660dda6774e3136d14",
   "protocol": {
     "name": "UnistreetLaunchpad",
@@ -21,17 +20,17 @@
   },
   "summary": "LaunchpadFactoryAuto.launch() forwarded unvalidated caller-supplied calldata as the LP-position custodian, allowing setApprovalForAll and withdrawal of every custodied Uniswap V4 position.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 17750,
       "valuationTimestamp": 1785976067,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0xfb60cd0b36ad4bd839b91767a6ad9055ab6ad825"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 290988,
-      "failureModeId": "legacy:eip155:1:0x9583e95d5c88c7966e269197f4b09022f26b7a27ad2c13660dda6774e3136d14:failure-1",
+      "failureModeId": "provisional:eip155:1:0x9583e95d5c88c7966e269197f4b09022f26b7a27ad2c13660dda6774e3136d14:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -78,7 +77,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/unistreet-launchpad.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
@@ -113,18 +112,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/unistreet-launchpad.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/unistreet-launchpad.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-08-06T00:27:47Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

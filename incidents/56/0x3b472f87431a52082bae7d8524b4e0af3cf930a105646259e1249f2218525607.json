@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x3b472f87431a52082bae7d8524b4e0af3cf930a105646259e1249f2218525607",
   "protocol": {
     "name": "DBW",
@@ -21,11 +20,11 @@
   },
   "summary": "DBW pays LP dividends from the caller's current LP balance without recording that the position had already been paid, so moving the same LP between addresses collected the dividend repeatedly.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 19857,
       "valuationTimestamp": 1679670735,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -64,10 +63,10 @@
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "Legacy basis: latest of 18 pre-incident Upgraded event(s)."
+        "description": "Unreviewed seed-inventory basis: latest of 18 pre-incident Upgraded event(s)."
       },
       "codeAgeSeconds": 1468295,
-      "failureModeId": "legacy:eip155:56:0x3b472f87431a52082bae7d8524b4e0af3cf930a105646259e1249f2218525607:failure-1",
+      "failureModeId": "provisional:eip155:56:0x3b472f87431a52082bae7d8524b4e0af3cf930a105646259e1249f2218525607:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -81,7 +80,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/dbw.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
       }
@@ -115,18 +114,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/dbw.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/dbw.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 18,
-      "date": "2023-03-24T15:12:15Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xa5b0246f2f8d238bb56c0ddb500b04bbe0c30db650e06a41e00b6a0fff11a7e5",
   "protocol": {
     "name": "GYM Network",
@@ -57,7 +56,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Exact pre-recovery victim depletion is the LiquidityMigrationV2 GYMNET balance change across the exploit: 1,450,998.605164940945782286 before to 284,261.031699608471293657 after, a loss of 1,166,737.573465332474488629 GYMNET also emitted from the victim in Transfer log 49. The 1,399,999.999999999999999838 GYM left in the migration contract was attacker-supplied campaign input and does not offset gross victim depletion. No earlier transaction in block 16798807 touched the GYMNET/WBNB pair, so its block-16798806 reserves are the exact pre-exploit price state: 7,677,163.643402146827976102 GYMNET and 11,387.586657604004961399 WBNB. Their ratio values the depleted GYMNET at about 1,730.629414932106 WBNB; DefiLlama's incident-time BNB price of $423.1616558171135 gives $732,336.0088284722. The legacy $561,595 figure instead values the attacker's lower 1,327.140409926955785497 WBNB retained proceeds after repayment and token-transfer fees, so it is not the preferred gross victim-loss boundary."
+    "notes": "Exact pre-recovery victim depletion is the LiquidityMigrationV2 GYMNET balance change across the exploit: 1,450,998.605164940945782286 before to 284,261.031699608471293657 after, a loss of 1,166,737.573465332474488629 GYMNET also emitted from the victim in Transfer log 49. The 1,399,999.999999999999999838 GYM left in the migration contract was attacker-supplied campaign input and does not offset gross victim depletion. No earlier transaction in block 16798807 touched the GYMNET/WBNB pair, so its block-16798806 reserves are the exact pre-exploit price state: 7,677,163.643402146827976102 GYMNET and 11,387.586657604004961399 WBNB. Their ratio values the depleted GYMNET at about 1,730.629414932106 WBNB; DefiLlama's incident-time BNB price of $423.1616558171135 gives $732,336.0088284722. The seed row's $561,595 figure instead values the attacker's lower 1,327.140409926955785497 WBNB retained proceeds after repayment and token-transfer fees, so it is not the preferred gross victim-loss boundary."
   },
   "targets": [
     {
@@ -172,16 +171,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-8"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/gym-network.json",
-      "originalIncidentIndex": 1,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-04-09T15:38:34Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

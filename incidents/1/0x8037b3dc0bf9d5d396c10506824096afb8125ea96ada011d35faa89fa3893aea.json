@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea",
   "protocol": {
     "name": "n00d (Xn00d bar)",
@@ -21,11 +20,11 @@
   },
   "summary": "The Xn00d SushiBar-style staking contract accepted the ERC-777 n00d token and pulled it with transferFrom before minting shares, so the attacker's ERC-1820 tokensToSend hook re-entered enter() and minted shares against the same deposit repeatedly.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 29394,
       "valuationTimestamp": 1666716419,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x3561081260186e69369e6c32f280836554292e08"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 2541876,
-      "failureModeId": "legacy:eip155:1:0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea:failure-1",
+      "failureModeId": "provisional:eip155:1:0x8037b3dc0bf9d5d396c10506824096afb8125ea96ada011d35faa89fa3893aea:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -81,7 +80,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/n00d.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
@@ -121,18 +120,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/n00d.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/n00d.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-10-25T16:46:59Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

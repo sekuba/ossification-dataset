@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:8453:0x00b949bc3ed3edb58b04faedfbd8eb1db2edceae761382e80fe012919f8d3732",
   "protocol": {
     "name": "SingularityDynaVault",
@@ -142,7 +141,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Exact depletion of vault 0x67b93f6676bd1911c5fae7ffa90fff5f35e14dcd, taken as its balanceOf delta for each holding across the single exploit block and converted to USDC with that holding's own ERC4626 convertToAssets at block 45183966. Every holding is a USDC-denominated yield-vault share redeemable at net asset value, not an AMM-quoted token, so NAV is the correct basis and the attacker's own actions did not move it: he redeemed 413132.022315 USDC of it inside the exploit transaction and forwarded the balance as 31174.292353430123 maxUSD and 1347.499541 ysUSDC shares, worth 35840.5 at the same NAV, which reconciles to the total. The 100,000 USDC Morpho flash loan he deposited is attacker-supplied and is excluded; the vault's own 100 USDC of idle deposit token was untouched. The 413,130 figure in the legacy row is the immediately redeemed USDC leg alone."
+    "notes": "Exact depletion of vault 0x67b93f6676bd1911c5fae7ffa90fff5f35e14dcd, taken as its balanceOf delta for each holding across the single exploit block and converted to USDC with that holding's own ERC4626 convertToAssets at block 45183966. Every holding is a USDC-denominated yield-vault share redeemable at net asset value, not an AMM-quoted token, so NAV is the correct basis and the attacker's own actions did not move it: he redeemed 413132.022315 USDC of it inside the exploit transaction and forwarded the balance as 31174.292353430123 maxUSD and 1347.499541 ysUSDC shares, worth 35840.5 at the same NAV, which reconciles to the total. The 100,000 USDC Morpho flash loan he deposited is attacker-supplied and is excluded; the vault's own 100 USDC of idle deposit token was untouched. The 413,130 figure in the seed row is the immediately redeemed USDC leg alone."
   },
   "targets": [
     {
@@ -234,16 +233,7 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/singularitydynavault.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-04-25T22:48:01Z"
-    }
+    ]
   },
   "notes": [
     "A second defect-bearing role in the same causal path, VaultTokensLib 0x7e81c4022018cae002f70817aa9a4035f7daf5c5 adding price * amount / 10**decimals in totalAssets() with no zero-price guard, is described in the review note but is not represented as a separate target; the oracle is the proximate defect and is the only code state aged here."

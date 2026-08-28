@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x3ee23c1585474eaa4f976313cafbc09461abb781d263547c8397788c68a00160",
   "protocol": {
     "name": "LaunchZone / SwapX",
@@ -56,7 +55,7 @@
       }
     ],
     "confidence": "medium",
-    "notes": "The attacker pulled a long list of approval holders in two transactions and routed each balance straight through a PancakeSwap pair, so the tokens never sat in the attacker\u2019s hands at a markable price. Netting both transactions across the attacker EOA and its exploit contract leaves 739.641476234907877084 WBNB gained and 1,000,000 DND of the attacker\u2019s own token spent, so the realised proceeds are used as the measure rather than a mark on the drained tokens, which were mostly thin BSC assets sold into their own pools. Contemporaneous reporting put the event near USD 1 million on a nominal basis; that figure is not reproducible from the realised flows and is not used. Nothing was recovered."
+    "notes": "The attacker pulled a long list of approval holders in two transactions and routed each balance straight through a PancakeSwap pair, so the tokens never sat in the attacker’s hands at a markable price. Netting both transactions across the attacker EOA and its exploit contract leaves 739.641476234907877084 WBNB gained and 1,000,000 DND of the attacker’s own token spent, so the realised proceeds are used as the measure rather than a mark on the drained tokens, which were mostly thin BSC assets sold into their own pools. Contemporaneous reporting put the event near USD 1 million on a nominal basis; that figure is not reproducible from the realised flows and is not used. Nothing was recovered."
   },
   "targets": [
     {
@@ -151,7 +150,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T15:00:00Z",
-      "note": "Target corrected. The v1 record put the artifact on 0x6d1879f4151b7f3958b8f5a9cc5e2cc93b95e50d with relationship proxy, but the trace shows that address being delegate-called only for pairFor address arithmetic; the defective entry point, selector 0x4f1f05bc with the owner as an argument and the transferFrom that follows, is in SwapX\u2019s own runtime, so the target is direct on 0x6d8981847eb3cc2234179d0f0e72f6b6b2421a01. That contract is not upgradeable: identical runtime code hash at the deployment block 12168762 and at block 26023088 with a zero EIP-1967 slot, so the exploited code is 486.6 days old and its deployer 0x6b40b4bef3730c1d484dc0f917a8cd845fe0e85c is not an attacker address. Two of the attacker\u2019s transactions call the contract; netting both leaves the realised WBNB, which is the loss measure because the drained approvals were routed straight into pairs and never held at a markable price."
+      "note": "Target corrected. The v1 record put the artifact on 0x6d1879f4151b7f3958b8f5a9cc5e2cc93b95e50d with relationship proxy, but the trace shows that address being delegate-called only for pairFor address arithmetic; the defective entry point, selector 0x4f1f05bc with the owner as an argument and the transferFrom that follows, is in SwapX’s own runtime, so the target is direct on 0x6d8981847eb3cc2234179d0f0e72f6b6b2421a01. That contract is not upgradeable: identical runtime code hash at the deployment block 12168762 and at block 26023088 with a zero EIP-1967 slot, so the exploited code is 486.6 days old and its deployer 0x6b40b4bef3730c1d484dc0f917a8cd845fe0e85c is not an attacker address. Two of the attacker’s transactions call the contract; netting both leaves the realised WBNB, which is the loss measure because the drained approvals were routed straight into pairs and never held at a markable price."
     },
     {
       "id": "source-7",
@@ -172,16 +171,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/launchzone.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-02-27T06:25:41Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

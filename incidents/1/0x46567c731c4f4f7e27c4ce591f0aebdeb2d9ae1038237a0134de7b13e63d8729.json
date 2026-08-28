@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x46567c731c4f4f7e27c4ce591f0aebdeb2d9ae1038237a0134de7b13e63d8729",
   "protocol": {
     "name": "OnyxDAO",
@@ -235,7 +234,7 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T21:20:00Z",
-      "note": "Reviewed the live Ethereum receipt and complete call trace, the two victim architectures and pre-exploit hashes, NFTLiquidationProxy creation and every pre-exploit NewImplementation event, custom implementation storage slot 2, oETH creation and immutable runtime, explorer-verified source, the commit-pinned reproduction, exact token transfers, and published technical reporting. The legacy target incorrectly treated implementation 0xf10bc5be84640236c71173d1809038af4ee19002 as a direct execution address; the exploit actually calls proxy 0x323398de3c35f96053d930d25fe8d92132f83d44, which delegates the vulnerable liquidateWithSingleRepay calls to that artifact. Its sole NewImplementation event selected the artifact at 16727653:52 log 78 and slot 2 retained it through the exploit. Separately, direct oETH 0x2ccb7d00a9e10d0c3408b5eefb67011abfacb075 executes the empty-market donation and rounding loop. The two defects compose: fake repay and collateral oTokens control the liquidation path and reenter a real liquidation after oETH's exchange rate has been manipulated. The receipt establishes the exact VUSD, XCN, DAI, WBTC and USDT components; security reporting values the gross basket at approximately $3.8 million."
+      "note": "Reviewed the live Ethereum receipt and complete call trace, the two victim architectures and pre-exploit hashes, NFTLiquidationProxy creation and every pre-exploit NewImplementation event, custom implementation storage slot 2, oETH creation and immutable runtime, explorer-verified source, the commit-pinned reproduction, exact token transfers, and published technical reporting. The seed row's target incorrectly treated implementation 0xf10bc5be84640236c71173d1809038af4ee19002 as a direct execution address; the exploit actually calls proxy 0x323398de3c35f96053d930d25fe8d92132f83d44, which delegates the vulnerable liquidateWithSingleRepay calls to that artifact. Its sole NewImplementation event selected the artifact at 16727653:52 log 78 and slot 2 retained it through the exploit. Separately, direct oETH 0x2ccb7d00a9e10d0c3408b5eefb67011abfacb075 executes the empty-market donation and rounding loop. The two defects compose: fake repay and collateral oTokens control the liquidation path and reenter a real liquidation after oETH's exchange rate has been manipulated. The receipt establishes the exact VUSD, XCN, DAI, WBTC and USDT components; security reporting values the gross basket at approximately $3.8 million."
     },
     {
       "id": "source-4",
@@ -274,16 +273,6 @@
     ],
     "reviewSourceIds": [
       "source-3"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/onyxdao.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-09-26T12:01:59Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

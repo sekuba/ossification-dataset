@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x00e94786271db9bde4f6612b9e01c5eca6b24d4f4b5a4524a2988b22f510f0a7",
   "protocol": {
     "name": "Four.meme",
@@ -244,11 +243,12 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-28T09:52:21Z",
-      "note": "Re-anchored from the legacy sample profit transaction 0x2902f93a...27f61 to the first successful transaction that executes the vulnerable launchpad path. Attack pool helper 0xbf26e147918a07cb8d8cf38d260edf346977686c was deployed by 0x010fc97cb0a4d101dce20dab37361514bd59a53a at block 46543408. Enumerating every PancakeSwap V3 Factory PoolCreated log from that block through campaign close and retaining top-level calls to the helper yields 92 attacker-created WBNB pools. The first seven creation calls did not later migrate. Pool 0xe09178079fc3d3dd9b05babb0fc4462211c78e57, created in 0x6d87fca...deb827 at block 46552817, is the earliest one Four.meme migrated: operator 0x74d86638f359bdff6ec55d78a97f294747f8f5b3 called proxy 0x5c952063c7fc8610ffdb798152d69f0b9550762b addLiquidity(address,uint160) in anchor 0x00e94786...10f0a7 at block 46552826 index 91, timestamp 1739239875. Before the anchor the existing pool's slot0 sqrtPriceX96 was 10000000000000000000000000000000000000000, while anchor calldata supplied 27169599998237907265358521; the pool then lost 23.524425040311988396 WBNB in its first swap three blocks later. Across the helper's complete 92-pool set, 74 pools were migrated and 68 lost WBNB in their first post-migration swap during the campaign. Those losses occur in 66 transactions because two transactions each drain two pools. Summing WBNB Transfer, Deposit and Withdrawal flow at each pool gives exactly 367359656702730835025 wei; there is no WBNB input to any selected pool in its drain transaction. The last selected drain is 0x37ad7d1a...d5b2 at block 46557229 index 46, timestamp 1739253088. Seven connected EOAs consolidated funds to 0x482b004e7800174a1efb87f496552ac8f53b2fda in blocks 46558599-46558610; the next WBNB movement from any of the six undrained migrated pools begins at block 46597785, by unrelated router users, and is excluded as post-campaign trading. Code identity: factory 0x8d369b8c1750700f257939983cb76531b4cb2953 CREATE-deployed the execution proxy in 0x08810535...5426c at block 41983675 index 15, timestamp 1725527007. The anchor trace delegates 0x55110640 from that proxy to 0xb28723a16d3347cdc0ce035eb1c1eb0b7406682f. The implementation was created by the project deployer in 0x7439edc0...9f298 at block 46469870 index 30, timestamp 1738991007; its 24206-byte runtime is absent in the preceding block and hashes to 0xfa50ce3850f4e32e9eda9e521e265241b4dc08f488d5557c39c6940251e7fcee at deployment and immediately before the anchor. The proxy emitted ten Upgraded events before the anchor; the last is log 135 of 0x2b016a01...550e7 at block 46469874 index 60, timestamp 1738991019, and selects the same implementation. The EIP-1967 implementation slot retains it at block 46552825, making the defect-bearing code 248856 seconds old."
+      "note": "Re-anchored from the seed row's sample profit transaction 0x2902f93a...27f61 to the first successful transaction that executes the vulnerable launchpad path. Attack pool helper 0xbf26e147918a07cb8d8cf38d260edf346977686c was deployed by 0x010fc97cb0a4d101dce20dab37361514bd59a53a at block 46543408. Enumerating every PancakeSwap V3 Factory PoolCreated log from that block through campaign close and retaining top-level calls to the helper yields 92 attacker-created WBNB pools. The first seven creation calls did not later migrate. Pool 0xe09178079fc3d3dd9b05babb0fc4462211c78e57, created in 0x6d87fca...deb827 at block 46552817, is the earliest one Four.meme migrated: operator 0x74d86638f359bdff6ec55d78a97f294747f8f5b3 called proxy 0x5c952063c7fc8610ffdb798152d69f0b9550762b addLiquidity(address,uint160) in anchor 0x00e94786...10f0a7 at block 46552826 index 91, timestamp 1739239875. Before the anchor the existing pool's slot0 sqrtPriceX96 was 10000000000000000000000000000000000000000, while anchor calldata supplied 27169599998237907265358521; the pool then lost 23.524425040311988396 WBNB in its first swap three blocks later. Across the helper's complete 92-pool set, 74 pools were migrated and 68 lost WBNB in their first post-migration swap during the campaign. Those losses occur in 66 transactions because two transactions each drain two pools. Summing WBNB Transfer, Deposit and Withdrawal flow at each pool gives exactly 367359656702730835025 wei; there is no WBNB input to any selected pool in its drain transaction. The last selected drain is 0x37ad7d1a...d5b2 at block 46557229 index 46, timestamp 1739253088. Seven connected EOAs consolidated funds to 0x482b004e7800174a1efb87f496552ac8f53b2fda in blocks 46558599-46558610; the next WBNB movement from any of the six undrained migrated pools begins at block 46597785, by unrelated router users, and is excluded as post-campaign trading. Code identity: factory 0x8d369b8c1750700f257939983cb76531b4cb2953 CREATE-deployed the execution proxy in 0x08810535...5426c at block 41983675 index 15, timestamp 1725527007. The anchor trace delegates 0x55110640 from that proxy to 0xb28723a16d3347cdc0ce035eb1c1eb0b7406682f. The implementation was created by the project deployer in 0x7439edc0...9f298 at block 46469870 index 30, timestamp 1738991007; its 24206-byte runtime is absent in the preceding block and hashes to 0xfa50ce3850f4e32e9eda9e521e265241b4dc08f488d5557c39c6940251e7fcee at deployment and immediately before the anchor. The proxy emitted ten Upgraded events before the anchor; the last is log 135 of 0x2b016a01...550e7 at block 46469874 index 60, timestamp 1738991019, and selects the same implementation. The EIP-1967 implementation slot retains it at block 46552825, making the defect-bearing code 248856 seconds old."
     }
   ],
   "discovery": [
     "dfhl:src/test/2025-02/FourMeme_exp.sol",
+    "seed:four-meme:2025-02-11:four-meme-launchpad-liquidity-migration-into-pre-initialized-pool",
     "web:2025-02-11:four-meme-first-incident"
   ],
   "verification": {
@@ -256,17 +256,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-9"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/four-meme.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 10,
-      "date": "2025-02-11T04:36:37Z",
-      "reanchored": true
-    }
-  },
-  "notes": []
+    ]
+  }
 }

@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:137:0x7320accea0ef1d7abca8100c82223533b624c82d3e8d445954731495d4388483",
   "protocol": {
     "name": "Libertify",
@@ -76,7 +75,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "Exact victim depletion, measured as the change in the vault 0x9c80a455ecaca7025a45f5fa3b85fd6a462a447b's own token balances across the single exploit transaction: WETH 129.411606107394699466 -> 0.011673447233479552 and USDT 81476.027164 -> 26663.335833. The attacker's two 5,000,000-USDT Aave V2 flash loans and the 0.004 WETH it deposited are attacker-supplied inputs and are netted out; the 9,000 USDT of flash-loan premium it paid is not deducted. WETH and USDT are deep markets on Polygon and the attacker's ~5.56 WETH Uniswap V3 sale did not move them, so a contemporaneous spot mark is used rather than realised proceeds; the DefiLlama WETH quote is the Ethereum WETH series because DefiLlama carries no Polygon WETH series. The legacy row and the DeFiHackLabs header both state ~452,000 USD; that figure is not reproducible from the receipt at any contemporaneous price and is not used."
+    "notes": "Exact victim depletion, measured as the change in the vault 0x9c80a455ecaca7025a45f5fa3b85fd6a462a447b's own token balances across the single exploit transaction: WETH 129.411606107394699466 -> 0.011673447233479552 and USDT 81476.027164 -> 26663.335833. The attacker's two 5,000,000-USDT Aave V2 flash loans and the 0.004 WETH it deposited are attacker-supplied inputs and are netted out; the 9,000 USDT of flash-loan premium it paid is not deducted. WETH and USDT are deep markets on Polygon and the attacker's ~5.56 WETH Uniswap V3 sale did not move them, so a contemporaneous spot mark is used rather than realised proceeds; the DefiLlama WETH quote is the Ethereum WETH series because DefiLlama carries no Polygon WETH series. The seed row and the DeFiHackLabs header both state ~452,000 USD; that figure is not reproducible from the receipt at any contemporaneous price and is not used."
   },
   "targets": [
     {
@@ -152,7 +151,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
-      "note": "Anchor: the attacker EOA 0xfd2d3ffb05ad00e61e3c8d8701cb9036b7a16d02 has exactly two Polygon transactions in this campaign, nonce 0 deploying the helper 0xdfcdb5a86b167b3a418f3909d6f7a2f2873f2969 in 0x201b86592bccb969032e90d8556bddaf2d4387d53c10def7fbef4078c7095d76 and nonce 1 executing it here, status 1 at block 44941585 index 7, timestamp 1689060728. The whole campaign is this one transaction, so the legacy anchor is correct and no re-anchoring was needed. Trace: the helper takes two 5,000,000-USDT Aave V2 flash loans from 0x8dff5e27ea6b7ac08ebfdf9eb090f32ee9a30fcf, calls 0xfaa9bce9 deposit(uint256,address,bytes) on the vault clone 0x9c80a455ecaca7025a45f5fa3b85fd6a462a447b, which DELEGATECALLs the master 0x089d9868b58ef37d5804281e106d9b7e71a4d05f, which calls 0x7c025200 swap on 1inch AggregationRouterV4 0x1111111254fb6c44bac0bed2854e76f90643097d, which calls 0x2636f7f8 callBytes back into the helper, which reenters the same deposit on the same clone. I read the verified LibertiVault source (solc 0.8.17, contracts/LibertiVault.sol plus LibertiAggregationRouterV4.sol) and confirmed deposit captures nav before safeTransferFrom and _deposit reads totalSupply() after userSwap, with no reentrancy modifier anywhere on that path. Target: the clone's runtime is the exact 45-byte EIP-1167 pattern pinning the master, so the artifact is the master and the relationship is minimal-proxy; the master's runtime is 18,110 bytes and hashes to 0x9370e501ef304390115c69a5fb23a562142a4e210152fa24dfcaa7f3a4527959 both at its deployment block 40785224 and at block 44941584, and is the empty-code hash at block 40785223. Code history: the clone was CREATE2'd by the factory 0x66430935e26e52a97a1c898d681e8aeb404f3061 inside transaction 0xc5f2ee14824e90f4906e010a2e3f6b57d354652f7b66d267084d7a03e65c65b3 at block 40785922 index 31, one of four clones minted in that transaction, and the factory is not an attacker address; that creation is the age basis, giving 9,236,544 s or 106.90 days. Seventy-two sibling clones of the same master exist and would collapse to the same code hash, but only this one held reserves and only this one appears in the trace. Loss: measured from the clone's own balances, WETH 129.411606107394699466 -> 0.011673447233479552 and USDT 81476.027164 -> 26663.335833 across the transaction, i.e. 129.399932660161219914 WETH and 54,812.691331 USDT of victim depletion after netting the 0.004 WETH the attacker deposited and the 10,000,000 USDT of flash-loan principal it routed through the vault. I could not reproduce the legacy and DeFiHackLabs ~452,000 USD headline from the receipt at any contemporaneous price and replaced it with the receipt-exact 298,620.28 USD."
+      "note": "Anchor: the attacker EOA 0xfd2d3ffb05ad00e61e3c8d8701cb9036b7a16d02 has exactly two Polygon transactions in this campaign, nonce 0 deploying the helper 0xdfcdb5a86b167b3a418f3909d6f7a2f2873f2969 in 0x201b86592bccb969032e90d8556bddaf2d4387d53c10def7fbef4078c7095d76 and nonce 1 executing it here, status 1 at block 44941585 index 7, timestamp 1689060728. The whole campaign is this one transaction, so the seed row's anchor is correct and no re-anchoring was needed. Trace: the helper takes two 5,000,000-USDT Aave V2 flash loans from 0x8dff5e27ea6b7ac08ebfdf9eb090f32ee9a30fcf, calls 0xfaa9bce9 deposit(uint256,address,bytes) on the vault clone 0x9c80a455ecaca7025a45f5fa3b85fd6a462a447b, which DELEGATECALLs the master 0x089d9868b58ef37d5804281e106d9b7e71a4d05f, which calls 0x7c025200 swap on 1inch AggregationRouterV4 0x1111111254fb6c44bac0bed2854e76f90643097d, which calls 0x2636f7f8 callBytes back into the helper, which reenters the same deposit on the same clone. I read the verified LibertiVault source (solc 0.8.17, contracts/LibertiVault.sol plus LibertiAggregationRouterV4.sol) and confirmed deposit captures nav before safeTransferFrom and _deposit reads totalSupply() after userSwap, with no reentrancy modifier anywhere on that path. Target: the clone's runtime is the exact 45-byte EIP-1167 pattern pinning the master, so the artifact is the master and the relationship is minimal-proxy; the master's runtime is 18,110 bytes and hashes to 0x9370e501ef304390115c69a5fb23a562142a4e210152fa24dfcaa7f3a4527959 both at its deployment block 40785224 and at block 44941584, and is the empty-code hash at block 40785223. Code history: the clone was CREATE2'd by the factory 0x66430935e26e52a97a1c898d681e8aeb404f3061 inside transaction 0xc5f2ee14824e90f4906e010a2e3f6b57d354652f7b66d267084d7a03e65c65b3 at block 40785922 index 31, one of four clones minted in that transaction, and the factory is not an attacker address; that creation is the age basis, giving 9,236,544 s or 106.90 days. Seventy-two sibling clones of the same master exist and would collapse to the same code hash, but only this one held reserves and only this one appears in the trace. Loss: measured from the clone's own balances, WETH 129.411606107394699466 -> 0.011673447233479552 and USDT 81476.027164 -> 26663.335833 across the transaction, i.e. 129.399932660161219914 WETH and 54,812.691331 USDT of victim depletion after netting the 0.004 WETH the attacker deposited and the 10,000,000 USDT of flash-loan principal it routed through the vault. I could not reproduce the seed-row and DeFiHackLabs ~452,000 USD headline from the receipt at any contemporaneous price and replaced it with the receipt-exact 298,620.28 USD."
     },
     {
       "id": "source-4",
@@ -194,16 +193,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-3"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/libertify.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2023-07-11T07:32:08Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

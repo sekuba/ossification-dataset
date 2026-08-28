@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3",
   "protocol": {
     "name": "Pythia Finance",
@@ -21,17 +20,17 @@
   },
   "summary": "claimRewards() paid out against the caller's current staking-token balance without settling or resetting reward accounting when that balance was transferred, so the attacker recycled the same stake through fresh helper contracts and claimed the reward pool ~30 times in one transaction.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 53000,
       "valuationTimestamp": 1725334943,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": []
     },
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -60,10 +59,10 @@
           "type": "deployment",
           "address": "0xe2910b29252f97bb6f3cc5e66bfa0551821c7461"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 36624,
-      "failureModeId": "legacy:eip155:1:0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3:failure-1",
+      "failureModeId": "provisional:eip155:1:0x7e19f8edb1f1666322113f15d7674593950ac94bbc25d2aff96adabdcae0a6c3:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -75,7 +74,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/pythia.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence.",
           "One or more target block, transaction, ordering, or creator anchors remain unresolved."
         ]
@@ -110,18 +109,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/pythia.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/pythia.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-09-03T03:42:23Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

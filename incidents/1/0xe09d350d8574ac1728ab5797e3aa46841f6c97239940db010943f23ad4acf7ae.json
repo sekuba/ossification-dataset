@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xe09d350d8574ac1728ab5797e3aa46841f6c97239940db010943f23ad4acf7ae",
   "protocol": {
     "name": "XBridge",
@@ -21,7 +20,7 @@
       "0x899266243fd2b9a0426b58bd6d534c6b813ef27a"
     ]
   },
-  "summary": "XBridge.listToken() has no caller restriction, so anyone could register a listing for a token the bridge already custodies and pair it with a corresponding token and chain of their own choosing. The attacker listed the bridge\u2019s own STC, SRLTY and Mazi holdings against listings they controlled and then called withdrawTokens() to move the real deposits out.",
+  "summary": "XBridge.listToken() has no caller restriction, so anyone could register a listing for a token the bridge already custodies and pair it with a corresponding token and chain of their own choosing. The attacker listed the bridge’s own STC, SRLTY and Mazi holdings against listings they controlled and then called withdrawTokens() to move the real deposits out.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
@@ -97,7 +96,7 @@
       }
     ],
     "confidence": "medium",
-    "notes": "Components are the bridge proxy\u2019s net ERC-20 deltas across the six campaign transactions the attacker sent to its exploit contract between blocks 19723701 and 19723925. All three tokens are thin, so the DefiLlama unit prices, observed 98 to 167 seconds before the anchor, are a mark-to-market figure rather than a realisable one, which is why confidence is medium; contemporaneous reporting put the loss near USD 1.6 million. Nothing was recovered."
+    "notes": "Components are the bridge proxy’s net ERC-20 deltas across the six campaign transactions the attacker sent to its exploit contract between blocks 19723701 and 19723925. All three tokens are thin, so the DefiLlama unit prices, observed 98 to 167 seconds before the anchor, are a mark-to-market figure rather than a realisable one, which is why confidence is medium; contemporaneous reporting put the loss near USD 1.6 million. Nothing was recovered."
   },
   "targets": [
     {
@@ -128,7 +127,7 @@
           "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
           "codeAddressLocation": "topic1-address"
         },
-        "description": "The fifth and last Upgraded event the proxy emitted before the exploit, log 248 of block 19720066, selected 0x354cca2f55dde182d36fe34d673430e226a3cb8c. The anchor transaction\u2019s trace shows the proxy delegate-calling exactly that implementation for listToken, 12 hours 13 minutes later."
+        "description": "The fifth and last Upgraded event the proxy emitted before the exploit, log 248 of block 19720066, selected 0x354cca2f55dde182d36fe34d673430e226a3cb8c. The anchor transaction’s trace shows the proxy delegate-calling exactly that implementation for listToken, 12 hours 13 minutes later."
       },
       "codeAgeSeconds": 43992,
       "failureModeId": "failure:xbridge-permissionless-listtoken",
@@ -211,7 +210,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T10:50:00Z",
-      "note": "The attacker EOA created two contracts and then sent six transactions to the exploit contract; the anchor is the first of them and its trace is a bare successful listToken through the bridge proxy, which is the defect executing with no value moving yet. The remaining five carry the withdrawTokens legs, so the loss is measured across all six. The proxy is an OwnedUpgradeabilityProxy that does not use the EIP-1967 slot; it emitted exactly five Upgraded events between its creation block 18391304 and the exploit, the last at block 19720066 installing 0x354cca2f55dde182d36fe34d673430e226a3cb8c, and the anchor trace shows the proxy delegate-calling that implementation, which fixes both the artifact and the 12.2-hour age. Its creator 0xfe6fb9ded2651fd325512657d34911d2fb5d646b is not the attacker. The v1 record\u2019s deployment block was the last upgrade block rather than the proxy creation block; that is corrected here."
+      "note": "The attacker EOA created two contracts and then sent six transactions to the exploit contract; the anchor is the first of them and its trace is a bare successful listToken through the bridge proxy, which is the defect executing with no value moving yet. The remaining five carry the withdrawTokens legs, so the loss is measured across all six. The proxy is an OwnedUpgradeabilityProxy that does not use the EIP-1967 slot; it emitted exactly five Upgraded events between its creation block 18391304 and the exploit, the last at block 19720066 installing 0x354cca2f55dde182d36fe34d673430e226a3cb8c, and the anchor trace shows the proxy delegate-calling that implementation, which fixes both the artifact and the 12.2-hour age. Its creator 0xfe6fb9ded2651fd325512657d34911d2fb5d646b is not the attacker. The v1 record’s deployment block was the last upgrade block rather than the proxy creation block; that is corrected here."
     }
   ],
   "verification": {
@@ -219,16 +218,6 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-8"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/xbridge.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 5,
-      "date": "2024-04-24T07:18:35Z"
-    }
-  },
-  "notes": []
+    ]
+  }
 }

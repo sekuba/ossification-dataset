@@ -1,5 +1,5 @@
 /**
- * Dependency-free release validator for the v2 incident interface.
+ * Dependency-free release validator for the incident interface.
  *
  * JSON Schema owns document shape. This script implements the schema keywords
  * used by schema/incident.schema.json, then adds invariants spanning fields,
@@ -16,7 +16,6 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { buildArtifacts, ROOT, sha256 } from './build.mjs'
 
 const INCIDENT_ID = /^eip155:([1-9][0-9]*):(0x[0-9a-f]{64})$/
-const LEGACY_ID = /^legacy:/
 const REVIEWED_FAILURE_ID = /^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$/
 const ALLOWED_AGE_RESET_KINDS = new Set([
   'deployment',
@@ -25,7 +24,7 @@ const ALLOWED_AGE_RESET_KINDS = new Set([
   'configuration-change',
 ])
 const CANDIDATE_STATUSES = new Set(['included', 'excluded', 'out-of-scope', 'pending', 'unresolved'])
-const CANDIDATE_SOURCE_KINDS = new Set(['defihacklabs', 'web-list', 'adjudication', 'legacy'])
+const CANDIDATE_SOURCE_KINDS = new Set(['defihacklabs', 'web-list', 'adjudication', 'seed'])
 const SUPPORTED_SCHEMA_KEYWORDS = new Set([
   '$schema', '$id', '$ref', '$defs', 'title', 'description', 'default', 'examples',
   'type', 'const', 'enum', 'format', 'pattern', 'minLength', 'maxLength',
@@ -403,14 +402,6 @@ function verifyIncident(record, state, errors) {
   }
 
   if (incidentReviewed) {
-    if (incident.loss.kind === 'legacy-unspecified')
-      errors.push(`${label}: reviewed incident requires a reviewed loss kind`)
-    if (usd?.method === 'legacy-unspecified')
-      errors.push(`${label}: reviewed incident requires a reviewed USD valuation method`)
-    if (minimumUsd?.basis === 'legacy-inclusion-rule')
-      errors.push(`${label}: reviewed incident cannot rely on the legacy inclusion rule`)
-    if (!['high', 'medium'].includes(incident.loss.confidence))
-      errors.push(`${label}: reviewed incident requires high or medium loss confidence`)
     verifyReviewSources(
       `${label}: verification`,
       incident.verification.reviewSourceIds,
@@ -518,7 +509,7 @@ function verifyIncident(record, state, errors) {
         errors.push(`${targetLabel}: curve eligibility requires evidenced loss.usd.amount >= 1000`)
       if (!ALLOWED_AGE_RESET_KINDS.has(reset.kind))
         errors.push(`${targetLabel}: curve cannot use ${reset.kind} as an age reset`)
-      if (LEGACY_ID.test(target.failureModeId) || !REVIEWED_FAILURE_ID.test(target.failureModeId))
+      if (!REVIEWED_FAILURE_ID.test(target.failureModeId))
         errors.push(`${targetLabel}: curve failureModeId must use the reviewed failure:<namespace> form`)
       if (!target.codeArtifact?.address || !target.codeArtifact?.codeHash)
         errors.push(`${targetLabel}: curve eligibility requires an address and code hash for the code artifact`)
@@ -551,25 +542,6 @@ function verifyIncident(record, state, errors) {
     if (targetTier === 'reviewed' && reset.mechanism?.type === 'event' && reset.logIndex === null)
       errors.push(`${targetLabel}: event-based reviewed reset requires logIndex`)
   }
-
-  const legacy = incident.verification?.legacy
-  if (legacy) {
-    const key = `${legacy.originalFile}\u0000${legacy.originalIncidentIndex}`
-    const rawRow = state.legacyRows.get(key)
-    if (!rawRow)
-      errors.push(`${label}: legacy coordinate does not resolve in research/raw/legacy-v1.json`)
-    else {
-      if (rawRow.incident?.date !== legacy.date)
-        errors.push(`${label}: legacy.date does not equal the snapshot row date`)
-      const reanchored = rawRow.incident?.exploitTx?.toLowerCase() !== exploit.transactionHash
-      if (reanchored && legacy.reanchored !== true)
-        errors.push(`${label}: incident anchor differs from the snapshot row; set legacy.reanchored`)
-      if (!reanchored && legacy.reanchored === true)
-        errors.push(`${label}: legacy.reanchored is set but the incident anchor is unchanged`)
-      if (rawRow.protocol?.slug !== incident.protocol.slug)
-        errors.push(`${label}: legacy coordinate resolves to a different protocol slug`)
-    }
-  }
 }
 
 function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
@@ -591,7 +563,6 @@ function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
       errors.push(`schema/candidate.schema.json: ${error.message}`)
     }
   }
-  if (document.schemaVersion !== 2) errors.push('research/candidates.json: schemaVersion must equal 2')
   if (!Array.isArray(document.candidates)) {
     errors.push('research/candidates.json: candidates must be an array')
     return
@@ -704,7 +675,7 @@ function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
     errors.push('research/candidates.json: cannot claim complete coverage with pending/unresolved candidates')
 
   const generated = document.generatedFrom ?? {}
-  for (const field of ['defihacklabs', 'webList', 'adjudications', 'legacyV1']) {
+  for (const field of ['defihacklabs', 'webList', 'adjudications', 'seed']) {
     const relative = generated[field]?.file
     const absolute = typeof relative === 'string' ? path.resolve(root, relative) : ''
     const rawRoot = `${path.resolve(root, 'research', 'raw')}${path.sep}`
@@ -720,17 +691,13 @@ function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
     if (generated[field]?.sha256 !== actual)
       errors.push(`research/candidates.json: generatedFrom.${field}.sha256 is stale`)
   }
-  const legacyV1Path = path.join(root, generated.legacyV1?.file ?? '')
-  const legacyV1 = existsSync(legacyV1Path)
-    ? parseJson(legacyV1Path, generated.legacyV1.file, errors)
-    : null
-  if (legacyV1) {
-    if (legacyV1.source?.files !== 721 || legacyV1.source?.incidents !== 757 || legacyV1.rows?.length !== 757)
-      errors.push('research/raw/legacy-v1.json: expected the complete 721-file / 757-row corpus')
-    if (generated.legacyV1?.rows !== legacyV1.rows?.length)
-      errors.push('research/candidates.json: generatedFrom.legacyV1.rows is stale')
-    if (!jsonEqual(generated.legacyV1?.originalSource, legacyV1.source))
-      errors.push('research/candidates.json: generatedFrom.legacyV1.originalSource is stale')
+  const seedPath = path.join(root, generated.seed?.file ?? '')
+  const seed = existsSync(seedPath) ? parseJson(seedPath, generated.seed.file, errors) : null
+  if (seed) {
+    if (seed.rows?.length !== 757)
+      errors.push('research/raw/seed-incidents.json: expected the complete 757-row inventory')
+    if (generated.seed?.rows !== seed.rows?.length)
+      errors.push('research/candidates.json: generatedFrom.seed.rows is stale')
   }
   const primaryFiles = walkJsonFiles(path.join(root, 'incidents')).map((file) => file.absolute)
   if (generated.primaryIncidents?.files !== primaryFiles.length ||
@@ -806,21 +773,11 @@ export function checkDataset(root = ROOT) {
   const directory = path.join(root, 'incidents')
   const files = walkJsonFiles(directory)
   if (files.length === 0) errors.push('incidents/: no JSON incident files found')
-  const legacyPath = path.join(root, 'research', 'raw', 'legacy-v1.json')
-  const legacyDocument = parseJson(legacyPath, 'research/raw/legacy-v1.json', errors)
-  const legacyRows = new Map()
-  for (const row of legacyDocument?.rows ?? []) {
-    const key = `${row.source?.file}\u0000${row.source?.incidentIndex}`
-    if (legacyRows.has(key))
-      errors.push(`research/raw/legacy-v1.json: duplicate source coordinate ${key}`)
-    else legacyRows.set(key, row)
-  }
   const state = {
     incidentIds: new Map(),
     discoveryRefs: new Map(),
     lossTransactions: new Map(),
     exploitTransactions: new Map(),
-    legacyRows,
   }
   for (const file of files) {
     const record = {

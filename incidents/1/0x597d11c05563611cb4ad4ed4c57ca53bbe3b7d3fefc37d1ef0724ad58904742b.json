@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x597d11c05563611cb4ad4ed4c57ca53bbe3b7d3fefc37d1ef0724ad58904742b",
   "protocol": {
     "name": "Punk Protocol",
@@ -170,7 +169,7 @@
       "type": "review-note",
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T18:58:52Z",
-      "note": "Re-anchored from transaction 0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281 at index 52 to the frontrunning loss-bearing transaction at index 50 in the same block. The legacy transaction repeats the defect after the pools have been drained and receives only 0.028802 USDC, 0.036879 USDT, and 0.030390567272501362 DAI. The selected transaction calls initialize(address,address,address,address,address,address), invest(), and withdrawToForge(uint256) on each of the USDC, USDT, and DAI CompoundModel pools and transfers exactly 2,995,824.696852 USDC, 3,000,022.7862 USDT, and 2,954,191.544042759328963399 DAI to extraction contract 0x00000000b2ff98680adaf8a3e382176bbfc34c8f. All three pools are direct top-level deployments by 0xe36cc0432619247ab12f1cdd19bb3e7a24a7f47c, share the same 6,097-byte runtime and hash 0xad4296ca86f0d86547eee00e3723dbbd3a2c3462c846dd5dcd5b4ce9773625ce at deployment and immediately before the exploit, and execute without proxy delegation. The structured target uses the USDC pool as the representative execution context because the three pools contain the same code artifact and failure mode."
+      "note": "Re-anchored from transaction 0x7604c7dd6e9bcdba8bac277f1f8e7c1e4c6bb57afd4ddf6a16f629e8495a0281 at index 52 to the frontrunning loss-bearing transaction at index 50 in the same block. The seed row's transaction repeats the defect after the pools have been drained and receives only 0.028802 USDC, 0.036879 USDT, and 0.030390567272501362 DAI. The selected transaction calls initialize(address,address,address,address,address,address), invest(), and withdrawToForge(uint256) on each of the USDC, USDT, and DAI CompoundModel pools and transfers exactly 2,995,824.696852 USDC, 3,000,022.7862 USDT, and 2,954,191.544042759328963399 DAI to extraction contract 0x00000000b2ff98680adaf8a3e382176bbfc34c8f. All three pools are direct top-level deployments by 0xe36cc0432619247ab12f1cdd19bb3e7a24a7f47c, share the same 6,097-byte runtime and hash 0xad4296ca86f0d86547eee00e3723dbbd3a2c3462c846dd5dcd5b4ce9773625ce at deployment and immediately before the exploit, and execute without proxy delegation. The structured target uses the USDC pool as the representative execution context because the three pools contain the same code artifact and failure mode."
     },
     {
       "id": "source-4",
@@ -210,6 +209,6 @@
     ]
   },
   "notes": [
-    "The legacy anchor was a copied exploit transaction two positions after the successful frontrun. This record uses the earlier transaction that executes the same defect and carries the reported loss."
+    "The seed row's anchor was a copied exploit transaction two positions after the successful frontrun. This record uses the earlier transaction that executes the same defect and carries the reported loss."
   ]
 }

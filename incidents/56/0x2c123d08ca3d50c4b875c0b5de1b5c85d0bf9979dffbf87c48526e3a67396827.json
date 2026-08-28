@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x2c123d08ca3d50c4b875c0b5de1b5c85d0bf9979dffbf87c48526e3a67396827",
   "protocol": {
     "name": "Caterpillar Coin (CUT)",
@@ -128,7 +127,7 @@
       "type": "review-note",
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T20:05:00Z",
-      "note": "Reviewed the 2558-frame callTracer trace of the anchor, the receipts of all three campaign transactions, the attacker EOA's complete transaction list, the deployed runtime of the unverified logic contract, historical runtime hashes, and CertiK's incident analysis. Anchor 0x2c123d08ca3d50c4b875c0b5de1b5c85d0bf9979dffbf87c48526e3a67396827 is status 1 at block 42131697, transaction index 4, timestamp 1725972052, and is the earliest of the campaign: EOA 0x560a77bc06dcc77eee687acb65d46b580a63eb45 has exactly five transactions ever, a funding transfer at block 42131562 and the three exploit calls to helper 0x87efb39a716860ecd2324a944cb40ec5128e56dd at blocks 42131697, 42131710 and 42132018, plus one later transfer, so the legacy anchor is retained. Target identity: 0x7b2e7cb89824236cb7096cde7a153af30f3ecbaf appears in 80 frames of the anchor trace, always as a plain CALL from the CUT token 0x7057f3b0f4d0649b428f0d8378a8a0e7d21d36a7 and never through DELEGATECALL in either direction, so the relationship is direct; the four selectors it receives are 0xdafa54c6, 0x0e0824a3, 0x2c19d593 and 0x70f88861, and 0x70f88861 is keccak('valuePreservationByRemoveLP(address,uint256)'), the function CertiK names. Root cause reproduced numerically: in each of the ten 0x70f88861 calls the contract reads pair 0x83681f67069a154815a0c6c2c97e2daca6ed3249 token0 (USDT 0x55d398326f99059ff775485246999027b3197955), token1 (CUT) and getReserves, and a record from 0x0917914b0a70ee7f1f2460fcd487696856e31154 whose USDT-denominated value equals reserve0 divided by 2.254872744 in every call; the returned CUT minus the CUT passed in equals 0.283287608274 times reserve1 in all ten calls (spread below 1e-11), while reserve1 rises from 757,225.933923 to 5,083,077.535048 CUT and the price falls from 2.338351 to 0.053808 USDT per CUT, exactly the behaviour of a fixed USDT obligation divided by the live spot price. Independent control: eth_call of the identical first-call calldata with from set to the CUT token against the same deployed runtime at block 42131696 returns 0x0e1f2ab1c4, i.e. the input amount 60,652,433,860 unchanged, versus 275,165,157,604 inside the manipulated transaction; the pre-transaction pair state was 1,454,183.768693813451905 USDT / 777,631.983294 CUT, a price of 1.87 USDT per CUT. Code history: created by 0x714254c993a42e427b16f18c2541cb188c3ee978 in 0xafc9268939df584a318bc8c07b073d99edbce5508e8f45bab8191e492f4245a7 at block 40875691 index 29, timestamp 1722193748; the runtime hashes to 0x8a03774e2eb5085562b4b79047db87835258292de837c4b61e5e1b0bbcf2aa3b identically at block 40875691, block 42131696 and today, and the contract has no proxy slot or upgrade mechanism, so deployment is the code-age basis and the age is 1725972052 - 1722193748 = 3778304 seconds. Loss: summing USDT Transfer logs over the three transactions, the pair loses exactly 1,439,563.632938965392877836 USDT and gains 955,130,899.07835 CUT; 1,416,033.632938965392877836 USDT reaches 0x5766d1f03378f50c7c981c014ed5e5a8124f38a4 and 23,530 USDT stays with the flash-swap pair 0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae."
+      "note": "Reviewed the 2558-frame callTracer trace of the anchor, the receipts of all three campaign transactions, the attacker EOA's complete transaction list, the deployed runtime of the unverified logic contract, historical runtime hashes, and CertiK's incident analysis. Anchor 0x2c123d08ca3d50c4b875c0b5de1b5c85d0bf9979dffbf87c48526e3a67396827 is status 1 at block 42131697, transaction index 4, timestamp 1725972052, and is the earliest of the campaign: EOA 0x560a77bc06dcc77eee687acb65d46b580a63eb45 has exactly five transactions ever, a funding transfer at block 42131562 and the three exploit calls to helper 0x87efb39a716860ecd2324a944cb40ec5128e56dd at blocks 42131697, 42131710 and 42132018, plus one later transfer, so the seed row's anchor is retained. Target identity: 0x7b2e7cb89824236cb7096cde7a153af30f3ecbaf appears in 80 frames of the anchor trace, always as a plain CALL from the CUT token 0x7057f3b0f4d0649b428f0d8378a8a0e7d21d36a7 and never through DELEGATECALL in either direction, so the relationship is direct; the four selectors it receives are 0xdafa54c6, 0x0e0824a3, 0x2c19d593 and 0x70f88861, and 0x70f88861 is keccak('valuePreservationByRemoveLP(address,uint256)'), the function CertiK names. Root cause reproduced numerically: in each of the ten 0x70f88861 calls the contract reads pair 0x83681f67069a154815a0c6c2c97e2daca6ed3249 token0 (USDT 0x55d398326f99059ff775485246999027b3197955), token1 (CUT) and getReserves, and a record from 0x0917914b0a70ee7f1f2460fcd487696856e31154 whose USDT-denominated value equals reserve0 divided by 2.254872744 in every call; the returned CUT minus the CUT passed in equals 0.283287608274 times reserve1 in all ten calls (spread below 1e-11), while reserve1 rises from 757,225.933923 to 5,083,077.535048 CUT and the price falls from 2.338351 to 0.053808 USDT per CUT, exactly the behaviour of a fixed USDT obligation divided by the live spot price. Independent control: eth_call of the identical first-call calldata with from set to the CUT token against the same deployed runtime at block 42131696 returns 0x0e1f2ab1c4, i.e. the input amount 60,652,433,860 unchanged, versus 275,165,157,604 inside the manipulated transaction; the pre-transaction pair state was 1,454,183.768693813451905 USDT / 777,631.983294 CUT, a price of 1.87 USDT per CUT. Code history: created by 0x714254c993a42e427b16f18c2541cb188c3ee978 in 0xafc9268939df584a318bc8c07b073d99edbce5508e8f45bab8191e492f4245a7 at block 40875691 index 29, timestamp 1722193748; the runtime hashes to 0x8a03774e2eb5085562b4b79047db87835258292de837c4b61e5e1b0bbcf2aa3b identically at block 40875691, block 42131696 and today, and the contract has no proxy slot or upgrade mechanism, so deployment is the code-age basis and the age is 1725972052 - 1722193748 = 3778304 seconds. Loss: summing USDT Transfer logs over the three transactions, the pair loses exactly 1,439,563.632938965392877836 USDT and gains 955,130,899.07835 CUT; 1,416,033.632938965392877836 USDT reaches 0x5766d1f03378f50c7c981c014ed5e5a8124f38a4 and 23,530 USDT stays with the flash-swap pair 0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae."
     },
     {
       "id": "source-3",
@@ -160,8 +159,8 @@
     }
   ],
   "discovery": [
-    "legacy:caterpillar-coin:2024-09-10:cut-value-preservation-lp-pricing",
     "dfhl:src/test/2024-09/Caterpillar_Coin_CUT_exp.sol",
+    "seed:caterpillar-coin:2024-09-10:cut-value-preservation-lp-pricing",
     "web:2024-09-10:caterpillar-coin"
   ],
   "verification": {
@@ -169,16 +168,7 @@
     "limitations": [],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/caterpillar-coin.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-09-10T12:40:52Z"
-    }
+    ]
   },
   "notes": [
     "The campaign is three transactions in the same 322 blocks against the same defect; they are one incident with one loss, anchored on the first. realizedAt is not set because the last transaction is 967 seconds after the anchor and the loss is valued at par."

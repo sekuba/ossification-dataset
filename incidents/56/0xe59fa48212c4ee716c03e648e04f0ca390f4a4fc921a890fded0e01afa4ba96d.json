@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0xe59fa48212c4ee716c03e648e04f0ca390f4a4fc921a890fded0e01afa4ba96d",
   "protocol": {
     "name": "RES Token",
@@ -159,7 +158,7 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "note": "legacy migration note retained for provenance: onchain review: RES 0xecCD8B08Ac3B587B7175D40Fb9C60a20990F8D21 created 2022-07-20T13:06:03Z by 0xf53ff2f90ab93a429b5c6ac0e62825e50ccee195, unrelated to attack sender 0x986b2e2a1cf303536138d8ac762447500fd781c6; no EIP-1967 Upgraded events, age measured from deployment. DeFiHackLabs carries two PoCs (RES_exp and RES_exp2) for this same incident; one row is recorded. lossUsd uses the 290,671 USDT stated in the PoC header and the QuillAudits write-up."
+      "note": "seed-inventory note retained for provenance: onchain review: RES 0xecCD8B08Ac3B587B7175D40Fb9C60a20990F8D21 created 2022-07-20T13:06:03Z by 0xf53ff2f90ab93a429b5c6ac0e62825e50ccee195, unrelated to attack sender 0x986b2e2a1cf303536138d8ac762447500fd781c6; no EIP-1967 Upgraded events, age measured from deployment. DeFiHackLabs carries two PoCs (RES_exp and RES_exp2) for this same incident; one row is recorded. lossUsd uses the 290,671 USDT stated in the PoC header and the QuillAudits write-up."
     },
     {
       "id": "source-5",
@@ -192,16 +191,7 @@
     ],
     "reviewSourceIds": [
       "source-5"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/res-token.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2022-10-06T10:15:50Z"
-    }
+    ]
   },
   "notes": [
     "The campaign exercises two related defects in one code artifact - spot-reserve pricing of the ALL fee payout in _distB and the sell-then-burn in _thisAToB. They share the same runtime and the same code age, so they are recorded as a single composite failure mode rather than as two targets that would produce two curve observations from one loss."

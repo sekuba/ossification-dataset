@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0x6beb21b53f5b205c088570333ec875b720e333b49657f7026b01ed72b026851e",
   "protocol": {
     "name": "APEMAGA",
@@ -21,11 +20,11 @@
   },
   "summary": "APEMAGA.family(address) had no access control and reduced the target's token balance, so calling it three times against the Uniswap V2 pair and then sync() collapsed the pair's APEMAGA reserve and let the attacker's small pre-bought position be sold for the pool's WETH.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 30343,
       "valuationTimestamp": 1719399047,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x56ff4afd909aa66a1530fe69bf94c74e6d44500c"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 3276,
-      "failureModeId": "legacy:eip155:1:0x6beb21b53f5b205c088570333ec875b720e333b49657f7026b01ed72b026851e:failure-1",
+      "failureModeId": "provisional:eip155:1:0x6beb21b53f5b205c088570333ec875b720e333b49657f7026b01ed72b026851e:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -81,7 +80,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/apemaga.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
@@ -121,18 +120,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/apemaga.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/apemaga.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2024-06-26T10:50:47Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

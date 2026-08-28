@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:56:0x6a50fea9a44cf8c1bd288fb1857da942dd601a1a062aff9598b755f3e7580ff4",
   "protocol": {
     "name": "Pro Token",
@@ -179,22 +178,14 @@
       "note": "Reviewed the 11 campaign transactions and receipts, indexed Pro and USDT Transfer logs, proxy and implementation creation transactions/runtime bytecode, the proxy constructor's Upgraded event, exploit-time target attribution, the later remediation upgrade, and security-firm reporting. Transaction 0x6a50fe...80ff4 at block 112652246:1 is the first successful defect execution by EOA 0x427671b2c8e91034a91fe698f9b7259b2345f45d through helper 0xf00bc28d22d71be74bc8ab0d11fe77f6d77850ac; ten more same-helper transactions end at 0xaaea18...793d1. Each batch repeatedly reached exec() through proxy 0xc44f2accac20598a3f2b4d489a970fcf52a04a3c and implementation 0x7fba63d0c45f265c1bea3ed2e49f0691a9d9aa87. The artifact was deployed at block 87886213:43; the proxy was deployed by the same EOA one transaction later, and constructor log 128 selected it. No intervening implementation selection preceded this campaign; runtime hash 0x7666800a8209b6ff010f8c2513099b624472d89747dbd67b88fae41cb2cacc17 remained present. Campaign receipts reconcile exactly: executor -167,500 Pro; pair +151,425.148167480 Pro and -7,462,273.897551865680153047 USDT; configured receivers +7,404,304.727660184073717188 USDT; attacker EOA +57,969.169891681606435859 USDT. GoPlus reporting distinguishes the configured receivers from the attacker and documents the post-incident implementation's new caller check."
     }
   ],
+  "discovery": [
+    "seed:pro-token:2026-07-28:pro-token"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-8"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/pro-token.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2026-07-28T15:58:10Z",
-      "reanchored": true
-    }
-  },
-  "notes": []
+    ]
+  }
 }

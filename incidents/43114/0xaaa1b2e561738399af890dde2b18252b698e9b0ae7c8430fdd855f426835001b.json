@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:43114:0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b",
   "protocol": {
     "name": "Aave Rebalancer",
@@ -21,11 +20,11 @@
   },
   "summary": "The rebalancer executed caller-supplied target/calldata from its own address with no whitelist, so an attacker had it call Aave Pool.borrow(WAVAX, 7000e18, 2, 0, victim) against the WAVAX borrowing power the victim had delegated to it, then transferred the received WAVAX out with a second arbitrary call.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 64357,
       "valuationTimestamp": 1776583426,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-4"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x7a7bab45363efb0394ff27bfa29bb7c0534ca8c9"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 9377543,
-      "failureModeId": "legacy:eip155:43114:0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b:failure-1",
+      "failureModeId": "provisional:eip155:43114:0xaaa1b2e561738399af890dde2b18252b698e9b0ae7c8430fdd855f426835001b:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-3",
@@ -81,7 +80,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/aave-rebalancer.json; no semantic revalidation was inherited.",
+          "Target identity and code history were imported from the seed inventory without independent review.",
           "The executing code artifact and its code hash have not been established in structured evidence."
         ]
       }
@@ -121,18 +120,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/aave-rebalancer.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/aave-rebalancer.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-04-19T07:23:46Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }

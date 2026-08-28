@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:8453:0x9f906fcd8fceaa6745e8d1c004861dcfa9b5e6a893fe1e8c5d0013a4e982e6a8",
   "protocol": {
     "name": "AllbridgeCCTP",
@@ -158,24 +157,14 @@
       "note": "Reviewed the successful Base exploit receipt and call trace, the successful Polygon message transaction, the commit-pinned exact-calldata reproduction, explorer-verified Allbridge and Circle source, archive balances and calls, contract creation, runtime history, and every direct call to the vulnerable contract through the exploit block. On Polygon, attacker 0x2419432344b0b892e592b2601b98eae702ba360e directly called Circle MessageTransmitterV2.sendMessage in block 90871052 index 48. Its emitted 408-byte generic message names source domain 7, destination domain 6, recipient 0xb6fbdfa5f3cbeb139d4cce86d92f4ac8687b16c0, destination caller 0xf9b710e427bf4d93598e0f80a84de22c7ad9b577, amount 1,000,000 USDC, sourceSender 0xdac2959b638247ab586f6c3ffcfc9c352d3aae5c, and hookData hash 0xe15a0288fb4a60804a866655fdf08a6d3e51c3ca58f5d400e8620e7069aac52e. The Base exploit relayed Circle's valid attestation through CCTPTokenMessenger.receiveCctpMessage. Verified Allbridge code checked the destination caller, mapped source domain and copied sourceSender, then called Circle's receiveMessage; it did not require Circle's TokenMessengerV2 as recipient, observe a USDC balance increase, or otherwise establish a mint before assigning receivedMessages[messageHash] = amount - feeExecuted. The forged recipient was attacker code rather than Circle's minting messenger, so Circle minted no USDC. Router.receiveToken nevertheless accepted receivedTokenAmount(messageHash) and paid 999,000 USDC after the attacker topped its balance up with 808,844.023607 flash-loaned USDC. Archive calls show Router balances of 191,155.976393 USDC at block 50157344 and exactly 1,000 USDC at block 50157345. Transaction 0x3015213003863b4429c2290c51cd6862776a477a0b99598fd17a012d7cd2f229 had legitimately minted 191,112.338841 USDC into the Router three blocks earlier, leaving a 43.637552 USDC prior baseline. The exploit transfers are 808,844.023607 USDC into Router, 999,000 USDC out, and 809,248.445619 USDC back to Aave; harness 0xb6fbdfa5f3cbeb139d4cce86d92f4ac8687b16c0 ends with 189,751.554381 USDC. Gross victim depletion is therefore exactly 190,155.976393 USDC at stablecoin par. Artifact history: CCTPTokenMessenger is a direct, non-proxy contract created by 0xfa00c78931f236949d1b52e60d9dbe762a632641 in block 45294373 index 34. Its code is absent one block earlier, and its 6,018-byte runtime hashes to 0xed35bbb215ff837130244756eb11ba27fe8f5603ac25a4080e56f60acb4c81f9 from deployment through block 50157344. Its immutable TOKEN, TOKEN_MESSENGER, MESSAGE_TRANSMITTER and ROUTER bind Base USDC, Circle's TokenMessengerV2, Circle's MessageTransmitterV2 proxy and the Allbridge Router. Transaction 0x46e00cc9ed339e8b848906073a937342daf22d30a81ba789270f8fb69195bcb0 at block 45295222 index 91 changed remoteTokenMessengers(5) from zero to 0xdac2959b638247ab586f6c3ffcfc9c352d3aae5c; source domain 7 had been mapped to chain ID 5 two transactions earlier. This latest necessary configuration supplied the exact public comparison value used by the vulnerable receive path and forged message. It remained unchanged through block 50157344, and all later configuration calls visible in the complete direct-call history either addressed other chain IDs or changed noncausal fee and gas parameters. The defect-bearing Allbridge artifact is 0xf9b710e427bf4d93598e0f80a84de22c7ad9b577; its downstream call to Circle proxy 0x81d40f21f12a8f0e3252bccb954d722d4c464b64 and implementation 0x7db629f6acc20be49a0a7565c21cc178e9ac21e3 merely validated and delivered the generic message. The configuration reset precedes exploitation by 9,724,246 seconds."
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2026-08/AllbridgeCCTP_exp.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-6"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/allbridge-cctp.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-08-19T01:47:17Z"
-    }
-  },
-  "discovery": [
-    "dfhl:src/test/2026-08/AllbridgeCCTP_exp.sol"
-  ],
-  "notes": []
+    ]
+  }
 }

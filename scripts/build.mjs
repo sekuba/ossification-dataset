@@ -346,19 +346,13 @@ export function buildArtifacts(root = ROOT) {
     throw new Error(`duplicate incident IDs: ${[...new Set(duplicateIds)].sort().join(', ')}`)
   records.sort((a, b) => compareText(a.incident.id, b.incident.id))
 
-  const schemaVersions = [...new Set(records.map((record) => record.incident.schemaVersion))]
-  if (schemaVersions.length !== 1)
-    throw new Error(`source files have inconsistent schemaVersion values: ${schemaVersions.join(', ')}`)
-
   const incidents = {
     $schema: '../../schema/release-incidents.schema.json',
     formatVersion: 1,
-    schemaVersion: schemaVersions[0],
     // Reviewed incidents only, and only the fields a curve observation cannot
-    // supply. Provisional records are legacy rows whose loss has not been
-    // checked; they stay in incidents/ for review and are hashed in the
-    // manifest, but publishing their figures beside reviewed ones invites
-    // summing the two together.
+    // supply. Provisional records await review; they stay in incidents/ and
+    // are hashed in the manifest, but publishing their figures beside reviewed
+    // ones invites summing the two together.
     incidents: records
       .filter(({ incident }) => incident.verification?.tier === 'reviewed')
       .map(({ incident }) => ({
@@ -381,7 +375,6 @@ export function buildArtifacts(root = ROOT) {
   const manifest = {
     $schema: '../../schema/release-manifest.schema.json',
     formatVersion: 1,
-    schemaVersion: schemaVersions[0],
     description: 'Deterministic manifest for the latest ossification dataset distribution.',
     cohortRules: COHORT_RULES,
     counts: {

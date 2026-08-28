@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:1:0xeb87ebc0a18aca7d2a9ffcabf61aa69c9e8d3c6efade9e2303f8857717fb9eb7",
   "protocol": {
     "name": "Sturdy Finance",
@@ -171,23 +170,14 @@
   ],
   "discovery": [
     "dfhl:src/test/2023-06/Sturdy_exp.sol",
-    "legacy:sturdy:2023-06-12:sturdy"
+    "seed:sturdy:2023-06-12:sturdy"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
       "source-2"
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/sturdy.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "upgrade-events",
-      "upgradeEventCount": 1,
-      "date": "2023-06-12T01:06:35Z"
-    }
+    ]
   },
   "notes": [
     "This is the same class as the Conic and dForce records already in the dataset: a reentrancy guard that exists in the deployed system but is not applied on the path the attacker used. Here the guard is Sturdy's own _validateOracle, and the unguarded entry point is setUserUseReserveAsCollateral."

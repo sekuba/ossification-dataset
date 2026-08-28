@@ -1,6 +1,5 @@
 {
   "$schema": "../../schema/incident.schema.json",
-  "schemaVersion": "2.0.0",
   "id": "eip155:10:0xb0a8a3cc76fb17bf965ab1dee3b76b62f79ca72def31e12f8ad8b1711625df08",
   "protocol": {
     "name": "Perpetual Protocol",
@@ -21,11 +20,11 @@
   },
   "summary": "OrderBook.updateFundingGrowthAndLiquidityCoefficientInFundingPayment omitted its clearing-house-only guard, so a direct call poisoned cached funding growth and converted fabricated PnL into withdrawals from two deployments.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "unspecified",
     "usd": {
       "amount": 3062.213107,
       "valuationTimestamp": 1784221641,
-      "method": "legacy-unspecified",
+      "method": "unspecified",
       "sourceIds": [
         "source-3"
       ]
@@ -33,7 +32,7 @@
     "minimumUsd": null,
     "assets": [],
     "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
   },
   "targets": [
     {
@@ -62,10 +61,10 @@
           "type": "deployment",
           "address": "0x4e26b6815d82baa6b8c15fe4ffb646dfb4b474c7"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
       },
       "codeAgeSeconds": 146405284,
-      "failureModeId": "legacy:eip155:10:0xb0a8a3cc76fb17bf965ab1dee3b76b62f79ca72def31e12f8ad8b1711625df08:failure-1",
+      "failureModeId": "provisional:eip155:10:0xb0a8a3cc76fb17bf965ab1dee3b76b62f79ca72def31e12f8ad8b1711625df08:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
@@ -80,7 +79,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/perpetual-protocol.json; no semantic revalidation was inherited."
+          "Target identity and code history were imported from the seed inventory without independent review."
         ]
       }
     }
@@ -119,18 +118,8 @@
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/perpetual-protocol.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
-    ],
-    "legacy": {
-      "snapshot": "research/raw/legacy-v1.json",
-      "originalFile": "protocols/perpetual-protocol.json",
-      "originalIncidentIndex": 0,
-      "status": "OK",
-      "basis": "deployment",
-      "upgradeEventCount": 0,
-      "date": "2026-07-16T17:07:21Z"
-    }
-  },
-  "notes": []
+      "Classification and loss were imported from the seed inventory and await review.",
+      "The imported USD loss lacks structured valuation provenance."
+    ]
+  }
 }
