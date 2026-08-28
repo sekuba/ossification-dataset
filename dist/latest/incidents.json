@@ -524,6 +524,63 @@
       }
     },
     {
+      "id": "eip155:10:0xf4fc3b638f1a377cf22b729199a9aeb27fc62fe2983a65c4d14b99ee5c5b2328",
+      "protocol": {
+        "name": "NBLGAME",
+        "slug": "nblgame"
+      },
+      "name": "NblNftStake withdrawNft reentrancy",
+      "chainId": 10,
+      "exploit": {
+        "transactionHash": "0xf4fc3b638f1a377cf22b729199a9aeb27fc62fe2983a65c4d14b99ee5c5b2328",
+        "blockNumber": 115293069,
+        "transactionIndex": 1,
+        "timestamp": 1706184915
+      },
+      "summary": "NblNftStake.withdrawNft() returned the staked ERC-721 with safeTransferFrom before paying NBL and clearing the slot, despite inheriting a reentrancy guard that the function did not use. The receiver callback re-entered the same slot, so two nested withdrawals each paid its unchanged NBL amount and emptied the staking contract.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 180881.24657324585,
+          "valuationTimestamp": 1706184911,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-6"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 10,
+              "tokenAddress": "0x4b03afc91295ed778320c2824bad5eb5a1d852dd",
+              "symbol": "NBL"
+            },
+            "amount": "1773100000.000000000000000000",
+            "usdValue": 180881.24657324585,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1706184911,
+              "unitPriceUsd": 0.00010201412586613607,
+              "sourceIds": [
+                "source-1",
+                "source-4",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "NblNftStake held exactly 1,773,100,000 NBL before the exploit and zero afterwards. The attacker supplied a separate 1,773,100,000 NBL flash-loan deposit, which is excluded, then received 3,546,200,000 NBL through two identical withdrawals. After repaying 1,778,419,300 NBL principal and fee, the attacker sold the remaining 1,767,780,700 NBL for 164,967.658585 USDT and 6.900257340231423430 WETH. At $2,227.59/WETH those proceeds are $180,338.60283352611651843370, an effective realised price of $0.0001020141258661360634372994908/NBL. Applying that price to the exact gross victim depletion values it at $180,881.2465732458540806757271 without subtracting the attacker's flash-loan fee."
+      }
+    },
+    {
       "id": "eip155:137:0x10f2c28f5d6cd8d7b56210b4d5e0cece27e45a30808cd3d3443c05d4275bb008",
       "protocol": {
         "name": "0VIX Protocol",
@@ -10498,6 +10555,61 @@
       }
     },
     {
+      "id": "eip155:1:0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814",
+      "protocol": {
+        "name": "Alkimiya",
+        "slug": "alkimiya"
+      },
+      "name": "Alkimiya SilicaPools uint128 share-supply truncation",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x9b9a6dd05526a8a4b40e5e1a74a25df6ecccae6ee7bf045911ad89a1dd3f0814",
+        "blockNumber": 22146340,
+        "transactionIndex": 0,
+        "timestamp": 1743176087
+      },
+      "summary": "SilicaPools accepted a uint256 share quantity but narrowed it without a checked cast when updating the pool's uint128 sharesMinted accounting, while minting the full uint256 quantity as ERC-1155 long and short balances. The attacker minted 2^128 + 1 of each, making recorded supply wrap to 1, transferred away 2^128 - 1, and retained 2 short shares. After starting and ending the permissionless pool, redeemShort treated those 2 shares as twice the recorded supply and paid twice the deposited collateral, consuming the pool's pre-existing WBTC.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 96176.5420806,
+          "valuationTimestamp": 1743176087,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-5"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+              "symbol": "WBTC"
+            },
+            "amount": "1.14015390",
+            "usdValue": 96176.5420806,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1743176087,
+              "unitPriceUsd": 84354,
+              "sourceIds": [
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Archive balance calls show SilicaPools held exactly 114,015,390 WBTC satoshis before the exploit transaction and zero after it, establishing gross depletion of 1.14015390 WBTC independently of attacker financing. During the transaction a Morpho flash loan supplied 10 WBTC; the attacker added 0.56125794 WBTC directly and collateralizedMint transferred another 1.70141184 WBTC into SilicaPools. redeemShort then transferred the pool's full 3.40282368 WBTC balance out, the flash loan was repaid, and the exploit contract's final transfer sent 1.14015390 WBTC of proceeds onward. DefiLlama's BTC price of $84,354 values the depletion at $96,176.54."
+      }
+    },
+    {
       "id": "eip155:1:0x9c0503217d453905bf30f16317c1ed93292d7494dfe3765aa972d7bdea108a00",
       "protocol": {
         "name": "Unibot",
@@ -16235,6 +16347,61 @@
       }
     },
     {
+      "id": "eip155:1:0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6",
+      "protocol": {
+        "name": "TIME",
+        "slug": "time"
+      },
+      "name": "TIME ERC-2771 Multicall sender spoof",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xecdd111a60debfadc6533de30fb7f55dc5ceed01dfadd30e4a7ebdb416d2f6b6",
+        "blockNumber": 18730463,
+        "transactionIndex": 0,
+        "timestamp": 1701904319
+      },
+      "summary": "TIME combined a trusted-forwarder ERC-2771 context with self-delegatecall Multicall. A forwarded multicall could append an attacker-chosen address to an inner call, making burn() treat the TIME/WETH pair as the sender; the attacker burned the pair's TIME reserve, synchronized the pool, and drained WETH at the distorted price.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 199339.32010434635,
+          "valuationTimestamp": 1701904319,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-9",
+            "source-10"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "symbol": "WETH"
+            },
+            "amount": "89.513462587046838316",
+            "usdValue": 199339.32010434635,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1701904226,
+              "unitPriceUsd": 2226.92,
+              "sourceIds": [
+                "source-10"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-9"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The receipt records 5 WETH entering the TIME/WETH pair and 94.513462587046838316 WETH leaving it, for exact net victim depletion of 89.513462587046838316 WETH. DefiLlama's nearest prior ETH observation values it at $199,339.32. The commonly reported 84.59 ETH is attacker proceeds after the approximately 5 ETH transaction-builder payment. The burned TIME reserve is the mechanism of the same drain and is not valued again."
+      }
+    },
+    {
       "id": "eip155:1:0xf0464b01d962f714eee9d4392b2494524d0e10ce3eb3723873afd1346b8b06e4",
       "protocol": {
         "name": "Blueberry Protocol",
@@ -21245,6 +21412,60 @@
       }
     },
     {
+      "id": "eip155:56:0x00e94786271db9bde4f6612b9e01c5eca6b24d4f4b5a4524a2988b22f510f0a7",
+      "protocol": {
+        "name": "Four.meme",
+        "slug": "four-meme"
+      },
+      "name": "Four.meme launchpad liquidity migration into pre-initialized pools",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x00e94786271db9bde4f6612b9e01c5eca6b24d4f4b5a4524a2988b22f510f0a7",
+        "blockNumber": 46552826,
+        "transactionIndex": 91,
+        "timestamp": 1739239875
+      },
+      "summary": "The launchpad's addLiquidity() migration accepted an existing PancakeSwap V3 pool without checking its initialized price, so attackers pre-created pools at manipulated sqrtPriceX96 values and swapped out the WBNB deposited during migration.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 227399.3010955574,
+          "valuationTimestamp": 1739239863,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-7",
+            "source-8"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "367.359656702730835025",
+            "usdValue": 227399.3010955574,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1739239863,
+              "unitPriceUsd": 619.01,
+              "sourceIds": [
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-8"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross depletion is the WBNB transferred out of 68 attacker-preinitialized PancakeSwap V3 pools in their first post-migration drain, summed over 66 transactions. WBNB Transfer, Deposit and Withdrawal logs show no WBNB input to those pools in the selected transactions, so the exact aggregate outflow is also their aggregate transaction-level balance decrease. Eighteen attacker-created pools that never migrated and six migrated pools with no drain during the campaign are excluded. The public 287 BNB / USD 183,000 estimate is not used because it does not reconcile to gross pool depletion. No recovery is netted.",
+        "realizedAt": 1739253088
+      }
+    },
+    {
       "id": "eip155:56:0x04a1f0d1694242515ecb14faa71053901f11a1286cd21c27fe5542f9eeb62356",
       "protocol": {
         "name": "YYDS",
@@ -21514,6 +21735,83 @@
         ],
         "confidence": "high",
         "notes": "The exploit receipt records exactly 8.8 WBNB transferred to the attacker EOA after the 11 WBNB DODO flash loan was repaid."
+      }
+    },
+    {
+      "id": "eip155:56:0x1350cc72865420ba5d3c27234fd4665ad25c021b0a75ba03bc8340a1b1f98a45",
+      "protocol": {
+        "name": "TLN Protocol",
+        "slug": "tln-protocol"
+      },
+      "name": "TLN Protocol spot-reserve reward and collateral manipulation",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x1350cc72865420ba5d3c27234fd4665ad25c021b0a75ba03bc8340a1b1f98a45",
+        "blockNumber": 39198686,
+        "transactionIndex": 0,
+        "timestamp": 1717144634
+      },
+      "summary": "TLNProtocolStaking priced VUSD/VOW LP rewards from the live reserves of that pool and the thin USDT/VOW pair. A flash-loan-funded VOW purchase raised lpRate 12,876.67-fold, letting the attacker stake 943.253377026177767815 LP and mint 3,199,510.344301177871795565 TLN. TlnSwap then compounded the failure: lock() lent 3,251,534.902745099463206875 VUSD against the TLN while its second live-reserve calculation reduced required VOW collateral from a pre-transaction 921,120.006996164638490158 to 71.530270655320077627 VOW.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 748229.1155236985,
+          "valuationTimestamp": 1717144634,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-5",
+            "source-6",
+            "source-8"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": null,
+              "symbol": "BNB"
+            },
+            "amount": "182.838953341954182596",
+            "usdValue": 108231.51843076978,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1717144634,
+              "unitPriceUsd": 591.95,
+              "sourceIds": [
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-5"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "171.439728226688515854",
+            "usdValue": 639997.5970929287,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1717144634,
+              "unitPriceUsd": 3733.0763628292925,
+              "sourceIds": [
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-5",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "TlnSwap's VUSD balance fell exactly 3,251,534.902745099463206875, but VUSD had no reliable external dollar market, so it is not valued at its nominal peg. The recorded loss is instead the attacker's exact net realised proceeds. On BSC, the two sweep transactions moved 107,881.749956792323205771 USDT and 1,463,280.244257269082062875 VOW from the attack contract to the EOA. The EOA sold all USDT and 3,280.244257269082062875 VOW for 184.838953341954182596 BNB, then bridged exactly 1,460,000 VOW to Ethereum and sold it in 61 transactions for 171.439728226688515854 ETH. The 2 BNB transferred into the attack contract during setup bought the LP position later surrendered to staking and is attacker-supplied capital, so it is removed from the BNB component. Gas and bridge fees are disposal costs and are not subtracted. Incident-time DefiLlama prices value the resulting 182.838953341954182596 BNB and 171.439728226688515854 ETH at $748,229.12. Early reports of approximately $200,000 to $280,000 did not follow the VOW bridge and liquidation.",
+        "realizedAt": 1717151097
       }
     },
     {
@@ -22385,6 +22683,61 @@
         ],
         "confidence": "high",
         "notes": "Exact depletion of the FPC/USDT PancakeSwap pair 0xa1e08e10eb09857a8c6f2ef6cca297c1a081ed6b, whose USDT balance is 4,673,883.534817151619771979 at block 52624700 and 0.007676950608566658 at block 52624701; the difference is the liquidity providers' loss and is measured net of the 23,020,001 USDT the attacker paid into the pair on the preceding buy, so no attacker-supplied capital is counted. The 23,020,000 USDT PancakeSwap v3 flash loan and its 2,302 USDT fee are financing, not loss: the attacker's realised take is 4,671,581.527140201011205321 USDT, 2,302 USDT less than the gross depletion recorded here. DefiLlama prices BSC-USD at exactly 1.0 at the incident timestamp. The pair additionally lost 160,836.761063161996185171 FPC that burnLpToken moved to the project's own treasury 0x0fa6c0bd9704a7a45b16e0487549b10218a82baa and reward pool 0xcea188c6bb0db78fd17904c03e28f43ae4e46d5a; that component is not valued because the same transaction destroyed the only FPC market. Nothing was recovered."
+      }
+    },
+    {
+      "id": "eip155:56:0x3ad998a01ad1f1bbe6dba6a08e658c1749dabfa4a07da20ded3c73bcd6970d20",
+      "protocol": {
+        "name": "MetaDragon",
+        "slug": "metadragon"
+      },
+      "name": "MetaDragon token-id transfer unrestricted minting",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x3ad998a01ad1f1bbe6dba6a08e658c1749dabfa4a07da20ded3c73bcd6970d20",
+        "blockNumber": 39141427,
+        "transactionIndex": 70,
+        "timestamp": 1716972425
+      },
+      "summary": "P404Token treated any transfer value below 30,001 as an ERC-721 token ID. When the recipient was the token contract itself, _update skipped ERC-20 balance accounting, called the linked collection's burn without checking that the caller owned the NFT, and minted 9,800 MetaDragon tokens to msg.sender. The attacker repeated this over existing token IDs and sold the unbacked mint into the MetaDragon/WBNB pair in 12 transactions.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 180797.53580950433,
+          "valuationTimestamp": 1716972386,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-6",
+            "source-7"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "301.983523984473584116",
+            "usdValue": 180797.53580950433,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1716972386,
+              "unitPriceUsd": 598.7,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-4",
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The 12 successful campaign receipts each contain exactly one WBNB Transfer: a payout from MetaDragon/WBNB pair 0x0a86a9cc823f8febc1d26f1f880be3c986e7c042 to attack helper 0xdaef6079cb84405dac688a9f6956c6830b7ddbc6. Those exact realised payouts sum to 301.983523984473584116 WBNB; no WBNB enters the pair from the attacker in the transaction set. The USD value uses the nearest DefiLlama BNB observation preceding the anchor.",
+        "realizedAt": 1716972590
       }
     },
     {
@@ -24582,6 +24935,61 @@
         ],
         "confidence": "high",
         "notes": "The OLPC/LABUBU PancakePair 0xedb7dcb4cdfec957f8df5cbf5e94229a6cc9f365 lost 688380.902509080087370095 LABUBU in the single exploit transaction: its LABUBU balance falls from 720372.009849017508169693 at block 105326392 to 31991.107339937420799598 at block 105326393, and the pair's Swap event reports amount0Out 688380902509080087370095 with amount1In 8100000000000000000. Valuation is the realised proceeds of that same transaction rather than a spot price: DefiLlama has no LABUBU or OLPC observation, and both tokens trade only in the thin pools the attack moved. The attacker routed the LABUBU through the LABUBU/WBNB and WBNB/USDT pairs inside the exploit transaction and its BEP20-USDT balance rose from 0.105956839086043429 to 1115903.769368970807600681, a gain of 1115903.663412131721557252 USDT taken at par, which is 1.6210555222330743 USD per LABUBU removed from the pair and matches the 1115903.66 USDT figure in source-2. The attacker realised less than the pair lost because 124252.752903288956770302 LABUBU of the output was burned by LABUBU's own transfer tax on the way out. The pair also lost 51928285.776963524850939528 OLPC, burned to 0x000000000000000000000000000000000000dead by the defective hook, which is not valued: OLPC delivers zero tokens to any non-exempt buyer, so it has no realisable market price. No recovery or return took place."
+      }
+    },
+    {
+      "id": "eip155:56:0x8ff764dde572928c353716358e271638fa05af54be69f043df72ad9ad054de25",
+      "protocol": {
+        "name": "NGFS",
+        "slug": "ngfs"
+      },
+      "name": "NGFS public proxy initialization",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x8ff764dde572928c353716358e271638fa05af54be69f043df72ad9ad054de25",
+        "blockNumber": 38167373,
+        "transactionIndex": 111,
+        "timestamp": 1714043885
+      },
+      "summary": "NGFSToken left its single-use proxy initializer public, letting the attacker appoint its own contract as both privileged proxy and library, credit itself an unbacked NGFS balance, and sell it against the NGFS/USDT pool.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 190138.75799031075,
+          "valuationTimestamp": 1714043885,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-4"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "190138.757990310758328686",
+            "usdValue": 190138.75799031075,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1714043885,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The NGFS/USDT pair's USDT balance fell from 192,044.910952619638111430 to 1,906.152962308879782744 in the exploit transaction. Its only USDT transfer was the exact 190,138.757990310758328686 payout to the attacker contract, which began with zero USDT and retained the full amount. Stablecoin-par valuation therefore equals the exact gross LP depletion."
       }
     },
     {
@@ -27017,6 +27425,60 @@
       }
     },
     {
+      "id": "eip155:56:0xee10553c26742bec9a4761fd717642d19012bab1704cbced048425070ee21a8a",
+      "protocol": {
+        "name": "ATM (0xa595)",
+        "slug": "atm-a595"
+      },
+      "name": "ATM transfer-triggered fee auto-swap manipulation",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xee10553c26742bec9a4761fd717642d19012bab1704cbced048425070ee21a8a",
+        "blockNumber": 37483301,
+        "transactionIndex": 0,
+        "timestamp": 1711987729
+      },
+      "summary": "ATM synchronously sold its own token inventory into the ATM/WBNB pair before each non-whitelisted transfer to that pair. The sell amount followed the triggering transfer, the threshold was zero, and both internal swaps accepted zero minimum output, so a flash-funded attacker repeatedly transferred ATM to the pair and skimmed it back to trigger 34 protocol dumps before unwinding against the depleted pool.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 230111.04687454784,
+          "valuationTimestamp": 1711987599,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-6"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "400.946206569814328228",
+            "usdValue": 230111.04687454784,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1711987599,
+              "unitPriceUsd": 573.92,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The exploit receipt records 148.244121844478847692 WBNB entering and 549.190328414293175920 WBNB leaving the ATM/WBNB pair, for an exact 400.946206569814328228 WBNB net LP depletion. This excludes the attacker's pair inputs. The USD value uses the nearest DefiLlama BNB observation preceding the transaction."
+      }
+    },
+    {
       "id": "eip155:56:0xf2a0c957fef493af44f55b201fbc6d82db2e4a045c5c856bfe3d8cb80fa30c12",
       "protocol": {
         "name": "SVT",
@@ -28581,6 +29043,63 @@
         ],
         "confidence": "medium",
         "notes": "Exact pre-recovery victim depletion is 133.7 WETH: Rebalancer's WETH balance fell from 133.707875556674808577 immediately before the anchor transaction to 0.007875556674808577 afterward. The receipt records 267.4 WETH supplied to Rebalancer from flash-loan proceeds, 401.1 WETH returned across the nested burns, repayment of the 267.4 WETH principal, and retention of the 133.7 WETH victim depletion. Published analysis values 133.7 WETH at approximately $501,279; the USD total is therefore reported rather than independently price-reproduced."
+      }
+    },
+    {
+      "id": "eip155:8453:0x9f906fcd8fceaa6745e8d1c004861dcfa9b5e6a893fe1e8c5d0013a4e982e6a8",
+      "protocol": {
+        "name": "AllbridgeCCTP",
+        "slug": "allbridge-cctp"
+      },
+      "name": "Allbridge CCTP phantom deposit",
+      "chainId": 8453,
+      "exploit": {
+        "transactionHash": "0x9f906fcd8fceaa6745e8d1c004861dcfa9b5e6a893fe1e8c5d0013a4e982e6a8",
+        "blockNumber": 50157345,
+        "transactionIndex": 120,
+        "timestamp": 1787104037
+      },
+      "summary": "CCTPTokenMessenger accepted a generic Circle attestation, decoded a token amount from its attacker-authored body, and credited a deposit without verifying that Circle minted USDC.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 190155.976393,
+          "valuationTimestamp": 1787104037,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-5",
+            "source-6"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 8453,
+              "tokenAddress": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+              "symbol": "USDC"
+            },
+            "amount": "190155.976393",
+            "usdValue": 190155.976393,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1787104037,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-5",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "At block 50157344 the Router held 191,155.976393 USDC; 191,112.338841 USDC had been legitimately minted into it three blocks earlier and the remaining baseline was 43.637552 USDC. The attacker flash-borrowed and deposited 808,844.023607 USDC, then redeemed a phantom 1,000,000 USDC credit for a 999,000 USDC payout. The Router ended with its 1,000 USDC fee, so exact pre-existing victim depletion was 190,155.976393 USDC. The 404.422012 USDC flash-loan premium reduces attacker proceeds, not gross victim loss."
       }
     },
     {
