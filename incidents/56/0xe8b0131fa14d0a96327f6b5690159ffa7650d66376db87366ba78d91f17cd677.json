@@ -6,7 +6,7 @@
     "name": "ARK Token",
     "slug": "ark-token"
   },
-  "name": "ARK public autoBurnLiquidityPairTokens()",
+  "name": "ARK public liquidity-pair burn and reserve collapse",
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -16,72 +16,98 @@
       "timestamp": 1711199895
     },
     "attackerAddresses": [
-      "0xdd309ea4e99b772c1e6a798a6b159211bb95b22c"
+      "0xdd309ea4e99b772c1e6a798a6b159211bb95b22c",
+      "0x94598ec1eb8f85d57fba787df6b49dbbabb87f37"
     ]
   },
-  "summary": "ARK.autoBurnLiquidityPairTokens() can be called by anyone to burn ARK held by the ARK/WBNB pair and sync it, so the attacker repeatedly shrank the pool and sold into the inflated price.",
+  "summary": "ARK exposed an unrestricted function that burned tokens held by its ARK/WBNB pair and synchronized the reduced reserve. The attacker repeated it 6,794 times, then swapped against the collapsed ARK reserve and withdrew the pair's WBNB.",
   "loss": {
-    "kind": "legacy-unspecified",
+    "kind": "net-loss",
     "usd": {
-      "amount": 194776,
-      "valuationTimestamp": 1711199895,
-      "method": "legacy-unspecified",
+      "amount": 194844.1002974537,
+      "valuationTimestamp": 1711199695,
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-1",
+        "source-6"
       ]
     },
     "minimumUsd": null,
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Migrated from legacy lossUsd/lossOther. The legacy corpus did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "symbol": "WBNB"
+        },
+        "amount": "348.147268515623217850",
+        "usdValue": 194844.1002974537,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1711199695,
+          "unitPriceUsd": 559.66,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The exploit receipt contains the only two WBNB transfers: 0.000000000000000100 WBNB from the attack helper to the pair and 348.147268515623217950 WBNB from the pair to the attacker EOA. Their net is the exact pair loss. The USD value uses the nearest DefiLlama BNB observation preceding the transaction."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xde698b5bbb4a12ddf2261bbdf8e034af34399999",
-      "relationship": "unknown",
+      "relationship": "direct",
       "codeArtifact": {
-        "address": null,
-        "codeHash": null
+        "address": "0xde698b5bbb4a12ddf2261bbdf8e034af34399999",
+        "codeHash": "0x573886d71cd394def51ec7dbbf135f3ba6de777ad44eeef1b45301383fd7d499"
       },
       "deployment": {
         "timestamp": 1710173567,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 36880062,
+        "transactionHash": "0x5723b851566c255a0a31f4658aeebc1d706ab94af3db41e14886d4cba54b1435",
+        "transactionIndex": 98,
         "creatorAddress": "0x3b7b478d9fe6c76629d317e5708fc39a3ab9d097"
       },
       "ageReset": {
         "kind": "deployment",
         "timestamp": 1710173567,
-        "blockNumber": null,
-        "transactionHash": null,
-        "transactionIndex": null,
+        "blockNumber": 36880062,
+        "transactionHash": "0x5723b851566c255a0a31f4658aeebc1d706ab94af3db41e14886d4cba54b1435",
+        "transactionIndex": 98,
         "logIndex": null,
         "mechanism": {
           "type": "deployment",
           "address": "0xde698b5bbb4a12ddf2261bbdf8e034af34399999"
         },
-        "description": "Legacy basis: execution-address deployment."
+        "description": "The direct deployment fixed the defect-bearing token runtime."
       },
       "codeAgeSeconds": 1026328,
-      "failureModeId": "legacy:eip155:56:0xe8b0131fa14d0a96327f6b5690159ffa7650d66376db87366ba78d91f17cd677:failure-1",
+      "failureModeId": "failure:ark-token-unrestricted-liquidity-pair-burn",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
+          "source-2",
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "ageSourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history came from the v1 snapshot row originally at protocols/ark-token.json; no semantic revalidation was inherited.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -108,14 +134,32 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "note": "onchain review: victim 0xde698B5BBb4A12DDf2261BbdF8e034af34399999 created 2024-03-11T16:12:47Z by 0x3b7b478d9fe6c76629d317e5708fc39a3ab9d097, which is not the attack-tx sender 0xdd309ea4e99b772c1e6a798a6b159211bb95b22c; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). ~348 BNB x $559.7/BNB at the incident timestamp 1711199895 (DefiLlama coingecko:binancecoin) = $194,776."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-27T22:47:00Z",
+      "note": "The exploit trace shows helper 0x94598ec1 call ARK.autoBurnLiquidityPairTokens() 6,794 times. The receipt has 6,794 ARK transfers from pair 0xc0f54b87 to the dead address totaling 1,231.576863146536280717 ARK, 6,795 Sync logs, and one final swap. Its only WBNB transfers are 100 wei into the pair and 348.147268515623217950 WBNB from the pair to 0xdd309ea4, proving a net 348.147268515623217850 WBNB loss. ARK has no code at block 36880061; creation receipt 0x5723b851 deploys it at block 36880062 index 98, and its 12,035-byte runtime hash remains 0x573886d7 through the pre-exploit block. Both EIP-1967 slots are zero, the runtime contains neither DELEGATECALL nor SELFDESTRUCT, and the exploit trace contains no DELEGATECALL."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x5723b851566c255a0a31f4658aeebc1d706ab94af3db41e14886d4cba54b1435"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "provider": "DefiLlama Coins API",
+      "url": "https://coins.llama.fi/prices/historical/1711199800/coingecko:binancecoin",
+      "observedAt": 1787870820
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2024-03/ARK_exp.sol"
+  ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss came from the v1 snapshot row originally at protocols/ark-token.json; legacy measurement.status=OK is provenance only.",
-      "The legacy USD loss lacks uniformly structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ],
     "legacy": {
       "snapshot": "research/raw/legacy-v1.json",
@@ -127,5 +171,7 @@
       "date": "2024-03-23T13:18:15Z"
     }
   },
-  "notes": []
+  "notes": [
+    "Replaces the legacy rounded 348 BNB / $194,776 estimate with the transaction-exact WBNB balance flow and a pre-incident price observation."
+  ]
 }
