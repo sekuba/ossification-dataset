@@ -1047,6 +1047,83 @@
       }
     },
     {
+      "id": "eip155:137:0x7126ae1d8e8d1e0c0f1c598de16a035cf309d6cc556e73edc2847de2b5777e5e",
+      "protocol": {
+        "name": "Huma Finance",
+        "slug": "huma-finance"
+      },
+      "name": "Huma credit approval bypass",
+      "chainId": 137,
+      "exploit": {
+        "transactionHash": "0x7126ae1d8e8d1e0c0f1c598de16a035cf309d6cc556e73edc2847de2b5777e5e",
+        "blockNumber": 86725372,
+        "transactionIndex": 85,
+        "timestamp": 1778509109
+      },
+      "summary": "Permissionless requestCredit() created unapproved Requested credit lines, then permissionless refreshAccount() promoted them directly to drawable GoodStanding state without Evaluation Agent approval; a later drawdown emptied three pools.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 101390.301544,
+          "valuationTimestamp": 1778509165,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-4",
+            "source-5",
+            "source-6"
+          ]
+        },
+        "minimumUsd": null,
+        "assets": [
+          {
+            "asset": {
+              "chainId": 137,
+              "tokenAddress": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+              "symbol": "USDC"
+            },
+            "amount": "82315.571143",
+            "usdValue": 82315.571143,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1778509165,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-4",
+              "source-6"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 137,
+              "tokenAddress": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+              "symbol": "USDC.e"
+            },
+            "amount": "19074.730401",
+            "usdValue": 19074.730401,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1778509165,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-4",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The loss transaction transfers exactly 82,315.571143 native USDC and 19,074.730401 bridged USDC.e from the three pools to the attacker helper, which forwards the same quantities to the attacker EOA. Both assets are valued at par.",
+        "realizedAt": 1778509165
+      }
+    },
+    {
       "id": "eip155:137:0x7320accea0ef1d7abca8100c82223533b624c82d3e8d445954731495d4388483",
       "protocol": {
         "name": "Libertify",
