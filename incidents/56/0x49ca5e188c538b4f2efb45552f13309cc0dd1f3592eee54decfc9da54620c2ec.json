@@ -18,52 +18,129 @@
       "0x322696471792440499b1979e0a440491e870667a"
     ]
   },
-  "summary": "The Yiedl vault's redeem path forwards caller-supplied 1inch unoswapTo calldata without validating the swap recipient, so the attacker set itself as the destination and drained the vault's USDC, BTCB and BETH.",
+  "summary": "The Yiedl vault's redeem path forwarded caller-supplied router calldata without validating the swap recipient, allowing one constructor transaction to deplete the vault's USDC, BTCB, and ETH inventory.",
   "loss": {
-    "kind": "unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 135000,
+      "amount": 137325.189830315,
       "valuationTimestamp": 1713921883,
-      "method": "unspecified",
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-1",
+        "source-4",
+        "source-6",
+        "source-7"
       ]
     },
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+          "symbol": "USDC"
+        },
+        "amount": "75635.138375994372050770",
+        "usdValue": 75635.13837599437,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1713921883,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1",
+            "source-4"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+          "symbol": "BTCB"
+        },
+        "amount": "0.521372360835400072",
+        "usdValue": 34772.447986659994,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1713921749,
+          "unitPriceUsd": 66694.07624704877,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+          "symbol": "ETH"
+        },
+        "amount": "8.333778171625678105",
+        "usdValue": 26917.603467660643,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1713921683,
+          "unitPriceUsd": 3229.94,
+          "sourceIds": [
+            "source-7"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Gross loss is the exact ERC-20 depletion of vault 0x4edda16ab4f4cc46b160abc42763ba63885862a4 in the single successful constructor receipt. Fifty vault outflows aggregate to 75,635.138375994372050770 USDC, 0.521372360835400072 BTCB, and 8.333778171625678105 ETH, with zero inflows or returns of any component. Archive balances across block 38126754 reproduce all three deltas exactly. Later transactions from the same sender do not touch this vault or return these assets and are excluded from this single-vault boundary. USDC is valued at par; the closest preceding DefiLlama observations value BTC and ETH 134 and 200 seconds before the incident."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x4edda16ab4f4cc46b160abc42763ba63885862a4",
-      "relationship": "unknown",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0x4edda16ab4f4cc46b160abc42763ba63885862a4",
+        "codeHash": "0x74b96155073c5af9228ac8e09d90dc6d34e2eb420c0db651038ebc4c10e6bcca"
+      },
       "deployment": {
         "timestamp": 1713859068,
+        "blockNumber": 38105870,
+        "transactionHash": "0x62c3b5ca0e8139994f3c66406a7fab4ccb75f8283c32036807b47c7040f953a1",
+        "transactionIndex": 113,
         "creatorAddress": "0xc0aacf2a87bbdfff6e582762a7c4259ead5aee30"
       },
       "ageReset": {
         "kind": "deployment",
-        "description": "Unreviewed seed-inventory basis: execution-address deployment."
+        "description": "The victim vault is directly deployed. Its 24,569-byte runtime is absent one block before creation and has code hash 0x74b96155073c5af9228ac8e09d90dc6d34e2eb420c0db651038ebc4c10e6bcca at creation and immediately before the incident; the EIP-1967 implementation, admin, and beacon slots are zero. The vulnerable redeem behavior is in this unchanged runtime."
       },
       "codeAgeSeconds": 62815,
-      "failureModeId": "provisional:eip155:56:0x49ca5e188c538b4f2efb45552f13309cc0dd1f3592eee54decfc9da54620c2ec:failure-1",
+      "failureModeId": "failure:yiedl-redeem-unvalidated-router-recipient",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
+          "source-2",
           "source-3",
           "source-4"
         ],
         "ageSourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history were imported from the seed inventory without independent review.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -90,14 +167,43 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "note": "onchain review: victim 0x4eDda16AB4f4cc46b160aBC42763BA63885862a4 created 2024-04-23T07:57:48Z by 0xc0aacf2a87bbdfff6e582762a7c4259ead5aee30, which is not the attack-tx sender 0x322696471792440499b1979e0a440491e870667a; 0 EIP-1967 Upgraded events on the victim before the incident; code age measured from deployment (onchain). Loss measured from the exploit transaction: the vault loses 75,635.14 USDC, 0.5214 BTCB and 8.3338 BETH, roughly USD 135K in total."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-29T11:26:25Z",
+      "note": "Reviewed the successful constructor receipt and call trace, commit-pinned technical reproduction, published analysis, direct creation receipt, archive runtime code and balances, EIP-1967 slots, the sender's later transaction history, and independently preceding BTC and ETH prices. The anchor succeeds at block 38126754 index 18, timestamp 1713921883, and its constructor trace reaches direct Yiedl vault 0x4edda16ab4f4cc46b160abc42763ba63885862a4. The reproduction and analysis establish that the vault's redeem path forwarded caller-supplied router calldata without validating the recipient. Across 50 iterations in this one receipt, Transfer logs show exact vault outflows of 75,635.138375994372050770 USDC, 0.521372360835400072 BTCB, and 8.333778171625678105 ETH, with zero vault inflows or returned units. Archive balances from block 38126753 to 38126754 fall from 118,954.909835626232308114 to 43,319.771459631860257344 USDC, 0.819986629305181478 to 0.298614268469781406 BTCB, and 13.106921627719034641 to 4.773143456093356536 ETH, reproducing every receipt aggregate exactly. Later transactions from the same sender do not touch this vault or return these three assets and are outside this single-vault boundary. USDC is valued at par. The closest preceding DefiLlama observations are BTC $66,694.07624704877 at 1713921749 and ETH $3,229.94 at 1713921683, respectively 134 and 200 seconds before the incident; component values total $137,325.189830315. The vault was directly created by 0xc0aacf2a87bbdfff6e582762a7c4259ead5aee30 in 0x62c3b5ca...53a1 at block 38105870 index 113, timestamp 1713859068. Code is absent one block earlier, and the 24,569-byte runtime hashes to 0x74b96155073c5af9228ac8e09d90dc6d34e2eb420c0db651038ebc4c10e6bcca at creation and immediately before the incident. The EIP-1967 implementation, admin, and beacon slots are zero. Deployment is therefore the latest age reset, 1713921883 - 1713859068 = 62,815 seconds."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x62c3b5ca0e8139994f3c66406a7fab4ccb75f8283c32036807b47c7040f953a1"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "provider": "DefiLlama Coins API",
+      "url": "https://coins.llama.fi/prices/historical/1713921800/coingecko:bitcoin?searchWidth=4h",
+      "observedAt": 1788002785
+    },
+    {
+      "id": "source-7",
+      "type": "price-data",
+      "provider": "DefiLlama Coins API",
+      "url": "https://coins.llama.fi/prices/historical/1713921800/coingecko:ethereum?searchWidth=4h",
+      "observedAt": 1788002785
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2024-04/YIEDL_exp.sol",
+    "seed:yiedl:2024-04-24:yiedl-vault-forwards-caller-supplied-1inch-calldata"
+  ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss were imported from the seed inventory and await review.",
-      "The imported USD loss lacks structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ]
-  }
+  },
+  "notes": [
+    "Replaces the seed's rounded $135,000 estimate with exact single-vault depletion and independently preceding prices for both non-stable assets."
+  ]
 }

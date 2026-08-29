@@ -20,50 +20,83 @@
   },
   "summary": "Transfers to the zero address trigger the token's _MakeDonation path, which debits the sender's balance a second time; repeatedly sending iVest to the PancakeSwap pair and calling skim/sync shrank the pair's token reserve and let the attacker swap the reserve out for WBNB.",
   "loss": {
-    "kind": "unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 156000,
-      "valuationTimestamp": 1723438359,
-      "method": "unspecified",
+      "amount": 172148.54514558267,
+      "valuationTimestamp": 1723438335,
+      "method": "incident-price",
       "sourceIds": [
-        "source-4"
+        "source-1",
+        "source-6"
       ]
     },
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "symbol": "WBNB"
+        },
+        "amount": "338.875088869257198253",
+        "usdValue": 172148.54514558267,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1723438335,
+          "unitPriceUsd": 508,
+          "sourceIds": [
+            "source-6"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-4"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "The receipt shows 1,200 WBNB entering PancakeSwap iVest/WBNB pair 0x2607118d363789f841d952f02e359bfa483955f9 and 1,538.875088869257198253 WBNB leaving it, for 338.875088869257198253 WBNB of net depletion; archive pair balances at the surrounding block boundary reproduce that amount. The attacker input is netted out; the 0.6-WBNB flash-loan fee is not deducted from victim depletion. The closest preceding DefiLlama BNB price is $508 at 1723438335."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x786fcf76dc44b29845f284b81f5680b6c47302c6",
-      "relationship": "unknown",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0x786fcf76dc44b29845f284b81f5680b6c47302c6",
+        "codeHash": "0xe9a24aab772f62ded1a30d505ae07e6f7bbdc98fcfe5de544f5a23025e451036"
+      },
       "deployment": {
         "timestamp": 1718489801,
+        "blockNumber": 39645570,
+        "transactionHash": "0xd7ca33e2db0b61bdf2d1bff571bacd73c52b76cc06285717d7df85c12298cd8c",
+        "transactionIndex": 10,
         "creatorAddress": "0x3421d514fcd2cf1303bc13d88bcb3e75e8032642"
       },
       "ageReset": {
         "kind": "deployment",
-        "description": "Unreviewed seed-inventory basis: execution-address deployment."
+        "description": "iVest is a directly deployed token. Its 19,856-byte runtime is absent one block before creation and has code hash 0xe9a24aab772f62ded1a30d505ae07e6f7bbdc98fcfe5de544f5a23025e451036 at deployment and immediately before exploitation; both EIP-1967 code-selection slots are zero. The zero-address donation double debit is in the deployed transfer path and does not depend on later configuration."
       },
       "codeAgeSeconds": 4948558,
-      "failureModeId": "provisional:eip155:56:0x12f27e81e54684146ec50973ea94881c535887c2e2f30911b3402a55d67d121d:failure-1",
+      "failureModeId": "failure:ivest-zero-address-donation-double-debit",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
+          "source-2",
           "source-3",
-          "source-4"
+          "source-4",
+          "source-5"
         ],
         "ageSourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history were imported from the seed inventory without independent review.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -78,7 +111,7 @@
     {
       "id": "source-2",
       "type": "post-mortem",
-      "url": "https://www.tradingview.com/news/cointelegraph:62f377c83094b:0-weird-null-address-ivest-hack-millions-of-pcs-still-vulnerable-to-sinkclose-malware-crypto-sec/"
+      "url": "https://crypto.training/hacks/2024-08-ivestdao/"
     },
     {
       "id": "source-3",
@@ -90,14 +123,37 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "note": "onchain review: iVest token 0x786fcf76... created by 0x3421d514fcd2cf1303bc13d88bcb3e75e8032642 on 2024-06-15, no upgrade events; attack sender 0x46458632... unrelated to the creator; loss uses the $156k QuillAudits figure"
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-08-29T10:22:03Z",
+      "note": "Reviewed the successful exploit receipt and call trace, commit-pinned reproduction, technical analysis, victim-pair balances, direct creation receipt, archive runtime code, and EIP-1967 slots. The helper sends 40 WBNB into the iVest/WBNB pair 30 times, then calls skim(address(0)) four times. The iVest transfer path treats the zero-address transfer as a donation but continues into ordinary transfer accounting, debiting the pair again; skim and sync repeatedly shrink the recorded iVest reserve before the final swap. Across the transaction the pair receives exactly 1,200 WBNB and sends 1,538.875088869257198253 WBNB, matching its 338.875088869257198253-WBNB archive balance decrease. The 0.6-WBNB flash-loan fee reduces attacker proceeds to 338.275088869257198253 WBNB but does not reduce gross victim depletion. iVest was directly created in block 39,645,570 index 10. Code is absent at block 39,645,569, and the 19,856-byte runtime hashes to 0xe9a24aab772f62ded1a30d505ae07e6f7bbdc98fcfe5de544f5a23025e451036 at creation and immediately before exploitation. Both EIP-1967 slots are zero, and the defect is independent of mutable token settings, so deployment is the latest age reset 4,948,558 seconds before exploitation."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0xd7ca33e2db0b61bdf2d1bff571bacd73c52b76cc06285717d7df85c12298cd8c"
+    },
+    {
+      "id": "source-6",
+      "type": "price-data",
+      "provider": "DefiLlama Coins API",
+      "url": "https://coins.llama.fi/prices/historical/1723438359/coingecko:binancecoin?searchWidth=4h",
+      "observedAt": 1787998923
     }
   ],
+  "discovery": [
+    "dfhl:src/test/2024-08/IvestDao_exp.sol",
+    "seed:ivest-dao:2024-08-12:ivest-donation-on-burn-double-debit",
+    "web:2024-08-12:ivest-dao"
+  ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss were imported from the seed inventory and await review.",
-      "The imported USD loss lacks structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ]
-  }
+  },
+  "notes": [
+    "Replaces the seed's reported $156,000 estimate with exact victim-pair depletion, consistent with the web lead's rounded $172,000 report."
+  ]
 }
