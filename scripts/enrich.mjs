@@ -13,7 +13,7 @@
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { incidentToDisk, normalizeIncident } from './build.mjs'
+import { incidentToDisk, normalizeIncident, targetObservation } from './build.mjs'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const EMPTY_CODE_HASH = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
@@ -298,6 +298,25 @@ async function enrichFile(file, useExplorer) {
   }
 
   for (const target of incident.targets) {
+    const observed = targetObservation(incident, target)
+    if (target.observation) {
+      const anchor = await transactionAnchor(chainId, observed.transactionHash)
+      if (applyPosition(target.observation, anchor)) changes.push(`${target.id}:observation-anchor`)
+      if (ensureOnchainSource(incident, target, observed.transactionHash, ['target-identity']))
+        changes.push(`${target.id}:observation-source`)
+    }
+    let targetCallTrace = callTrace
+    if (
+      observed.transactionHash !== exploitHash &&
+      target.codeArtifact.address === null &&
+      target.relationship !== 'unknown' &&
+      target.relationship !== 'direct'
+    ) {
+      targetCallTrace = await rpc(chainId, 'debug_traceTransaction', [
+        observed.transactionHash,
+        { tracer: 'callTracer', tracerConfig: { onlyTopCall: false, withLog: false } },
+      ]).catch(() => null)
+    }
     if (target.relationship === 'direct' && target.codeArtifact.address === null) {
       target.codeArtifact.address = target.executionAddress
       changes.push(`${target.id}:direct-artifact`)
@@ -306,31 +325,35 @@ async function enrichFile(file, useExplorer) {
       target.codeArtifact.address === null &&
       target.relationship !== 'unknown' &&
       target.relationship !== 'direct' &&
-      callTrace
+      targetCallTrace
     ) {
-      const artifact = delegatedArtifact(callTrace, target.executionAddress)
+      const artifact = delegatedArtifact(targetCallTrace, target.executionAddress)
       if (artifact) {
         target.codeArtifact.address = artifact
         changes.push(`${target.id}:traced-artifact`)
       }
     }
     if (target.codeArtifact.address && target.codeArtifact.codeHash === null) {
-      if (prestate === undefined) {
-        prestate = await rpc(chainId, 'debug_traceTransaction', [
-          exploitHash,
+      let targetPrestate = prestate
+      if (observed.transactionHash !== exploitHash) targetPrestate = undefined
+      if (targetPrestate === undefined) {
+        targetPrestate = await rpc(chainId, 'debug_traceTransaction', [
+          observed.transactionHash,
           { tracer: 'prestateTracer', tracerConfig: { diffMode: false } },
         ]).catch(() => null)
+        if (observed.transactionHash === exploitHash) prestate = targetPrestate
       }
       let hash = null
-      if (prestate) {
-        const key = Object.keys(prestate).find(
+      if (targetPrestate) {
+        const key = Object.keys(targetPrestate).find(
           (candidate) => lower(candidate) === target.codeArtifact.address,
         )
-        const code = prestate?.[key]?.code
+        const code = targetPrestate?.[key]?.code
         if (code && code !== '0x')
           hash = lower(await rpc(chainId, 'web3_sha3', [code]).catch(() => null))
       }
-      if (!hash) hash = await prestateCodeHash(chainId, exploitHash, target.codeArtifact.address)
+      if (!hash)
+        hash = await prestateCodeHash(chainId, observed.transactionHash, target.codeArtifact.address)
       if (hash && hash !== EMPTY_CODE_HASH) {
         target.codeArtifact.codeHash = hash
         changes.push(`${target.id}:code-hash`)
@@ -394,7 +417,7 @@ async function enrichFile(file, useExplorer) {
         )
       ) changes.push(`${target.id}:age-reset-source`)
     }
-    const age = incident.incident.exploit.timestamp - reset.timestamp
+    const age = observed.timestamp - reset.timestamp
     if (target.codeAgeSeconds !== age) {
       target.codeAgeSeconds = age
       changes.push(`${target.id}:age`)

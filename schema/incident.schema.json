@@ -138,21 +138,36 @@
       "properties": {
         "chainId": { "type": "integer", "minimum": 1 },
         "exploit": {
-          "type": "object",
-          "required": ["transactionHash", "timestamp"],
-          "additionalProperties": false,
-          "properties": {
-            "transactionHash": { "$ref": "#/$defs/hash" },
-            "blockNumber": { "type": "integer", "minimum": 0 },
-            "transactionIndex": { "type": "integer", "minimum": 0 },
-            "timestamp": { "type": "integer", "minimum": 1 }
-          }
+          "$ref": "#/$defs/incidentAnchor"
         },
         "attackerAddresses": {
           "type": "array",
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/address" }
         }
+      }
+    },
+    "incidentAnchor": {
+      "type": "object",
+      "required": ["transactionHash", "timestamp"],
+      "additionalProperties": false,
+      "properties": {
+        "transactionHash": { "$ref": "#/$defs/hash" },
+        "blockNumber": { "type": "integer", "minimum": 0 },
+        "transactionIndex": { "type": "integer", "minimum": 0 },
+        "timestamp": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "targetObservationAnchor": {
+      "description": "A later transaction in the same campaign that first exercised this target. Omit when it is the incident anchor.",
+      "type": "object",
+      "required": ["transactionHash", "blockNumber", "transactionIndex", "timestamp"],
+      "additionalProperties": false,
+      "properties": {
+        "transactionHash": { "$ref": "#/$defs/hash" },
+        "blockNumber": { "type": "integer", "minimum": 0 },
+        "transactionIndex": { "type": "integer", "minimum": 0 },
+        "timestamp": { "type": "integer", "minimum": 1 }
       }
     },
     "loss": {
@@ -497,6 +512,11 @@
       "properties": {
         "id": { "type": "string", "pattern": "^target-[1-9][0-9]*$" },
         "executionAddress": { "$ref": "#/$defs/address" },
+        "observation": { "$ref": "#/$defs/targetObservationAnchor" },
+        "curveRole": {
+          "const": "supporting",
+          "description": "A reviewed correlated target retained as evidence but not counted as an independent curve observation."
+        },
         "relationship": {
           "enum": ["direct", "proxy", "beacon-proxy", "minimal-proxy", "diamond", "module-router", "library", "unknown"]
         },
@@ -517,6 +537,22 @@
         "verification": { "$ref": "#/$defs/targetVerification" }
       },
       "allOf": [
+        {
+          "if": {
+            "properties": { "curveRole": { "const": "supporting" } },
+            "required": ["curveRole"]
+          },
+          "then": {
+            "properties": {
+              "verification": {
+                "properties": {
+                  "tier": { "const": "reviewed" },
+                  "curveEligible": { "const": false }
+                }
+              }
+            }
+          }
+        },
         {
           "if": {
             "properties": {

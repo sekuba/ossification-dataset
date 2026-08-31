@@ -31,6 +31,8 @@ For the incident, establish:
 For each target, establish:
 
 - `executionAddress`, `relationship`, and implicated `codeArtifact`;
+- an `observation` anchor only when this target first executed after the campaign anchor;
+- `curveRole: supporting` for a correlated target that must not add another knot;
 - runtime code hash;
 - deployment transaction and creator, or an explicit block-zero
   `system-genesis` code anchor for a genesis system contract;

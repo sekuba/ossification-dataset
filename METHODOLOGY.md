@@ -64,6 +64,10 @@ in that incident. It distinguishes:
 - `codeArtifact`: the implementation, facet, module, library, or direct
   runtime containing the defect or consuming the causal state;
 - `relationship`: how the execution context reached the artifact;
+- optional `observation`: the later campaign transaction that first exercised
+  this target; omit it when the incident anchor did;
+- optional `curveRole: supporting`: a reviewed correlated target retained as
+  evidence while a same-failure sibling supplies the campaign's single knot;
 - `ageReset`: the latest code or causal configuration change that established
   the vulnerable state.
 
@@ -78,6 +82,10 @@ observation. Curve construction enforces this, so recording every instance as a
 target stays valid and auditable. Add targets for distinct failures and for
 distinct defect-bearing roles in the causal path.
 
+When different runtimes repeat one failure in a coordinated campaign, the
+target first reached by the incident anchor supplies the knot; later parallel
+targets use `curveRole: supporting`, not a minimum-age selection.
+
 This representation covers direct contracts, proxies, beacons, clones,
 diamonds, routers, shared implementations, and libraries.
 
@@ -86,8 +94,10 @@ diamonds, routers, shared implementations, and libraries.
 For each target:
 
 ```text
-codeAgeSeconds = incident.timestamp - ageReset.timestamp
+codeAgeSeconds = target.observation.timestamp - ageReset.timestamp
 ```
+
+When `target.observation` is omitted, the incident anchor supplies its timestamp.
 
 `ageReset` is the latest pre-exploit onchain change that established the
 vulnerable code-and-critical-state combination. It is the latest executable-code

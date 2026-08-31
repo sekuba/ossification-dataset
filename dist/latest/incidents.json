@@ -10406,6 +10406,276 @@
       }
     },
     {
+      "id": "eip155:1:0x8a8793963c0ef443b9a396665c3c185ded132d5f99daf7c99e87125597016e64",
+      "protocol": {
+        "name": "Ajna",
+        "slug": "ajna"
+      },
+      "name": "Ajna ERC20Pool liquidation accounting campaign",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x8a8793963c0ef443b9a396665c3c185ded132d5f99daf7c99e87125597016e64",
+        "blockNumber": 25854585,
+        "transactionIndex": 63,
+        "timestamp": 1787930315
+      },
+      "summary": "Two Ajna ERC20Pool master lineages permitted a campaign-controlled borrower to compose drawDebt/addQuoteToken/kick with bucketTake/removeCollateral/take/settle/repay so that liquidation accounting released scarce quote assets without matching debt repayment. The violated invariant is that collateral or quote released during an auction must remain covered by repaid debt or equivalent scarce consideration. Eleven immutable pool clones were affected in one coordinated campaign. The legacy and newer masters have different runtimes but implement the same failure; the legacy lineage first reached in the campaign supplies its canonical curve knot while the later newer-lineage recurrence remains reviewed supporting evidence.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 734105.014815599,
+          "valuationTimestamp": 1787930315,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-3",
+            "source-4",
+            "source-10",
+            "source-11",
+            "source-12",
+            "source-13",
+            "source-16"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "symbol": "WETH"
+            },
+            "amount": "48.880994783447236415",
+            "usdValue": 122403.42401569252,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1787929811,
+              "unitPriceUsd": 2504.11073993,
+              "sourceIds": [
+                "source-10",
+                "source-16"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-3"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "symbol": "WETH"
+            },
+            "amount": "44.618985982526959274",
+            "usdValue": 108450.15773016552,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1787941343,
+              "unitPriceUsd": 2430.5832,
+              "sourceIds": [
+                "source-11",
+                "source-16"
+              ]
+            },
+            "sourceIds": [
+              "source-3"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "symbol": "WETH"
+            },
+            "amount": "5.151922446056045673",
+            "usdValue": 12543.725093626292,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1787947307,
+              "unitPriceUsd": 2434.76590049,
+              "sourceIds": [
+                "source-12",
+                "source-16"
+              ]
+            },
+            "sourceIds": [
+              "source-3"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "23059.288839",
+            "usdValue": 23059.288839,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1787946023,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-3"
+              ]
+            },
+            "sourceIds": [
+              "source-3"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "11784.029677",
+            "usdValue": 11784.029677,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1787948387,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-3"
+              ]
+            },
+            "sourceIds": [
+              "source-3",
+              "source-9"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+              "symbol": "DAI"
+            },
+            "amount": "28601.317832590344872652",
+            "usdValue": 28601.317832590346,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1787952011,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-3"
+              ]
+            },
+            "sourceIds": [
+              "source-3",
+              "source-9"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+              "symbol": "DAI"
+            },
+            "amount": "31979.823008843540407093",
+            "usdValue": 31979.82300884354,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1787949839,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-3"
+              ]
+            },
+            "sourceIds": [
+              "source-3"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+              "symbol": "DAI"
+            },
+            "amount": "161183.378480172531808886",
+            "usdValue": 161183.37848017254,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1787955143,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-2",
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-2",
+              "source-4"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
+              "symbol": "wstETH"
+            },
+            "amount": "34.841843097892057306",
+            "usdValue": 105515.69479650816,
+            "valuation": {
+              "method": "other",
+              "timestamp": 1787956619,
+              "unitPriceUsd": 3028.418861196579,
+              "sourceIds": [
+                "source-13",
+                "source-16"
+              ]
+            },
+            "sourceIds": [
+              "source-4"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "114340.133355",
+            "usdValue": 114340.133355,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1787961083,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-4"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "14244.041987",
+            "usdValue": 14244.041987,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1787965391,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The 11 pool components are kept separate so lineage attribution remains machine-readable. Legacy master 0x05bb: cbETH/WETH 48.880994783447236415 WETH, wstETH/WETH 44.618985982526959274 WETH, rETH/WETH 5.151922446056045673 WETH, WETH/USDC 23,059.288839 USDC, sDAI/USDC 11,784.029677 USDC, WBTC/DAI 28,601.317832590344872652 DAI, and rETH/DAI 31,979.823008843540407093 DAI; exact USD subtotal 338,821.76619691822682552330043072. Newer master 0x4b3b: sUSDe/DAI 161,183.378480172531808886 DAI, mwstETH/wstETH 34.841843097892057306 wstETH, syrupUSDC/USDC 114,340.133355 USDC, and sDAI/USDC 14,244.041987 USDC; exact USD subtotal 395,283.24861868069118902436312289563392853470902444. Their exact sum is 734,105.01481559891801454766355361563392853470902444 USD. Archive balances reproduce every component. Campaign-created collateral positions and the small retained cbETH, wstETH, rETH, WBTC, sDAI, sUSDe, mwstETH-share and syrupUSDC quantities are attacker-supplied consideration, not additional victim loss. The cbETH continuation returned 0.026228701460587952 WETH to its pool and removed the remaining 0.000204277342017555 cbETH, so that return is netted from the earlier WETH outflow. The later syrup recurrence deposited 27,661.722202 USDC and withdrew 51,672.758035 USDC for 24,011.035833 USDC additional loss. Two unrelated transactions inside bounded archive windows withdrew 0.510962 USDC from the legacy sDAI pool and 2.478109933470371768 DAI from the WBTC pool; both are source-9 and excluded. No Ajna-pool return appears in the three campaign EOAs' later successful transactions through block 25,875,486. Stablecoins are at par. WETH prices are the closest preceding Chainlink ETH/USD answers for the three legacy WETH components. The new wstETH component uses the preceding 2,436.91552334 USD ETH answer and the pool-prestate wstETH stEthPerToken value 1.242726238226704561, yielding 3,028.41886119657925883287995374 USD per wstETH.",
+        "realizedAt": 1788115055,
+        "minimumUsd": null
+      }
+    },
+    {
       "id": "eip155:1:0x8af9b5fb3e2e3df8659ffb2e0f0c1f4c90d5a80f4f6fccef143b823ce673fb60",
       "protocol": {
         "name": "Astrid",

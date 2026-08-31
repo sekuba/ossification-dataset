@@ -13,7 +13,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { buildArtifacts, normalizeIncident, ROOT, sha256 } from './build.mjs'
+import { buildArtifacts, normalizeIncident, ROOT, sha256, targetObservation } from './build.mjs'
 
 const INCIDENT_ID = /^eip155:([1-9][0-9]*):(0x[0-9a-f]{64})$/
 const REVIEWED_FAILURE_ID = /^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$/
@@ -416,38 +416,55 @@ function verifyIncident(record, state, errors) {
     const targetLabel = `${label}: targets[${index}]`
     const deployment = target.deployment
     const reset = target.ageReset
+    const observed = targetObservation(incident, target)
     const targetTier = target.verification?.tier
     const targetEligible = target.verification?.curveEligible === true
+    const supporting = target.curveRole === 'supporting'
     const eligible = incidentReviewed && targetTier === 'reviewed' && targetEligible
     const systemGenesis = deployment.kind === 'system-genesis'
     if (targetIds.has(target.id)) errors.push(`${targetLabel}: duplicate target id ${target.id}`)
     targetIds.add(target.id)
-    if (target.codeAgeSeconds !== exploit.timestamp - reset.timestamp)
+    if (target.codeAgeSeconds !== observed.timestamp - reset.timestamp)
       errors.push(
-        `${targetLabel}: codeAgeSeconds ${target.codeAgeSeconds} != incident.timestamp - ageReset.timestamp ` +
-          `(${exploit.timestamp - reset.timestamp})`,
+        `${targetLabel}: codeAgeSeconds ${target.codeAgeSeconds} != observation.timestamp - ageReset.timestamp ` +
+          `(${observed.timestamp - reset.timestamp})`,
       )
+    if (target.observation) {
+      const observationKey = `${chainId}:${observed.transactionHash}`
+      const observationSource = incident.sources.find((source) =>
+        source.type === 'onchain-transaction' && source.chainId === chainId &&
+        source.transactionHash === observed.transactionHash)
+      if (observed.transactionHash === exploit.transactionHash)
+        errors.push(`${targetLabel}: target observation duplicates the incident anchor; omit it`)
+      if (!transactionKeys.has(observationKey) || !observationSource)
+        errors.push(`${targetLabel}: observation transaction must have an onchain source entry on the incident chain`)
+      else if (!(target.evidence?.identitySourceIds ?? []).includes(observationSource.id))
+        errors.push(`${targetLabel}: observation transaction source must be linked in target identity evidence`)
+      const exploitVsObserved = compareTransactionOrder(exploit, observed)
+      if (exploitVsObserved !== null && exploitVsObserved > 0)
+        errors.push(`${targetLabel}: target observation precedes the incident anchor`)
+    }
     // A shared artifact can predate this execution context; a reset applied to
     // the context itself cannot.
     const resetTargetsExecutionAddress =
       reset.mechanism?.address === undefined || reset.mechanism.address === target.executionAddress
     if (resetTargetsExecutionAddress && reset.timestamp < deployment.timestamp)
       errors.push(`${targetLabel}: age reset precedes target deployment`)
-    if (reset.timestamp > exploit.timestamp)
-      errors.push(`${targetLabel}: age reset occurs after exploit`)
-    if (deployment.blockNumber !== null && exploit.blockNumber !== null && deployment.blockNumber > exploit.blockNumber)
-      errors.push(`${targetLabel}: deployment block is after exploit block`)
-    if (reset.blockNumber !== null && exploit.blockNumber !== null && reset.blockNumber > exploit.blockNumber)
-      errors.push(`${targetLabel}: age-reset block is after exploit block`)
+    if (reset.timestamp > observed.timestamp)
+      errors.push(`${targetLabel}: age reset occurs after target observation`)
+    if (deployment.blockNumber !== null && observed.blockNumber !== null && deployment.blockNumber > observed.blockNumber)
+      errors.push(`${targetLabel}: deployment block is after target observation block`)
+    if (reset.blockNumber !== null && observed.blockNumber !== null && reset.blockNumber > observed.blockNumber)
+      errors.push(`${targetLabel}: age-reset block is after target observation block`)
     const deploymentVsReset = compareTransactionOrder(deployment, reset)
     if (resetTargetsExecutionAddress && deploymentVsReset !== null && deploymentVsReset > 0)
       errors.push(`${targetLabel}: deployment transaction is ordered after age reset`)
-    const resetVsExploit = compareTransactionOrder(reset, exploit)
-    if (resetVsExploit !== null && resetVsExploit >= 0)
-      errors.push(`${targetLabel}: age-reset transaction does not precede exploit transaction`)
-    const deploymentVsExploit = compareTransactionOrder(deployment, exploit)
-    if (deploymentVsExploit !== null && deploymentVsExploit >= 0)
-      errors.push(`${targetLabel}: deployment transaction does not precede exploit transaction`)
+    const resetVsObserved = compareTransactionOrder(reset, observed)
+    if (resetVsObserved !== null && resetVsObserved >= 0)
+      errors.push(`${targetLabel}: age-reset transaction does not precede target observation`)
+    const deploymentVsObserved = compareTransactionOrder(deployment, observed)
+    if (deploymentVsObserved !== null && deploymentVsObserved >= 0)
+      errors.push(`${targetLabel}: deployment transaction does not precede target observation`)
 
     if (
       reset.kind === 'configuration-change' &&
@@ -501,6 +518,15 @@ function verifyIncident(record, state, errors) {
       errors.push(`${targetLabel}: target curve eligibility requires a reviewed incident`)
     if (targetEligible && targetTier !== 'reviewed')
       errors.push(`${targetLabel}: target curve eligibility requires reviewed target verification`)
+    if (supporting) {
+      if (targetTier !== 'reviewed' || targetEligible)
+        errors.push(`${targetLabel}: supporting target must be reviewed and not curve-eligible`)
+      const selectedSibling = incident.targets.some((candidate) =>
+        candidate !== target && candidate.failureModeId === target.failureModeId &&
+        candidate.verification?.tier === 'reviewed' && candidate.verification?.curveEligible === true)
+      if (!selectedSibling)
+        errors.push(`${targetLabel}: supporting target requires a reviewed curve-eligible sibling with the same failureModeId`)
+    }
 
     if (eligible) {
       if (!usd || usd.amount < 1_000)
@@ -534,8 +560,8 @@ function verifyIncident(record, state, errors) {
       }
       if (!systemGenesis && !deployment.creatorAddress)
         errors.push(`${targetLabel}: curve eligibility requires creatorAddress`)
-      if (reset.transactionHash === exploit.transactionHash)
-        errors.push(`${targetLabel}: exploit transaction cannot define a pre-exploit age reset`)
+      if (reset.transactionHash === observed.transactionHash)
+        errors.push(`${targetLabel}: observation transaction cannot define a pre-observation age reset`)
       if (reset.mechanism?.type === 'event' && reset.mechanism.codeAddressLocation === null)
         errors.push(`${targetLabel}: eligible event reset requires codeAddressLocation`)
     } else if (targetTier !== 'provisional') {
@@ -551,6 +577,27 @@ function verifyIncident(record, state, errors) {
     if (targetTier === 'reviewed' && reset.mechanism?.type === 'event' && reset.logIndex === null)
       errors.push(`${targetLabel}: event-based reviewed reset requires logIndex`)
   }
+}
+
+export function checkIncidentCrossFields(incident, relative = null) {
+  const chainId = incident.incident.chainId
+  const transactionHash = incident.incident.exploit.transactionHash
+  const errors = []
+  const state = {
+    incidentIds: new Map(),
+    discoveryRefs: new Map(),
+    lossTransactions: new Map(),
+    exploitTransactions: new Map(),
+    failuresByCodeHash: new Map(),
+  }
+  const normalized = normalizeIncident(structuredClone(incident))
+  const file = relative ?? `${chainId}/${transactionHash}.json`
+  verifyIncident(
+    { path: `incidents/${file}`, relative: file, incident: normalized },
+    state,
+    errors,
+  )
+  return errors
 }
 
 function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {

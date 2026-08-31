@@ -110,6 +110,10 @@ export function normalizeIncident(incident) {
   return incident
 }
 
+export function targetObservation(incident, target) {
+  return target.observation ?? incident.incident.exploit
+}
+
 // Inverse of normalizeIncident: the canonical on-disk form.
 export function incidentToDisk(incident) {
   const clone = structuredClone(incident)
@@ -169,19 +173,21 @@ function numericUsd(loss) {
 
 function observationDetails(record, target) {
   const incident = record.incident
+  const observed = targetObservation(incident, target)
   return {
     observationId: `${incident.id}#${target.id}`,
     incidentId: incident.id,
     targetId: target.id,
     chainId: incident.incident.chainId,
     exploit: {
-      blockNumber: incident.incident.exploit.blockNumber,
-      transactionIndex: incident.incident.exploit.transactionIndex,
-      timestamp: incident.incident.exploit.timestamp,
+      blockNumber: observed.blockNumber,
+      transactionIndex: observed.transactionIndex,
+      timestamp: observed.timestamp,
     },
     incidentVerificationTier: incident.verification.tier,
     targetVerificationTier: target.verification.tier,
     targetCurveEligible: target.verification.curveEligible,
+    ...(target.curveRole ? { curveRole: target.curveRole } : {}),
     failureModeId: target.failureModeId,
     codeArtifactCodeHash: target.codeArtifact.codeHash,
     ageResetKind: target.ageReset.kind,
@@ -195,7 +201,8 @@ function exclusionReasons(incident, target) {
     reasons.push(`incident-verification-tier:${incident.verification?.tier ?? 'missing'}`)
   if (target.verification?.tier !== 'reviewed')
     reasons.push(`target-verification-tier:${target.verification?.tier ?? 'missing'}`)
-  if (target.verification?.curveEligible !== true)
+  if (target.curveRole === 'supporting') reasons.push('target-role:supporting-correlated')
+  else if (target.verification?.curveEligible !== true)
     reasons.push('target-verification:not-curve-eligible')
 
   const usd = numericUsd(incident.loss)

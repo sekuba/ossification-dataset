@@ -19,7 +19,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { normalizeIncident } from './build.mjs'
+import { normalizeIncident, targetObservation } from './build.mjs'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const EMPTY_CODE_HASH = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
@@ -143,6 +143,7 @@ function createReport(file, incident) {
       targetId: target.id,
       tier: target.verification?.tier,
       curveEligible: target.verification?.curveEligible,
+      curveRole: target.curveRole,
     })),
     scope:
       'Reproduces declared anchors and mechanism evidence; semantic review and latest-change completeness remain separate claims.',
@@ -722,12 +723,17 @@ async function verifyAgeResetMechanism(chainId, target, anchored, report) {
 
 async function verifyTarget(incident, target, exploitAnchor, report) {
   const chainId = incident.incident.chainId
-  if (target.codeAgeSeconds !== incident.incident.exploit.timestamp - target.ageReset.timestamp)
-    fail(report, `${target.id}:age`, 'codeAgeSeconds does not equal incident minus ageReset')
+  const observed = targetObservation(incident, target)
+  const observedAnchor = target.observation
+    ? await transactionAnchor(chainId, observed, `${target.id}:observation`, report)
+    : exploitAnchor
+  if (!observedAnchor) return
+  if (target.codeAgeSeconds !== observed.timestamp - target.ageReset.timestamp)
+    fail(report, `${target.id}:age`, 'codeAgeSeconds does not equal observation minus ageReset')
   else pass(report, `${target.id}:age`, `${target.codeAgeSeconds}s`)
 
-  await verifyTrace(chainId, incident.incident.exploit.transactionHash, target, report)
-  await verifyCodeHash(chainId, target, exploitAnchor, report)
+  await verifyTrace(chainId, observed.transactionHash, target, report)
+  await verifyCodeHash(chainId, target, observedAnchor, report)
   await verifyDeployment(chainId, target, report)
 
   const systemGenesisReset =
@@ -753,8 +759,8 @@ async function verifyTarget(incident, target, exploitAnchor, report) {
       logIndex: target.ageReset.logIndex,
     }
     const exploitPosition = {
-      blockNumber: exploitAnchor.blockNumber,
-      transactionIndex: exploitAnchor.transactionIndex,
+      blockNumber: observedAnchor.blockNumber,
+      transactionIndex: observedAnchor.transactionIndex,
       logIndex: -1,
     }
     if (comparePosition(resetPosition, exploitPosition) >= 0)
@@ -764,7 +770,7 @@ async function verifyTarget(incident, target, exploitAnchor, report) {
   }
 
   const attackers = new Set(
-    [...incident.incident.attackerAddresses, lower(exploitAnchor.tx.from)].filter(Boolean),
+    [...incident.incident.attackerAddresses, lower(observedAnchor.tx.from)].filter(Boolean),
   )
   if (target.deployment.kind === 'system-genesis')
     pass(report, `${target.id}:creator-not-attacker`, 'not applicable to genesis state')
@@ -824,7 +830,8 @@ function reportStatus(report, curveReady) {
     (report.tier !== 'reviewed' ||
       report.targetVerification.some(
         (verification) =>
-          verification.tier !== 'reviewed' || verification.curveEligible !== true,
+          verification.tier !== 'reviewed' ||
+          (verification.curveEligible !== true && verification.curveRole !== 'supporting'),
       ))
   )
     return 'INCOMPLETE'

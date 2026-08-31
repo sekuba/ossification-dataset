@@ -28,25 +28,26 @@
     ]
   },
   "counts": {
-    "sourceIncidents": 711,
-    "sourceTargets": 749,
-    "eligibleBeforeDeduplication": 434,
-    "curveObservations": 403,
+    "sourceIncidents": 712,
+    "sourceTargets": 751,
+    "eligibleBeforeDeduplication": 435,
+    "curveObservations": 404,
     "deduplicatedObservations": 31,
     "provisionalObservations": 312,
-    "otherExcludedObservations": 3,
+    "otherExcludedObservations": 4,
     "incidentsByVerificationTier": {
       "provisional": 312,
-      "reviewed": 399
+      "reviewed": 400
     },
     "targetsByVerificationTier": {
       "provisional": 312,
-      "reviewed": 437
+      "reviewed": 439
     },
     "exclusionReasons": {
       "age-reset:unknown": 1,
       "incident-verification-tier:provisional": 312,
       "loss:no-usd-valuation": 1,
+      "target-role:supporting-correlated": 1,
       "target-verification-tier:provisional": 312,
       "target-verification:not-curve-eligible": 315
     }
@@ -6821,6 +6822,24 @@
       "codeAgeSeconds": 90693912
     },
     {
+      "observationId": "eip155:1:0x8a8793963c0ef443b9a396665c3c185ded132d5f99daf7c99e87125597016e64#target-1",
+      "incidentId": "eip155:1:0x8a8793963c0ef443b9a396665c3c185ded132d5f99daf7c99e87125597016e64",
+      "targetId": "target-1",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 25854585,
+        "transactionIndex": 63,
+        "timestamp": 1787930315
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": true,
+      "failureModeId": "failure:ajna-liquidation-accounting-unmatched-collateral-release",
+      "codeArtifactCodeHash": "0x4537d3997334e04cf8891b8c1da371dbb517416b712b468576be1bd6e082075e",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 98920644
+    },
+    {
       "observationId": "eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d#target-1",
       "incidentId": "eip155:1:0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d",
       "targetId": "target-1",
@@ -7684,6 +7703,7 @@
     87139181,
     90358155,
     90693912,
+    98920644,
     99894647,
     101430522,
     102187798,
@@ -15607,6 +15627,28 @@
     }
   ],
   "otherExcludedObservations": [
+    {
+      "observationId": "eip155:1:0x8a8793963c0ef443b9a396665c3c185ded132d5f99daf7c99e87125597016e64#target-2",
+      "incidentId": "eip155:1:0x8a8793963c0ef443b9a396665c3c185ded132d5f99daf7c99e87125597016e64",
+      "targetId": "target-2",
+      "chainId": 1,
+      "exploit": {
+        "blockNumber": 25856647,
+        "transactionIndex": 62,
+        "timestamp": 1787955143
+      },
+      "incidentVerificationTier": "reviewed",
+      "targetVerificationTier": "reviewed",
+      "targetCurveEligible": false,
+      "curveRole": "supporting",
+      "failureModeId": "failure:ajna-liquidation-accounting-unmatched-collateral-release",
+      "codeArtifactCodeHash": "0x0294b5b2dc7252ee040db2b47ce53de17d62a248a3f1644ff75e41a9dfd0fbda",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 79600368,
+      "exclusionReasons": [
+        "target-role:supporting-correlated"
+      ]
+    },
     {
       "observationId": "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0#target-1",
       "incidentId": "eip155:1:0xdc86737cb0d4d9e9196445160adc7495ecca11ebfe17bfaa15092d615bd246d0",
