@@ -137,7 +137,7 @@ date | project | reported loss | candidate mechanism
 2026-04-16 | Grinex | $15m USDT | hot-wallet compromise
 2026-04-14 | CowSwap frontend | $1.2m | domain or frontend supply-chain attack; distinct from existing 2024 CoW row
 2026-04-13 | Hyperbridge | $2.5m | forged messages and admin-token mint
-2026-04-13 | Dango | $1.9m gross | insurance-fund negative-donation flaw; funds returned
+2026-04-13 | Dango | approximately 1.9m USDC depleted; 410,010 USDC bridged | insurance-fund sign-check failure; the user-supplied OpenUSDT lead was merged here because its date and 410,010-USDC figure identify Dango's documented bridge outflow; funds returned
 2026-04-13 | MONA | $60,950 | deferred LP-burn flaw
 2026-04-12 | SubQuery Network | $134k | missing onlyOwner
 2026-04-11 | Zerion | $100k | employee social engineering or hot-wallet compromise
@@ -603,3 +603,29 @@ date | project | reported loss | candidate mechanism
 2016 candidates 
 
 2016-06-17 | The DAO | approximately 3.64m ETH | recursive-call reentrancy in splitDAO
+
+User-supplied L2 incident leads
+
+> Normalized 2026-08-29; internal duplicates are collapsed and month-only dates retain their reported precision.
+
+2026-08-23 | warp.green Chia–EVM bridge (Ethereum/Base) | approximately $93k USDC | Chialisp bug reportedly let worthless CAT tokens produce validator-signed messages redeemable for genuine USDC from EVM bridge contracts; non-EVM root cause needs classification
+2026-08-08 | Oraichain EVM cross-chain transfer | at least 3.9m unauthorized ORAI | unauthorized-mint path reportedly routed ORAI to exchanges; exact EVM contract, gross mint and realized loss need reconstruction
+2026-08 | Across Protocol Solana deployment to EVM destinations | approximately $4.5m gross fills; under $4m net | offchain reader reportedly accepted forged Solana deposit-like events, causing EVM relayer fills; EVM contracts were not compromised
+2026-05 | Cellframe Bridge | at least approximately $2k illegal issuance; total unknown | unauthorized issuance is acknowledged but chain, vulnerable contract, total loss and EVM root cause remain unresolved
+2026-04-22 | TimeBridge / TIME (Polygon to BNB Chain) | 519k TIME; approximately $872k notional | validator authorization for a Polygon burn was reportedly replayable against a different BNB Chain bridge because target-domain binding was insufficient
+2026-03-13 | Messina Bridge / Opulous OPUL (Ethereum/Arbitrum/BNB Chain) | 474,976,619 OPUL | bridge/router emitter and same-chain checks reportedly let one Wormhole VAA recursively create new VAAs over approximately 143 rounds; USD loss needs valuation
+2025-12-09 | thirdweb legacy Bridge contract | more than $30k USDC | obsolete proxy reportedly retained a transaction-ordering or authorization flaw after newer deployments were fixed, draining a wallet with unlimited approval
+2025-08-10 | Symbiosis cross-chain swap infrastructure | approximately $5.27m attacker profit | destination parameters exposed by cross-chain initiation reportedly enabled deterministic sandwiching through 2025-10-10; classify as interop design/MEV
+2025-08 | Edenlayer EDEN bridge deployment (Solana to Base) | realized loss unquantified | Base proxy reportedly launched with empty upgrade authorization, was taken over within three blocks, then received unrestricted minting logic nine days later
+2024-04-23 | Magpie Protocol MagpieRouterV2 | approximately $129k from 221 wallets | fixed-position selector validation reportedly diverged from executed transfer parameters, exposing wallets with router approvals
+2023-02-15 | Multichain / Anyswap V4 router second exploitation wave | 87 ETH; approximately $130k | later successful reuse of the January 2022 WETH permit-fallback flaw against stale approvals; distinct incident in the same vulnerability family
+2022-11-03 | pNetwork pGALA bridge deployment (BNB Chain) | more than $1bn nominal mint; approximately $10.8m market impact | misconfigured token reportedly enabled takeover or unauthorized minting before a defensive mint and deprecation; isolate the initial attacker boundary
+2022-10-11 | QANplatform QANX bridge (Ethereum/BNB Chain) | approximately $2m reported | bridge-wallet compromise and unauthorized issuance need classification between key compromise and EVM contract failure
+2022-09-21 | BXH cross-chain bridge, separate 2022 incident | amount unresolved | compensation records identify bridge loss distinct from LP and flash-loan events; signing-key versus EVM-code cause needs reconstruction
+2022-09-16 | OmniBridge replay on EthereumPoW | 200 ETHW | pre-fork bridge message reportedly replayed because a stored legacy source-chain identifier did not bind verification to execution CHAINID
+2022-06-05 | Optimism / Wintermute counterfactual Safe takeover | 20m OP; approximately $30m gross | attacker replayed a pre-EIP-155 Safe factory deployment and obtained the undeployed Optimism address during 2022-06-05–08; most tokens were returned
+2022-04-11 | Marvin Inu bridge (Ethereum/BNB Chain) | 110 ETH; approximately $350k | conflicting reports describe either a bridge-contract flaw or private-key compromise; withdrawal, mint and signer transactions need classification
+2021-12-04 | Polygon PoS MRC20 genesis contract | 801,601 MATIC | malformed signatures recovered the zero address while transfer logic reportedly lacked balance checks; approximately 9.27bn MATIC was at risk before an emergency upgrade
+2021-10-31 | Wrapped BANANO bridge (BNB Chain/Polygon) | 3,746,400 unbacked wBAN | chain-agnostic receipts and a shared signer reportedly allowed cross-chain replay, minting 577,400 wBAN on BNB Chain and 3,169,000 on Polygon through 2021-11-01
+2021-06-29 | THORChain Bifrost Ethereum integration | approximately $140k | Bifrost reportedly treated an ERC-20 whose symbol was ETH as native ETH; root cause is offchain Bifrost parsing rather than EVM bridge code
+2021-06 | Zapper deprecated Polygon Bridge Zap | approximately 25% of an undisclosed rescue amount temporarily captured | deprecated Zap reportedly accepted insufficiently validated calldata while retaining approval access; permanent loss and threshold eligibility are unresolved

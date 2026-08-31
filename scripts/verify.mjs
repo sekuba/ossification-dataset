@@ -440,6 +440,39 @@ async function verifyCreateNonceProof(chainId, target, anchored, report) {
 
 async function verifyDeployment(chainId, target, report) {
   const deployment = target.deployment
+  if (deployment.kind === 'system-genesis') {
+    const label = `${target.id}:deployment`
+    if (deployment.blockNumber !== 0) {
+      fail(report, label, 'system-genesis deployment must use block zero')
+      return
+    }
+    const block = await rpc(chainId, 'eth_getBlockByNumber', ['0x0', false])
+    if (!block) {
+      inconclusive(report, label, 'block zero is unavailable')
+      return
+    }
+    const actualTimestamp = hexInt(block.timestamp)
+    if (actualTimestamp !== deployment.timestamp) {
+      fail(report, label, `block-zero timestamp ${actualTimestamp} != ${deployment.timestamp}`)
+      return
+    }
+    const runtime = await rpc(chainId, 'eth_getCode', [target.executionAddress, '0x0'])
+    const runtimeHash = await keccak256(chainId, runtime)
+    if (runtime === '0x' || runtimeHash === EMPTY_CODE_HASH) {
+      fail(report, label, 'executionAddress has no code at block zero')
+      return
+    }
+    if (target.codeArtifact.address !== target.executionAddress) {
+      fail(report, label, 'system-genesis code artifact is not the executionAddress')
+      return
+    }
+    if (runtimeHash !== target.codeArtifact.codeHash) {
+      fail(report, label, `block-zero runtime hash ${runtimeHash} != ${target.codeArtifact.codeHash}`)
+      return
+    }
+    pass(report, label, `block 0 at ${actualTimestamp}, runtime ${runtimeHash}`)
+    return
+  }
   const anchored = await transactionAnchor(chainId, deployment, `${target.id}:deployment`, report)
   if (!anchored) return
   if (deployment.creatorAddress) {
@@ -697,13 +730,23 @@ async function verifyTarget(incident, target, exploitAnchor, report) {
   await verifyCodeHash(chainId, target, exploitAnchor, report)
   await verifyDeployment(chainId, target, report)
 
-  const reset = await transactionAnchor(
-    chainId,
-    target.ageReset,
-    `${target.id}:age-reset`,
-    report,
-  )
+  const systemGenesisReset =
+    target.deployment.kind === 'system-genesis' && target.ageReset.kind === 'deployment'
+  const reset = systemGenesisReset
+    ? {
+        blockNumber: target.ageReset.blockNumber,
+        transactionIndex: -1,
+        timestamp: target.ageReset.timestamp,
+      }
+    : await transactionAnchor(
+        chainId,
+        target.ageReset,
+        `${target.id}:age-reset`,
+        report,
+      )
   if (reset) {
+    if (systemGenesisReset)
+      pass(report, `${target.id}:age-reset`, 'system runtime active at genesis')
     const resetPosition = {
       blockNumber: reset.blockNumber,
       transactionIndex: reset.transactionIndex,
@@ -723,7 +766,9 @@ async function verifyTarget(incident, target, exploitAnchor, report) {
   const attackers = new Set(
     [...incident.incident.attackerAddresses, lower(exploitAnchor.tx.from)].filter(Boolean),
   )
-  if (target.deployment.creatorAddress && attackers.has(target.deployment.creatorAddress))
+  if (target.deployment.kind === 'system-genesis')
+    pass(report, `${target.id}:creator-not-attacker`, 'not applicable to genesis state')
+  else if (target.deployment.creatorAddress && attackers.has(target.deployment.creatorAddress))
     fail(report, `${target.id}:creator-not-attacker`, 'creator is an attacker/exploit sender')
   else if (target.deployment.creatorAddress)
     pass(report, `${target.id}:creator-not-attacker`, target.deployment.creatorAddress)

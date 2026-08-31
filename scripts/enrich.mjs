@@ -338,7 +338,7 @@ async function enrichFile(file, useExplorer) {
     }
 
     const deployment = target.deployment
-    if (!deployment.transactionHash && useExplorer) {
+    if (deployment.kind !== 'system-genesis' && !deployment.transactionHash && useExplorer) {
       const discovered = await explorerCreation(chainId, target.executionAddress)
       if (discovered) {
         deployment.transactionHash = discovered.transactionHash
@@ -407,8 +407,11 @@ async function enrichFile(file, useExplorer) {
         'The executing code artifact and its code hash have not been established in structured evidence.',
       )
     ) changes.push(`${target.id}:artifact-limitation`)
-    if (
-      [
+    const completeAnchors = deployment.kind === 'system-genesis'
+      ? reset.kind === 'deployment'
+        ? [deployment.blockNumber, reset.blockNumber]
+        : [deployment.blockNumber, reset.blockNumber, reset.transactionHash, reset.transactionIndex]
+      : [
         deployment.blockNumber,
         deployment.transactionHash,
         deployment.transactionIndex,
@@ -416,7 +419,9 @@ async function enrichFile(file, useExplorer) {
         reset.blockNumber,
         reset.transactionHash,
         reset.transactionIndex,
-      ].every((value) => value !== null) &&
+      ]
+    if (
+      completeAnchors.every((value) => value !== null) &&
       removeLimitation(
         target.verification,
         'One or more target block, transaction, ordering, or creator anchors remain unresolved.',

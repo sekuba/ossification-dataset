@@ -32,7 +32,8 @@ For each target, establish:
 
 - `executionAddress`, `relationship`, and implicated `codeArtifact`;
 - runtime code hash;
-- deployment transaction and creator;
+- deployment transaction and creator, or an explicit block-zero
+  `system-genesis` code anchor for a genesis system contract;
 - latest pre-exploit age reset: deployment, code change, or causal
   configuration change;
 - exact block, transaction index, and log index;

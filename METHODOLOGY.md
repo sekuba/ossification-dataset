@@ -143,6 +143,8 @@ storage history, and execution traces.
 When historical internal-creation traces are unavailable, a CREATE creator can
 be established by address derivation, creator nonce bounds, code appearance in
 the deployment block, and a deployment-receipt witness from the created address.
+Genesis system code has no deployment transaction. Anchor it as
+`system-genesis` at block zero and verify that block's timestamp and runtime hash.
 
 ## Verification
 

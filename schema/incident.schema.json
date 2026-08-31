@@ -316,6 +316,7 @@
       "required": ["timestamp"],
       "additionalProperties": false,
       "properties": {
+        "kind": { "const": "system-genesis" },
         "timestamp": { "type": "integer", "minimum": 1 },
         "blockNumber": { "type": "integer", "minimum": 0 },
         "transactionHash": { "$ref": "#/$defs/hash" },
@@ -324,6 +325,22 @@
         "creatorProof": { "$ref": "#/$defs/createNonceProof" }
       },
       "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "system-genesis" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["blockNumber"],
+            "properties": {
+              "blockNumber": { "const": 0 },
+              "transactionHash": false,
+              "transactionIndex": false,
+              "creatorAddress": false,
+              "creatorProof": false
+            }
+          }
+        },
         {
           "if": { "required": ["creatorProof"] },
           "then": { "required": ["blockNumber", "transactionHash", "transactionIndex", "creatorAddress"] }
@@ -513,7 +530,14 @@
             "required": ["codeArtifact"],
             "properties": {
               "deployment": {
-                "required": ["timestamp", "blockNumber", "transactionHash", "transactionIndex", "creatorAddress"]
+                "if": {
+                  "properties": { "kind": { "const": "system-genesis" } },
+                  "required": ["kind"]
+                },
+                "then": { "required": ["timestamp", "blockNumber"] },
+                "else": {
+                  "required": ["timestamp", "blockNumber", "transactionHash", "transactionIndex", "creatorAddress"]
+                }
               },
               "ageReset": {
                 "if": {

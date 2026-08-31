@@ -598,7 +598,7 @@ if (
 
 const webLines = readFileSync(webPath, 'utf8').split(/\r?\n/)
 const webRows = webLines.flatMap((line, index) => {
-  const match = line.match(/^(\d{4}-\d{2}-\d{2}) \| ([^|]+) \| ([^|]+) \| (.+)$/)
+  const match = line.match(/^(\d{4}-\d{2}(?:-\d{2})?) \| ([^|]+) \| ([^|]+) \| (.+)$/)
   if (!match) return []
   return [
     {

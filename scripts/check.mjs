@@ -419,6 +419,7 @@ function verifyIncident(record, state, errors) {
     const targetTier = target.verification?.tier
     const targetEligible = target.verification?.curveEligible === true
     const eligible = incidentReviewed && targetTier === 'reviewed' && targetEligible
+    const systemGenesis = deployment.kind === 'system-genesis'
     if (targetIds.has(target.id)) errors.push(`${targetLabel}: duplicate target id ${target.id}`)
     targetIds.add(target.id)
     if (target.codeAgeSeconds !== exploit.timestamp - reset.timestamp)
@@ -514,6 +515,11 @@ function verifyIncident(record, state, errors) {
           (target.evidence?.ageSourceIds ?? []).length === 0)
         errors.push(`${targetLabel}: curve eligibility requires target-specific identity and age-history evidence`)
       for (const [anchorName, anchor] of [['deployment', deployment], ['ageReset', reset]]) {
+        if (systemGenesis && (anchorName === 'deployment' || reset.kind === 'deployment')) {
+          if (anchor.blockNumber !== 0 || anchor.timestamp !== deployment.timestamp)
+            errors.push(`${targetLabel}: ${anchorName} must resolve to the block-zero system-genesis anchor`)
+          continue
+        }
         if (anchor.blockNumber === null || anchor.transactionHash === null)
           errors.push(`${targetLabel}: curve eligibility requires a complete ${anchorName} anchor`)
         else {
@@ -526,14 +532,20 @@ function verifyIncident(record, state, errors) {
             errors.push(`${targetLabel}: ${anchorName} transaction source must be linked in target evidence`)
         }
       }
-      if (!deployment.creatorAddress) errors.push(`${targetLabel}: curve eligibility requires creatorAddress`)
+      if (!systemGenesis && !deployment.creatorAddress)
+        errors.push(`${targetLabel}: curve eligibility requires creatorAddress`)
       if (reset.transactionHash === exploit.transactionHash)
         errors.push(`${targetLabel}: exploit transaction cannot define a pre-exploit age reset`)
       if (reset.mechanism?.type === 'event' && reset.mechanism.codeAddressLocation === null)
         errors.push(`${targetLabel}: eligible event reset requires codeAddressLocation`)
     } else if (targetTier !== 'provisional') {
-      if ([deployment.blockNumber, deployment.transactionHash, deployment.transactionIndex, deployment.creatorAddress,
-        reset.blockNumber, reset.transactionHash, reset.transactionIndex].some((value) => value === null))
+      const anchors = systemGenesis
+        ? reset.kind === 'deployment'
+          ? [deployment.blockNumber, reset.blockNumber]
+          : [deployment.blockNumber, reset.blockNumber, reset.transactionHash, reset.transactionIndex]
+        : [deployment.blockNumber, deployment.transactionHash, deployment.transactionIndex, deployment.creatorAddress,
+            reset.blockNumber, reset.transactionHash, reset.transactionIndex]
+      if (anchors.some((value) => value === null))
         errors.push(`${targetLabel}: non-provisional verification requires complete anchors`)
     }
     if (targetTier === 'reviewed' && reset.mechanism?.type === 'event' && reset.logIndex === null)
