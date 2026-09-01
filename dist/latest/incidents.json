@@ -11378,6 +11378,83 @@
       }
     },
     {
+      "id": "eip155:1:0x927b784148b60d5233e57287671cdf67d38e3e69e5b6d0ecacc7c1aeaa98985b",
+      "protocol": {
+        "name": "ROE Finance",
+        "slug": "roe-finance"
+      },
+      "name": "ROE WBTC/USDC LP live-reserve collateral valuation",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x927b784148b60d5233e57287671cdf67d38e3e69e5b6d0ecacc7c1aeaa98985b",
+        "blockNumber": 16384470,
+        "transactionIndex": 13,
+        "timestamp": 1673450939
+      },
+      "summary": "ROE's custom WBTC/USDC LP oracle divided the pair's current externally priced reserves by current LP supply. It applied no time, donation or deviation bound, so a same-receipt reserve donation immediately raised every recursively minted roeLP collateral claim before the USDC borrow check. The violated invariant is that collateral value used to authorize borrowing must not be increased atomically by the borrower through a live reserve balance that is amplified across repeated claims on the same underlying inventory.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 103242.9988379475,
+          "valuationTimestamp": 1673450939,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-6",
+            "source-7",
+            "source-8"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+              "symbol": "WBTC"
+            },
+            "amount": "2.96141905",
+            "usdValue": 51581.8489419475,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1673450877,
+              "unitPriceUsd": 17417.95,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-8"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "51661.149896",
+            "usdValue": 51661.149896,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1673450860,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-8"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Immediately before the receipt, the ROE reserve aToken 0x68b26dcf21180d2a8de5a303f8cc5b14c8d99c4c owns exactly 2,953,841,283 raw UNI-V2 WBTC/USDC LP out of 5,771,992,996 supply. The pair reserves are 578,680,045 WBTC satoshis and 100,949,159,688 USDC micro-units. Integer-floor redemption therefore equals floor(2,953,841,283 * 578,680,045 / 5,771,992,996) = 296,141,905 WBTC satoshis and floor(2,953,841,283 * 100,949,159,688 / 5,771,992,996) = 51,661,149,896 USDC micro-units. Receipt logs 600-605 burn exactly that LP and emit exactly those two quantities; the reserve's LP balance becomes zero. The campaign has 50 borrow principals totalling 147,692,064,150 raw LP, 49 redeposits totalling 144,738,222,867 raw LP, and the final 2,953,841,283-raw burn. At receipt end the EOA has 147,692,064,169 raw variable LP debt and a 5,673,090.338021 roeUSDC claim, while the helper has a 144,738,222,868-raw roeLP claim and 5,673,090.338021 USDC debt. Both underlying reserve balances are zero immediately after the receipt and remain zero through block 25,882,427 while all four claim/debt balances only accrue, so the cross-claims are unbacked bad debt, not collectible consideration. The 5,673,090.338021-USDC Balancer funding, deposit, borrow and repayment cancel exactly. After the burn, 26,024.069170 of the just-received USDC is sent back to the pair and sync() is called; it is recycled victim inventory rather than external attacker consideration. A later same-receipt swap returns 0.66679001 WBTC and 14,345.053375 USDC, leaving the helper with 2.29462904 WBTC and 39,982.134101 USDC proceeds. Those proceeds are not substituted for gross victim depletion. Canonical WBTC reports 8 decimals and Circle USDC reports 6 decimals; DefiLlama's independently preceding observations value them at 17,417.95 USD and par, giving exact products 51,581.8489419475 USD and 51,661.149896 USD.",
+        "minimumUsd": null
+      }
+    },
+    {
       "id": "eip155:1:0x92cdcc732eebf47200ea56123716e337f6ef7d5ad714a2295794fdc6031ebb2e",
       "protocol": {
         "name": "Dough Finance",
@@ -14048,6 +14125,61 @@
       }
     },
     {
+      "id": "eip155:1:0xb5cfa3f86ce9506e2364475dc43c44de444b079d4752edbffcdad7d1654b1f67",
+      "protocol": {
+        "name": "GradientMakerPool",
+        "slug": "gradientmakerpool"
+      },
+      "name": "GradientMakerPool heterogeneous-unit LP share accounting",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xb5cfa3f86ce9506e2364475dc43c44de444b079d4752edbffcdad7d1654b1f67",
+        "blockNumber": 22765114,
+        "transactionIndex": 9,
+        "timestamp": 1750657343
+      },
+      "summary": "GradientMarketMakerPool added raw GRAY token units and wei-denominated ETH when minting LP shares, then used those shares pro rata against the whole pool. The live GRAY/WETH pair constrained the deposit ratio but did not convert the two assets to a common value unit, so a deposit that was valid at the market ratio received shares as though each GRAY wei and ETH wei were economically interchangeable.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 6743.210529916518,
+          "valuationTimestamp": 1750657320,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-3",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "3.010899131704627093",
+            "usdValue": 6747.665826080606,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1750657320,
+              "unitPriceUsd": 2241.08,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-3"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The direct pool's archive ETH balance falls from 3.027810499442493292 at block 22765113 to 0.016911367737866199 at block 22765114, an exact gross reserve depletion of 3.010899131704627093 ETH. In the same receipt it retains 3.010899131704627094 GRAY as consideration. Immediately before the receipt, the sole credible GRAY market, canonical Uniswap V2 pair 0x0846f55387ab118b4e59eee479f1a3e8ea4905ec, held 261,545.090101530069672838 GRAY and 172.690952204762289631 WETH. The exact reserve-implied credit is (3.010899131704627094 * 172.690952204762289631) / 261,545.090101530069672838 = approximately 0.001988012995559277896495942208041284852218098342934136728762105924489847668692228748688376255407217518 ETH. Gross depletion less that credit is approximately 3.008911118709067815103504057791958715147781901657065863271237894075510152331307771251311623744592782 ETH. At the independently preceding $2,241.08 ETH mark, gross outflow is exactly $6,747.66582608060568558044, the GRAY credit is approximately $4.455296164087986508279126163597162656608935834382835140094180345255707813352780004110546258468007035, and net loss is approximately $6,743.210529916517699072160873836402837343391064165617164859905819654744292186647219995889453741531992. Morpho's 3-WETH flash principal is returned with zero token fee. A linked Uniswap trade spends 0.664800798545598825 WETH for 1,000 GRAY; 50 GRAY goes to the token contract, 950 is deposited, 946.989100868295372906 is returned to the helper, and the pool keeps the stated 3.010899131704627094-GRAY credit. The helper later transfers its returned GRAY to the attacker EOA for disposal; neither that activity nor any later transaction returns ETH or GRAY to the victim pool. The seed's $5,000 figure was attacker-proceeds scale rather than the pool's exact net impairment.",
+        "minimumUsd": null
+      }
+    },
+    {
       "id": "eip155:1:0xb8f57cf82b7057d9d03f1500e3f0ce46980388c3b13ff317f1c617d932313386",
       "protocol": {
         "name": "SushiSwap",
@@ -14102,6 +14234,41 @@
         "confidence": "high",
         "notes": "The depleted assets were not protocol-held funds. RouteProcessor2 custodies nothing; every wei taken came out of an external wallet that had previously granted the router an ERC20 allowance. Reconstructed from WETH Transfer receipts rather than from the post-mortem estimate: across eleven successful transactions between blocks 17007838 and 17007856, exactly eighteen 100 WETH transferFrom calls left the single approving wallet 0x31d3243cfb54b34fc9c73e1cb1137124bd6b13e1 for eight different searcher contracts, totalling exactly 1800.000000000000000000 WETH. Ten transactions moved 100 WETH each; 0x04b166e7b4ab5105a8e9c85f08f6346de1c66368687215b0e0b58d6e5002bc32 batched eight callbacks for 800 WETH. Sweeping every WETH inflow of all eight receiving contracts over blocks 16990000-17020000 turns up no other victim wallet, so the campaign's gross depletion is exactly the 1800 WETH the post-mortem approximates. Financing, gas, builder payments and any later whitehat returns are not netted.",
         "realizedAt": 1681007927,
+        "minimumUsd": null
+      }
+    },
+    {
+      "id": "eip155:1:0xb93506af8f1a39f6a31e2d34f5f6a262c2799fef6e338640f42ab8737ed3d8a4",
+      "protocol": {
+        "name": "Curve LlamaLend",
+        "slug": "curve"
+      },
+      "name": "LlamaLend sDOLA-long2 spot share-rate oracle liquidation",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xb93506af8f1a39f6a31e2d34f5f6a262c2799fef6e338640f42ab8737ed3d8a4",
+        "blockNumber": 24566937,
+        "transactionIndex": 0,
+        "timestamp": 1772420411
+      },
+      "summary": "The sDOLA-long2 market bound a direct CryptoFromPoolVaultWAgg oracle that multiplied a pool price by sDOLA.convertToAssets(1e18) without smoothing or a rate-change bound. In one receipt the attacker redeemed and donated through sDOLA, atomically changed that share rate, and used the resulting LLAMMA health state to hard-liquidate all 27 active borrowers.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 796878.0669860904,
+          "valuationTimestamp": 1772420402,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-7",
+            "source-8",
+            "source-9"
+          ]
+        },
+        "assets": [],
+        "confidence": "high",
+        "notes": "Measured as the 27 liquidated borrowers' exact pre-manipulation equity, not attacker proceeds or the receipt's gross LLAMMA trading inventory. At block 24,566,936 the positions held 9,864,443.426512786048822333 sDOLA shares. Summing floor(shares_i * 1.189042662706965487 DOLA/share) independently for each borrower gives 11,729,244.077982985551536718 DOLA; using one aggregate floor would overstate this by 11 wei. The 27 Liquidate events extinguish exactly 10,906,769.122958957524427581 crvUSD of execution-time debt, including 0.097677580952622523 accrued after the preceding-block snapshot. Valuing collateral at the closest-preceding DOLA price, $0.9953312328463403 at 1772420342, and debt at the closest-preceding crvUSD price, $0.9973260439345676 at 1772420402, gives exactly $796,878.0669860904335422913758616186241598. All 27 positions have zero x, y and debt after the receipt, loan_exists is false, and no borrower receives a collateral or stablecoin refund. Later unrelated borrower token activity is excluded.",
         "minimumUsd": null
       }
     },
@@ -22781,6 +22948,228 @@
       }
     },
     {
+      "id": "eip155:42161:0xf52a681bc76df1e3a61d9266e3a66c7388ef579d62373feb4fd0991d36006855",
+      "protocol": {
+        "name": "Citadel Finance",
+        "slug": "citadel-finance"
+      },
+      "name": "CitadelRedeem fixed-rate live-route quotation",
+      "chainId": 42161,
+      "exploit": {
+        "transactionHash": "0xf52a681bc76df1e3a61d9266e3a66c7388ef579d62373feb4fd0991d36006855",
+        "blockNumber": 174662727,
+        "transactionIndex": 1,
+        "timestamp": 1706347536
+      },
+      "summary": "CitadelRedeem converted a fixed USDC-denominated staking entitlement to WETH with CamelotRouter.getAmountsOut against the live WETH/USDC pool. Three linked redemptions used that mutable route quote and depleted the treasury while the pool and flash lender gained fees.",
+      "loss": {
+        "kind": "net-loss",
+        "realizedAt": 1706347913,
+        "usd": {
+          "amount": 116280.21691475646,
+          "valuationTimestamp": 1706347913,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-5",
+            "source-6",
+            "source-7",
+            "source-8",
+            "source-10"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+              "symbol": "WETH"
+            },
+            "amount": "24.842391304488882786",
+            "usdValue": 56193.81498545377,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1706347499,
+              "unitPriceUsd": 2262.013116881379,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-10"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+              "symbol": "WETH"
+            },
+            "amount": "16.209329538689066771",
+            "usdValue": 36653.94885310503,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1706347793,
+              "unitPriceUsd": 2261.287165864445,
+              "sourceIds": [
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-2",
+              "source-10"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+              "symbol": "WETH"
+            },
+            "amount": "10.567828449326170156",
+            "usdValue": 23891.21816681414,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1706347816,
+              "unitPriceUsd": 2260.75,
+              "sourceIds": [
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-2",
+              "source-10"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Across the three successful redemption receipts, treasury 0x5ed32847e33844155c18944ae84459404e432620 sends 24.842391304488882786 + 16.209329538689066771 + 10.567828449326170156 = 51.619549292504119713 WETH to the helper with no WETH return. Archive balances reconcile each component exactly: 72.668070516983737917 -> 47.825679212494855131 -> 31.616349673805788360 -> 21.048521224479618204 WETH. The linked deposit supplies exactly 2,653 CIT; the three redemptions burn 30.951666666666666666 + 20.265972222222222222 + 13.269386574074074074 CIT, and the withdrawal returns 2,411.306998087592149132 CIT. The exact 241.693001912407850868-CIT net consideration equals 205.187178472222222222 CIT retained by the token contract plus 36.505823440185628646 net burned after a 27.981202022777334316-CIT withdrawal reward mint. CIT is the verified 18-decimal Citadel token. Immediately before the first linked purchase, Camelot CIT/WETH pool 0x73d31c0b326a27a92bdacc7d46f4219c47a022ea held 30,858.676994450283426965 CIT and 25.914525972692246359 WETH, and the EOA held zero CIT. The reserve-implied price is 0.00083978084923578519117074409216673495894624855512076249886196087913167322817030897 WETH per CIT; the consideration is therefore 0.20296915440034811929674252951339791056958896839176185986689155741402339819266159 WETH, worth exactly $458.76509061647484360284823718324789532312485758684757900133898047619466623292721 at the $2,260.27 ETH observation 88 seconds before the purchase. That credit is less than one percent of the pool's WETH-side depth. The three gross WETH products are exactly $56,193.814985453764543677728197041894, $36,653.948853105031488162364539857095 and $23,891.21816681413918017700. Their $116,738.982005372935212017092736898989 sum minus the CIT credit is exact net loss $116,280.21691475646036841424449971574110467687514241315242099866101952380533376707; the shorter numeric fields are IEEE-754 renderings only. In every redemption the quote pool sends and receives the same USDC.e amount exactly (474,961.669570; 475,492.089296; 476,907.393537), gains 1.265909302277494528 + 1.271238817402037529 + 1.274439752872321937 = 3.811587872551853994 WETH, and the external Uniswap V3 lender gains 2.25 WETH per receipt. CitadelRedeem, treasury, staking, owner, EOA and helper each held zero quote-pool LP at anchor minus one; its external LPs therefore incurred no inventory loss. EOA nonces 7-11 are respectively the CIT deposit, three losses and the CIT withdrawal. Nonces 12-21 only approve, dispose, unwrap or forward already measured assets. Separate protocol-owner transactions rescued the treasury's remaining WETH; no attacker or helper transaction ever returned WETH to the treasury. The imported approximately $93,000 figure measured proceeds rather than entity-level loss.",
+        "minimumUsd": null
+      }
+    },
+    {
+      "id": "eip155:42161:0xf5e753d3da60db214f2261343c1e1bc46e674d2fa4b7a953eaf3c52123aeebd2",
+      "protocol": {
+        "name": "Paribus",
+        "slug": "paribus"
+      },
+      "name": "Paribus Camelot PNFT instantaneous-position oracle",
+      "chainId": 42161,
+      "exploit": {
+        "transactionHash": "0xf5e753d3da60db214f2261343c1e1bc46e674d2fa4b7a953eaf3c52123aeebd2",
+        "blockNumber": 296699667,
+        "transactionIndex": 7,
+        "timestamp": 1737200705
+      },
+      "summary": "Paribus's direct Algebra V1 position oracle valued a Camelot liquidity NFT from the pool's instantaneous globalState without a time-weighted or deviation constraint. Once that oracle, pool and PNFT market were enabled, the lending controller accepted the transient position valuation and released four scarce reserve assets against collateral whose fair pre-event value was much lower.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 75056.63756377492,
+          "valuationTimestamp": 1737200705,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-8",
+            "source-9",
+            "source-10",
+            "source-12"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "12.599960598441767978",
+            "usdValue": 41494.06424318245,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1737200698,
+              "unitPriceUsd": 3293.19,
+              "sourceIds": [
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-12"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": "0x912ce59144191c1204e64559fe8253a0e49e6548",
+              "symbol": "ARB"
+            },
+            "amount": "6510.273280264926258675",
+            "usdValue": 5041.386361131872,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1737200702,
+              "unitPriceUsd": 0.774374,
+              "sourceIds": [
+                "source-9"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-12"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f",
+              "symbol": "WBTC"
+            },
+            "amount": "0.36729789",
+            "usdValue": 37757.12119833,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1737200700,
+              "unitPriceUsd": 102797,
+              "sourceIds": [
+                "source-10"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-12"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 42161,
+              "tokenAddress": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+              "symbol": "USDT"
+            },
+            "amount": "3924.210566",
+            "usdValue": 3924.210566,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1737200705,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-12"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The four Paribus reserves are the victim entity. At block 296699666 they hold 12.599960598441767978 native ETH, 6,510.273280264926258675 ARB, 0.36729789 WBTC and 3,924.210566 USDT; each balance is zero at block 296699667. The same receipt records helper 0xa8906930 debts in exactly those principal amounts. At the independently preceding marks the four gross products are $41,494.064243182445887469820, $5,041.386361131872006635194450, $37,757.12119833 and $3,924.210566, totalling exactly $88,216.782368644317894105014450. Canonical Arbitrum USDT reports six decimals and is valued at par. NFT 224023, retained by the Paribus PNFT custodian, has ticks -870000/+870000 and liquidity 261501642958000974. Applying the deployed LiquidityAmounts integer floors to the block-minus-one sqrtPriceX96 1993589943807320009052 gives 10,392,455.444702046400702691 PBX plus 6,580.072402 USDT. Camelot pool 0x25874cc60cbf7495b7cd1fa724178d251cfad5a8 then held 32,061,295.168839585435883621 PBX, 12,479.674453 USDT and active liquidity 466540172465242247; its exact spot was 0.00063315858681153637624319371523608944190276287934929122266559846865593598578993264 USDT per PBX. The position's fair pre-event value is therefore exactly $13,160.144804869404522237652225787648445816117581853463500053413592978259905749617, and gross reserve value less that attacker-supplied collateral consideration is $75,056.637563774913371867362224212351554183882418146536499946586407021740094250383. Two Uniswap V3 PBX/USDT pools had zero active liquidity and only dust; this Camelot pool was the only credible active market. DefiLlama's independently preceding $0.00060716 PBX mark at 1737197908 would value the position at $12,889.95564980529449265064586756, a disclosed 2.05% sensitivity, but the immediate onchain block-minus-one market is selected. Later recovery is not netted from exploit-time loss. The attacker swept and returned exactly 12.599 native ETH, all 6,510.273280264926258675 ARB, and the 10,283.193627-USDT final receipt residual to governance address 0x8ad8328166764ad208ae8dfe90ae766a1f0aee65. The residual includes the receipt's sale of all 0.36729789 WBTC for 37,912.265247 USDT, together with the pUSDT draw and PBX round trip, after the 3,093,209.807085-USDT Aave principal and 1,546.604904-USDT premium were repaid; it is not the WBTC proceeds alone. The returned ETH is 0.000960598441767978 below the pETH principal. Governance later withdrew the underlying NFT from the PNFT custodian in transaction 0x9bfa37a9 and burned it in transaction 0x125c5f6a, receiving 17,018,151.157492337382342522 PBX and 4,176.682356 USDT. The helper still owns the wrapper token, but the underlying NFT no longer exists, so that wrapper carries no residual underlying claim. No RepayBorrow event names the helper after the incident; all four reserve cash balances remain zero and the four debts remain outstanding and accrued at head.",
+        "minimumUsd": null
+      }
+    },
+    {
       "id": "eip155:42161:0xf9baf8cee8973cf9700ae1b1f41c625d7a2abdbcbc222582d24a8f2f790d0b5a",
       "protocol": {
         "name": "Jimbos Protocol",
@@ -24109,6 +24498,65 @@
       }
     },
     {
+      "id": "eip155:56:0x0c850f54c1b497c077109b3d2ef13c042bb70f7f697201bcf2a4d0cb95e74271",
+      "protocol": {
+        "name": "DKP",
+        "slug": "dkp"
+      },
+      "name": "DKP exchange live-pair valuation",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x0c850f54c1b497c077109b3d2ef13c042bb70f7f697201bcf2a4d0cb95e74271",
+        "blockNumber": 26284132,
+        "transactionIndex": 0,
+        "timestamp": 1678270609
+      },
+      "summary": "The direct DKP exchange valued its DKP inventory from the configured pair's live token balances. A two-receipt campaign caused the exchange to release DKP at a transient balance ratio and then removed canonical USDT from the same pair.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 78459.54914395766,
+          "valuationTimestamp": 1678270651,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "78459.549143957652842113",
+            "usdValue": 78459.54914395766,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1678270651,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-2",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The canonical 18-decimal BSC USDT balance of pair 0xbe654 falls from 259,605.445236391899433885 before source-1 to 181,045.896092434246591772 after source-2. Receipt arithmetic agrees: source-1 sends 259,390 USDT to the helper, receives the 259,390 principal plus a 674.414 fee, and source-2 sends 79,233.963143957652842113 USDT to the EOA, for exact pair depletion of 78,559.549143957652842113 USDT. The helper also pays 100 USDT through 0xb24fc to constructor-fixed specifyusdtAddr 0xb6df; that address is the DKP protocol's recurring exchange-revenue and distribution account and retains the amount, so entity-level loss is 78,459.549143957652842113 USDT. DKP moves internally across the harmed entity set: exchange -17,115.243270155346986000, pair +16,178.183701114341738517, DKP token fee inventory +851.483352690228512552, and constructor-fixed connectionAddr +85.576216350776734930. Their one-wei shortfall is the token's integer fee truncation, not attacker-held consideration; helper DKP starts and ends at zero. At the pre-incident block, pair total supply is 97,597.498194969607267275 LP: owner-linked UsdtTokenPool holds 68,040.736000000000010000 (69.7156558911%), constructor-bound lpAddress holds 28,714.702564796886292017 (29.4215559782%), and the other 230 holders jointly hold 842.059630172720965258 (0.8627881305%). The pair inventory therefore represents the complete LP-holder victim set while the exchange, token-fee inventory and fixed revenue recipients conserve internal DKP. Source-3 bounds EOA nonces 131-139: helper creation, 932.745305403783296414-USDT funding, the two incident receipts, downstream approval and disposal of 78,000 USDT, and withdrawal of the helper's remaining 158.331305403783296414 USDT to the EOA. No later DKP or USDT returns to the exchange, pair or protocol recipients occur in the same-day actor/helper scan.",
+        "realizedAt": 1678270651,
+        "minimumUsd": null
+      }
+    },
+    {
       "id": "eip155:56:0x0fe3716431f8c2e43217c3ca6d25eed87e14d0fbfa9c9ee8ce4cef2e5ec4583c",
       "protocol": {
         "name": "MARA (0xc6a8)",
@@ -24784,6 +25232,62 @@
         "confidence": "high",
         "notes": "Three calls using the unguarded forwarder entry point define the BSC campaign. In the first two, KiloEx USDT vault 0xef7af0804aab3885da59a8236fabfa19ddc6cf48 loses a transaction-local net 892947.452212280000000000 and 61974.379910380000000000 USDT. In the third, the attacker directly relays USDT.transfer through the forwarder and removes 4306.800000000000000000 USDT of accumulated KiloEx fees. The resulting gross KiloEx outflow is 959228.632122660000000000 USDT; the attacker EOA receives 959217.079253360000000000 USDT, with the difference going to flash-loan and protocol fees. This record covers BSC only and does not include the separately recorded Base loss or the out-of-scope opBNB leg. Later recovery under the cross-chain bounty agreement is not netted out of the exploit-time gross loss.",
         "realizedAt": 1744660053,
+        "minimumUsd": null
+      }
+    },
+    {
+      "id": "eip155:56:0x1eeef7b9a12b13f82ba04a7951c163eb566aa048050d6e9318b725d7bcec6bfa",
+      "protocol": {
+        "name": "Layer3 USD",
+        "slug": "lusd-bsc"
+      },
+      "name": "Layer3 USD live spot collateral valuation",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x1eeef7b9a12b13f82ba04a7951c163eb566aa048050d6e9318b725d7bcec6bfa",
+        "blockNumber": 29756867,
+        "transactionIndex": 130,
+        "timestamp": 1688739886
+      },
+      "summary": "Loan.supply valued deposited BTCB with PancakeSwap Router V2's current two-token quote and minted LUSD from that quote. The successful receipt temporarily displaced the referenced BTCB/USDT reserves, so the LUSD minted against 0.001515366635982742 BTCB exceeded the independently valued collateral retained by the Loan contract.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 9654.503250353257,
+          "valuationTimestamp": 1688739223,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-3",
+            "source-8"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "9700.398846824019666633",
+            "usdValue": 9700.39884682402,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1688739886,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-3"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-3"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The LUSD pool's archive USDT balance falls by 9,800.402958646947704433 in the incident block. The receipt decomposes that change exactly: 100.004111822928037800 USDT is paired with endogenous L3 and capitalized into 16.110436463978777246 Cake-LP minted to and retained by the pool, while 9,700.398846824019666633 USDT leaves the victim entity for the attacker helper. The Loan contract simultaneously retains the attacker's exact 0.001515366635982742-BTCB deposit. Immediately before the loss, Pancake pair 0x3f803ec2b816ea7f06ec76aa2b6f2532f9892d62 held 39,642.343651114056995536 USDT and 1.308898664806062396 BTCB, with reserve timestamp 1688739223. The reserve-implied price is the exact ratio 39,642.343651114056995536 / 1.308898664806062396, approximately $30,286.793559368329840326123063709099959686246757061248349441343945552583311207193 per BTCB; DefiLlama independently corroborates it with a preceding $30,277 observation at 1688739768. The exact collateral-credit rational is (0.001515366635982742 × 39,642.343651114056995536) / 1.308898664806062396 dollars, approximately $45.895596470763762791825835613590524256663991716609547910720118830076326619601439. Subtracting that rational from the external USDT outflow gives net loss approximately $9,654.5032503532559038411741643864094757433360082833904520892798811699236733803986. No BTCB was returned to the attacker: the collateral stayed in Loan until protocol manager transaction 0xe5dfbf3d1f27f00efee13b465d877ac7d5bef7c978016659aeb9b3ac8e9c0050 later swept the aggregate 0.001533265791594517-BTCB balance to 0x81f319f3cba6abb3ba555b6e6cf4debb1fd93568. That later protocol disposition does not change the incident-time credit. Five nested flash lenders received their USDT principal back; the six preceding calls reverted; and the next successful EOA transaction forwarded the already measured 9,464.716730420359231245-USDT proceeds without returning assets to the victim.",
         "minimumUsd": null
       }
     },
@@ -25491,6 +25995,83 @@
         ],
         "confidence": "medium",
         "notes": "The attacker pulled a long list of approval holders in two transactions and routed each balance straight through a PancakeSwap pair, so the tokens never sat in the attacker’s hands at a markable price. Netting both transactions across the attacker EOA and its exploit contract leaves 739.641476234907877084 WBNB gained and 1,000,000 DND of the attacker’s own token spent, so the realised proceeds are used as the measure rather than a mark on the drained tokens, which were mostly thin BSC assets sold into their own pools. Contemporaneous reporting put the event near USD 1 million on a nominal basis; that figure is not reproducible from the realised flows and is not used. Nothing was recovered.",
+        "minimumUsd": null
+      }
+    },
+    {
+      "id": "eip155:56:0x40f3bdd0a3a8d0476ae6aa2875dc2ec60b80812e2a394b67a88260df57c65522",
+      "protocol": {
+        "name": "SteamSwap",
+        "slug": "steamswap"
+      },
+      "name": "MineSTM live-reserve LP redemption",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x40f3bdd0a3a8d0476ae6aa2875dc2ec60b80812e2a394b67a88260df57c65522",
+        "blockNumber": 39381374,
+        "transactionIndex": 100,
+        "timestamp": 1717694757
+      },
+      "summary": "MineSTM converted incoming STM into a fraction of the bound STM/USDT pair's current LP supply using the pair's mutable live STM reserve, then removed that LP inventory for the caller. One bounded receipt changed the reserve before four redemptions; this review measures the exact MineSTM-plus-pair entity depletion and values STM from the sole pre-incident market state.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 154980.44639274344,
+          "valuationTimestamp": 1717694754,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-7"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "91738.825514135991169650",
+            "usdValue": 91738.825514136,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1717694754,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-7"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbd0df7d2383b1ac64afeafdd298e640efd9864e0",
+              "symbol": "STM"
+            },
+            "amount": "1888533.492920270643450573",
+            "usdValue": 63241.62087860745,
+            "valuation": {
+              "method": "other",
+              "timestamp": 1717694754,
+              "unitPriceUsd": 0.03348715874814372,
+              "sourceIds": [
+                "source-1",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The victim entity is MineSTM 0xb7d0a1adafa3e9e8d8e244c20b6277bee17a09b6 plus its bound STM/USDT pair 0x2e45aef311706e12d48552d0daa8d9b8fb764b1c. Immediately before the receipt the pair holds 91,756.641426462709287653 USDT and MineSTM holds zero; afterward the pair holds 17.815912326718118003 and MineSTM remains zero, for exact entity depletion of 91,738.825514135991169650 USDT. The pair sends 591,738.825514135991169650 USDT while receiving 500,000 from the helper. It sends 2,314,287.608214378446697049 STM in the initial swap and 425,754.115294107803246467 through four LP burns, while MineSTM receives 851,508.230588215606492943 STM as redemption consideration. The resulting STM entity depletion is exactly 1,888,533.492920270643450573. Archive balances agree: combined STM falls from exactly 9,500,000 to 7,611,466.507079729356549427, and no unrelated same-block transaction touches either entity's STM or USDT. MineSTM holds 499,338.331500868972566582 of 499,338.331500868972567582 LP immediately before the receipt; the only other supply is the permanently locked 1,000 wei. Four burns consume 499,323.298010219937390466 LP and leave MineSTM 15.033490649035176116 LP, so no external LP inventory is charged. A complete pre-incident factory-log scan finds this as STM's only V2 pair and no V3 pool; standard BSC factories return no STM market. At block 39,381,373 the sole market has 91,756.641426462709287653 USDT / 2,740,054.541998103233948508 STM depth, implying exactly 0.033487158748143717276970686791644159494883811816510845881153 USDT per STM. The STM depletion is therefore $63,241.620878607452035423885641777403102812372209428855614566888502, and exact total loss is $154,980.446392743443205073885641777403102812372209428855614566888502. Binance-Peg 0x55d398326f99059ff775485246999027b3197955 reports name Tether USD, symbol USDT and 18 decimals and is valued at par. Pancake V3 pool 0x92b7807bf19b7dddf89b706143896d05228f3121 lends the helper exactly 500,000 USDT and receives 500,050, an exact 50-USDT financing fee external to the victim entity. The helper ends with zero USDT, sends 91,688.825514135991169650 USDT proceeds to the funds holder, and retains exactly the STM entity depletion. The funds-holder's later approval and disposal activity and the EOA's later native transfer are downstream exclusions; the bounded and later transfer scan finds no STM or USDT return or recovery to MineSTM or the pair.",
         "minimumUsd": null
       }
     },
@@ -26458,6 +27039,65 @@
         ],
         "confidence": "high",
         "notes": "The component is the exact net USDT depletion of the LBP/USDT pair 0x00e3ea08fd8cbad955ec5d2292ad637670c31524 in the single exploit transaction, summed over the receipt's USDT Transfer logs and confirmed by getReserves(): 439,363.604173946711436972 USDT at block 104727183 against 61,721.065999847161634108 at block 104727184. The 41,861,104.641678089199196186 USDT of Moolah and PancakeSwap-Vault flash liquidity was attacker-supplied and repaid in full in the same transaction, so it is not loss. This is realised, not marked: the attacker's residual 377,642.570850 USDT was immediately swapped to 610.555786330933864102 WBNB, of which 5 BNB went to builder 0x4848489f0b2bedd788c696e2d79b6b69d7484848 and 605.555786330933864102 BNB to 0x515788797914cb663114aeb806b3cfb6096f6d1a; the builder payment does not reduce gross depletion. At the DefiLlama WBNB price of USD 601.9086 that proceeds leg marks at USD 367,499, which is the USD 367k figure the seed row and the DeFiHackLabs header carry; the USDT par figure recorded here is the victim-side measurement. Not counted: the attacker also retained 23,218.051024950574782538 LBP/USDT LP tokens, 25.3 percent of the post-exploit LP supply, a dilution claim on the remaining reserves rather than an extraction, and the 131,347.6 LBP the pair received is freshly minted unbacked supply rather than compensation.",
+        "minimumUsd": null
+      }
+    },
+    {
+      "id": "eip155:56:0x55983d8701e40353fee90803688170a16424ee702f6b21bb198bb8e7282112cd",
+      "protocol": {
+        "name": "ATK (Journey of Awakening)",
+        "slug": "atk"
+      },
+      "name": "ATK live-pair reward pricing",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x55983d8701e40353fee90803688170a16424ee702f6b21bb198bb8e7282112cd",
+        "blockNumber": 22102839,
+        "transactionIndex": 149,
+        "timestamp": 1665550981
+      },
+      "summary": "The ATK reward contract sized claimToken1 from the configured pair's live ATK and USDT balances, so a claim inside a pair callback released reward inventory at a transient reserve ratio and the resulting ATK removed USDT from the pair.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 127078.00087601303,
+          "valuationTimestamp": 1665550999,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-8"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "127078.000876013025445713",
+            "usdValue": 127078.00087601303,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1665550999,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-2",
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-8"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Across the bounded nonce-5-through-18 campaign, the ATK/USDT pair sends 130,938.042674581496920399 + 127,677.363775463262166716 + 3,735.200016119348067113 USDT. It receives 134.728431544645009270 and 121.217699044304557015 USDT in the two linked ATK buys, then 131,271.934683401679737546 and 3,744.724776160452404684 USDT in the two flash repayments. The exact net depletion is 127,078.000876013025445713 USDT. Nonce 18 only moves the first helper's remaining 490.475239958895662429 USDT to the campaign EOA and leaves that helper at zero USDT; nonce 19 similarly withdraws the second helper's 166.107991179817182853-USDT remainder. Nonces 19-21 are downstream disposal, not victim flows. The unrelated source-4 swap in the claim block sends 61.384706202020868948 USDT out of the pair and 607.789 ATK in; excluding it reconciles archive balances. The two positions deposit 970.4654 and 971.1491 genuinely purchased ATK. The claim sends 51,066,033.07817472 ATK from the reward contract; the sale routes 46,038,567.993335287573138174 ATK back to the pair and 505,918.329597091072232287 ATK back to the reward contract. This endogenous reward inventory is not independent scarce consideration; its genuine acquisition costs are already netted in USDT.",
+        "realizedAt": 1665550999,
         "minimumUsd": null
       }
     },
@@ -28147,6 +28787,59 @@
         ],
         "confidence": "high",
         "notes": "The OLPC/LABUBU PancakePair 0xedb7dcb4cdfec957f8df5cbf5e94229a6cc9f365 lost 688380.902509080087370095 LABUBU in the single exploit transaction: its LABUBU balance falls from 720372.009849017508169693 at block 105326392 to 31991.107339937420799598 at block 105326393, and the pair's Swap event reports amount0Out 688380902509080087370095 with amount1In 8100000000000000000. Valuation is the realised proceeds of that same transaction rather than a spot price: DefiLlama has no LABUBU or OLPC observation, and both tokens trade only in the thin pools the attack moved. The attacker routed the LABUBU through the LABUBU/WBNB and WBNB/USDT pairs inside the exploit transaction and its BEP20-USDT balance rose from 0.105956839086043429 to 1115903.769368970807600681, a gain of 1115903.663412131721557252 USDT taken at par, which is 1.6210555222330743 USD per LABUBU removed from the pair and matches the 1115903.66 USDT figure in source-2. The attacker realised less than the pair lost because 124252.752903288956770302 LABUBU of the output was burned by LABUBU's own transfer tax on the way out. The pair also lost 51928285.776963524850939528 OLPC, burned to 0x000000000000000000000000000000000000dead by the defective hook, which is not valued: OLPC delivers zero tokens to any non-exempt buyer, so it has no realisable market price. No recovery or return took place.",
+        "minimumUsd": null
+      }
+    },
+    {
+      "id": "eip155:56:0x8e1775cbfd44db29744cc6687ff1822d2c47321de6e94062f789ad6181ad5514",
+      "protocol": {
+        "name": "FoxLpBondsPool",
+        "slug": "fox-lp-bonds-pool"
+      },
+      "name": "FoxLpBondsPool pre-swap spot pricing over-mints FOX",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x8e1775cbfd44db29744cc6687ff1822d2c47321de6e94062f789ad6181ad5514",
+        "blockNumber": 116169049,
+        "transactionIndex": 1,
+        "timestamp": 1786836779
+      },
+      "summary": "stake() prices the entire USDT bond from the FOX/USDT pair before swapping half of that same deposit through the shallow pair. It then mints FOX-denominated bond and referral inventory from the stale pre-swap quote. One financed call minted endogenous FOX and sold it back into the pair, depleting its liquid USDT reserve.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 676520.832271855,
+          "valuationTimestamp": 1786836770,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "677549.050517106599255604",
+            "usdValue": 676520.832271855,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1786836770,
+              "unitPriceUsd": 0.9984824445632876,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The FOX/USDT pair 0xaab18bcdee287aea288c0560612caadf7c328803 sent 482652334.587313528253588625 USDT and received 240987392.768398210827166510 plus 240987392.768398210827166511 USDT in the loss receipt, so its gross scarce-asset depletion is 677549.050517106599255604 USDT. Archive balances agree exactly: 2786697.198864505157273333 before and 2109148.148347398558017729 after the block; no other transaction in the block touches the pair's USDT or FOX. The pair received net 2108546.337965754947092948 FOX, principally from FOX minted during the same call, so that endogenous inventory is consideration but not an independently scarce loss offset. Thirty-one external financing pools supplied 481974785.536796421654333021 USDT and received 482539358.468560385626356388, an aggregate 564572.931763963972023367-USDT gain outside the Fox victim entity. The attacker retained 112976.118753142627232237 USDT, explaining the smaller proceeds-based seed figure. The canonical BNB Chain bridge list identifies this 18-decimal contract as BSC USDT; DefiLlama observed $0.9984824445632876 nine seconds before the receipt. Exact decimal multiplication is $676520.8322718550395813237978550269637104.",
         "minimumUsd": null
       }
     },
@@ -30633,6 +31326,62 @@
       }
     },
     {
+      "id": "eip155:56:0xd87cdecd5320301bf9a985cc17f6944e7e7c1fbb471c80076ef2d031cc3023b2",
+      "protocol": {
+        "name": "ARA",
+        "slug": "ara"
+      },
+      "name": "ARA swap arbitrary approved-source authorization failure",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xd87cdecd5320301bf9a985cc17f6944e7e7c1fbb471c80076ef2d031cc3023b2",
+        "blockNumber": 29214011,
+        "transactionIndex": 0,
+        "timestamp": 1687106228
+      },
+      "summary": "The public ARA swap entry point accepted an arbitrary token source address, checked that address's standing allowance, and transferFrom'd its balance without requiring the caller to be that source or otherwise authorized by it. The attacker forced an allowance-granting EOA through two adverse ARA/USDT trades around its own Pancake V3 price movement; across that EOA and the external LP inventory, ARA merely moved internally while USDT left the victim set.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 124915.75835420915,
+          "valuationTimestamp": 1687106228,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-5",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "124915.758354209141283962",
+            "usdValue": 124915.75835420915,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1687106228,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The victim set is the code-empty allowance-granting EOA 0xb817ef68d764f150b8d73a2ad7ce9269674538e0 plus the external-liquidity inventory in the canonical Pancake V3 ARA/USDT fee-100 pool 0x92974438c330d5c6790b4260e358e84513109872; the swap contract itself is a zero-balance conduit. Archive balances at blocks 29,214,010 and 29,214,011 show the EOA moving from 8,876.933460457984207061 USDT and 163,497.870920445229714611 ARA to zero USDT and 12,179.863325262845197568 ARA, while the pool moves from 499,211.781917017878419913 USDT and 498,700.441845375704016457 ARA to 383,172.957023266721343012 USDT and 650,018.449440558088533500 ARA. Thus combined ARA is exactly 662,198.312765820933731068 before and after, while combined USDT falls from 508,088.715377475862626974 to 383,172.957023266721343012: exact scarce-asset depletion of 124,915.758354209141283962 USDT. Pancake V3 has no fungible LP shares; the NonfungiblePositionManager balances of the attacker EOA, helper, allowance-granting EOA and swap deployer are all zero at block minus one, so the pool-side inventory is not attacker- or deployer-owned. The Binance-Peg USDT contract reports symbol USDT and 18 decimals and is valued at the repository's stablecoin-par convention.",
+        "minimumUsd": null
+      }
+    },
+    {
       "id": "eip155:56:0xdb9a13bc970b97824e082782e838bdff0b76b30d268f1d66aac507f1d43ff4ed",
       "protocol": {
         "name": "ULME",
@@ -30992,6 +31741,62 @@
         ],
         "confidence": "high",
         "notes": "The exploit receipt contains the only two WBNB transfers: 0.000000000000000100 WBNB from the attack helper to the pair and 348.147268515623217950 WBNB from the pair to the attacker EOA. Their net is the exact pair loss. The USD value uses the nearest DefiLlama BNB observation preceding the transaction.",
+        "minimumUsd": null
+      }
+    },
+    {
+      "id": "eip155:56:0xeab946cfea49b240284d3baef24a4071313d76c39de2ee9ab00d957896a6c1c4",
+      "protocol": {
+        "name": "YuliAI",
+        "slug": "yuliai"
+      },
+      "name": "YuliAI sell inventory live V3 quotation",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xeab946cfea49b240284d3baef24a4071313d76c39de2ee9ab00d957896a6c1c4",
+        "blockNumber": 57432056,
+        "transactionIndex": 94,
+        "timestamp": 1755072137
+      },
+      "summary": "YuliAI's sellToken path valued incoming YULIAI by forwarding the requested quantity to a QuoterV2 against the live YULIAI/USDT Pancake V3 pool, then paid that quote from protocol USDT inventory. One bounded receipt moved the pool before repeatedly exercising the path; this review nets protocol-controlled sell fees and the fair prestate value of the retained YULIAI consideration.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 83053.8331452925,
+          "valuationTimestamp": 1755072137,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-5",
+            "source-7"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "94846.132969304914150520",
+            "usdValue": 94846.13296930492,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1755072137,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The victim entity is sell contract 0x8262325bf1d8c3be83eb99f5a74b8458ebb96282 plus its creator, owner and configured receiverFee EOA 0x078f3f917c7355027a8388b7083b2199910c8a9a. Archive balances at blocks 57,432,055 and 57,432,056 move from 101,443.782000000000000000 + 663.393732000000000000 = 102,107.175732000000000000 USDT to 1,605.747295468511420520 + 5,655.295467226574428960 = 7,261.042762695085849480 USDT. The exact entity-level stable depletion is therefore 94,846.132969304914150520 USDT: the contract's 99,838.034704531488579480-USDT outflow less the owner's internal 4,991.901735226574428960-USDT five-percent fee recovery. In the same boundary, the sell contract gains exactly 3,347,358.354974243185076585 YULIAI and the owner balance is unchanged. Immediately before the receipt, Pancake V3 fee-10,000 pool 0xa687c7b3c2cf6adaef0c4edab234c55b88e01333 has token0 canonical 18-decimal Binance-Peg USDT, token1 18-decimal YULIAI, sqrtPriceX96 1,334,846,821,531,167,810,533,929,326,840, active liquidity 1,721,008,515,508,744,595,598,029, and balances 102,203.563337554348779303 USDT and 29,004,603.501598146291084966 YULIAI. Correct token orientation gives 0.003522867459496474822898258515289302553283462544060329020695 USDT per YULIAI. At that recorded 60-decimal price, retained consideration is $11,792.299824012411246321659065323531459767412921239379420208798892 to 60 decimal places, leaving net loss $83,053.833145292502904198340934676468540232587078760620579791201108 to 60 decimal places. The only other factory-discovered prestate YULIAI market is a dust V2 pair with 0.029203095562343651 USDT and 7.986386893235572202 YULIAI, so it is not a competing price anchor. The V3 pool gains 16,046.200892423232810268 USDT while providing the retained YULIAI, and flash proxy 0x8f73b65b4caaf64fba2af91cc5d4a2a1318e5d8c sends and receives exactly 200,000 USDT with zero fee. The campaign EOA realizes 78,799.932076881681340252 USDT; proceeds are not substituted for entity loss. EOA nonce 2 creates the helper and nonce 3 is the sole loss. Nonce 4 approves a downstream aggregator; nonce 5 plus three permissioned relayer receipts dispose of all proceeds; nonce 6 withdraws only the helper's native balance, leaving it at zero USDT and YULIAI. Nonce 7 is a later unrelated native deposit. These disposal and withdrawal receipts contain no transfer to the victim contract or owner, and the bounded attacker/helper scan finds no later USDT or YULIAI return or recovery.",
         "minimumUsd": null
       }
     },
@@ -32179,6 +32984,59 @@
         "confidence": "high",
         "notes": "Exact pre-recovery gross depletion is the sum of 15 SAND Transfer events from Ethereum OFT adapter 0xac531eb26ca1d21b85126de8fb87e80e09002dcf. Each receipt's OFTReceived event identifies LayerZero source EID 30184 (Base); the set starts 150 seconds after the Base takeover and ends at 2026-08-22T01:22:11Z. The exact raw sum is 14753431668978000000000000 wei-SAND. Nominal unbacked Base mint amounts, attacker swaps, and later unrelated withdrawals are excluded. DefiLlama's nearest high-confidence Ethereum SAND observation was $0.04648630455127788 at 2026-08-22T01:20:00Z, 131 seconds before campaign end.",
         "realizedAt": 1787361731,
+        "minimumUsd": null
+      }
+    },
+    {
+      "id": "eip155:8453:0x16a99aef4fab36c84ba4616668a03a5b37caa12e2fc48923dba4e711d2094699",
+      "protocol": {
+        "name": "Nalakuvara",
+        "slug": "nalakuvara"
+      },
+      "name": "LotteryTicketSwap50 live-reserve redemption misprices LP",
+      "chainId": 8453,
+      "exploit": {
+        "transactionHash": "0x16a99aef4fab36c84ba4616668a03a5b37caa12e2fc48923dba4e711d2094699",
+        "blockNumber": 30001613,
+        "transactionIndex": 25,
+        "timestamp": 1746792573
+      },
+      "summary": "LotteryTicketSwap50 sized each ticket redemption's LP burn from the NATA/USDC pair's live reserves. A flash-financed reserve skew let one helper mint 2,600 tickets and redeem them in 130 calls while destroying too much protocol-owned LP, depleting the protocol entity's native Base USDC.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 107214.21012,
+          "valuationTimestamp": 1746792544,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 8453,
+              "tokenAddress": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+              "symbol": "USDC"
+            },
+            "amount": "107220",
+            "usdValue": 107214.21012,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1746792544,
+              "unitPriceUsd": 0.999946,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The victim entity is LotteryTicketSwap50 0x172119155a48de766b126de95c2cb331d3a5c7c2, its NATA/USDC pair 0xadcaab077f636d74fd50fda7f44ad41e20a21fee and the owner/deployer's LP position. At anchor-1 the pair had 170.154260915765325861 LP outstanding: 99.415567080707983861 (58.42672792%) held by LotteryTicketSwap50 and 70.738693835057341000 (41.57327207%) held by its owner/deployer 0x66d9748e58f3bbfb4e400b3c6991bd578dabbeb2. Exhaustive LP Transfer history leaves no external holder. The pair sent 3037219.668858 and received 2929805 USDC, losing 107414.668858, while the swap contract received 259219.668858 and sent 259025, recovering 194.668858 internally. Entity loss is therefore exactly 107220 USDC: 105470 reached the attacker EOA and 1750 was the fee paid to external Uniswap V3 WETH/USDC 0.05% pool 0xd0b53d9277642d899df5c87a3966a349a798f224. Archive USDC balances agree: pair 291143.873072 -> 183729.204214 and swap 413.324943 -> 607.993801. Base USDC returns name USD Coin, symbol USDC and 6 decimals at anchor-1. DefiLlama observed $0.999946 29 seconds before the receipt; exact decimal multiplication is $107214.21012.",
         "minimumUsd": null
       }
     },
