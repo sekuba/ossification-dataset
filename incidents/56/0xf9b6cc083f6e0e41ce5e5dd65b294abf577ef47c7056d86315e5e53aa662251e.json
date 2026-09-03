@@ -1,6 +1,10 @@
 {
   "$schema": "../../schema/incident.schema.json",
   "id": "eip155:56:0xf9b6cc083f6e0e41ce5e5dd65b294abf577ef47c7056d86315e5e53aa662251e",
+  "discovery": [
+    "dfhl:src/test/2023-01/GDS_exp.sol",
+    "seed:gds:2023-01-02:gds-token-business-logic-flaw"
+  ],
   "protocol": {
     "name": "GDS",
     "slug": "gds"
@@ -18,50 +22,87 @@
       "0xcf2362b46669e04b16d0780cf9b6e61c82de36a7"
     ]
   },
-  "summary": "GDS credits token holders a share sized from the liquidity pair's live balance on every transfer, so a flash-loaned position repeatedly harvested that share and drained the pair's USDT.",
+  "summary": "GDS transferred liquidity-pair tokens to holders during ordinary transfers without consuming a holder-specific entitlement. The attacker split GDS among 100 helper contracts, repeatedly triggered the transfer path, and redeemed the accumulated pair tokens for USDT.",
   "loss": {
-    "kind": "unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 180000,
-      "valuationTimestamp": 1672701906,
-      "method": "unspecified",
-      "sourceIds": []
+      "amount": 37252.75005312738,
+      "valuationTimestamp": 1672705274,
+      "method": "stablecoin-par",
+      "sourceIds": [
+        "source-1",
+        "source-4",
+        "source-5"
+      ]
     },
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+          "symbol": "USDT"
+        },
+        "amount": "37252.750053127377203615",
+        "usdValue": 37252.75005312738,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1672705274,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-1",
+            "source-5"
+          ]
+        },
+        "sourceIds": [
+          "source-1",
+          "source-5"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "USDT Transfer logs show the GDS/USDT pair received 3,600 USDT in the setup transaction and lost 40,852.750053127377203615 USDT in the completion transaction. The net pair depletion across the two-transaction campaign is therefore 37,252.750053127377203615 USDT. This replaces the unaudited imported $180,000 estimate.",
+    "realizedAt": 1672705274
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0xc1bb12560468fb255a8e8431bdf883cc4cb3d278",
-      "relationship": "unknown",
+      "relationship": "direct",
+      "codeArtifact": {
+        "address": "0xc1bb12560468fb255a8e8431bdf883cc4cb3d278",
+        "codeHash": "0x7a5a2cbec31a08e33dadf00ea90a44f933831ad9df7e4a70a15892fd79ce99d9"
+      },
       "deployment": {
         "timestamp": 1670134865,
+        "blockNumber": 23608262,
+        "transactionHash": "0x7b59eed7373cd6ceeac77d7670885697ef6057d317548c8ccf9dca6053306dac",
+        "transactionIndex": 87,
         "creatorAddress": "0x5b18b1d988479526267a1aa0d66765cc7c3cc3a8"
       },
       "ageReset": {
         "kind": "deployment",
-        "description": "Unreviewed seed-inventory basis: execution-address deployment."
+        "description": "The direct GDS runtime contained the repeatable pair-token distribution path at deployment and remained byte-identical through the first exploit transaction."
       },
       "codeAgeSeconds": 2567041,
-      "failureModeId": "provisional:eip155:56:0xf9b6cc083f6e0e41ce5e5dd65b294abf577ef47c7056d86315e5e53aa662251e:failure-1",
+      "failureModeId": "failure:gds-repeatable-pair-token-distribution",
       "evidence": {
         "identitySourceIds": [
+          "source-1",
           "source-2",
-          "source-4"
+          "source-4",
+          "source-6"
         ],
         "ageSourceIds": [
-          "source-4"
+          "source-4",
+          "source-6"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Target identity and code history were imported from the seed inventory without independent review.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-4"
         ]
       }
     }
@@ -88,14 +129,28 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "note": "onchain review: GDS 0xC1Bb12560468fb255A8e8431BDF883CC4cB3d278 created 2022-12-04T06:21:05Z by 0x5b18b1d988479526267a1aa0d66765cc7c3cc3a8, unrelated to attack sender 0xcf2362b46669e04b16d0780cf9b6e61c82de36a7; no EIP-1967 Upgraded events, age measured from deployment. The attack ran over two transactions; lossUsd uses the ~$180k reported by DeFiHackLabs and PeckShield."
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-09-03T10:21:43Z",
+      "note": "Reviewed both successful BSC campaign receipts, the first transaction call trace, the pinned DeFiHackLabs reproduction, the GDS creation receipt, and historical runtime code. The first transaction at 24449918:41 already exercises the defect while distributing pair tokens among 100 helpers; the second transaction at 24451036:75 completes their redemption. GDS was created directly at 23608262:87 by 0x5b18b1d988479526267a1aa0d66765cc7c3cc3a8, code was absent one block earlier, and runtime hash 0x7a5a2cbe...99d9 is identical at deployment and immediately before exploitation. Transfer logs show a net 3,600 USDT entering pair 0x4526c263571eb57110d161b41df8fd073df3c44a in the setup transaction and a net 40,852.750053127377203615 USDT leaving it in the completion transaction, for exact gross victim depletion of 37,252.750053127377203615 USDT after excluding the attacker's input."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x2bb704e0d158594f7373ec6e53dc9da6c6639f269207da8dab883fc3b5bf6694"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x7b59eed7373cd6ceeac77d7670885697ef6057d317548c8ccf9dca6053306dac"
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Classification and loss were imported from the seed inventory and await review.",
-      "The imported USD loss lacks structured valuation provenance."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-4"
     ]
   }
 }

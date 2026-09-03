@@ -885,6 +885,63 @@
       "codeAgeSeconds": 6134
     },
     {
+      "id": "eip155:56:0xd08cfb22d14bc4f2808970b5ce2557124ae3d7dc9fda756647a3427b8275f054",
+      "protocol": {
+        "name": "DDC Token",
+        "slug": "ddc-token"
+      },
+      "name": "DDC handleDeductFee missing access control",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xd08cfb22d14bc4f2808970b5ce2557124ae3d7dc9fda756647a3427b8275f054",
+        "blockNumber": 20840080,
+        "transactionIndex": 18,
+        "timestamp": 1661699873
+      },
+      "summary": "DDC's handleDeductFee(uint256,uint256,address,address) was callable by anyone and moved the fee amount out of an arbitrary holder, so the attacker deducted the whole DDC/USDT pair balance to themselves and sold it.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 110104.65584773128,
+          "valuationTimestamp": 1661699873,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-4"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "110104.655847731280923234",
+            "usdValue": 110104.65584773128,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1661699873,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1"
+              ]
+            },
+            "sourceIds": [
+              "source-1"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The exploit receipt's USDT Transfer ledger shows 1.368537570861681076 USDT entering the DDC/USDT pair and 110,106.024385302142604310 USDT leaving it: 104,600.658160502419544245 USDT reached the attack contract and 5,505.366224799723060065 USDT went through the router to the fee recipient. Net pair depletion, and therefore gross victim loss after excluding the attacker's input, is 110,104.655847731280923234 USDT."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:ddc-unprotected-handle-deduct-fee",
+      "codeHash": "0x948012cb5ceb75519d3874caa50e57577a26643fdaf861102443c765344859e4",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 6519
+    },
+    {
       "id": "eip155:1:0xd82fe84e63b1aa52e1ce540582ee0895ba4a71ec5e7a632a3faa1aff3e763873",
       "protocol": {
         "name": "LI.FI",
@@ -16028,6 +16085,67 @@
       "codeHash": "0x50736a8883f73b77645436ed987e5eb3df54d250dc4d7d2223ccbb6a326676fe",
       "ageResetKind": "deployment",
       "codeAgeSeconds": 2564438
+    },
+    {
+      "id": "eip155:56:0xf9b6cc083f6e0e41ce5e5dd65b294abf577ef47c7056d86315e5e53aa662251e",
+      "protocol": {
+        "name": "GDS",
+        "slug": "gds"
+      },
+      "name": "GDS token business-logic flaw",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xf9b6cc083f6e0e41ce5e5dd65b294abf577ef47c7056d86315e5e53aa662251e",
+        "blockNumber": 24449918,
+        "transactionIndex": 41,
+        "timestamp": 1672701906
+      },
+      "summary": "GDS transferred liquidity-pair tokens to holders during ordinary transfers without consuming a holder-specific entitlement. The attacker split GDS among 100 helper contracts, repeatedly triggered the transfer path, and redeemed the accumulated pair tokens for USDT.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 37252.75005312738,
+          "valuationTimestamp": 1672705274,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-5"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "37252.750053127377203615",
+            "usdValue": 37252.75005312738,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1672705274,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-5"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "USDT Transfer logs show the GDS/USDT pair received 3,600 USDT in the setup transaction and lost 40,852.750053127377203615 USDT in the completion transaction. The net pair depletion across the two-transaction campaign is therefore 37,252.750053127377203615 USDT. This replaces the unaudited imported $180,000 estimate.",
+        "realizedAt": 1672705274
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:gds-repeatable-pair-token-distribution",
+      "codeHash": "0x7a5a2cbec31a08e33dadf00ea90a44f933831ad9df7e4a70a15892fd79ce99d9",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 2567041
     },
     {
       "id": "eip155:56:0xd3382252bc204fdc32a6b3add8c639850882b70a798399d6e00a542cdf769040",
@@ -32481,6 +32599,63 @@
       "codeAgeSeconds": 74651820
     },
     {
+      "id": "eip155:1:0x674f74b30a3d7bdf15fa60a7c29d96a402ea894a055f624164a8009df98386a0",
+      "protocol": {
+        "name": "MEV bot 0x0ad8",
+        "slug": "mevbot-0x0ad8"
+      },
+      "name": "MEV bot 0x0ad8 unprotected arbitrary call",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x674f74b30a3d7bdf15fa60a7c29d96a402ea894a055f624164a8009df98386a0",
+        "blockNumber": 15926097,
+        "transactionIndex": 133,
+        "timestamp": 1667919911
+      },
+      "summary": "The bot exposed a public entry point that executed caller-supplied calldata with no access control, letting the attacker make it pull 91,638 USDC out of a companion contract that had approved it.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 91638.112249,
+          "valuationTimestamp": 1667919911,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-4"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "91638.112249",
+            "usdValue": 91638.112249,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1667919911,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1"
+              ]
+            },
+            "sourceIds": [
+              "source-1"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The exploit receipt records one USDC transfer of 91,638.112249 from companion contract 0x211b6a1137bf539b2750e02b9e525cf5757a35ae to the attacker."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:mevbot-0ad8-unprotected-arbitrary-call",
+      "codeHash": "0xe8540b2ba858b31c82ae36d7c5dfa7abfe25693978992dcbfb353a4a27dfdfd6",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 79094381
+    },
+    {
       "id": "eip155:1:0x431341c6d41301b7db3b719ccaec8081adf71b707069ea27d71dcdd374d8e6fa",
       "protocol": {
         "name": "NFT Trader",
@@ -33864,6 +34039,65 @@
       "codeHash": "0x8c76250e7cb2295aae488d59890524baa963724ddf91bdbcca36a41da39eea45",
       "ageResetKind": "implementation-change",
       "codeAgeSeconds": 115829043
+    },
+    {
+      "id": "eip155:1:0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db",
+      "protocol": {
+        "name": "ADC (MainPool)",
+        "slug": "adc"
+      },
+      "name": "MainPool public calcStepIncome()",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db",
+        "blockNumber": 19138641,
+        "transactionIndex": 0,
+        "timestamp": 1706851727
+      },
+      "summary": "MainPool.calcStepIncome(id, amount, step) was callable by anyone with arbitrary arguments and credited the caller's withdrawable income directly, so the attacker joined the game and then wrote itself an income entry it withdrew as ETH.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 48475.47906236103,
+          "valuationTimestamp": 1706851522,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "21.0999999999999999",
+            "usdValue": 48475.47906236103,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1706851522,
+              "unitPriceUsd": 2297.41606930621,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "The attack trace shows the helper depositing 15 ETH into MainPool and MainPool paying it 36.0999999999999999 ETH. MainPool's balance therefore fell by exactly 21.0999999999999999 ETH, valued at DefiLlama's pre-incident ETH price of $2,297.41606930621. A separate 3 ETH ticket purchase was attacker input to another contract and is not victim loss."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:mainpool-unprotected-income-credit",
+      "codeHash": "0xff6848ddb34111f774ee71d18bd310fc032e66cd392c2b8f4d384f9b9bf359a9",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 117259032
     },
     {
       "id": "eip155:1:0xe4b893f8b1b1738d88e02e2808aff7cfe6443ed15c98d7a01e2907f9bef17618",
@@ -36129,17 +36363,6 @@
       ]
     },
     {
-      "id": "eip155:1:0x674f74b30a3d7bdf15fa60a7c29d96a402ea894a055f624164a8009df98386a0",
-      "name": "MEV bot 0x0ad8 unprotected arbitrary call",
-      "chainId": 1,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:1:0x69a825ffedeb4461afc95e21475c011b1675a95d318bb1dd63b13307dfe3b9ed",
       "name": "RnsPay",
       "chainId": 1,
@@ -36472,17 +36695,6 @@
     {
       "id": "eip155:1:0xc7477d6a5c63b04d37a39038a28b4cbaa06beb167e390d55ad4a421dbe4067f8",
       "name": "SizeCredit",
-      "chainId": 1,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "id": "eip155:1:0xcf834aff4de9992f5da9c443600dad9c6277a8a00de5007842fece51564992db",
-      "name": "MainPool public calcStepIncome()",
       "chainId": 1,
       "verificationTier": "provisional",
       "exclusionReasons": [
@@ -38581,17 +38793,6 @@
       ]
     },
     {
-      "id": "eip155:56:0xd08cfb22d14bc4f2808970b5ce2557124ae3d7dc9fda756647a3427b8275f054",
-      "name": "DDC handleDeductFee missing access control",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:56:0xd16a1c3dcd84427b2c7dcccbe1854c1c5bf65900460e1a44a95c1aaaf140c3a5",
       "name": "JoeAgent",
       "chainId": 56,
@@ -38990,17 +39191,6 @@
     {
       "id": "eip155:56:0xf8f431b392a50eb997ecae2e35668d6dd4dc8568d002057600d2532e18f36d86",
       "name": "WHALE",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "id": "eip155:56:0xf9b6cc083f6e0e41ce5e5dd65b294abf577ef47c7056d86315e5e53aa662251e",
-      "name": "GDS token business-logic flaw",
       "chainId": 56,
       "verificationTier": "provisional",
       "exclusionReasons": [
