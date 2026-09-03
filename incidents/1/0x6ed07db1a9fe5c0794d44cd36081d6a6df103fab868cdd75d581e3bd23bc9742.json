@@ -138,7 +138,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-4"
+          "source-4",
+          "source-10"
         ]
       }
     },
@@ -178,10 +179,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: sibling instance of the same template and failure; target-1 carries the latest age reset and supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-4"
+          "source-4",
+          "source-10"
         ]
       }
     }
@@ -243,6 +247,13 @@
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1762154000/ethereum:0xf1c9acdc66974dfb6decb12aa385b9cd01190e38",
       "observedAt": 1787580030
+    },
+    {
+      "id": "source-10",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T09:00:00Z",
+      "note": "Knot selection. 2 sibling targets share failure:balancer-v2-stable-exact-out-rounds-input-down and one loss, so the incident contributes one observation. target-1 (0xdacf5fa19b1f720111609043ac67a9818262850c) carries the latest age reset among them and supplies the knot; target-2 remain reviewed evidence."
     }
   ],
   "verification": {

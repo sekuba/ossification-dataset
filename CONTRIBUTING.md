@@ -9,9 +9,10 @@ curve construction.
    answers in its `discovery` field.
 2. Establish the EVM vulnerability, onchain-anchor, and USD-loss admission
    claims.
-3. Create one `incidents/<chainId>/<exploitTx>.json` per affected same-chain
-   campaign. Keep different chains and separate campaigns distinct; a coherent
-   mass campaign may use the representative-target rule. Never duplicate loss.
+3. Create one `incidents/<chainId>/<exploitTx>.json` per fault episode,
+   anchored on its earliest successful exploit. A recurrence of the same fault
+   in the same code, or a same-campaign leg on another chain, joins that record
+   as further loss components. Never duplicate loss.
 4. Add targets under the representative rule in `METHODOLOGY.md`, then link
    each claim to evidence source IDs.
 5. Run the onchain verifier and promote only the claims actually reproduced and
@@ -31,8 +32,7 @@ For the incident, establish:
 For each target, establish:
 
 - `executionAddress`, `relationship`, and implicated `codeArtifact`;
-- an `observation` anchor only when this target first executed after the campaign anchor;
-- `curveRole: supporting` for a correlated target that must not add another knot;
+- `curveEligible: true` on one target only, the one with the latest age reset;
 - runtime code hash;
 - deployment transaction and creator, or an explicit block-zero
   `system-genesis` code anchor for a genesis system contract;
@@ -58,8 +58,7 @@ semantic review. Set incident or target `reviewed` only after linking a
 
 `research/candidates.json` marks a lead covered only when an incident claims it.
 Set `discovery` to the candidate ids a record answers, for example
-`["web:2021-05-29:belt-finance"]`. Ids come from `research/candidates.json`; a
-campaign spanning several chains has one lead claimed by each chain's incident.
+`["web:2021-05-29:belt-finance"]`. Ids come from `research/candidates.json`.
 The field is research bookkeeping and supports no claim. Edit the raw inputs,
 including `research/raw/adjudications.json`, then regenerate the ledger.
 
@@ -73,5 +72,5 @@ npm run verify -- incidents/<chainId>/<file>.json --curve-ready
 npm run build
 ```
 
-Review observation IDs, cohort counts, exclusion reasons, and source hashes in
+Review the curve rows, exclusion reasons, counts, and source hashes in
 `dist/latest/`.

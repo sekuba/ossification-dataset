@@ -113,10 +113,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: sibling instance of the same template and failure; target-2 carries the latest age reset and supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-2"
+          "source-2",
+          "source-8"
         ]
       }
     },
@@ -159,7 +162,8 @@
           "The USDT pool is a sibling deployment of the same Pool template as target-1 and carries the same failureModeId, so curve construction keeps only the incident's earliest observation. Its runtime differs from target-1's because the immutable token address and derived precision differ, so the two are recorded separately."
         ],
         "reviewSourceIds": [
-          "source-2"
+          "source-2",
+          "source-8"
         ]
       }
     }
@@ -206,6 +210,13 @@
       "id": "source-7",
       "type": "post-mortem",
       "url": "https://allbridge.medium.com/allbridge-core-updates-following-the-relaunch-9f7716eeb5da"
+    },
+    {
+      "id": "source-8",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T09:00:00Z",
+      "note": "Knot selection. 2 sibling targets share failure:allbridge-pool-withdraw-equal-leg-reduction and one loss, so the incident contributes one observation. target-2 (0xb19cd6ab3890f18b662904fd7a40c003703d2554) carries the latest age reset among them and supplies the knot; target-1 remain reviewed evidence."
     }
   ],
   "discovery": [

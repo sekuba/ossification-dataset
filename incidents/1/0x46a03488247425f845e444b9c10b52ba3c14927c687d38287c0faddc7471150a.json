@@ -106,10 +106,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: sibling instance of the same template and failure; target-2 carries the latest age reset and supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-2"
+          "source-2",
+          "source-8"
         ]
       }
     },
@@ -152,7 +155,8 @@
           "This target carries the same failureModeId as target-1 because it is the same defect realised in a second contract, so curve construction keeps only one observation for the incident."
         ],
         "reviewSourceIds": [
-          "source-2"
+          "source-2",
+          "source-8"
         ]
       }
     }
@@ -200,6 +204,13 @@
       "id": "source-7",
       "type": "post-mortem",
       "url": "https://valuedefi.medium.com/multistables-vault-exploit-post-mortem-d11b0635788f"
+    },
+    {
+      "id": "source-8",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T09:00:00Z",
+      "note": "Knot selection. 2 sibling targets share failure:vault-share-value-from-manipulable-curve-pool-quote and one loss, so the incident contributes one observation. target-2 (0x57cda125d0c7b146a8320614ccd6c55999d15bf2) carries the latest age reset among them and supplies the knot; target-1 remain reviewed evidence."
     }
   ],
   "discovery": [

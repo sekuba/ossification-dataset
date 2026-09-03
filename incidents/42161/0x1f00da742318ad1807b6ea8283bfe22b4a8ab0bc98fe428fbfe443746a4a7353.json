@@ -253,10 +253,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-10"
         ]
       }
     },
@@ -298,7 +301,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-10"
         ]
       }
     }
@@ -363,6 +367,13 @@
         "0x28a000501ef8e3364b0e7f573256b04b87d9a8e8173410c869004b987bf0beef",
         "0x20abfeff0206030986b05422080dc9e81dbb53a662fbc82461a47418decc49af"
       ]
+    },
+    {
+      "id": "source-10",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T07:30:00Z",
+      "note": "Knot collapse. The PositionManager reentrancy window is the only way to move shortsTracker.globalShortAveragePrices in one transaction, and GlpManager.getAum pricing GLP from that average is the only way the manipulation becomes Vault depletion; neither alone produces the loss. The pair is one conjunctive failure. GlpManager was deployed after PositionManager and completed the exploitable combination, so target-2 supplies the single knot and target-1 is supporting."
     }
   ],
   "discovery": [

@@ -158,18 +158,6 @@
         "timestamp": { "type": "integer", "minimum": 1 }
       }
     },
-    "targetObservationAnchor": {
-      "description": "A later transaction in the same campaign that first exercised this target. Omit when it is the incident anchor.",
-      "type": "object",
-      "required": ["transactionHash", "blockNumber", "transactionIndex", "timestamp"],
-      "additionalProperties": false,
-      "properties": {
-        "transactionHash": { "$ref": "#/$defs/hash" },
-        "blockNumber": { "type": "integer", "minimum": 0 },
-        "transactionIndex": { "type": "integer", "minimum": 0 },
-        "timestamp": { "type": "integer", "minimum": 1 }
-      }
-    },
     "loss": {
       "type": "object",
       "required": ["kind", "assets", "confidence", "notes"],
@@ -512,11 +500,6 @@
       "properties": {
         "id": { "type": "string", "pattern": "^target-[1-9][0-9]*$" },
         "executionAddress": { "$ref": "#/$defs/address" },
-        "observation": { "$ref": "#/$defs/targetObservationAnchor" },
-        "curveRole": {
-          "const": "supporting",
-          "description": "A reviewed correlated target retained as evidence but not counted as an independent curve observation."
-        },
         "relationship": {
           "enum": ["direct", "proxy", "beacon-proxy", "minimal-proxy", "diamond", "module-router", "library", "unknown"]
         },
@@ -537,22 +520,6 @@
         "verification": { "$ref": "#/$defs/targetVerification" }
       },
       "allOf": [
-        {
-          "if": {
-            "properties": { "curveRole": { "const": "supporting" } },
-            "required": ["curveRole"]
-          },
-          "then": {
-            "properties": {
-              "verification": {
-                "properties": {
-                  "tier": { "const": "reviewed" },
-                  "curveEligible": { "const": false }
-                }
-              }
-            }
-          }
-        },
         {
           "if": {
             "properties": {
@@ -694,7 +661,10 @@
           "enum": ["provisional", "reviewed"],
           "description": "provisional = artifact identity or age history awaits research; reviewed = target identity and complete age history reviewed."
         },
-        "curveEligible": { "type": "boolean" },
+        "curveEligible": {
+          "type": "boolean",
+          "description": "At most one target per incident supplies the knot; the others are reviewed evidence."
+        },
         "limitations": {
           "type": "array",
           "uniqueItems": true,

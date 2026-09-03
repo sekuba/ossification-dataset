@@ -172,8 +172,10 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: the xSNXa mint defect is independent of the xBNTa defect exploited in the same transaction, but an incident contributes one observation and xBNT carries the latest age reset."
+        ],
         "reviewSourceIds": [
           "source-2"
         ]
@@ -334,7 +336,7 @@
     ]
   },
   "notes": [
-    "Both defective modules were exploited inside the single anchor transaction, so the incident carries two targets rather than two records.",
+    "Both defective modules were exploited inside the single anchor transaction. The xSNXa and xBNTa mint defects are independent and either alone would have produced a loss, but the incident contributes one observation: xBNT, whose implementation upgrade is the latest age reset.",
     "Loss aggregates value removed from the xSNX fund contract and from the Balancer and Bancor pools into which the unbacked xSNXa and xBNTa were sold; no single victim contract holds the whole depletion."
   ]
 }

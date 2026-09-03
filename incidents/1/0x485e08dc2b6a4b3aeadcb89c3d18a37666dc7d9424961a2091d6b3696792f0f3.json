@@ -68,10 +68,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: sibling instance of the same template and failure; target-5 carries the latest age reset and supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-9"
         ]
       }
     },
@@ -109,10 +112,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: sibling instance of the same template and failure; target-5 carries the latest age reset and supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-9"
         ]
       }
     },
@@ -150,10 +156,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: sibling instance of the same template and failure; target-5 carries the latest age reset and supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-9"
         ]
       }
     },
@@ -191,10 +200,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: sibling instance of the same template and failure; target-5 carries the latest age reset and supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-9"
         ]
       }
     },
@@ -235,7 +247,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-9"
         ]
       }
     }
@@ -288,6 +301,13 @@
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-24T15:00:00Z",
       "note": "Reviewed the exploit receipt and full call trace, all five Ethereum Pool creation transactions and CREATE2 traces, verified-contract metadata, runtime code at each deployment block and immediately before exploitation, and KyberSwap's post-mortem. The successful anchor at block 18630392 index 41 is sent by KyberSwap's confirmed primary-exploiter address and repeatedly executes the vulnerable swap sequence against pools 0xfd7b111aa83b9b6f547e617c7601efd997f64703, 0xfbc887823dd414edf76c5da88ffcd9eef2ba87cc, 0x36240069ff26cecbde04d9e49a2af8d39146263e, 0x93fc0acf77edd68e611f8a776c9995f350f84274, and 0x35e6f409565a98500001783ea090e6f669744c83. Etherscan identifies each 24,229-byte direct runtime as Pool compiled with Solidity 0.8.9. Each deployment trace shows factory 0xc7a590291e07b9fe9e64b86c58fd8fc764308c4a creating the recorded address with CREATE2, and every deployment-block runtime hash equals its pre-exploit hash. These immutable non-proxy pools therefore age from their individual deployments. The post-mortem identifies the double-rounding current-tick/base-liquidity mismatch and reports $55,234,535.17 taken across the campaign before recoveries."
+    },
+    {
+      "id": "source-9",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T09:00:00Z",
+      "note": "Knot selection. 5 sibling targets share failure:kyberswap-elastic:swap-rounding-tick-liquidity-mismatch and one loss, so the incident contributes one observation. target-5 (0x35e6f409565a98500001783ea090e6f669744c83) carries the latest age reset among them and supplies the knot; target-1, target-2, target-3, target-4 remain reviewed evidence."
     }
   ],
   "verification": {

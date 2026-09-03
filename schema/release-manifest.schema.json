@@ -15,18 +15,17 @@
   "additionalProperties": false,
   "properties": {
     "$schema": { "const": "../../schema/release-manifest.schema.json" },
-    "formatVersion": { "const": 1 },
+    "formatVersion": { "const": 2 },
     "description": { "type": "string", "minLength": 1 },
     "cohortRules": { "$ref": "#/$defs/cohortRules" },
     "counts": { "$ref": "#/$defs/counts" },
     "sources": { "$ref": "#/$defs/sources" },
     "artifacts": {
       "type": "object",
-      "required": ["incidents.json", "curve.json"],
+      "required": ["incidents.json"],
       "additionalProperties": false,
       "properties": {
-        "incidents.json": { "$ref": "#/$defs/artifact" },
-        "curve.json": { "$ref": "#/$defs/artifact" }
+        "incidents.json": { "$ref": "#/$defs/artifact" }
       }
     }
   },
@@ -39,11 +38,8 @@
         "curveUsdComparability",
         "curveInclusion",
         "ageResetKinds",
-        "deduplication",
-        "deduplicationSelectionOrder",
-        "incidentReference",
-        "ordering",
-        "excludedTargetTiers"
+        "merging",
+        "ordering"
       ],
       "additionalProperties": false,
       "properties": {
@@ -62,30 +58,21 @@
           "uniqueItems": true,
           "items": { "enum": ["deployment", "implementation-change", "module-change", "configuration-change"] }
         },
-        "deduplication": { "type": "string", "minLength": 1 },
-        "deduplicationSelectionOrder": { "type": "string", "minLength": 1 },
-        "incidentReference": { "type": "string", "minLength": 1 },
-        "ordering": { "type": "string", "minLength": 1 },
-        "excludedTargetTiers": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": { "const": "provisional" }
-        }
+        "merging": { "type": "string", "minLength": 1 },
+        "ordering": { "type": "string", "minLength": 1 }
       }
     },
     "counts": {
       "type": "object",
       "required": [
         "incidentFiles",
-        "incidents",
+        "curveIncidents",
+        "excludedIncidents",
+        "incidentsByVerificationTier",
         "targets",
+        "exclusionReasons",
         "evidenceSources",
         "evidenceSourcesByType",
-        "curveObservations",
-        "provisionalObservations",
-        "otherExcludedObservations",
-        "deduplicatedObservations",
         "researchCandidates",
         "researchCandidatesBySource",
         "researchCandidatesByDisposition",
@@ -94,8 +81,22 @@
       "additionalProperties": false,
       "properties": {
         "incidentFiles": { "type": "integer", "minimum": 0 },
-        "incidents": { "type": "integer", "minimum": 0 },
+        "curveIncidents": { "type": "integer", "minimum": 0 },
+        "excludedIncidents": { "type": "integer", "minimum": 0 },
+        "incidentsByVerificationTier": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "provisional": { "type": "integer", "minimum": 0 },
+            "reviewed": { "type": "integer", "minimum": 0 }
+          }
+        },
         "targets": { "type": "integer", "minimum": 0 },
+        "exclusionReasons": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        },
         "evidenceSources": { "type": "integer", "minimum": 0 },
         "evidenceSourcesByType": {
           "type": "object",
@@ -109,10 +110,6 @@
             "source-code": { "type": "integer", "minimum": 0 }
           }
         },
-        "curveObservations": { "type": "integer", "minimum": 0 },
-        "provisionalObservations": { "type": "integer", "minimum": 0 },
-        "otherExcludedObservations": { "type": "integer", "minimum": 0 },
-        "deduplicatedObservations": { "type": "integer", "minimum": 0 },
         "researchCandidates": { "type": "integer", "minimum": 0 },
         "researchCandidatesBySource": {
           "type": "object",
@@ -162,7 +159,7 @@
         "schema": { "$ref": "#/$defs/fileHash" },
         "releaseSchemas": {
           "type": "array",
-          "minItems": 3,
+          "minItems": 2,
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/fileHash" }
         },

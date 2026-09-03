@@ -17,9 +17,9 @@ A primary incident satisfies three conditions:
    bound of at least 1,000.
 
 Candidate records hold discovery leads, context incidents, and entries awaiting
-one of these claims. The release retains every admitted target, but the code-age
-curve contains only reviewed, curve-eligible target observations with a
-concrete USD loss.
+one of these claims. The release lists every record, but the code-age curve
+contains only reviewed incidents whose knot target is reviewed and
+curve-eligible and whose loss has a concrete USD value.
 
 A code defect is executable logic that violates an evidenced security invariant
 under calls or inputs the deployed system permits. This includes missing or
@@ -35,27 +35,29 @@ parameter value or parameter-only mitigation does not decide attribution.
 
 Exclude losses caused only by compromised credentials, direct privileged
 transfers or drains, market conditions, or offchain/front-end behavior. A
-privileged action or credential compromise is not itself an observation; a
+privileged action or credential compromise is not itself an incident; a
 persistent state change it makes can qualify only when it creates a vulnerability
 exercised by a later transaction. Values that only change exposure or loss size
 do not reset age.
 
 ## Incident and target units
 
-An incident represents one coherent campaign against an affected execution
-context on one chain. Anchor it to the earliest successful transaction in the
-campaign that exercises the vulnerability, or to the transaction that makes a
-permanent loss final when there is no earlier successful exploit. The incident
-owns the summary and a loss measurement not counted by another record.
+An incident is one fault episode: every exploitation of one vulnerability in
+one code artifact, from its first successful exercise until the code was fixed.
+Anchor it to the earliest successful transaction that exercises the
+vulnerability, or to the transaction that makes a permanent loss final when
+there is no earlier successful exploit. The incident owns the summary, one knot,
+and a loss not counted by another record.
 
-Repeated transactions in one coherent campaign on the same chain belong to one
-incident. Such a campaign may span code-identical deployments under the
-representative-target rule below. A campaign on a different chain, or a
-separate campaign against another deployment, is a separate incident because
-its anchors, age, and loss are independent. When one incident implicates
-several distinct vulnerable execution contexts or code artifacts, represent
-them as targets of that incident. Curve deduplication handles code-identical
-repetitions across incidents; it does not merge their source records or losses.
+Repeated transactions, later actors repeating the exploit against the same
+code, and same-campaign legs against byte-identical deployments on other chains
+all belong to that one incident: code already shown vulnerable does not fail a
+second time, it loses more. Each merged campaign adds its own loss components
+and sources, `realizedAt` marks the end of the last one, and a note names when
+and by whom it happened. Targets are the contracts the anchor transaction
+executed; a deployment exercised only later or on another chain is described in
+the note. A different vulnerability, or the same vulnerability in another
+codebase exploited in a separate campaign, is a separate incident.
 
 A target is an independently aged execution context and code artifact implicated
 in that incident. It distinguishes:
@@ -64,40 +66,30 @@ in that incident. It distinguishes:
 - `codeArtifact`: the implementation, facet, module, library, or direct
   runtime containing the defect or consuming the causal state;
 - `relationship`: how the execution context reached the artifact;
-- optional `observation`: the later campaign transaction that first exercised
-  this target; omit it when the incident anchor did;
-- optional `curveRole: supporting`: a reviewed correlated target retained as
-  evidence while a same-failure sibling supplies the campaign's single knot;
 - `ageReset`: the latest code or causal configuration change that established
   the vulnerable state.
 
-An incident has at most one target for each exact
-`(codeArtifact.codeHash, failureModeId)` pair. If a same-chain campaign exploits
-many sibling deployments of one template through the same failure, use the
-execution context first reached by the anchored campaign as the representative
-target and cover the full campaign in the loss evidence. Siblings need not be
-byte-identical: clones, beacon proxies and pools of one template differ only in
-their deployment arguments, and one defect exercised across them is one
-observation. Curve construction enforces this, so recording every instance as a
-target stays valid and auditable. Add targets for distinct failures and for
-distinct defect-bearing roles in the causal path.
+Add a target for every defect-bearing artifact the anchor executed: price
+sources, entry points, and sibling deployments of one template, which differ
+only in their deployment arguments. One target may represent many siblings when
+the loss evidence covers the full campaign, and an incident has at most one
+target per exact `(codeArtifact.codeHash, failureModeId)` pair.
 
-When different runtimes repeat one failure in a coordinated campaign, the
-target first reached by the incident anchor supplies the knot; later parallel
-targets use `curveRole: supporting`, not a minimum-age selection.
-
-This representation covers direct contracts, proxies, beacons, clones,
-diamonds, routers, shared implementations, and libraries.
+An incident contributes one knot. Exactly one target is `curveEligible`: the
+one with the latest age reset, because the exploitable combination came into
+existence at that reset. This holds whether the targets composed one failure -
+an oracle and its consumer, a reentrancy window and the pricing it corrupts,
+sibling runtimes repeating one defect - or exploited independent defects in one
+transaction. The other targets remain reviewed evidence and say in a limitation
+why they are not the knot.
 
 ## Code age
 
 For each target:
 
 ```text
-codeAgeSeconds = target.observation.timestamp - ageReset.timestamp
+codeAgeSeconds = incident.exploit.timestamp - ageReset.timestamp
 ```
-
-When `target.observation` is omitted, the incident anchor supplies its timestamp.
 
 `ageReset` is the latest pre-exploit onchain change that established the
 vulnerable code-and-critical-state combination. It is the latest executable-code
@@ -162,13 +154,13 @@ Verification follows the ownership of each claim:
 
 - Incident `provisional`: exploit anchor, summary, or loss awaits review.
 - Incident `reviewed`: exploit anchor, vulnerability summary, and loss have been
-  reviewed. Only reviewed incidents reach `dist/latest/incidents.json`.
+  reviewed. Only reviewed incidents become curve rows.
 - Target `provisional`: artifact identity or age history awaits research.
 - Target `reviewed`: execution relationship, artifact hash, failure identity,
   exact anchors, and age-history completeness have been reviewed.
 
-A curve observation requires a reviewed incident and a reviewed target with
-`curveEligible: true`. Each target is promoted independently.
+An incident reaches the curve when it is reviewed and its curve-eligible
+target is reviewed. Each target is promoted independently.
 
 Every reviewed claim links to a `review-note` attestation with a reviewer and
 review time. Incident attestations cover anchor, root cause, and loss; target
@@ -188,10 +180,11 @@ financing fees, builder payments, and later recoveries do not reduce gross
 victim depletion. Use net loss only when gross victim depletion cannot be
 separated, and state how every adjustment is treated.
 
-A loss spanning several transactions in the same incident covers the coherent
-campaign. Cross-chain or separate-deployment losses belong to their respective
-incident records and must not be duplicated. The incident anchor fixes the
-code-age timestamp; `realizedAt` records a later campaign end when needed.
+A loss covers every campaign merged into the incident, each measured by its
+own components and sources, and is never duplicated across records. The
+incident anchor fixes the code-age timestamp; `realizedAt` records a later
+campaign end when needed.
+
 Evidence can combine onchain transactions, project reports, technical
 post-mortems, and reputable published analysis. Reported estimates state their
 scope and valuation method.
@@ -216,23 +209,15 @@ which requires `loss.usd.amount >= 1,000`.
 
 ## Curve construction
 
-Eligible targets collapse in two passes, each keeping the earliest reviewed
-exploit in the group. First by `(incidentId, failureModeId)`, so sibling
-instances of one template contribute one observation to the campaign that owns
-their single loss. Then by `(codeArtifact.codeHash, failureModeId)`, so
-byte-identical artifacts collapse across incidents.
+Each reviewed incident with a reviewed, curve-eligible target and a concrete
+USD loss is one curve row carrying that target's age and the incident's loss.
+The checker rejects a second curve-eligible target in one incident, and rejects
+the same `failure:<namespace>` identifier knotted on the same runtime hash in
+two incidents: such records merge, or one of them names a distinct defect. A
+distinct vulnerability in identical bytecode receives a distinct identifier.
 
-For complete anchors on one chain, selection uses block number and transaction
-index. Cross-chain or incomplete comparisons use timestamp, chain ID, incident
-ID, and target ID. A distinct vulnerability in identical bytecode receives a
-distinct reviewed `failure:<namespace>` identifier.
-
-`dist/latest/curve.json` publishes selected observations, deduplicated
-observations, exclusions, and sorted `ageKnots`. Each observation references its
-incident-level loss through `incidentId`, and every non-selected target appears
-with its `exclusionReasons`. An incident that still contributes several
-observations owns one loss, so a loss-weighted curve aggregates per `incidentId`
-instead of summing per observation.
+`dist/latest/incidents.json` publishes the rows sorted by age and every other
+record with its `exclusionReasons`.
 
 ## Provenance and releases
 

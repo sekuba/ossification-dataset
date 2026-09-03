@@ -19,7 +19,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { normalizeIncident, targetObservation } from './build.mjs'
+import { normalizeIncident } from './build.mjs'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const EMPTY_CODE_HASH = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
@@ -143,7 +143,6 @@ function createReport(file, incident) {
       targetId: target.id,
       tier: target.verification?.tier,
       curveEligible: target.verification?.curveEligible,
-      curveRole: target.curveRole,
     })),
     scope:
       'Reproduces declared anchors and mechanism evidence; semantic review and latest-change completeness remain separate claims.',
@@ -723,13 +722,11 @@ async function verifyAgeResetMechanism(chainId, target, anchored, report) {
 
 async function verifyTarget(incident, target, exploitAnchor, report) {
   const chainId = incident.incident.chainId
-  const observed = targetObservation(incident, target)
-  const observedAnchor = target.observation
-    ? await transactionAnchor(chainId, observed, `${target.id}:observation`, report)
-    : exploitAnchor
+  const observed = incident.incident.exploit
+  const observedAnchor = exploitAnchor
   if (!observedAnchor) return
   if (target.codeAgeSeconds !== observed.timestamp - target.ageReset.timestamp)
-    fail(report, `${target.id}:age`, 'codeAgeSeconds does not equal observation minus ageReset')
+    fail(report, `${target.id}:age`, 'codeAgeSeconds does not equal exploit minus ageReset')
   else pass(report, `${target.id}:age`, `${target.codeAgeSeconds}s`)
 
   await verifyTrace(chainId, observed.transactionHash, target, report)
@@ -828,11 +825,8 @@ function reportStatus(report, curveReady) {
   if (
     curveReady &&
     (report.tier !== 'reviewed' ||
-      report.targetVerification.some(
-        (verification) =>
-          verification.tier !== 'reviewed' ||
-          (verification.curveEligible !== true && verification.curveRole !== 'supporting'),
-      ))
+      report.targetVerification.some((verification) => verification.tier !== 'reviewed') ||
+      !report.targetVerification.some((verification) => verification.curveEligible === true))
   )
     return 'INCOMPLETE'
   return 'PASS_ANCHORS'

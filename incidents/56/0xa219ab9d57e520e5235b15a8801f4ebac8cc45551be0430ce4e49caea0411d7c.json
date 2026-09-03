@@ -93,10 +93,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: sibling instance of the same template and failure; target-2 carries the latest age reset and supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       }
     },
@@ -140,7 +143,8 @@
           "The rental contract's bytecode is not source-verified on BscScan. Its identity, runtime hash, deployment anchor and code-history completeness were reproduced onchain, and its role - a claimTeamReward() reachable by attacker-created contracts that unconditionally tops the payout up by calling LULA.recycle - was established from 41 successful iterations in the anchor call trace rather than from source."
         ],
         "reviewSourceIds": [
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       }
     }
@@ -177,6 +181,13 @@
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-26T00:00:00Z",
       "note": "Anchor: 0xa219ab9d57e520e5235b15a8801f4ebac8cc45551be0430ce4e49caea0411d7c at 112655390:49, timestamp 1785254909, status 1; EOA 0x2677806d48325ced7533c54b86ed5e99b129a4ed calls its own helper 0x5e506ba06fa6c61d1069b0e68d7013de35afa816 (created eleven minutes earlier at block 112653941) with selector 0x763a0e5b. The attacker's earlier BSC transactions in the twelve days before are contract creations and reward registrations that accrue referral credit; they do not execute the confiscation, and there is no earlier successful transaction in which the pair is manipulated, so the campaign is this single transaction. Root cause read from the Etherscan-verified LULA source: `function recycle(uint256 amount) external { require(msg.sender == rentalContract, \"Only Rental\"); uint256 pairBalance = balanceOf[uniswapV2Pair]; uint256 maxTake = pairBalance / 3; uint256 actual = amount >= maxTake ? maxTake : amount; if (actual == 0) return; _basicTransfer(uniswapV2Pair, rentalContract, actual); IUniswapV2Pair(uniswapV2Pair).sync(); }`. Boundary test: the extraction cap is the hardcoded pairBalance/3 and there is no rate limit, no value bound and no check that the pair is not mid-manipulation; the only stored value recycle reads besides the pair balance is rentalContract, which initialize() fixes once behind `require(rentalContract == address(0))` with no setter, and which merely selects who may confiscate. No value of buyTaxRate, sellTaxRate, sellLpRate, swapAtAmount, swapSlippageBps, cooldownTime, lpPool or buyEnabled prevents the pair's reserve from being removed, so the deployed code is wrong for every configuration and this is an executable-code defect rather than the oracle-manipulation parameter case the seed row implied. State read at block 112655389 confirms the wiring: LULA.rentalContract = 0x377a015f44c3fdf71060e94648edc9e0316c7f1a, LULA.uniswapV2Pair = 0xf0b36389a12a28be1280c0ec2a4bbc76889d6a96, LULA.owner = 0x43721abc1d19378c6160abfda6f1dd488ebbb5c9. Execution reproduced with cast run --quick: the helper takes recursive Moolah flash loans, swaps 197050832754852581075167541 USDT into the pair and routes the 7982785694934909976701260 LULA output to the fee-exempt owner address so _transfer takes the isExcludedFromFee branch and neither the 3 percent buy tax nor lastBuyTime is recorded, leaving the pair at 197642323.852857398857730617 USDT against 24022.129524779385677863 LULA; then 41 claimTeamReward() calls from attacker clones each reach 0x377a015f which calls LULA.recycle, and the receipt's Transfer logs show exactly 41 pair-to-rental LULA transfers totalling 24022.132677570768 LULA, each followed by pair.sync(); the recycled LULA is forwarded to the helper and sold back into the token-empty pair. Code history: Etherscan getcontractcreation puts LULA at 106133685:89 in 0xb1448a89b6b6c64876347aacaf95ebcda9a3309d47142c5cb766b5eb9da4f6de and the rental contract at 106134806:82 in 0x48b51c79ea25550d76b1550cbf63206f92ecc89dfaef5f4602c9d70e54293b49, both from 0x43721abc1d19378c6160abfda6f1dd488ebbb5c9, block timestamps 1782318652 and 1782319156 read from the chain; eth_getCode at the deployment blocks and at 112655389 gives 0x99366bf8f264505f8f861840792e1d39947be3cc92930adeb70dfcf4beefdb14 and 0xcf4e6608ce8313103a4c0cf62f16f2e3f7d61c8146e50e71f9c9a83db3ce260c unchanged, neither contract is a proxy, so codeAgeSeconds are 1785254909 - 1782318652 = 2936257 (34.0 d) and 1785254909 - 1782319156 = 2935753. Loss reconstructed from balances rather than from the reported figure: the pair's USDT went from 591841327760739761309679 to 181576724119654205222 wei, a depletion of 591659751036620107104457 wei, while the attacker EOA gained 578295907588061000526778 wei, which is the figure the seed row and the public write-ups quote; the gross victim depletion is used here and the difference is financing cost."
+    },
+    {
+      "id": "source-6",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T09:00:00Z",
+      "note": "Knot selection. 2 sibling targets share failure:lula-recycle-drains-pair-reserve-with-sync and one loss, so the incident contributes one observation. target-2 (0x377a015f44c3fdf71060e94648edc9e0316c7f1a) carries the latest age reset among them and supplies the knot; target-1 remain reviewed evidence."
     }
   ],
   "discovery": [

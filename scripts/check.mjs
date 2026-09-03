@@ -13,7 +13,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { buildArtifacts, normalizeIncident, ROOT, sha256, targetObservation } from './build.mjs'
+import { buildArtifacts, normalizeIncident, ROOT, sha256 } from './build.mjs'
 
 const INCIDENT_ID = /^eip155:([1-9][0-9]*):(0x[0-9a-f]{64})$/
 const REVIEWED_FAILURE_ID = /^failure:[a-z0-9]+(?:[-:][a-z0-9]+)*$/
@@ -337,8 +337,6 @@ function verifyIncident(record, state, errors) {
     if (sourceIds.has(source.id)) errors.push(`${sourceLabel}: duplicate source id ${source.id}`)
     sourceIds.add(source.id)
     sourceById.set(source.id, source)
-    if (source.type === 'onchain-transaction' && source.chainId !== chainId)
-      errors.push(`${sourceLabel}: chainId ${source.chainId} does not equal incident chainId ${chainId}`)
     if (source.type === 'source-code' && !/^[0-9a-f]{40}$/.test(source.commit ?? ''))
       errors.push(`${sourceLabel}: source-code evidence must pin a full 40-character commit`)
   }
@@ -412,38 +410,24 @@ function verifyIncident(record, state, errors) {
 
   const localPairs = new Set()
   const targetIds = new Set()
+  let knots = 0
   for (const [index, target] of (incident.targets ?? []).entries()) {
     const targetLabel = `${label}: targets[${index}]`
     const deployment = target.deployment
     const reset = target.ageReset
-    const observed = targetObservation(incident, target)
+    const observed = exploit
     const targetTier = target.verification?.tier
     const targetEligible = target.verification?.curveEligible === true
-    const supporting = target.curveRole === 'supporting'
     const eligible = incidentReviewed && targetTier === 'reviewed' && targetEligible
+    if (eligible) knots++
     const systemGenesis = deployment.kind === 'system-genesis'
     if (targetIds.has(target.id)) errors.push(`${targetLabel}: duplicate target id ${target.id}`)
     targetIds.add(target.id)
     if (target.codeAgeSeconds !== observed.timestamp - reset.timestamp)
       errors.push(
-        `${targetLabel}: codeAgeSeconds ${target.codeAgeSeconds} != observation.timestamp - ageReset.timestamp ` +
+        `${targetLabel}: codeAgeSeconds ${target.codeAgeSeconds} != exploit.timestamp - ageReset.timestamp ` +
           `(${observed.timestamp - reset.timestamp})`,
       )
-    if (target.observation) {
-      const observationKey = `${chainId}:${observed.transactionHash}`
-      const observationSource = incident.sources.find((source) =>
-        source.type === 'onchain-transaction' && source.chainId === chainId &&
-        source.transactionHash === observed.transactionHash)
-      if (observed.transactionHash === exploit.transactionHash)
-        errors.push(`${targetLabel}: target observation duplicates the incident anchor; omit it`)
-      if (!transactionKeys.has(observationKey) || !observationSource)
-        errors.push(`${targetLabel}: observation transaction must have an onchain source entry on the incident chain`)
-      else if (!(target.evidence?.identitySourceIds ?? []).includes(observationSource.id))
-        errors.push(`${targetLabel}: observation transaction source must be linked in target identity evidence`)
-      const exploitVsObserved = compareTransactionOrder(exploit, observed)
-      if (exploitVsObserved !== null && exploitVsObserved > 0)
-        errors.push(`${targetLabel}: target observation precedes the incident anchor`)
-    }
     // A shared artifact can predate this execution context; a reset applied to
     // the context itself cannot.
     const resetTargetsExecutionAddress =
@@ -451,20 +435,20 @@ function verifyIncident(record, state, errors) {
     if (resetTargetsExecutionAddress && reset.timestamp < deployment.timestamp)
       errors.push(`${targetLabel}: age reset precedes target deployment`)
     if (reset.timestamp > observed.timestamp)
-      errors.push(`${targetLabel}: age reset occurs after target observation`)
+      errors.push(`${targetLabel}: age reset occurs after the exploit anchor`)
     if (deployment.blockNumber !== null && observed.blockNumber !== null && deployment.blockNumber > observed.blockNumber)
-      errors.push(`${targetLabel}: deployment block is after target observation block`)
+      errors.push(`${targetLabel}: deployment block is after the exploit block`)
     if (reset.blockNumber !== null && observed.blockNumber !== null && reset.blockNumber > observed.blockNumber)
-      errors.push(`${targetLabel}: age-reset block is after target observation block`)
+      errors.push(`${targetLabel}: age-reset block is after the exploit block`)
     const deploymentVsReset = compareTransactionOrder(deployment, reset)
     if (resetTargetsExecutionAddress && deploymentVsReset !== null && deploymentVsReset > 0)
       errors.push(`${targetLabel}: deployment transaction is ordered after age reset`)
     const resetVsObserved = compareTransactionOrder(reset, observed)
     if (resetVsObserved !== null && resetVsObserved >= 0)
-      errors.push(`${targetLabel}: age-reset transaction does not precede target observation`)
+      errors.push(`${targetLabel}: age-reset transaction does not precede the exploit`)
     const deploymentVsObserved = compareTransactionOrder(deployment, observed)
     if (deploymentVsObserved !== null && deploymentVsObserved >= 0)
-      errors.push(`${targetLabel}: deployment transaction does not precede target observation`)
+      errors.push(`${targetLabel}: deployment transaction does not precede the exploit`)
 
     if (
       reset.kind === 'configuration-change' &&
@@ -491,8 +475,8 @@ function verifyIncident(record, state, errors) {
       localPairs.add(pair)
       if (REVIEWED_FAILURE_ID.test(target.failureModeId)) {
         const failures = state.failuresByCodeHash.get(target.codeArtifact.codeHash) ?? new Map()
-        const labels = failures.get(target.failureModeId) ?? new Set()
-        labels.add(label)
+        const labels = failures.get(target.failureModeId) ?? new Map()
+        labels.set(label, eligible)
         failures.set(target.failureModeId, labels)
         state.failuresByCodeHash.set(target.codeArtifact.codeHash, failures)
       }
@@ -518,16 +502,6 @@ function verifyIncident(record, state, errors) {
       errors.push(`${targetLabel}: target curve eligibility requires a reviewed incident`)
     if (targetEligible && targetTier !== 'reviewed')
       errors.push(`${targetLabel}: target curve eligibility requires reviewed target verification`)
-    if (supporting) {
-      if (targetTier !== 'reviewed' || targetEligible)
-        errors.push(`${targetLabel}: supporting target must be reviewed and not curve-eligible`)
-      const selectedSibling = incident.targets.some((candidate) =>
-        candidate !== target && candidate.failureModeId === target.failureModeId &&
-        candidate.verification?.tier === 'reviewed' && candidate.verification?.curveEligible === true)
-      if (!selectedSibling)
-        errors.push(`${targetLabel}: supporting target requires a reviewed curve-eligible sibling with the same failureModeId`)
-    }
-
     if (eligible) {
       if (!usd || usd.amount < 1_000)
         errors.push(`${targetLabel}: curve eligibility requires evidenced loss.usd.amount >= 1000`)
@@ -561,7 +535,7 @@ function verifyIncident(record, state, errors) {
       if (!systemGenesis && !deployment.creatorAddress)
         errors.push(`${targetLabel}: curve eligibility requires creatorAddress`)
       if (reset.transactionHash === observed.transactionHash)
-        errors.push(`${targetLabel}: observation transaction cannot define a pre-observation age reset`)
+        errors.push(`${targetLabel}: exploit transaction cannot define a pre-exploit age reset`)
       if (reset.mechanism?.type === 'event' && reset.mechanism.codeAddressLocation === null)
         errors.push(`${targetLabel}: eligible event reset requires codeAddressLocation`)
     } else if (targetTier !== 'provisional') {
@@ -577,6 +551,7 @@ function verifyIncident(record, state, errors) {
     if (targetTier === 'reviewed' && reset.mechanism?.type === 'event' && reset.logIndex === null)
       errors.push(`${targetLabel}: event-based reviewed reset requires logIndex`)
   }
+  if (knots > 1) errors.push(`${label}: ${knots} curve-eligible targets; an incident contributes one knot`)
 }
 
 export function checkIncidentCrossFields(incident, relative = null) {
@@ -761,9 +736,21 @@ function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
     errors.push('research/candidates.json: generatedFrom.primaryIncidents is stale')
 }
 
+// Release schemas reuse incident definitions through
+// "incident.schema.json#/$defs/<name>"; fold those into local references.
+function linkReleaseSchema(schema, incidentSchema) {
+  const linked = JSON.parse(
+    JSON.stringify(schema).replaceAll('"incident.schema.json#/$defs/', '"#/$defs/'),
+  )
+  linked.$defs = { ...incidentSchema.$defs, ...linked.$defs }
+  return linked
+}
+
 function validateDistribution(root, errors) {
   const directory = path.join(root, 'dist', 'latest')
   if (!existsSync(directory)) return
+  const incidentSchema = parseJson(path.join(root, 'schema', 'incident.schema.json'), 'schema/incident.schema.json', errors)
+  if (!incidentSchema) return
   let expected
   try {
     expected = buildArtifacts(root)
@@ -772,12 +759,13 @@ function validateDistribution(root, errors) {
     return
   }
   for (const [artifact, schemaFile] of [
-    ['curve', 'release-curve.schema.json'],
+    ['incidents', 'release-incidents.schema.json'],
     ['manifest', 'release-manifest.schema.json'],
   ]) {
     const relative = `schema/${schemaFile}`
-    const schema = parseJson(path.join(root, relative), relative, errors)
-    if (!schema) continue
+    const raw = parseJson(path.join(root, relative), relative, errors)
+    if (!raw) continue
+    const schema = linkReleaseSchema(raw, incidentSchema)
     try {
       assertSupportedSchema(schema)
       for (const error of validateSchema(expected.values[artifact], schema))
@@ -796,15 +784,10 @@ function validateDistribution(root, errors) {
     if (actual !== contents) errors.push(`dist/latest/${name}: stale or nondeterministic; run node scripts/build.mjs`)
   }
 
-  const curve = expected.values.curve
-  if (curve.ageKnots.length !== curve.observations.length)
-    errors.push('dist/latest/curve.json: one age knot is required per curve observation')
-  for (const [index, observation] of curve.observations.entries()) {
-    if (curve.ageKnots[index] !== observation.codeAgeSeconds)
-      errors.push(`dist/latest/curve.json: ageKnots[${index}] differs from its observation`)
-    if (index > 0 && curve.ageKnots[index - 1] > curve.ageKnots[index])
-      errors.push('dist/latest/curve.json: age knots are not sorted')
-  }
+  const rows = expected.values.incidents.incidents
+  for (const [index, row] of rows.entries())
+    if (index > 0 && rows[index - 1].codeAgeSeconds > row.codeAgeSeconds)
+      errors.push('dist/latest/incidents.json: incidents are not sorted by codeAgeSeconds')
   const manifest = expected.values.manifest
   for (const [name, metadata] of Object.entries(manifest.artifacts)) {
     const contents = expected.serialized[name]
@@ -861,15 +844,21 @@ export function checkDataset(root = ROOT) {
     if (ids.size > 1) notes.push(`loss evidence ${key} is cited by ${[...ids].sort().join(', ')}`)
   }
 
-  // The curve deduplicates by (codeHash, failureModeId), so the failure id is
-  // the only thing keeping observations on identical bytecode apart. Distinct
-  // ids on one hash are legitimate for genuinely distinct defects; surface
-  // them so a human confirms it is not one defect named twice.
+  // One fault in one artifact is one incident. The same failure on the same
+  // runtime hash knotted twice means two records that must merge or carry
+  // distinct failure ids. Distinct ids on one hash are legitimate for
+  // genuinely distinct defects; surface them so a human confirms it is not one
+  // defect named twice.
   for (const [codeHash, failures] of state.failuresByCodeHash) {
+    for (const [failureModeId, labels] of failures) {
+      const knotted = [...labels].filter(([, eligible]) => eligible).map(([label]) => label).sort()
+      if (knotted.length > 1)
+        errors.push(`${failureModeId} on code hash ${codeHash} is knotted by ${knotted.join(', ')}: merge the records or give distinct failure ids`)
+    }
     if (failures.size < 2) continue
     const listed = [...failures]
       .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-      .map(([failureModeId, labels]) => `${failureModeId} (${[...labels].sort().join(', ')})`)
+      .map(([failureModeId, labels]) => `${failureModeId} (${[...labels.keys()].sort().join(', ')})`)
     notes.push(
       `code hash ${codeHash} carries ${failures.size} failure ids: ${listed.join('; ')} - confirm these are distinct defects, not one defect named twice`,
     )

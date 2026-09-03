@@ -94,10 +94,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-3"
+          "source-3",
+          "source-10"
         ]
       }
     },
@@ -136,10 +139,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-3"
+          "source-3",
+          "source-10"
         ]
       }
     },
@@ -178,10 +184,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-3"
+          "source-3",
+          "source-10"
         ]
       }
     },
@@ -223,7 +232,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-3"
+          "source-3",
+          "source-10"
         ]
       }
     },
@@ -262,10 +272,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-3"
+          "source-3",
+          "source-10"
         ]
       }
     }
@@ -325,6 +338,13 @@
       "id": "source-9",
       "type": "post-mortem",
       "url": "https://blog.verichains.io/p/lien-finance-hack-analysis"
+    },
+    {
+      "id": "source-10",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T07:30:00Z",
+      "note": "Knot collapse. Unbacked bonds minted through the BondMaker exception-validation defect only became USDC when the OTC contracts priced them without validating backing; the two BondMaker and two GeneralizedDotc deployments and DecentralizedOTC are links and repeats of one conjunctive failure exercised in the anchor transaction for one loss. GeneralizedDotc 0x7db84492cfd27e47c39499d852decc2a01476a75, deployed at block 12023596, carries the latest reset and completed the exploitable combination, so target-4 supplies the single knot and the other four targets are supporting."
     }
   ],
   "verification": {

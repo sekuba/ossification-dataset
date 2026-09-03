@@ -109,7 +109,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-9"
         ]
       }
     },
@@ -151,10 +152,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-8"
+          "source-8",
+          "source-9"
         ]
       }
     }
@@ -219,6 +223,13 @@
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-08-27T11:27:01Z",
       "note": "The seed row anchored the first large cashout and mistook a setup buy for token deployment. Transaction 0xcd5395f8181d70e702e7a90e9c1ee5d2e347d5ad504cd97a0deaf81901e3333b at block 102068601:35 is instead the earliest successful defect execution after a 10 USDT setup buy. Its trace calls the orchestrator, then Staking.burnExpiredReward, then ATMToken.recycle and pair.sync; the receipt shows ATM leaving the pair with no USDT trade. The attacker submitted 130 successful reserve-removal batches through the orchestrator at nonces 2305 and 2311-2439, reducing the pair's ATM balance from 95,047,483.731159944878445252 ATM before the anchor to 45,700,582.363302945940466043 ATM after the last batch. Four setup calls and four cashout calls bracket those batches. Their USDT Transfer logs total 200,018.979935764085407782 into the pair and 381,343.544327480794650401 out; the exact 181,324.564391716709242619 USDT difference also equals the pair balance decline from before the first setup through the final cashout. Staking was top-level deployed by 0xbe8351c14e5108a57a545dfa8669fa31aa6adc68 at block 73688560:60. Its slot 2 ATM pointer changed from 0xd5ea95ca0d4277495ead4c35d91a51ef3163eb32 to the implicated token in source-6 at block 73703834:93 and remained unchanged through the anchor. Its 23,803-byte direct runtime hashes to 0xa2ee78704337a67180efcda486f03869e063ff0107c7e7baae0f10965e856862 at deployment and before exploitation. ATMToken was top-level deployed by the same creator in source-5 at block 73703785:92; its constructor fixed STAKING to the Staking address and created pair 0x659b44d603052132fd36cf048d9e0ba1e307ae3a. Its 9,208-byte direct runtime hashes to 0x18e6f9ac0b026fa34a04813a8e0c3339de08890e8bb4c43e3b84ec326101906d at deployment and before exploitation. Extracted verified Staking source shows external burnExpiredReward accepts any user and index, converts expiredReward using current reserves, and calls ATM.recycle without a caller or aggregate rate limit. Pinned verified ATMToken source shows recycle authorizes Staking but directly transfers up to one third of the pair's ATM balance to Staking before sync. The same source shows the later sell path auto-swaps 20% of each sell size from contract reserves with amountOutMin zero, amplifying the 30-farmer cashout."
+    },
+    {
+      "id": "source-9",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T07:30:00Z",
+      "note": "Knot collapse. Staking.burnExpiredReward is the only permissionless path into ATMToken.recycle, and recycle is the only reserve-removal mechanism; the two produced one loss and neither alone does. The pair is one conjunctive failure. The setATM pointer write at block 73703834 is later than the ATMToken deployment at block 73703785 and completed the exploitable combination, so target-1 supplies the single knot and target-2 is supporting."
     }
   ],
   "discovery": [

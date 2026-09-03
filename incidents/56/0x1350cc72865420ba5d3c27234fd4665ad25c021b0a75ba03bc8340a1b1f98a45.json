@@ -122,7 +122,8 @@
           "The staking runtime is unverified on BscScan; its fixed inputs and reward calculation were reviewed from constructor bytecode, runtime decompilation, archive calls and the exploit trace."
         ],
         "reviewSourceIds": [
-          "source-7"
+          "source-7",
+          "source-9"
         ]
       }
     },
@@ -161,10 +162,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-7"
+          "source-7",
+          "source-9"
         ]
       }
     }
@@ -298,6 +302,13 @@
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1717144634/coingecko:binancecoin,coingecko:ethereum",
       "observedAt": 1787897866
+    },
+    {
+      "id": "source-9",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T07:30:00Z",
+      "note": "Knot collapse. TLNProtocolStaking reward inflation and TlnSwap collateral underpricing read the same manipulated reserves in one transaction and produced one VUSD loss; the campaign needed the minted TLN to open the undercollateralized lock. The pair is one conjunctive failure. Staking was deployed 492 seconds after TlnSwap, so its deployment completed the exploitable combination: target-1 supplies the single knot and target-2 is supporting."
     }
   ],
   "discovery": [

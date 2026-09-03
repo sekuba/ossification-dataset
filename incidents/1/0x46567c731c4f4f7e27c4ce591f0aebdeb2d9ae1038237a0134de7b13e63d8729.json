@@ -154,10 +154,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-3"
+          "source-3",
+          "source-9"
         ]
       }
     },
@@ -200,7 +203,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-3"
+          "source-3",
+          "source-9"
         ]
       }
     }
@@ -254,6 +258,13 @@
       "id": "source-8",
       "type": "post-mortem",
       "url": "https://www.halborn.com/blog/post/explained-the-onyx-protocol-hack-september-2024"
+    },
+    {
+      "id": "source-9",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T07:30:00Z",
+      "note": "Knot collapse. The commit-pinned reproduction shows the borrows against the 2,000 flash-loaned ETH were fully collateralized until liquidateWithSingleRepay, driven by fake oTokens, self-liquidated the position for one unit of VUSD and released the oETH collateral whose exchange rate the rounding loop had prepared. The loss requires both the oETH rounding manipulation and the NFTLiquidation untrusted-oToken path, so the pair is one conjunctive failure. The oETH deployment is the later reset and completed the exploitable combination: target-2 supplies the single knot and target-1 is supporting."
     }
   ],
   "verification": {

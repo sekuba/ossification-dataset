@@ -109,7 +109,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-2"
+          "source-2",
+          "source-11"
         ]
       }
     },
@@ -160,10 +161,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-2"
+          "source-2",
+          "source-11"
         ]
       }
     }
@@ -237,6 +241,13 @@
       "type": "onchain-transaction",
       "chainId": 56,
       "transactionHash": "0x1e205434cb48f88f641a4213e98dc1f5b2ea2fdd955739c1cfe764bfac0eebf9"
+    },
+    {
+      "id": "source-11",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T07:30:00Z",
+      "note": "Knot collapse. StrategyEllipsisImpl raw-balance LP valuation and MultiStrategyTokenImpl spot share pricing produced one loss and neither alone does: the vault only mints and redeems against the number the strategy reports. The pair is one conjunctive failure. The strategy implementation upgrade at block 6952957 is the later reset and completed the exploitable combination, so target-1 supplies the single knot and target-2 is supporting."
     }
   ],
   "discovery": [

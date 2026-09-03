@@ -1,10 +1,9 @@
 /**
  * Build the deterministic, audit-oriented distribution in dist/latest.
  *
- * Source files are never modified. Every target is retained either as a curve
- * observation, a deduplicated observation, or an explicitly excluded
- * observation. Only reviewed incidents explicitly marked curve-eligible can
- * contribute a knot.
+ * Source files are never modified. One incident yields one knot: the reviewed,
+ * curve-eligible target of a reviewed incident with a concrete USD loss. Every
+ * other incident is listed as excluded with the reasons it contributes nothing.
  *
  *   node scripts/build.mjs          # write dist/latest
  *   node scripts/build.mjs --check  # fail if dist/latest is stale
@@ -25,7 +24,7 @@ export const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..'
 export const LOSS_FLOOR_USD = 1_000
 
 export const COHORT_RULES = {
-  unit: 'one target-level observation per (codeArtifact.codeHash, failureModeId)',
+  unit: 'one incident, one knot, one loss: the single curve-eligible target of a reviewed incident',
   datasetAdmission:
     `losses meet the ${LOSS_FLOOR_USD} USD floor through loss.usd or an evidenced loss.minimumUsd lower bound`,
   curveUsdComparability:
@@ -38,14 +37,9 @@ export const COHORT_RULES = {
     'ageReset.kind describes deployment, executable-code change, or a causal configuration change',
   ],
   ageResetKinds: ['deployment', 'implementation-change', 'module-change', 'configuration-change'],
-  deduplication:
-    'two passes, each keeping the earliest exploit under the deterministic selection order: first group by (incidentId, failureModeId) so sibling instances of one template collapse to one observation, then by (codeArtifact.codeHash, failureModeId) so byte-identical artifacts collapse across incidents',
-  deduplicationSelectionOrder:
-    'for observations on the same chain with complete exploit anchors: blockNumber, transactionIndex, timestamp, incidentId, target id; otherwise: timestamp, chainId, incidentId, target id',
-  incidentReference:
-    'observation.incidentId resolves the incident-level summary and loss in incidents.json, which lists reviewed incidents only; loss is intentionally not copied onto each target observation, and an incident that contributes several observations owns one loss, so a loss-weighted curve must aggregate per incidentId rather than sum per observation',
-  ordering: 'ascending codeAgeSeconds, then observationId',
-  excludedTargetTiers: ['provisional'],
+  merging:
+    'a recurrence of one fault in the same code, or one campaign against byte-identical deployments on several chains, is one incident anchored on its earliest successful exploit and owning the summed loss',
+  ordering: 'ascending codeAgeSeconds, then id',
 }
 
 function walkJsonFiles(dir, relativeTo = dir) {
@@ -110,10 +104,6 @@ export function normalizeIncident(incident) {
   return incident
 }
 
-export function targetObservation(incident, target) {
-  return target.observation ?? incident.incident.exploit
-}
-
 // Inverse of normalizeIncident: the canonical on-disk form.
 export function incidentToDisk(incident) {
   const clone = structuredClone(incident)
@@ -171,44 +161,17 @@ function numericUsd(loss) {
   return typeof amount === 'number' && Number.isFinite(amount) ? amount : null
 }
 
-function observationDetails(record, target) {
-  const incident = record.incident
-  const observed = targetObservation(incident, target)
-  return {
-    observationId: `${incident.id}#${target.id}`,
-    incidentId: incident.id,
-    targetId: target.id,
-    chainId: incident.incident.chainId,
-    exploit: {
-      blockNumber: observed.blockNumber,
-      transactionIndex: observed.transactionIndex,
-      timestamp: observed.timestamp,
-    },
-    incidentVerificationTier: incident.verification.tier,
-    targetVerificationTier: target.verification.tier,
-    targetCurveEligible: target.verification.curveEligible,
-    ...(target.curveRole ? { curveRole: target.curveRole } : {}),
-    failureModeId: target.failureModeId,
-    codeArtifactCodeHash: target.codeArtifact.codeHash,
-    ageResetKind: target.ageReset.kind,
-    codeAgeSeconds: target.codeAgeSeconds,
-  }
-}
-
-function exclusionReasons(incident, target) {
+export function exclusionReasons(incident, target) {
   const reasons = []
   if (incident.verification?.tier !== 'reviewed')
     reasons.push(`incident-verification-tier:${incident.verification?.tier ?? 'missing'}`)
   if (target.verification?.tier !== 'reviewed')
     reasons.push(`target-verification-tier:${target.verification?.tier ?? 'missing'}`)
-  if (target.curveRole === 'supporting') reasons.push('target-role:supporting-correlated')
-  else if (target.verification?.curveEligible !== true)
+  if (target.verification?.curveEligible !== true)
     reasons.push('target-verification:not-curve-eligible')
-
   const usd = numericUsd(incident.loss)
   if (usd === null) reasons.push('loss:no-usd-valuation')
   else if (usd < LOSS_FLOOR_USD) reasons.push('loss:below-floor')
-
   if (!COHORT_RULES.ageResetKinds.includes(target.ageReset?.kind))
     reasons.push(`age-reset:${target.ageReset?.kind ?? 'missing'}`)
   return reasons
@@ -224,129 +187,62 @@ function countBy(records, value) {
   return Object.fromEntries(Object.entries(result).sort(([a], [b]) => compareText(a, b)))
 }
 
-function compareCandidates(a, b) {
-  if (
-    a.chainId === b.chainId &&
-    a.exploit.blockNumber !== null && a.exploit.transactionIndex !== null &&
-    b.exploit.blockNumber !== null && b.exploit.transactionIndex !== null
-  ) {
-    const onchainOrder =
-      a.exploit.blockNumber - b.exploit.blockNumber ||
-      a.exploit.transactionIndex - b.exploit.transactionIndex
-    if (onchainOrder !== 0) return onchainOrder
-  }
-  return (
-    a.exploit.timestamp - b.exploit.timestamp ||
-    a.chainId - b.chainId ||
-    compareText(a.incidentId, b.incidentId) ||
-    compareText(a.observationId, b.observationId)
-  )
-}
-
-function compareCurveObservations(a, b) {
-  return a.codeAgeSeconds - b.codeAgeSeconds || compareText(a.observationId, b.observationId)
-}
-
-export function createCurve(records) {
-  const eligible = []
-  const provisionalObservations = []
-  const otherExcludedObservations = []
+export function createRelease(records) {
+  const incidents = []
+  const excluded = []
   const exclusionReasonCounts = {}
-  let sourceTargetCount = 0
-
-  for (const record of records) {
-    const incident = record.incident
+  for (const { incident } of records) {
+    const knots = []
+    const reasons = new Set()
     for (const target of incident.targets ?? []) {
-      sourceTargetCount++
-      const observation = observationDetails(record, target)
-      const reasons = exclusionReasons(incident, target)
-      if (reasons.length === 0) {
-        eligible.push(observation)
-        continue
-      }
-      for (const reason of reasons) increment(exclusionReasonCounts, reason)
-      const excluded = { ...observation, exclusionReasons: reasons }
-      if (incident.verification?.tier === 'provisional' || target.verification?.tier === 'provisional')
-        provisionalObservations.push(excluded)
-      else otherExcludedObservations.push(excluded)
+      const targetReasons = exclusionReasons(incident, target)
+      if (targetReasons.length === 0) knots.push(target)
+      else for (const reason of targetReasons) reasons.add(reason)
     }
+    if (knots.length > 1)
+      throw new Error(`${incident.id}: ${knots.length} curve-eligible targets; an incident contributes one knot`)
+    if (knots.length === 1) {
+      const [target] = knots
+      incidents.push({
+        id: incident.id,
+        protocol: incident.protocol,
+        name: incident.name,
+        chainId: incident.incident.chainId,
+        exploit: incident.incident.exploit,
+        summary: incident.summary,
+        loss: Object.fromEntries(Object.entries(incident.loss).filter(([, value]) => value !== null)),
+        targetId: target.id,
+        failureModeId: target.failureModeId,
+        codeHash: target.codeArtifact.codeHash,
+        ageResetKind: target.ageReset.kind,
+        codeAgeSeconds: target.codeAgeSeconds,
+      })
+      continue
+    }
+    const exclusionList = [...reasons].sort(compareText)
+    for (const reason of exclusionList) increment(exclusionReasonCounts, reason)
+    excluded.push({
+      id: incident.id,
+      name: incident.name,
+      chainId: incident.incident.chainId,
+      verificationTier: incident.verification.tier,
+      exclusionReasons: exclusionList,
+    })
   }
-
-  const deduplicatedObservations = []
-
-  // Two collapse passes, narrowest first. Within one incident, sibling
-  // instances of one template - a factory's clones, a beacon's proxies, a
-  // router's pools - fail together through the same defect and carry one loss,
-  // so they contribute one observation even though their bytecode differs by
-  // deployment arguments. Across incidents, byte-identical artifacts failing
-  // the same way collapse too.
-  const collapse = (candidates, keyOf, keyFor) => {
-    const groups = new Map()
-    for (const observation of candidates) {
-      const key = JSON.stringify(keyOf(observation))
-      groups.set(key, [...(groups.get(key) ?? []), observation])
-    }
-    const kept = []
-    for (const group of groups.values()) {
-      group.sort(compareCandidates)
-      const selected = group[0]
-      kept.push(selected)
-      for (const duplicate of group.slice(1)) {
-        deduplicatedObservations.push({
-          ...duplicate,
-          duplicateOf: selected.observationId,
-          deduplicationKey: keyFor(selected),
-        })
-      }
-    }
-    return kept
-  }
-
-  const observations = collapse(
-    collapse(
-      eligible,
-      (observation) => [observation.incidentId, observation.failureModeId],
-      (selected) => ({ incidentId: selected.incidentId, failureModeId: selected.failureModeId }),
-    ),
-    (observation) => [observation.codeArtifactCodeHash, observation.failureModeId],
-    (selected) => ({
-      codeArtifactCodeHash: selected.codeArtifactCodeHash,
-      failureModeId: selected.failureModeId,
-    }),
-  )
-
-  observations.sort(compareCurveObservations)
-  deduplicatedObservations.sort((a, b) => compareText(a.observationId, b.observationId))
-  provisionalObservations.sort((a, b) => compareText(a.observationId, b.observationId))
-  otherExcludedObservations.sort((a, b) => compareText(a.observationId, b.observationId))
-
+  incidents.sort((a, b) => a.codeAgeSeconds - b.codeAgeSeconds || compareText(a.id, b.id))
+  excluded.sort((a, b) => compareText(a.id, b.id))
   return {
-    $schema: '../../schema/release-curve.schema.json',
-    formatVersion: 1,
-    description: 'Empirical code ages at EVM exploits, reset by code or causal configuration changes.',
-    cohortRules: COHORT_RULES,
-    counts: {
-      sourceIncidents: records.length,
-      sourceTargets: sourceTargetCount,
-      eligibleBeforeDeduplication: eligible.length,
-      curveObservations: observations.length,
-      deduplicatedObservations: deduplicatedObservations.length,
-      provisionalObservations: provisionalObservations.length,
-      otherExcludedObservations: otherExcludedObservations.length,
-      incidentsByVerificationTier: countBy(records, (record) => record.incident.verification?.tier),
-      targetsByVerificationTier: countBy(
-        records.flatMap((record) => record.incident.targets ?? []),
-        (target) => target.verification?.tier,
-      ),
-      exclusionReasons: Object.fromEntries(
-        Object.entries(exclusionReasonCounts).sort(([a], [b]) => compareText(a, b)),
-      ),
+    release: {
+      $schema: '../../schema/release-incidents.schema.json',
+      formatVersion: 2,
+      description:
+        'Reviewed EVM exploits with the age of the failed code at the exploit, reset by code or causal configuration changes, and the onchain loss each owns. Excluded records list what keeps them off the curve.',
+      incidents,
+      excluded,
     },
-    observations,
-    ageKnots: observations.map((observation) => observation.codeAgeSeconds),
-    deduplicatedObservations,
-    provisionalObservations,
-    otherExcludedObservations,
+    exclusionReasonCounts: Object.fromEntries(
+      Object.entries(exclusionReasonCounts).sort(([a], [b]) => compareText(a, b)),
+    ),
   }
 }
 
@@ -357,14 +253,13 @@ function sourceManifest(records, root) {
   const files = records
     .map((record) => ({ path: record.path, sha256: record.sha256 }))
     .sort((a, b) => compareText(a.path, b.path))
-  const datasetSha256 = sha256(files.map((file) => `${file.path}\u0000${file.sha256}\n`).join(''))
+  const datasetSha256 = sha256(files.map((file) => `${file.path} ${file.sha256}\n`).join(''))
   const inputs = [
     ...files,
     { path: 'schema/incident.schema.json', sha256: sha256(schemaRaw) },
   ]
   const releaseSchemas = [
     'schema/release-incidents.schema.json',
-    'schema/release-curve.schema.json',
     'schema/release-manifest.schema.json',
   ].map((relative) => {
     const absolute = path.join(root, relative)
@@ -402,7 +297,7 @@ function sourceManifest(records, root) {
   return {
     incidentFiles: files,
     incidentFilesSha256: datasetSha256,
-    allInputsSha256: sha256(inputs.map((file) => `${file.path}\u0000${file.sha256}\n`).join('')),
+    allInputsSha256: sha256(inputs.map((file) => `${file.path} ${file.sha256}\n`).join('')),
     schema: {
       path: 'schema/incident.schema.json',
       sha256: sha256(schemaRaw),
@@ -420,47 +315,25 @@ export function buildArtifacts(root = ROOT) {
     throw new Error(`duplicate incident IDs: ${[...new Set(duplicateIds)].sort().join(', ')}`)
   records.sort((a, b) => compareText(a.incident.id, b.incident.id))
 
-  const incidents = {
-    $schema: '../../schema/release-incidents.schema.json',
-    formatVersion: 1,
-    // Reviewed incidents only, and only the fields a curve observation cannot
-    // supply. Provisional records await review; they stay in incidents/ and
-    // are hashed in the manifest, but publishing their figures beside reviewed
-    // ones invites summing the two together.
-    incidents: records
-      .filter(({ incident }) => incident.verification?.tier === 'reviewed')
-      .map(({ incident }) => ({
-      id: incident.id,
-      protocol: incident.protocol,
-      name: incident.name,
-      chainId: incident.incident.chainId,
-      exploit: incident.incident.exploit,
-      summary: incident.summary,
-      loss: incident.loss,
-    })),
-  }
-  const curve = createCurve(records)
+  const { release, exclusionReasonCounts } = createRelease(records)
   const evidenceSources = records.flatMap((record) => record.incident.sources ?? [])
   const candidatePath = path.join(root, 'research', 'candidates.json')
   const candidateLedger = existsSync(candidatePath) ? JSON.parse(readFileSync(candidatePath, 'utf8')) : null
-  const incidentsSerialized = serialize(incidents)
-  const curveSerialized = serialize(curve)
-  const sources = sourceManifest(records, root)
+  const releaseSerialized = serialize(release)
   const manifest = {
     $schema: '../../schema/release-manifest.schema.json',
-    formatVersion: 1,
+    formatVersion: 2,
     description: 'Deterministic manifest for the latest ossification dataset distribution.',
     cohortRules: COHORT_RULES,
     counts: {
       incidentFiles: records.length,
-      incidents: records.length,
-      targets: curve.counts.sourceTargets,
+      curveIncidents: release.incidents.length,
+      excludedIncidents: release.excluded.length,
+      incidentsByVerificationTier: countBy(records, (record) => record.incident.verification?.tier),
+      targets: records.reduce((sum, record) => sum + (record.incident.targets?.length ?? 0), 0),
+      exclusionReasons: exclusionReasonCounts,
       evidenceSources: evidenceSources.length,
       evidenceSourcesByType: countBy(evidenceSources, (source) => source.type),
-      curveObservations: curve.counts.curveObservations,
-      provisionalObservations: curve.counts.provisionalObservations,
-      otherExcludedObservations: curve.counts.otherExcludedObservations,
-      deduplicatedObservations: curve.counts.deduplicatedObservations,
       ...(candidateLedger
         ? {
             researchCandidates: candidateLedger.candidates?.length ?? 0,
@@ -476,24 +349,19 @@ export function buildArtifacts(root = ROOT) {
           }
         : {}),
     },
-    sources,
+    sources: sourceManifest(records, root),
     artifacts: {
       'incidents.json': {
-        bytes: Buffer.byteLength(incidentsSerialized),
-        sha256: sha256(incidentsSerialized),
-      },
-      'curve.json': {
-        bytes: Buffer.byteLength(curveSerialized),
-        sha256: sha256(curveSerialized),
+        bytes: Buffer.byteLength(releaseSerialized),
+        sha256: sha256(releaseSerialized),
       },
     },
   }
   return {
     records,
-    values: { incidents, curve, manifest },
+    values: { incidents: release, manifest },
     serialized: {
-      'incidents.json': incidentsSerialized,
-      'curve.json': curveSerialized,
+      'incidents.json': releaseSerialized,
       'manifest.json': serialize(manifest),
     },
   }
@@ -510,6 +378,9 @@ function main() {
   }
 
   const outputDirectory = path.join(ROOT, 'dist', 'latest')
+  const summary =
+    `${build.values.incidents.incidents.length} curve incidents, ` +
+    `${build.values.incidents.excluded.length} excluded`
   if (process.argv.includes('--check')) {
     const stale = []
     for (const [name, expected] of Object.entries(build.serialized)) {
@@ -521,22 +392,14 @@ function main() {
       process.exitCode = 1
       return
     }
-    console.log(
-      `OK: dist/latest is deterministic and current (${build.values.curve.counts.curveObservations} curve, ` +
-        `${build.values.curve.counts.provisionalObservations} provisional)`,
-    )
+    console.log(`OK: dist/latest is deterministic and current (${summary})`)
     return
   }
 
   mkdirSync(outputDirectory, { recursive: true })
   for (const [name, contents] of Object.entries(build.serialized))
     writeFileSync(path.join(outputDirectory, name), contents)
-  console.log(
-    `Built dist/latest: ${build.values.incidents.incidents.length} incidents, ` +
-      `${build.values.curve.counts.curveObservations} curve observations, ` +
-      `${build.values.curve.counts.provisionalObservations} provisional observations, ` +
-      `${build.values.curve.counts.deduplicatedObservations} deduplicated observations.`,
-  )
+  console.log(`Built dist/latest: ${summary}.`)
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) main()

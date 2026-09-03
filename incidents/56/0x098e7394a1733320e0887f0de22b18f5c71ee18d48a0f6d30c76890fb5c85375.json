@@ -99,7 +99,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-5"
+          "source-5",
+          "source-9"
         ]
       }
     },
@@ -140,10 +141,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-5"
+          "source-5",
+          "source-9"
         ]
       }
     }
@@ -197,6 +201,13 @@
       "type": "onchain-transaction",
       "chainId": 56,
       "transactionHash": "0xb3787e14ca6d6662e97148f37d8f1512eafc94496c237def9bbff3d073ef3937"
+    },
+    {
+      "id": "source-9",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T07:30:00Z",
+      "note": "Knot collapse. FarmZAP fee-exempt swaps through an untrusted farm and the BabyDoge token unbounded swapAndLiquify sale produced one loss and neither alone does: the token sale is only profitable to trigger with fee-free manipulation, and FarmZAP alone moves no victim value. The pair is one conjunctive failure. FarmZAP was deployed after the token and completed the exploitable combination, so target-1 supplies the single knot and target-2 is supporting."
     }
   ],
   "verification": {
@@ -207,7 +218,6 @@
     ]
   },
   "notes": [
-    "The seed row's $7.5 million value belongs to the Jimbo Protocol exploit reported on the same date. This BabyDoge transaction's exact net proceeds are 437.123093519995276290 BNB, consistent with contemporary reporting of roughly $157,000.",
-    "Both independently aged defect-executing contracts are retained: FarmZAP supplies the untrusted-farm/approval path, and the BabyDoge token executes the manipulation-sensitive auto-liquidity sale."
+    "The seed row's $7.5 million value belongs to the Jimbo Protocol exploit reported on the same date. This BabyDoge transaction's exact net proceeds are 437.123093519995276290 BNB, consistent with contemporary reporting of roughly $157,000."
   ]
 }

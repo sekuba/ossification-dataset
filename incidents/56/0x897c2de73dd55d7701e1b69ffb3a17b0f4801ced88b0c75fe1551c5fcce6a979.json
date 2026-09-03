@@ -106,10 +106,13 @@
       },
       "verification": {
         "tier": "reviewed",
-        "curveEligible": true,
-        "limitations": [],
+        "curveEligible": false,
+        "limitations": [
+          "Not the knot: one link of the conjunctive failure; the sibling with the latest age reset supplies the incident's single observation."
+        ],
         "reviewSourceIds": [
-          "source-2"
+          "source-2",
+          "source-13"
         ]
       }
     },
@@ -163,7 +166,8 @@
         "curveEligible": true,
         "limitations": [],
         "reviewSourceIds": [
-          "source-2"
+          "source-2",
+          "source-13"
         ]
       }
     }
@@ -242,6 +246,13 @@
       "type": "onchain-transaction",
       "chainId": 56,
       "transactionHash": "0xf900b296e47ebec51c1acc0f8ec9d757fd2ef3ee7070775746980d718730bf76"
+    },
+    {
+      "id": "source-13",
+      "type": "review-note",
+      "reviewer": "Claude Fable 5.1",
+      "reviewedAt": "2026-09-03T07:30:00Z",
+      "note": "Knot collapse. PriceCalculatorBSCV1 spot LP valuation and BunnyMinterV2 unbounded minting produced one loss and neither alone does: the calculator returns a manipulable number that only the minter turns into unbacked BUNNY. The pair is one conjunctive failure. The exploitable combination existed from the calculator implementation upgrade at block 7129699, the later of the two resets, so target-2 supplies the single knot and target-1 is supporting."
     }
   ],
   "discovery": [
