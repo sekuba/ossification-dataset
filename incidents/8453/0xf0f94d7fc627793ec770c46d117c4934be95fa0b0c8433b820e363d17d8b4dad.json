@@ -121,6 +121,11 @@
       "note": "Reviewed the three-chain campaign ordering, the live Base receipt and call trace for the earliest successful drain, the Base creation receipt and trace, historical runtime code, pinned verified source, and the cited campaign report. The selected Base transaction is the first successful campaign call after the attacker wrapper's deployment, preceding the first Arbitrum drain by 18 seconds and the first Ethereum drain by 34 seconds. It calls SquidRouterModule 0x1f1d37a3bf840e35c6a860c7c2da71fe555123ca through expressExecuteWithToken with amount zero and attacker-supplied sourceAddress, victim Safe, registered delegate, and actions. The module checks the supplied delegate's permissions but never binds it to msg.sender, then repeatedly drives victim Safes through execTransactionFromModule to approve and swap valuable tokens into attacker pools. The module was created at 42545004:101 by 0x311df7369ecbca483eab798129aa1687b767d137. Code was absent one block earlier; the direct runtime has no DELEGATECALL or SELFDESTRUCT and its hash stayed unchanged through the anchor. Rekt reports $3.98 million gross across 308 successful drains and 88 Safes on Base, Arbitrum, and Ethereum."
     }
   ],
+  "discovery": [
+    "web:2026-05-25:third-party-gnosis-safe-squidroutermodule",
+    "seed:newmarkettrading:2026-05-25:newmarkettrading",
+    "dfhl:src/test/2026-05/SquidRouterModule_exp.sol"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [

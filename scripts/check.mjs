@@ -575,6 +575,32 @@ export function checkIncidentCrossFields(incident, relative = null) {
   return errors
 }
 
+// The candidate ledger resolves incident coverage before adjudications, so an
+// admitted record silently flips an excluded lead to included. Admitting a
+// transaction an adjudication excluded is a reversal that must be argued in the
+// adjudication, not left as two files disagreeing.
+function validateAdjudications(root, exploitTransactions, errors) {
+  const file = path.join(root, 'research', 'raw', 'adjudications.json')
+  if (!existsSync(file)) return
+  const document = parseJson(file, 'research/raw/adjudications.json', errors)
+  if (!Array.isArray(document?.entries)) return
+  const anchors = new Map()
+  for (const key of exploitTransactions.keys()) {
+    const hash = key.slice(key.indexOf(':') + 1)
+    anchors.set(hash.toLowerCase(), exploitTransactions.get(key))
+  }
+  for (const [index, entry] of document.entries.entries()) {
+    const disposition = entry.disposition ?? document.defaultDisposition
+    if (disposition !== 'excluded') continue
+    const label = anchors.get(entry.exploitTx?.toLowerCase())
+    if (label)
+      errors.push(
+        `research/raw/adjudications.json: adjudication:${index + 1} excludes ${entry.exploitTx}, ` +
+          `which ${label} anchors: reverse the adjudication with its reasoning or drop the record`,
+      )
+  }
+}
+
 function validateCandidates(root, incidentIds, discoveryRefs, errors, notes) {
   const candidatePath = path.join(root, 'research', 'candidates.json')
   if (!existsSync(candidatePath)) return
@@ -864,6 +890,7 @@ export function checkDataset(root = ROOT) {
     )
   }
 
+  validateAdjudications(root, state.exploitTransactions, errors)
   validateCandidates(root, state.incidentIds, state.discoveryRefs, errors, notes)
   validateDistribution(root, errors)
   return { errors, notes, incidentCount: files.length }

@@ -62,6 +62,10 @@ Set `discovery` to the candidate ids a record answers, for example
 The field is research bookkeeping and supports no claim. Edit the raw inputs,
 including `research/raw/adjudications.json`, then regenerate the ledger.
 
+Admitting a transaction an adjudication excluded is a reversal: rewrite that
+adjudication to argue it, or drop the record. The checker rejects the two
+disagreeing.
+
 ## Validation
 
 Use Node 22.

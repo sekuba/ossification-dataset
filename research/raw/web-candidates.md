@@ -5,8 +5,11 @@ date | project | reported loss | candidate mechanism
 
 2026
 
-2026-08-22–2026-07-28
+2026-08-31–2026-07-28
 
+2026-08-31 | Balancer V1 BPool | $234,000 | joinswapPoolAmountOut fixed-point rounding minted 4,408.8 BPT for 1 satoshi after WBTC reserve compression
+2026-08-27 | Moonwell MAMO market | approximately $9.1m residual borrower obligations; $11.03m gross borrows | direct underlying transfers inflated mMAMO exchange rate past the mint-path supply cap while thin-market buying lifted the oracle price
+2026-08-23 | Term Finance vaults | approximately $8.5m | governance-token majority acquired cheaply passed malicious proposals that zeroed the timelock and drained strategy vaults
 2026-08-21 | The Sandbox SAND OFT bridge | approximately $686k actual Ethereum escrow depletion | approveAndCall confused-deputy callback overwrote LayerZero delegate on Base and BNB Chain; nominal unbacked mints excluded
 2026-08-18 | Maya Protocol | $1.7m | trade-account, outbound and pool-accounting bugs
 2026-08-15 | FoxMarket | $118.7k | spot-quote and LP-bond manipulation

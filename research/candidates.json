@@ -23,16 +23,16 @@
         "seed": 748
       },
       "byDisposition": {
-        "excluded": 25,
-        "included": 1326,
+        "excluded": 26,
+        "included": 1332,
         "out-of-scope": 53,
-        "pending": 111,
-        "unresolved": 92
+        "pending": 105,
+        "unresolved": 91
       },
       "openByReason": {
         "incident-anchors": 0,
-        "loss-evidence": 18,
-        "semantic-research": 185
+        "loss-evidence": 16,
+        "semantic-research": 180
       }
     }
   },
@@ -45,11 +45,11 @@
     "webList": {
       "file": "research/raw/web-candidates.md",
       "lineNumbers": "1-based",
-      "sha256": "c4975eebd686304ca1525545e24a42290166f9b27964cacf0575a33088aff141"
+      "sha256": "cecac54232abeef9ad74b8876722c17995fd651f125d5efcfa57f1421cc787f6"
     },
     "adjudications": {
       "file": "research/raw/adjudications.json",
-      "sha256": "f02cdeea3dff9ee799ff0b0089be8c80f021b5b54613f798b38cb8b9416a54b1"
+      "sha256": "0ffad184ba7c5cbe36f3f334bcd24ea2fc81d28f66b4db9c5256558548b9245b"
     },
     "seed": {
       "file": "research/raw/seed-incidents.json",
@@ -58,24 +58,24 @@
     },
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
-      "files": 721,
-      "sha256": "5551bebd66f82da01acd7f857fa534ae1dce118ad9e34947afa44e09e110d0ca"
+      "files": 733,
+      "sha256": "c8e92b1043bd3d3cceb3b95c3beb780b45cddb43789d2d9ec1c99324cc492297"
     }
   },
   "counts": {
-    "total": 2252,
+    "total": 2274,
     "bySource": {
-      "adjudication": 121,
+      "adjudication": 140,
       "defihacklabs": 869,
       "seed": 757,
-      "web-list": 505
+      "web-list": 508
     },
     "byDisposition": {
-      "excluded": 235,
-      "included": 1463,
+      "excluded": 274,
+      "included": 1484,
       "out-of-scope": 54,
-      "pending": 118,
-      "unresolved": 382
+      "pending": 111,
+      "unresolved": 351
     },
     "defihacklabsCoverage": {
       "total": 869,
@@ -571,6 +571,153 @@
       }
     },
     {
+      "id": "adjudication:122",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 121
+      },
+      "candidate": {
+        "name": "PAID Network proxy-owner key mint",
+        "chain": "ethereum",
+        "date": "2021-03-05T18:07:13Z",
+        "exploitTx": "0x4bb10927ea7afc2336033574b74ebd6f73ef35ac0db1bb96229627c9d77555a0"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "KEY_COMPROMISE: CertiK's post-mortem shows the proxy owner's key was used to transfer ownership (tx 0x733dd279b3d24f3415f3850b8eceafc651c1998163dcd0352b9e83c46e2b33d9) and then upgrade the proxy to code carrying burn and mint functions (tx 0xe4678ca53b308bb35f6fd393ca369e853f936788cd6c318cd38b0a25bec88b70), which do not exist in the audited code. The key holder burned about 60m PAID (tx 0x3a483dd881d98541ebbd51e9a64daa700546bae9c2b33a30c2192f9981334b9b), minted 59,471,745 PAID, and sold about 2.5m for roughly 2,040 ETH on Uniswap (tx 0x4bb10927ea7afc2336033574b74ebd6f73ef35ac0db1bb96229627c9d77555a0). The upgrade mechanism executed exactly as designed for the holder of the proxy key, so no deployed-code invariant was violated."
+      }
+    },
+    {
+      "id": "adjudication:123",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 122
+      },
+      "candidate": {
+        "name": "pNetwork pGALA proxy-admin key and white-hat drain",
+        "chain": "bsc",
+        "date": "2022-11-03T20:13:00Z",
+        "exploitTx": "0x4b239b0a92b8375ca293e0fde9386cbe6bbeb2f04bc23e7c80147308b9515c2e"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: SlowMist attributes the takeover to a leaked plaintext admin private key on GitHub, with the pGALA proxy admin owner replaced about 70 days before disclosure. The $4.3-4.6m figure is pNetwork's own privileged white-hat drain, 55.6b uncollateralised pGALA minted in two batches and sold for 12,977 BNB into the PancakeSwap pool (Beosin-traced tx 0x4b239b0a92b8375ca293e0fde9386cbe6bbeb2f04bc23e7c80147308b9515c2e), not an attacker's exploit of defective code, and no third-party theft from the bridge collateral is evidenced. A privileged mint-and-dump by the key holder is excluded either way."
+      }
+    },
+    {
+      "id": "adjudication:124",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 123
+      },
+      "candidate": {
+        "name": "Sweat Economy SWEAT NEAR token drain",
+        "chain": "near",
+        "date": "2026-04-29T13:36:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: the SWEAT token contract lives on NEAR Protocol and is written in Rust; the 13.71b SWEAT drain of foundation wallets executed inside NEAR's runtime and was routed through Ref Finance. NEAR has no eip155 chain id and no EVM bytecode whose age could be measured, and the exact contract defect was never publicly pinned beyond a token-contract flaw. Cohort conditions 1 and 2 both fail."
+      }
+    },
+    {
+      "id": "adjudication:125",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 124
+      },
+      "candidate": {
+        "name": "RetoSwap Haveno arbitrator-spoof drain",
+        "chain": "monero",
+        "date": "2026-05-20T02:31:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: the flaw is in Haveno's offchain trade-protocol messaging (a fake out-of-order arbitrator ACK overwrote the arbitrator address before multisig creation), and the 7,000 XMR moved inside Monero multisig wallets. Haveno clients are Java, the defect is message handling in peer software, and Monero has no eip155 chain id and no EVM contract state. There is no executed EVM code to age."
+      }
+    },
+    {
+      "id": "adjudication:126",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 125
+      },
+      "candidate": {
+        "name": "PIZZA eCurve EOS infinite mint",
+        "chain": "eos",
+        "date": "2021-12-08T20:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: eCurve and the PIZZA platform are EOS DAPPs written in C++; the infinite Tripool mint and collateral drain executed inside EOS contracts. EOS has no eip155 chain id and no EVM bytecode, so no code-age observation is possible."
+      }
+    },
+    {
+      "id": "adjudication:127",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 126
+      },
+      "candidate": {
+        "name": "TesseraDAO TSR ownership-takeover mint",
+        "chain": "bsc",
+        "date": "2026-06-01T11:38:25Z",
+        "exploitTx": "0x25093e573c116562c8839dc67a15ac21761271006a8dfe50b18fa475564bfcd1"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "KEY_COMPROMISE: attacker 0x2201037A1755eC48eC5F00Fea21A10A9E56f2Dd8 minted 99,000,000 TSR from the null address in tx 0x25093e573c116562c8839dc67a15ac21761271006a8dfe50b18fa475564bfcd1 at 2026-06-01T11:38:25Z after seizing ownership control of the contract, then dumped for about $2.4-2.5m USDT and bridged to Ethereum (1,285.5 ETH through Tornado Cash). The mint executed through the owner's mint authority as designed; no permissionless mint flaw in the deployed logic is evidenced. Re-enter only if a non-privileged mint path is verifiably pinned."
+      }
+    },
+    {
+      "id": "adjudication:128",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 127,
+        "defihacklabs": {
+          "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+          "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+          "path": "src/test/2026-06/ATM_LP_Burn_exp.sol",
+          "recordedRef": "src/test/2026-06/ATM_LP_Burn_exp.sol@main"
+        }
+      },
+      "candidate": {
+        "name": "ATM/WBNB mistaken LP burn",
+        "chain": "bsc",
+        "date": "2026-06-22T09:23:39Z",
+        "candidateVictim": "0xbe8351c14e5108a57a545dfa8669fa31aa6adc68",
+        "exploitTx": "0x4e9f3dc3ce3c0a6aa19dae0f1384ff46e801b433b7e3bc4c780de486db6c950a"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "USER_ERROR, no code defect: LP owner 0xbe8351c14e5108a57a545dfa8669fa31aa6adc68 mistakenly transferred its Pancake V2 ATM/WBNB LP balance to the pair contract itself, and permissionless burn() redeemed the pair-held LP for the underlying 1,603.99 WBNB exactly as designed. No executable logic violated an invariant; the loss is a self-inflicted mis-transfer harvested by a watcher, not a vulnerability in executed code."
+      }
+    },
+    {
+      "id": "adjudication:129",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 128
+      },
+      "candidate": {
+        "name": "WEMIX Play Bridge Vault monitoring-key withdrawals",
+        "chain": "wemix",
+        "date": "2025-02-28T00:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "KEY_COMPROMISE: the WEMIX Foundation attributes the 8.65m WEMIX drain across 13 successful of 15 withdrawals to stolen authentication keys for the NILE NFT platform monitoring system, uploaded to a shared repository and held by the attacker for two months before use. No smart-contract vulnerability is evidenced; the vault released funds to correctly authenticated withdrawal requests."
+      }
+    },
+    {
       "id": "adjudication:13",
       "source": {
         "kind": "adjudication",
@@ -590,6 +737,176 @@
         "incidentIds": [
           "eip155:534352:0x0a7b4c6542eb8f37de788c8848324c0ae002919148a4426903b0fb4149f88f05"
         ]
+      }
+    },
+    {
+      "id": "adjudication:130",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 129
+      },
+      "candidate": {
+        "name": "WEMIX$ admin-privilege mint",
+        "chain": "wemix",
+        "date": "2026-07-26T09:17:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "KEY_COMPROMISE: WEMIX discloses the attacker gained administrator privileges over the WEMIX$ contract and minted about 5,225,525 WEMIX$, swapping part into 30,736 WEMIX and 724,198.27 USDC.e before bridging out; about $724,000 was siphoned externally while the headline $6.25m counts the briefly circulating unauthorized issuance. The mint executed through the admin privilege as designed, with no evidenced defect in the deployed contract logic. The WEMIX3.0 chain is not an eip155 chain either, so both cohort conditions fail independently."
+      }
+    },
+    {
+      "id": "adjudication:131",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 130
+      },
+      "candidate": {
+        "name": "Coinsbuy hot-wallet drain",
+        "chain": "ethereum",
+        "date": "2026-08-09T13:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "KEY_COMPROMISE and NO_VICTIM_CONTRACT: about 6.04m USDT left eight Tron wallets and about 1.89m USDT plus 77 ETH left three Ethereum wallets as ordinary transfers signed by the holders' keys, coordinated within an hour after a 5 USDT test. Investigators attribute it to compromised wallet keys or admin access at the custodial payment processor; no deployed contract in the causal path failed any invariant, and Coinsbuy covered client balances from reserves. A custodial hot-wallet drain yields no victim contract and no code age to measure."
+      }
+    },
+    {
+      "id": "adjudication:132",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 131
+      },
+      "candidate": {
+        "name": "Dango insurance-fund sign-check outflow",
+        "chain": "dango",
+        "date": "2026-04-13T00:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: Dango is a Cosmos SDK appchain DEX, not an eip155 chain; the insurance-fund sign-check failure and the 410,010 USDC bridge outflow executed outside any EVM state, and the funds were returned. No EVM code defect and no standing loss remain to measure."
+      }
+    },
+    {
+      "id": "adjudication:133",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 132
+      },
+      "candidate": {
+        "name": "Term Finance strategy-vault governance capture",
+        "chain": "ethereum",
+        "date": "2026-08-23T06:25:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "MARKET_GOVERNANCE_CAPTURE: the attacker cheaply acquired a majority of the sparsely held governance token (seeded with 2 ETH from Tornado Cash), passed malicious proposals that zeroed the seven-day timelock, and drained about 2,843 ETH plus 1.68m USDC from the strategy vaults in legitimate governance-authorized transfers at block 25816049 (Defimon-circulated exploit transactions 0xd354a15b1 and 0x9f273f9a5 prefixes). The vault contracts executed exactly as the vote instructed; acquiring voting power on the open market and voting it is not a defect in executed EVM code. Re-enter only if a non-governance code path is verifiably pinned."
+      }
+    },
+    {
+      "id": "adjudication:134",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 133
+      },
+      "candidate": {
+        "name": "Solido Cash oracle misassignment",
+        "chain": "supra",
+        "date": "2026-07-23T18:21:35Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: Solido Cash runs on the Supra blockchain (Move modules, CDP vaults, CASH/SUPRA pools), not an eip155 chain; the two-wave oracle-misassignment mint of 809,051.55 unbacked CASH and the 293,705,544.97 SUPRA extraction executed outside any EVM state. No EVM code defect and no EVM anchor exist to measure."
+      }
+    },
+    {
+      "id": "adjudication:135",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 134
+      },
+      "candidate": {
+        "name": "Optimism Wintermute counterfactual Safe takeover",
+        "chain": "optimism",
+        "date": "2022-06-05T00:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NO_CODE_DEFECT: the attacker replayed Wintermute pre-EIP-155 deployer transactions on Optimism to front-run deployment of the counterfactual Safe holding 20m OP, then transferred the tokens from an address they controlled. The theft path executes only CREATE and transfer logic as designed; no defect in executed EVM code selected or authorized the loss, so no knot exists to age. Operational deployer-replay hygiene, outside the EVM code-bug cohort."
+      }
+    },
+    {
+      "id": "adjudication:136",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 135
+      },
+      "candidate": {
+        "name": "Osmosis LP share calculation bug",
+        "chain": "osmosis",
+        "date": "2022-06-08T00:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: Osmosis is a Cosmos SDK appchain DEX; the liquidity-pool share calculation bug and the approximately $5m outflow executed outside any EVM state. No EVM code defect and no EVM anchor exist to measure."
+      }
+    },
+    {
+      "id": "adjudication:137",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 136
+      },
+      "candidate": {
+        "name": "Nirvana Finance oracle manipulation",
+        "chain": "solana",
+        "date": "2022-07-28T00:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: Nirvana Finance runs on Solana; the flash-loan oracle manipulation and approximately $3.5m drain executed outside any EVM state. No EVM code defect and no EVM anchor exist to measure."
+      }
+    },
+    {
+      "id": "adjudication:138",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 137
+      },
+      "candidate": {
+        "name": "Typus Finance oracle-module exploit",
+        "chain": "sui",
+        "date": "2025-10-15T00:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: Typus Finance runs on Sui (Move); the oracle-module exploit and approximately $3.44m impact executed outside any EVM state. No EVM code defect and no EVM anchor exist to measure."
+      }
+    },
+    {
+      "id": "adjudication:139",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 138
+      },
+      "candidate": {
+        "name": "Flow execution-layer vulnerability",
+        "chain": "flow",
+        "date": "2025-12-27T00:00:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "NON_EVM_CHAIN: the Flow execution-layer vulnerability and $3.9m impact are on the Flow/Cadence chain, not an eip155 chain. No EVM code defect and no EVM anchor exist to measure."
       }
     },
     {
@@ -613,8 +930,28 @@
         "exploitTx": "0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12"
       },
       "disposition": {
-        "status": "pending",
-        "reason": "CAUSAL_CONFIGURATION: impaired Silo Varlamore Arks had deposit caps set to zero but remained active, so their stale reported value still counted in FleetCommander NAV. The later donation and redemption exercised that persistent offboarding state. Reopened pending the exact state-changing transaction, before/after active-set evidence, artifact history, and structured loss review."
+        "status": "included",
+        "reason": "CAUSAL_CONFIGURATION: the LowerRisk Silo Varlamore ark cap went to zero in 0x1143847e4a297f630788503f06da8a68c168e1e7d3c4301cfd3d49d4f46649f7 (block 23690024) and the HigherRisk Term ark cap in 0x5231796eef08cdc9e63efc7685013879618647030f4279f83920cc8451cf0c66 (block 23742679), both arks staying in their fleets' active NAV sets. The reviewed incident reproduces both before/after cap reads, complete immutable-artifact history, the single-transaction dual-fleet campaign, and the 6,016,754.998 DAI exit against the $6.04M reported loss.",
+        "incidentIds": [
+          "eip155:1:0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12"
+        ]
+      }
+    },
+    {
+      "id": "adjudication:140",
+      "source": {
+        "kind": "adjudication",
+        "file": "research/raw/adjudications.json",
+        "entryIndex": 139
+      },
+      "candidate": {
+        "name": "Hector Network redemption whitelist drain",
+        "chain": "ethereum",
+        "date": "2024-01-15T05:59:00Z"
+      },
+      "disposition": {
+        "status": "excluded",
+        "reason": "INSIDER_OR_KEY: the $2.7m mintWithdraw payout executed only after the team deployer account itself called addEligibleWallet for the attacker address (0x1b813d90) and set a $2.7m redemption rate. The attacker could not self-authorize through any defect in executed EVM code; the privileged state transition came from team-controlled keys, consistent with inside-job or private-key compromise findings. No code defect on the attacker-reachable path."
       }
     },
     {
@@ -2148,7 +2485,7 @@
       "candidate": {
         "name": "SQTokenStaking hardcoded backdoor beneficiary",
         "chain": "bsc",
-        "date": "2026-05-12T02:11:11Z",
+        "date": "2026-05-12T10:11:11Z",
         "candidateVictim": "0x404404a845fff0201f3a4d419b4839fc419c99f7",
         "exploitTx": "0x1bae633eda9b3d98999ea116bc403712eaa07093ec32bd6d559085cc4607f5b8"
       },
@@ -24488,8 +24825,11 @@
         }
       ],
       "disposition": {
-        "status": "pending",
-        "reason": "The pinned PoC matches its seed row only through an identifier several PoCs share, so the row cannot show which campaign this PoC reproduces. An incident must cite this PoC path or declare the lead."
+        "status": "included",
+        "incidentIds": [
+          "eip155:8453:0xf0f94d7fc627793ec770c46d117c4934be95fa0b0c8433b820e363d17d8b4dad"
+        ],
+        "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
     },
     {
@@ -24702,9 +25042,15 @@
         "kind": "no-dataset-row",
         "hint": "@KeyInfo - Total Lost : 1,603.99 WBNB | Victim : 0xbe8351c14e5108a57a545dfa8669fa31aa6adc68 | Liquidity Setup Tx : https://bscscan.com/tx/0x2bb7f486730d7d6a271a2a0c18cec45c89f447a95e956415f18d2a0671ec789c"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:128"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "The source snapshot has no seed row or explicit adjudication."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:128"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -25191,8 +25537,11 @@
         }
       ],
       "disposition": {
-        "status": "pending",
-        "reason": "A linked seed code-bug row exists, but no matching primary incident id was found."
+        "status": "included",
+        "incidentIds": [
+          "eip155:137:0x6dc8a7fba1303faef3ec7afa770b90b17ec5ecd73b51229277a9b0492e285796"
+        ],
+        "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
     },
     {
@@ -25772,11 +26121,11 @@
         }
       ],
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:14"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
     },
     {
@@ -47493,8 +47842,11 @@
         ]
       },
       "disposition": {
-        "status": "pending",
-        "reason": "The seed row is classified as an EVM code bug, but its primary incident claims are incomplete."
+        "status": "included",
+        "incidentIds": [
+          "eip155:8453:0xf0f94d7fc627793ec770c46d117c4934be95fa0b0c8433b820e363d17d8b4dad"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -48188,8 +48540,11 @@
         ]
       },
       "disposition": {
-        "status": "pending",
-        "reason": "The seed row is classified as an EVM code bug, but its primary incident claims are incomplete."
+        "status": "included",
+        "incidentIds": [
+          "eip155:137:0x6dc8a7fba1303faef3ec7afa770b90b17ec5ecd73b51229277a9b0492e285796"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -56201,11 +56556,11 @@
         ]
       },
       "disposition": {
-        "status": "pending",
-        "adjudicationIds": [
-          "adjudication:14"
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12"
         ],
-        "reason": "An exact adjudication reopened this lead under the causal critical-state rule."
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -63741,7 +64096,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 605
+        "line": 608
       },
       "candidate": {
         "date": "2016-06-17",
@@ -63762,7 +64117,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 599
+        "line": 602
       },
       "candidate": {
         "date": "2020-02-15",
@@ -63780,7 +64135,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 598
+        "line": 601
       },
       "candidate": {
         "date": "2020-02-18",
@@ -63801,7 +64156,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 597
+        "line": 600
       },
       "candidate": {
         "date": "2020-04-18",
@@ -63819,7 +64174,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 596
+        "line": 599
       },
       "candidate": {
         "date": "2020-04-19",
@@ -63840,7 +64195,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 595
+        "line": 598
       },
       "candidate": {
         "date": "2020-08-05",
@@ -63861,7 +64216,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 594
+        "line": 597
       },
       "candidate": {
         "date": "2020-09-15",
@@ -63882,7 +64237,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 593
+        "line": 596
       },
       "candidate": {
         "date": "2020-09-26",
@@ -63906,7 +64261,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 592
+        "line": 595
       },
       "candidate": {
         "date": "2020-09-29",
@@ -63927,7 +64282,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 591
+        "line": 594
       },
       "candidate": {
         "date": "2020-10-26",
@@ -63957,7 +64312,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 590
+        "line": 593
       },
       "candidate": {
         "date": "2020-11-06",
@@ -63978,7 +64333,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 589
+        "line": 592
       },
       "candidate": {
         "date": "2020-11-12",
@@ -63999,7 +64354,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 588
+        "line": 591
       },
       "candidate": {
         "date": "2020-11-14",
@@ -64020,7 +64375,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 587
+        "line": 590
       },
       "candidate": {
         "date": "2020-11-17",
@@ -64050,7 +64405,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 586
+        "line": 589
       },
       "candidate": {
         "date": "2020-11-21",
@@ -64080,7 +64435,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 585
+        "line": 588
       },
       "candidate": {
         "date": "2020-12-14",
@@ -64101,7 +64456,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 584
+        "line": 587
       },
       "candidate": {
         "date": "2020-12-17",
@@ -64131,7 +64486,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 583
+        "line": 586
       },
       "candidate": {
         "date": "2020-12-28",
@@ -64161,7 +64516,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 577
+        "line": 580
       },
       "candidate": {
         "date": "2021-02-13",
@@ -64182,7 +64537,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 576
+        "line": 579
       },
       "candidate": {
         "date": "2021-02-27",
@@ -64212,7 +64567,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 575
+        "line": 578
       },
       "candidate": {
         "date": "2021-03-04",
@@ -64236,7 +64591,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 574
+        "line": 577
       },
       "candidate": {
         "date": "2021-03-05",
@@ -64244,9 +64599,15 @@
         "reportedLoss": "approximately $3m realized",
         "mechanism": "unauthorized mint"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:122"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:122"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -64254,7 +64615,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 573
+        "line": 576
       },
       "candidate": {
         "date": "2021-03-08",
@@ -64284,7 +64645,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 572
+        "line": 575
       },
       "candidate": {
         "date": "2021-03-14",
@@ -64302,7 +64663,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 571
+        "line": 574
       },
       "candidate": {
         "date": "2021-04-19",
@@ -64326,7 +64687,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 570
+        "line": 573
       },
       "candidate": {
         "date": "2021-04-28",
@@ -64356,7 +64717,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 569
+        "line": 572
       },
       "candidate": {
         "date": "2021-05-02",
@@ -64377,7 +64738,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 568
+        "line": 571
       },
       "candidate": {
         "date": "2021-05-05",
@@ -64398,7 +64759,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 567
+        "line": 570
       },
       "candidate": {
         "date": "2021-05-12",
@@ -64419,7 +64780,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 566
+        "line": 569
       },
       "candidate": {
         "date": "2021-05-14",
@@ -64443,7 +64804,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 565
+        "line": 568
       },
       "candidate": {
         "date": "2021-05-18",
@@ -64467,7 +64828,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 564
+        "line": 567
       },
       "candidate": {
         "date": "2021-05-20",
@@ -64488,7 +64849,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 563
+        "line": 566
       },
       "candidate": {
         "date": "2021-05-28",
@@ -64509,7 +64870,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 562
+        "line": 565
       },
       "candidate": {
         "date": "2021-05-29",
@@ -64530,7 +64891,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 561
+        "line": 564
       },
       "candidate": {
         "date": "2021-06-22",
@@ -64554,7 +64915,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 560
+        "line": 563
       },
       "candidate": {
         "date": "2021-06-23",
@@ -64575,7 +64936,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 630
+        "line": 633
       },
       "candidate": {
         "date": "2021-06-29",
@@ -64593,7 +64954,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 631
+        "line": 634
       },
       "candidate": {
         "date": "2021-06",
@@ -64611,7 +64972,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 556
+        "line": 559
       },
       "candidate": {
         "date": "2021-07-10",
@@ -64635,7 +64996,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 555
+        "line": 558
       },
       "candidate": {
         "date": "2021-07-10",
@@ -64665,7 +65026,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 554
+        "line": 557
       },
       "candidate": {
         "date": "2021-07-15",
@@ -64689,7 +65050,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 553
+        "line": 556
       },
       "candidate": {
         "date": "2021-07-22",
@@ -64713,7 +65074,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 552
+        "line": 555
       },
       "candidate": {
         "date": "2021-08-10",
@@ -64743,7 +65104,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 551
+        "line": 554
       },
       "candidate": {
         "date": "2021-08-12",
@@ -64767,7 +65128,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 550
+        "line": 553
       },
       "candidate": {
         "date": "2021-08-19",
@@ -64791,7 +65152,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 549
+        "line": 552
       },
       "candidate": {
         "date": "2021-08-29",
@@ -64815,7 +65176,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 548
+        "line": 551
       },
       "candidate": {
         "date": "2021-09-19",
@@ -64839,7 +65200,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 547
+        "line": 550
       },
       "candidate": {
         "date": "2021-09-20",
@@ -64860,7 +65221,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 546
+        "line": 549
       },
       "candidate": {
         "date": "2021-10-14",
@@ -64890,7 +65251,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 545
+        "line": 548
       },
       "candidate": {
         "date": "2021-10-30",
@@ -64914,7 +65275,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 629
+        "line": 632
       },
       "candidate": {
         "date": "2021-10-31",
@@ -64932,7 +65293,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 544
+        "line": 547
       },
       "candidate": {
         "date": "2021-11-05",
@@ -64956,7 +65317,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 543
+        "line": 546
       },
       "candidate": {
         "date": "2021-11-30",
@@ -64986,7 +65347,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 542
+        "line": 545
       },
       "candidate": {
         "date": "2021-12-04",
@@ -65010,7 +65371,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 628
+        "line": 631
       },
       "candidate": {
         "date": "2021-12-04",
@@ -65031,7 +65392,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 541
+        "line": 544
       },
       "candidate": {
         "date": "2021-12-08",
@@ -65039,9 +65400,15 @@
         "reportedLoss": "approximately $5m",
         "mechanism": "integer-overflow or infinite LP mint"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:126"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:126"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -65049,7 +65416,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 540
+        "line": 543
       },
       "candidate": {
         "date": "2021-12-11",
@@ -65073,7 +65440,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 539
+        "line": 542
       },
       "candidate": {
         "date": "2021-12-13",
@@ -65097,7 +65464,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 538
+        "line": 541
       },
       "candidate": {
         "date": "2021-12-18",
@@ -65127,7 +65494,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 536
+        "line": 539
       },
       "candidate": {
         "date": "2021-12-21",
@@ -65145,7 +65512,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 537
+        "line": 540
       },
       "candidate": {
         "date": "2021-12-21",
@@ -65175,7 +65542,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 530
+        "line": 533
       },
       "candidate": {
         "date": "2022-01-10",
@@ -65199,7 +65566,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 529
+        "line": 532
       },
       "candidate": {
         "date": "2022-01-17",
@@ -65223,7 +65590,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 528
+        "line": 531
       },
       "candidate": {
         "date": "2022-02-02",
@@ -65247,7 +65614,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 527
+        "line": 530
       },
       "candidate": {
         "date": "2022-02-05",
@@ -65268,7 +65635,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 526
+        "line": 529
       },
       "candidate": {
         "date": "2022-02-10",
@@ -65292,7 +65659,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 525
+        "line": 528
       },
       "candidate": {
         "date": "2022-03-12",
@@ -65313,7 +65680,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 524
+        "line": 527
       },
       "candidate": {
         "date": "2022-03-15",
@@ -65322,8 +65689,11 @@
         "mechanism": "oracle manipulation"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:250:0xe374495036fac18aa5b1a497a17e70f256c4d3d416dd1408c026f3f5c70a3a9c"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -65331,7 +65701,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 523
+        "line": 526
       },
       "candidate": {
         "date": "2022-03-23",
@@ -65355,7 +65725,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 522
+        "line": 525
       },
       "candidate": {
         "date": "2022-04-02",
@@ -65376,7 +65746,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 627
+        "line": 630
       },
       "candidate": {
         "date": "2022-04-11",
@@ -65394,7 +65764,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 521
+        "line": 524
       },
       "candidate": {
         "date": "2022-04-12",
@@ -65424,7 +65794,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 520
+        "line": 523
       },
       "candidate": {
         "date": "2022-04-28",
@@ -65445,7 +65815,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 519
+        "line": 522
       },
       "candidate": {
         "date": "2022-04-30",
@@ -65475,7 +65845,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 518
+        "line": 521
       },
       "candidate": {
         "date": "2022-05-09",
@@ -65493,7 +65863,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 517
+        "line": 520
       },
       "candidate": {
         "date": "2022-05-16",
@@ -65517,7 +65887,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 626
+        "line": 629
       },
       "candidate": {
         "date": "2022-06-05",
@@ -65525,9 +65895,15 @@
         "reportedLoss": "20m OP; approximately $30m gross",
         "mechanism": "attacker replayed a pre-EIP-155 Safe factory deployment and obtained the undeployed Optimism address during 2022-06-05–08; most tokens were returned"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:135"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:135"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -65535,7 +65911,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 516
+        "line": 519
       },
       "candidate": {
         "date": "2022-06-08",
@@ -65565,7 +65941,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 515
+        "line": 518
       },
       "candidate": {
         "date": "2022-06-08",
@@ -65573,9 +65949,15 @@
         "reportedLoss": "approximately $5m",
         "mechanism": "liquidity-pool share calculation bug"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:136"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:136"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -65583,7 +65965,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 514
+        "line": 517
       },
       "candidate": {
         "date": "2022-07-03",
@@ -65607,7 +65989,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 513
+        "line": 516
       },
       "candidate": {
         "date": "2022-07-23",
@@ -65628,7 +66010,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 512
+        "line": 515
       },
       "candidate": {
         "date": "2022-07-28",
@@ -65636,9 +66018,15 @@
         "reportedLoss": "approximately $3.5m",
         "mechanism": "oracle manipulation"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:137"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:137"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -65646,7 +66034,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 511
+        "line": 514
       },
       "candidate": {
         "date": "2022-08-02",
@@ -65670,7 +66058,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 625
+        "line": 628
       },
       "candidate": {
         "date": "2022-09-16",
@@ -65688,7 +66076,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 624
+        "line": 627
       },
       "candidate": {
         "date": "2022-09-21",
@@ -65706,7 +66094,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 623
+        "line": 626
       },
       "candidate": {
         "date": "2022-10-11",
@@ -65724,7 +66112,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 510
+        "line": 513
       },
       "candidate": {
         "date": "2022-10-18",
@@ -65748,7 +66136,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 509
+        "line": 512
       },
       "candidate": {
         "date": "2022-10-21",
@@ -65766,7 +66154,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 508
+        "line": 511
       },
       "candidate": {
         "date": "2022-11-02",
@@ -65790,7 +66178,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 622
+        "line": 625
       },
       "candidate": {
         "date": "2022-11-03",
@@ -65798,9 +66186,15 @@
         "reportedLoss": "more than $1bn nominal mint; approximately $10.8m market impact",
         "mechanism": "misconfigured token reportedly enabled takeover or unauthorized minting before a defensive mint and deprecation; isolate the initial attacker boundary"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:123"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:123"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -65808,7 +66202,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 507
+        "line": 510
       },
       "candidate": {
         "date": "2022-11-10",
@@ -65838,7 +66232,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 506
+        "line": 509
       },
       "candidate": {
         "date": "2022-11-11",
@@ -65862,7 +66256,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 505
+        "line": 508
       },
       "candidate": {
         "date": "2022-12-10",
@@ -65892,7 +66286,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 504
+        "line": 507
       },
       "candidate": {
         "date": "2022-12-16",
@@ -65910,7 +66304,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 503
+        "line": 506
       },
       "candidate": {
         "date": "2022-12-23",
@@ -65940,7 +66334,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 502
+        "line": 505
       },
       "candidate": {
         "date": "2022-12-26",
@@ -65964,7 +66358,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 495
+        "line": 498
       },
       "candidate": {
         "date": "2023-02-02",
@@ -65985,7 +66379,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 496
+        "line": 499
       },
       "candidate": {
         "date": "2023-02-02",
@@ -66015,7 +66409,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 621
+        "line": 624
       },
       "candidate": {
         "date": "2023-02-15",
@@ -66036,7 +66430,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 494
+        "line": 497
       },
       "candidate": {
         "date": "2023-02-21",
@@ -66054,7 +66448,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 493
+        "line": 496
       },
       "candidate": {
         "date": "2023-02-27",
@@ -66078,7 +66472,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 492
+        "line": 495
       },
       "candidate": {
         "date": "2023-03-07",
@@ -66096,7 +66490,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 491
+        "line": 494
       },
       "candidate": {
         "date": "2023-03-27",
@@ -66114,7 +66508,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 490
+        "line": 493
       },
       "candidate": {
         "date": "2023-03-28",
@@ -66144,7 +66538,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 489
+        "line": 492
       },
       "candidate": {
         "date": "2023-04-02",
@@ -66165,7 +66559,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 488
+        "line": 491
       },
       "candidate": {
         "date": "2023-04-04",
@@ -66195,7 +66589,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 487
+        "line": 490
       },
       "candidate": {
         "date": "2023-04-09",
@@ -66216,7 +66610,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 485
+        "line": 488
       },
       "candidate": {
         "date": "2023-04-10",
@@ -66240,7 +66634,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 486
+        "line": 489
       },
       "candidate": {
         "date": "2023-04-10",
@@ -66258,7 +66652,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 484
+        "line": 487
       },
       "candidate": {
         "date": "2023-04-14",
@@ -66282,7 +66676,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 483
+        "line": 486
       },
       "candidate": {
         "date": "2023-04-26",
@@ -66300,7 +66694,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 482
+        "line": 485
       },
       "candidate": {
         "date": "2023-04-28",
@@ -66330,7 +66724,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 481
+        "line": 484
       },
       "candidate": {
         "date": "2023-05-05",
@@ -66360,7 +66754,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 480
+        "line": 483
       },
       "candidate": {
         "date": "2023-05-19",
@@ -66378,7 +66772,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 479
+        "line": 482
       },
       "candidate": {
         "date": "2023-05-20",
@@ -66399,7 +66793,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 478
+        "line": 481
       },
       "candidate": {
         "date": "2023-05-23",
@@ -66423,7 +66817,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 477
+        "line": 480
       },
       "candidate": {
         "date": "2023-06-03",
@@ -66447,7 +66841,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 476
+        "line": 479
       },
       "candidate": {
         "date": "2023-06-23",
@@ -66465,7 +66859,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 472
+        "line": 475
       },
       "candidate": {
         "date": "2023-07-22",
@@ -66489,7 +66883,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 471
+        "line": 474
       },
       "candidate": {
         "date": "2023-07-23",
@@ -66513,7 +66907,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 469
+        "line": 472
       },
       "candidate": {
         "date": "2023-07-30",
@@ -66531,7 +66925,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 470
+        "line": 473
       },
       "candidate": {
         "date": "2023-07-30",
@@ -66549,7 +66943,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 468
+        "line": 471
       },
       "candidate": {
         "date": "2023-08-18",
@@ -66567,7 +66961,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 467
+        "line": 470
       },
       "candidate": {
         "date": "2023-09-04",
@@ -66591,7 +66985,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 466
+        "line": 469
       },
       "candidate": {
         "date": "2023-09-12",
@@ -66615,7 +67009,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 465
+        "line": 468
       },
       "candidate": {
         "date": "2023-09-23",
@@ -66639,7 +67033,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 464
+        "line": 467
       },
       "candidate": {
         "date": "2023-09-24",
@@ -66663,7 +67057,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 463
+        "line": 466
       },
       "candidate": {
         "date": "2023-10-07",
@@ -66693,7 +67087,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 462
+        "line": 465
       },
       "candidate": {
         "date": "2023-10-31",
@@ -66711,7 +67105,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 461
+        "line": 464
       },
       "candidate": {
         "date": "2023-11-10",
@@ -66735,7 +67129,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 460
+        "line": 463
       },
       "candidate": {
         "date": "2023-11-19",
@@ -66759,7 +67153,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 459
+        "line": 462
       },
       "candidate": {
         "date": "2023-11-22",
@@ -66783,7 +67177,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 457
+        "line": 460
       },
       "candidate": {
         "date": "2023-12-13",
@@ -66801,7 +67195,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 458
+        "line": 461
       },
       "candidate": {
         "date": "2023-12-13",
@@ -66819,7 +67213,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 451
+        "line": 454
       },
       "candidate": {
         "date": "2024-01-16",
@@ -66827,9 +67221,15 @@
         "reportedLoss": "$2.7m",
         "mechanism": "payout-contract exploit"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:140"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:140"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -66837,7 +67237,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 450
+        "line": 453
       },
       "candidate": {
         "date": "2024-01-17",
@@ -66855,7 +67255,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 449
+        "line": 452
       },
       "candidate": {
         "date": "2024-01-18",
@@ -66873,7 +67273,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 448
+        "line": 451
       },
       "candidate": {
         "date": "2024-01-22",
@@ -66891,7 +67291,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 447
+        "line": 450
       },
       "candidate": {
         "date": "2024-01-22",
@@ -66918,7 +67318,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 445
+        "line": 448
       },
       "candidate": {
         "date": "2024-01-23",
@@ -66942,7 +67342,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 446
+        "line": 449
       },
       "candidate": {
         "date": "2024-01-23",
@@ -66960,7 +67360,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 443
+        "line": 446
       },
       "candidate": {
         "date": "2024-01-25",
@@ -66978,7 +67378,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 444
+        "line": 447
       },
       "candidate": {
         "date": "2024-01-25",
@@ -66996,7 +67396,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 442
+        "line": 445
       },
       "candidate": {
         "date": "2024-01-27",
@@ -67026,7 +67426,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 441
+        "line": 444
       },
       "candidate": {
         "date": "2024-01-27",
@@ -67050,7 +67450,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 440
+        "line": 443
       },
       "candidate": {
         "date": "2024-01-28",
@@ -67068,7 +67468,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 439
+        "line": 442
       },
       "candidate": {
         "date": "2024-01-29",
@@ -67089,7 +67489,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 438
+        "line": 441
       },
       "candidate": {
         "date": "2024-02-08",
@@ -67107,7 +67507,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 437
+        "line": 440
       },
       "candidate": {
         "date": "2024-02-09",
@@ -67140,7 +67540,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 436
+        "line": 439
       },
       "candidate": {
         "date": "2024-02-14",
@@ -67158,7 +67558,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 435
+        "line": 438
       },
       "candidate": {
         "date": "2024-02-14",
@@ -67179,7 +67579,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 434
+        "line": 437
       },
       "candidate": {
         "date": "2024-02-16",
@@ -67203,7 +67603,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 433
+        "line": 436
       },
       "candidate": {
         "date": "2024-02-16",
@@ -67221,7 +67621,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 432
+        "line": 435
       },
       "candidate": {
         "date": "2024-02-19",
@@ -67251,7 +67651,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 431
+        "line": 434
       },
       "candidate": {
         "date": "2024-02-23",
@@ -67275,7 +67675,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 430
+        "line": 433
       },
       "candidate": {
         "date": "2024-02-24",
@@ -67296,7 +67696,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 429
+        "line": 432
       },
       "candidate": {
         "date": "2024-02-25",
@@ -67314,7 +67714,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 428
+        "line": 431
       },
       "candidate": {
         "date": "2024-02-28",
@@ -67332,7 +67732,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 424
+        "line": 427
       },
       "candidate": {
         "date": "2024-03-17",
@@ -67350,7 +67750,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 422
+        "line": 425
       },
       "candidate": {
         "date": "2024-03-20",
@@ -67368,7 +67768,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 423
+        "line": 426
       },
       "candidate": {
         "date": "2024-03-20",
@@ -67386,7 +67786,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 421
+        "line": 424
       },
       "candidate": {
         "date": "2024-03-20",
@@ -67404,7 +67804,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 419
+        "line": 422
       },
       "candidate": {
         "date": "2024-03-21",
@@ -67422,7 +67822,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 420
+        "line": 423
       },
       "candidate": {
         "date": "2024-03-21",
@@ -67440,7 +67840,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 418
+        "line": 421
       },
       "candidate": {
         "date": "2024-03-22",
@@ -67458,7 +67858,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 417
+        "line": 420
       },
       "candidate": {
         "date": "2024-03-22",
@@ -67479,7 +67879,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 416
+        "line": 419
       },
       "candidate": {
         "date": "2024-03-24",
@@ -67503,7 +67903,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 415
+        "line": 418
       },
       "candidate": {
         "date": "2024-03-25",
@@ -67530,7 +67930,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 414
+        "line": 417
       },
       "candidate": {
         "date": "2024-03-27",
@@ -67554,7 +67954,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 413
+        "line": 416
       },
       "candidate": {
         "date": "2024-03-29",
@@ -67572,7 +67972,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 412
+        "line": 415
       },
       "candidate": {
         "date": "2024-03-30",
@@ -67590,7 +67990,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 411
+        "line": 414
       },
       "candidate": {
         "date": "2024-03-31",
@@ -67608,7 +68008,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 410
+        "line": 413
       },
       "candidate": {
         "date": "2024-04-01",
@@ -67638,7 +68038,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 409
+        "line": 412
       },
       "candidate": {
         "date": "2024-04-03",
@@ -67656,7 +68056,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 408
+        "line": 411
       },
       "candidate": {
         "date": "2024-04-04",
@@ -67674,7 +68074,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 407
+        "line": 410
       },
       "candidate": {
         "date": "2024-04-07",
@@ -67692,7 +68092,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 405
+        "line": 408
       },
       "candidate": {
         "date": "2024-04-08",
@@ -67710,7 +68110,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 406
+        "line": 409
       },
       "candidate": {
         "date": "2024-04-08",
@@ -67728,7 +68128,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 403
+        "line": 406
       },
       "candidate": {
         "date": "2024-04-09",
@@ -67746,7 +68146,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 404
+        "line": 407
       },
       "candidate": {
         "date": "2024-04-09",
@@ -67764,7 +68164,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 402
+        "line": 405
       },
       "candidate": {
         "date": "2024-04-12",
@@ -67782,7 +68182,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 401
+        "line": 404
       },
       "candidate": {
         "date": "2024-04-14",
@@ -67800,7 +68200,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 620
+        "line": 623
       },
       "candidate": {
         "date": "2024-04-23",
@@ -67818,7 +68218,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 400
+        "line": 403
       },
       "candidate": {
         "date": "2024-04-28",
@@ -67836,7 +68236,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 399
+        "line": 402
       },
       "candidate": {
         "date": "2024-04-29",
@@ -67860,7 +68260,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 392
+        "line": 395
       },
       "candidate": {
         "date": "2024-05-06",
@@ -67878,7 +68278,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 393
+        "line": 396
       },
       "candidate": {
         "date": "2024-05-06",
@@ -67908,7 +68308,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 394
+        "line": 397
       },
       "candidate": {
         "date": "2024-05-06",
@@ -67926,7 +68326,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 395
+        "line": 398
       },
       "candidate": {
         "date": "2024-05-06",
@@ -67956,7 +68356,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 391
+        "line": 394
       },
       "candidate": {
         "date": "2024-05-09",
@@ -67974,7 +68374,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 390
+        "line": 393
       },
       "candidate": {
         "date": "2024-05-20",
@@ -68007,7 +68407,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 388
+        "line": 391
       },
       "candidate": {
         "date": "2024-05-31",
@@ -68031,7 +68431,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 389
+        "line": 392
       },
       "candidate": {
         "date": "2024-05-31",
@@ -68052,7 +68452,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 387
+        "line": 390
       },
       "candidate": {
         "date": "2024-06-04",
@@ -68073,7 +68473,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 386
+        "line": 389
       },
       "candidate": {
         "date": "2024-06-08",
@@ -68091,7 +68491,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 384
+        "line": 387
       },
       "candidate": {
         "date": "2024-06-09",
@@ -68109,7 +68509,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 385
+        "line": 388
       },
       "candidate": {
         "date": "2024-06-09",
@@ -68133,7 +68533,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 382
+        "line": 385
       },
       "candidate": {
         "date": "2024-06-10",
@@ -68151,7 +68551,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 383
+        "line": 386
       },
       "candidate": {
         "date": "2024-06-10",
@@ -68169,7 +68569,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 381
+        "line": 384
       },
       "candidate": {
         "date": "2024-06-14",
@@ -68187,7 +68587,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 380
+        "line": 383
       },
       "candidate": {
         "date": "2024-06-14",
@@ -68211,7 +68611,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 379
+        "line": 382
       },
       "candidate": {
         "date": "2024-06-17",
@@ -68229,7 +68629,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 378
+        "line": 381
       },
       "candidate": {
         "date": "2024-06-22",
@@ -68253,7 +68653,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 377
+        "line": 380
       },
       "candidate": {
         "date": "2024-06-22",
@@ -68271,7 +68671,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 376
+        "line": 379
       },
       "candidate": {
         "date": "2024-06-23",
@@ -68289,7 +68689,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 371
+        "line": 374
       },
       "candidate": {
         "date": "2024-07-02",
@@ -68313,7 +68713,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 372
+        "line": 375
       },
       "candidate": {
         "date": "2024-07-02",
@@ -68331,7 +68731,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 370
+        "line": 373
       },
       "candidate": {
         "date": "2024-07-11",
@@ -68349,7 +68749,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 369
+        "line": 372
       },
       "candidate": {
         "date": "2024-07-11",
@@ -68379,7 +68779,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 368
+        "line": 371
       },
       "candidate": {
         "date": "2024-07-15",
@@ -68400,7 +68800,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 367
+        "line": 370
       },
       "candidate": {
         "date": "2024-07-16",
@@ -68418,7 +68818,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 366
+        "line": 369
       },
       "candidate": {
         "date": "2024-07-18",
@@ -68442,7 +68842,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 365
+        "line": 368
       },
       "candidate": {
         "date": "2024-07-19",
@@ -68475,7 +68875,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 364
+        "line": 367
       },
       "candidate": {
         "date": "2024-07-21",
@@ -68493,7 +68893,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 363
+        "line": 366
       },
       "candidate": {
         "date": "2024-07-21",
@@ -68511,7 +68911,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 361
+        "line": 364
       },
       "candidate": {
         "date": "2024-07-23",
@@ -68529,7 +68929,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 362
+        "line": 365
       },
       "candidate": {
         "date": "2024-07-23",
@@ -68547,7 +68947,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 360
+        "line": 363
       },
       "candidate": {
         "date": "2024-07-25",
@@ -68565,7 +68965,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 359
+        "line": 362
       },
       "candidate": {
         "date": "2024-07-26",
@@ -68583,7 +68983,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 358
+        "line": 361
       },
       "candidate": {
         "date": "2024-07-30",
@@ -68601,7 +69001,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 357
+        "line": 360
       },
       "candidate": {
         "date": "2024-07-31",
@@ -68619,7 +69019,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 356
+        "line": 359
       },
       "candidate": {
         "date": "2024-08-01",
@@ -68649,7 +69049,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 355
+        "line": 358
       },
       "candidate": {
         "date": "2024-08-06",
@@ -68679,7 +69079,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 354
+        "line": 357
       },
       "candidate": {
         "date": "2024-08-06",
@@ -68700,7 +69100,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 353
+        "line": 356
       },
       "candidate": {
         "date": "2024-08-07",
@@ -68718,7 +69118,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 352
+        "line": 355
       },
       "candidate": {
         "date": "2024-08-12",
@@ -68748,7 +69148,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 351
+        "line": 354
       },
       "candidate": {
         "date": "2024-08-28",
@@ -68766,7 +69166,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 347
+        "line": 350
       },
       "candidate": {
         "date": "2024-09-03",
@@ -68796,7 +69196,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 346
+        "line": 349
       },
       "candidate": {
         "date": "2024-09-10",
@@ -68826,7 +69226,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 344
+        "line": 347
       },
       "candidate": {
         "date": "2024-09-11",
@@ -68850,7 +69250,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 345
+        "line": 348
       },
       "candidate": {
         "date": "2024-09-11",
@@ -68868,7 +69268,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 343
+        "line": 346
       },
       "candidate": {
         "date": "2024-09-13",
@@ -68886,7 +69286,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 342
+        "line": 345
       },
       "candidate": {
         "date": "2024-09-19",
@@ -68904,7 +69304,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 341
+        "line": 344
       },
       "candidate": {
         "date": "2024-09-20",
@@ -68928,7 +69328,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 340
+        "line": 343
       },
       "candidate": {
         "date": "2024-09-22",
@@ -68958,7 +69358,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 339
+        "line": 342
       },
       "candidate": {
         "date": "2024-09-26",
@@ -68976,7 +69376,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 338
+        "line": 341
       },
       "candidate": {
         "date": "2024-09-26",
@@ -68994,7 +69394,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 336
+        "line": 339
       },
       "candidate": {
         "date": "2024-10-18",
@@ -69018,7 +69418,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 337
+        "line": 340
       },
       "candidate": {
         "date": "2024-10-18",
@@ -69036,7 +69436,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 332
+        "line": 335
       },
       "candidate": {
         "date": "2024-10-24",
@@ -69054,7 +69454,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 331
+        "line": 334
       },
       "candidate": {
         "date": "2024-10-24",
@@ -69072,7 +69472,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 330
+        "line": 333
       },
       "candidate": {
         "date": "2024-10-25",
@@ -69090,7 +69490,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 329
+        "line": 332
       },
       "candidate": {
         "date": "2024-10-30",
@@ -69108,7 +69508,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 328
+        "line": 331
       },
       "candidate": {
         "date": "2024-10-31",
@@ -69132,7 +69532,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 327
+        "line": 330
       },
       "candidate": {
         "date": "2024-10-31",
@@ -69150,7 +69550,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 326
+        "line": 329
       },
       "candidate": {
         "date": "2024-11-04",
@@ -69168,7 +69568,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 325
+        "line": 328
       },
       "candidate": {
         "date": "2024-11-08",
@@ -69186,7 +69586,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 324
+        "line": 327
       },
       "candidate": {
         "date": "2024-11-10",
@@ -69204,7 +69604,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 323
+        "line": 326
       },
       "candidate": {
         "date": "2024-12-02",
@@ -69222,7 +69622,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 322
+        "line": 325
       },
       "candidate": {
         "date": "2024-12-03",
@@ -69240,7 +69640,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 321
+        "line": 324
       },
       "candidate": {
         "date": "2024-12-04",
@@ -69258,7 +69658,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 320
+        "line": 323
       },
       "candidate": {
         "date": "2024-12-12",
@@ -69276,7 +69676,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 319
+        "line": 322
       },
       "candidate": {
         "date": "2024-12-17",
@@ -69306,7 +69706,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 318
+        "line": 321
       },
       "candidate": {
         "date": "2024-12-29",
@@ -69324,7 +69724,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 312
+        "line": 315
       },
       "candidate": {
         "date": "2025-01-01",
@@ -69342,7 +69742,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 311
+        "line": 314
       },
       "candidate": {
         "date": "2025-01-24",
@@ -69360,7 +69760,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 310
+        "line": 313
       },
       "candidate": {
         "date": "2025-02-04",
@@ -69384,7 +69784,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 309
+        "line": 312
       },
       "candidate": {
         "date": "2025-02-07",
@@ -69402,7 +69802,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 308
+        "line": 311
       },
       "candidate": {
         "date": "2025-02-08",
@@ -69420,7 +69820,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 307
+        "line": 310
       },
       "candidate": {
         "date": "2025-02-11",
@@ -69441,7 +69841,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 306
+        "line": 309
       },
       "candidate": {
         "date": "2025-02-18",
@@ -69459,7 +69859,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 305
+        "line": 308
       },
       "candidate": {
         "date": "2025-02-24",
@@ -69483,7 +69883,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 304
+        "line": 307
       },
       "candidate": {
         "date": "2025-02-28",
@@ -69491,9 +69891,15 @@
         "reportedLoss": "$6.22m",
         "mechanism": "bridge-vault compromise"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:129"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:129"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -69501,7 +69907,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 300
+        "line": 303
       },
       "candidate": {
         "date": "2025-03-01",
@@ -69519,7 +69925,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 299
+        "line": 302
       },
       "candidate": {
         "date": "2025-03-05",
@@ -69537,7 +69943,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 298
+        "line": 301
       },
       "candidate": {
         "date": "2025-03-14",
@@ -69555,7 +69961,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 296
+        "line": 299
       },
       "candidate": {
         "date": "2025-03-18",
@@ -69573,7 +69979,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 297
+        "line": 300
       },
       "candidate": {
         "date": "2025-03-18",
@@ -69591,7 +69997,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 295
+        "line": 298
       },
       "candidate": {
         "date": "2025-03-21",
@@ -69624,7 +70030,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 294
+        "line": 297
       },
       "candidate": {
         "date": "2025-03-28",
@@ -69642,7 +70048,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 293
+        "line": 296
       },
       "candidate": {
         "date": "2025-04-01",
@@ -69666,7 +70072,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 289
+        "line": 292
       },
       "candidate": {
         "date": "2025-04-11",
@@ -69684,7 +70090,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 288
+        "line": 291
       },
       "candidate": {
         "date": "2025-04-13",
@@ -69702,7 +70108,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 287
+        "line": 290
       },
       "candidate": {
         "date": "2025-04-15",
@@ -69723,7 +70129,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 286
+        "line": 289
       },
       "candidate": {
         "date": "2025-04-16",
@@ -69741,7 +70147,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 285
+        "line": 288
       },
       "candidate": {
         "date": "2025-04-18",
@@ -69759,7 +70165,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 284
+        "line": 287
       },
       "candidate": {
         "date": "2025-04-24",
@@ -69777,7 +70183,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 282
+        "line": 285
       },
       "candidate": {
         "date": "2025-04-26",
@@ -69795,7 +70201,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 283
+        "line": 286
       },
       "candidate": {
         "date": "2025-04-26",
@@ -69813,7 +70219,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 281
+        "line": 284
       },
       "candidate": {
         "date": "2025-04-27",
@@ -69831,7 +70237,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 280
+        "line": 283
       },
       "candidate": {
         "date": "2025-05-08",
@@ -69855,7 +70261,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 279
+        "line": 282
       },
       "candidate": {
         "date": "2025-05-11",
@@ -69873,7 +70279,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 278
+        "line": 281
       },
       "candidate": {
         "date": "2025-05-16",
@@ -69891,7 +70297,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 277
+        "line": 280
       },
       "candidate": {
         "date": "2025-05-22",
@@ -69909,7 +70315,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 273
+        "line": 276
       },
       "candidate": {
         "date": "2025-05-28",
@@ -69939,7 +70345,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 272
+        "line": 275
       },
       "candidate": {
         "date": "2025-05-30",
@@ -69969,7 +70375,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 271
+        "line": 274
       },
       "candidate": {
         "date": "2025-06-01",
@@ -69987,7 +70393,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 270
+        "line": 273
       },
       "candidate": {
         "date": "2025-06-06",
@@ -70011,7 +70417,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 266
+        "line": 269
       },
       "candidate": {
         "date": "2025-06-18",
@@ -70035,7 +70441,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 265
+        "line": 268
       },
       "candidate": {
         "date": "2025-06-21",
@@ -70053,7 +70459,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 264
+        "line": 267
       },
       "candidate": {
         "date": "2025-06-25",
@@ -70071,7 +70477,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 262
+        "line": 265
       },
       "candidate": {
         "date": "2025-07-09",
@@ -70089,7 +70495,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 263
+        "line": 266
       },
       "candidate": {
         "date": "2025-07-09",
@@ -70110,7 +70516,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 261
+        "line": 264
       },
       "candidate": {
         "date": "2025-07-10",
@@ -70140,7 +70546,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 260
+        "line": 263
       },
       "candidate": {
         "date": "2025-07-12",
@@ -70161,7 +70567,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 259
+        "line": 262
       },
       "candidate": {
         "date": "2025-07-16",
@@ -70185,7 +70591,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 258
+        "line": 261
       },
       "candidate": {
         "date": "2025-07-19",
@@ -70209,7 +70615,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 257
+        "line": 260
       },
       "candidate": {
         "date": "2025-07-24",
@@ -70233,7 +70639,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 256
+        "line": 259
       },
       "candidate": {
         "date": "2025-07-28",
@@ -70263,7 +70669,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 618
+        "line": 621
       },
       "candidate": {
         "date": "2025-08-10",
@@ -70281,7 +70687,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 255
+        "line": 258
       },
       "candidate": {
         "date": "2025-08-12",
@@ -70305,7 +70711,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 254
+        "line": 257
       },
       "candidate": {
         "date": "2025-08-14",
@@ -70329,7 +70735,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 250
+        "line": 253
       },
       "candidate": {
         "date": "2025-08-16",
@@ -70359,7 +70765,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 249
+        "line": 252
       },
       "candidate": {
         "date": "2025-08-27",
@@ -70377,7 +70783,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 619
+        "line": 622
       },
       "candidate": {
         "date": "2025-08",
@@ -70395,7 +70801,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 248
+        "line": 251
       },
       "candidate": {
         "date": "2025-09-02",
@@ -70425,7 +70831,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 246
+        "line": 249
       },
       "candidate": {
         "date": "2025-09-08",
@@ -70443,7 +70849,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 247
+        "line": 250
       },
       "candidate": {
         "date": "2025-09-08",
@@ -70467,7 +70873,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 244
+        "line": 247
       },
       "candidate": {
         "date": "2025-09-12",
@@ -70485,7 +70891,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 245
+        "line": 248
       },
       "candidate": {
         "date": "2025-09-12",
@@ -70503,7 +70909,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 243
+        "line": 246
       },
       "candidate": {
         "date": "2025-09-14",
@@ -70527,7 +70933,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 242
+        "line": 245
       },
       "candidate": {
         "date": "2025-09-22",
@@ -70551,7 +70957,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 241
+        "line": 244
       },
       "candidate": {
         "date": "2025-09-23",
@@ -70569,7 +70975,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 239
+        "line": 242
       },
       "candidate": {
         "date": "2025-09-24",
@@ -70587,7 +70993,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 240
+        "line": 243
       },
       "candidate": {
         "date": "2025-09-24",
@@ -70611,7 +71017,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 238
+        "line": 241
       },
       "candidate": {
         "date": "2025-09-27",
@@ -70629,7 +71035,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 237
+        "line": 240
       },
       "candidate": {
         "date": "2025-09-28",
@@ -70647,7 +71053,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 233
+        "line": 236
       },
       "candidate": {
         "date": "2025-10-15",
@@ -70655,9 +71061,15 @@
         "reportedLoss": "$3.44m",
         "mechanism": "oracle-module exploit"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:138"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:138"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -70665,7 +71077,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 232
+        "line": 235
       },
       "candidate": {
         "date": "2025-10-19",
@@ -70689,7 +71101,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 231
+        "line": 234
       },
       "candidate": {
         "date": "2025-10-21",
@@ -70707,7 +71119,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 230
+        "line": 233
       },
       "candidate": {
         "date": "2025-10-28",
@@ -70725,7 +71137,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 229
+        "line": 232
       },
       "candidate": {
         "date": "2025-10-31",
@@ -70749,7 +71161,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 228
+        "line": 231
       },
       "candidate": {
         "date": "2025-11-04",
@@ -70767,7 +71179,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 224
+        "line": 227
       },
       "candidate": {
         "date": "2025-11-13",
@@ -70785,7 +71197,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 223
+        "line": 226
       },
       "candidate": {
         "date": "2025-11-20",
@@ -70803,7 +71215,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 222
+        "line": 225
       },
       "candidate": {
         "date": "2025-11-21",
@@ -70821,7 +71233,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 221
+        "line": 224
       },
       "candidate": {
         "date": "2025-11-23",
@@ -70839,7 +71251,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 220
+        "line": 223
       },
       "candidate": {
         "date": "2025-11-24",
@@ -70857,7 +71269,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 219
+        "line": 222
       },
       "candidate": {
         "date": "2025-11-27",
@@ -70881,7 +71293,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 218
+        "line": 221
       },
       "candidate": {
         "date": "2025-12-02",
@@ -70899,7 +71311,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 217
+        "line": 220
       },
       "candidate": {
         "date": "2025-12-04",
@@ -70929,7 +71341,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 617
+        "line": 620
       },
       "candidate": {
         "date": "2025-12-09",
@@ -70950,7 +71362,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 216
+        "line": 219
       },
       "candidate": {
         "date": "2025-12-11",
@@ -70968,7 +71380,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 214
+        "line": 217
       },
       "candidate": {
         "date": "2025-12-12",
@@ -70986,7 +71398,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 215
+        "line": 218
       },
       "candidate": {
         "date": "2025-12-12",
@@ -71004,7 +71416,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 210
+        "line": 213
       },
       "candidate": {
         "date": "2025-12-17",
@@ -71022,7 +71434,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 209
+        "line": 212
       },
       "candidate": {
         "date": "2025-12-26",
@@ -71046,7 +71458,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 207
+        "line": 210
       },
       "candidate": {
         "date": "2025-12-27",
@@ -71064,7 +71476,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 208
+        "line": 211
       },
       "candidate": {
         "date": "2025-12-27",
@@ -71072,9 +71484,15 @@
         "reportedLoss": "$3.9m",
         "mechanism": "execution-layer vulnerability"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:139"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:139"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -71082,7 +71500,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 206
+        "line": 209
       },
       "candidate": {
         "date": "2025-12-30",
@@ -71100,7 +71518,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 200
+        "line": 203
       },
       "candidate": {
         "date": "2026-01-01",
@@ -71130,7 +71548,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 199
+        "line": 202
       },
       "candidate": {
         "date": "2026-01-05",
@@ -71148,7 +71566,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 198
+        "line": 201
       },
       "candidate": {
         "date": "2026-01-05",
@@ -71166,7 +71584,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 197
+        "line": 200
       },
       "candidate": {
         "date": "2026-01-06",
@@ -71184,7 +71602,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 196
+        "line": 199
       },
       "candidate": {
         "date": "2026-01-07",
@@ -71202,7 +71620,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 195
+        "line": 198
       },
       "candidate": {
         "date": "2026-01-08",
@@ -71232,7 +71650,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 194
+        "line": 197
       },
       "candidate": {
         "date": "2026-01-14",
@@ -71250,7 +71668,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 190
+        "line": 193
       },
       "candidate": {
         "date": "2026-01-17",
@@ -71268,7 +71686,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 189
+        "line": 192
       },
       "candidate": {
         "date": "2026-01-19",
@@ -71298,7 +71716,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 188
+        "line": 191
       },
       "candidate": {
         "date": "2026-01-20",
@@ -71322,7 +71740,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 187
+        "line": 190
       },
       "candidate": {
         "date": "2026-01-21",
@@ -71340,7 +71758,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 186
+        "line": 189
       },
       "candidate": {
         "date": "2026-01-25",
@@ -71370,7 +71788,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 185
+        "line": 188
       },
       "candidate": {
         "date": "2026-01-25",
@@ -71400,7 +71818,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 184
+        "line": 187
       },
       "candidate": {
         "date": "2026-01-29",
@@ -71418,7 +71836,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 183
+        "line": 186
       },
       "candidate": {
         "date": "2026-01-31",
@@ -71442,7 +71860,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 182
+        "line": 185
       },
       "candidate": {
         "date": "2026-02-01",
@@ -71451,8 +71869,11 @@
         "mechanism": "cross-chain contract exploit"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x37d9b911ef710be851a2e08e1cfc61c2544db0f208faeade29ee98cc7506ccc2"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -71460,7 +71881,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 181
+        "line": 184
       },
       "candidate": {
         "date": "2026-02-20",
@@ -71478,7 +71899,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 180
+        "line": 183
       },
       "candidate": {
         "date": "2026-02-21",
@@ -71496,7 +71917,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 176
+        "line": 179
       },
       "candidate": {
         "date": "2026-02-22",
@@ -71520,7 +71941,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 175
+        "line": 178
       },
       "candidate": {
         "date": "2026-02-23",
@@ -71538,7 +71959,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 174
+        "line": 177
       },
       "candidate": {
         "date": "2026-02-25",
@@ -71556,7 +71977,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 173
+        "line": 176
       },
       "candidate": {
         "date": "2026-02-26",
@@ -71565,8 +71986,11 @@
         "mechanism": "contract exploit"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:8453:0xa88317a105155b464118431ce1073d272d8b43e87aba528a24b62075e48d929d"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -71574,7 +71998,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 172
+        "line": 175
       },
       "candidate": {
         "date": "2026-02-27",
@@ -71592,7 +72016,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 171
+        "line": 174
       },
       "candidate": {
         "date": "2026-03-02",
@@ -71610,7 +72034,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 170
+        "line": 173
       },
       "candidate": {
         "date": "2026-03-02",
@@ -71628,7 +72052,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 169
+        "line": 172
       },
       "candidate": {
         "date": "2026-03-06",
@@ -71637,8 +72061,11 @@
         "mechanism": "vault exploit"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x44e637c7d85190d376a52d89ca75f2d208089bb02b7c4708ad2aaae3a97a958d"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -71646,7 +72073,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 168
+        "line": 171
       },
       "candidate": {
         "date": "2026-03-07",
@@ -71664,7 +72091,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 167
+        "line": 170
       },
       "candidate": {
         "date": "2026-03-09",
@@ -71682,7 +72109,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 166
+        "line": 169
       },
       "candidate": {
         "date": "2026-03-10",
@@ -71700,7 +72127,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 165
+        "line": 168
       },
       "candidate": {
         "date": "2026-03-11",
@@ -71718,7 +72145,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 164
+        "line": 167
       },
       "candidate": {
         "date": "2026-03-12",
@@ -71736,7 +72163,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 162
+        "line": 165
       },
       "candidate": {
         "date": "2026-03-12",
@@ -71754,7 +72181,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 163
+        "line": 166
       },
       "candidate": {
         "date": "2026-03-12",
@@ -71772,7 +72199,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 616
+        "line": 619
       },
       "candidate": {
         "date": "2026-03-13",
@@ -71790,7 +72217,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 158
+        "line": 161
       },
       "candidate": {
         "date": "2026-03-22",
@@ -71814,7 +72241,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 156
+        "line": 159
       },
       "candidate": {
         "date": "2026-03-23",
@@ -71832,7 +72259,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 157
+        "line": 160
       },
       "candidate": {
         "date": "2026-03-23",
@@ -71850,7 +72277,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 155
+        "line": 158
       },
       "candidate": {
         "date": "2026-03-28",
@@ -71868,7 +72295,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 154
+        "line": 157
       },
       "candidate": {
         "date": "2026-03-31",
@@ -71886,7 +72313,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 153
+        "line": 156
       },
       "candidate": {
         "date": "2026-04-01",
@@ -71910,7 +72337,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 152
+        "line": 155
       },
       "candidate": {
         "date": "2026-04-02",
@@ -71928,7 +72355,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 151
+        "line": 154
       },
       "candidate": {
         "date": "2026-04-03",
@@ -71946,7 +72373,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 150
+        "line": 153
       },
       "candidate": {
         "date": "2026-04-04",
@@ -71964,7 +72391,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 146
+        "line": 149
       },
       "candidate": {
         "date": "2026-04-05",
@@ -71982,7 +72409,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 145
+        "line": 148
       },
       "candidate": {
         "date": "2026-04-07",
@@ -72000,7 +72427,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 144
+        "line": 147
       },
       "candidate": {
         "date": "2026-04-09",
@@ -72018,7 +72445,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 143
+        "line": 146
       },
       "candidate": {
         "date": "2026-04-11",
@@ -72036,7 +72463,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 142
+        "line": 145
       },
       "candidate": {
         "date": "2026-04-12",
@@ -72066,7 +72493,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 140
+        "line": 143
       },
       "candidate": {
         "date": "2026-04-13",
@@ -72074,9 +72501,15 @@
         "reportedLoss": "approximately 1.9m USDC depleted; 410,010 USDC bridged",
         "mechanism": "insurance-fund sign-check failure; the user-supplied OpenUSDT lead was merged here because its date and 410,010-USDC figure identify Dango's documented bridge outflow; funds returned"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:132"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:132"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -72084,7 +72517,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 139
+        "line": 142
       },
       "candidate": {
         "date": "2026-04-13",
@@ -72102,7 +72535,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 141
+        "line": 144
       },
       "candidate": {
         "date": "2026-04-13",
@@ -72120,7 +72553,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 138
+        "line": 141
       },
       "candidate": {
         "date": "2026-04-14",
@@ -72138,7 +72571,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 137
+        "line": 140
       },
       "candidate": {
         "date": "2026-04-16",
@@ -72162,7 +72595,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 136
+        "line": 139
       },
       "candidate": {
         "date": "2026-04-16",
@@ -72186,7 +72619,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 135
+        "line": 138
       },
       "candidate": {
         "date": "2026-04-18",
@@ -72210,7 +72643,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 134
+        "line": 137
       },
       "candidate": {
         "date": "2026-04-20",
@@ -72228,7 +72661,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 133
+        "line": 136
       },
       "candidate": {
         "date": "2026-04-20",
@@ -72246,7 +72679,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 132
+        "line": 135
       },
       "candidate": {
         "date": "2026-04-21",
@@ -72264,7 +72697,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 128
+        "line": 131
       },
       "candidate": {
         "date": "2026-04-22",
@@ -72282,7 +72715,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 615
+        "line": 618
       },
       "candidate": {
         "date": "2026-04-22",
@@ -72303,7 +72736,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 127
+        "line": 130
       },
       "candidate": {
         "date": "2026-04-25",
@@ -72321,7 +72754,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 126
+        "line": 129
       },
       "candidate": {
         "date": "2026-04-26",
@@ -72339,7 +72772,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 125
+        "line": 128
       },
       "candidate": {
         "date": "2026-04-27",
@@ -72357,7 +72790,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 124
+        "line": 127
       },
       "candidate": {
         "date": "2026-04-27",
@@ -72366,8 +72799,11 @@
         "mechanism": "arbitrary-call issue"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:8453:0x63aec3e7d9557683938cc59f22491270d2002b122ab6633e3cc2aca7078de1ec"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -72375,7 +72811,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 123
+        "line": 126
       },
       "candidate": {
         "date": "2026-04-28",
@@ -72384,8 +72820,11 @@
         "mechanism": "missing caller authorization"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x6b04344d5627df59d3bc645e7454f4605a90272852a91e435e370376643353b3"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -72393,7 +72832,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 122
+        "line": 125
       },
       "candidate": {
         "date": "2026-04-29",
@@ -72411,7 +72850,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 121
+        "line": 124
       },
       "candidate": {
         "date": "2026-04-29",
@@ -72419,9 +72858,15 @@
         "reportedLoss": "$3.5m",
         "mechanism": "token-contract vulnerability"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:124"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:124"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -72429,7 +72874,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 120
+        "line": 123
       },
       "candidate": {
         "date": "2026-04-29",
@@ -72447,7 +72892,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 119
+        "line": 122
       },
       "candidate": {
         "date": "2026-04-30",
@@ -72465,7 +72910,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 118
+        "line": 121
       },
       "candidate": {
         "date": "2026-05-01",
@@ -72483,7 +72928,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 117
+        "line": 120
       },
       "candidate": {
         "date": "2026-05-04",
@@ -72501,7 +72946,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 112
+        "line": 115
       },
       "candidate": {
         "date": "2026-05-11",
@@ -72519,7 +72964,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 116
+        "line": 119
       },
       "candidate": {
         "date": "2026-05-11",
@@ -72537,7 +72982,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 110
+        "line": 113
       },
       "candidate": {
         "date": "2026-05-12",
@@ -72546,8 +72991,11 @@
         "mechanism": "reinitializer or diamondCut flaw"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:42161:0x19cbafae517791e7e73403313d70440abf60558350e419df05c04f816998fe0a"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -72555,7 +73003,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 111
+        "line": 114
       },
       "candidate": {
         "date": "2026-05-12",
@@ -72563,9 +73011,15 @@
         "reportedLoss": "$346.1k",
         "mechanism": "hardcoded owner or backdoor"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:88"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:88"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -72573,7 +73027,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 109
+        "line": 112
       },
       "candidate": {
         "date": "2026-05-13",
@@ -72582,8 +73036,11 @@
         "mechanism": "meta-transaction or DSAuth flaw"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:42161:0xdda5bcab8eb28458de171ad3780bd1b1028e9231192d73522b0cda36ab46207d"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -72591,7 +73048,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 108
+        "line": 111
       },
       "candidate": {
         "date": "2026-05-13",
@@ -72609,7 +73066,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 107
+        "line": 110
       },
       "candidate": {
         "date": "2026-05-15",
@@ -72633,7 +73090,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 106
+        "line": 109
       },
       "candidate": {
         "date": "2026-05-18",
@@ -72651,7 +73108,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 104
+        "line": 107
       },
       "candidate": {
         "date": "2026-05-19",
@@ -72669,7 +73126,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 105
+        "line": 108
       },
       "candidate": {
         "date": "2026-05-19",
@@ -72687,7 +73144,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 103
+        "line": 106
       },
       "candidate": {
         "date": "2026-05-20",
@@ -72695,9 +73152,15 @@
         "reportedLoss": "$2.7m",
         "mechanism": "fake arbitrator ACK"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:125"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:125"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -72705,7 +73168,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 102
+        "line": 105
       },
       "candidate": {
         "date": "2026-05-22",
@@ -72723,7 +73186,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 101
+        "line": 104
       },
       "candidate": {
         "date": "2026-05-23",
@@ -72741,7 +73204,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 100
+        "line": 103
       },
       "candidate": {
         "date": "2026-05-24",
@@ -72759,7 +73222,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 99
+        "line": 102
       },
       "candidate": {
         "date": "2026-05-25",
@@ -72768,8 +73231,11 @@
         "mechanism": "weak module authorization; unaffiliated with Squid Router"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:8453:0xf0f94d7fc627793ec770c46d117c4934be95fa0b0c8433b820e363d17d8b4dad"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -72777,7 +73243,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 98
+        "line": 101
       },
       "candidate": {
         "date": "2026-05-25",
@@ -72795,7 +73261,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 93
+        "line": 96
       },
       "candidate": {
         "date": "2026-05-27",
@@ -72813,7 +73279,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 94
+        "line": 97
       },
       "candidate": {
         "date": "2026-05-27",
@@ -72831,7 +73297,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 92
+        "line": 95
       },
       "candidate": {
         "date": "2026-05-28",
@@ -72849,7 +73315,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 91
+        "line": 94
       },
       "candidate": {
         "date": "2026-05-29",
@@ -72879,7 +73345,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 90
+        "line": 93
       },
       "candidate": {
         "date": "2026-05-30",
@@ -72897,7 +73363,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 89
+        "line": 92
       },
       "candidate": {
         "date": "2026-05-30",
@@ -72915,7 +73381,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 88
+        "line": 91
       },
       "candidate": {
         "date": "2026-05-31",
@@ -72933,7 +73399,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 614
+        "line": 617
       },
       "candidate": {
         "date": "2026-05",
@@ -72951,7 +73417,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 87
+        "line": 90
       },
       "candidate": {
         "date": "2026-06-01",
@@ -72969,7 +73435,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 86
+        "line": 89
       },
       "candidate": {
         "date": "2026-06-01",
@@ -72977,9 +73443,15 @@
         "reportedLoss": "$2.4m",
         "mechanism": "key or control compromise and unauthorized mint"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:127"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:127"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -72987,7 +73459,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 85
+        "line": 88
       },
       "candidate": {
         "date": "2026-06-03",
@@ -73005,7 +73477,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 83
+        "line": 86
       },
       "candidate": {
         "date": "2026-06-04",
@@ -73026,7 +73498,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 84
+        "line": 87
       },
       "candidate": {
         "date": "2026-06-04",
@@ -73056,7 +73528,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 78
+        "line": 81
       },
       "candidate": {
         "date": "2026-06-08",
@@ -73077,7 +73549,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 79
+        "line": 82
       },
       "candidate": {
         "date": "2026-06-08",
@@ -73095,7 +73567,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 77
+        "line": 80
       },
       "candidate": {
         "date": "2026-06-08",
@@ -73116,7 +73588,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 73
+        "line": 76
       },
       "candidate": {
         "date": "2026-06-09",
@@ -73134,7 +73606,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 74
+        "line": 77
       },
       "candidate": {
         "date": "2026-06-09",
@@ -73152,7 +73624,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 72
+        "line": 75
       },
       "candidate": {
         "date": "2026-06-09",
@@ -73176,7 +73648,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 75
+        "line": 78
       },
       "candidate": {
         "date": "2026-06-09",
@@ -73206,7 +73678,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 76
+        "line": 79
       },
       "candidate": {
         "date": "2026-06-09",
@@ -73239,7 +73711,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 70
+        "line": 73
       },
       "candidate": {
         "date": "2026-06-10",
@@ -73257,7 +73729,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 71
+        "line": 74
       },
       "candidate": {
         "date": "2026-06-10",
@@ -73275,7 +73747,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 69
+        "line": 72
       },
       "candidate": {
         "date": "2026-06-14",
@@ -73284,8 +73756,11 @@
         "mechanism": "incomplete proof verification"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -73293,7 +73768,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 67
+        "line": 70
       },
       "candidate": {
         "date": "2026-06-17",
@@ -73302,8 +73777,11 @@
         "mechanism": "deprecated bridge or escape-hatch flaw"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -73311,7 +73789,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 68
+        "line": 71
       },
       "candidate": {
         "date": "2026-06-17",
@@ -73341,7 +73819,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 66
+        "line": 69
       },
       "candidate": {
         "date": "2026-06-19",
@@ -73359,7 +73837,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 65
+        "line": 68
       },
       "candidate": {
         "date": "2026-06-19",
@@ -73377,7 +73855,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 61
+        "line": 64
       },
       "candidate": {
         "date": "2026-06-21",
@@ -73395,7 +73873,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 60
+        "line": 63
       },
       "candidate": {
         "date": "2026-06-21",
@@ -73413,7 +73891,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 59
+        "line": 62
       },
       "candidate": {
         "date": "2026-06-23",
@@ -73431,7 +73909,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 58
+        "line": 61
       },
       "candidate": {
         "date": "2026-06-25",
@@ -73449,7 +73927,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 57
+        "line": 60
       },
       "candidate": {
         "date": "2026-06-28",
@@ -73479,7 +73957,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 56
+        "line": 59
       },
       "candidate": {
         "date": "2026-07-02",
@@ -73500,7 +73978,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 55
+        "line": 58
       },
       "candidate": {
         "date": "2026-07-06",
@@ -73524,7 +74002,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 54
+        "line": 57
       },
       "candidate": {
         "date": "2026-07-11",
@@ -73542,7 +74020,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 53
+        "line": 56
       },
       "candidate": {
         "date": "2026-07-13",
@@ -73572,7 +74050,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 52
+        "line": 55
       },
       "candidate": {
         "date": "2026-07-13",
@@ -73602,7 +74080,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 51
+        "line": 54
       },
       "candidate": {
         "date": "2026-07-14",
@@ -73632,7 +74110,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 49
+        "line": 52
       },
       "candidate": {
         "date": "2026-07-15",
@@ -73656,7 +74134,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 50
+        "line": 53
       },
       "candidate": {
         "date": "2026-07-15",
@@ -73674,7 +74152,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 44
+        "line": 47
       },
       "candidate": {
         "date": "2026-07-15",
@@ -73698,7 +74176,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 45
+        "line": 48
       },
       "candidate": {
         "date": "2026-07-15",
@@ -73716,7 +74194,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 43
+        "line": 46
       },
       "candidate": {
         "date": "2026-07-16",
@@ -73734,7 +74212,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 42
+        "line": 45
       },
       "candidate": {
         "date": "2026-07-19",
@@ -73752,7 +74230,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 40
+        "line": 43
       },
       "candidate": {
         "date": "2026-07-21",
@@ -73770,7 +74248,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 41
+        "line": 44
       },
       "candidate": {
         "date": "2026-07-21",
@@ -73794,7 +74272,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 39
+        "line": 42
       },
       "candidate": {
         "date": "2026-07-22",
@@ -73803,8 +74281,11 @@
         "mechanism": "median-oracle manipulation"
       },
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "included",
+        "incidentIds": [
+          "eip155:56:0xe7abe6416e386332b41d63cf5f16903251dc178942cd79bf080fe61058587628"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -73812,7 +74293,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 38
+        "line": 41
       },
       "candidate": {
         "date": "2026-07-22",
@@ -73836,7 +74317,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 37
+        "line": 40
       },
       "candidate": {
         "date": "2026-07-23",
@@ -73844,9 +74325,15 @@
         "reportedLoss": "$73.4k",
         "mechanism": "oracle misassignment"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:134"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:134"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -73854,7 +74341,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 36
+        "line": 39
       },
       "candidate": {
         "date": "2026-07-23",
@@ -73875,7 +74362,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 34
+        "line": 37
       },
       "candidate": {
         "date": "2026-07-24",
@@ -73905,7 +74392,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 35
+        "line": 38
       },
       "candidate": {
         "date": "2026-07-24",
@@ -73929,7 +74416,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 32
+        "line": 35
       },
       "candidate": {
         "date": "2026-07-25",
@@ -73947,7 +74434,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 33
+        "line": 36
       },
       "candidate": {
         "date": "2026-07-25",
@@ -73965,7 +74452,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 31
+        "line": 34
       },
       "candidate": {
         "date": "2026-07-26",
@@ -73983,7 +74470,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 30
+        "line": 33
       },
       "candidate": {
         "date": "2026-07-26",
@@ -74001,7 +74488,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 29
+        "line": 32
       },
       "candidate": {
         "date": "2026-07-26",
@@ -74009,9 +74496,15 @@
         "reportedLoss": "$6.25m",
         "mechanism": "owner privilege or key used for unauthorized mint"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:130"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:130"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -74019,7 +74512,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 24
+        "line": 27
       },
       "candidate": {
         "date": "2026-07-28",
@@ -74037,7 +74530,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 25
+        "line": 28
       },
       "candidate": {
         "date": "2026-07-28",
@@ -74067,7 +74560,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 22
+        "line": 25
       },
       "candidate": {
         "date": "2026-07-30",
@@ -74085,7 +74578,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 23
+        "line": 26
       },
       "candidate": {
         "date": "2026-07-30",
@@ -74103,7 +74596,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 20
+        "line": 23
       },
       "candidate": {
         "date": "2026-08-02",
@@ -74124,7 +74617,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 21
+        "line": 24
       },
       "candidate": {
         "date": "2026-08-02",
@@ -74154,7 +74647,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 19
+        "line": 22
       },
       "candidate": {
         "date": "2026-08-03",
@@ -74172,7 +74665,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 18
+        "line": 21
       },
       "candidate": {
         "date": "2026-08-06",
@@ -74190,7 +74683,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 17
+        "line": 20
       },
       "candidate": {
         "date": "2026-08-08",
@@ -74208,7 +74701,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 612
+        "line": 615
       },
       "candidate": {
         "date": "2026-08-08",
@@ -74226,7 +74719,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 15
+        "line": 18
       },
       "candidate": {
         "date": "2026-08-09",
@@ -74234,9 +74727,15 @@
         "reportedLoss": "$7.9m",
         "mechanism": "payment-processor wallets drained"
       },
+      "relatedAdjudicationIds": [
+        "adjudication:131"
+      ],
       "disposition": {
-        "status": "unresolved",
-        "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:131"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
       }
     },
     {
@@ -74244,7 +74743,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 16
+        "line": 19
       },
       "candidate": {
         "date": "2026-08-09",
@@ -74262,7 +74761,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 14
+        "line": 17
       },
       "candidate": {
         "date": "2026-08-10",
@@ -74283,7 +74782,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 13
+        "line": 16
       },
       "candidate": {
         "date": "2026-08-11",
@@ -74301,7 +74800,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 12
+        "line": 15
       },
       "candidate": {
         "date": "2026-08-15",
@@ -74319,7 +74818,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 11
+        "line": 14
       },
       "candidate": {
         "date": "2026-08-18",
@@ -74337,7 +74836,7 @@
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 10
+        "line": 13
       },
       "candidate": {
         "date": "2026-08-21",
@@ -74351,11 +74850,35 @@
       }
     },
     {
+      "id": "web:2026-08-23:term-finance-vaults",
+      "source": {
+        "kind": "web-list",
+        "file": "research/raw/web-candidates.md",
+        "line": 12
+      },
+      "candidate": {
+        "date": "2026-08-23",
+        "project": "Term Finance vaults",
+        "reportedLoss": "approximately $8.5m",
+        "mechanism": "governance-token majority acquired cheaply passed malicious proposals that zeroed the timelock and drained strategy vaults"
+      },
+      "relatedAdjudicationIds": [
+        "adjudication:133"
+      ],
+      "disposition": {
+        "status": "excluded",
+        "adjudicationIds": [
+          "adjudication:133"
+        ],
+        "reason": "An exact adjudication excludes this lead from the primary dataset."
+      }
+    },
+    {
       "id": "web:2026-08-23:warp-green-chia-evm-bridge-ethereum-base",
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 611
+        "line": 614
       },
       "candidate": {
         "date": "2026-08-23",
@@ -74369,11 +74892,32 @@
       }
     },
     {
+      "id": "web:2026-08-27:moonwell-mamo-market",
+      "source": {
+        "kind": "web-list",
+        "file": "research/raw/web-candidates.md",
+        "line": 11
+      },
+      "candidate": {
+        "date": "2026-08-27",
+        "project": "Moonwell MAMO market",
+        "reportedLoss": "approximately $9.1m residual borrower obligations; $11.03m gross borrows",
+        "mechanism": "direct underlying transfers inflated mMAMO exchange rate past the mint-path supply cap while thin-market buying lifted the oracle price"
+      },
+      "disposition": {
+        "status": "included",
+        "incidentIds": [
+          "eip155:8453:0x056597f42302ab7f9f5e91c7f84856d3ba73827da7f956645d1f26bdde109ce9"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
+      }
+    },
+    {
       "id": "web:2026-08-28:ajna",
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 632
+        "line": 635
       },
       "candidate": {
         "date": "2026-08-28",
@@ -74390,11 +74934,32 @@
       }
     },
     {
+      "id": "web:2026-08-31:balancer-v1-bpool",
+      "source": {
+        "kind": "web-list",
+        "file": "research/raw/web-candidates.md",
+        "line": 10
+      },
+      "candidate": {
+        "date": "2026-08-31",
+        "project": "Balancer V1 BPool",
+        "reportedLoss": "$234,000",
+        "mechanism": "joinswapPoolAmountOut fixed-point rounding minted 4,408.8 BPT for 1 satoshi after WBTC reserve compression"
+      },
+      "disposition": {
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0x7fcc82228a8517f45e87eb8a6f1ba044e21918dffe6c83340e9471a8e75873e8"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
+      }
+    },
+    {
       "id": "web:2026-08:across-protocol-solana-deployment-to-evm-destinations",
       "source": {
         "kind": "web-list",
         "file": "research/raw/web-candidates.md",
-        "line": 613
+        "line": 616
       },
       "candidate": {
         "date": "2026-08",

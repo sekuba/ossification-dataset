@@ -207,6 +207,9 @@
       "note": "The seed record measured this against the RollupProcessor’s 2021-03-03 deployment, giving 5.29 years. That is the wrong artifact. The rollup does not contain the failing logic: escapeHatch statically calls the verifier held in its storage slot 6, and the exploit trace shows TurboVerifier 0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8 running the check and delegate-calling its verification key 0xf3761b450571a49fa8e2af6e37e1eb3516209d56 for key id 0. Both were deployed by 0x36bb84d28bb2d9772158cc9a09feaa5472ebfd32 in block 19232962 on 2024-02-15, and the RollupProcessor emitted nine VerifierUpdated events in total, the last of which, log 166 of block 19233032, selected 0x48cb7ba0; slot 6 holds that address continuously through block 25339093. The exploited verifier is therefore 853.3 days old, not 5.29 years. The target is recorded on the verifier itself rather than on the rollup because the verifier is the artifact whose verify() accepted the unsound proof; its verification key, which the published analyses name as the component that failed to bind the output owner, was deployed in the same block, so the age is the same under either attribution. Loss is the rollup’s ETH, DAI and renBTC balance deltas across the three escape-hatch transactions, all of which land in the attacker address."
     }
   ],
+  "discovery": [
+    "web:2026-06-17:aztec-private-rollup-bridge"
+  ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
