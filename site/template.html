@@ -132,6 +132,14 @@ th.num{text-align:right}
 td.pn{color:var(--ink);font-weight:600}
 td.pn a{color:inherit;text-decoration:underline;text-decoration-color:var(--axis);text-underline-offset:2px}
 td.pn a:hover{text-decoration-color:var(--ink2)}
+.knotwrap{padding:0 16px 16px}
+.knotbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 8px}
+textarea.knots{
+  display:block;width:100%;min-height:200px;resize:vertical;padding:8px 10px;
+  font-size:12px;line-height:1.5;color:var(--ink2);background:var(--plane);
+  border:1px solid var(--border);border-radius:8px;white-space:pre;overflow:auto;
+}
+textarea.knots:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
 @media (max-width:820px){
   .grid{grid-template-columns:1fr}
   .kpis{grid-template-columns:repeat(2,1fr)}
@@ -219,6 +227,18 @@ td.pn a:hover{text-decoration-color:var(--ink2)}
       <p class="cs" id="funnelsub"></p>
       <div id="c-funnel"></div>
     </div>
+
+    <details class="tbl">
+      <summary>Curve age knots <span class="sub mono" id="knotcount"></span></summary>
+      <div class="knotwrap">
+        <p class="cs" id="knotsub"></p>
+        <div class="knotbar">
+          <button class="chip" type="button" id="knotcopy">Copy JSON</button>
+          <span class="sub mono" id="knotmsg" role="status"></span>
+        </div>
+        <textarea class="knots mono" id="knotjson" readonly spellcheck="false" aria-label="Curve age knots as a JSON array"></textarea>
+      </div>
+    </details>
 
     <details class="tbl">
       <summary>Incident table <span class="sub mono" id="tblcount"></span></summary>
@@ -780,6 +800,95 @@ function renderTable(rows){
   tb.appendChild(frag);
 }
 
+/* ================= curve age knots ================= */
+/* formatJson: json pretty printer with wadler-style groups. doc tokens: string = text,
+   0 = softline, 1 = hardline, 2 = group open, 3 = group close, 4 = nest open, 5 = nest close */
+const formatJson = (value, { indentSize = 2, lineSize = 80 } = {}) => {
+  const doc = [2], modes = []
+  /* build: json value -> doc tokens */
+  const build = (v) => {
+    if (Array.isArray(v)) {
+      if (!v.length) return doc.push('[]')
+      doc.push(2, '[', 0, 4)
+      const n = v.length, fill = n > 1 && v.every((x) => typeof x === 'number')  /* number arrays wrap like prettier fill */
+      for (let i = 0; i < n; i++) {
+        if (fill) doc.push(2)
+        build(v[i])
+        if (i + 1 < n) doc.push(',', 1)
+        if (fill) doc.push(3)
+      }
+      doc.push(5, 0, ']', 3)
+    } else if (v && typeof v === 'object') {
+      const keys = Object.keys(v).filter((k) => v[k] !== undefined)
+      if (!keys.length) return doc.push('{}')
+      doc.push(2, '{', 4, 1)
+      for (let i = 0; i < keys.length; i++) {
+        doc.push(JSON.stringify(keys[i]), ': ')
+        build(v[keys[i]])
+        if (i + 1 < keys.length) doc.push(',')
+        doc.push(1)
+      }
+      doc.push(5, '}', 3)
+    } else doc.push(JSON.stringify(v) ?? 'null')  /* throws on bigint, maps undefined/function/symbol to null */
+  }
+  build(value), doc.push(3)
+  /* does the doc from a group's push fit in room? counts to the group's pop, then text until the next line (fill) */
+  const fits = (from, room) => {
+    let depth = 0, width = 0, i = from
+    for (; i < doc.length && depth >= 0; i++) {
+      const t = doc[i]
+      if (typeof t === 'string') width += t.length
+      else if (t < 2) width += t
+      else if (t === 2) depth++
+      else if (t === 3) depth--
+      if (width > room) return false
+    }
+    for (; i < doc.length; i++) {
+      const t = doc[i]
+      if (typeof t === 'string') { if ((width += t.length) > room) return false }
+      else if (t < 2) break
+    }
+    return width <= room
+  }
+  /* render: doc tokens -> string */
+  let out = '', nest = 0, line = 0, flat = false
+  const emit = (text) => { if (!line) { out += ' '.repeat(nest); line = nest } out += text; line += text.length }
+  for (let i = 0; i < doc.length; i++) {
+    const t = doc[i]
+    if (typeof t === 'string') emit(t)
+    else if (t < 2) { if (flat) emit(' '.repeat(t)); else { out += '\n'; line = 0 } }
+    else if (t === 2) { modes.push(flat); flat = fits(i + 1, lineSize - Math.min(Math.max(line, nest), lineSize)) }
+    else if (t === 3) flat = modes.pop() ?? false
+    else if (!flat) nest += t === 4 ? indentSize : -indentSize
+  }
+  return out + '\n'
+}
+/* {hash, knots}: the dataset commit the page was built from and one knot per
+   admitted incident, its codeAgeSeconds ascending — the shape the score consumes
+   as OSSIFICATION_CURVE_AGE_KNOTS. At the $1K floor this is the release curve;
+   a higher threshold previews an alternative cohort. */
+const knotJson=document.getElementById("knotjson");
+const knotMsg=document.getElementById("knotmsg");
+function renderKnots(rows){
+  const knots=rows.map(d=>d.a).sort((a,b)=>a-b);
+  knotJson.value=formatJson({hash:META.hash,knots});
+  document.getElementById("knotcount").textContent=knots.length+" knots · "+fmtUsd(TH)+" floor";
+  document.getElementById("knotsub").textContent=
+    "hash: dataset commit · knots: codeAgeSeconds of each incident with loss ≥ "+fmtUsd(TH)+", ascending"+
+    (TH===1000?" · the release curve":" · the release curve uses the $1K floor");
+}
+document.getElementById("knotcopy").addEventListener("click",async()=>{
+  const n=JSON.parse(knotJson.value).knots.length;
+  try{
+    await navigator.clipboard.writeText(knotJson.value);
+    knotMsg.textContent="copied "+n+" knots";
+  }catch{
+    knotJson.focus();knotJson.select();
+    knotMsg.textContent="selected · press ⌘/Ctrl+C";
+  }
+  setTimeout(()=>{knotMsg.textContent="";},2500);
+});
+
 /* ================= threshold control ================= */
 const slider=document.getElementById("thslider");
 const thval=document.getElementById("thval");
@@ -834,6 +943,7 @@ function renderAll(){
   renderBands(rows,"c-bandn",sub=>sub.length,v=>v.toLocaleString(),"--s1");
   renderBands(rows,"c-bandl",sub=>sub.reduce((a,d)=>a+d.l,0),fmtUsd,"--s2");
   renderFunnel();
+  renderKnots(rows);
   renderTable(rows);
 }
 if(/\blin\b/i.test(location.hash)){AGELIN=true;[...axbox.children].forEach((c,i)=>c.setAttribute("aria-pressed",i===1?"true":"false"));}

@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 
 const KIND_INDEX = {
@@ -8,6 +9,7 @@ const KIND_INDEX = {
 }
 
 const release = JSON.parse(readFileSync('dist/latest/incidents.json', 'utf8'))
+const manifest = JSON.parse(readFileSync('dist/latest/manifest.json', 'utf8'))
 
 const rows = release.incidents.map((incident) => {
   const usd = incident.loss.usd?.amount
@@ -28,11 +30,27 @@ const rows = release.incidents.map((incident) => {
   ]
 })
 
+// The page offers the rows' ages as the curve's knots, so it relies on the
+// release ordering and cohort count that the consumer of the knots also checks.
+for (let i = 1; i < rows.length; i++) {
+  if (rows[i][0] < rows[i - 1][0]) throw new Error('release incidents are not sorted by codeAgeSeconds')
+}
+if (manifest.counts.curveIncidents !== rows.length) {
+  throw new Error(`manifest.counts.curveIncidents ${manifest.counts.curveIncidents} != ${rows.length} curve rows`)
+}
+
+// The copied knots carry the release's commit so a consumer can pin what it
+// took. A local build over an uncommitted release must not pass as its parent.
+const head = process.env.GITHUB_SHA ?? git('rev-parse', 'HEAD')
+const dirty = git('status', '--porcelain', '--', 'dist', 'schema').length > 0
+const hash = dirty ? `${head}-dirty` : head
+
 const excluded = release.excluded
 const meta = {
   repo: `https://github.com/${process.env.GITHUB_REPOSITORY ?? 'sekuba/ossification-dataset'}`,
   generatedAt: new Date().toISOString().slice(0, 10),
-  commit: (process.env.GITHUB_SHA ?? '').slice(0, 7),
+  hash,
+  commit: hash.slice(0, 7),
   counts: {
     curve: rows.length,
     provisional: excluded.filter((incident) => incident.verificationTier === 'provisional').length,
@@ -52,3 +70,7 @@ for (const [placeholder, value] of [
 mkdirSync('_site', { recursive: true })
 writeFileSync('_site/index.html', html)
 console.log(`_site/index.html: ${rows.length} incidents, data ${meta.generatedAt}`)
+
+function git(...args) {
+  return execFileSync('git', args, { encoding: 'utf8' }).trim()
+}
