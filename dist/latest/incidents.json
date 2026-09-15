@@ -2680,6 +2680,66 @@
       "codeAgeSeconds": 25080
     },
     {
+      "id": "eip155:1:0xe3eab35b288c086afa9b86a97ab93c7bb61d21b1951a156d2a8f6f5d5715c475",
+      "protocol": {
+        "name": "DRLVaultV3",
+        "slug": "drlvaultv3"
+      },
+      "name": "DRLVaultV3 permissionless swap uses manipulated spot quote",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xe3eab35b288c086afa9b86a97ab93c7bb61d21b1951a156d2a8f6f5d5715c475",
+        "blockNumber": 23769387,
+        "transactionIndex": 0,
+        "timestamp": 1762784051
+      },
+      "summary": "The fixed-clone vault exposed swapToWETH to any caller and derived amountOutMinimum from a same-transaction quote of the pool being traded. The attacker moved that pool first, forced the vault to exchange 100,000 USDC for 0.000120518513556060 WETH, then reversed the manipulation.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 99999.56605790662,
+          "valuationTimestamp": 1762784051,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-7",
+            "source-8"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "100000",
+            "usdValue": 99999.56605790662,
+            "valuation": {
+              "method": "other",
+              "timestamp": 1762784051,
+              "unitPriceUsd": null,
+              "sourceIds": [
+                "source-7",
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross victim value lost before recoveries: receipt Transfer log 12 spends 100,000 USDC (6 decimals); log 11 returns 0.000120518513556060 WETH (18 decimals). The component records raw USDC spent but values only its uncompensated portion: 100000 - 0.000120518513556060 × 3600.626 = 99999.56605790661 USD. USDC uses par and WETH uses the pre-exploit Chainlink ETH/USD answer. Contemporaneous consideration is deducted; attacker financing, fees, builder payments and later recoveries are not. Full USDC/WETH outgoing-log history from clone creation through the exploit contains only this USDC payment."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:drlvaultv3-permissionless-swap-spot-quote",
+      "codeHash": "0x27c72feea644926d6941409a5f384145fec35c89f93110bfc6733a5e565fa8df",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 26400
+    },
+    {
       "id": "eip155:56:0x8c026c3939f7e2d0376d13e30859fa918a5a567348ca1329836df88bef30c73e",
       "protocol": {
         "name": "Unverified BSC executor 0xb5cb",
@@ -26698,6 +26758,137 @@
       "codeAgeSeconds": 16521253
     },
     {
+      "id": "eip155:56:0x70fb4c6a27445bb638618e801a792135638effa1d24b3ec37b0225736fae2567",
+      "protocol": {
+        "name": "UF DAO",
+        "slug": "ufdao"
+      },
+      "name": "UF DAO stale XDAO Shop public offer mints LP below treasury value",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x70fb4c6a27445bb638618e801a792135638effa1d24b3ec37b0225736fae2567",
+        "blockNumber": 18256132,
+        "transactionIndex": 115,
+        "timestamp": 1653925945
+      },
+      "summary": "Shop.buyPublicOffer(address,uint256) is permissionless and mints the caller _lpAmount LP for _lpAmount * publicOffers[dao].rate / 1e18 of the offer currency, while LP.burn redeems pro rata against the whole DAO treasury through Dao.burnLp. Nothing ties the static rate to treasury value per LP and the offer has no cap or expiry, so UF DAO's still-active offer of 1 LP per 1 USDC kept selling a claim on the treasury for less than the claim was worth as the treasury grew: 4.31 USDC per LP at the first exercise on 2022-05-30 and 13,235 USDC per LP at the 2023-01-11 leg, against an unchanged 6.8 LP supply.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 89992.4436788162,
+          "valuationTimestamp": 1673475204,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-7",
+            "source-8",
+            "source-9",
+            "source-10",
+            "source-4"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+              "symbol": "USDC"
+            },
+            "amount": "21.452716690293480029",
+            "usdValue": 21.45271669029348,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1653925945,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-9",
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-9",
+              "source-4"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": null,
+              "symbol": "BNB"
+            },
+            "amount": "0.009525684428216540",
+            "usdValue": 2.99432185142139,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1653925821,
+              "unitPriceUsd": 314.3419114905538,
+              "sourceIds": [
+                "source-10"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-9",
+              "source-4"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+              "symbol": "USDC"
+            },
+            "amount": "89958.965929193266975646",
+            "usdValue": 89958.96592919326,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1673475204,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-8",
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-8",
+              "source-4"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": null,
+              "symbol": "BNB"
+            },
+            "amount": "0.032316017467209068",
+            "usdValue": 9.030711081211575,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1673475181,
+              "unitPriceUsd": 279.45,
+              "sourceIds": [
+                "source-7"
+              ]
+            },
+            "sourceIds": [
+              "source-8",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Two campaign legs against the same offer, each measured as transaction-local depletion of the UF DAO treasury 0x2101e0f648a2b5517fd2c5d9618582e9de7a651a, with the exercising caller's own payments netted off. Leg one, 2022-05-30, is five buy-and-burn round trips by 0xa675d0d6eb15409a5e4101f18d796c6dd161c747 across ten transactions from block 18256132 to block 18257186: 31 USDC in, 52.452716690293480029 USDC out, net 21.452716690293480029 USDC, plus 0.009525684428216540 BNB of pro-rata native payout, which matches the DAO's native balance falling from 0.01 to 0.000474315571783460 over the same span. Leg two, 2023-01-11, is transaction 0x933d19d7d822e84e34ca47ac733226367fbee0d9c0c89d88d431c4f99629d77a: 1,111.622391174831097929 USDC in, 91,070.588320368098073575 out, net 89,958.965929193266975646 USDC, with the DAO's USDC balance falling from 90,000.668202254645779194 to 41.702273061378803548, plus 0.032316017467209068 BNB matching the native balance move from 0.032328555433316689 to 0.000012537966107621. Both callers funded their purchases themselves, so those inflows are attacker-supplied campaign input rather than victim loss; the 2023 attacker's 90,070.588320368098073575 USDC receipt, the seed inventory's headline, exceeds the victim depletion by exactly his 1,111.622391174831097929 USDC input. USDC is valued at par and BNB at a contemporaneous price for each leg, so the aggregate method is other; valuationTimestamp is the later leg, which is also realizedAt.",
+        "realizedAt": 1673475204
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:xdao-shop-public-offer-mint-below-nav",
+      "codeHash": "0xc5f7a45739f062d4c088f0615b1eb1883796d1b4c31fe2ba7e53262dfcf0e975",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 16936982
+    },
+    {
       "id": "eip155:42161:0x025cf2858723369d606ee3abbc4ec01eab064a97cc9ec578bf91c6908679be75",
       "protocol": {
         "name": "Gamma Strategies",
@@ -27102,13 +27293,15 @@
       "loss": {
         "kind": "gross-assets-lost",
         "usd": {
-          "amount": 134983.61127897454,
+          "amount": 244633.3642716574,
           "valuationTimestamp": 1685239913,
           "method": "incident-price",
           "sourceIds": [
             "source-1",
             "source-4",
-            "source-6"
+            "source-6",
+            "source-10",
+            "source-12"
           ]
         },
         "assets": [
@@ -27133,10 +27326,32 @@
               "source-4",
               "source-5"
             ]
+          },
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "441.904457311420882068",
+            "usdValue": 109649.75299268286,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1687350214,
+              "unitPriceUsd": 248.13,
+              "sourceIds": [
+                "source-12"
+              ]
+            },
+            "sourceIds": [
+              "source-10",
+              "source-11"
+            ]
           }
         ],
         "confidence": "high",
-        "notes": "The attack helper's native BNB balance rises from zero before the transaction to exactly 437.123093519995276290 BNB after the flash loan is repaid. This is the gross victim-pool loss and the attacker's proceeds; transaction gas paid separately by the attacker EOA is excluded."
+        "notes": "Both components measure attacker proceeds after every loan and borrow was repaid inside the exploit transaction, net of identifiable attacker-supplied inputs; financing fees, builder payments and gas are not added back. 2023-05-28: the attack helper 0x51873a0b615a51115f2cfbc2e24d9db4bfa2e6e2 holds no native BNB before the transaction and exactly 437.123093519995276290 BNB after the flash loan is repaid. 2023-06-21: helper 0x9a6b926281b0c7bc4f775e81f42b13eda9c1c98e sweeps 441.905957368884914737 WBNB to attacker EOA 0xee6764ac7aa45ed52482e4320906fd75615ba1d1 in the last call of the transaction, of which 0.001500057464032669 WBNB is the helper's own pre-funded seed and is deducted, leaving 441.904457311420882068 WBNB. That figure reconciles with the victim side: the BabyDogeSwap pair is depleted by 454.222711001031799752 WBNB less flash fees of 7.496201410465721525 and 4.822052278730673748 WBNB. Remaining attacker inputs on that leg, 986809918461 BABYDOGE base units and 4e9 BabyDogeSwap LP units, are together under 1e-9 BNB and are not deducted. No component is counted by another record.",
+        "realizedAt": 1687350214
       },
       "targetId": "target-1",
       "failureModeId": "failure:babydoge-farmzap-untrusted-farm-callback",
@@ -33114,6 +33329,110 @@
       "codeAgeSeconds": 68154760
     },
     {
+      "id": "eip155:137:0x957bcfa47657a198b683feb455f7957e8e6d912b5584a5af510f4ff8a41f4f5a",
+      "protocol": {
+        "name": "Fun.xyz",
+        "slug": "fun-xyz"
+      },
+      "name": "Fun.xyz retired CheckoutPool unauthenticated bridge()",
+      "chainId": 137,
+      "exploit": {
+        "transactionHash": "0x957bcfa47657a198b683feb455f7957e8e6d912b5584a5af510f4ff8a41f4f5a",
+        "blockNumber": 84291587,
+        "transactionIndex": 262,
+        "timestamp": 1773703207
+      },
+      "summary": "Fun.xyz's retired first-generation CheckoutPool at 0x13046f51 exposes bridge(address,BridgeParams) with no caller authorisation - that runtime holds no operator variable at all - so the only remaining constraint on bridgeParams.target and bridgeParams.callData is the bridge-target and chain-id allowlist, and setAllowAll(true) had disabled it. Any address could therefore make the pool perform an arbitrary external call, violating the invariant that only the protocol operator selects the call a CheckoutPool makes on a checkout's behalf. Because the retired pool was still an allowed operator on CheckoutPaymaster, the attacker aimed that call at activateAndCall, which invoked the live CheckoutPool's onlyPaymaster execute() for a checkout the attacker had self-registered through the permissionless deposit() with params.targetAmount 85,730 USDC.e against 1 USDC.e held, and the pool paid the 85,729 USDC.e difference out of _POOL_EXCESS_.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 85760.77,
+          "valuationTimestamp": 1773703207,
+          "method": "other",
+          "sourceIds": [
+            "source-1",
+            "source-7",
+            "source-8",
+            "source-9",
+            "source-10",
+            "source-12"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 137,
+              "tokenAddress": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+              "symbol": "USDC.e"
+            },
+            "amount": "85735.269319",
+            "usdValue": 85735.27,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1773703207,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-7",
+              "source-12"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 137,
+              "tokenAddress": "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+              "symbol": "USDC"
+            },
+            "amount": "24.490243",
+            "usdValue": 24.49,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1773706013,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-10"
+              ]
+            },
+            "sourceIds": [
+              "source-7"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 137,
+              "tokenAddress": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+              "symbol": "WMATIC"
+            },
+            "amount": "9.891240460827629941",
+            "usdValue": 1.01,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1773706013,
+              "unitPriceUsd": 0.10182574743698113,
+              "sourceIds": [
+                "source-9"
+              ]
+            },
+            "sourceIds": [
+              "source-7"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Gross depletion of the live CheckoutPool 0x1929347e, measured from its token balances and net of attacker-supplied deposits. Its USDC.e balance was 85,735.269319 before the campaign's first deposit at block 84290864 and zero after block 84292990; the attackers put 3.000000 USDC.e in through three deposit() calls and took 85,730.000000 out in the anchor transaction plus 8.269319 in the recurrence, so 85,735.269319 USDC.e of pre-campaign holdings were lost. _POOL_EXCESS_[USDC.e] fell 417,094.931356 -> 331,365.931356 across the anchor block, the protocol's own accounting of the 85,729 excess spent there. The recurrence at 84292990 by 0xc513e4f5 through contract 0x972c516a used the same defect and adds 24.490243 native USDC and 9.891240460827629941 WMATIC of net depletion. Stablecoins are valued at par, corroborated by DefiLlama observations of 1.0000018 and 0.9999971; WMATIC uses the DefiLlama mark at the recurrence. The seed inventory's 85,730 was the anchor transaction's gross transfer and did not net the attacker's own deposits or count the recurrence.",
+        "realizedAt": 1773706013
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:funxyz-checkout-pool-v1-unauthenticated-bridge-call",
+      "codeHash": "0x1193648c11a1eed1ea42794c6aea96ca06f180aacc6f3ad70a7a9fb192d741f0",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 68189214
+    },
+    {
       "id": "eip155:1:0x074ec9317d8336db37e8c348fbdd7515573ff4088239c77ab429f522509aeeb1",
       "protocol": {
         "name": "Aztec",
@@ -37617,17 +37936,6 @@
       ]
     },
     {
-      "id": "eip155:137:0x957bcfa47657a198b683feb455f7957e8e6d912b5584a5af510f4ff8a41f4f5a",
-      "name": "unverified_1304",
-      "chainId": 137,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:137:0xa1f2377fc6c24d7cd9ca084cafec29e5d5c8442a10aae4e7e304a4fbf548be6d",
       "name": "NST swap contract unrestricted minter",
       "chainId": 137,
@@ -38190,11 +38498,12 @@
     },
     {
       "id": "eip155:1:0xc27c3ec61c61309c9af35af062a834e0d6914f9352113617400577c0f2b0e9de",
-      "name": "ParaSwapRepayAdapter V3 unvalidated paraswapData",
+      "name": "Aave ParaSwap adapters retain allowances across mismatched swaps",
       "chainId": 1,
       "verificationTier": "provisional",
       "exclusionReasons": [
         "incident-verification-tier:provisional",
+        "loss:no-usd-valuation",
         "target-verification-tier:provisional",
         "target-verification:not-curve-eligible"
       ]
@@ -38332,17 +38641,6 @@
     {
       "id": "eip155:1:0xe28ca1f43036f4768776805fb50906f8172f75eba3bf1d9866bcd64361fda834",
       "name": "sHATE staking share inflation",
-      "chainId": 1,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "id": "eip155:1:0xe3eab35b288c086afa9b86a97ab93c7bb61d21b1951a156d2a8f6f5d5715c475",
-      "name": "DRLVaultV3",
       "chainId": 1,
       "verificationTier": "provisional",
       "exclusionReasons": [
@@ -39785,17 +40083,6 @@
       ]
     },
     {
-      "id": "eip155:56:0x933d19d7d822e84e34ca47ac733226367fbee0d9c0c89d88d431c4f99629d77a",
-      "name": "UF DAO SHOP incorrect parameter setting",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:56:0x93ae5f0a121d5e1aadae052c36bc5ecf2d406d35222f4c6a5d63fef1d6de1081",
       "name": "Transit router exactInputV3Swap arbitrary pool call",
       "chainId": 56,
@@ -40106,17 +40393,6 @@
     {
       "id": "eip155:56:0xb97502d3976322714c828a890857e776f25c79f187a32e2d548dda1c315d2a7d",
       "name": "BEVO reflection-token pair balance flaw",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "id": "eip155:56:0xbaf3e4841614eca5480c63662b41cd058ee5c85dc69198b29e7ab63b84bc866c",
-      "name": "BabyDogeCoin swapAndLiquify sandwich (second exploit, unchanged code)",
       "chainId": 56,
       "verificationTier": "provisional",
       "exclusionReasons": [

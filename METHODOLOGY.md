@@ -46,7 +46,10 @@ An incident is one fault episode: every exploitation of one vulnerability in
 one code artifact, from its first successful exercise until the code was fixed.
 Anchor it to the earliest successful transaction that exercises the
 vulnerability, or to the transaction that makes a permanent loss final when
-there is no earlier successful exploit. The incident owns the summary, one knot,
+there is no earlier successful exploit. The size of that first exercise does not
+matter: the 1,000 USD floor admits the episode's merged loss, it does not select
+the anchor, so establishing an incident includes scanning the artifact's history
+for earlier exercises of the same path. The incident owns the summary, one knot,
 and a loss not counted by another record.
 
 Repeated transactions, later actors repeating the exploit against the same
