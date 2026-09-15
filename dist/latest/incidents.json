@@ -2464,6 +2464,113 @@
       "codeAgeSeconds": 18858
     },
     {
+      "id": "eip155:8453:0x52d3e16c14ffa576855c1f5787dd4450969c7fcc5fac0b8a9b650fcb854d1974",
+      "protocol": {
+        "name": "TSURU",
+        "slug": "tsuru"
+      },
+      "name": "TSURUWrapper unauthorized ERC1155 callback mint",
+      "chainId": 8453,
+      "exploit": {
+        "transactionHash": "0x52d3e16c14ffa576855c1f5787dd4450969c7fcc5fac0b8a9b650fcb854d1974",
+        "blockNumber": 14279290,
+        "transactionIndex": 13,
+        "timestamp": 1715347927
+      },
+      "summary": "onERC1155Received returns early for the immutable trusted NFT contract but mints for every other caller. Three transfers of an unrelated ERC1155 first minted 1.2 million unbacked TSURU; a later caller minted another 167.2 million directly. Both actors sold the counterfeit tokens into the same WETH pool.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 426862.98154220235,
+          "valuationTimestamp": 1715348941,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-5",
+            "source-6",
+            "source-7",
+            "source-8",
+            "source-9"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 8453,
+              "tokenAddress": "0x4200000000000000000000000000000000000006",
+              "symbol": "WETH"
+            },
+            "amount": "2.346295227022583735",
+            "usdValue": 7092.052730912083,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1715348693,
+              "unitPriceUsd": 3022.66,
+              "sourceIds": [
+                "source-7",
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-5",
+              "source-6"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 8453,
+              "tokenAddress": "0x4200000000000000000000000000000000000006",
+              "symbol": "WETH"
+            },
+            "amount": "1.130223242228222988",
+            "usdValue": 3415.331197830089,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1715348816,
+              "unitPriceUsd": 3021.82,
+              "sourceIds": [
+                "source-8",
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-5",
+              "source-6"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 8453,
+              "tokenAddress": "0x4200000000000000000000000000000000000006",
+              "symbol": "WETH"
+            },
+            "amount": "137.783057102494581685",
+            "usdValue": 416355.59761346015,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1715348816,
+              "unitPriceUsd": 3021.82,
+              "sourceIds": [
+                "source-9",
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-5",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "medium",
+        "realizedAt": 1715348941,
+        "notes": "Exact WETH transferred out of UniV3 pool 0x913b1658dd001dff93d3af2a657523f1eed53917 in three sales totals 141.259575571745388408. The first actor sold all 1.2 million counterfeit TSURU in two transactions; the later actor sold all 167.2 million in one. No WETH was supplied by either actor to these disposals. Counterfeit TSURU and unrelated NFTs are not counted as victim assets. Gas, router fees, and later recoveries do not reduce gross pool depletion. WETH valued at each disposal using timestamped ETH market prices; the seed $140,000 is replaced, not added."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:tsuru-untrusted-erc1155-callback-mint",
+      "codeHash": "0xf504eb67b5d2e2342f345aba92572c030606e43bc6d13e85401985b8fff5d6ae",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 19352
+    },
+    {
       "id": "eip155:56:0x48e52a12cb297354a2a1c54cbc897cf3772328e7e71f51c9889bb8c5e533a934",
       "protocol": {
         "name": "SafeMoon",
@@ -2748,6 +2855,65 @@
       "codeHash": "0x224710c1f67d107cbad92aa65d95e89fd00aed9d6305bd5659631e777a40e8cb",
       "ageResetKind": "deployment",
       "codeAgeSeconds": 32517
+    },
+    {
+      "id": "eip155:56:0x1c09395848a87069c9d6ddbe5adc6249510aba7a2a83479a74b4280cafb5fb29",
+      "protocol": {
+        "name": "DIP",
+        "slug": "dip"
+      },
+      "name": "DIP double router transfer",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x1c09395848a87069c9d6ddbe5adc6249510aba7a2a83479a74b4280cafb5fb29",
+        "blockNumber": 104598279,
+        "transactionIndex": 80,
+        "timestamp": 1781627318
+      },
+      "summary": "DIP._transfer executes the base transfer twice when either endpoint is the router. Skimming excess DIP to the router debited the pair twice; sync committed the reduced reserve, allowing the attacker to exchange remaining DIP for almost all AIC.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 111765.674801107,
+          "valuationTimestamp": 1781627318,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x524c72268e2053bb356ecb4c1364b5bb74644405",
+              "symbol": "AIC"
+            },
+            "amount": "10037659.001700876485419035",
+            "usdValue": 111765.674801107,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1781627318,
+              "unitPriceUsd": 0.011134635554183337,
+              "sourceIds": [
+                "source-1",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "medium",
+        "notes": "Exact AIC depletion of pair 0xf7d8267d01d1104da2dd30828aa9c0e1647919ef excludes the attacker-supplied 19000000 AIC swap input. Valuation applies the same-transaction realised price: 9977659.001700876485419035 AIC sold for 111097.596667856001191208 USDC, valued at par. The remaining 60000 AIC paid as financing cost stays in gross loss and is estimated at that effective price. DIP shifted to the router is not valued separately; gas and financing do not reduce gross loss."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:dip-router-transfer-fallthrough-double-debit",
+      "codeHash": "0x046998dfa5c1d4b35b004ace1774dc48fbea5c8a2a0d54d49386ab46cf542ee4",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 37068
     },
     {
       "id": "eip155:8453:0x4db0b2516f5e98083cea14d3d0f356c94e20942604a2a3116dd860effbbadc29",
@@ -3765,6 +3931,68 @@
       "codeHash": "0xdb972a7db9bbcc6b4131490943344fac3aaa3e67836e7553135861350e2bc869",
       "ageResetKind": "deployment",
       "codeAgeSeconds": 75495
+    },
+    {
+      "id": "eip155:56:0x191a34e6c0780c3d1ab5c9bc04948e231d742b7d88e0e4f85568d57fcdc03182",
+      "protocol": {
+        "name": "TrustPad",
+        "slug": "trustpad"
+      },
+      "name": "TrustPad LaunchpadLockableStaking reward accounting",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x191a34e6c0780c3d1ab5c9bc04948e231d742b7d88e0e4f85568d57fcdc03182",
+        "blockNumber": 33260392,
+        "transactionIndex": 46,
+        "timestamp": 1699286572
+      },
+      "summary": "receiveUpPool accepts arbitrary callers and trusts their reported lock history. It computes reward debt before increasing the stake, so an attacker supplies an old lock date, repeatedly deposits and withdraws, then compounds unearned historical rewards with stakePendingRewards.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 152016.99772016378,
+          "valuationTimestamp": 1699322143,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-6",
+            "source-7",
+            "source-8"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xadcfc6bf853a0a8ad7f9ff4244140d10cf01363c",
+              "symbol": "TPAD"
+            },
+            "amount": "29587378.247454806",
+            "usdValue": 152016.99772016378,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1699322143,
+              "unitPriceUsd": 0.005137900237350051,
+              "sourceIds": [
+                "source-6",
+                "source-7",
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-6",
+              "source-8"
+            ]
+          }
+        ],
+        "confidence": "medium",
+        "realizedAt": 1699322216,
+        "notes": "Victim balanceOf before/after each of 26 exploit blocks totals 29587378.247454806 TPAD depletion, excluding recycled deposits. The victim is reflection-excluded and fee-exempt; the two unrelated token transactions in final block 33262748 cannot affect its balance. Value uses disposal VWAP: 19 sales debit 30162599.532230174 TPAD including the 1% transfer fee, producing 615.682669599467334517 BNB, valued at $251.70828244452184/BNB. Sale inputs are exact transferFrom calldata amounts; Transfer logs omit the reflection fee. Apply that effective price to victim depletion, not the larger sold quantity, which also includes reflections and the initial 0.02 BNB token purchase. The remaining 251.336528056 TPAD is included in victim depletion at that same estimated VWAP; gas and later recoveries are not deducted."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:trustpad-untrusted-lock-history-reward-debt",
+      "codeHash": "0x700b91a1602d7518e27189ae9325a21d23cddd47c84d01a5c04b3e3b50e0ed54",
+      "ageResetKind": "implementation-change",
+      "codeAgeSeconds": 77280
     },
     {
       "id": "eip155:8453:0x16a99aef4fab36c84ba4616668a03a5b37caa12e2fc48923dba4e711d2094699",
@@ -19163,6 +19391,68 @@
       "codeAgeSeconds": 4614185
     },
     {
+      "id": "eip155:56:0x199c4b88cab6b4b495b9d91af98e746811dd8f82f43117c48205e6332db9f0e0",
+      "protocol": {
+        "name": "FFIST",
+        "slug": "ffist"
+      },
+      "name": "FFIST predictable airdrop balance overwrite",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x199c4b88cab6b4b495b9d91af98e746811dd8f82f43117c48205e6332db9f0e0",
+        "blockNumber": 30113118,
+        "transactionIndex": 6,
+        "timestamp": 1689811626
+      },
+      "summary": "FFIST._airdrop assigns one raw token unit to a predictably chosen address. A crafted zero-value transfer overwrote the pair balance; sync and tiny sales then drained its USDT reserves.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 55413.106238566936,
+          "valuationTimestamp": 1689811626,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-4",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "55413.106238566935687592",
+            "usdValue": 55413.106238566936,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1689811626,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-1",
+                "source-4",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "realizedAt": 1689815840,
+        "notes": "USDT realised from pair 0x7a3adf2f6b239e64dab1738c695cf48155b6e152: 53200.841980198574448225 in the anchor plus 2214.672631294872206647 in 65 later tiny sales, less the original attacker-supplied 2.408372926510967280 USDT purchase input. USDT is valued at par. Overwritten and remaining FFIST receive no separate value; gas and later transfers do not reduce gross victim depletion."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:ffist-predictable-airdrop-balance-overwrite",
+      "codeHash": "0x0dda439f8c1e18bc7aa4fef5e3857b59c9efcbb642555b93b59c622a0db36b53",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 4649465
+    },
+    {
       "id": "eip155:56:0xec317deb2f3efdc1dbf7ed5d3902cdf2c33ae512151646383a8cf8cbcd3d4577",
       "protocol": {
         "name": "Elephant Money",
@@ -20601,6 +20891,66 @@
       "codeHash": "0x7d311619daf40dc50ea5d54ce2b69d5479c4937c60f086f69c55a6e80489dceb",
       "ageResetKind": "deployment",
       "codeAgeSeconds": 5772324
+    },
+    {
+      "id": "eip155:56:0x8de1921ae538264917f99f8ebd567890061d39c92a8fe58f4abd108d2373a265",
+      "protocol": {
+        "name": "landNFT",
+        "slug": "landnft"
+      },
+      "name": "landNFT permissionless whitelisted minter",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x8de1921ae538264917f99f8ebd567890061d39c92a8fe58f4abd108d2373a265",
+        "blockNumber": 28207867,
+        "transactionIndex": 124,
+        "timestamp": 1684081585
+      },
+      "summary": "The NFT owner whitelisted a helper whose public batch mint forwards arbitrary recipients and quantities without caller authorization. An unrelated caller minted 876 NFTs in five transactions and redeemed 143 for 28,600 XQJ.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 149610.89310157733,
+          "valuationTimestamp": 1684082363,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-5",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x89eb16377f3d10d39b23df7c02ae94ac3a81d389",
+              "symbol": "XQJ"
+            },
+            "amount": "28600",
+            "usdValue": 149610.89310157733,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1684082363,
+              "unitPriceUsd": 5.2311501084467595,
+              "sourceIds": [
+                "source-5",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-5",
+              "source-6"
+            ]
+          }
+        ],
+        "confidence": "medium",
+        "realizedAt": 1684082633,
+        "notes": "143 successful redemptions remove exactly 28,600 XQJ (9 decimals) from 0xeab03ad7ea0ac5afb272b592bef88cf93ed190c5. The disposal swaps 28,601 XQJ for 149,616.134251685770252629 Binance-Peg USDT (0x55d398326f99059ff775485246999027b3197955), not BUSD. Subtract 0.01 USDT injected into the pair and apply disposal unit value to only the 28,600 stolen XQJ, excluding one pre-purchased XQJ. USDT valued at $1. Remaining unredeemed NFTs carry no additional valuation; gas and recoveries are not deducted."
+      },
+      "targetId": "target-2",
+      "failureModeId": "failure:landnft-permissionless-whitelisted-minter",
+      "codeHash": "0xbb0ad26c473a799c4012c87df727b756d54336029fcec695e84fca9202cdc5ec",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 5985420
     },
     {
       "id": "eip155:1:0x0fe2542079644e107cbf13690eb9c2c65963ccb79089ff96bfaf8dced2331c92",
@@ -24561,29 +24911,31 @@
       "codeAgeSeconds": 11523088
     },
     {
-      "id": "eip155:1:0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e",
+      "id": "eip155:1:0x9437dde6c06a20f6d56f69b07f43d5fb918e6c57c97e1fc25a4162c693f578aa",
       "protocol": {
         "name": "Uniswap V1",
         "slug": "uniswap-v1"
       },
-      "name": "Uniswap V1 imBTC exchange ERC-777 reentrancy",
+      "name": "Uniswap V1 ERC-777 sender-hook reserve reentrancy",
       "chainId": 1,
       "exploit": {
-        "transactionHash": "0x32c83905db61047834f29385ff8ce8cb6f3d24f97e24e6101d8301619efee96e",
-        "blockNumber": 9894154,
-        "transactionIndex": 46,
-        "timestamp": 1587182364
+        "transactionHash": "0x9437dde6c06a20f6d56f69b07f43d5fb918e6c57c97e1fc25a4162c693f578aa",
+        "blockNumber": 9893295,
+        "transactionIndex": 8,
+        "timestamp": 1587171499
       },
-      "summary": "The Uniswap V1 imBTC exchange updated its reserves after pulling tokens, so imBTC's ERC-777 tokensToSend hook let the attacker re-enter tokenToEthSwapInput() at a stale price and drain the ETH reserve.",
+      "summary": "Uniswap V1 tokenToEthInput pays ETH before collecting tokens and has no reentrancy lock. An ERC-777 tokensToSend callback can sell again before the first transfer updates the token reserve, overpaying ETH against a stale reserve.",
       "loss": {
-        "kind": "net-loss",
+        "kind": "gross-assets-lost",
         "usd": {
-          "amount": 232239.46,
-          "valuationTimestamp": 1587182364,
-          "method": "reported",
+          "amount": 232855.2491883574,
+          "valuationTimestamp": 1587171752,
+          "method": "incident-price",
           "sourceIds": [
             "source-3",
-            "source-4"
+            "source-5",
+            "source-6",
+            "source-7"
           ]
         },
         "assets": [
@@ -24593,30 +24945,52 @@
               "tokenAddress": null,
               "symbol": "ETH"
             },
-            "amount": "1278",
-            "usdValue": 232239.46,
+            "amount": "1278.781248956352130815",
+            "usdValue": 220669.94871485446,
             "valuation": {
-              "method": "reported",
-              "timestamp": 1587182364,
-              "unitPriceUsd": null,
+              "method": "incident-price",
+              "timestamp": 1587171752,
+              "unitPriceUsd": 172.562702882099,
               "sourceIds": [
-                "source-3"
+                "source-5"
               ]
             },
             "sourceIds": [
               "source-3",
-              "source-4"
+              "source-6"
+            ]
+          },
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": null,
+              "symbol": "ETH"
+            },
+            "amount": "70.613755290031533337",
+            "usdValue": 12185.300473502957,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1587171752,
+              "unitPriceUsd": 172.562702882099,
+              "sourceIds": [
+                "source-5"
+              ]
+            },
+            "sourceIds": [
+              "source-3",
+              "source-6"
             ]
           }
         ],
         "confidence": "high",
-        "notes": "The Eye of Horus campaign analysis identifies 525 reentrant transactions against the same imBTC exchange and reports 1,278 ETH of accumulated profit, worth $232,239.46 over the campaign. The code-age anchor is one transaction from that sequence; its trace independently reproduces 0.083716857663001059 ETH of net profit."
+        "notes": "The components are ETH reserve depletion in the imBTC exchange (519 transactions) and eINV exchange (six transactions). For each campaign transaction, sum ETH calls out of its exchange minus ETH calls into it; this excludes recycled attacker inputs and flash-loan principal without subtracting gas or later recoveries. The eINV total exceeds the attacker payout column in the Horus table by 2,193 wei retained in the helper. Both components use the same incident-time ETH price. Unvalued residual token depletion is 0.00000245 imBTC and 0.000000000000000003 eINV.",
+        "realizedAt": 1587183778
       },
       "targetId": "target-1",
       "failureModeId": "failure:uniswap-v1-erc777-reentrancy-stale-token-reserve",
       "codeHash": "0xb9205fc3f30b0ad30c6f03a0f464f8fd435fbf28cdbb6071054d62fb506a4b96",
       "ageResetKind": "deployment",
-      "codeAgeSeconds": 11556263
+      "codeAgeSeconds": 11545398
     },
     {
       "id": "eip155:1:0xd9b3e229acc755881890394cc76fde0d7b83b1abd4d046b0f69c1fd9fd495ff6",
@@ -25007,6 +25381,66 @@
       "codeHash": "0x20450c32b82b446cc96fd669e1e3fefb1d5391f3ea6581bb322290eb3bc5d5f0",
       "ageResetKind": "implementation-change",
       "codeAgeSeconds": 12342987
+    },
+    {
+      "id": "eip155:56:0xeb4eb487f58d39c05778fed30cd001b986d3c52279e44f46b2de2773e7ee1d5e",
+      "protocol": {
+        "name": "Utopia",
+        "slug": "utopia"
+      },
+      "name": "Utopia predictable airdrop balance overwrite",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0xeb4eb487f58d39c05778fed30cd001b986d3c52279e44f46b2de2773e7ee1d5e",
+        "blockNumber": 30119397,
+        "transactionIndex": 36,
+        "timestamp": 1689830491
+      },
+      "summary": "Utopia._airdrop overwrites rather than increments a predictably chosen address balance. A crafted pair skim overwrote the pair’s Utopia balance, allowing sync and tiny subsequent sales to drain WBNB reserves.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 119958.1171795637,
+          "valuationTimestamp": 1689830564,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-5",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+              "symbol": "WBNB"
+            },
+            "amount": "495.735668979104498241",
+            "usdValue": 119958.1171795637,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1689830564,
+              "unitPriceUsd": 241.98,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-5"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "realizedAt": 1689832176,
+        "notes": "WBNB extracted from pair 0xfeef619a56fce9d003e20bf61393d18f62b0b2d5: 492.088605739133158123 in the anchor plus six later payouts totaling 3.657063239971340118, less the attacker’s 0.01 WBNB purchase input. Protocol fee conversions retained as MT for LP rewards are excluded. No separate value is assigned to overwritten or unsold Utopia balances; gas and subsequent transfers do not reduce gross loss. WBNB is valued at the timestamped BNB/USD sample."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:utopia-predictable-airdrop-balance-overwrite",
+      "codeHash": "0xacb5856ffcfcfb2f221f14dad0006d014159b9d0e0f3b393f8cf1592dec18973",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 12586297
     },
     {
       "id": "eip155:56:0x13d19809b19ac512da6d110764caee75e2157ea62cb70937c8d9471afcb061bf",
@@ -31625,6 +32059,66 @@
       "codeAgeSeconds": 55283324
     },
     {
+      "id": "eip155:1:0x185a16017fb4d9b2fefdf5935435253d53d4758238275426b507fe54eb4fe97a",
+      "protocol": {
+        "name": "EquilibriaEPendle",
+        "slug": "equilibriaependle"
+      },
+      "name": "Equilibria transferable-share reward replay",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0x185a16017fb4d9b2fefdf5935435253d53d4758238275426b507fe54eb4fe97a",
+        "blockNumber": 23203452,
+        "transactionIndex": 0,
+        "timestamp": 1755948059
+      },
+      "summary": "VaultEPendle did not update reward debt on share transfers and public getReward(account) let fresh receivers re-claim the same native rewards repeatedly.",
+      "loss": {
+        "kind": "net-loss",
+        "usd": {
+          "amount": 64238.842466590555,
+          "valuationTimestamp": 1755948060,
+          "method": "incident-price",
+          "sourceIds": [
+            "source-5",
+            "source-6",
+            "source-3"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "symbol": "ETH",
+              "tokenAddress": null
+            },
+            "amount": "13.599119865909616611",
+            "usdValue": 64238.842466590555,
+            "valuation": {
+              "method": "incident-price",
+              "timestamp": 1755948060,
+              "unitPriceUsd": 4723.75,
+              "sourceIds": [
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-5",
+              "source-3"
+            ]
+          }
+        ],
+        "confidence": "medium",
+        "realizedAt": 1755956687,
+        "notes": "Five successful reward-replay transactions plus one funding-only attempt form one episode. CALL-value outflows minus all campaign inflows, including recycled payouts and the standalone 0.664440216358314284 ETH topup, equal 13.599119865909616611 ETH. This matches vault balance depletion from 13.603353927190515249 to 0.004234061280898638 ETH over blocks 23203451–23204165. Net loss is used because pooled attacker inputs cannot be assigned individually to the residual balance. Gas, builder payments and later recoveries are not deductions. All ETH is valued at the first-exploit historical price; the campaign lasts under three hours."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:equilibria-vault-transfer-reward-debt",
+      "codeHash": "0xbc38d07577af13a82cebd4d14004f2854970322a6831f9ec5a82b681a269693d",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 58768788
+    },
+    {
       "id": "eip155:56:0xe7abe6416e386332b41d63cf5f16903251dc178942cd79bf080fe61058587628",
       "protocol": {
         "name": "Balance Protocol",
@@ -37189,17 +37683,6 @@
       ]
     },
     {
-      "id": "eip155:1:0x185a16017fb4d9b2fefdf5935435253d53d4758238275426b507fe54eb4fe97a",
-      "name": "EquilibriaEPendle",
-      "chainId": 1,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:1:0x1a3e9eb5e00f39e84f90ca23bd851aa194b1e7a90003e3f6b9b17bbb66dabbb9",
       "name": "unverified_03f9",
       "chainId": 1,
@@ -37980,17 +38463,6 @@
       ]
     },
     {
-      "id": "eip155:42161:0x001cb16e17c4c5a5c4d02423c9e9b2f2b11ab6b2a1baf2ba53b8fcaf06167716",
-      "name": "SEAToken",
-      "chainId": 42161,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:42161:0x20db78913a51c3b3aece860ea142c240f3f8fa3b5bbf533a3d1d48eed857e10f",
       "name": "FractalProtocol",
       "chainId": 42161,
@@ -38063,6 +38535,18 @@
       "verificationTier": "provisional",
       "exclusionReasons": [
         "incident-verification-tier:provisional",
+        "target-verification-tier:provisional",
+        "target-verification:not-curve-eligible"
+      ]
+    },
+    {
+      "id": "eip155:42161:0xcbcbcfe3dd9dd8dce6c606ae086f499bb8a1c94b1ba409ebfb07a8373e61f2de",
+      "name": "MetaSea atomic open/redeem distributor depletion",
+      "chainId": 42161,
+      "verificationTier": "provisional",
+      "exclusionReasons": [
+        "incident-verification-tier:provisional",
+        "loss:no-usd-valuation",
         "target-verification-tier:provisional",
         "target-verification:not-curve-eligible"
       ]
@@ -38387,41 +38871,8 @@
       ]
     },
     {
-      "id": "eip155:56:0x191a34e6c0780c3d1ab5c9bc04948e231d742b7d88e0e4f85568d57fcdc03182",
-      "name": "TrustPad LaunchpadLockableStaking reward accounting",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "id": "eip155:56:0x199c4b88cab6b4b495b9d91af98e746811dd8f82f43117c48205e6332db9f0e0",
-      "name": "FFIST",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:56:0x1ae499ccf292a2ee5e550702b81a4a7f65cd03af2c604e2d401d52786f459ba6",
       "name": "Bitpaidio",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "id": "eip155:56:0x1c09395848a87069c9d6ddbe5adc6249510aba7a2a83479a74b4280cafb5fb29",
-      "name": "DIP",
       "chainId": 56,
       "verificationTier": "provisional",
       "exclusionReasons": [
@@ -38932,6 +39383,7 @@
       "verificationTier": "provisional",
       "exclusionReasons": [
         "incident-verification-tier:provisional",
+        "loss:no-usd-valuation",
         "target-verification-tier:provisional",
         "target-verification:not-curve-eligible"
       ]
@@ -40037,17 +40489,6 @@
       ]
     },
     {
-      "id": "eip155:56:0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048",
-      "name": "landNFT miner mint without permission check",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:56:0xe7b7c974e51d8bca3617f927f86bf907a25991fe654f457991cbf656b190fe94",
       "name": "BDEX BvaultsStrategy unprotected withdrawal",
       "chainId": 56,
@@ -40071,12 +40512,12 @@
     },
     {
       "id": "eip155:56:0xe968e648b2353cea06fc3da39714fb964b9354a1ee05750a3c5cc118da23444b",
-      "name": "SellToken router unchecked user-supplied settlement input",
+      "name": "SellToken miner spot-priced reward inflation",
       "chainId": 56,
       "verificationTier": "provisional",
       "exclusionReasons": [
         "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
+        "loss:no-usd-valuation",
         "target-verification:not-curve-eligible"
       ]
     },
@@ -40105,17 +40546,6 @@
     {
       "id": "eip155:56:0xea88dc6dbd81d09c572b5849e0d4508598edcf8f11c9a995cd8fe7e6c194f39e",
       "name": "BNBX helper unrestricted transferFrom of user allowances",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "id": "eip155:56:0xeb4eb487f58d39c05778fed30cd001b986d3c52279e44f46b2de2773e7ee1d5e",
-      "name": "Utopia",
       "chainId": 56,
       "verificationTier": "provisional",
       "exclusionReasons": [
@@ -40463,17 +40893,6 @@
       ]
     },
     {
-      "id": "eip155:8453:0xe63a8df8759f41937432cd34c590d85af61b3343cf438796c6ed2c8f5b906f62",
-      "name": "TSURU",
-      "chainId": 8453,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:8453:0xe831f3991132cbaffbb4a3738da7d1e254a6c02f0adce605a333229a61e27ad7",
       "name": "UnprotectedArbBot",
       "chainId": 8453,
@@ -40488,10 +40907,9 @@
       "id": "eip155:8453:0xf42a8fe556d5e4ab59b0b7675ccbcd1425e7e2a6a8e0c9775fc6cd7c48ff55a1",
       "name": "PRXVTStaking reward accounting not settled on transfer",
       "chainId": 8453,
-      "verificationTier": "provisional",
+      "verificationTier": "reviewed",
       "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
+        "loss:no-usd-valuation",
         "target-verification:not-curve-eligible"
       ]
     },

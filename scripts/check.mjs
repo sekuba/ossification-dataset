@@ -391,7 +391,7 @@ function verifyIncident(record, state, errors) {
       .filter((asset) => asset.usdValue !== null)
       .map((asset) => asset.valuation?.method),
   )
-  if (valuedAssetMethods.has('realised-proceeds')) {
+  if (usd && valuedAssetMethods.has('realised-proceeds')) {
     const expected = valuedAssetMethods.size === 1 ? 'realised-proceeds' : 'other'
     if (usd?.method !== expected)
       errors.push(`${label}: loss.usd.method must be ${expected} for its realised-proceeds asset components`)

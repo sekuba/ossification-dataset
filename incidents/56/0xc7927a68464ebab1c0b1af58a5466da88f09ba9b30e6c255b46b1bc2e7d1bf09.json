@@ -18,7 +18,7 @@
       "0x835b45d38cbdccf99e609436ff38e31ac05bc502"
     ]
   },
-  "summary": "The OSN token's transfer hook pushed USDT dividends to LP holders through its dividend tracker without any minimum LP holding time or contract-recipient check, so the attacker split funds across helper contracts, added liquidity, and immediately collected the accumulated reward pool.",
+  "summary": "OSN supplied stale and duplicated LP dividend weights: its liquidity-removal transfer hook copied the recipient\u2019s current pair-token balance into the dividend tracker, but subsequent LP transfers did not reduce the previous holder\u2019s recorded weight. Reusing LP across recipients could therefore multiply reward entitlement. The defect is in the token\u2019s weight updates, not the tracker\u2019s owner-only setBalance authorization or the absence of a holding period.",
   "loss": {
     "kind": "unspecified",
     "usd": {
@@ -29,40 +29,48 @@
     },
     "assets": [],
     "confidence": "unknown",
-    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Unverified $109,000 seed estimate retained only as a discovery value. Tracker payouts include legitimate LP yield and are not themselves stolen value; neither full-campaign wrongful entitlement nor a defensible USD lower bound has been isolated."
   },
   "targets": [
     {
       "id": "target-1",
       "executionAddress": "0x810f4c6ae97bcc66da5ae6383cc31bd3670f6d13",
-      "relationship": "unknown",
+      "relationship": "direct",
       "deployment": {
         "timestamp": 1713163426,
-        "creatorAddress": "0xeac1d1cebf3165a5dbbd6367eba726a28266e81d"
+        "creatorAddress": "0xeac1d1cebf3165a5dbbd6367eba726a28266e81d",
+        "transactionHash": "0x8fe82398d2070b9a983e33c9b91b7a8eef5ba5b9a1699ee7a01e6e38813f97c9",
+        "blockNumber": 37874409,
+        "transactionIndex": 147
       },
       "ageReset": {
         "kind": "deployment",
-        "description": "Unreviewed seed-inventory basis: execution-address deployment."
+        "description": "Provisional deployment basis; earliest fault exercise and intervening causal configuration remain unresolved."
       },
       "codeAgeSeconds": 1803125,
       "failureModeId": "provisional:eip155:56:0xc7927a68464ebab1c0b1af58a5466da88f09ba9b30e6c255b46b1bc2e7d1bf09:failure-1",
       "evidence": {
         "identitySourceIds": [
-          "source-3",
-          "source-4"
+          "source-1",
+          "source-4",
+          "source-5"
         ],
         "ageSourceIds": [
-          "source-4"
+          "source-4",
+          "source-5"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history were imported from the seed inventory without independent review.",
-          "The executing code artifact and its code hash have not been established in structured evidence.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Deployment and sampled runtime hashes are reproduced; intervening causal configuration, including trading activation and address exemptions, has not been fully reviewed.",
+          "The retained campaign transaction is not established as the earliest fault exercise, so the stored deployment-based age is not a reviewed measurement."
         ]
+      },
+      "codeArtifact": {
+        "address": "0x810f4c6ae97bcc66da5ae6383cc31bd3670f6d13",
+        "codeHash": "0xddce666d829127978e102b141ddfdaa508d5657f4a44aaaa5248f9b54bfcee95"
       }
     }
   ],
@@ -88,14 +96,26 @@
     {
       "id": "source-4",
       "type": "review-note",
-      "note": "onchain review: OSN token 0x810f4c6ae97bcc66da5ae6383cc31bd3670f6d13 created 2024-04-15 by 0xeac1d1cebf3165a5dbbd6367eba726a28266e81d (it deployed its dividend tracker 0x8e474bc29fb9a884b1fc297b0b4bbc465700a571 in the same tx); attack sender 0x835b45d38cbdccf99e609436ff38e31ac05bc502 is unrelated to the creator; no upgrade events"
+      "reviewer": "Codex",
+      "reviewedAt": "2026-09-15T06:53:04Z",
+      "note": "Bounded OSN review: Etherscan verified source at https://bscscan.com/address/0x810f4c6ae97bcc66da5ae6383cc31bd3670f6d13#code shows _transfer copying pair.balanceOf(to) into _userInfo[to].lpAmount and lpDividendTracker.setBalance on removal; pair-token transfers do not invoke this token hook. DividendTracker.setBalance is onlyOwner. Source-1 callTracer reproduces direct OSN CALLs and 202 tracker setBalance calls (selector 0xe30443bc); tracker accounting is downstream of token-supplied weights. Source-5 receipt establishes direct creation at block 37874409, index 147, timestamp 1713163426 by the recorded creator. eth_getCode is empty at 37874408 and hashes to the recorded runtime at 37874409 and 38474365. These endpoint checks do not establish complete state continuity. Earlier LP transfers can leave stale donor weights before another recipient is registered; establishing the earliest loss requires replaying those weights and payouts against legitimate entitlement. Full-campaign excess rewards and causal configuration history remain unresolved; no incident or target promotion."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x8fe82398d2070b9a983e33c9b91b7a8eef5ba5b9a1699ee7a01e6e38813f97c9"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss were imported from the seed inventory and await review.",
-      "The imported USD loss lacks structured valuation provenance."
+      "The recorded transaction is a confirmed campaign execution, not a proven earliest successful exercise; earlier stale-weight payouts require entitlement replay.",
+      "The imported USD estimate is unverified; campaign payouts must be separated from legitimate LP yield before measuring wrongful depletion."
     ]
-  }
+  },
+  "discovery": [
+    "seed:osn:2024-05-06:osn-lp-dividend-distribution-drain",
+    "web:2024-05-06:osn"
+  ]
 }
