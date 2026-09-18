@@ -31,7 +31,7 @@
     },
     "assets": [],
     "confidence": "unknown",
-    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported rounded estimate. Source-4 reproduces 94304.580256723571814836 USDT depletion for the recorded transaction; full campaign valuation remains unresolved."
   },
   "targets": [
     {
@@ -44,7 +44,10 @@
       },
       "deployment": {
         "timestamp": 1660918174,
-        "creatorAddress": "0xffa253745772f1c3b659583cd47a9858286b8e61"
+        "creatorAddress": "0xffa253745772f1c3b659583cd47a9858286b8e61",
+        "blockNumber": 20579790,
+        "transactionHash": "0x44513a58d6b90cea4e874073c887bc8a2f103f2dfcdb5b4a24060fb1aebcbe08",
+        "transactionIndex": 98
       },
       "ageReset": {
         "kind": "implementation-change",
@@ -53,9 +56,13 @@
         "transactionHash": "0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b",
         "transactionIndex": 53,
         "mechanism": {
-          "type": "documented"
+          "type": "storage-write",
+          "address": "0x01112ea0679110cbc0ddea567b51ec36825aef9b",
+          "storageSlot": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb",
+          "valueBefore": "0x000000000000000000000000e0d971450997bef4508abeae8082291c2658f2b8",
+          "valueAfter": "0x0000000000000000000000009122191d7b2ccf11a2600de4eafd6b8cd3d03a62"
         },
-        "description": "2022-08-21T06:21:16Z (BSC block 20627998, tx 0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b sent by the deployer 0xffa253745772f1c3b659583cd47a9858286b8e61): the proxy's implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb changed 0xe0d971450997bef4508abeae8082291c2658f2b8 -> 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 with no event emitted; found by binary-searching eth_getStorageAt on that slot"
+        "description": "Implementation activation reproduced by prestateTracer diffMode; latest causal configuration remains unresolved."
       },
       "codeAgeSeconds": 2842927,
       "failureModeId": "provisional:eip155:56:0xd692f71de2768017390395db815d34033013136c378177c05d0d46ef3b6f0897:failure-1",
@@ -67,15 +74,15 @@
         ],
         "ageSourceIds": [
           "source-4",
-          "source-5"
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history were imported from the seed inventory without independent review.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Later wrapper configuration writes and token authority history have not been fully adjudicated; implementation activation is provisional age basis."
         ]
       }
     }
@@ -100,26 +107,30 @@
       "url": "https://twitter.com/BlockSecTeam/status/1573252869322846209"
     },
     {
-      "id": "source-4",
-      "type": "review-note",
-      "note": "onchain review: wrapper 0x01112eA0679110cbc0ddeA567b51ec36825aeF9b created 2022-08-19T14:09:34Z by 0xffa253745772f1c3b659583cd47a9858286b8e61, unrelated to attack sender 0xa957910cb426cb52dfc6dff5e582860a22db70d2; no EIP-1967 Upgraded events (this proxy emits none - see the recheck below). Loss verified onchain: 94,304.58 USDT left the RADT/USDT pair 0xaF8fb60f310DCd8E488e4fa10C48907B7abf115e to the attack contract. Recheck (deployment basis was wrong): the wrapper's runtime is a 98-byte proxy that SLOADs 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb - the raw keccak(\"eip1967.proxy.implementation\"), one less than the standard EIP-1967 slot - and delegatecalls it, which is why an EIP-1967 event/slot scan sees nothing. Reading that slot instead: it held 0xe0d971450997bef4508abeae8082291c2658f2b8 at the creation block 20579790 and 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 at the incident block; a binary search over [20579790, 21572418] puts the single change at block 20627998 (2022-08-21T06:21:16Z), written silently by the deployer, with no Upgraded log anywhere on the proxy. 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 is the address the victim delegatecalls in the exploit (selector d9caed12, the withdraw path). Age measured from that swap: 32.9 days rather than 34.6."
-    },
-    {
       "id": "source-5",
       "type": "onchain-transaction",
       "chainId": 56,
       "transactionHash": "0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-09-16T15:26:31Z",
+      "note": "Partial review, not promotion. Reproduce source-1 eth_getTransactionReceipt: USDT 0x55d398326f99059ff775485246999027b3197955 (18 decimals), Transfer log 22 pays 95305580256723571814836 raw units from pair 0xaf8fb60f310dcd8e488e4fa10c48907b7abf115e to attacker helper; logs 2 and 9 supply 1000000000000000000000 and 1000000000000000000 raw units to that pair. Recorded-transaction depletion after removing campaign inputs is 94304.580256723571814836 USDT; full campaign scope remains unresolved. source-1 debug_traceTransaction(callTracer) shows helper 0x90b50cab27ede09a0d59743e4112d6e87e838ff4 directly calling wrapper selector 0xd9caed12, delegatecalling the recorded implementation; wrapper invokes token 0xdc8cb92aa6fc7277e3ec32e3f00ad7b8437ae883. Reproduce eth_getLogs for that token Transfer topic with pair as topic1 over blocks 20579790..21572419: 4522 logs in 4309 unique transactions. Trace each with callTracer and filter wrapper calls with selector 0xd9caed12 whose caller is not that token: only source-1 matches, with zero trace errors. This bounds earlier pair depletion only, not arbitrary token-holder abuse or later campaigns. source-6 receipt identifies deployment block/index; source-5 prestateTracer(diffMode=true) witnesses the implementation slot before/after values stored in ageReset. The slot is keccak256(eip1967.proxy.implementation), one greater than the standard EIP-1967 slot. Unresolved: latest causal configuration, full first-use and campaign scope. Next: classify wrapper persistent reads against all configuration writes after activation, inspect token authority history, and extend Transfer/call-trace scan beyond pair-origin transfers and beyond recorded incident to the fix. Later wrapper txlist identifies withdrawal 0x35f01ebce53727872ef601d30fcbb73e9f53f62ea8e5a06988a122b643f129ff at block 21625307 and implementation change 0xa3c7e285d0628bdf547ce1568cb50907fcc74b959134ac02d61997776af52d8e at 21625505. Next campaign-scope step: trace that withdrawal and test whether it repeats the fault before treating the later implementation change as a fix."
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x44513a58d6b90cea4e874073c887bc8a2f103f2dfcdb5b4a24060fb1aebcbe08"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss were imported from the seed inventory and await review.",
-      "The imported USD loss lacks structured valuation provenance."
+      "Earliest arbitrary-holder abuse and later campaigns remain unresolved; source-4 gives the exact bounded scan and next steps.",
+      "Full campaign valuation and latest causal configuration remain provisional."
     ]
-  },
-  "notes": [
-    "Seed-inventory flag: nonStandardUpgradeArchitecture=true.",
-    "Seed-inventory documentedLastChange: 2022-08-21T06:21:16Z (BSC block 20627998, tx 0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b sent by the deployer 0xffa253745772f1c3b659583cd47a9858286b8e61): the proxy's implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb changed 0xe0d971450997bef4508abeae8082291c2658f2b8 -> 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 with no event emitted; found by binary-searching eth_getStorageAt on that slot"
-  ]
+  }
 }

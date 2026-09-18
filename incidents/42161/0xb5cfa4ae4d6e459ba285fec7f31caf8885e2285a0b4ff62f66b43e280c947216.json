@@ -29,7 +29,7 @@
     },
     "assets": [],
     "confidence": "unknown",
-    "notes": "Imported from the seed inventory, which did not consistently distinguish gross from net loss or record valuation provenance."
+    "notes": "Imported $130,000 resembles attacker proceeds, not reproduced gross victim depletion. Source-4 reconciles reserve flows and attacker-supplied native USDC; remaining collateral/debt positions and full campaign require review before valuation."
   },
   "targets": [
     {
@@ -41,29 +41,47 @@
         "codeHash": "0x47e157d8ea643bb5cf75e50c1f29764cf406099cbd7daa14b6aaace499d1cfaf"
       },
       "deployment": {
-        "timestamp": 1716266401
+        "timestamp": 1716266401,
+        "blockNumber": 213419780,
+        "transactionHash": "0x67965deab92809be6535082bf77576f8350a37856348c8ad3ebd879916aab0fc",
+        "transactionIndex": 2,
+        "creatorAddress": "0xbc2842f25dd2c37845afd8f854c9b4b18095d0c2"
       },
       "ageReset": {
-        "kind": "deployment",
-        "description": "Unreviewed seed-inventory basis: execution-address deployment."
+        "kind": "implementation-change",
+        "timestamp": 1716266378,
+        "blockNumber": 213419690,
+        "transactionHash": "0x0c70c0e899dc53c318fecc289f138b8cdf4d4293088757e6f76fec4ba07d3d61",
+        "transactionIndex": 3,
+        "logIndex": 3,
+        "mechanism": {
+          "type": "event",
+          "address": "0x090287f882669268aea53be5b3fb284facf7bae6",
+          "eventTopic": "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+          "codeAddressLocation": "topic1-address"
+        },
+        "description": "Beacon activated this implementation 23 seconds before execution-context creation; complete causal-state history remains provisional."
       },
-      "codeAgeSeconds": 11615469,
+      "codeAgeSeconds": 11615492,
       "failureModeId": "provisional:eip155:42161:0xb5cfa4ae4d6e459ba285fec7f31caf8885e2285a0b4ff62f66b43e280c947216:failure-1",
       "evidence": {
         "identitySourceIds": [
           "source-2",
-          "source-3"
+          "source-3",
+          "source-4"
         ],
         "ageSourceIds": [
-          "source-3"
+          "source-3",
+          "source-4",
+          "source-5",
+          "source-6"
         ]
       },
       "verification": {
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "Target identity and code history were imported from the seed inventory without independent review.",
-          "One or more target block, transaction, ordering, or creator anchors remain unresolved."
+          "Implementation source is unverified; complete defect attribution, additional oracle/consumer targets, earliest exercise and causal configuration history remain unresolved."
         ]
       }
     }
@@ -86,13 +104,32 @@
       "id": "source-3",
       "type": "review-note",
       "note": "re-check 2026 (deployment-basis rows with a DELEGATECALL in the runtime): CONFIRMED deployment basis. The victim is an ERC-1967 beacon proxy: the beacon slot 0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50 holds 0x090287f882669268aea53be5b3fb284facf7bae6 at all 21 sample points across [213419780, 259645908], and that beacon's implementation (its storage slot 1) holds 0x1e515301f24abbf92dfb3d071e062739a8827b4d over the same probe, with its single Upgraded event at block 213419690 - 90 blocks (23 s) before the proxy itself was created. callTracer on the exploit tx confirms the proxy delegatecalls only 0x1e515301... ."
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-09-16T15:13:57Z",
+      "note": "Partial review, not promotion. Reproduce source-1 eth_getTransactionReceipt: native USDC 0xaf88d065e77c8cc2239327c5edb3a432268e5831 log 80 transfers 6492300768118 raw units from attacker-created helper 0x1209ea2953310fceb37f7e2c32fe9153bd2445c6 into reserve 0x56ea05c0c3b665f67538909343fb3becb4fe5714; log 150 transfers 6630792705184 out, a preexisting cash depletion of 138491.937066 USDC after removing campaign input. Logs 162/174/186 transfer 679208 WBTC raw units, 153407712731719084 WETH raw units and 298077739 USDC.e raw units from their lending reserves. These cash changes are not yet a complete loss calculation: reconcile LP collateral, helper deposits/debt and any subsequent withdrawals before choosing gross/net scope. The PoC labels native USDC as cUSDC and its $130k estimate concerns final proceeds. Etherscan V2 getcontractcreation and source-5 receipt identify proxy factory 0xbc2842f25dd2c37845afd8f854c9b4b18095d0c2 (EOA deployer differs), block 213419780/index 2. Source-6 block 213419690/index 3/log 3 activates implementation in the beacon. At block 259645907 eth_getStorageAt(proxy,EIP1967 beacon slot) returns beacon 0x090287f882669268aea53be5b3fb284facf7bae6, beacon slot 1 returns implementation 0x1e515301f24abbf92dfb3d071e062739a8827b4d, and cast keccak(eth_getCode(implementation,same block)) reproduces stored hash. Source-1 callTracer confirms delegatecalls to it. Unresolved: latest causal state, complete fault-artifact set, first successful exercise and exact campaign loss. Next: recover source matching the unverified implementation runtime, identify the lending oracle reached by the trace, scan beacon Upgraded logs and collateral-configuration history from activation through exploit, and reconcile the helper loan/deposit positions with reserve cash changes. The beacon activation basis replaces the seed execution-proxy creation basis under shared mutable-beacon methodology."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "chainId": 42161,
+      "transactionHash": "0x67965deab92809be6535082bf77576f8350a37856348c8ad3ebd879916aab0fc"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "chainId": 42161,
+      "transactionHash": "0x0c70c0e899dc53c318fecc289f138b8cdf4d4293088757e6f76fec4ba07d3d61"
     }
   ],
   "verification": {
     "tier": "provisional",
     "limitations": [
-      "Classification and loss were imported from the seed inventory and await review.",
-      "The imported USD loss lacks structured valuation provenance."
+      "Earliest successful exercise and complete fault attribution remain unresolved; source-4 preserves reproduction coordinates and next steps.",
+      "Imported $130,000 is not gross reserve depletion; full collateral/debt reconciliation and valuation remain unresolved."
     ]
   }
 }

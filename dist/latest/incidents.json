@@ -5053,6 +5053,66 @@
       "codeAgeSeconds": 120060
     },
     {
+      "id": "eip155:56:0x442ce0af4d10b23968a66b0b53d7b95f5bb611d55f19dc5a1963c763f65128f0",
+      "protocol": {
+        "name": "BitCrown",
+        "slug": "bitcrown"
+      },
+      "name": "BitCrown distributor missing caller authorization",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x442ce0af4d10b23968a66b0b53d7b95f5bb611d55f19dc5a1963c763f65128f0",
+        "blockNumber": 51131922,
+        "transactionIndex": 38,
+        "timestamp": 1749441923
+      },
+      "summary": "The stateless distributor let any caller choose a token, recipients and amounts for transfers from its own balance. The attacker removed its entire 100,000 BTCn inventory and sold it for USDT.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 7939.270661176575,
+          "valuationTimestamp": 1749441923,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-1",
+            "source-3"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x3f74a64eb5641d2479cb8343b2330c6598d126d4",
+              "symbol": "BTCn"
+            },
+            "amount": "100000",
+            "usdValue": 7939.270661176575,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1749441923,
+              "unitPriceUsd": 0.07939270661176576,
+              "sourceIds": [
+                "source-1",
+                "source-3"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-3",
+              "source-5"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Entire BTCn inventory valued at actual same-transaction disposal proceeds: 7939.270661176575393032 USDT at par. The token transfer deduction and swap price impact are reflected in the effective value of the stolen 100000 BTCn; gas and recoveries do not reduce gross loss."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:bitcrown-distributor-missing-caller-authorization",
+      "codeHash": "0xe3964c8cc2895731a0249aa878aca7abc76f234cc3be94ccc0c63b7a8110f546",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 121380
+    },
+    {
       "id": "eip155:59144:0x7ffb4569827ed3acd595270c755195da5c630a1ad999afe6eb9b884ff09d6e5d",
       "protocol": {
         "name": "Malda",
@@ -7281,6 +7341,64 @@
       "codeHash": "0x2deac76a78f4a24cbd590fd5ae30847eed4a064c91ae2dc18a4aa7f7f01293e0",
       "ageResetKind": "module-change",
       "codeAgeSeconds": 305256
+    },
+    {
+      "id": "eip155:1:0xfc872bf5ca8f04b18b82041ec563e4abf2e31e1fc27d1ea5dee39bc8a79d2d06",
+      "protocol": {
+        "name": "USDTStakingContract28",
+        "slug": "usdt-staking-28"
+      },
+      "name": "USDTStakingContract28 public tokenAllowAll()",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xfc872bf5ca8f04b18b82041ec563e4abf2e31e1fc27d1ea5dee39bc8a79d2d06",
+        "blockNumber": 17696563,
+        "transactionIndex": 6,
+        "timestamp": 1689396899
+      },
+      "summary": "tokenAllowAll(token, spender) was public with no owner check, so the attacker had the staking contract approve them for unlimited USDT and then transferred out the whole deposit balance.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 20999.916289,
+          "valuationTimestamp": 1689396899,
+          "method": "stablecoin-par",
+          "sourceIds": [
+            "source-1",
+            "source-4"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+              "symbol": "USDT"
+            },
+            "amount": "20999.916289",
+            "usdValue": 20999.916289,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1689396899,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-4"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-4"
+            ]
+          }
+        ],
+        "confidence": "high",
+        "notes": "Entire preexisting staking balance transferred to attacker, valued at USDT par. No campaign input or recovery adjustment; gas costs do not reduce gross loss."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:usdt-staking-28-public-token-approval",
+      "codeHash": "0x7f5cf84ccf9cf62eb95a9ba3fc94a046a51448f04c44fbe296a08ba6ca45cf96",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 316860
     },
     {
       "id": "eip155:56:0x83b4adaf73ad34c5c53aa9b805579ed74bc1391c5297201e6457cde709dff723",
@@ -38739,17 +38857,6 @@
       ]
     },
     {
-      "id": "eip155:1:0xfc872bf5ca8f04b18b82041ec563e4abf2e31e1fc27d1ea5dee39bc8a79d2d06",
-      "name": "USDTStakingContract28 public tokenAllowAll()",
-      "chainId": 1,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:1:0xfe8bc757d87e97a5471378c90d390df47e1b29bb9fca918b94acd8ecfaadc598",
       "name": "Zenterest stale price feed under-collateralised borrow",
       "chainId": 1,
@@ -38862,7 +38969,7 @@
     },
     {
       "id": "eip155:42161:0xd64729c528e6689cb18b0c90345ab0c9ed18fea44247c89af2f1374643fc89c2",
-      "name": "Sharwa Finance pool liquidity double-counted against a margin position",
+      "name": "Sharwa Finance leveraged-position close under manipulated swap prices",
       "chainId": 42161,
       "verificationTier": "provisional",
       "exclusionReasons": [
@@ -39424,17 +39531,6 @@
     {
       "id": "eip155:56:0x4353a6d37e95a0844f511f0ea9300ef3081130b24f0cf7a4bd1cae26ec393101",
       "name": "WMRP mints on zero-value self-transfer",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
-      "id": "eip155:56:0x442ce0af4d10b23968a66b0b53d7b95f5bb611d55f19dc5a1963c763f65128f0",
-      "name": "BitCrown",
       "chainId": 56,
       "verificationTier": "provisional",
       "exclusionReasons": [
@@ -41153,6 +41249,7 @@
       "verificationTier": "provisional",
       "exclusionReasons": [
         "incident-verification-tier:provisional",
+        "loss:no-usd-valuation",
         "target-verification-tier:provisional",
         "target-verification:not-curve-eligible"
       ]
