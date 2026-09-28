@@ -5,7 +5,7 @@
     "name": "Payy",
     "slug": "payy"
   },
-  "name": "Payy recursive verifier accepted zero-commitment USDC burns",
+  "name": "Payy verifier accepted zero-hash USDC burns",
   "incident": {
     "chainId": 1,
     "exploit": {
@@ -18,7 +18,7 @@
       "0xaa4985dbdabfaca344237d40f7e06c4a0bb57e70"
     ]
   },
-  "summary": "The registered recursive Honk verifier accepted USDC burn messages whose first consumed-note commitment was zero, contradicting the bound UTXO circuit statement. Two settlement batches depleted the bridge through direct payouts and a reimbursed fast withdrawal.",
+  "summary": "Payy L2 admitted UTXO burns of USDC with a zero burn hash, which the UTXO circuit binds to the first input-note commitment and permits only for zero-kind padding notes. The registered recursive Honk verifier accepted the aggregated statements, and two settlement batches depleted the bridge through direct payouts and a reimbursed fast withdrawal.",
   "loss": {
     "kind": "gross-assets-lost",
     "assets": [
@@ -82,28 +82,28 @@
         "creatorAddress": "0x0e55252d64535621037b1198d153b69d4fc86f01"
       },
       "ageReset": {
-        "kind": "configuration-change",
+        "kind": "module-change",
         "timestamp": 1778862167,
         "blockNumber": 25101717,
         "transactionHash": "0x44bd787ea6ddfbc2246ac15926e6b0db51731c2b9c46db53db03beb114536edf",
         "transactionIndex": 71,
         "logIndex": 271,
         "mechanism": {
-          "type": "view-call",
+          "type": "event",
           "address": "0x367c1eaf14aa06b78ce76bd0243297de79d85270",
-          "callData": "0x5d5fa0d10701c58cb73e870b8da74294bb1a820e346546e4d3cdca393aa84d3716d3787c",
-          "valueBefore": "0x000000000000000000000000b553c325959c8615d9018f00906aec3799b9420000000000000000000000000000000000000000000000000000000000000003e8",
-          "valueAfter": "0x00000000000000000000000014dacd534ddc676601b27f41eb541a7951524a2f00000000000000000000000000000000000000000000000000000000000003e8"
+          "eventTopic": "0xdb2a4be964bb3f5ba0504bccdbceaa478be8d73af2238cd9be0ba0c8efc107ca",
+          "codeAddressLocation": "data-word-1-address"
         },
-        "description": "Bridge registry activation of the exact verifier and recursive statement used by the invalid burns."
+        "description": "VerifierAdded on the bridge registry selected this verifier for the agg_final key 0x0701c58c…787c, replacing 0xb553c325959c8615d9018f00906aec3799b94200; the selection held through the exploit."
       },
-      "failureModeId": "failure:payy-recursive-verifier-zero-commitment-burn",
+      "failureModeId": "failure:payy-utxo-proof-zero-hash-burn",
       "evidence": {
         "identitySourceIds": [
           "source-1",
           "source-2",
           "source-7",
-          "source-12"
+          "source-12",
+          "source-14"
         ],
         "ageSourceIds": [
           "source-5",
@@ -117,10 +117,11 @@
         "curveEligible": true,
         "reviewSourceIds": [
           "source-7",
-          "source-11"
+          "source-11",
+          "source-14"
         ],
         "limitations": [
-          "Failure is established at recursive-statement soundness level; the exact cryptographic layer is not independently recovered."
+          "The failing layer is below the published circuit source (constraint translation or proof system of Payy's bb 3.0.0 stack); the specific defect is not independently recovered."
         ]
       },
       "codeAgeSeconds": 11361516
@@ -212,6 +213,13 @@
       "type": "onchain-transaction",
       "chainId": 1,
       "transactionHash": "0xbc595b46e63f21bce4cf2995d384436f2b08682c236721747700c4514c9f1b54"
+    },
+    {
+      "id": "source-14",
+      "type": "review-note",
+      "reviewer": "Claude Opus 5.5",
+      "reviewedAt": "2026-09-28T16:30:00Z",
+      "note": "Root-cause review. Compiling noir/{utxo,agg_utxo,agg_agg,agg_final} at source-12 with nargo 1.0.0-beta.14 reproduces the fixture program.json bytecode. Payy's pinned bb 3.0.0-manual.20251030 write_vk (ultra_honk; poseidon2, keccak for agg_final) reproduces all four fixture keys, and the agg_final vk_hash 0x0f8581a9…3328 equals the verifier VK_HASH immutable. The deployed verifier therefore embeds the published circuits. source-10 is Payy's burn substitutor fast-paying the 1-USDC zero-hash burn from committed L2 block 33198792. The substitutor reads node-committed transactions, and the node verifies each UTXO proof natively before admitting it (pkg/node/src/utxo.rs), so the burns entered as L2 transactions, not through prover-side injection. The first-batch zero-hash burn is message 38 of 84, interleaved with legitimate messages rather than in a tail, so it is not the GHSA-fhxc-63vg-9gwr pattern. agg_utxo/agg_agg export and RollupV1 parsing (kind 2: 4 words, kind 3: 5 words) agree. Under the published UTXO circuit, burn hash equals the first input commitment, and that commitment is zero only for kind-0, value-0 notes, while the burn kind must equal the USDC kind. No valid UTXO proof exists for these messages. The failure is below the circuit source, and it is shared by the native check and the in-circuit HONK_ZK recursion that this verifier's key chain embeds. The verifier target remains the knot. The registry write selects executable verifier code, so it is a module-change anchored on VerifierAdded log 271, data word 1."
     }
   ],
   "verification": {
@@ -219,11 +227,12 @@
     "reviewSourceIds": [
       "source-7",
       "source-8",
-      "source-11"
+      "source-11",
+      "source-14"
     ],
     "limitations": [
-      "Failure identity denotes accepted zero-commitment burns; the precise cryptographic layer is not independently established.",
-      "Earliest exercise and campaign scope use a complete zero-commitment event scan through block 26075925; nonzero historical proofs are not independently reverified."
+      "The UTXO proofs behind the zero-hash burns are unavailable (Payy node offline), so the specific proof-system or constraint defect is not recovered.",
+      "Earliest exercise and campaign scope use a complete zero-hash burn event scan through block 26075925; nonzero historical proofs are not independently reverified."
     ]
   },
   "discovery": [

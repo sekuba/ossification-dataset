@@ -25036,7 +25036,7 @@
         "name": "Payy",
         "slug": "payy"
       },
-      "name": "Payy recursive verifier accepted zero-commitment USDC burns",
+      "name": "Payy verifier accepted zero-hash USDC burns",
       "chainId": 1,
       "exploit": {
         "transactionHash": "0xf43abdac5422087f645d77923eb1c825178bff3eb86d17d40fa18d89701e1814",
@@ -25044,7 +25044,7 @@
         "transactionIndex": 23,
         "timestamp": 1790223683
       },
-      "summary": "The registered recursive Honk verifier accepted USDC burn messages whose first consumed-note commitment was zero, contradicting the bound UTXO circuit statement. Two settlement batches depleted the bridge through direct payouts and a reimbursed fast withdrawal.",
+      "summary": "Payy L2 admitted UTXO burns of USDC with a zero burn hash, which the UTXO circuit binds to the first input-note commitment and permits only for zero-kind padding notes. The registered recursive Honk verifier accepted the aggregated statements, and two settlement batches depleted the bridge through direct payouts and a reimbursed fast withdrawal.",
       "loss": {
         "kind": "gross-assets-lost",
         "assets": [
@@ -25092,9 +25092,9 @@
         }
       },
       "targetId": "target-1",
-      "failureModeId": "failure:payy-recursive-verifier-zero-commitment-burn",
+      "failureModeId": "failure:payy-utxo-proof-zero-hash-burn",
       "codeHash": "0xda23a6ab8bd6575b7f8f06a10e7da972890b2bc19b833044fdfbef1bcc2ca6fb",
-      "ageResetKind": "configuration-change",
+      "ageResetKind": "module-change",
       "codeAgeSeconds": 11361516
     },
     {
