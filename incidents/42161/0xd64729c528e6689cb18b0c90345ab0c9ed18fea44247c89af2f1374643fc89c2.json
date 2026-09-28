@@ -115,6 +115,25 @@
       "id": "source-8",
       "type": "review-note",
       "note": "Verified explorer source: https://arbiscan.io/address/0x02434cd23972c82fbabf610d157b41bfb45a45a3#code"
+    },
+    {
+      "id": "source-9",
+      "type": "onchain-transaction",
+      "chainId": 42161,
+      "transactionHash": "0x35a523bdaf60a9e8b66ab92bb8b78d5012e102e462b665e98ce46f7e07addd36"
+    },
+    {
+      "id": "source-10",
+      "type": "onchain-transaction",
+      "chainId": 42161,
+      "transactionHash": "0xb0bf77475818b2501e78f0927f4131e52c6efd45bc4978992cbbe218a57e6f7f"
+    },
+    {
+      "id": "source-11",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-09-28T07:05:04Z",
+      "note": "Partial follow-up; no promotion. Reproduce source-9/source-10 with eth_getTransactionReceipt and debug_traceTransaction using callTracer on Arbitrum. Source-9 is block 391409320 transaction 2: WBTC log 1 supplies 0.01600001, logs 13/38 deposit/withdraw 0.3, and log 46 returns 0.26341852 WBTC to the sender; the trace reaches TradeRouter then FacadeTradeRouter 0xb84945ec1c4e9973cb108a6ba76fa6d46856e679 with selector 0x27e1e39f. Source-10 is later, block 391450359 transaction 1, and uses different pool contexts: 0x9b6ceb59bbe4e98e6edea6226a07a0b3c8aa7320 (USDC), 0x6736da3cc7f28817d4060947d41b92b26495c96d (WBTC), 0xb17e214d94350274723ff4ba85015affddeee84b (WETH). Logs 76/78 pay 0.40264081 WBTC and 10.000413246997093659 WETH to 0x9bcab76878e301dfe05af5c78b528b096e870283. These proceeds do not establish complete victim depletion or a shared code artifact across legs. Unresolved: earliest successful exercise, exact defect-bearing artifacts and code equivalence of the later pool contexts, complete campaign depletion excluding collateral, and latest causal configuration. Next: enumerate both senders through block 391450359, decode source-9 facade selector against verified source, and compare source-10 pool/facade runtimes and setter histories before deciding whether its loss belongs to this episode."
     }
   ],
   "verification": {

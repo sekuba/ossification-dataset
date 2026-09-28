@@ -2976,6 +2976,65 @@
       "codeAgeSeconds": 37068
     },
     {
+      "id": "eip155:56:0x3f1973fe56de5ecd59a815d3b14741cf48385903b0ccfe248f7f10c2765061f7",
+      "protocol": {
+        "name": "Melo Token",
+        "slug": "melo-token"
+      },
+      "name": "Melo unrestricted mint sold into USDT liquidity",
+      "chainId": 56,
+      "exploit": {
+        "transactionHash": "0x3f1973fe56de5ecd59a815d3b14741cf48385903b0ccfe248f7f10c2765061f7",
+        "blockNumber": 27960446,
+        "transactionIndex": 6,
+        "timestamp": 1683338179
+      },
+      "summary": "MEL exposed mint(address,uint256,string) without authorization or supply limits. Callers minted arbitrary balances and sold them into the MEL/USDT pair, depleting its USDT. The initial transaction and later repetitions exercise the same immutable token defect.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "usd": {
+          "amount": 92338.99436335763,
+          "valuationTimestamp": 1683338179,
+          "method": "realised-proceeds",
+          "sourceIds": [
+            "source-4",
+            "source-6"
+          ]
+        },
+        "assets": [
+          {
+            "asset": {
+              "chainId": 56,
+              "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+              "symbol": "USDT"
+            },
+            "amount": "92338.994363357639483171",
+            "usdValue": 92338.99436335763,
+            "valuation": {
+              "method": "realised-proceeds",
+              "timestamp": 1683338179,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-4",
+                "source-6"
+              ]
+            },
+            "sourceIds": [
+              "source-6"
+            ]
+          }
+        ],
+        "realizedAt": 1760144211,
+        "confidence": "high",
+        "notes": "Merged 31 mint-and-sale transactions through 2025-10-11, including later actors repeating the same fault. USDT proceeds value the fabricated MEL at disposal, with USDT at $1. Subtract 0.000000062597217262 USDT supplied by a later exploiter to the pair; ordinary token purchases and sales are excluded. No recovery or financing-fee deduction."
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:melo-unrestricted-mint",
+      "codeHash": "0xa55f168ce3d3d7c02fba0646d92a1188e13e2863135af904d9ab02368f5b9bdb",
+      "ageResetKind": "deployment",
+      "codeAgeSeconds": 39591
+    },
+    {
       "id": "eip155:8453:0x4db0b2516f5e98083cea14d3d0f356c94e20942604a2a3116dd860effbbadc29",
       "protocol": {
         "name": "Leetswap",
@@ -24972,6 +25031,73 @@
       "codeAgeSeconds": 11187901
     },
     {
+      "id": "eip155:1:0xf43abdac5422087f645d77923eb1c825178bff3eb86d17d40fa18d89701e1814",
+      "protocol": {
+        "name": "Payy",
+        "slug": "payy"
+      },
+      "name": "Payy recursive verifier accepted zero-commitment USDC burns",
+      "chainId": 1,
+      "exploit": {
+        "transactionHash": "0xf43abdac5422087f645d77923eb1c825178bff3eb86d17d40fa18d89701e1814",
+        "blockNumber": 26044909,
+        "transactionIndex": 23,
+        "timestamp": 1790223683
+      },
+      "summary": "The registered recursive Honk verifier accepted USDC burn messages whose first consumed-note commitment was zero, contradicting the bound UTXO circuit statement. Two settlement batches depleted the bridge through direct payouts and a reimbursed fast withdrawal.",
+      "loss": {
+        "kind": "gross-assets-lost",
+        "assets": [
+          {
+            "asset": {
+              "chainId": 1,
+              "tokenAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "symbol": "USDC"
+            },
+            "amount": "1918788.198148",
+            "usdValue": 1918788.198148,
+            "valuation": {
+              "method": "stablecoin-par",
+              "timestamp": 1790223683,
+              "unitPriceUsd": 1,
+              "sourceIds": [
+                "source-8"
+              ]
+            },
+            "sourceIds": [
+              "source-1",
+              "source-2",
+              "source-8",
+              "source-9",
+              "source-10",
+              "source-11"
+            ]
+          }
+        ],
+        "realizedAt": 1790242235,
+        "confidence": "medium",
+        "notes": "Three zero-commitment burns depleted 1,918,793.198148 USDC, including the 1-USDC substitutor reimbursement. Subtract 5 USDC of outstanding attacker-supplied deposits. The earlier 5-USDC deposit/withdrawal cancels. No financing costs or subsequent recoveries are deducted.",
+        "usd": {
+          "amount": 1918788.198148,
+          "sourceIds": [
+            "source-1",
+            "source-2",
+            "source-8",
+            "source-9",
+            "source-10",
+            "source-11"
+          ],
+          "valuationTimestamp": 1790223683,
+          "method": "stablecoin-par"
+        }
+      },
+      "targetId": "target-1",
+      "failureModeId": "failure:payy-recursive-verifier-zero-commitment-burn",
+      "codeHash": "0xda23a6ab8bd6575b7f8f06a10e7da972890b2bc19b833044fdfbef1bcc2ca6fb",
+      "ageResetKind": "configuration-change",
+      "codeAgeSeconds": 11361516
+    },
+    {
       "id": "eip155:1:0x8c3f442fc6d640a6ff3ea0b12be64f1d4609ea94edd2966f42c01cd9bdcf04b5",
       "protocol": {
         "name": "TempleDAO",
@@ -39518,17 +39644,6 @@
       ]
     },
     {
-      "id": "eip155:56:0x3f1973fe56de5ecd59a815d3b14741cf48385903b0ccfe248f7f10c2765061f7",
-      "name": "Melo token missing access control on critical function",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:56:0x4353a6d37e95a0844f511f0ea9300ef3081130b24f0cf7a4bd1cae26ec393101",
       "name": "WMRP mints on zero-value self-transfer",
       "chainId": 56,
@@ -40223,17 +40338,6 @@
       ]
     },
     {
-      "id": "eip155:56:0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646",
-      "name": "DPC staking reward miscalculation",
-      "chainId": 56,
-      "verificationTier": "provisional",
-      "exclusionReasons": [
-        "incident-verification-tier:provisional",
-        "target-verification-tier:provisional",
-        "target-verification:not-curve-eligible"
-      ]
-    },
-    {
       "id": "eip155:56:0x96a955304fed48a8fbfb1396ec7658e7dc42b7c140298b80ce4206df34f40e8d",
       "name": "LW transferFrom from the token contract without allowance",
       "chainId": 56,
@@ -40247,6 +40351,17 @@
     {
       "id": "eip155:56:0x96d1a0175eb4a82585db62a374518391f6b575a07c25c0e2874ca82400b830c7",
       "name": "BOSS",
+      "chainId": 56,
+      "verificationTier": "provisional",
+      "exclusionReasons": [
+        "incident-verification-tier:provisional",
+        "target-verification-tier:provisional",
+        "target-verification:not-curve-eligible"
+      ]
+    },
+    {
+      "id": "eip155:56:0x97381c260e50a54b80db68391f1838f73e10988d0b41165aa29fe708cb165ace",
+      "name": "DPC stake changes duplicate accrued reward quota",
       "chainId": 56,
       "verificationTier": "provisional",
       "exclusionReasons": [

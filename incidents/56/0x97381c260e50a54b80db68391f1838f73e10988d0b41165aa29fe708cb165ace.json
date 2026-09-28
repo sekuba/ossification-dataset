@@ -1,0 +1,166 @@
+{
+  "$schema": "../../schema/incident.schema.json",
+  "id": "eip155:56:0x97381c260e50a54b80db68391f1838f73e10988d0b41165aa29fe708cb165ace",
+  "protocol": {
+    "name": "DPC",
+    "slug": "dpc"
+  },
+  "name": "DPC stake changes duplicate accrued reward quota",
+  "incident": {
+    "chainId": 56,
+    "exploit": {
+      "transactionHash": "0x97381c260e50a54b80db68391f1838f73e10988d0b41165aa29fe708cb165ace",
+      "blockNumber": 21178424,
+      "transactionIndex": 259,
+      "timestamp": 1662717208
+    },
+    "attackerAddresses": [
+      "0xf211fa86cbc60d693d687075b03dff3c225b25c9"
+    ]
+  },
+  "summary": "DPC stakeLp and claimStakeLp added getClaimQuota to oldClaimQuota even though the getter already included oldClaimQuota. Repeated stake changes therefore duplicated existing accrued credit, which claimDpcAirdrop paid as DPC tokens sold into the USDT pair. The seed description incorrectly claimed that elapsed-time accrual was absent.",
+  "loss": {
+    "kind": "unspecified",
+    "usd": {
+      "amount": 103755,
+      "valuationTimestamp": 1662720592,
+      "method": "unspecified",
+      "sourceIds": [
+        "source-4"
+      ]
+    },
+    "assets": [],
+    "confidence": "unknown",
+    "notes": "The seed $103,755 is not reproduced. Source-10 records three onchain USDT cash-outs and campaign inputs; legitimate entitlement and full-campaign reconciliation remain unresolved.",
+    "realizedAt": 1662720592
+  },
+  "targets": [
+    {
+      "id": "target-1",
+      "executionAddress": "0xb75ca3c3e99747d0e2f6e75a9fbd17f5ac03cebe",
+      "relationship": "direct",
+      "deployment": {
+        "timestamp": 1662542095,
+        "creatorAddress": "0x8e59424663e6ba2327564b28437b6e0294a4725c",
+        "transactionHash": "0x0560cfe9d29d0a903b72889fa1f53f20b31a5fbb8a08a3676bf65cad774b0a6c",
+        "blockNumber": 21120156,
+        "transactionIndex": 259
+      },
+      "ageReset": {
+        "kind": "deployment",
+        "description": "Unreviewed seed-inventory basis: execution-address deployment."
+      },
+      "codeAgeSeconds": 175113,
+      "failureModeId": "provisional:eip155:56:0x97381c260e50a54b80db68391f1838f73e10988d0b41165aa29fe708cb165ace:failure-1",
+      "evidence": {
+        "identitySourceIds": [
+          "source-2",
+          "source-4",
+          "source-11"
+        ],
+        "ageSourceIds": [
+          "source-4",
+          "source-9",
+          "source-11"
+        ]
+      },
+      "verification": {
+        "tier": "provisional",
+        "curveEligible": false,
+        "limitations": [
+          "Direct runtime and deployment anchors reproduced; whether claim activation or another causal state change resets age remains unresolved."
+        ]
+      },
+      "codeArtifact": {
+        "address": "0xb75ca3c3e99747d0e2f6e75a9fbd17f5ac03cebe",
+        "codeHash": "0x9bb3a2d7523ad63c40b995a6281b5141c081d3e106629c43449e1efe7142e0ec"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-1",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646"
+    },
+    {
+      "id": "source-2",
+      "type": "source-code",
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2022-09/DPC_exp.sol"
+    },
+    {
+      "id": "source-3",
+      "type": "post-mortem",
+      "url": "https://twitter.com/BeosinAlert/status/1568429355919089664"
+    },
+    {
+      "id": "source-4",
+      "type": "review-note",
+      "note": "onchain review: DPC 0xB75cA3C3e99747d0e2F6e75A9fBD17F5Ac03cebE created 2022-09-07T09:14:55Z by 0x8e59424663e6ba2327564b28437b6e0294a4725c, unrelated to attack sender 0xf211fa86cbc60d693d687075b03dff3c225b25c9; no EIP-1967 Upgraded events, age measured from deployment. The attack ran as a long series of small claims from 0x2109bbecB0a563e204985524Dd3DB2F6254AB419 and 0xf211fa86cbc60d693d687075b03dff3c225b25c9 (this transaction alone drained 547.75 USDT from the DPC pair); lossUsd uses the ~$103,755 total reported by Beosin. Recheck of the deployment basis (DELEGATECALL audit): the victim sets no EIP-1967 implementation or beacon slot and its runtime is byte-identical at the creation block 21120156 and the incident block 21179552; all ten DELEGATECALL sites are solc external-library calls to the PUSH20 constant 0xff7a90fa8193b51482c37e84f3e9a0798921380b (with the usual EXTCODESIZE guard), a library deployed five blocks before the victim by the same creator 0x8e59424663e6ba2327564b28437b6e0294a4725c and byte-identical over the window, so the target is fixed."
+    },
+    {
+      "id": "source-5",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0xe4c0ce1b77a4fcd49d29720953454561eb43f27635cc9f7a5e2df9c697347a62"
+    },
+    {
+      "id": "source-6",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x92cab23d536d2e13ecb7c473350121165de0ae6c6c81be94ba502ac7db72e86f"
+    },
+    {
+      "id": "source-7",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0xdd9a6fd206744c58ac392715e228453f2e1f4c75c0bdd3063eef8617aead2064"
+    },
+    {
+      "id": "source-8",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x1231e0c4cb464b441f1b118a552ff96a354be469bc206437b45fdcabf0b07685"
+    },
+    {
+      "id": "source-9",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x0560cfe9d29d0a903b72889fa1f53f20b31a5fbb8a08a3676bf65cad774b0a6c"
+    },
+    {
+      "id": "source-10",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-09-28T07:09:56Z",
+      "note": "Partial review; no promotion. Verified source https://bscscan.com/address/0xb75ca3c3e99747d0e2f6e75a9fbd17f5ac03cebe#code, compiler v0.8.7+commit.e28d00a7, shows oldClaimQuota += getClaimQuota in stakeLp/claimStakeLp and getClaimQuota returning time-accrued quota plus oldClaimQuota. Etherscan V2 account/txlist with startblock=21120156,endblock=21190000,sort=asc returns 1,742 victim direct transactions. account/txlist for helper 0x2109bbecb0a563e204985524dd3db2f6254ab419 with startblock=0,endblock=21220000 returns 12 transactions; source-5 at block 21179254 successfully calls claimStakeLp 27 times, while earlier attempt 0x253666db7ccc770d3b2ce33e40192f11adb0a1680e693728ca7d6db7f704db1e reverts. Reproduce via eth_getTransactionReceipt and debug_traceTransaction(tx,{tracer:callTracer}). USDT Transfer logs in source-6, source-7 and source-1 pay 75664.535267446184667697, 2001.517797961483091691 and 547.746536387919096025 respectively from pair 0x79cd24ed4524373af6e047556018b1440cf04be3 to 0xf211fa86cbc60d693d687075b03dff3c225b25c9; these are proceeds, not yet reviewed victim loss. Setup transactions 0x4d9a4b90c0916e547b86dc3df52aeffede0a8b6d59ac16febc50babeef943f15 and 0x6f059f35c45caab499466a07afe8434606296f367b292a1154cd68927c8d30de transfer 4,200 and 300 USDT from helper into DPC; 0x0a9158bd93e505c019d687ea64a2f2a9032178ee07dd3f23783bb7a8a5f2ce1c supplies 97.40330721507801 USDT to the pair. Source-8 prestateTracer with tracerConfig.diffMode=true reproduces isClaim slot 0x53 changing 0 to 1. eth_getLogs for LP Transfer events over [21120156,21179552] returns 431 logs, including three pre-campaign withdrawals that require entitlement review. Unresolved: first positive quota duplication, whether claim activation resets defect age, complete campaign, and loss net of campaign inputs and legitimate entitlements. Next: inspect oldClaimQuota state differences for successful pre-source-5 stake/withdraw calls, enumerate later quota payouts/sales, and reconcile purchased versus accelerated DPC rewards before choosing an anchor, age reset or USD amount."
+    },
+    {
+      "id": "source-11",
+      "type": "review-note",
+      "reviewer": "OpenAI Codex",
+      "reviewedAt": "2026-09-28T07:12:08Z",
+      "note": "Anchor correction. The earliest observed duplicated positive credit is 0x97381c260e50a54b80db68391f1838f73e10988d0b41165aa29fe708cb165ace at block 21178424, before the deliberate helper campaign: stakeLp by 0x736f9f8f4acf1e46ec9d5a152022a4a5906656e3 adds getClaimQuota including already nonzero oldClaimQuota. Reproduce debug_traceTransaction(tx,{tracer:prestateTracer,tracerConfig:{diffMode:true}}); mapping slot keccak256(abi.encode(account,uint256(0x4e))) changes 4667785272954 to 1647380116041453. The prior successful stake at block 21177384 first created that positive credit. Checked all 35 successful direct stakeLp/claimStakeLp transactions preceding block 21179254 via state diffs. LP Transfer logs over [21120156,21179552] identify only one earlier indirect staking transaction, helper setup 0x0a9158bd93e505c019d687ea64a2f2a9032178ee07dd3f23783bb7a8a5f2ce1c at 21179222, later than the corrected anchor. This identifies fault exercise, not malicious intent of the earlier account. Source-1 remains the last known helper payout. Incident and target remain provisional: next reconcile rightful versus duplicated payouts and later campaigns, then adjudicate whether source-8 claim enablement is the latest causal age reset. Runtime hash reproduced with cast keccak(eth_getCode(target,21178423)); source-9 receipt establishes direct creation."
+    },
+    {
+      "id": "source-12",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0x97381c260e50a54b80db68391f1838f73e10988d0b41165aa29fe708cb165ace"
+    }
+  ],
+  "verification": {
+    "tier": "provisional",
+    "limitations": [
+      "Anchor corrected to the earliest observed positive-credit duplication; complete campaign loss and causal age reset remain unresolved (source-11).",
+      "Seed loss and deployment-based age remain provisional; source-10 preserves reproduced receipts, history scopes, configuration change and next steps."
+    ]
+  },
+  "discovery": [
+    "dfhl:src/test/2022-09/DPC_exp.sol",
+    "seed:dpc:2022-09-09:dpc-staking-reward-miscalculation"
+  ]
+}

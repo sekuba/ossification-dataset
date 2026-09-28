@@ -45,7 +45,7 @@
     "webList": {
       "file": "research/raw/web-candidates.md",
       "lineNumbers": "1-based",
-      "sha256": "cecac54232abeef9ad74b8876722c17995fd651f125d5efcfa57f1421cc787f6"
+      "sha256": "18dca17fca98b5335664d7da272f0b978f8a27285f6efb20c264b76a885a0957"
     },
     "adjudications": {
       "file": "research/raw/adjudications.json",
@@ -58,21 +58,21 @@
     },
     "primaryIncidents": {
       "glob": "incidents/**/*.json",
-      "files": 732,
-      "sha256": "6eb84e2cd5eeb60beffd1eee627f5d19bcca81ca05031e2b79191c3e08f475d7"
+      "files": 733,
+      "sha256": "e45f96704b001107041f2a189cf0008a13279d08d05501b734e1b959656cc52a"
     }
   },
   "counts": {
-    "total": 2274,
+    "total": 2275,
     "bySource": {
       "adjudication": 140,
       "defihacklabs": 869,
       "seed": 757,
-      "web-list": 508
+      "web-list": 509
     },
     "byDisposition": {
       "excluded": 274,
-      "included": 1484,
+      "included": 1485,
       "out-of-scope": 54,
       "pending": 112,
       "unresolved": 350
@@ -5724,7 +5724,7 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:56:0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646"
+          "eip155:56:0x97381c260e50a54b80db68391f1838f73e10988d0b41165aa29fe708cb165ace"
         ],
         "reason": "The source is linked to at least one incident admitted to the primary dataset."
       }
@@ -36540,9 +36540,9 @@
       "disposition": {
         "status": "included",
         "incidentIds": [
-          "eip155:56:0x95de7abe458fb916209dd10fe29c7802d1078e91dc34fbd9aa8a51bfae7c8646"
+          "eip155:56:0x97381c260e50a54b80db68391f1838f73e10988d0b41165aa29fe708cb165ace"
         ],
-        "reason": "An admitted primary incident anchors this row's exploit transaction."
+        "reason": "An admitted incident declares this discovery lead."
       }
     },
     {
@@ -74970,6 +74970,27 @@
       "disposition": {
         "status": "unresolved",
         "reason": "No exact normalized project name and UTC date match was found; fuzzy matching was not used."
+      }
+    },
+    {
+      "id": "web:2026-09-24:payy",
+      "source": {
+        "kind": "web-list",
+        "file": "research/raw/web-candidates.md",
+        "line": 636
+      },
+      "candidate": {
+        "date": "2026-09-24",
+        "project": "Payy",
+        "reportedLoss": "at least $1.918m USDC",
+        "mechanism": "accepted Ethereum withdrawal batches; executed Honk verifier lacks upstream small-subgroup boundary opening, causal attribution unresolved; https://github.com/AztecProtocol/aztec-packages/commit/58bf73a289f7da78c8920c9c73604a8e5d105025"
+      },
+      "disposition": {
+        "status": "included",
+        "incidentIds": [
+          "eip155:1:0xf43abdac5422087f645d77923eb1c825178bff3eb86d17d40fa18d89701e1814"
+        ],
+        "reason": "An admitted incident declares this discovery lead."
       }
     }
   ]
