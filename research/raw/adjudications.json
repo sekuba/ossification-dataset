@@ -21,15 +21,6 @@
    "reason": "NO_CREATION_INFO: the recorded victim address is a truncation artifact (the first 20 bytes of the exploit tx hash); no contract exists there. No verified victim contract was ever identified."
   },
   {
-   "name": "GFOX",
-   "chain": "ethereum",
-   "date": "2024-05-10T00:00:35Z",
-   "candidateVictim": "0x47c4b3144de2c87a458d510c0c0911d1903d1686",
-   "exploitTx": "0x12fe79f1de8aed0ba947cec4dce5d33368d649903cb45a5d3e915cc459e751fc",
-   "defihacklabs": "src/test/2024-05/GFOX_exp.sol@ad353ba25fbb",
-   "reason": "ATTACKER_DEPLOYED: the candidate victim was deployed by the attacker (0xfce19f8f823759b5867ef9a5055a376f20c5e454); attack infrastructure, not protocol code."
-  },
-  {
    "name": "MainnetSettler",
    "chain": "ethereum",
    "date": "2024-11-20T18:34:47Z",
@@ -126,9 +117,9 @@
    "date": "2026-07-06T05:17:59Z",
    "candidateVictim": "0x98c49e13bf99d7cad8069faa2a370933ec9ecf17",
    "exploitTx": "0x0db528c44f23fc7fa4544684a2fab81096450a14aae8bc89f42cd0592d43da12",
-    "defihacklabs": "src/test/2026-07/SummerFi_exp.sol@ad353ba25fbb",
-    "disposition": "included",
-    "reason": "CAUSAL_CONFIGURATION: the LowerRisk Silo Varlamore ark cap went to zero in 0x1143847e4a297f630788503f06da8a68c168e1e7d3c4301cfd3d49d4f46649f7 (block 23690024) and the HigherRisk Term ark cap in 0x5231796eef08cdc9e63efc7685013879618647030f4279f83920cc8451cf0c66 (block 23742679), both arks staying in their fleets' active NAV sets. The reviewed incident reproduces both before/after cap reads, complete immutable-artifact history, the single-transaction dual-fleet campaign, and the 6,016,754.998 DAI exit against the $6.04M reported loss."
+   "defihacklabs": "src/test/2026-07/SummerFi_exp.sol@ad353ba25fbb",
+   "disposition": "included",
+   "reason": "CAUSAL_CONFIGURATION: the LowerRisk Silo Varlamore ark cap went to zero in 0x1143847e4a297f630788503f06da8a68c168e1e7d3c4301cfd3d49d4f46649f7 (block 23690024) and the HigherRisk Term ark cap in 0x5231796eef08cdc9e63efc7685013879618647030f4279f83920cc8451cf0c66 (block 23742679), both arks staying in their fleets' active NAV sets. The reviewed incident reproduces both before/after cap reads, complete immutable-artifact history, the single-transaction dual-fleet campaign, and the 6,016,754.998 DAI exit against the $6.04M reported loss."
   },
   {
    "name": "VOW temporary usdRate configuration exposure",
@@ -217,7 +208,10 @@
    "date": "2025-11-04T05:45:11Z",
    "candidateVictim": "0xfc41b49d064ac646015b459c522820db9472f4b5",
    "exploitTx": "0x190a491c0ef095d5447d6d813dc8e2ec11a5710e189771c24527393a2beb05ac",
-   "reason": "EXTERNAL_ORACLE_MALFUNCTION: Chainlinks own RSETH/ETH AccessControlledOffchainAggregator 0x4a61db12d0cb4293d799ecdd82e5994b5746f850 (proxy 0xd7221b10fbbc1e1ba95fd0b4d031c15f7f365296, 18 decimals) published one anomalous round: latestAnswer is 1.0559334702744045e18 at block 37722000, 1,649,934,607,316,470,707,093,500 (about 1.56 million times too high, updatedAt 1762235095, 16 s before the exploit) at blocks 37722880-37722882, and 1.056046082284861200e18 again at block 37723500. Moonwells ChainlinkCompositeOracle 0x79c613b4f07080963c3b0ca58eb2745dd4c744a5 multiplied that rate by ETH/USD as designed and returned 5.813066107843462759938890135e27 for mwrsETH, so a dust deposit collateralised millions of borrow. The faulty datum is offchain and no attacker-permitted onchain input produced it, so no defect in executed EVM code caused the loss. Distinct from the 2026-02-15 Moonwell row: different market, mechanism and attacker EOA (0x6997a8c804642ae2de16d7b8ff09565a5d5658ff vs 0x0100ab3021de6e00c39be16424472164c281c308), 103 days apart."
+   "reason": "EXTERNAL_ORACLE_MALFUNCTION: Chainlinks own RSETH/ETH AccessControlledOffchainAggregator 0x4a61db12d0cb4293d799ecdd82e5994b5746f850 (proxy 0xd7221b10fbbc1e1ba95fd0b4d031c15f7f365296, 18 decimals) published one anomalous round: latestAnswer is 1.0559334702744045e18 at block 37722000, 1,649,934,607,316,470,707,093,500 (about 1.56 million times too high, updatedAt 1762235095, 16 s before the exploit) at blocks 37722880-37722882, and 1.056046082284861200e18 again at block 37723500. Moonwells ChainlinkCompositeOracle 0x79c613b4f07080963c3b0ca58eb2745dd4c744a5 multiplied that rate by ETH/USD as designed and returned 5.813066107843462759938890135e27 for mwrsETH, so a dust deposit collateralised millions of borrow. The faulty datum is offchain and no attacker-permitted onchain input produced it, so no defect in executed EVM code caused the loss. Distinct from the 2026-02-15 Moonwell row: different market, mechanism and attacker EOA (0x6997a8c804642ae2de16d7b8ff09565a5d5658ff vs 0x0100ab3021de6e00c39be16424472164c281c308), 103 days apart.",
+   "candidateIds": [
+    "web:2025-11-04:moonwell-wrst-market"
+   ]
   },
   {
    "name": "Venus Protocol XVS collateral liquidation cascade",
@@ -1349,6 +1343,1262 @@
    "reason": "INSIDER_OR_KEY: the $2.7m mintWithdraw payout executed only after the team deployer account itself called addEligibleWallet for the attacker address (0x1b813d90) and set a $2.7m redemption rate. The attacker could not self-authorize through any defect in executed EVM code; the privileged state transition came from team-controlled keys, consistent with inside-job or private-key compromise findings. No code defect on the attacker-reachable path.",
    "candidateIds": [
     "web:2024-01-16:hector-network"
+   ]
+  },
+  {
+   "name": "EverValueCoin",
+   "chain": "arbitrum",
+   "date": "2025-08-30T20:42:24Z",
+   "candidateVictim": "0x03339ecae41bc162dacae5c2a275c8f64d6c80a0",
+   "exploitTx": "0xb13b2ab202cb902b8986cbd430d7227bf3ddca831b79786af145ccb5f00fcf3f",
+   "defihacklabs": "src/test/2025-08/EverValueCoin_exp.sol@ad353ba25fbb897c56d64c28ce92ee10ac68cad2",
+   "reason": "NO_EVIDENCED_VULNERABILITY: OpenAI Codex reviewed 2026-09-28T14:31:19+00:00. The seed calls a profitable order fill an accounting exploit. Reproduce eth_getTransactionReceipt and debug_traceTransaction(callTracer) on Arbitrum: block 373990723 transaction 9, logs 14/16 exchange 884760000 WBTC base units (8 decimals) for 60000000000000000000000 EVA base units (18 decimals). Logs 20/23 realise 1004091045 WBTC units on resale; 119331045 units paid to the caller at log 28 are trading profit, not established theft. Verified OrderBookFactory source at https://arbiscan.io/address/0x03339ecae41bc162dacae5c2a275c8f64d6c80a0#code, inlined PairLib.partiallyFillOrder, collects quantity * maker price / 1e18, credits the maker, and decrements available quantity. With pair 0x3e0eda1b16003a6bbf05702d0b0474c698229478dc3cf66aa0f56dcb3d4df98f and order 0x5f10c77ae865c7d18861f527c1cc9ccb6f526303eef674cf7871a83ee3aff3ce, eth_call getOrderDetailForPair(bytes32,bytes32) at blocks 373990722/373990723 returns price 14746, original quantity 100000e18, and available quantity 100000e18/40000e18. checkBalanceTrader(bytes32,address) for maker 0x61e66f0d08f64681d891d2b7e03fa3304d7b68d2 returns (0,0)/(0,884760000): the maker receives exactly its asking price. The maker placed that sell order directly in 0x67b850688fbf816be50425772f12640bc3b0bfc5aaa7d3d5cbcf77375b486883, block 372630214 transaction 1. Runtime keccak256 is 0x6004a8083b7c8ff04c4933c4f432934a4b734cb219f8d045b14ff9ec4cca82ae at deployment block 370463837 and pre-trade block 373990722; deployment 0x70e14e39c318c82277636f33506fdba5a97b5dd3a09825676ff01028b257680c transaction 4 by 0xc534be123a0f0a293774a1709bd8bdf04b6b5f73, no code at block 370463836. Etherscan V2 txlist for the orderbook, blocks 0..373990723 ascending, returns 12 direct transactions; this is not a complete internal-call history. Unresolved: whether the linked report https://x.com/SuplabsYi/status/1961906638438445268 concerns a different transaction or an additional violated invariant. Reopen only with that exact path and wrongful depletion; next inspect the original report and compare any alternative transaction against maker entitlement and payment. The named transaction and PoC do not establish the cohort admission claim."
+  },
+  {
+   "name": "Aztec escape-hatch unconstrained proof_id (whitehat fork reproduction)",
+   "chain": "ethereum",
+   "date": "2026-06-22T00:00:00Z",
+   "candidateVictim": "0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba",
+   "defihacklabs": "src/test/2026-06/AztecEscapeHatch_exp2.sol@b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+   "reason": "LOSS_NOT_ESTABLISHED: Claude Opus 5.5 reviewed 2026-09-28. The PoC declares Total Lost N/A, has no attack transaction, forks block 25295800 and patches five RollupProcessor storage slots with vm.store before submitting fixture proofs; it reproduces an unconstrained inner proof_id in the escape-hatch circuit, whose exploitation needs an inner proof with proof_id = 1 and publicInput > 0. Etherscan V2 txlist of 0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba from block 19232962 to head contains exactly three escapeHatch (0xd1c65264) calls, 0xab306cd2..., 0x5c196c37... and 0x9e1d6ab7... by 0x6952d9246e9afe8b887b2877225163436f78e97f, each with inner proof_id word 0 and publicInput word 0, i.e. the separate verifier soundness failure recorded in eip155:1:0xab306cd2184d23b6ba3e151b10b3b9a0b81f211cc16f4f3b0c79f0b17a59c2b5. eth_getBalance and DAI balanceOf of the rollup are 0 from block 25343289 onward, so the described path never produced a loss. Reopen only with an onchain transaction exercising proof_id = 1.",
+   "candidateIds": [
+    "dfhl:src/test/2026-06/AztecEscapeHatch_exp2.sol"
+   ]
+  },
+  {
+   "name": "Demex Nitron dGLP collateral",
+   "chain": "carbon",
+   "date": "2025-05-16T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Demex's post-mortem (https://blog.dem.exchange/nitron-post-mortem/) places the $950,559 loss in Nitron, Demex's lending market on the Carbon Cosmos chain: the attacker donated fsGLP to the deprecated dGLP vault 0xab19bdaeb37242fa0f30486195f45b9cf5361b78 on Arbitrum, the Demex oracle relayed the inflated redemption rate to Carbon, and dGLP collateral there borrowed milkTIA and other Carbon-held assets. The depleted assets and the lending, collateral and oracle-cap logic are non-EVM; the Arbitrum vault lost nothing. Reopen only if a victim-side loss on an eip155 chain is identified.",
+   "candidateIds": [
+    "web:2025-05-16:nitron"
+   ]
+  },
+  {
+   "name": "Roll social-money hot wallet key compromise",
+   "chain": "ethereum",
+   "date": "2021-03-14T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Roll's statements reported by TechCrunch (https://techcrunch.com/2021/03/23/roll-still-doesnt-know-how-its-hot-wallet-was-hacked/) and Decrypt (https://decrypt.co/61349/a-5-7-million-crypto-heist-leaves-social-tokens-in-freefall) attribute the roughly 5.7m USD loss to compromise of the private key of Roll's custodial hot wallet, explicitly not a bug in its smart contracts or social-token contracts; the attacker moved the wallet's creator tokens by ordinary signed transfers, sold them on Uniswap for about 3,000 ETH and routed part through Tornado Cash. A custodial EOA drain has no victim contract and no code age to measure.",
+   "candidateIds": [
+    "web:2021-03-14:roll"
+   ]
+  },
+  {
+   "name": "Bent Finance rogue-deployer balance backdoor",
+   "chain": "ethereum",
+   "date": "2021-12-21T00:00:00Z",
+   "reason": "INSIDER_RUG and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Bent Finance's update (https://bentfi.medium.com/bent-update-12ae69a41dc6) and Halborn's analysis (https://www.halborn.com/blog/post/explained-the-bent-finance-hack-december-2021) show the Bent deployer EOA, which still owned the pools before the multisig migration, upgraded the cvxCRV and MIM pool implementations on 2021-11-30 to a version hardcoding a balance of 100000001000001e12 for 0xd23cfffa066f81c7640e3f0dc8bb2958f7686d1f, then upgraded back to conceal it; the account later withdrew about 513k cvxCRV LP (about 1.75m USD). The drain ran through an owner-installed backdoor, not a defect in code exercisable by an unprivileged caller.",
+   "candidateIds": [
+    "web:2021-12-21:bent-finance"
+   ]
+  },
+  {
+   "name": "QANX bridge Profanity-derived deployer key compromise",
+   "chain": "bsc",
+   "date": "2022-10-11T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Numen Cyber's analysis (https://medium.com/numen-cyber-labs/the-private-key-of-qanplatform-was-cracked-by-hackers-causing-1-9-million-losses-8673a54fbb20) shows the QANX bridge deployer 0x68e8198d5b3b3639372358542b92eb997c5c314a was a vanity address generated with a Profanity-derived tool whose private key was recoverable; the attacker used that key's bridge authority to withdraw about 1.44bn QANX on BNB Chain and 1.43bn QANX on Ethereum, selling for about 3,090 BNB and 255 ETH (about 1.16m USD cashed out). The bridge access control executed as designed for the key holder; the fault is key generation, not deployed code.",
+   "candidateIds": [
+    "web:2022-10-11:qanplatform-qanx-bridge-ethereum-bnb-chain"
+   ]
+  },
+  {
+   "name": "Raydium AMM v4 pool-owner key compromise",
+   "chain": "solana",
+   "date": "2022-12-16T00:00:00Z",
+   "reason": "NON_EVM_CHAIN and KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Raydium's post-mortem (https://raydium.medium.com/detailed-post-mortem-and-next-steps-d6d6dd461c3e) and CertiK's analysis (https://www.certik.com/blog/raydium-protocol-exploit-incident-analysis) attribute the roughly 4.4m USD loss to theft of the AMM v4 pool owner (admin) private key, suspected via a trojan on the machine holding it; the attacker used admin-only instructions to inflate expected PnL fees and repeatedly call withdrawPNL on eight constant-product pools. The pools and the program are Solana (Rust) accounts outside eip155, and the drain ran through an admin authority as designed.",
+   "candidateIds": [
+    "web:2022-12-16:raydium"
+   ]
+  },
+  {
+   "name": "Hope Finance TradingHelper swap exit scam",
+   "chain": "arbitrum",
+   "date": "2023-02-20T00:00:00Z",
+   "reason": "INSIDER_RUG and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. CertiK's findings reported by Cointelegraph (https://cointelegraph.com/news/hope-finance-exploit-results-in-2m-stolen-from-users-funds) show that on launch day the project's privileged address swapped the TradingHelper contract used by GenesisRewardPool for one routing funds to the scammer and staged a fake router, so the next OpenTrade call moved the genesis-pool deposits out; about 1,095 ETH (about 1.86m USD) went to Tornado Cash. The loss came from an owner-authorized contract substitution, not a defect exercisable by an unprivileged caller.",
+   "candidateIds": [
+    "web:2023-02-21:hope-finance"
+   ]
+  },
+  {
+   "name": "Kokomo Finance deployer cBTC takeover exit scam",
+   "chain": "optimism",
+   "date": "2023-03-26T00:00:00Z",
+   "reason": "INSIDER_RUG and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. CertiK's findings reported by Cointelegraph (https://cointelegraph.com/news/4m-exit-scam-suspected-as-kokomo-finance-flies-off-radar-token-plunges) and QuillAudits' breakdown (https://medium.com/coinmonks/decoding-kokomo-finance-4-million-rug-pull-quillaudits-d5d027522bf3) show the KOKO deployer reset reward speeds, paused borrowing and replaced the cBTC market implementation, after which 0x5a2d... was approved over 7,000 So-WBTC and swapped it out for about 4m USD; the team then deleted its accounts. The drain ran through admin-controlled implementation and parameter changes by the project itself.",
+   "candidateIds": [
+    "web:2023-03-27:kokomo-finance"
+   ]
+  },
+  {
+   "name": "Terraport developer-wallet liquidity drain",
+   "chain": "terra-classic",
+   "date": "2023-04-10T00:00:00Z",
+   "reason": "NON_EVM_CHAIN and INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. Cointelegraph (https://cointelegraph.com/news/terra-defi-project-terraport-suffers-2m-hack-days-after-launch) and Unchained (https://unchainedcrypto.com/terra-classic-dex-loses-2-million-in-exploit-days-after-launch/) report that Terraport's developer wallet changed the code of three liquidity-provision contracts hours before the DEX's pools were emptied of about 15.1bn LUNC, 9.4m USTC and 9.1m TERRA (about 2m USD), and the TerraCVita validator later called it an insider job. The contracts are CosmWasm contracts on Terra Classic, outside eip155, and the change was privileged.",
+   "candidateIds": [
+    "web:2023-04-10:terraport"
+   ]
+  },
+  {
+   "name": "Merlin DEX feeTo-address approval drain",
+   "chain": "zksync",
+   "date": "2023-04-26T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. Halborn's analysis (https://www.halborn.com/blog/post/explained-the-merlin-dex-hack-april-2023) and CoinDesk (https://www.coindesk.com/tech/2023/04/27/dex-merlin-and-certik-plan-to-compensate-2m-to-users-impacted-in-rugpull) show the feeTo address set at deployment held maximum token approvals from the pools, a centralization risk CertiK had flagged, and was used during the MAGE liquidity generation event to pull about 1.82m USD of USDC and ETH; Merlin and CertiK treated it as a rug pull by team members. The pools honored a privileged address the deployer configured; no permissionless defect is evidenced.",
+   "candidateIds": [
+    "web:2023-04-26:merlin-dex"
+   ]
+  },
+  {
+   "name": "Swaprum add() backdoor LP theft",
+   "chain": "arbitrum",
+   "date": "2023-05-18T00:00:00Z",
+   "reason": "INSIDER_RUG and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-swaprum-rug-pull-may-2023) and CertiK's findings reported by Cointelegraph (https://cointelegraph.com/news/alleged-swaprum-rug-pull-swipes-three-million-in-customer-funds) show the Swaprum deployer upgraded the staking contracts after the audit to add a backdoor add() function, used it to take users' staked LP tokens, removed the liquidity and bridged about 1,628 ETH (about 2.95m USD) to Tornado Cash. The failing code was an owner-installed backdoor.",
+   "candidateIds": [
+    "web:2023-05-19:swaprum"
+   ]
+  },
+  {
+   "name": "Atlantis Loans abandoned GovernorBravo takeover",
+   "chain": "bsc",
+   "date": "2023-06-10T00:00:00Z",
+   "reason": "MARKET_GOVERNANCE_CAPTURE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-atlantis-loans-hack-june-2023) and Neptune Mutual (https://medium.com/neptune-mutual/understanding-atlantis-loans-exploit-3716f7e765b4) show that after the team abandoned the protocol, the attacker passed a GovernorBravo proposal created on 2023-06-07 (an April attempt, proposal 49, had missed quorum) that after the 172,800-second timelock made an attacker contract admin of the ABep20Delegator proxies, then pointed them at a backdoored implementation and used users' lingering approvals to pull about 2.5m USD. Governance executed a validly passed vote; acquiring and voting governance power is not a defect in executed EVM code.",
+   "candidateIds": [
+    "web:2023-06-23:atlantis-loans"
+   ]
+  },
+  {
+   "name": "DefiLabs vPoolv6 withdrawFunds backdoor",
+   "chain": "bsc",
+   "date": "2023-07-27T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-defi-labs-rug-pull-july-2023) and Web3 Is Going Great (https://www.web3isgoinggreat.com/?id=defilabs-rug-pull) show that after announcing maintenance, the privileged address 0xee08... called the owner-only withdrawFunds() in DefiLabs' vPoolv6 contract and removed about 1.4m BSC-USD (about 1.6m USD in total). The function worked as its authors intended for the project's own key; no unprivileged defect is involved.",
+   "candidateIds": [
+    "web:2023-07-30:defilabs"
+   ]
+  },
+  {
+   "name": "Kannagi Finance vault rug pull",
+   "chain": "zksync",
+   "date": "2023-07-28T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-kannagi-finance-rug-pull-july-2023) and crypto.news (https://crypto.news/zksync-eras-kannagi-finance-rug-pulls-and-steal-2-13m/) report that the Kannagi team emptied its zkSync Era vaults of about 2.13m USD, leaving 0.17 USD TVL, deleted its website, X and GitHub, and moved about 600 ETH through Tornado Cash; the live vault code was unverified and differed from the audited code. The loss is a team exit, not an exploit of a defect by an outside caller.",
+   "candidateIds": [
+    "web:2023-07-30:kannagi-finance"
+   ]
+  },
+  {
+   "name": "OKX DEX deprecated proxy malicious upgrade",
+   "chain": "ethereum",
+   "date": "2023-12-12T22:23:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. The Block (https://www.theblock.co/news/regulation/2023-12-13-okx-dex-suffers-apparent-2-7-million-exploit-following-suspected-private-key-leak-267405) and Cointelegraph (https://cointelegraph.com/news/okx-dex-2-7-m-exploit-proxy-admin-contract-upgrade) report that the owner of the deprecated DEX Proxy's ProxyAdmin, whose private key had leaked, upgraded the proxy at about 22:23 UTC on 2023-12-12 to an implementation that called TokenApprove.claimTokens against users' lingering approvals, taking about 2.7m USD by PeckShield's count (OKX reported about 370k USD). The upgrade authority and TokenApprove checks behaved as designed for the key holder.",
+   "candidateIds": [
+    "web:2023-12-13:okx-dex-deprecated-proxy"
+   ]
+  },
+  {
+   "name": "Concentric vault deployer-key malicious upgrade",
+   "chain": "arbitrum",
+   "date": "2024-01-22T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Neptune Mutual's analysis (https://neptunemutual.com/blog/how-was-concentric-finance-exploited/) and crypto.news (https://crypto.news/concentric-app-suffers-1-7m-social-engineering-hack-on-arbitrum/) show a team member was socially engineered into installing malware, the Concentric deployer key was stolen, and the attacker used its upgrade authority to replace the vault code, call adminMint for CONE LP tokens and burn them to withdraw pool assets, about 715.7 ETH (about 1.72m USD). Upgrade and admin-mint authority executed as designed for the stolen key.",
+   "candidateIds": [
+    "web:2024-01-22:concentric-finance"
+   ]
+  },
+  {
+   "name": "Duelbits casino hot wallet drain",
+   "chain": "ethereum",
+   "date": "2024-02-14T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Web3 Is Going Great (https://www.web3isgoinggreat.com/?id=duelbits-hack), citing PeckShield and Scam Sniffer, reports about 4.6m USD moved out of the crypto casino's custodial hot wallets on Ethereum, BNB Chain and Tron by ordinary signed transfers, attributed to a compromised private key; the site's own contracts are not in the path. A custodial EOA drain has no victim contract and no code age.",
+   "candidateIds": [
+    "web:2024-02-14:duelbits"
+   ]
+  },
+  {
+   "name": "RiskOnBlast team exit with presale ETH",
+   "chain": "blast",
+   "date": "2024-02-25T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. CoinDesk (https://www.coindesk.com/markets/2024/02/26/blast-ecosystem-sees-first-apparent-scam-as-riskonblast-rug-pulls-13m-ether) and Web3 Is Going Great (https://www.web3isgoinggreat.com/?id=riskonblast-gambling-platform-rug-pulls-for-1-3-million) report that the anonymous RiskOnBlast team took the more than 420 ETH (about 1.3m USD) raised from over 750 wallets and sent it to ChangeNOW, MEXC and Bybit before disappearing. The team controlled the funds; no exploit of deployed code by an outside caller occurred.",
+   "candidateIds": [
+    "web:2024-02-25:riskonblast"
+   ]
+  },
+  {
+   "name": "Serenity Shield SERSH MetaMask wallet key leak",
+   "chain": "ethereum",
+   "date": "2024-02-27T09:11:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Cointelegraph (https://www.tradingview.com/news/cointelegraph:244a74751094b:0-serenity-shield-s-token-falls-nearly-99-after-metamask-wallet-breach/) and crypto.news (https://crypto.news/serenity-shield-token-collapses-by-95-after-5-6m-breach/) report that at 09:11 UTC on 2024-02-27 6.9m SERSH (nominally 5.6m USD, sold for about 586k USD) was transferred out of one of the project's MetaMask EOAs after its private key leaked. An ordinary token transfer signed with a stolen key yields no victim contract.",
+   "candidateIds": [
+    "web:2024-02-28:serenity-shield"
+   ]
+  },
+  {
+   "name": "Remilia treasury password-manager compromise",
+   "chain": "ethereum",
+   "date": "2024-03-17T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. The Block (https://www.theblock.co/post/282972/remilia-founder-charlotte-fang-claims-he-was-hacked-as-treasury-is-drained-of-millions) and Unchained (https://unchainedcrypto.com/milady-founder-claims-hack-after-millions-in-eth-and-nfts-drained/) report that the Remilia treasury multisig's signer keys were all stored in one Bitwarden vault that the founder says malware compromised; about 490 ETH, 58k USDC and hundreds of Milady, Remilio and NFTX assets (about 6m USD at floor) were moved by transactions the stolen keys signed. Some observers suspected an inside job; either way no contract check was bypassed.",
+   "candidateIds": [
+    "web:2024-03-17:remilia-treasury"
+   ]
+  },
+  {
+   "name": "AirDAO AMB/ETH Uniswap liquidity key theft",
+   "chain": "ethereum",
+   "date": "2024-03-21T00:00:00Z",
+   "reason": "KEY_COMPROMISE and OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. AirDAO's disclosure reported by ForkLog (https://forklog.com/en/airdao-suffers-1-million-platform-breach/) and crypto.news (https://crypto.news/airdao-suffers-exploit-hackers-transfer-stolen-funds-to-mexc-kucoin-changenow/) says an attacker gained access through a phishing email with a malicious attachment impersonating a partner and removed the project-owned AMB/ETH Uniswap liquidity, 126.5 ETH and 41.61m AMB (about 1m USD). The Uniswap position was withdrawn by its owner's stolen credentials; Uniswap behaved as designed.",
+   "candidateIds": [
+    "web:2024-03-21:airdao"
+   ]
+  },
+  {
+   "name": "TICKER airdrop-developer token dump",
+   "chain": "base",
+   "date": "2024-03-21T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. DailyCoin (https://dailycoin.com/ticker-presale-ends-in-900k-theft-by-french-developer/) and CoinEdition (https://coinedition.com/crypto-sleuth-identifies-french-devs-massive-ticker-theft-of-900k/), citing ZachXBT, report that after an 877 ETH presale the TICKER team sent 15% of supply to the developer hired to run the airdrop, who instead sold 13% of supply for about 900k USD on Base and bridged the ETH out via Orbiter Finance. A trusted insider sold tokens he had been given; no deployed code failed.",
+   "candidateIds": [
+    "web:2024-03-21:ticker"
+   ]
+  },
+  {
+   "name": "Lucky Star Currency post-rug ownership drain",
+   "chain": "bsc",
+   "date": "2024-03-22T00:00:00Z",
+   "reason": "INSIDER_RUG and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Blockfence's March 2024 report (https://blockfence.io/security/web3-security-incidents-report-march-2024-blockfence/) classifies it as a rug pull: on 2024-03-22 ownership of the Lucky Star Currency project, already exposed by CertiK as a 1.1m USD exit scam in October 2023 (https://www.certik.com/resources/blog/lucky-star-currency-exit-scam), was transferred to a malicious contract that drained almost 300k USD of tokens from remaining holders. The drain ran through owner authority transferred by the project's own key.",
+   "candidateIds": [
+    "web:2024-03-22:lucky-star-currency"
+   ]
+  },
+  {
+   "name": "Solareum Telegram trading-bot wallet drain",
+   "chain": "solana",
+   "date": "2024-03-29T00:00:00Z",
+   "reason": "NON_EVM_CHAIN and KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Decrypt (https://decrypt.co/224371/solana-telegram-trading-bot-shut-down-users-drained-523k) and DL News (https://www.dlnews.com/articles/regulation/how-a-dprk-developer-tricked-solareum-and-stole-14m/) report that on 2024-03-29 more than 2,800 SOL (about 520k USD, up to about 1.4m USD by later counts) was drained from over 300 users' Solareum custodial bot wallets, traced to a North Korean developer the team had hired who had access to wallet keys. The wallets are Solana accounts outside eip155 and were emptied with their own keys.",
+   "candidateIds": [
+    "web:2024-03-30:solareum"
+   ]
+  },
+  {
+   "name": "FixedFloat second custodial drain via third-party service",
+   "chain": "ethereum",
+   "date": "2024-04-01T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. CoinDesk (https://www.coindesk.com/markets/2024/04/02/bitcoin-lightning-exchange-fixedfloat-sees-suspicious-transfers-of-3m-to-ethereum-tron) and Web3 Is Going Great (https://www.web3isgoinggreat.com/?id=fixedfloat-hack-2) report that on 2024-04-01 about 3m USD of ETH, USDT, WETH, DAI and USDC left the custodial instant exchange's wallets to Ethereum and Tron addresses, which FixedFloat attributed to a vulnerability in a third-party service, by the same group as its February breach. Custodial wallets were emptied through compromised offchain access; no victim contract exists.",
+   "candidateIds": [
+    "web:2024-03-31:fixedfloat-second-incident"
+   ]
+  },
+  {
+   "name": "CondomSol Solana presale rug",
+   "chain": "solana",
+   "date": "2024-04-04T00:00:00Z",
+   "reason": "NON_EVM_CHAIN and INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. crypto.news (https://crypto.news/solana-meme-coin-team-rug-pull/) and The Crypto Times (https://www.cryptotimes.io/2024/04/05/solana-condom-meme-coin-presale-raises-concerns/) report that the CONDOM memecoin team raised 4,965 SOL (about 906k USD) into a Solana presale wallet and deleted its accounts before launch. The funds sat in a team-controlled Solana address outside eip155; no contract exploit occurred.",
+   "candidateIds": [
+    "web:2024-04-04:condomsol"
+   ]
+  },
+  {
+   "name": "Zest Protocol Clarity duplicate-collateral exploit",
+   "chain": "stacks",
+   "date": "2024-04-11T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Zest's security update (https://www.zestprotocol.com/blog/zest-protocol-security-update) and EXVUL's analysis (https://medium.com/@exvul/the-first-attack-on-bitcoin-defi-smart-contract-ec5e5976983e) show the attacker duplicated entries in the collateral list passed to Zest's lending contract so collateral was overvalued, borrowing out about 324,000 STX (about 1m USD) over five operations. Zest is a Clarity contract on Stacks, not an eip155 chain, so there is no EVM code to age.",
+   "candidateIds": [
+    "web:2024-04-12:zest-protocol"
+   ]
+  },
+  {
+   "name": "Grand Base deployer-key GB mint",
+   "chain": "base",
+   "date": "2024-04-15T03:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Neptune Mutual (https://medium.com/neptune-mutual/understanding-the-grand-base-exploit-82a1ead971dc) and Cointelegraph (https://cointelegraph.com/news/base-asset-tokenization-protocol-compromised) show a developer's PC was hacked, exposing the deployer/LP wallet that held the GB token's mint authority and liquidity; the attacker minted and sold about 32.5m GB against a 50m cap and pulled liquidity for about 808.57 ETH (about 2m USD) around 03:00 UTC on 2024-04-15. The mint executed through the owner's authority as designed. The lead's 2024-04-09 date predates the reported incident.",
+   "candidateIds": [
+    "web:2024-04-09:grand-base"
+   ]
+  },
+  {
+   "name": "GNUS.ai stolen-key Axelar fake-token deployment",
+   "chain": "fantom",
+   "date": "2024-05-05T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. CertiK's findings reported by Cointelegraph (https://www.tradingview.com/news/cointelegraph:dd1a36de8094b:0-gnus-ai-discord-hack-causes-1-27m-in-losses/) and the Quadriga Initiative case (https://www.quadrigainitiative.com/hackfraudscam/gnusaidiscordprivatekeysexposed.php) show the attacker obtained the private key of the team's 0x18... account, exposed through the team's compromised private Discord, reused the token's deployment salt to register a Fantom GNUS through Axelar's interchain token service, minted fake GNUS, bridged it to Ethereum and Polygon and sold it for about 407 ETH (1.27m USD). Axelar authorized the deployment because the stolen key was the legitimate deployer.",
+   "candidateIds": [
+    "web:2024-05-06:gnus"
+   ]
+  },
+  {
+   "name": "Gemholic GemstoneIDO team withdrawal",
+   "chain": "zksync",
+   "date": "2024-06-07T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. Cointelegraph (https://cointelegraph.com/news/gemholic-scam-suspected-rug-pull-zksync) reports that 921 ETH of IDO proceeds, stuck in Gemholic's GemstoneIDO contract since April 2023 because of zkSync's transfer() gas behavior, became withdrawable after zkSync's v24 upgrade on 2024-06-07, and the team, which had promised refunds for a year, withdrew all of it (about 3.5m USD) to an unrelated wallet and deleted its accounts. The team took funds it controlled; no outside exploit occurred.",
+   "candidateIds": [
+    "web:2024-06-08:gemholic"
+   ]
+  },
+  {
+   "name": "Loopring Official Guardian 2FA service compromise",
+   "chain": "ethereum",
+   "date": "2024-06-09T00:00:00Z",
+   "reason": "OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. Loopring's post-mortem (https://medium.com/loopring-protocol/postmortem-incident-report-and-path-forward-aa64f7e5f7d1) and The Block (https://www.theblock.co/post/299177/loopring-suffers-5-million-hack-after-guardian-two-factor-authentication-service-is-compromised) show the attacker compromised Loopring's offchain 2FA service, used it to obtain Official Guardian approval for wallet-recovery requests on smart wallets whose only guardian was the Official Guardian, reset ownership and withdrew about 5m USD. The wallet contracts correctly honored guardian-approved recovery; the failure was the offchain authentication service.",
+   "candidateIds": [
+    "web:2024-06-09:loopring-guardian-2fa"
+   ]
+  },
+  {
+   "name": "CoinStats hosted-wallet AWS breach",
+   "chain": "ethereum",
+   "date": "2024-06-22T00:00:00Z",
+   "reason": "OFFCHAIN_INFRASTRUCTURE and KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. CoinStats' incident report covered by DL News (https://www.dlnews.com/articles/people-culture/coinstats-issues-security-incident-report-on-june-attack/) and BleepingComputer (https://www.bleepingcomputer.com/news/cryptocurrency/coinstats-says-north-korean-hackers-breached-1-590-crypto-wallets/) says a socially engineered employee installed malware that gave suspected Lazarus actors access to CoinStats' AWS infrastructure, from which keys of 1,590 app-hosted wallets were used to drain about 2.2m USD. The victims are EOAs whose keys CoinStats held offchain.",
+   "candidateIds": [
+    "web:2024-06-22:coinstats"
+   ]
+  },
+  {
+   "name": "Sportsbet.io hot wallet drain",
+   "chain": "tron",
+   "date": "2024-06-23T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Web3 Is Going Great (https://www.web3isgoinggreat.com/?id=sportsbetio-hack), citing ZachXBT, reports about 3.5m USD of USDT and TRX leaving the crypto sportsbook's custodial hot wallets by ordinary signed transfers, which the operator did not attribute to any contract. A custodial hot-wallet drain on Tron has no eip155 victim contract and no code age.",
+   "candidateIds": [
+    "web:2024-06-23:sportsbet"
+   ]
+  },
+  {
+   "name": "ReHold co-founder unauthorized withdrawal",
+   "chain": "bsc",
+   "date": "2024-07-15T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. ReHold CTO Michael Semin's disclosure (https://medium.com/@bifotofficial/700-000-unauthorized-withdrawal-from-rehold-protocol-full-disclosure-and-next-steps-097119d545cd) and the Quadriga Initiative case (https://www.quadrigainitiative.com/hackfraudscam/reholdrenatgafarovsmartcontractwithdrawal.php) state that on 2024-07-15 co-founder Renat Gafarov used his own privileged access to withdraw more than 700k USD of protocol profits and founders' capital from ReHold's contracts without his partner's approval, disclosed on 2024-09-26. A key holder withdrew through the owner path as designed.",
+   "candidateIds": [
+    "web:2024-09-26:rehold"
+   ]
+  },
+  {
+   "name": "ETHTrustFund treasury exit",
+   "chain": "base",
+   "date": "2024-07-20T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. Cointelegraph (https://cointelegraph.com/news/ethtrustfund-dao-transfers-treasury-apparent-rug-pull) and crypto.news (https://crypto.news/ethtrustfund-rug-pulls-on-base-leading-to-2m-in-investor-losses/) report that on 2024-07-20 the developers of the Olympus fork moved about 607 ETH (about 2.1m USD) from the treasury they controlled to Ethereum, then through Tornado Cash and Railgun, and deleted all websites and social accounts. The team withdrew treasury funds under its own authority.",
+   "candidateIds": [
+    "web:2024-07-21:ethtrustfund"
+   ]
+  },
+  {
+   "name": "MonoSwap developer infostealer key compromise",
+   "chain": "blast",
+   "date": "2024-07-24T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-monoswap-hack-july-2024) and SlowMist (https://slowmist.medium.com/cunning-phishing-in-the-dark-forest-493221c34687) show attackers posing as VCs got a MonoSwap developer to install a fake 'Kakao' meeting app that was an infostealer; with the developer's keys, which held full control of the project's wallets and contracts, they took over the staking contracts and withdrew users' staked liquidity, at least 1.3m USD. The contracts honored their owner's stolen keys.",
+   "candidateIds": [
+    "web:2024-07-25:monoswap"
+   ]
+  },
+  {
+   "name": "Casper Network account privilege-escalation breach",
+   "chain": "casper",
+   "date": "2024-07-26T05:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Casper's preliminary incident report (https://www.casper.network/news/casper-blockchain-security-update-preliminary-incident-report) states that on 2024-07-26 an elevation-of-privilege vulnerability in the Casper node let an attacker gain access to 13 accounts and move about 6.7m USD, after which validators paused consensus until a patch on 2024-07-31. Casper is a WebAssembly layer-1, not an eip155 chain, so there is no EVM code to age.",
+   "candidateIds": [
+    "web:2024-07-26:casper-network"
+   ]
+  },
+  {
+   "name": "Terra IBC hooks reentrancy drain",
+   "chain": "terra",
+   "date": "2024-07-30T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Range Security's analysis (https://www.range.org/blog/terra-ibc-hooks-exploit-analysis) and The Block (https://www.theblock.co/post/308440/attacker-exploits-ibc-hooks-vulnerability-to-steal-tokens-on-terra-blockchain) show the attacker exploited an ibc-go/IBC-hooks reentrancy, patched upstream in April 2024 but reintroduced by Terra's June upgrade to a custom ibc-go 7.3.1, to drain CosmWasm contracts of about 60m ASTRO, 3.5m USDC, 500k USDT and 2.7 BTC (about 6.4m USD) until validators halted the chain at height 11430400. The defect is in the Cosmos SDK chain software, outside eip155.",
+   "candidateIds": [
+    "web:2024-07-31:terra-ibc-hooks"
+   ]
+  },
+  {
+   "name": "Nexera NXRA proxy-owner credential compromise",
+   "chain": "ethereum",
+   "date": "2024-08-07T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Nexera's post-mortem (https://nexera.medium.com/240807-incident-post-mortem-report-5f1f7840d4d7) and CoinDesk (https://www.coindesk.com/business/2024/08/07/blockchain-protocol-nexara-suffers-18m-exploit-nxra-tumbles-40) state that malicious code on a team machine exposed the credentials managing the Fundrs contracts; the attacker took ownership of the NXRA proxy, upgraded it and used the admin withdraw function to take 47.24m NXRA, of which 14.75m (about 449k USD; about 1.8m USD nominal) was sold. Ownership and admin withdrawal behaved as designed for the stolen credentials.",
+   "candidateIds": [
+    "web:2024-08-07:nexera"
+   ]
+  },
+  {
+   "name": "Banana Gun Telegram message-oracle transfers",
+   "chain": "ethereum",
+   "date": "2024-09-19T00:00:00Z",
+   "reason": "OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. Banana Gun's disclosure reported by Cointelegraph (https://cointelegraph.com/news/banana-gun-crypto-bot-refunds-3m) and QuillAudits' analysis (https://www.quillaudits.com/blog/hack-analysis/banana-gun-exploit) show attackers abused a vulnerability in the bot's offchain Telegram message oracle to trigger manual transfers of about 3m USD in ETH out of 11 users' bot-custodied wallets, on both the EVM and Solana bots, which share only that oracle. The victim wallets are EOAs whose keys the bot's backend held; no deployed contract failed.",
+   "candidateIds": [
+    "web:2024-09-19:banana-gun"
+   ]
+  },
+  {
+   "name": "Truflation treasury multisig malware key theft",
+   "chain": "ethereum",
+   "date": "2024-09-25T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-truflation-hack-september-2024) and Cointelegraph (https://cointelegraph.com/news/truflation-loses-estimated-5-million-malware-attack) report that malware, believed installed around Token2049, gave the attacker the private keys controlling Truflation's treasury multisig and personal wallets, from which about 5.23m USD on Ethereum and about 100k USD on seven other chains were transferred; customer and staking funds were untouched. The multisig accepted valid signatures from the stolen keys.",
+   "candidateIds": [
+    "web:2024-09-26:truflation"
+   ]
+  },
+  {
+   "name": "Tapioca DAO contributor-key vesting and USDO takeover",
+   "chain": "arbitrum",
+   "date": "2024-10-18T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Tapioca's post-mortem (https://mirror.xyz/tapiocada0.eth/RVcRuKmJAavD05ObYsyYOHLDJ4gkEZKwyY_Y0Gx6gNc) and Halborn (https://www.halborn.com/blog/post/explained-the-tapioca-dao-hack-october-2024) show a DPRK 'contagious interview' implant stole a core contributor's keys; the attacker used them to take ownership of the TAP vesting contract and claim 30m TAP, and of the USDO contract to add a minter, mint USDO and drain the USDO/USDC pool, taking about 605 ETH and 3.1m USDC (about 4.65m USD). Ownership-gated functions behaved as designed.",
+   "candidateIds": [
+    "web:2024-10-18:tapioca-dao"
+   ]
+  },
+  {
+   "name": "Sunray Finance key-compromise SUN mint",
+   "chain": "arbitrum",
+   "date": "2024-10-30T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Cointelegraph (https://cointelegraph.com/news/btc-scammers-sunray-finance-crypto-sec) reports that on 2024-10-30 an attacker with a compromised Sunray key upgraded the protocol's contract, minted about 200 sextillion SUN (and took control of ARC) and dumped them into DEX pairs, cashing out about 2.1m USD in USDT of a 2.7-2.86m USD total; Sunray itself described 'a sudden issuance of Sunray treasury asset tokens'. The upgrade and mint went through the key holder's authority.",
+   "candidateIds": [
+    "web:2024-10-31:sunray-finance"
+   ]
+  },
+  {
+   "name": "MetaWin frictionless-withdrawal hot wallet drain",
+   "chain": "ethereum",
+   "date": "2024-11-03T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-metawin-hack-november-2024) and Web3 Is Going Great (https://www.web3isgoinggreat.com/single/metawin-casino-hack) report that on 2024-11-03 the attacker abused a flaw in the casino's backend 'frictionless withdrawal system', per CEO Richard Skelhorn, to have MetaWin's Ethereum and Solana hot wallets pay out about 4m USD, which went to KuCoin and roughly 115 linked addresses. The payouts were ordinary transfers from custodial EOAs authorized by the offchain withdrawal service; no deployed contract failed.",
+   "candidateIds": [
+    "web:2024-11-04:metawin"
+   ]
+  },
+  {
+   "name": "CoinPoker hot wallet drain",
+   "chain": "ethereum",
+   "date": "2024-11-08T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Web3 Is Going Great (https://www.web3isgoinggreat.com/?id=coinpoker-hack) and Cyvers' analysis (https://cyvers.ai/coinpokers-hack-a-comprehensive-analysis-by-cyvers) report that on 2024-11-08 an attacker who compromised a CoinPoker-controlled hot wallet made 82 transfers of at most 25k USD each within 50 minutes across BNB Chain, Ethereum and Polygon, about 2m USD in total, laundered through Tornado Cash; custody provider Fireblocks attributed it to CoinPoker's own configuration and deposit processes. A custodial wallet drain has no victim contract.",
+   "candidateIds": [
+    "web:2024-11-08:coinpoker"
+   ]
+  },
+  {
+   "name": "DeBox operational wallet key leak",
+   "chain": "ethereum",
+   "date": "2024-12-02T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. DeBox's statement summarized in Nominis' December 2024 report (https://www.nominis.io/insights/crypto-security-incidents-december-2024) attributes the loss of 31.03 ETH and 4.88m BOX (about 275k USD) to a leaked private key of an operational wallet, unrelated to user funds, and commits to moving that account to a multisig. The assets left an EOA by transfers signed with the leaked key; no contract failed.",
+   "candidateIds": [
+    "web:2024-12-02:debox"
+   ]
+  },
+  {
+   "name": "NoOnes hot wallets drained via internal Solana bridge",
+   "chain": "ethereum",
+   "date": "2025-01-01T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE and NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. The Block (https://www.theblock.co/post/337004/noones-ceo-ray-youssef-8-million-exploit-crypto-sleuth-zachxbt-investigation) and Merkle Science (https://www.merklescience.com/blog/hack-track-noones-flow-of-funds-analysis) report that on 2025-01-01 hundreds of sub-7,000 USD withdrawals emptied about 7.9m USD from the custodial P2P marketplace's hot wallets on Ethereum, Tron, Solana and BNB Chain; CEO Ray Youssef attributed it to a flaw in the platform's own Solana bridge integration, since disabled. The EVM legs are ordinary transfers from custodial EOAs, and the named flaw is in the platform's Solana-side withdrawal machinery.",
+   "candidateIds": [
+    "web:2025-01-01:noones-solana-bridge"
+   ]
+  },
+  {
+   "name": "Orange Finance single-signer admin key takeover",
+   "chain": "arbitrum",
+   "date": "2025-01-08T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. The lead's 2024-01-23 date does not match the only reported Orange Finance incident, dated 2025-01-08 by Rekt (https://rekt.news/orange-finance-rekt) and Web3 Is Going Great (https://www.web3isgoinggreat.com/single/orange-finance-hack), for about 840k USD. There the admin multisig required a single signature, a leaked key let the attacker upgrade Orange's vault contracts and transfer their assets and approved user tokens, swapped through Uniswap, PancakeSwap and SushiSwap. The upgrade authority behaved as designed for the key holder.",
+   "candidateIds": [
+    "web:2024-01-23:orange-finance"
+   ]
+  },
+  {
+   "name": "AdsPower wallet-extension supply-chain injection",
+   "chain": "ethereum",
+   "date": "2025-01-21T10:00:00Z",
+   "reason": "OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-adspower-hack-january-2025) and Risky Business (https://risky.biz/risky-bulletin-supply-chain-attack-at-adspower-browser-platform/) report that between 2025-01-21 and 2025-01-24 10:00 UTC attackers who compromised the AdsPower antidetect browser injected code into wallet extensions installed through it (MetaMask, Phantom and others) that exfiltrated seed phrases and private keys, then drained about 4.7m USD from users' wallets. The victims are EOAs emptied with stolen keys.",
+   "candidateIds": [
+    "web:2025-01-24:adspower"
+   ]
+  },
+  {
+   "name": "Cardex exposed session-signer key drain",
+   "chain": "abstract",
+   "date": "2025-02-18T00:00:00Z",
+   "reason": "KEY_COMPROMISE and OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. Abstract's post-mortem covered by The Block (https://www.theblock.co/post/341694/cardex-exploit-compromised-400000-worth-of-ether-across-9000-wallets-abstract) and Decrypt (https://decrypt.co/306608/cardex-game-exploit-drains-abstract-wallets) states that the Cardex game shipped the private key of its session signer in its website frontend; the attacker used it to execute transactions under the month-long session keys about 9,000 Abstract Global Wallets had granted Cardex, draining about 400k USD of ETH. The wallets correctly honored a validly delegated session key; the fault was key exposure in offchain code.",
+   "candidateIds": [
+    "web:2025-02-18:cardex-the-portal"
+   ]
+  },
+  {
+   "name": "Voltage Finance Simple Staking retained-owner withdrawal",
+   "chain": "fuse",
+   "date": "2025-03-18T00:00:00Z",
+   "reason": "PRIVILEGED_ACTION and INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. Voltage's post-mortem (https://medium.com/@voltage.finance/voltage-finance-transparency-post-mortem-report-simple-staking-hack-ecde06c6b8bc), summarized in SlowMist's March report (https://slowmist.medium.com/slowmist-monthly-security-report-march-estimated-losses-at-33-99-million-34bffcceda67), says a developer who deployed the SimpleChefStaking contracts never transferred their ownership to the team, and on 2025-03-18 171,027.20 USDC.e and 151,085.87 USD of WETH were withdrawn from the Simple Staking pools; the team revoked his access and filed police reports. The withdrawal ran through retained owner authority; no permissionless defect is evidenced.",
+   "candidateIds": [
+    "web:2025-03-18:voltage-finance"
+   ]
+  },
+  {
+   "name": "ZKsync airdrop admin key sweepUnclaimed mint",
+   "chain": "zksync",
+   "date": "2025-04-15T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-zksync-hack-april-2025) and ZKsync's confirmation reported by blocmates (https://www.blocmates.com/news-posts/zksync-reports-5m-token-loss-from-compromised-airdrop-admin-account) show the private key of admin 0x842822c797049269A3c29464221995C56da5587D, which controlled three airdrop distributor contracts, was compromised and used to call the admin-only sweepUnclaimed() and mint about 111m unclaimed ZK (about 5m USD); 90% was later returned under a bounty. The admin function behaved as designed for its key holder.",
+   "candidateIds": [
+    "web:2025-04-13:zksync-airdrop-administrator"
+   ]
+  },
+  {
+   "name": "R0AR staking contractor storage backdoor",
+   "chain": "ethereum",
+   "date": "2025-04-16T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. R0AR's statement (https://www.theblock.co/press-releases/351357/1r0r-contract-exploited-by-external-developer-r0ar-responds-with-buyback-program) and SlowMist's April report (https://slowmist.medium.com/slowmist-monthly-security-report-april-estimated-losses-at-26-4-million-0f64e8a9f904) show a trusted external contractor deployed R0ARStaking with deployment-time storage writes inflating user.amount for his own address, then called the emergency withdrawal to take about 780k USD of ETH through Tornado Cash. The failing code was an author-planted backdoor, not a defect an outside caller could exercise.",
+   "candidateIds": [
+    "web:2025-04-16:r0ar"
+   ]
+  },
+  {
+   "name": "Loopscale RateX PT oracle exploit",
+   "chain": "solana",
+   "date": "2025-04-26T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-loopscale-hack-april-2025) and The Block (https://www.theblock.co/post/352083/solana-defi-protocol-loopscale-hit-with-5-8-million-exploit-two-weeks-after-launch) show the attacker manipulated Loopscale's pricing of RateX principal-token collateral to take undercollateralized loans of about 5.73m USDC and 1,211 SOL from its Genesis vaults, all later returned. Loopscale and RateX are Solana programs outside eip155.",
+   "candidateIds": [
+    "web:2025-04-26:loopscale"
+   ]
+  },
+  {
+   "name": "Force Bridge privileged-key unlock drain",
+   "chain": "ethereum",
+   "date": "2025-06-01T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-force-bridge-hack-june-2025) and crypto.news (https://crypto.news/nervos-network-suffers-major-exploit-as-3-9m-in-crypto-is-stolen-from-force-bridge/) show that, after Magickbase announced the bridge's sunset, the attacker called the Force Bridge contracts' privileged unlock functions on Ethereum and BNB Chain with compromised operator keys, after about six hours of failed attempts, draining 60,400 DAI, 539 ETH, 898,300 USDC, 257,800 USDT and 0.79 WBTC (about 3.7m USD) to Tornado Cash. The access checks passed for the stolen keys; the lead's supply-chain account concerns how those keys leaked, not deployed code.",
+   "candidateIds": [
+    "web:2025-06-01:force-bridge"
+   ]
+  },
+  {
+   "name": "Hacken HAI bridge minter key leak",
+   "chain": "ethereum",
+   "date": "2025-06-21T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Hacken's statements reported by The Block (https://www.theblock.co/news/markets/2025-06-22-hacken-cites-human-error-after-private-key-leak-triggers-5-million-crash-in-hai-value-359097) and Rekt (https://rekt.news/hacken-rekt) say a private key holding minting privileges on the HAI bridge contracts was exposed by human error during bridge architecture changes; the attacker minted about 900m HAI on Ethereum and BNB Chain and dumped it for about 250k USD, and the uncompromised deployer then revoked the minter. The mint executed through a legitimately authorized minter.",
+   "candidateIds": [
+    "web:2025-06-21:hacken-hai-mint-key"
+   ]
+  },
+  {
+   "name": "Texture USDC vault rebalance exploit",
+   "chain": "solana",
+   "date": "2025-07-09T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Texture's post-mortem (https://x.com/texture_fi/status/1944851497897926737) and Web3 Is Going Great (https://www.web3isgoinggreat.com/?id=texture-hack) show the attacker abused a missing check in the rebalance instruction of Texture's USDC vault program to transfer about 2.2m USD, returning 90% under a bounty. Texture is a Solana lending program outside eip155.",
+   "candidateIds": [
+    "web:2025-07-09:texture"
+   ]
+  },
+  {
+   "name": "Nemo Protocol Sui oracle exploit",
+   "chain": "sui",
+   "date": "2025-09-07T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. The Block (https://www.theblock.co/post/369766/sui-nemo-protocol-exploit) and CoinDesk (https://www.coindesk.com/markets/2025/09/08/sui-based-yield-protocol-nemo-exploited-for-usd2-4m-in-usdc) report that the attacker manipulated a price oracle in Nemo's Sui yield-trading Move modules to extract about 2.4m USDC, later bridged via Arbitrum to Ethereum. The vulnerable code and depleted pools are on Sui, outside eip155; the EVM legs are laundering.",
+   "candidateIds": [
+    "web:2025-09-08:nemo-protocol"
+   ]
+  },
+  {
+   "name": "Shibarium PoS bridge validator-key takeover",
+   "chain": "ethereum",
+   "date": "2025-09-12T18:44:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. The Shiba Inu team's security update (https://blog.shib.io/shibarium-bridge-security-update/) and CCN (https://www.ccn.com/education/crypto/shibarium-bridge-hack-shib-bone-crash-explained/) report that at 18:44 UTC on 2025-09-12 the attacker, holding compromised signing keys for 10 of 12 Shibarium validators plus 4.6m flash-borrowed BONE staked to reach two-thirds, signed a malicious checkpoint and pushed a fraudulent exit through the Ethereum PoS bridge, withdrawing 224.57 ETH, 92.6bn SHIB and other tokens (about 2.4m USD). The bridge accepted a validly signed supermajority checkpoint; the failure is key custody.",
+   "candidateIds": [
+    "web:2025-09-12:shibarium-bridge"
+   ]
+  },
+  {
+   "name": "Seedify SFUND bridge developer-key mint",
+   "chain": "bsc",
+   "date": "2025-09-23T12:05:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Seedify's disclosure reported by Cryptonews (https://cryptonews.com/news/sfund-token-crashes-99-as-north-korean-hackers-drain-1-2m-from-seedify-bridge/) and Brave New Coin (https://bravenewcoin.com/insights/sfund-token-crashes-99-as-north-korean-hackers-drain-1-2m-from-seedify-bridge) says a DPRK-linked group obtained a Seedify developer's private keys around 12:05 UTC on 2025-09-23 and used their bridge authority to mint SFUND across Ethereum, Arbitrum, Base and BNB Chain, dumping it for about 1.2-1.7m USD. The mint went through the developer key's privileges.",
+   "candidateIds": [
+    "web:2025-09-23:seedify-sfund-bridge"
+   ]
+  },
+  {
+   "name": "Griffin AI GAIN admin-EOA OFT peer swap",
+   "chain": "bsc",
+   "date": "2025-09-24T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. QuillAudits (https://www.quillaudits.com/blog/hack-analysis/griffin-ai-exploit) and BeInCrypto (https://beincrypto.com/griffin-ai-gain-token-crash-exploit/) show the attacker controlled GAIN's admin EOA and used setPeer to replace the official Ethereum OFT peer 0xccdbb9... with an attacker contract 0x7a8caf..., then sent LayerZero messages from it to mint 5bn GAIN on BNB Chain and sold 147.5m for 2,955 BNB (about 3m USD). The OFT correctly trusted the peer its owner configured; the malicious peer was attack machinery, not a latent vulnerability.",
+   "candidateIds": [
+    "web:2025-09-24:griffinai-gain-bridge"
+   ]
+  },
+  {
+   "name": "Hyperliquid POPCAT order-book manipulation HLP bad debt",
+   "chain": "hyperliquid",
+   "date": "2025-11-12T00:00:00Z",
+   "reason": "MARKET_RISK and NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. CoinDesk (https://www.coindesk.com/markets/2025/11/13/peak-degen-warfare-alleged-popcat-manipulation-hits-hyperliquid-with-usd4-9m-loss) and Halborn (https://www.halborn.com/blog/post/explained-the-hyperliquid-hack-november-2025) report that the trader spread about 3m USDC from OKX across 19 wallets, opened over 20m USD of leveraged POPCAT longs, propped the price with a roughly 20m USD bid at 0.21 and then pulled it, so the crash liquidated the positions and the HLP vault absorbed about 4.9m USD of bad debt. The loss is market manipulation within the permitted leverage and liquidation design of HyperCore's native order book, not HyperEVM contract code.",
+   "candidateIds": [
+    "web:2025-11-13:hyperliquid-hlp-popcat"
+   ]
+  },
+  {
+   "name": "GANA Payment ownership takeover reward drain",
+   "chain": "bsc",
+   "date": "2025-11-20T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-gana-payment-hack-november-2025) and Cryptonews, citing ZachXBT (https://cryptonews.com/news/zachxbt-reveals-bsc-project-gana-payment-hit-with-3-1m-exploit/), report that an attacker with the project's stolen owner key transferred contract ownership to himself, raised the reward rate, and used unstake to collect inflated GANA rewards, laundering about 1,140 BNB and 346.8 ETH (about 3.1m USD) through Tornado Cash. Owner-only parameter changes behaved as designed.",
+   "candidateIds": [
+    "web:2025-11-20:gana-payment"
+   ]
+  },
+  {
+   "name": "Aerodrome and Velodrome registrar DNS hijack",
+   "chain": "base",
+   "date": "2025-11-21T00:00:00Z",
+   "reason": "OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-aerodrome-finance-hack-november-2025) and The Block (https://www.theblock.co/post/380037/top-dexs-aerodrome-velodrome-hit-with-front-end-compromise-urge-users-to-avoid-main-domains) report that DNS records for the protocols' centralized domains were altered, traced to an insider at registrar NameSilo, to serve a malicious copy of the frontend that phished approvals, costing users about 700k USD; the Aerodrome and Velodrome contracts were not compromised.",
+   "candidateIds": [
+    "web:2025-11-21:aerodrome-velodrome-domains"
+   ]
+  },
+  {
+   "name": "BasisOS Agentic FoF insider vault theft",
+   "chain": "base",
+   "date": "2025-11-24T00:00:00Z",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-28. BasisOS' disclosure reported by Bitget News (https://www.bitget.com/news/detail/12560605078975) and Nominis' November report (https://www.nominis.io/insights/nominis-monthly-report-crypto-attacks-in-november-2025) says an internal engineer who ran the agent wrapper code had manually controlled the Agentic Fund of Funds vault behind the purported AI agent since launch and stole about 531k USD. An operator key holder withdrew funds he controlled.",
+   "candidateIds": [
+    "web:2025-11-24:basisos-agentic-fof"
+   ]
+  },
+  {
+   "name": "DeBot custodial wallet key theft",
+   "chain": "bsc",
+   "date": "2025-12-09T00:00:00Z",
+   "reason": "KEY_COMPROMISE and OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. SlowMist's alert and DeBot's statement reported by Bitget News (https://www.bitget.com/news/detail/12560605124233, https://www.bitget.com/news/detail/12560605124368) say an intrusion from a Japanese data center detected on 2025-12-09 exposed private keys of DeBot trading-bot wallets created before 2025-12-10; the attacker drained about 255k USD from those wallets, consolidating on BNB Chain and routing through Tornado Cash, and DeBot compensated users. The victims are custodial EOAs emptied with stolen keys.",
+   "candidateIds": [
+    "web:2025-12-27:debot-wallet"
+   ]
+  },
+  {
+   "name": "0G reward contract leaked-key emergencyWithdraw",
+   "chain": "0g",
+   "date": "2025-12-11T00:00:00Z",
+   "reason": "KEY_COMPROMISE and OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. The 0G Foundation's statement (https://x.com/0G_Foundation/status/1999781517283737670), reported by ChainCatcher (https://www.chaincatcher.com/en/article/2229218), says AliCloud instances compromised through Next.js CVE-2025-66478 exposed a plaintext private key used for reward updates, and the attacker used it to call the alignment reward contract's privileged emergencyWithdraw, taking 520,010 0G plus 9.93 ETH and 4,200 USDT. The privileged function executed as designed for the key holder.",
+   "candidateIds": [
+    "web:2025-12-11:0g-foundation-reward-contract"
+   ]
+  },
+  {
+   "name": "Meteora OTC buyback counterparty scam",
+   "chain": "solana",
+   "date": "2026-01-17T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE and NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Meteora's Q1 2026 token-holder report, covered by crypto.news (https://crypto.news/meteora-reports-1-5-million-otc-scam-loss-in-q1-met-report/), discloses that 1.5m USDC was lost to a counterparty who posed as an OTC seller during a MET buyback and never delivered, for which a police report was filed. Meteora voluntarily sent the funds; no contract was exploited, and Meteora operates on Solana.",
+   "candidateIds": [
+    "web:2026-01-17:meteora"
+   ]
+  },
+  {
+   "name": "IoTeX ioTube Validator owner-key malicious upgrade",
+   "chain": "ethereum",
+   "date": "2026-02-21T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. IoTeX's incident review (https://blog.iotex.io/blog/how-iotex-responded-to-the-iotube-bridge-incident-a-full-month-in-review/) and Halborn (https://www.halborn.com/blog/post/explained-the-iotex-hack-february-2026) show an attacker who had compromised an employee's machine obtained the private key owning ioTube's Ethereum-side Validator contract and upgraded it to skip signature checks, gaining control of TokenSafe and MintPool; about 4.3-4.4m USD of USDC, USDT, IOTX, WBTC and BUSD was drained and 111m CIOTX and 9.3m CCS minted. The upgrade went through the owner key's legitimate authority.",
+   "candidateIds": [
+    "web:2026-02-21:iotex-iotube"
+   ]
+  },
+  {
+   "name": "Holdstation app-update supply-chain injection",
+   "chain": "bsc",
+   "date": "2026-02-25T00:00:00Z",
+   "reason": "OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. Holdstation's disclosure reported by Bitget News (https://www.bitget.com/news/detail/12560605224859, https://www.bitget.com/news/detail/12560605218450) says the attacker stole a developer's session token, bypassed two-factor authentication and injected malicious code into a Holdstation smart-wallet application update (Worldchain and BNB Chain), which then stole about 462k USDT from users; Holdstation suspended services and promised compensation, and Verichains confirmed the contracts were secure. The loss originates in the distributed client software, not in deployed contract logic.",
+   "candidateIds": [
+    "web:2026-02-25:holdstation"
+   ]
+  },
+  {
+   "name": "GoonFi V2 prop-AMM mispricing drain",
+   "chain": "solana",
+   "date": "2026-03-28T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. SlowMist's Solana incident log (https://hacked.slowmist.io/?c=Solana) records that GoonFi V2's WSOL/USDC pool, program goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE (https://solscan.io/account/goonuddtQRrWqqn5nFyczVKaie28f3kDkHWkHtURSLE), was drained of about 254k USD by searchers arbitraging a program configuration and pricing bug in one atomic transaction. The program is a Solana prop AMM outside eip155.",
+   "candidateIds": [
+    "web:2026-03-28:goonfi-v2"
+   ]
+  },
+  {
+   "name": "CoW Swap cow.fi domain hijack",
+   "chain": "ethereum",
+   "date": "2026-04-14T00:00:00Z",
+   "reason": "OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. CoW's post-mortem as reported by The Block (https://www.theblock.co/post/397432/cow-swap-pauses-protocol-amid-domain-hijacking) and The Cryptonomist (https://en.cryptonomist.ch/2026/04/17/cow-swap-domain-hijack/) says attackers used social engineering and forged identity documents against the .fi registry to take over the cow.fi DNS and serve a phishing interface at swap.cow.fi for several hours, costing users about 1.2m USD in malicious signatures; CoW Protocol's contracts and backend were not affected.",
+   "candidateIds": [
+    "web:2026-04-14:cowswap-frontend"
+   ]
+  },
+  {
+   "name": "Volo vaults operator key compromise",
+   "chain": "sui",
+   "date": "2026-04-21T00:00:00Z",
+   "reason": "NON_EVM_CHAIN and KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Rekt (https://rekt.news/volo-rekt) and Bitcoin.com News (https://news.bitcoin.com/volo-protocol-loses-3-5-million-in-sui-blockchain-exploit-blocks-wbtc-bridge-attempt/) report that on 2026-04-21 an attacker with a compromised Volo admin/operator key drained its WBTC, XAUm and USDC vaults on Sui of about 3.5m USD (about 2m later recovered); GoPlus and ExVul confirmed a privileged key breach rather than a contract flaw. The vaults are Sui Move objects outside eip155.",
+   "candidateIds": [
+    "web:2026-04-21:volo-vaults"
+   ]
+  },
+  {
+   "name": "Purrlend admin multisig bridge-role grant",
+   "chain": "hyperevm",
+   "date": "2026-04-25T00:00:00Z",
+   "reason": "SIGNING_PLANE_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Purrlend's disclosure (https://x.com/purrlend/status/2049807764944458094), reported by Bitget News (https://www.bitget.com/news/detail/12560605393515), attributes the about 1.52m USD loss to a breach of its 2-of-3 admin multisig, which about eight hours earlier raised caps and granted an unknown address the Aave-style bridge role, whose unbacked-mint privilege then drained pools on HyperEVM (about 1.2m USD) and MegaETH (about 324k USD). The pool code honored a role the admin multisig validly granted; the grant was the attack itself.",
+   "candidateIds": [
+    "web:2026-04-25:purrlend"
+   ]
+  },
+  {
+   "name": "Syndicate Commons bridge upgrade-key leak",
+   "chain": "base",
+   "date": "2026-04-29T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Syndicate Labs' statement reported by crypto.news (https://crypto.news/syndicate-labs-suffers-380k-synd-bridge-exploit-pledges-full-user-compensation/) and Coincu (https://coincu.com/syndicate-private-key-leak-malicious-bridge-contract-upgrade-380k-loss/) says the single upgrade key of the Commons bridge, stored unencrypted in a password manager, leaked and was used to install a malicious implementation, draining about 18.5m SYND and user funds (about 380k USD). The upgrade authority behaved as designed for the key holder.",
+   "candidateIds": [
+    "web:2026-04-29:syndicate-commons-bridge"
+   ]
+  },
+  {
+   "name": "Aftermath Perpetuals negative builder-fee exploit",
+   "chain": "sui",
+   "date": "2026-04-29T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. The Crypto Times (https://www.cryptotimes.io/2026/04/29/aftermath-finance-perps-on-sui-exploited-for-1-14m/) and a technical breakdown (https://dev.to/mehvetero/how-one-missing-assert-drained-114m-from-aftermath-finance-a-signed-integer-exploit-on-sui-1db3) show the attacker supplied a builder fee that read as negative under the perpetuals module's signed comparison, which settlement converted into collateral credit, withdrawing about 1.14m USDC in 11 transactions. The defect is in a Sui Move module outside eip155.",
+   "candidateIds": [
+    "web:2026-04-29:aftermath-perpetuals"
+   ]
+  },
+  {
+   "name": "Wasabi Protocol deployer key via AWS heap dump",
+   "chain": "ethereum",
+   "date": "2026-04-30T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-wasabi-protocol-hack-april-2026) and CoinDesk (https://www.coindesk.com/tech/2026/04/30/wasabi-protocol-drained-for-usd4-5-million-in-apparent-admin-key-compromise) show the attacker pulled the wasabideployer.eth private key from an exposed Spring Boot Actuator heap dump on Wasabi's AWS infrastructure and, with no multisig or timelock, appointed a malicious admin and upgraded contracts on Ethereum, Base, Berachain and Blast, taking about 5.7m USD. Admin and upgrade checks passed for the stolen key.",
+   "candidateIds": [
+    "web:2026-04-30:wasabi-protocol"
+   ]
+  },
+  {
+   "name": "Bisq v1 negative miner-fee trade protocol exploit",
+   "chain": "bitcoin",
+   "date": "2026-05-01T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Bisq's post-mortem (https://bisq.network/blog/security-incident-post-mortem/) states that a modified client exploited missing validation of the taker-defined miner fee, which could be negative, to manipulate the Bitcoin multisig trade output and take about 11.6 BTC (about 876k USD) from ten users' offers. Bisq is an offchain Java trade protocol settling on Bitcoin; no eip155 code is involved.",
+   "candidateIds": [
+    "web:2026-05-01:bisq-v1"
+   ]
+  },
+  {
+   "name": "Transit Finance legacy TRON router exploit",
+   "chain": "tron",
+   "date": "2026-05-11T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Transit's announcement (https://x.com/TransitFinance/status/2054559075384590681) and Web3 Is Going Great (https://www.web3isgoinggreat.com/?id=transit-finance-hack) report that an early-version Transit contract deployed on TRON and deprecated in 2022 was exploited through historical vulnerabilities for about 1.88m USD, later bridged into DAI on Ethereum; Transit said its current contracts were unaffected and compensated users. The vulnerable code runs on the TRON Virtual Machine, which is not an eip155 chain.",
+   "candidateIds": [
+    "web:2026-05-13:transit-finance-legacy-tron-contract"
+   ]
+  },
+  {
+   "name": "TAC bridge TON-side counterfeit jetton deposits",
+   "chain": "ton",
+   "date": "2026-05-11T02:20:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. TAC's post-mortem (https://tac.build/blog/post-mortem-report-tac-bridge) states that at about 02:20 UTC on 2026-05-11 the attacker deployed counterfeit TON jetton wallets whose deposit notifications the bridge accepted without checking the canonical jetton wallet code hash, so the TAC EVM side minted and released about 2.85m USD of USDT, BLUM and tsTON. The failed verification is in the TON-side bridge contracts and sequencing, outside eip155; the TAC EVM contracts honored messages the bridge attested.",
+   "candidateIds": [
+    "web:2026-05-11:tac-cross-chain-system"
+   ]
+  },
+  {
+   "name": "Echo Protocol eBTC admin-key unbacked mint",
+   "chain": "monad",
+   "date": "2026-05-18T00:00:00Z",
+   "reason": "KEY_COMPROMISE and PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. Merkle Science (https://www.merklescience.com/blog/hack-track-the-echo-protocol-ebtc-incident) and Decrypt (https://decrypt.co/368315/bitcoin-defi-platform-echo-protocol-hit-by-76m-monad-exploit) show the attacker obtained the private key of an Echo administrator EOA on Monad, granted itself minting rights and minted 1,000 unbacked eBTC, then deposited 45 into Curvance to borrow about 11.29 WBTC (about 821-867k USD), laundered as about 384 ETH through Tornado Cash. No smart-contract bug was involved; the mint followed the admin's authority.",
+   "candidateIds": [
+    "web:2026-05-18:echo-protocol-ebtc"
+   ]
+  },
+  {
+   "name": "Bankr AI agent wallet prompt-injection drains",
+   "chain": "base",
+   "date": "2026-05-19T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. AMBCrypto (https://ambcrypto.com/ai-linked-wallet-drained-via-prompt-injection-in-bankr-exploit/) and CoinTurk (https://en.coin-turk.com/bankr-halts-swaps-after-440000-ai-exploit-hits-users/) report that attackers used prompt injection and social engineering against Bankr's AI agent, which controls custodial user wallets, to have it transfer funds out of 14 wallets, about 440k USD in linked addresses, after which Bankr paused swaps and transfers. The transfers were validly signed by the agent's own keys on instruction from its offchain model; no contract failed.",
+   "candidateIds": [
+    "web:2026-05-19:bankr-ai-agent"
+   ]
+  },
+  {
+   "name": "Polymarket dormant top-up wallet key compromise",
+   "chain": "polygon",
+   "date": "2026-05-22T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. CoinDesk (https://www.coindesk.com/markets/2026/05/22/zachxbt-flags-usd520k-polymarket-exploit-on-polygon-team-says-funds-are-safe) and Decrypt (https://decrypt.co/368740/polymarket-hit-by-internal-top-up-wallet-exploit-700k-drained) report that an attacker obtained the private key of a roughly six-year-old Polymarket operational wallet used for internal reward top-ups and used its permissions to drain about 520-700k USD from two associated Polygon contracts; Polymarket confirmed a key compromise, not a contract exploit, and revoked the key's permissions.",
+   "candidateIds": [
+    "web:2026-05-22:polymarket-operations-wallet"
+   ]
+  },
+  {
+   "name": "StablR 1-of-3 minting Safe takeover",
+   "chain": "ethereum",
+   "date": "2026-05-24T00:00:00Z",
+   "reason": "KEY_COMPROMISE and SIGNING_PLANE_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. CoinDesk (https://www.coindesk.com/markets/2026/05/26/stablr-freezes-usdr-and-eurr-after-attacker-mints-usd13-5-million-in-unbacked-tokens) and ForkLog (https://forklog.com/en/stablrs-eurr-and-usdr-stablecoins-lose-peg-after-2-8-million-hack/) report that one stolen key sufficed for StablR's 1-of-3 minting multisig; the attacker added himself as owner, removed the others and minted 8.35m USDR and 4.5m EURR, realizing about 1,115 ETH (about 2.8m USD). The Safe and token honored a valid owner signature.",
+   "candidateIds": [
+    "web:2026-05-24:stablr-eurr-usdr"
+   ]
+  },
+  {
+   "name": "SUPERFORTUNE GUA airdrop multisig destination tampering",
+   "chain": "bsc",
+   "date": "2026-05-27T00:00:00Z",
+   "reason": "SIGNING_PLANE_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. SUPERFORTUNE's statement (https://x.com/SUPERFORTUNE888/status/2059818459421372485) and Halborn (https://www.halborn.com/blog/post/explained-the-superfortune-ai-hack-may-2026) say a multisig transaction meant to fund the airdrop claim contract 0x70ae7D3DECfB4C3aE996fb1c07092566F73D5c15 was signed and executed with the lookalike destination 0x70AE678b457C5E1b3fD7AD9537F234dFc1795C15, sending about 15m GUA to the attacker, who sold for about 5.66m USD; classic address poisoning was ruled out in favor of compromised tooling or workflow. The signers authorized the transfer, so no contract check failed.",
+   "candidateIds": [
+    "web:2026-05-27:superfortune-gua"
+   ]
+  },
+  {
+   "name": "Alephium TokenBridge forged guardian observations",
+   "chain": "ethereum",
+   "date": "2026-05-30T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. The Defiant (https://thedefiant.io/news/hacks/alephium-bridge-815k-forged-guardian-messages), citing Blockaid and Alephium's statement, reports that an off-chain vulnerability in the Wormhole-fork bridge backend let forged events be observed and signed by the four-guardian quorum; the Ethereum and BNB Chain bridge contracts then released 200,967 USDT, 17,594 USDC, 5.18 WETH, 0.335 WBTC, 36,750 USDT and 24.386 WBNB (about 815k USD) and minted 13.76m unbacked ALPH. Alephium ruled out both a contract bug and key compromise; the contracts correctly honored quorum-signed messages.",
+   "candidateIds": [
+    "web:2026-05-30:alephium-tokenbridge"
+   ]
+  },
+  {
+   "name": "Gravity Bridge validator signing-key compromise",
+   "chain": "ethereum",
+   "date": "2026-05-30T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. CoinCentral (https://coincentral.com/gravity-bridge-drained-of-5-4-million-in-suspected-signing-key-compromise/) and The Crypto Times (https://www.cryptotimes.io/2026/05/30/gravity-bridge-hit-in-5-4m-exploit-amid-suspected-key-compromise/) report that the Cosmos-to-Ethereum bridge's Ethereum contract released about 4.3m USDC, 274 ETH, 434k USDT and PAYG (about 5.4m USD) on signatures from compromised validator signing keys, with investigators pointing to key compromise rather than any code vulnerability. The Gravity contract accepted a validly signed validator set.",
+   "candidateIds": [
+    "web:2026-05-30:gravity-bridge"
+   ]
+  },
+  {
+   "name": "Haedal Vault cross-version share-accounting flaw",
+   "chain": "sui",
+   "date": "2026-06-09T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. SlowMist's incident log (https://hacked.slowmist.io/?c=Other) and Haedal's recovery statement reported by Bitget News (https://www.bitget.com/news/detail/12560605466093) show the attacker used deprecated deposit paths left by a 2025 upgrade to mint inflated LP shares in Haedal's Sui vaults and redeemed them through the new paths for about 915k USD of excess underlying; Haedal replaced the SUI-USDC, ETH-USDC, DEEP-SUI, WAL-SUI, CETUS-SUI and LBTC-SUI vaults and covered losses. The vaults are Sui Move modules outside eip155.",
+   "candidateIds": [
+    "web:2026-06-09:haedal-vault"
+   ]
+  },
+  {
+   "name": "Secret Network Axelar CW20-ICS20 forged-channel mint",
+   "chain": "secret",
+   "date": "2026-06-10T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Common Prefix's analysis (https://www.commonprefix.com/blog/secret-network-exploit) and The Block (https://www.theblock.co/post/405459/secret-networks-axelar-bridge-drained-for-4-67-million-in-infinite-mint-exploit-that-went-unnoticed-for-seven-days) show Secret Network's fork of the CW20-ICS20 contract had its source-channel checks removed, so the attacker opened an IBC channel from a counterfeit chain and self-relayed forged deposit packets to mint unbacked saUSDT, saUSDC, saWETH and others, draining the Axelar escrow of about 4.67m USD. The vulnerable code is a CosmWasm contract on Secret Network, outside eip155.",
+   "candidateIds": [
+    "web:2026-06-10:secret-network-axelar-ibc-bridge"
+   ]
+  },
+  {
+   "name": "Raydium legacy AMM V3 fake LP-mint drain",
+   "chain": "solana",
+   "date": "2026-06-10T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Raydium's disclosure reported by Cryptonews (https://cryptonews.com/news/raydium-exploit-fake-lp-tokens-deprecated-solana-pools/) and Crypto Briefing (https://cryptobriefing.com/raydium-exploit-legacy-amm-v3/) says the deprecated AMM V3 program checked LP supply on withdrawal without verifying the LP mint address, so the attacker passed a fake LP mint with supply 1 and drained five Serum-era pools of about 150,177 RAY, 5,603 SOL and 893,700 USDC (about 1.34m USD). The program is a Solana program outside eip155.",
+   "candidateIds": [
+    "web:2026-06-10:raydium-deprecated-amm-v3"
+   ]
+  },
+  {
+   "name": "Namada MASP IBC transfer drain",
+   "chain": "namada",
+   "date": "2026-06-19T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. The Crypto Times (https://www.cryptotimes.io/2026/06/20/namadas-600k-masp-drain-goes-unnoticed-as-stale-indexer-masks-the-loss/) and CryptoRank (https://cryptorank.io/news/feed/54d1e-namada-protocol-exploit) report that an IBC transfer-logic flaw in the Namada protocol let an attacker sweep about 600k USD of ATOM, USDC, OSMO, TIA and NYM from its Multi-Asset Shielded Pool, masked for a time by a stale indexer. Namada is a Cosmos-SDK-style Rust chain, not eip155.",
+   "candidateIds": [
+    "web:2026-06-19:namada-shielded-pools"
+   ]
+  },
+  {
+   "name": "mySwap CL fake-token pool accounting drain",
+   "chain": "starknet",
+   "date": "2026-06-19T07:15:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. mySwap's security update (https://x.com/mySwapxyz/status/2067941891010711560) and Crypto Adventure (https://cryptoadventure.com/myswap-loses-305k-on-starknet-after-fake-evil-token-abuses-cl-pool-accounting/) report that at 07:15 UTC on 2026-06-19 an attacker used a fake EVIL token to corrupt mySwap CL pool accounting and drained about 137.96 ETH, 45,000 USDC, 19,900 USDT and 230,000 STRK (about 300k USD). mySwap is a Cairo contract on Starknet, outside eip155.",
+   "candidateIds": [
+    "web:2026-06-19:myswap-cl"
+   ]
+  },
+  {
+   "name": "SecondFi (Yoroi) predictable-nonce key disclosure",
+   "chain": "cardano",
+   "date": "2026-06-21T00:00:00Z",
+   "reason": "NON_EVM_CHAIN and OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. A public analysis of the SecondFi signer (https://hackmd.io/@QmCYMVNVQuqRJhiqMlXVdA/ry2LIyiMGx) and Crypto Briefing (https://cryptobriefing.com/secondfi-exploit-drains-cardano-users/) show the wallet's Ed25519 signing code produced predictable nonces, so private keys could be reconstructed from public Cardano signatures; about 16m ADA (about 2.4m USD) was taken from 374 addresses between 2026-06-21 and 06-23 and EMURGO wound the wallet down. The flaw is in client key handling on Cardano.",
+   "candidateIds": [
+    "web:2026-06-23:secondfi-yoroi"
+   ]
+  },
+  {
+   "name": "Polymarket frontend vendor script injection",
+   "chain": "polygon",
+   "date": "2026-06-25T00:00:00Z",
+   "reason": "OFFCHAIN_INFRASTRUCTURE: Claude Opus 5.5 reviewed 2026-09-28. Halborn (https://www.halborn.com/blog/post/explained-the-polymarket-hack-june-2026) and BleepingComputer (https://www.bleepingcomputer.com/news/security/polymarket-customers-lose-3-million-in-supply-chain-attack/) report that a compromised third-party frontend vendor injected malicious JavaScript into polymarket.com, tricking eleven users into approving transactions that drained about 3.1m USD of pUSD, later bridged into about 1,893 ETH; Polymarket's servers and contracts were not compromised.",
+   "candidateIds": [
+    "web:2026-06-25:polymarket-frontend"
+   ]
+  },
+  {
+   "name": "TeleSwap Bitcoin hot wallet outflows",
+   "chain": "bitcoin",
+   "date": "2026-07-15T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. Bitget News (https://www.bitget.com/news/detail/12560605520572) and Protos (https://protos.com/across-allbridge-teleswap-lost-5-7m-to-bridge-hacks-in-past-week/), citing ZachXBT, report suspicious outflows of more than 735k USD from TeleSwap's Bitcoin hot wallet on 2026-07-15, after which the wallet stopped processing and funds went to Tornado Cash; the team gave no contract-level explanation. The drained wallet is a Bitcoin address, so no eip155 victim code is implicated.",
+   "candidateIds": [
+    "web:2026-07-15:teleswap"
+   ]
+  },
+  {
+   "name": "DefiTuna zero-valued position solvency bypass",
+   "chain": "solana",
+   "date": "2026-07-16T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. CertiK's analysis (https://www.certik.com/blog/defituna-incident-analysis) and Crypto Briefing (https://cryptobriefing.com/defituna-lending-pools-exploited-580k/) show the attacker routed borrowed USDC into an illiquid TUNA/USDC pool so DefiTuna valued the position's assets at zero and treated it as healthy, withdrawing about 580k USD from the USDC lending pool. DefiTuna is a Solana program outside eip155.",
+   "candidateIds": [
+    "web:2026-07-16:defituna-lending"
+   ]
+  },
+  {
+   "name": "Across Risk Labs Solana relayer event spoofing",
+   "chain": "solana",
+   "date": "2026-07-17T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. Asymmetric Research's write-up (https://blog.asymmetric.re/across-solana-event-spoofing/) and crypto.news (https://crypto.news/across-protocol-relayer-lose-under-4m-in-solana-attack/) show Risk Labs' offchain Solana relayer did not verify the Anchor event discriminator, so a wrapper program CPI-ing into SpokePool's read-only get_unsafe_deposit_id with appended fake FundsDeposited payloads fooled it into filling 581 of 1,627 forged deposits on EVM destinations, about 4.5m USD gross and under 4m net of the relayer's own capital. The EVM SpokePools and user funds were unaffected; the lead's 2026-08 date is later than the reported 2026-07-17 incident.",
+   "candidateIds": [
+    "web:2026-08:across-protocol-solana-deployment-to-evm-destinations"
+   ]
+  },
+  {
+   "name": "Allbridge Core Solana stable-pool flash-loan manipulation",
+   "chain": "solana",
+   "date": "2026-07-19T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. CoinDesk (https://www.coindesk.com/business/2026/07/20/cross-chain-protocol-allbridge-halts-after-usd1-65-million-flash-loan-exploit) and crypto.news (https://crypto.news/allbridge-core-halted-after-1-65m-solana-exploit/) report that the attacker flash-borrowed 1.12m USDC from Kamino, traded repeatedly through Allbridge Core's Solana USDC/USDT pool to distort its internal rate and withdrew liquidity at that rate for about 1.65m USD. The pools are a Solana program, outside eip155.",
+   "candidateIds": [
+    "web:2026-07-19:allbridge-core-solana"
+   ]
+  },
+  {
+   "name": "ChainConnect Venom callback-sender check",
+   "chain": "venom",
+   "date": "2026-07-26T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. 0xposed's incident record (https://0xposed.io/radar/chainconnect-bridge-callback-exploit-white-hat-resolution) places the flaw in ProxyMultiVaultAlien_V10.onCheckAccumulatedFee on Venom 2.0, which failed to authenticate the callback sender, letting an unauthorized caller trigger releases of about 650k USD from the bridge's Ethereum, BNB Chain, Avalanche and Polygon vaults in 23 transactions; 280 ETH (82.9%) was returned on 2026-07-30 under a whitehat deal. The vulnerable code runs on Venom's TVM, outside eip155; the EVM vaults honored the bridge's attestations.",
+   "candidateIds": [
+    "web:2026-07-26:chainconnect"
+   ]
+  },
+  {
+   "name": "Garden Finance independent-solver database compromise",
+   "chain": "ethereum",
+   "date": "2026-07-26T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. Garden's statement reported by Cointelegraph (https://cointelegraph.com/news/garden-finance-app-offline-450k-htlc-exploit) and crypto.news (https://crypto.news/garden-finance-takes-app-offline-after-independent-solver-database-compromise/) says an attacker inserted fraudulent records into one independent solver's offchain database, so the solver released its own USDT from HTLCs on Ethereum, Base, Arbitrum and BNB Chain for swaps never funded, about 450k USD; the core contracts and user funds were unaffected. The HTLCs executed the solver's valid redeems.",
+   "candidateIds": [
+    "web:2026-07-26:garden-finance"
+   ]
+  },
+  {
+   "name": "Swan Treasury ZhaiquanBuy leaked signer key",
+   "chain": "bsc",
+   "date": "2026-07-30T00:00:00Z",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. crypto.news (https://crypto.news/swan-treasury-loses-625k-after-signer-key-leak-enables-discounted-sty-purchases/) and Nominis' July report (https://www.nominis.io/insights/nominis-monthly-report-crypto-exploits-and-attacks-in-july-2026) show the attacker held the private key of the offchain signer hardcoded as _signer in the ZhaiquanBuy contract and produced valid signatures with discount 1, buying about 687,000 STY at about 1/100 of price and selling it into the STY/USDT pool for about 625k USD. Signature verification behaved correctly for the stolen key.",
+   "candidateIds": [
+    "web:2026-07-30:swan-treasury"
+   ]
+  },
+  {
+   "name": "Maya Protocol chained accounting bugs",
+   "chain": "mayachain",
+   "date": "2026-08-18T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: Claude Opus 5.5 reviewed 2026-09-28. CoinDesk (https://www.coindesk.com/markets/2026/08/19/maya-protocol-exploit-drains-bitcoin-and-other-assets-as-pool-value-drops-usd11-million) and crypto.news (https://crypto.news/maya-protocol-suffers-1-7-million-exploit-halts-network/) report that one 23-message transaction chained six MAYAChain bugs, a faulty compensation credit of about 49m CACAO against about 168k in reserve that survived a failed transfer, letting the attacker take over 99% of a low-liquidity pool and withdraw 48.87m CACAO swapped for about 1.7m USD of BTC and other assets. MAYAChain is a Cosmos SDK chain, not eip155.",
+   "candidateIds": [
+    "web:2026-08-18:maya-protocol"
+   ]
+  },
+  {
+   "name": "Cascade CLS vault (Cascade Orbit L3, chain 27182)",
+   "chain": "arbitrum",
+   "date": "2026-07-15T00:00:00Z",
+   "candidateVictim": "0x6b01ca287311055c8b72d48086f5cf2ea5be99ec",
+   "reason": "NO_EVIDENCED_VULNERABILITY: Claude Opus 5.5 reviewed 2026-09-28. The CLS vault ran on Cascade's Arbitrum Orbit L3 (rollup 0x869E22EC4a03BF7145074396F1Cfa1385B1a61f2 on 42161, chainId()=27182), which has no public RPC or explorer, so the exploit transaction, vulnerable artifact and code age cannot be identified. Only settlement is observable on Arbitrum: L3 account 0xaab4ae284ee49f541edca49972d119b4e7e1b61c (EIP-7702, funded by EOA 0x285996ba0b464f841d3a63e88c7cc319d70d9b55) deposited 500+50 USDC via 0x444e4d6948e95a3c98b9b498262fb2b7a05fd544 (Arbitrum blocks 484235340, 484244315); Outbox.executeTransaction in 0xcd801d24eb5957a4b2739cd9c3b24ddfc470935479d747e2b418a9a752578314 (block 484256243, index 1; L3 block 708106) paid 1,343,921.816016 USDC from L1USDCGateway proxy 0x6b01ca28 to the EOA (WithdrawalFinalized exitNum 0xb10; gateway USDC 2,585,633.586709 -> 1,241,711.770693), and 8,999 USDC followed in 0x36bd74193ecb69e8fc1e1d31537516681380d6b7f4ad5f9397b68b5abe237263. These are canonical bridge payouts of L3 balances, not execution of the vulnerable code. Reported mechanisms conflict (contract flaw; oracle/spot manipulation; mark-price and liquidation manipulation) and an offchain matching engine cannot be excluded. Reopen if a chain-27182 RPC or archive becomes available.",
+   "candidateIds": [
+    "web:2026-07-15:cascade"
+   ]
+  },
+  {
+   "name": "Yearn StrategyLlamaLendConvex dust deposit redemption",
+   "chain": "ethereum",
+   "date": "2025-07-16T04:54:59Z",
+   "exploitTx": "0x2ff7c23dca7e9a86c70004696802cbd37d6a77fc4f3e02522b16617045b764f6",
+   "candidateVictim": "0x75b7db3e11138134fe4744553b5e5e3d6546d289",
+   "defihacklabs": "src/test/2025-07/StrategyLlamaLendConvex_exp.sol@b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+   "reason": "LOSS_NOT_ESTABLISHED: Claude Opus 5.5 reviewed 2026-09-28. The PoC records a total loss of 563.12 USD from one transaction (block 22929493, sender 0x29bd2258485da9f4224a99c512e14d4f64d81a50) in which a dust crvUSD deposit into the Yearn strategy is redeemed for hundreds of crvUSD after the strategy unstakes from Convex and redeems from the Curve Lend vault. That is below the 1,000 USD cohort floor. Its seed match is only the shared crvUSD controller 0xad444663c6c92b497225c6ce65fee2e7f78bfb86 of the unrelated 2026 LlamaLend sDOLA incident. Reopen with further exploit transactions against the strategy that bring the loss above the floor.",
+   "candidateIds": [
+    "dfhl:src/test/2025-07/StrategyLlamaLendConvex_exp.sol"
+   ]
+  },
+  {
+   "name": "BOB token pair skim loop",
+   "chain": "bsc",
+   "date": "2023-12-17T09:01:19Z",
+   "exploitTx": "0xfb14292a531411f852993e5a3ba4e7eb63ed548220267b9b3f4aacc5572d3a58",
+   "defihacklabs": "src/test/2023-12/Bob_exp.sol@b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+   "reason": "LOSS_NOT_ESTABLISHED: Claude Opus 5.5 reviewed 2026-09-28. The PoC reports about 3 BNB lost; in the attack transaction (block 34428628, sender 0xcb733f075ae67a83a9c5f38a0864596e338a0106, contract 0x0fe1983b8972630c866fe77ad873a66ec598b685) WBNB Transfer logs net the attacker 3.014818844900881 WBNB from the BOB/WBNB pair 0x7cafdaaa0ba0f471c800dbaca94bdb943311939d skim loop, about 725 USD at the DefiLlama BNB price of 240.64, below the 1,000 USD floor. The PoC's seed match is only the HackDao token address it references; HackDao's own incident is a separate record.",
+   "candidateIds": [
+    "dfhl:src/test/2023-12/Bob_exp.sol"
+   ]
+  },
+  {
+   "name": "WUSD GLOVE wrap-reward Sybil farm",
+   "chain": "ethereum",
+   "date": "2026-05-25T06:07:59Z",
+   "candidateVictim": "0x068e3563b1c19590f822c0e13445c4fa1b9eefa5",
+   "exploitTx": "0x2051c1f8d43730c41cc353b5dffd8cc59f96cb1ca56fdce4b28fb127bdb37712",
+   "defihacklabs": "src/test/2026-05/WUSD_exp.sol@b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+   "reason": "NO_EVIDENCED_VULNERABILITY: verified WUSD source mints creditless GLOVE in _englove to any wrapper whose current GLOVE balance is below 2e18 and vests it in _deglove by global epochs (one per 100,000 WUSD cumulative wrapping); the code behaves as written. Receipt of 0x2051c1f8 (block 25170426 idx 72, EIP-7702 EOA 0x88329a09 calling itself): 167.9832 GLOVE minted to fresh helpers, 185 wrap fees of 1,000 USDT to Collector 0x62f2819d, WUSD epoch 28 at block 25170400 -> 942 after this tx. Victim depletion is the GLO pools' stables: 8,079.161526 USDT from 0xa2bd1a14 and 11,702.083968 USDC from 0xb89f65d6, i.e. the sale of reward GLOVE. Collector.use() (amountOutMinimum 0) was sandwiched: attacker Swap log 1633 bought 921.368 GLO for 2,154,605.47 USDT, collector Swap log 1642 paid 163,382.55 USDT for 5.368 GLO, Use log 1648, attacker log 1654 sold 1,025.504 GLO for 2,347,585.63 USDT. The swapped collector funds were the attacker's own same-tx fees (collector held 138.73 USDT / 3 USDC at block 25170400), so the unprotected swap refunded attacker inputs rather than taking victim assets. Sybil/incentive-design abuse, not an executed-code invariant violation. Campaign spans attacker txs from block 25170401 onward (~200k USD reported).",
+   "candidateIds": [
+    "dfhl:src/test/2026-05/WUSD_exp.sol",
+    "seed:wusd-fi:2026-05-25:wusd-glove-wrap-reward-sybil-farm",
+    "web:2026-05-25:wusd-fi-glove"
+   ]
+  },
+  {
+   "name": "StrongBlock governance takeover",
+   "chain": "ethereum",
+   "date": "2026-08-05T21:50:23Z",
+   "candidateVictim": "0x53ca51ba980b6475c13d158c1825013cf81038fc",
+   "exploitTx": "0x3ffa7f6da3f0747660917dd331e060e45ffca8a195578ec8db4c9fbc623b0401",
+   "defihacklabs": "src/test/2026-08/StrongBlock_exp.sol@b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+   "reason": "MARKET_GOVERNANCE_CAPTURE: Governor 0xbddc7ef8 (impl 0x145931a8, verified) counts VoteV3.getPriorProposalVotes at proposalStartBlock; params at block 25683598: quorum 200,000e18, threshold 100,000e18, votingDelay 1 block, votingPeriod 4320, queue 43200 s, proposalCount 0 (abandoned DAO). Proposer 0x4462d831 bought 200,958.1665 STRNGR for 22 ETH via 1inch (block 25683569), staked via ServiceProxy.mineForVotesOnly (25683578; checkpointed votes 200,958.17e18 from that block), proposed setPendingAdmin(0xacbca357) on Upgrader 0x75c53809 (25683599), voted 200,958.17 (25683603, Voted log), unstaked (25683610) and sold (25683627), then queued (25687923) and executed (25691516) within the Governor's own rules. No rule was bypassed: the attacker legitimately acquired majority voting weight. Attacker 0xacbca357 then acceptAdmin (25691519), upgraded service proxy 0x53ca51ba to attacker implementation 0xe89c0d3f (25691525) and run() drained 32,695.7617 STRONG + 383,447.1673 STRNGR (0x3ffa7f6d); a second proxy 0xfbddadd8 was drained the same way in 0x6d79fb7a (11,645.71 USDC, 4,388.73 USDT, 2,700 BUSD, 14,965.12 STRNGR). Privileged action gained through governance, not a code defect.",
+   "candidateIds": [
+    "dfhl:src/test/2026-08/StrongBlock_exp.sol",
+    "seed:strong-block:2026-08-05:strongblock-governance-takeover"
+   ]
+  },
+  {
+   "name": "Cozy Finance",
+   "chain": "optimism",
+   "date": "2026-09-07T05:43:11Z",
+   "candidateVictim": "0x17705474203f7ff7ba8a940c433ab43d1f58e249",
+   "exploitTx": "0x8761164b8947a0690b57896a8e7370dd69fe8e9137ce61e0b21ff08581a2ce60",
+   "defihacklabs": "src/test/2026-09/CozyFinance_exp.sol@8d8c5db24bf7a74af3d9a4c1f8e1452cd839e8b1",
+   "reason": "EXTERNAL_ORACLE_MALFUNCTION: Claude Opus 5.5 reviewed 2026-09-28. The verified UMATrigger contracts 0xeb6613fac35fed17c276e3fe45d67da67685f1ef (market 5, 'Did Aave v2 get hacked?') and 0xacd105feea362d5c27caaba0b45f53d91b92de27 (market 0, 'Did Curve get hacked?') bind an immutable UMA OptimisticOracleV2 0x255483434aba5a75dc60c1391bb162bcd9de2882 (verified OptimisticOracleV2). priceProposed, priceSettled and priceDisputed accept only oracle callbacks for their own identifier, timestamp and query. runProgrammaticCheck calls oracle.settle only once oracle.hasPrice is true, and TRIGGERED is set only from the settled answer 1e18. TX1 0x53b454a3f552c5498994f74ae8737faa60123cac274bdd3b0383ccb226b3f2cb (block 156364035:54, 2026-09-02T05:27:27Z): attacker EOA 0x003fe7359a4e03c85ac2f521ec699ed84c7c5ccb, via 0x9e47c805587362ef36f2cab9d1e4e7d546f953d4, bought 96,596.967870 + 65,715.735793 USDC.e of protection on Set 0x17705474 while both markets were ACTIVE. It then proposed YES with 500 USDC.e bonds; two OO ProposePrice logs follow and both triggers froze. getLogs for ProposalDisputed on both triggers over blocks 156364035-156580507 returns 0, so the 432,000 s liveness passed with no dispute. TX2 0x8761164b (block 156580507:23) settled both requests and claimed. The Set paid 160,776.340904 USDC.e to the attack contract (Set USDC.e balance 162,312.703663 at block 156364034, 4,168.126922 at 156580507), and 163,326.3437 USDC.e went on to 0xeb2d41bcb3c3be8be5d74942fa2deb601448e240. Neither Aave v2 nor Curve suffered a loss of 50% or more after block 17187855, so the settled YES was false. It became final only through the external oracle's undisputed-liveness rule on abandoned markets. Buying protection before the proposal falls in the intended pre-freeze window, so no Cozy executed-code invariant was violated.",
+   "candidateIds": [
+    "web:2026-09-07:cozy-finance"
+   ]
+  },
+  {
+   "name": "Yam Finance",
+   "chain": "ethereum",
+   "date": "2026-09-14T02:45:59Z",
+   "candidateVictim": "0xffb607418dbeab7a888e079a34be28a30d8e1de2",
+   "exploitTx": "0x203f837539b2b9a5c1560298395e04043b8631ed1e9611a675392d8fdccd6ef3",
+   "defihacklabs": "src/test/2026-09/YamFinance_exp.sol@8d8c5db24bf7a74af3d9a4c1f8e1452cd839e8b1",
+   "reason": "MARKET_GOVERNANCE_CAPTURE: Claude Opus 5.5 reviewed 2026-09-28. Attacker 0x26881eacc00bcccd7c4ebe14bd7840dd989bf982 bought about 504,427 YAM with its own funds through an aggregator swap (0x152eb1a7…, block 25884984), then delegated to itself (0x69a82b0e…, 25884985). It created proposal 45 (0xf3c9b1d7…, 25884997), a single setPendingAdmin(attacker) call on Timelock 0x8b4f1616751117c38a0f84f9a146cca191ea3ec5, and voted for it (0x51566289…). YamGovernorAlpha 0x2da253835967d6e721c6c077157f9c9742934aea proposals(45) records forVotes 201664062636824099514174674941 and againstVotes 0, above quorumVotes 2e29, and proposalThreshold was 5e28. state(45) = 4 (Succeeded) at block 25897346. The proposal was queued at 2026-09-03T14:21:59Z, eta 1788877319; the Timelock delay was 432,000 s; it was executed at 2026-09-08T14:22:35Z (0xc04a9c36…), followed by acceptAdmin (0xb8373248…). As Timelock admin the attacker queued and executed _setPendingGov on the legacy UMA farming contracts, then called _acceptGov, _settleExpired and the gov-only masterFallback. The first value-moving drain is 0x203f8375… (block 25972788:110), paying 23.499119440368500920 WETH from UMAFarmingMar. It was followed by 24.586255602921865850 WETH from UMAFarmingFeb 0xc0ae1e1e (0x9ddc2df8…), 763.101265318097645247 UMA from UMAFarmingMar (0x15d8f16b…) and 1.144532680233388946 WETH from 0xdfe435ad (0x1b5704a1…). The DAO was dormant, but its governance and timelock rules were followed exactly, and no executed code bypassed them.",
+   "candidateIds": [
+    "web:2026-09-12:yam-finance"
+   ]
+  },
+  {
+   "name": "Arrakis V1 G-UNI ENS/WETH vault",
+   "chain": "ethereum",
+   "date": "2026-08-23T12:50:11Z",
+   "candidateVictim": "0x7c687f775a3b73bbab0e15832f24caab5d53bdde",
+   "exploitTx": "0x6ae3af4b2f25a56594de99cfb31369150dd9ac059c49efe04b9e3e0163dbc672",
+   "reason": "MARKET_RISK: Claude Opus 5.5 reviewed 2026-09-28. Verified ArrakisVaultV1 implementation 0xd68b055fb444d136e3ac4df023f4c42334f06395 mints strictly proportionally (_computeMintAmounts: mintAmount = min(amount0Max, amount1Max scaled by totalSupply over getUnderlyingBalances)) and burn returns burnAmount/totalSupply of the position and idle balances; neither converts one token into the other at a price. In 0x6ae3af4b (block 25817966, index 1, EOA 0xa3b096e4 via 0x028d9c17) the attacker swapped the WETH/ENS pool, minted, partially swapped back, burned and unwound: vault getUnderlyingBalances moved from 6.162572482440993506 WETH / 9294.764916212744741028 ENS to 0.774725768564949376 WETH / 9878.195412513836270881 ENS with totalSupply 324756647238033925914 unchanged. The vault's liquidity was traded against at pool prices the attacker moved (a sandwich of the LP position), about 2.94 ETH net to the attacker per the DeFiHackLabs PoC; the vault code behaved as designed and no executed-code invariant was violated.",
+   "candidateIds": [
+    "web:2026-08-23:arrakis-g-uni"
+   ]
+  },
+  {
+   "name": "Tectonic",
+   "chain": "cronos",
+   "date": "2026-08-30T00:00:00Z",
+   "candidateVictim": "0xb3831584acb95ed9ccb0c11f677b5ad01deaeec0",
+   "reason": "LOSS_NOT_ESTABLISHED: Claude Opus 5.5 reviewed 2026-09-28. The DefiLlama hacks entry (2026-08-30, $124,470,000, 'Donation Attack', no source link) matches no onchain drain. DefiLlama's own Tectonic TVL series (api.llama.fi/protocol/tectonic) reads 121,745,946 USD on 2026-08-30, 3,016,946 on 2026-08-31 and 121,406,915 on 2026-09-01, i.e. a one-day data gap rather than a loss. Onchain (Cronos RPC cronos.drpc.org), getCash() and totalBorrows() of every market of the three Tectonic comptrollers (main 0xb3831584acb95ed9ccb0c11f677b5ad01deaeec0, 0x8312a8d5d1dec499d00eb28e1a2723b13aa53c1e, 0x7e0067cef1e7558dafbab3b1f8f6fa75ff64725f) at block 90637149 (2026-08-29 00:00 UTC) and 91044013 (2026-09-01 00:00 UTC) move by ordinary amounts: tUSDC cash 54,525,174.69 -> 54,250,787.61 USDC, tCRO 43.72M -> 44.57M CRO, tWETH 1895.03 -> 1882.62 WETH; the largest relative change, tTONIC (+942.5B TONIC borrows), is about 13.5k USD at the DefiLlama TONIC price 1.44e-8.",
+   "candidateIds": [
+    "web:2026-08-30:tectonic"
+   ]
+  },
+  {
+   "name": "Meter Passport bridge unbacked MTRG (Meter L1 native-token counterfeiting)",
+   "chain": "bsc",
+   "date": "2026-09-24T00:00:00Z",
+   "candidateVictim": "0x8209815136b35f21b8c0f5aa2e2f915a73530df9",
+   "exploitTx": "0xda1b9b3dd90c8667b3a306e065bd78f918683acb4d58b1b6fc89305c3f663bcd",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. The five BSC MTRG (0xbd2949f67dcdc549c6ebe98696449fa79d988a9f) mints of 1e6, 1e6, 1e9, 1e7 and 86743.546 MTRG (blocks 123758350..123769056) are Passport v2 BridgeUpgradeable (proxy 0x8209815136b35f21b8c0f5aa2e2f915a73530df9) voteProposals calls by the regular relayer EOA 0xf6c75ea68bec6205def2c5a4043ab9f4f85bb9ea (nonces 34577..34581) carrying valid RELAYER_ROLE signatures for origin domain 3 (Meter, eip155:82), nonces 3734..3738. Each matches a real Meter-side Deposit on Meter bridge 0x23894d2937a2a4a479f0407909da5b028049568e (e.g. nonce 3734 = 0xf209b1c1a4bc8b4618882c4cab5f37af912e57a17b1e599b62dd190099bedcae) in which the depositor actually transferred the MTRG into handler 0x139d9b458acda76457dd99db3a6a36ca9cb3bbf1. Passport behaved as designed on both sides. The MTRG itself was counterfeit: Meter block 100731418 (timestamp 1790198091 per rpc.meter.io, before the first BSC mint at 1790253525; miner 0xee2eeeed4ed8580669ed924abeb49f27f7d0bd65, the attacker) contains tx 0x63a588f79e16eef23e9cc43ccf8085cef05f346b8a327da5c6ff944170013c63 from 0x0000000000000000000000000000000000000000 with r=s=0 crediting 1e31 wei MTR to the attacker, whose MTRG balance goes 0 -> 8e30 wei in that block. MTRG totalSupply at 0x228ebbee999c6a7ad74a6130e81b12f9fe237ba3 rises from 8.44e25 (block 100700000) to 1e41 wei (block 100768776), after which the Meter chain stopped producing blocks. The fault is in the Meter chain's block-production / native-token layer (proposer-inserted unsigned zero-sender value transfer), not in executed eip155 contract code or persistent contract configuration; whether it was a client bug or validator-key misuse is not established. Not the 2022 ERC20Handler wrapped-native defect (incidents/56/0x63f37aff...): different contracts, and the BSC-side code executed correctly.",
+   "candidateIds": [
+    "web:2026-09-24:meter-passport-bridge"
+   ]
+  },
+  {
+   "name": "YO Protocol yoUSD operator swap",
+   "chain": "ethereum",
+   "date": "2026-01-12T13:02:59Z",
+   "candidateVictim": "0x0000000f2eb9f69274678c76222b35eec7588a65",
+   "exploitTx": "0x6aff59e800dc219ff0d1614b3dc512e7a07159197b2a6a26969a9ca25c3e33b4",
+   "reason": "PRIVILEGED_ACTION: Claude Opus 5.5 reviewed 2026-09-28. The DefiLlama entry (2026-01-13, $3.6m, 'Missing Slippage Check') matches yoUSD vault transaction 0x6aff59e8 (block 24218806, index 1, 5,837,595 gas), a manage() call (0x224d8703) sent by the vault operator 0x5c28b54e7e1f9aafbdc5c563c1a460106f41bd58. Receipt log 1 moves 3,840,651.3975 stkGHO from the vault to executor 0x365084b05fa7d5028346bd21d842ed0601bab5b8, which routes it through Uniswap v4 and other pools; log 170 returns only 112,036.12644 USDC to the vault. Replaying the same calldata with eth_call at block 24218805 succeeds from the operator and reverts 'UNAUTHORIZED' from 0x…dEaD. The loss came from the operator's own route having no effective minimum output; no unauthorized party exercised any code path.",
+   "candidateIds": [
+    "web:2026-01-13:yo-protocol"
+   ]
+  },
+  {
+   "name": "BounceBit chain-level unauthorized transfers",
+   "chain": "bouncebit",
+   "date": "2026-08-19T00:00:00Z",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-28. DefiLlama records BounceBit as classification 'Access Control', targetType 'Chain', language 'Go', $3.0m. SlowMist's entry (2026-08-19, citing x.com/bouncebit/article/2090785561800061430) says an attacker exploited a protocol-level authorization flaw in the Evmos stack to move about 286.5M native BB from nine mainnet accounts in 14 transactions, with no keys or signatures compromised. BounceBit then sunset the L1 and reissued BB on BNB Chain from a pre-attack snapshot. The defect is in the chain's Go node/Cosmos-SDK modules, not in deployed EVM contract code. The 14 transactions were not enumerated onchain (no BounceBit RPC configured).",
+   "candidateIds": [
+    "web:2026-08-19:bouncebit"
+   ]
+  },
+  {
+   "name": "i6Token (InfinitySix)",
+   "chain": "bsc",
+   "date": "2026-03-31T00:08:08Z",
+   "candidateVictim": "0x1cb36b0f1efd9b738997da3d5525364c7e82a18a",
+   "exploitTx": "0xc1b9a237a00b53a595e1e2d0d93841154ddcdf9aa217be8f395449b8e4ab2f16",
+   "reason": "MARKET_RISK: verified InfinitySix credits invest() deposits and the 5% direct referral bonus at face USDT value and never values a deposit at the pool spot price; withdraw() converts USDT-denominated balances to i6 at the protocol's own lagging TWAP (twapPrice 1051590062994774683 at block 89703285, equal to the pre-attack spot; TWAP_UPDATE_INTERVAL 1 minute, not updated within the transaction). The attacker (EOA 0x6d1cafc890cc7dd6bf3718453367f8e0fd9851e4, contract-creation tx, block 89703286 index 1) self-referred a 124M USDT invest so that invest()'s own swap/addLiquidity moved spot to ~15,528 USDT/i6, withdrew its referral bonus as 5473038.4 i6 from the contract inventory at the unmanipulated TWAP, and sold it into the pool it had inflated with its own capital. Pair 0xdc769f4d941408ab5c12db981e50ed3e69357e36 USDT 459906692886707617389936 -> 182682253564840307078638 (net -277224.44 USDT; attacker +273802.01). The TWAP functioned as designed and the victim code priced nothing at a manipulable spot quote; the loss follows from the referral-bonus economics.",
+   "candidateIds": [
+    "web:2026-03-31:i6token"
+   ]
+  },
+  {
+   "name": "UPCX",
+   "chain": "ethereum",
+   "date": "2025-04-01T00:00:00Z",
+   "candidateVictim": "0x14e46e1b893d72dc82153639aa25cbd5d510cf51",
+   "exploitTx": "0x33fa5e2ce6ccba986242165ac8ebd3effb34801bc24dfc8c2cda9930ff34dc40",
+   "reason": "KEY_COMPROMISE: ProxyAdmin 0xf44c83548bf52541e1dca9c94e57ff3392d07d8a owner 0x4c2aa7506d65156f798299c1084c1609f133583e (deployer of the original StakingContractV1 implementation 0xa7a6c0062202a772fae80c87e7bfa354d4837881) called upgradeAndCall in 0xcc6bf9f2f1aa3663058d8f5fa5294df1253460c959b47a731727da37083ab125 (block 22164330) to unverified implementation 0xa434b7e476db3c4f0fdcb135b3ec157c74c5be16, which it had created one block earlier; the staking proxies' owner 0x0ddc6030572aa4b73ee82d6650cac9b5cd5ffd00 (owner() at block 22164329) then called withdrawByAdmin on 0x14e46e1b..., 0x3bef3105133b9ba898e9accb12263b6d632748e9 and 0xd1e5d321fcf63e281fb399f81d2ff49ff2b39246 (blocks 22172513-22172532), moving 18,473,280 UPC (0x487d62468282bd04ddf976631c23128a425555ee) to itself and on to 0xff7174d64192454382776ef21dbf131b2a62b334. Both steps are authorized privileged-key actions (UPCX reported unauthorized access to management accounts); no victim-code or configuration defect was exercised.",
+   "candidateIds": [
+    "web:2025-04-01:upcx"
+   ]
+  },
+  {
+   "name": "Virtue",
+   "chain": "iota",
+   "date": "2026-08-28T00:00:00Z",
+   "reason": "NON_EVM_CHAIN: the DefiLlama hacks API entry (https://api.llama.fi/hacks, name Virtue, date 1787875200, 894,500 USD) lists chain [\"Iota\"] and language \"Move\", and DefiLlama protocol 6455 (slug virtue, app.virtue.money) lists chains [\"IOTA\"], i.e. IOTA Rebased Move rather than IOTA EVM.",
+   "candidateIds": [
+    "web:2026-08-28:virtue"
+   ]
+  },
+  {
+   "name": "QNT legacy pool drain via compromised 7702-delegated admin EOA",
+   "chain": "ethereum",
+   "date": "2026-04-28T11:36:23Z",
+   "candidateVictim": "0x9510facf9e83f6e615ffb7bf11010ddb065da153",
+   "exploitTx": "0x4f31f68df9f240492f13df9ab23207ea231ec1b5a89af9c31cde58e7d98cb18c",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-28. Two 2018 investment pools, 0x9510facf9e83f6e615ffb7bf11010ddb065da153 (block 24978303 idx 11, 1988.546547972979064297 QNT) and 0xdd4f556e1b42d9b29294a7eeb6d6a5059bbbe16a (0xef9994ac862318ccf3ebdb66c181bb159651373b945aea59a966608d7b98684f, block 24978818, 1974.546547972979064297 QNT), lost QNT through forwardTransaction(address,uint256,bytes) (0x4d5a8e10). That function is admin-gated: eth_call at block 24978302 succeeds from 0xc6ddf90790b433743bd050c1d1d45f673a3413f4 and reverts from any other caller, and 0xc6ddf907 is also the creator of 0xdd4f556e. The pools behaved as designed; the call arrived from their own admin EOA. 0xc6ddf907 is a key-compromised EOA: from block 22758253 a funder repeatedly tops it up and each top-up is followed by an immediate token sweep; its EIP-7702 delegation moved to sweeper delegate 0x95538e1c40e82dbc9dfb2f7f88580d0d0824688e in 0x0eb1be88c270b4640eb9837e9a0ec380fc4094eed8ce3b57cdb2dbead95dd67e (block 24380439 idx 38), a type-4 transaction by 0x00a0b0262620216849a38bf3dd208311c1835700 carrying 40 authorizations including nonce 2680 of this EOA. The delegate gates executeBatch (0x34fcd5be) to hard-coded addresses including batch contract 0x044dc3e39c566a95011e272ec800dbd2cc9c057c, whose batch(address[],bytes[]) has no caller check; the attacker (EOA 0xe6de6836f3fdc9ea186e267634dca95a4a3672ef, contract 0x5a81ea5ec89571c78b4b3a8e7a1207914c8179fd) routed batch -> 0xc6ddf907.executeBatch -> pool.forwardTransaction(QNT, 0, transfer(attacker, balance)). The authority used exists only because the admin key was compromised; no victim code or causal victim configuration failed.",
+   "candidateIds": [
+    "web:2026-04-28:qnt"
+   ]
+  },
+  {
+   "name": "LZMultiCall misapproved allowances",
+   "chain": "ethereum",
+   "date": "2026-02-06T22:37:23Z",
+   "candidateVictim": "0xacddac6c77318b615f7f6fb9bb67c6833e9c05f1",
+   "exploitTx": "0x4036c401d2c3159973f267df97432b5d1cd22c245540876841536fdf390640d9",
+   "reason": "NO_EVIDENCED_VULNERABILITY: Claude Opus 5.5 reviewed 2026-09-28. The Feb-2026 victims approved LayerZero LZMultiCall 0xacddac6c77318b615f7f6fb9bb67c6833e9c05f1 directly: WBTC 200000000 by 0xe2e1808ed4cc4a6f701696086838f511ee187d57 (block 24400811 idx 1) and USDT max by 0xaf9bd9d87761a06382bd0df34997b00db2e6fd45 (block 24400969). Approval-watching bots (EIP-7702 EOAs 0x129b5ea8f9822aa2b2acb19c857a31530ab152b0 and 0x53a1f685d66c14962e7ebbc58e5f30b17b0c06df) called LZMultiCall 0x571d3dc7 in the next transaction to transferFrom the victims: 2 WBTC (block 24400811 idx 2) and 151.668878 USDT (0x5e4134cba7d9f4b9febd1b13c699646c116220fde910f5b35c077db59f559535), about 141,227 USD. The verified source (v0.8.26, SourceCode SHA-256 6a4285e5855a0db8a113da731cd28ef9b5882cf3e8f4e869fb1a622ff6bd91a7) states that users approve the separate TransferDelegate and that 'No allowance should ever be set on this contract for any token, as it'd allow anyone to permissionlessly claim the tokens.' The contract behaved as specified; the approvals were user-signed misuse.",
+   "candidateIds": [
+    "web:2026-02-07:lzmulticall"
+   ]
+  },
+  {
+   "name": "Blizz Finance LUNA stale Chainlink price",
+   "chain": "avalanche",
+   "date": "2022-05-12T14:09:09Z",
+   "candidateVictim": "0x70bbe4a294878a14cb3cdd9315f5eb490e346163",
+   "exploitTx": "0x354b0102dbf4afe4287c33d9de75a1c43d04ad0a959ff4629d7fed034f6ac7b1",
+   "reason": "EXTERNAL_ORACLE_MALFUNCTION: Blizz AaveOracle 0x89fc4fa08b5fcb8fa9538d6cc25b638370fc26d8 (verified) returns source.latestAnswer()*1e10; LUNA (0x120ad3e5a7c796349e591f1570d9f7980f4ea9cb) source is Chainlink proxy 0x12fe6a4df310d4ad9887d27d4fce45a6494d4a4a whose aggregator 0x2e7e21f479167c1206420c956f3e8e392da580f5 has minAnswer 1e7 (0.10 USD). Its last round 19975 = 10736482 at ts 1652355546 (2022-05-12T11:39:06Z) stayed latest until Chainlink repointed the proxy to aggregator 0x323375236d950501e3e52846cd12019d0248a979 at block 14609499 (ts 1652381633); getAssetPrice(LUNA) = 0.10736482e18 at blocks 14600000-14608000 while DefiLlama LUNA was 0.0166 (1652364567), 0.0113 (1652370848), 0.0174 (1652378106). In that window 0x6fe797a05359c9d91b1f85d418e2ed4ea6c65a8f and 0x4b5b199cb5ab646d60a0b9b1c1d68e953d91ee25 deposited LUNA and borrowed WAVAX and other assets (Deposit/Borrow logs of the LendingPool, first borrow 0x354b0102 at 14600899). The frozen value is Chainlink's own circuit-breaker behaviour; Blizz code consumed the feed as designed.",
+   "candidateIds": [
+    "web:2022-05-13:blizz-finance"
+   ]
+  },
+  {
+   "name": "Alchemix alETH keeper harvest debt write-off",
+   "chain": "ethereum",
+   "date": "2021-06-16T12:13:47Z",
+   "candidateVictim": "0x6b566554378477490ab040f6f757171c967d03ab",
+   "exploitTx": "0x3cc071f9f40294bb250fc7b9aa6b2d7e6ca5707ce4d6d222157d7a0feef618b3",
+   "reason": "PRIVILEGED_ACTION: TransmuterEth 0x45f81ef5f2ae78f49851f7a62e4061ff54ff674b had rewards set (setRewards txs at blocks 12613820/12613835/12621125 by deployer 0xae824fd57a09af78d6a262bf63ab7024cdcb5a04) to the AlchemistEth vault adapter 0xeba649e0010818aa4321088d34bd6162d65e7971. Keeper 0x51e029a5ef288fb87c5e8dd46895c353ad9aaaec called onlyKeeper TransmuterEth.harvest(0) in 0x3cc071f9 (block 12645422), which moved 4,308.0795 yvWETH shares from the transmuter adapter 0x54dc35eb8c2e2e20f3657af6f84cd9949c08cf38 to 0xeba649e0 (adapter totalValue 9,214.53 -> 13,522.59 WETH with vault totalDeposited 9,214.45 unchanged). The same keeper's onlyWhitelist AlchemistEth.harvest(0) in 0x38ecc836 (block 12645430) booked 4,308 WETH as yield (FundsHarvested), raising accumulatedYieldWeight and zeroing CDP debts until setEmergencyExit at 12646711. Both state-corrupting calls were privileged; no unprivileged transaction exercised the defect, and users then withdrew collateral against credited balances.",
+   "candidateIds": [
+    "web:2021-06-16:alchemix-v2"
+   ]
+  },
+  {
+   "name": "ApolloX Treasury claims with 255 backend-issued signatures",
+   "chain": "bsc",
+   "date": "2022-06-08T10:49:53Z",
+   "candidateVictim": "0xe2e912f0b1b5961be7cb0d6dbb4a920ace06cd99",
+   "exploitTx": "0x21e5e6ee42906a840c07eb39fb788553a3fbb5794562825c2a1d37bfc910e5f7",
+   "reason": "OFFCHAIN_ROOT_CAUSE: ApolloxExchangeTreasury (verified) claim(message, signature) pays any message signed by truthHolder 0xc3c96d19de156380919ce4200bf23d024f0216de once per id. Attack contract 0xcc6eedeb5266aae42a33b629380b78c570e29956 (EOA 0xd2419bccace1c6100b5aa47f0a31c64b20ba9a49) submitted 255 distinct validly signed 7-word reward messages (ids 0x8220c47b2711000...0x8229297c61ee000, each 211,556.09265759 APX to 0x9e532b19abd155ae5ced76ca2a206a732c68f261, deadlines 2022-06-06) in 0x21e5e6ee (18507668, 50 claims), 0x67a90c1a (18507821, 50), 0xccc9e8eb (18507939, 100) and 0x34b29a39 (18507961, 55): 53,946,803.63 APX. None of the ids was claimed on the reward contracts 0x6be863e0/0x486f003e. SlowMist attributes the event to a flaw in ApolloX's signature system that let the attacker generate 255 signatures. The Treasury's 6-word decode (reading reservedAmount as deadline) only let expired messages pass; the signed claims themselves came from the offchain signer.",
+   "candidateIds": [
+    "web:2022-06-08:apollox"
+   ]
+  },
+  {
+   "name": "Vesper Lend beta Rari Fuse pool 23 VUSD oracle manipulation",
+   "chain": "ethereum",
+   "date": "2021-11-02T17:49:40Z",
+   "exploitTx": "0x89d0ae4dc1743598a540c4e33917efdce24338723b0fabf34813b79cb0ecf4c5",
+   "reason": "MARKET_RISK: Vesper's post-mortem (https://medium.com/vesperfinance/on-the-vesper-lend-beta-rari-fuse-pool-23-exploit-9043ccd40ac9) and the attacker's calls (EOA 0xa3f447feb0b2bddc50a44ccd6f412a5f98619264 via 0x7993e1d66ffb1ab3fb1cb3db87219f532c25bdc8, blocks 13538946 and 13538957): the attacker bought all VUSD in the thin Uniswap V3 0.05% VUSD/USDC pool and added a 0.1 USDC out-of-range position, so the Uniswap V3 price oracle used by Rari Fuse pool 23 reported trillions per VUSD; VUSD collateral then borrowed about 3.5M. The oracle and Fuse code worked as designed on a manipulable thin market; no executed-code invariant was violated.",
+   "candidateIds": [
+    "web:2021-11-03:vesper-finance"
+   ]
+  },
+  {
+   "name": "Venus user delegated-borrow phishing drain",
+   "chain": "bsc",
+   "date": "2025-09-02T09:05:36Z",
+   "candidateVictim": "0x563617b87d8bb3f2f14bb5a581f2e19f80b52008",
+   "exploitTx": "0x4216f924ceec9f45ff7ffdfdad0cea71239603ce3c22056a9f09054581836286",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-29. The victim EOA itself sent Venus Comptroller 0xfd36e2c2a6789db23113685031d7f16329158384 updateDelegate(0x7fd8f825e905c771285f510d8e428a2b69a6202a, true) (0xddbf54fd) in 0x75eee705a234bf047050140197aeb9616418435688cfed4d072be75fcb9be0e2 (block 59740608), seven blocks before the drain (block 59740615). Attacker contract 0x7fd8f825, as the authorised delegate, repaid the victim's vXRP/vBTC debt and redeemed its vUSDC/vETH/vUSDT/vFDUSD/vWBETH collateral. Venus behaved as designed; the authority came from a socially engineered victim signature.",
+   "candidateIds": [
+    "web:2025-09-02:unknown-bsc-contract-0x4216f924"
+   ]
+  },
+  {
+   "name": "Kraken reverted-internal-transfer deposit crediting",
+   "chain": "base",
+   "date": "2024-05-24T14:33:13Z",
+   "exploitTx": "0xfbf6b17a9de7f9e1e97eb48dc68a993f7663d4b9530a3cd6cc262e554549e59d",
+   "reason": "OFFCHAIN_ROOT_CAUSE: Claude Opus 5.5 reviewed 2026-09-29. Tx (block 14885923, index 38) is a successful call to contract 0x4550ceb90266735198f3321bb6c4dd64832acea9. Its internal frame 0xb6852ff9 sends 1e12 wei to Kraken deposit EOA 0xaf83edef4e170e971a9f3e21fb3ce5b7be242cf5 and then reverts ('revert'), so no value reached Kraken onchain and no logs were emitted. The loss arose from Kraken's offchain deposit indexer crediting reverted internal transfers; no victim contract exists.",
+   "candidateIds": [
+    "web:2024-05-24:kraken"
+   ]
+  },
+  {
+   "name": "DeXe DAO GovPools dormant-DAO governance takeover",
+   "chain": "bsc",
+   "date": "2024-12-10T05:52:11Z",
+   "exploitTx": "0xc96287cadfc96afd715ffeae25fd07b19d3c06b83dff54ffd7ad4633882d7b24",
+   "reason": "MARKET_GOVERNANCE_CAPTURE: Claude Opus 5.5 reviewed 2026-09-29. Attacker 0x71decbfc8be353c56052b04b44fcea2227ff1876 (contracts 0xf122f686768d271ace48e24e53cf72e672ed9d27, 0x31abe92d7f6e8549b637b186f4839d5d4d7b8e0e) ran step1..step4 over about 28 DeXe GovPools: for each it bought the DAO token on the market, deposited it into the pool's UserKeeper, created and voted a proposal, then executed it with GovPool.execute(uint256) (0xfe0d94c1) to transfer the treasury. Example: in 0x011fc055eeea606e3d215934403d0b6a88a5294bec7abf0207c3e92ba04b1938 (block 44739789) it bought 409,999,999.99 of 1e9 'cz' 0xe4c5ce70b035037bd6ac98a340390c02f1cecfd0 for about 3.35 WBNB; UserKeeper 0x87ecbb4977b3b0b5d61f4e90bcb314f2f267c7d7 held 0 cz beforehand, so the attacker was the sole voter. The first executions ran from 0x982c571a73bfe37af6f4e1dd7a8b8fddd84797c735dd0318ee969ce6f5eac0b6 (block 44739909). GovPool applied its voting rules correctly; voting power was acquired on the market in abandoned DAOs.",
+   "candidateIds": [
+    "web:2024-12-10:unknown-bsc-contract-0xc96287ca"
+   ]
+  },
+  {
+   "name": "440 bot-farm EOAs delegated to attacker 7702 contract",
+   "chain": "bsc",
+   "date": "2025-06-23T06:31:29Z",
+   "exploitTx": "0x91a8b4d7755b0ded860fbeefc0271b39d39fb069f9f921b107c73ab0e95e3120",
+   "reason": "KEY_COMPROMISE: Claude Opus 5.5 reviewed 2026-09-29. Attacker EOA 0xbf073e9eb8a345d2e33e70c6e1f60b0cb6e85f9a deployed delegate 0x81696aa439755881a348772a16b9916f07d1b7fb at block 51943306 (0x15bcadde02aa7fc339f8b7b009c9e26800c05d17dbd71490aaadbdc7e42cf13d). At block 51943434 each victim EOA sent itself a type-4 tx authorising that delegate, e.g. 0x1b25c24352cd9abe8c8fb5abfccda56521b2954b in 0x60864c37dd957e54f37d3a48b8cbce8d29b4fe9861006ed3a41ff9f060f1cf73 (index 393). The exploit tx then called 440 delegated EOAs' 0x062bb125 to make their token-holding beacon proxies (e.g. 0x63cfb914665d6c5937d34bc0ea4e16b49308a68b) sell token 0x37383cfc97faae2fe96e3e6d86ad2f8e99999999 into a pair the attacker had skewed. The authority used came from the EOAs' own keys.",
+   "candidateIds": [
+    "web:2025-06-22:unknown-bsc-contract-0x91a8b4d7"
+   ]
+  },
+  {
+   "name": "Panoptic V1 whitehat rescue",
+   "chain": "ethereum",
+   "date": "2025-08-28T00:00:00Z",
+   "exploitTx": "0x67a45dfe5ff4b190058674d7c791bbdc48e889f319f937c24fa13a5f9093f088",
+   "reason": "LOSS_NOT_ESTABLISHED: Claude Opus 5.5 reviewed 2026-09-29. At block 23242436, EOA 0xa1f0a9d51b592ee074ed6987006976908631503b CREATE2-deployed helpers 0x3cc7f89e91b4d6ee32bd4a52724baeb71eed1e0c and 0x32b658f236cad42a4fc75025b16f8fa83876cfad, which withdrew WBTC/WETH/USDC from Panoptic collateral trackers. In block 23242738 all proceeds went to 5-owner Gnosis Safe 0x82bf455e9ebd6a541ef10b683de1edcaf05ce7a1, which had existed before (USDC receipt at block 22971625) and later redistributed funds (block 23384759). This was a protocol-coordinated rescue, not a theft.",
+   "candidateIds": [
+    "web:2025-08-28:panoptic"
+   ]
+  },
+  {
+   "name": "Enso Finance",
+   "chain": "ethereum",
+   "date": "2026-09-08T19:46:59Z",
+   "candidateVictim": "0x890ed1ee6d435a35d51081ded97ff7ce53be5942",
+   "exploitTx": "0x63fbfc4b47e810d604dbdab0db35b17366f421337d8c60955eb81cd5d6071ad3",
+   "defihacklabs": "src/test/2026-09/EnsoFinance_exp.sol@8d8c5db24bf7a74af3d9a4c1f8e1452cd839e8b1",
+   "reason": "MARKET_RISK: no same-transaction manipulation. callTracer of the exploit (25934827:13) shows the only swap is on the correctly priced FARM/WETH UniswapV2 pair 0x56feaccb (reserves 3600.3959 FARM / 8.4506 WETH at 25934826, 0.002347 WETH/FARM); the FARM/WETH 1% V3 pool 0x4da56307 is only read via observe([900,0]). That pool had zero in-range liquidity (slot0 tick -887272, liquidity 0 at 25934735) until the attacker EOA 0x31963983 swapped 0.0000026 WETH into it in 0x7a9d3263e23b45032fe89647bb700fcbfce74974b7c24981b38119f9a19629b6 (25934736:191), setting tick -37522 (0.02347 WETH/FARM, 10x V2). It then waited 1,104 s, longer than the 900-s window, so the TWAP equalled the manipulated spot. The loss (~5.6 ETH of UNI/AAVE/MKR) comes from a multi-block TWAP manipulation of a thin external pool that the EnsoOracle estimator was configured to read, not from victim code breaking an invariant within the transaction.",
+   "candidateIds": [
+    "web:2026-09-09:enso-finance"
+   ]
+  },
+  {
+   "name": "BGM",
+   "chain": "bsc",
+   "date": "2024-11-10T08:04:24Z",
+   "candidateVictim": "0x42646478b25317160e0dc8db413991277e4bb3c2",
+   "exploitTx": "0x8580825008800b9e13266f40b41a838a521e4d0bb4abc1cb78684253b7bc9fd1",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-29. The pump-and-withdraw drain (pair 0xadc4eca2 loses 486995.55 USDT) needs buy caps far above the defaults: buyMaxValue()/tolDayBuyMaxValue() are 100e18/20000e18 at block 43881715. Owner 0x207ce5c0 called setBuyValue(1e25,1e25) in 0xd0925f155ac6a5961754391a3ff4f7bd8a9abd43774ca2f06be9aa486df619a8 (block 43881716, index 180), one block before the exploit (43881717, index 2). The owner was funded with 0.01 BNB by LP provider 0x5b55eb22 at 43881709; 0x5b55eb22 had itself tried the identical call and reverted (0xda110920..., block 43881658). The attacker's exploit contract 0x00c0f54d was deployed at 43850396, about 26h before the caps were raised. Earlier attacker 92930b45 withdraw+sell transactions (e.g. 0xd1f5a7f5..., block 43878820) have no in-transaction pump; pair USDT history shows 0x85808250 is the only pump-and-withdraw.",
+   "candidateIds": [
+    "web:2024-11-10:bgm"
+   ]
+  },
+  {
+   "name": "CheckDot Protocol",
+   "chain": "bsc",
+   "date": "2024-01-31T17:40:27Z",
+   "exploitTx": "0xdd19e3a1657f8381b561c4d6c9b61be67380e10fd4d367ccad6e8cf28c114e72",
+   "reason": "LOSS_NOT_ESTABLISHED: Claude Opus 5.5 reviewed 2026-09-29. In the listed transaction attacker 0x1f9e20c1 creates a CDT/USDC pair, buys covers 13/14 (35000 USDT / 19000 USDC) on insurance 0x9c84a04e with cheaply priced CDT and opens claims (5fa76ff8, d0a208b7); its net gain is 0.24 BNB. Etherscan tokentx shows no later payout from 0x9c84a04e to attacker contracts 0x056881ab or 0xc296d301. The only later pool outflows (35393.59 USDT at 35752567 and 19649.64 USDC at 35752583) went to 0x961a14be, the fee recipient named in the cover-purchase trace, which returned 49000 USDT/USDC at 35754469..521.",
+   "candidateIds": [
+    "web:2024-01-31:checkdot-protocol"
+   ]
+  },
+  {
+   "name": "SharedStake timelock insider exploit",
+   "chain": "ethereum",
+   "date": "2021-06-19T08:54:27Z",
+   "candidateVictim": "0x6d0f6ec8db9b5769c065bb4fd621c17d2e84cf47",
+   "exploitTx": "0x9400daa8711b4326e7b3bb7a4874099e5c7fe801c8b1488ff91bd6e5de332c9f",
+   "reason": "INSIDER_RUG: Claude Opus 5.5 reviewed 2026-09-29. Immunefi's postmortem (https://medium.com/immunefi/sharedstake-insider-exploit-postmortem-17fa93d5c90e) says the SmartTimelock call() bypass could only be used by the timelock beneficiary, and a SharedStake insider used it. On chain, the first tx (block 12663857) is sent by 0xf6827e678f2d8f7656e577842a84b602db202eec, which equals beneficiary() of SmartVesting 0x6d0f6ec8...; it makes the timelock approve 1,000,000 SGT (0x84810bcf08744d5862b8181f12d17bfd57d3b078) to itself. The later tx 0x68dcf70e... is sent by 0xa1feaf41d843d53d0f6bed86a8cf592ce21c409e, owner() of the timelocks. Only privileged recipients could exercise it (also PRIVILEGED_ACTION).",
+   "candidateIds": [
+    "web:2021-06-24:sharedstake"
    ]
   }
  ]

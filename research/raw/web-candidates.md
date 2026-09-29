@@ -5,6 +5,181 @@ date | project | reported loss | candidate mechanism
 
 2026
 
+DefiLlama hacks API (https://api.llama.fi/hacks, retrieved 2026-09-28): EVM entries from 2025-2026 absent from the other lists
+
+2026-08-30 | Tectonic | $124.47m | DefiLlama: donation attack (token and share accounting), Cronos
+2026-08-28 | Virtue | $894.5k | DefiLlama: oracle misconfiguration, IOTA EVM
+2026-08-19 | BounceBit | $3.0m | DefiLlama: improper access control, BounceBit chain
+2026-07-17 | FlyCow | $65.3k | DefiLlama: incorrect share accounting, BSC
+2026-06-20 | JaredFromSubway MEV bot | $7.5m | DefiLlama: MEV bot drained (market manipulation), Ethereum
+2026-06-01 | Gnosis Pay | $1.5m | DefiLlama: signature verification flaw, Gnosis Chain
+2026-05-30 | AFI Protocol | $480k | DefiLlama: protocol logic, unknown technique, Ethereum
+2026-05-12 | BoostHook | $187k | DefiLlama: spot price manipulation, Ethereum; BlockSec tx 0xb45cc4d9c13c2c24b4bbf71db9e6f52ed24d174ad23ed2622a290289cebd3811
+2026-05-12 | IEXCBP | $97k | DefiLlama: spot price manipulation, BSC
+2026-03-26 | TUR Staking | $133k | DefiLlama: spot price manipulation, BSC; BlockSec tx 0x96c9ce3c527681bf0da18511d142efb5769ad8dac1d9d659a6b70a697381e348
+2026-03-22 | Cyrus Finance | $5.0m | DefiLlama: spot price manipulation, BSC
+2026-02-26 | Ploutos Money | $390k | DefiLlama: oracle misconfiguration, Ethereum; BlockSec tx 0xa17dc37e1b65c65d20042212fb834974f7faaa961442e3fc05393778705f8474
+2026-02-19 | Velar Perps | $401k | DefiLlama: predictable oracle update, Mezo
+2026-01-27 | PGNLZ | $100k | DefiLlama: incorrect share accounting, BSC; BlockSec tx 0xc7270212846136f3d103d1802a30cdaa6f8f280c4bce02240e99806101e08121
+2026-01-13 | YO Protocol | $3.6m | DefiLlama: missing slippage check, Ethereum
+2025-12-28 | MSCST | $129.9k | DefiLlama: improper access control, BSC
+2025-12-26 | FilDA | $166.8k | DefiLlama: spot price manipulation, Elastos
+2025-11-20 | Dexmax AI | $130k | DefiLlama: token approval abuse, Ethereum
+2025-10-09 | Astera.fi | $573k | DefiLlama: incorrect share accounting, Linea
+2025-09-18 | New Gold Protocol | $1.9m | DefiLlama: spot price manipulation, BSC
+2025-07-02 | Future Protocol | $4.6m | DefiLlama: incorrect share accounting, BSC
+2025-05-26 | Dexodus Finance | $300k | DefiLlama: stale oracle price, Base
+2025-04-01 | UPCX | $70m | DefiLlama: proxy upgrade hijack (access control), Ethereum
+2025-03-27 | Vicuna Lending | $700k | DefiLlama: spot price manipulation, Sonic
+2025-03-16 | WebKeyDAO | $73k | DefiLlama: improper access control, BSC
+
+SlowMist Hacked (https://hacked.slowmist.io, pages 1-25, retrieved 2026-09-28): EVM contract incidents absent from the other lists
+
+2026-09-24 | Limit Break Payment Processor V2 | $2.8m | SlowMist: Payment Processor V2 bug let stale Magic Eden marketplace approvals settle zero-price NFT sales, Ethereum and ApeChain
+2026-09-24 | Meter Passport bridge | about $2.3m unbacked | SlowMist/Blockaid: unbacked wrapped MTRG minted through the Meter Passport bridge on BNB Chain and partly sold on PancakeSwap
+2026-09-21 | RWC Token | $109,460.85 | SlowMist: unprotected burn destroyed RWC held by the PancakeSwap RWC/USDT pair, BSC
+2026-09-14 | Long Bridge | $118k | SlowMist: custodial bridge keeper released 46.79 WETH from its Robinhood Chain vault after a third-party RPC reported fabricated withdrawal events
+2026-09-09 | Amnext | $116.1k | SlowMist: old no-loss prize-pool protocol; attacker mass-minted Ticket AMC and drained about 154.02 WBNB, BSC
+2026-08-26 | FH Token | $20k | SlowMist: FH token _transfer/isSell logic flaw drained the FH/USDT PancakeSwap pair, BSC
+2026-04-15 | LootBot AI | $9.6k | SlowMist: xLoot NFT staking redeem() accepted duplicate token IDs
+2026-03-14 | Goose Finance | $8,435 | SlowMist: StrategyGooseEgg share-accounting loop in an old BSC yield farm; BlockSec tx 0x86efdf5b45ee833e696be15bddf0b60f6c449f73a45e39edd4838d9ece316223
+
+BlockSec weekly roundups (https://blocksec.com/blog/weekly-web3-security-incident-roundup-*, retrieved 2026-09-28): EVM incidents absent from the other lists
+
+2026-04-11 | XBIT | $53k | BlockSec weekly roundup: initialization-dependent access check failed open, BNB Chain, tx 0xbc877fc865082eebd622ea55133df369649667518b84feea7c1d150d4df1b694
+2026-04-07 | HB Token | $193k | BlockSec weekly roundup: flawed reward settlement enabled direct AMM reserve manipulation, BNB Chain, tx 0x19671f5781acc3f5e3a869491a880aa9ee894911f4898a43254fa942d71594ed
+2026-04-03 | Unknown EIP-7702 delegate (pancakeV3SwapCallback) | $17.2k | BlockSec weekly roundup: missing access control in delegated code's pancakeV3SwapCallback, BNB Chain, tx 0x5b2cef3d601b84d91f653a07dd36ff9895e4f698a625a36d0049a7948d7e4261
+2026-03-31 | i6Token | $273.8k | BlockSec weekly roundup: spot-price-impacting deposit and TWAP-settled withdrawal in one transaction, BNB Chain, tx 0xc1b9a237a00b53a595e1e2d0d93841154ddcdf9aa217be8f395449b8e4ab2f16
+2026-03-30 | WDGG Token | $40k | BlockSec weekly roundup: missing access control in burnFrom, BNB Chain, tx 0x2da59a05359c07bb640075ce99416846f6f26f9fb594dedaab9e1662de750bd1
+2026-03-25 | MYX Network | $3.6k | BlockSec weekly roundup: flawed dividend accounting in transfer logic, Ethereum, tx 0x843c9ea7edf09ea234d99de189c6a6ba9b79d958bbbbdbc56fd477028ea55b90
+2026-03-23 | Unknown distribution contract (integer overflow) | $97k | BlockSec weekly roundup: integer overflow in distribution logic, Ethereum, tx 0x73bd1384e7b628a29542239be4bc96af0871f7aa22d410c0b38d62367630b053
+2026-03-23 | Unknown liquidity contract (reentrancy) | $11k | BlockSec weekly roundup: reentrancy in a liquidity function, Ethereum, tx 0x1382e898ae7582d184903b504aa43191a5d240851d5477a7464a29e262fad993
+2026-03-19 | ShiMama | $35k | BlockSec weekly roundup: missing access control on executePairBurn, BNB Chain, tx 0x13959bc1ea4ba372a0dae00ee8569b26190c2477cb137a130a25001f3c20e001
+2026-03-18 | Keom | $35k | BlockSec weekly roundup: redemption did not recompute the withdrawal amount after capping shares, Polygon zkEVM, tx 0x4ccde7fc6b240397228c1a740d15a149d2062ae0c11336ff81ad394603d9dfd8
+2026-03-17 | dTRINITY empty market | $257k | BlockSec weekly roundup: empty-market liquidityIndex inflation via flash-loan premiums, Ethereum, tx 0x8d33d688def03551cb77b0463f55ae5a670f5ebf3bbb5b8aa0e284c040ae7139
+2026-03-15 | EtherFreakers | $25k | BlockSec weekly roundup: payout before settling the target token's state; transfer hook reads a stale balance, Ethereum, tx 0x89e24dbfddcbc566c4b5f539e588bacee9ef72682119892977afa0279abd2942
+2026-03-11 | Planet Finance | $10k | BlockSec weekly roundup: discount settlement treats new borrows as accrued interest, BNB Chain, tx 0x5f4580486f2cc06ab9140ce5e3e04e414e1e584329b64791fda4684e7dde5ec9
+2026-03-08 | LEDS | $64k | BlockSec weekly roundup: chained unguarded deflationary mechanisms deplete pair reserves, BNB Chain, tx 0x26081ccd74296e45ccfb6031cea37a162748e0b81a110f9e657b155ee23f79da
+2026-03-03 | V4 Router by z0r0z | $42k | BlockSec weekly roundup: hardcoded calldata offset bypassed by non-standard ABI encoding, Ethereum, tx 0xfe34c4beee447de536bbd3d613aa0e3aa7eeb63832e9453e4ef3999924ab466a
+2026-03-02 | ACPRoute | $58k | BlockSec weekly roundup: job state loaded into memory instead of storage, disbursements not persisted, Base, tx 0xe94a5ed54d0a9aa317c997607d7d1ea9828ad47626d7794b0e4020ff49cdf9a0
+2026-03-01 | BUBU2 | $19.7k | BlockSec weekly roundup: unbounded trigger interval let accumulated burn rounds drain pair reserves, BNB Chain, tx 0x1bc0a65cb33a839d44425016b11ed51e325997afe61c5bb6cc4bbe93a330141c
+2026-02-27 | Unknown signature-verification contract | $180k | BlockSec weekly roundup: signature verification missing an empty-array check, BNB Chain, tx 0x91f4526052060d7137919a8e2bb3ce6c2169e5a376ab002c4745f69841cfd784
+2026-02-25 | HedgePay | $15.7k | BlockSec weekly roundup: withdrawal did not update the staked balance, BNB Chain, tx 0x5f2ea6cb43d14986188fa2f474d9e22502fa95cc76cab72cd6ba1ba146ed137f
+2026-02-23 | STO | $16.1k | BlockSec weekly roundup: burn mechanism enabled pool price manipulation, BNB Chain, tx 0x8ba17bea937f062743ef85b1f1f22504d79b2499dece96ccb6171aae5a54020c
+2026-02-19 | PearlDriver | $40.3k | BlockSec weekly roundup: unchecked overflow in bonding-curve buy(), BNB Chain, tx 0xb4a29409cbd018956746f90d285f427175070c735c36ff3bc2f3c4a4bbaae705
+2026-02-14 | OCA | $422k | BlockSec weekly roundup: post-swap deflationary clawback returned sold tokens to the caller, BNB Chain, tx 0xcd5979352d9b42ccb7780d5344fac08d1d46591a592ab284a588e2156cf44906
+2026-02-14 | SOF | $225k | BlockSec weekly roundup: transfer override burned tokens from the Uniswap V2 pair balance, BNB Chain, tx 0xcb5b22d86819b84ef176aee2d6b89f687e74d829560de1bcc63d53fcb2ac68f8
+2026-02-10 | Unknown intermediary contract | $10k | BlockSec weekly roundup: unchecked balance withdrawal from an intermediary contract, BNB Chain, tx 0x380cd298a607d4422edc640b7f5a907ec0792841ee5fc963d265b1189397c905
+2026-01-28 | XPlayer | $717k | BlockSec weekly roundup: burn mechanism let privileged addresses burn tokens from the pool, BNB Chain, tx 0x9779341b2b80ba679c83423c93ecfc2ebcec82f9f94c02624f83d8a647ee2e49
+2026-05-10 | Renegade darkpool proxy | $220k | BlockSec weekly roundup: access control vulnerability, chain unstated
+2026-04-29 | Ycdeal3 | $398k | BlockSec weekly roundup: access control vulnerability, chain unstated
+2026-04-28 | JUDAO Token | $228k | BlockSec weekly roundup: access control vulnerability, chain unstated
+2026-04-28 | JetonRouter | $229k | BlockSec weekly roundup: business logic flaw, chain unstated
+2026-04-28 | QNT | $125k | BlockSec weekly roundup: access control vulnerability, chain unstated
+2026-02-07 | LZMultiCall | $142k | BlockSec weekly roundup: users approved allowances to an arbitrary-call contract, Ethereum
+
+DefiLlama hacks API (retrieved 2026-09-28): pre-2025 EVM entries absent from the dataset, the other lists and DeFiHackLabs
+
+2024-12-29 | Fegex | $1.07m | DefiLlama: cross-chain message spoofing (bridge & cross-chain), Ethereum, BSC, Base
+2024-12-01 | Clipper | $450k | DefiLlama: deposit logic flaw (protocol logic), Optimism, Base
+2024-09-20 | OcelotDex | $980k | DefiLlama: infinite mint (token & share accounting), Ethereum
+2024-05-10 | Galaxy Fox | $330k | DefiLlama: improper access control (access control), Ethereum
+2024-03-15 | MOBOX | $750k | DefiLlama: borrow logic flaw (protocol logic), Optimism
+2024-03-11 | Blastoff | $600k | DefiLlama: unknown (protocol logic), Blast
+2023-09-01 | SharedStake | $175k | DefiLlama: ownership takeover (access control), Ethereum
+2023-07-28 | Pond0x | $2.20m | DefiLlama: arbitrary external call (access control), Ethereum
+2023-07-25 | EraLend | $3.40m | DefiLlama: read-only reentrancy (reentrancy), zkSync Era
+2023-06-15 | Hashflow | $605k | DefiLlama: token approval abuse (access control), Ethereum, Arbitrum, Avalanche, BSC, Polygon
+2023-05-19 | WDZD Swap | $1.00m | DefiLlama: swap logic flaw (protocol logic), Binance Smart Chain
+2023-02-27 | DungeonSwap | $728k | DefiLlama: improper access control (access control), BSC
+2023-01-16 | LendHub | $6.00m | DefiLlama: incorrect share accounting (token & share accounting), Heco
+2022-10-27 | UvToken | $1.50m | DefiLlama: improper access control (access control), BSC
+2022-10-17 | MTDAO | $702k | DefiLlama: deposit logic flaw (protocol logic), BSC
+2022-09-05 | DAO Swap | $580k | DefiLlama: improper access control (access control), Binance Smart Chain
+2022-06-08 | ApolloX | $2.15m | DefiLlama: signature verification flaw (input validation), BSC
+2022-05-18 | Feminist Metaverse | $540k | DefiLlama: improper access control (access control), Binance Smart Chain
+2022-05-13 | Blizz Finance | $8.30m | DefiLlama: stale oracle price (oracle manipulation), Avalanche
+2022-03-31 | Ola Finance | $4.67m | DefiLlama: reentrancy (reentrancy), Fuse
+2022-02-18 | Rigoblock | $464k | DefiLlama: improper access control (access control), Ethereum
+2022-02-08 | Superfluid | $8.70m | DefiLlama: missing input validation (input validation), Polygon
+2021-11-03 | Vesper Finance | $3.37m | DefiLlama: spot price manipulation (oracle manipulation), Ethereum
+2021-10-29 | AutoShark | $580k | DefiLlama: reward logic flaw (protocol logic), BSC
+2021-09-03 | Siren | $3.50m | DefiLlama: reentrancy (reentrancy), Polygon
+2021-08-25 | Dot.Finance | $430k | DefiLlama: spot price manipulation (oracle manipulation), Binance Smart Chain
+2021-08-13 | NEKO | $2.20m | DefiLlama: improper access control (access control), Binance Smart Chain
+2021-08-08 | Zerogoki | $670k | DefiLlama: oracle misconfiguration (oracle manipulation), Ethereum
+2021-07-14 | ApeRocket | $1.26m | DefiLlama: reward logic flaw (protocol logic), BSC
+2021-06-24 | SharedStake | $500k | DefiLlama: improper access control (access control), Ethereum
+2021-06-20 | Polydex | $500k | DefiLlama: reentrancy (reentrancy), Polygon
+2021-06-16 | Alchemix V2 | $6.50m | DefiLlama: borrow logic flaw (protocol logic), Ethereum
+2021-06-10 | EvoDefi | $1.00m | DefiLlama: reward logic flaw (protocol logic), BSC
+2021-05-24 | AutoShark | $823k | DefiLlama: reward logic flaw (protocol logic), BSC
+2021-05-23 | Bogged Finance | $3.00m | DefiLlama: arithmetic error (token & share accounting), BSC
+2021-02-12 | BT Finance | $1.50m | DefiLlama: spot price manipulation (oracle manipulation), Ethereum
+2020-11-02 | Axion | $500k | DefiLlama: infinite mint (token & share accounting), Ethereum
+
+BlockSec incident API (POST https://blocksec.com/api/v1/attack/events, retrieved 2026-09-29): incidents whose transactions and names are absent from the dataset and other lists
+
+2026-04-28 | Unknown Ethereum contract 0xebaaab69 | $983k | BlockSec incident API: access control issue, Ethereum, tx 0xebaaab69baa3cd2543eb80ecfb8e3ed226b9e5a6f5694891a8adf4edbcbd8107
+2026-04-27 | Unknown Ethereum contract 0xa41fe650 | $708k | BlockSec incident API: access control issue, Ethereum, Base, tx 0xa41fe6509de9ea1df777359e9603076be8f1aced11812b8f0df6e68b02287012
+2026-01-30 | Gyro.finance | $700k | BlockSec incident API: arbitrary call, Arbitrum, Ethereum, tx 0x51c22898a9b9f519a10b0a0be89b9d51c0248adb80cc0f89e57437e15e6c60c7
+2025-11-07 | Unknown BSC contract 0xc94143fd | $230k | BlockSec incident API: vulnerable price dependency, BSC, tx 0xc94143fd6e7e7f05790902d66956adcf39b60bdda1e555f9963d7b1d32188825
+2025-10-29 | Unknown Base contract 0x4449114c | $218k | BlockSec incident API: access control issue, Base, tx 0x4449114ceaedd11e8f1363c5e53507198323a63cb6958dc26078fc016d0d4b27
+2025-10-14 | Unknown Ethereum contract 0x57463979 | $120k | BlockSec incident API: access control issue, Ethereum, tx 0x57463979c56a133b522ac073f81d3c6712372d8ee83a5f6c4a9e5f05916029db
+2025-09-30 | Unknown Ethereum contract 0xfc1086c8 | $1.10m | BlockSec incident API: access control issue, Ethereum, tx 0xfc1086c8974db1d9778fca0e115264e1ad65e9ddad66af32a2960c2ccb42d09a
+2025-09-02 | Unknown BSC contract 0x4216f924 | $13.00m | BlockSec incident API: others, BSC, tx 0x4216f924ceec9f45ff7ffdfdad0cea71239603ce3c22056a9f09054581836286
+2025-08-28 | Panoptic | $400k | BlockSec incident API: others, Ethereum, tx 0x67a45dfe5ff4b190058674d7c791bbdc48e889f319f937c24fa13a5f9093f088
+2025-07-23 | Unknown BSC contract 0xb92d3594 | $615k | BlockSec incident API: lack of slippage protection, BSC, tx 0xb92d3594b818470cc3f6c03eff4a9c5704d87df9749557336545c39c7b2bfed9
+2025-06-22 | Unknown BSC contract 0x91a8b4d7 | $403k | BlockSec incident API: access control issue, BSC, tx 0x91a8b4d7755b0ded860fbeefc0271b39d39fb069f9f921b107c73ab0e95e3120
+2025-04-24 | Zora token | $128k | BlockSec incident API: business logic flaw, Base, tx 0xf71a96fe83f4c182da0c3011a0541713e966a186a5157fd37ec825a9a99deda6
+2025-04-01 | OPC | $107k | BlockSec incident API: business logic flaw, BSC, tx 0x65a29faf44c5be567e9ea2aa419254263a1b8553799258d9e36769a06ceac109
+2025-02-13 | Unknown Avalanche contract 0xfa11f489 | $170k | BlockSec incident API: access control issue, Avalanche, BSC, Ethereum, Base, tx 0xfa11f4897351a6389ad642f59846dd099f235013ff41dd8a725d4fd910aedee6
+2025-02-08 | Unknown Arbitrum contract 0x4b75157d | $188k | BlockSec incident API: access control issue, Arbitrum, tx 0x4b75157d64bb371380bc83256ee36034effb07c532b8623a34154aa881df9798
+2024-12-10 | Unknown BSC contract 0xc96287ca | $640k | BlockSec incident API: access control issue, BSC, tx 0xc96287cadfc96afd715ffeae25fd07b19d3c06b83dff54ffd7ad4633882d7b24
+2024-10-05 | EGA Token | $554k | BlockSec incident API: lack of slippage protection, BSC, tx 0xece4a4ac46660618ecee43826fc6f89fe4beaef87ca5e5786f763892b48bc999
+2024-09-11 | Inferno | $440k | BlockSec incident API: lack of slippage protection, Ethereum, tx 0x7f78389cdc19c59c402fa9dddabcdbe7b9e6630f124362a764c0826ac863903c
+2024-05-24 | Kraken | $3.00m | BlockSec incident API: accounting error, Base, tx 0xfbf6b17a9de7f9e1e97eb48dc68a993f7663d4b9530a3cd6cc262e554549e59d
+2024-01-31 | CheckDot Protocol | $120k | BlockSec incident API: access control issue, BSC, tx 0xdd19e3a1657f8381b561c4d6c9b61be67380e10fd4d367ccad6e8cf28c114e72
+2023-11-12 | MEV Bot 0xa24734 | $150k | BlockSec incident API: access control issue, Ethereum, tx 0xdfbfb0387129541c65934e71deee404ea70de6629258ae49d9f24bcf6e866ea6
+2023-08-03 | MEV Bot 0xd61492 | $800k | BlockSec incident API: lack of input validation, Arbitrum, tx 0x864c8cfb8c54d3439613e6bd0d81a5ea2c5d0ad25c9af11afd190e5ea4dcfc1f
+2023-02-24 | EFVault | $5.10m | BlockSec incident API: storage collision, Ethereum, tx 0x1fe5a53405d00ce2f3e15b214c7486c69cbc5bf165cf9596e86f797f62e81914
+
+2026-09-26–2026-08-22
+
+2026-09-26 | DAOstack | 4.025 ETH | permissionless newOrganization let an attacker mint REP on an existing Reputation contract and install itself as a scheme on the Genesis Alpha Avatar
+2026-09-21 | DoinGud | 35,380 USDC | acceptOffer replay via missing offer cleanup on the amount=0 path
+2026-09-21 | GaslessReservoirEnabler | 8.72 WETH across 466 approvers | erc20WithTransfersAndExecute let a whitelisted module run unvalidated transferFrom calldata
+2026-09-21 | InternetToken | 5.85 WETH | permissionless swapV3 with a caller-supplied pool let a fake callback mint INT
+2026-09-18 | Likwid | 74.31 BNB | missing pairDelta update in leverage=0 margin borrow froze the AMM quote
+2026-09-16 | Startale | about $2.9k | transient-storage init flag outlived the constructor and let anyone reinitialize ERC-7579 accounts
+2026-09-16 | Flamincome | about $346k net; $595k gross | permissionless Convex stakeFor inflated Strategy NAV so VaultYUSDT overpaid on withdrawAll
+2026-09-16 | PrimeFinance | 425.5 WHYPE | permissionless overwrite with a stale signed oracle report drained the lending pool
+2026-09-16 | Nimiq | $50,464 | GSN forwarder skipped signature checks and trusted an attacker-chosen paymaster
+2026-09-15 | rsETH Safe module router | 2,900 aEthrsETH, about $7.8m | nested self-referential multicall authorization bypass drained a Gnosis Safe via DELEGATECALL
+2026-09-15 | BonfireSwap | about 66 BNB | missing caller authorization let anyone force-sell approved holders' tokens
+2026-09-12 | SpiralHookV2 | 10.707 ETH | Uniswap V4 spot-price borrow plus a tx.origin-keyed same-block guard bypass
+2026-09-12 | Yam Finance | about $121k | dormant-DAO quorum governance takeover drained legacy UMA farming contracts
+2026-09-11 | ORB | about 45 BNB | leveraged pool buyout and refund-before-sell reentrancy drained a burnLP-depleted reserve
+2026-09-11 | GDC | 35.34 BNB | chained EOA bypass, liquidity misclassification, burn mismatch and reentrant tax-free exit
+2026-09-09 | EtherFi AtomicQueue | about 15.45 ETH | missing solver access control drained victims' liquidETH allowances
+2026-09-09 | OMNI404 | about 3.02 ETH | ERC-404 dual ID/amount transfer interpretation drained pool WETH
+2026-09-09 | Unifi Protocol | 5.86 BNB | unregistered caller-supplied pool trusted for reward eligibility and math
+2026-09-09 | BeatXswap | about $77.5k drained | slot0 spot-price oracle drained vesting BTX reserves
+2026-09-09 | Enso Finance | about 5.6 ETH | short-window Uniswap V3 TWAP enabled an overvalued strategy deposit
+2026-09-09 | Zentra Finance | about $143k | aToken burn clamped to zero so repayWithATokens cleared debt without burning
+2026-09-08 | OrderFactory | about 24.7 ETH | missing access control on createOrderForBuyer drained buyer accounts
+2026-09-07 | RouterDrain | 62.28 WBNB across 29 victims | permissionless swap entry let a fake V3 pool abuse router allowances
+2026-09-07 | Cozy Finance | about $160.8k | unverified UMA optimistic-oracle trigger enabled unbacked protection-token redemption
+2026-09-05 | DHC | about $71.8k | repeatable claim due to a missing claimed flag
+2026-09-05 | Reddio | about 9.25 ETH | cross-share-class balance double count via permissionless registerErc20
+2026-09-05 | SecuredFi | about $104k | same-block self-trade manipulated getMarketUnitPrice to fabricate collateral
+2026-09-03 | Notional Finance | about $1.73m | ERC1155 fCash mint overflow drained escrow
+2026-09-01 | Reflexer GEB | 5.94 ETH | shared GebProxyActions library registered as SAFE owner
+2026-08-31 | Float Protocol | 10.71 ETH | Uniswap V3 spot-price manipulation of Hypervisor LP shares
+2026-08-27 | CashCowCoin | 165.47 WBNB | burn plus premature sync() drained the PancakeSwap pair
+2026-08-26 | Enjin CryptoItems | 5,231,353 ENJ | unprotected registry reinitialization enabled manager takeover
+2026-08-23 | Arrakis G-UNI | 2.94 ETH | Uniswap V3 spot-price manipulation of vault mint/burn
+
 2026-08-31–2026-07-28
 
 2026-08-31 | Balancer V1 BPool | $234,000 | joinswapPoolAmountOut fixed-point rounding minted 4,408.8 BPT for 1 satoshi after WBTC reserve compression
@@ -152,7 +327,7 @@ date | project | reported loss | candidate mechanism
 
 2026-04-04 | TMM / USDT | $1.665m | reserve manipulation
 2026-04-03 | Silo V2 | $392k | oracle misconfiguration
-2026-04-02 | SAS Token | $12k | deferred burn and reserve manipulation
+2026-04-02 | SAS Token | $12k | deferred burn and reserve manipulation; BlockSec tx 0x878e214a895b057e2f284a084135a6dbe5fe3d696402da6380547a3e5696adc5
 2026-04-01 | Drift | approximately $285m | social-engineering or admin compromise plus fake collateral or oracle
 2026-03-31 | LML staking | $950k | spot-price and reward manipulation
 2026-03-28 | GoonFi v2 | $254k | program configuration or mispricing
@@ -162,13 +337,13 @@ date | project | reported loss | candidate mechanism
 
 2026-03-12–2026-02-22 
 
-2026-03-12 | AM / USDT | $131k | contract or reserve manipulation
+2026-03-12 | AM / USDT | $131k | contract or reserve manipulation; BlockSec tx 0xd0d13179645985eae599c029574e866d79b286fbea395b66504f87f31629f859
 2026-03-12 | Stake DAO Votemarket | $176k | L1BlockOracleUpdater or forged-vote path
 2026-03-12 | Aave V3 CAPO configuration | $862k | oracle-configuration error causing wrongful liquidations
 2026-03-11 | DBXen | $150k | ERC-2771 sender mismatch
-2026-03-10 | MT-WBNB | $242k | pool manipulation
+2026-03-10 | MT-WBNB | $242k | pool manipulation; BlockSec tx 0xfb57c980286ea8755a7b69de5a74483c44b1f74af4ab34b7c52e733fc62dfca6
 2026-03-09 | Gondi V3 | $230k | contract exploit
-2026-03-07 | Molt EVM | $127k | contract exploit
+2026-03-07 | Molt EVM | $127k | contract exploit; BlockSec tx 0x10b7ec56e852351de4951ab2a91fca4099fc4f385dd2171951476c3d497fe03d
 2026-03-06 | Solv BRO vault | $2.7m | vault exploit
 2026-03-02 | Inverse Finance | $240k | lending or oracle exploit
 2026-03-02 | Curve LlamaLend | $822k borrower equity; $240k attacker profit | lending-market exploit
@@ -184,7 +359,7 @@ date | project | reported loss | candidate mechanism
 2026-02-20 | Veil Cash | $5k | contract exploit
 2026-02-01 | CrossCurve | $3m | cross-chain contract exploit
 2026-01-31 | Step Finance | approximately $40m treasury impact | executive-device compromise
-2026-01-29 | Revert Lend | $50,101 | lending-contract exploit
+2026-01-29 | Revert Lend | $50,101 | lending-contract exploit; BlockSec tx 0x10429eaeb479f9149854e4aeb978a35ac02d9688f6e22371712b3878c63a64ab
 2026-01-25 | SwapNet | $13.43m | contract exploit
 2026-01-25 | Aperture Finance | $3.67m | contract exploit
 2026-01-21 | SagaEVM | $7m | execution-layer exploit
@@ -300,7 +475,7 @@ date | project | reported loss | candidate mechanism
 2025-03-18 | Voltage Finance | $320k | contract exploit
 2025-03-14 | Berally | $86,725 | contract exploit
 2025-03-05 | Pond.fun | $145k | insider or key compromise
-2025-03-01 | Zoth collateral incident | $285k | collateral-contract exploit
+2025-03-01 | Zoth collateral incident | $285k | collateral-contract exploit; BlockSec tx 0xc3f70057e261af554c6acf6a372389899f0c2d7d1ebd27311e39525dee88fb39
 
 2025-02-28–2025-01-01 
 
@@ -308,7 +483,7 @@ date | project | reported loss | candidate mechanism
 2025-02-24 | Infini | $50m | payment-platform privileged-key compromise
 2025-02-18 | Cardex / The Portal | $400k | contract exploit
 2025-02-11 | Four.Meme, first incident | $183k | launchpad exploit
-2025-02-08 | Cashverse | $107.9k | contract exploit
+2025-02-08 | Cashverse | $107.9k | contract exploit; BlockSec tx 0x8501a9d34fc28bee21fd08505b3e4b1b0a4aec3a5496b508a290531d8eb25281
 2025-02-07 | BankX | $43k | contract exploit
 2025-02-04 | Ionic | $12.3m | social engineering plus fake collateral
 2025-01-24 | AdsPower | $4.7m | browser-profile supply-chain compromise
@@ -322,9 +497,9 @@ date | project | reported loss | candidate mechanism
 2024-12-17 | GemPad | $2m | lock-contract exploit
 2024-12-12 | MAAT | $240k | unauthorized USDT withdrawal
 2024-12-04 | Vestra DAO | $500k | staking-reward exploit
-2024-12-03 | RunWay / BYC | $100k | contract exploit
+2024-12-03 | RunWay / BYC | $100k | contract exploit; BlockSec tx 0x177b87bd009e3b3aebb11cf2b88efc217d14fc1554a4675ee749eeb527d201ff
 2024-12-02 | DeBox | $275k | key compromise
-2024-11-10 | BGM | $450k | price manipulation
+2024-11-10 | BGM | $450k | price manipulation; BlockSec tx 0x8580825008800b9e13266f40b41a838a521e4d0bb4abc1cb78684253b7bc9fd1
 2024-11-08 | CoinPoker | $2m | hot-wallet compromise
 2024-11-04 | MetaWin | $4.4m | hot-wallet or withdrawal compromise
 2024-10-31 | SUNRAY Finance | $2.855m | private-key compromise
@@ -363,7 +538,7 @@ date | project | reported loss | candidate mechanism
 2024-07-25 | MonoSwap | $1.3m | malware or private-key compromise
 2024-07-23 | dYdX domain | $31k | domain hijack
 2024-07-23 | Spectra router | $550k | router-contract exploit
-2024-07-21 | UPS, second incident | $521k | separate exploit
+2024-07-21 | UPS, second incident | $521k | separate exploit; BlockSec tx 0x1ddf415a4b18d25e87459ad1416077fe7398d5504171d4ca36e757b1a889f604
 2024-07-21 | ETHTrustFund | $2m | discrete insider or rug drain
 2024-07-19 | Rho Markets | $7.6m | oracle misconfiguration; funds returned
 2024-07-18 | WazirX | $230m | multisig or custody compromise

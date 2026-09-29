@@ -15,19 +15,22 @@
       "timestamp": 1781721287
     },
     "attackerAddresses": [
-      "0x6952d9246e9afe8b887b2877225163436f78e97f"
+      "0x6952d9246e9afe8b887b2877225163436f78e97f",
+      "0xb6f89d12ff9a9e394f40b701ac46428de0d1bea5"
     ]
   },
   "summary": "The escape-hatch verifier the deprecated Aztec 2.0 RollupProcessor delegated proof checking to did not bind a note’s output owner to the party entitled to it, so a proof carrying an attacker-chosen outputOwner verified as sound. escapeHatch() forwarded the attacker’s proof, verify() returned true, and the rollup paid the requested withdrawals out of pooled funds without any further ownership check.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
-      "amount": 2201243.5200759624,
+      "amount": 2202667.1873070416,
       "valuationTimestamp": 1781721287,
       "method": "incident-price",
       "sourceIds": [
         "source-4",
-        "source-5"
+        "source-5",
+        "source-9",
+        "source-10"
       ]
     },
     "assets": [
@@ -90,10 +93,51 @@
         "sourceIds": [
           "source-4"
         ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": null,
+          "symbol": "ETH"
+        },
+        "amount": "0.759804206229645062",
+        "usdValue": 1327.971331358666,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1781770624,
+          "unitPriceUsd": 1747.7809684002943,
+          "sourceIds": [
+            "source-10"
+          ]
+        },
+        "sourceIds": [
+          "source-9"
+        ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "symbol": "DAI"
+        },
+        "amount": "95.695899720407042487",
+        "usdValue": 95.69589972040704,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1781771723,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-9"
+          ]
+        },
+        "sourceIds": [
+          "source-9"
+        ]
       }
     ],
     "confidence": "high",
-    "notes": "Three escape-hatch transactions from the same EOA drained the rollup: the ETH leg in the anchor transaction, then the DAI leg at block 25339169 and the renBTC leg at block 25339172. The rollup balance falls from 1158.759804206229645062 ETH to 0.759804206229645062 ETH, from 150095.695899720407042487 DAI to 95.695899720407042487 DAI, and from 0.46963295 renBTC to 0, and the attacker address holds exactly the difference afterwards. The 0.759804206229645062 ETH residue a copycat swept the next morning is not included. Nothing was recovered; the contract’s ownership is renounced so it could not be paused."
+    "notes": "Three escape-hatch transactions from the same EOA drained the rollup: the ETH leg in the anchor transaction, then the DAI leg at block 25339169 and the renBTC leg at block 25339172. The rollup balance falls from 1158.759804206229645062 ETH to 0.759804206229645062 ETH, from 150095.695899720407042487 DAI to 95.695899720407042487 DAI, and from 0.46963295 renBTC to 0, and the attacker address holds exactly the difference afterwards. The residue was swept the next morning by a second actor, fresh EOA 0xb6f89d12ff9a9e394f40b701ac46428de0d1bea5, through two processRollup transactions whose proofs the same TurboVerifier and verification key accepted: 0.759804206229645062 ETH at block 25343196 and 95.695899720407042487 DAI at block 25343289, taking both balances to exactly zero. Those two legs are merged here as further components; ETH is valued at the DefiLlama observation 17 seconds after the ETH leg and DAI at par. Nothing was recovered; the contract’s ownership is renounced so it could not be paused.",
+    "realizedAt": 1781771723
   },
   "targets": [
     {
@@ -205,6 +249,29 @@
       "reviewer": "Claude Opus 5",
       "reviewedAt": "2026-08-25T08:30:00Z",
       "note": "The seed record measured this against the RollupProcessor’s 2021-03-03 deployment, giving 5.29 years. That is the wrong artifact. The rollup does not contain the failing logic: escapeHatch statically calls the verifier held in its storage slot 6, and the exploit trace shows TurboVerifier 0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8 running the check and delegate-calling its verification key 0xf3761b450571a49fa8e2af6e37e1eb3516209d56 for key id 0. Both were deployed by 0x36bb84d28bb2d9772158cc9a09feaa5472ebfd32 in block 19232962 on 2024-02-15, and the RollupProcessor emitted nine VerifierUpdated events in total, the last of which, log 166 of block 19233032, selected 0x48cb7ba0; slot 6 holds that address continuously through block 25339093. The exploited verifier is therefore 853.3 days old, not 5.29 years. The target is recorded on the verifier itself rather than on the rollup because the verifier is the artifact whose verify() accepted the unsound proof; its verification key, which the published analyses name as the component that failed to bind the output owner, was deployed in the same block, so the age is the same under either attribution. Loss is the rollup’s ETH, DAI and renBTC balance deltas across the three escape-hatch transactions, all of which land in the attacker address."
+    },
+    {
+      "id": "source-9",
+      "type": "onchain-transaction-set",
+      "chainId": 1,
+      "transactionHashes": [
+        "0x389bce3dad78c09900cb4c9e72397a73b39b8217ae37ef264f3439046737cb0c",
+        "0x1aac2de030b7b21af23ff02b47627f9c945dbf0429a25a852b9953487029c4b5"
+      ]
+    },
+    {
+      "id": "source-10",
+      "type": "price-data",
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1781770607/coingecko:ethereum?searchWidth=10m",
+      "observedAt": 1790612189
+    },
+    {
+      "id": "source-11",
+      "type": "review-note",
+      "reviewer": "Claude Opus 5.5",
+      "reviewedAt": "2026-09-28T16:17:15Z",
+      "note": "Merged the 2026-06-18 residue sweep, and checked that DeFiHackLabs src/test/2026-06/AztecEscapeHatch_exp2.sol@b3719ce7 describes a different, never-exploited defect. (1) Sweep: binary search of eth_getBalance and DAI balanceOf(0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba) between blocks 25339200 and head shows the post-drain residue 0.759804206229645062 ETH / 95.695899720407042487 DAI unchanged until block 25343196 (ETH -> 0) and block 25343289 (DAI -> 0). The only rollup transactions in those blocks are 0x389bce3dad78c09900cb4c9e72397a73b39b8217ae37ef264f3439046737cb0c (block 25343196 index 327, timestamp 1781770607, nonce 0) and 0x1aac2de030b7b21af23ff02b47627f9c945dbf0429a25a852b9953487029c4b5 (block 25343289 index 169, timestamp 1781771723, nonce 1), both from fresh EOA 0xb6f89d12ff9a9e394f40b701ac46428de0d1bea5, status 1, selector 0x06011a46 processRollup(bytes,bytes,bytes,bytes,address,address,uint256). callTracer: rollup STATICCALLs verifier 0x48cb7ba00d087541dc8e2b3738f80fdd1fee8ce8 (slot 6 at block 25343195; runtime keccak 0x720803cb..., identical to target-1) selector 0xac318c5d, which DELEGATECALLs verification key 0xf3761b450571a49fa8e2af6e37e1eb3516209d56, then pays 0xa8b5de6632a6706 wei (0.759804206229645062 ETH) to the EOA, resp. DAI Transfer log 0x6da of 95.695899720407042487 DAI to the EOA. proofData words 13-17 are (1, 0, 0, publicOutput, assetId) with publicOutput equal to the entire residual balance to the wei (assetId 0 = ETH, 1 = DAI), the same single-withdrawal-without-deposit layout as the anchor's (1, 0, 0, 1158e18, 0); a legitimate note set cannot sum to exactly both residues, so this is the same verifier soundness failure exercised by a later actor, merged as loss (ETH 0.759804206229645062 x 1747.7809684002943 USD at 1781770624, source price; DAI par). (2) exp2 lead: the PoC declares Total Lost N/A, has no attack transaction and forks block 25295800 after patching five rollup storage slots with vm.store; it reproduces an unconstrained inner proof_id in the escape-hatch circuit, whose exploitation requires an inner proof with proof_id = 1 and publicInput > 0. Etherscan txlist of the rollup from block 19232962 (verifier deployment) to head contains exactly three escapeHatch 0xd1c65264 calls, the three transactions of source-4, each with inner proof_id word 0 and publicInput word 0, so that path was never used, and the rollup has held zero ETH and zero DAI since block 25343289. That lead is not this fault and this record does not claim it."
     }
   ],
   "discovery": [
@@ -214,7 +281,8 @@
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
-      "source-8"
+      "source-8",
+      "source-11"
     ]
   }
 }

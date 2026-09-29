@@ -49,4 +49,7 @@ npm run enrich -- --all
 ```
 
 The verifier succeeds when every declared anchor reaches `PASS_ANCHORS`;
-`--allow-incomplete` retains partial results for exploratory sweeps.
+`--allow-incomplete` retains partial results for exploratory sweeps. It reads
+the RPC from the chain's variable in `scripts/verify.mjs`, else from
+`RPC_URL_FOR_CHAIN_<id>`; trace checks need archive `debug_traceTransaction` or
+`trace_transaction`.

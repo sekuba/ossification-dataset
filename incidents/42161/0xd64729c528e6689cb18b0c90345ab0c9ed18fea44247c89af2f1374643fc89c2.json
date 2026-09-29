@@ -62,8 +62,7 @@
         "tier": "provisional",
         "curveEligible": false,
         "limitations": [
-          "TradeRouter is a direct entry point; the defect-bearing swap/pricing and position-accounting artifacts and latest causal configuration reset remain unresolved.",
-          "Deployment transaction, runtime hash and complete history remain unresolved."
+          "Defect-bearing artifact is FacadeTradeRouter 0xb84945ec1c4e9973cb108a6ba76fa6d46856e679 (spot getAmountOut sizing in decreaseLongPosition), not this forwarding entry point; target identity, activation and campaign loss remain unresolved (see source-12)."
         ]
       },
       "codeAgeSeconds": 1540255
@@ -134,6 +133,13 @@
       "reviewer": "OpenAI Codex",
       "reviewedAt": "2026-09-28T07:05:04Z",
       "note": "Partial follow-up; no promotion. Reproduce source-9/source-10 with eth_getTransactionReceipt and debug_traceTransaction using callTracer on Arbitrum. Source-9 is block 391409320 transaction 2: WBTC log 1 supplies 0.01600001, logs 13/38 deposit/withdraw 0.3, and log 46 returns 0.26341852 WBTC to the sender; the trace reaches TradeRouter then FacadeTradeRouter 0xb84945ec1c4e9973cb108a6ba76fa6d46856e679 with selector 0x27e1e39f. Source-10 is later, block 391450359 transaction 1, and uses different pool contexts: 0x9b6ceb59bbe4e98e6edea6226a07a0b3c8aa7320 (USDC), 0x6736da3cc7f28817d4060947d41b92b26495c96d (WBTC), 0xb17e214d94350274723ff4ba85015affddeee84b (WETH). Logs 76/78 pay 0.40264081 WBTC and 10.000413246997093659 WETH to 0x9bcab76878e301dfe05af5c78b528b096e870283. These proceeds do not establish complete victim depletion or a shared code artifact across legs. Unresolved: earliest successful exercise, exact defect-bearing artifacts and code equivalence of the later pool contexts, complete campaign depletion excluding collateral, and latest causal configuration. Next: enumerate both senders through block 391450359, decode source-9 facade selector against verified source, and compare source-10 pool/facade runtimes and setter histories before deciding whether its loss belongs to this episode."
+    },
+    {
+      "id": "source-12",
+      "type": "review-note",
+      "reviewer": "Claude Opus 5.5",
+      "reviewedAt": "2026-09-28T17:20:00Z",
+      "note": "Partial review, not promotion. Etherscan V2 getcontractcreation: FacadeTradeRouter 0xb84945ec1c4e9973cb108a6ba76fa6d46856e679 created in 0xdf415c081025aacc0a3993107c83fbc347174914840ff1c5c5e2ac3bbd7badf2 (block 385232818, timestamp 1759394473) and TradeRouter 0xd3fde5af30da1f394d6e0d361b552648d0dff797 in 0xeca481d437133a191d125c802047e7e9d6ec522cb83a0840873170097df25235 (block 385232893), both by 0x8b57f3a9bdf2cfdbf9b2627ff8bea86fb5641a50; LiquidityPool 0x02434cd23972c82fbabf610d157b41bfb45a45a3 at block 385225783. Verified FacadeTradeRouter.decreaseLongPosition sizes the swap and repayment from facadeInput.getAmountOut(token, usdc, amount), a spot quote; TradeRouter.decreaseLongPosition only forwards to it. Attacker transactions in order: source-1 (block 391402008, opens), source-6 (391402389, closes after pool manipulation), 0x35a523bdaf60a9e8b66ab92bb8b78d5012e102e462b665e98ce46f7e07addd36 (391409320, contract 0xd4a687b03008d9a347e6862e66d68003c8dc662a), all by 0xd356c82e0c85e1568641d084dbdaf76b8df96c08, then 0xb0bf77475818b2501e78f0927f4131e52c6efd45bc4978992cbbe218a57e6f7f (391450359) by 0xaa24987bab540617416b77c986f66ae009c55795. Unresolved: the pool set and campaign depletion, and whether a facade role grant after block 385232818 is the latest causal reset. Next: read the facade's facadeInput and pool addresses, sum pool token net outflows over every transaction from both senders and their contracts 0xd9ff21caeeea4329133c98a892db16b42f9baa25, 0xd4a687b03008d9a347e6862e66d68003c8dc662a, 0x9dda6ef3d919c9bc8885d5560999a3640431e8e6, 0x397652cc4e0c0d3f1aa859c9bf827480c35b03be, 0x9bcab76878e301dfe05af5c78b528b096e870283, and list RoleGranted events on the facade up to block 391402389."
     }
   ],
   "verification": {

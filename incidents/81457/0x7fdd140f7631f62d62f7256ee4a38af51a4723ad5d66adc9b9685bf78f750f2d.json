@@ -16,7 +16,8 @@
     },
     "attackerAddresses": [
       "0x3cf5b87726af770c94494e886d2a69c42a203884",
-      "0xd31c7a22f4e6f928f1d4adabbc08c7bf88a3e402"
+      "0xd31c7a22f4e6f928f1d4adabbc08c7bf88a3e402",
+      "0xfb72b2b32740de44488db791d83125ce39a53d91"
     ]
   },
   "summary": "The Bazaar vault is a Balancer fork whose exitPool() never checks that the caller is the position holder or an approved relayer of it. The attacker called exitPool naming another holder as the sender, burning 850,000,000 of that holder’s BZR pool tokens and receiving the corresponding 392.37 WETH and 880,539,680 rYOLO.",
@@ -67,7 +68,7 @@
       }
     ],
     "confidence": "high",
-    "notes": "The whole loss is in the single exploit transaction, which is a contract creation whose constructor performs the exit. The vault 0xefb4e3cc438ef2854727a7df0d0baf844484edab pays out exactly 392.368916281212373207 WETH and 880539680.680963671973966099 rYOLO to the attacker contract while 850,000,000 BZR pool tokens are burned from the holder 0xb66585c4e460d49154d50325ce60adc44bc900e9. DefiLlama has no price series for rYOLO, so that component is recorded in quantity only and the USD total counts the WETH leg alone, which makes the figure a floor. WETH on Blast is priced through the DefiLlama ETH series. Nothing was recovered."
+    "notes": "The whole loss is in the single exploit transaction, which is a contract creation whose constructor performs the exit. The vault 0xefb4e3cc438ef2854727a7df0d0baf844484edab pays out exactly 392.368916281212373207 WETH and 880539680.680963671973966099 rYOLO to the attacker contract while 850,000,000 BZR pool tokens are burned from the holder 0xb66585c4e460d49154d50325ce60adc44bc900e9. DefiLlama has no price series for rYOLO, so that component is recorded in quantity only and the USD total counts the WETH leg alone, which makes the figure a floor. WETH on Blast is priced through the DefiLlama ETH series. The attacker, self-described as a whitehat, forwarded the ETH to 0xfb72b2b32740de44488db791d83125ce39a53d91, which returned 353.13201 ETH to 0xde4d48f64687888d112b653c8fab4f0f67c37dbb in 0x5fc22cab25e0d9cf436718a040893550c266789ebd58c7ab5936634c762a70dd (block 4623649); the rYOLO never left the attacker contract. Recoveries do not reduce gross loss."
   },
   "targets": [
     {
@@ -154,5 +155,8 @@
     "reviewSourceIds": [
       "source-5"
     ]
-  }
+  },
+  "discovery": [
+    "web:2024-06-10:yolo-games"
+  ]
 }

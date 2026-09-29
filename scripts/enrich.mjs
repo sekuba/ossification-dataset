@@ -65,7 +65,7 @@ function configured(names) {
 }
 
 function rpcUrl(chainId) {
-  return configured(RPC_ENV_BY_CHAIN_ID[chainId] ?? [])
+  return configured(RPC_ENV_BY_CHAIN_ID[chainId] ?? [`RPC_URL_FOR_CHAIN_${chainId}`])
 }
 
 async function fetchJson(url, init, attempts = 5) {

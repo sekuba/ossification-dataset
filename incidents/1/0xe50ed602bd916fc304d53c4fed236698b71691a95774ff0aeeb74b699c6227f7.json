@@ -17,14 +17,16 @@
     "attackerAddresses": [
       "0xfa2731d0bede684993ab1109db7ecf5bf33e8051",
       "0xfde0d1575ed8e06fbf36256bcdfa1f359281455a",
-      "0xd050e0a4838d74769228b49dff97241b4ef3805d"
+      "0xd050e0a4838d74769228b49dff97241b4ef3805d",
+      "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+      "0xe08d97e151473a848c3d9ca3f323cb720472d015"
     ]
   },
   "summary": "AnyswapV4Router treated a non-reverting permit call as proof of authorization. WETH's fallback returned successfully without creating an allowance, after which the router consumed users' pre-existing approvals.",
   "loss": {
     "kind": "gross-assets-lost",
     "usd": {
-      "amount": 1516176.1624227874,
+      "amount": 2269610.1624227874,
       "valuationTimestamp": 1642611600,
       "method": "incident-price",
       "sourceIds": [
@@ -33,7 +35,9 @@
         "source-7",
         "source-8",
         "source-9",
-        "source-10"
+        "source-10",
+        "source-12",
+        "source-14"
       ]
     },
     "assets": [
@@ -78,11 +82,32 @@
           "source-8",
           "source-9"
         ]
+      },
+      {
+        "asset": {
+          "chainId": 1,
+          "tokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+          "symbol": "WETH"
+        },
+        "amount": "200",
+        "usdValue": 753434.0,
+        "valuation": {
+          "method": "incident-price",
+          "timestamp": 1753817398,
+          "unitPriceUsd": 3767.17,
+          "sourceIds": [
+            "source-14"
+          ]
+        },
+        "sourceIds": [
+          "source-12",
+          "source-13"
+        ]
       }
     ],
     "confidence": "medium",
-    "notes": "Multichain reported 445 WETH lost as of January 18. The anchor transaction transferred exactly 308.636644758370382903 WETH; the 445 WETH record is the contemporaneous incident aggregate across affected users and transactions. The USD value uses the nearest preceding CoinGecko ETH observation, 12 minutes 38 seconds before the anchor. Recurrence of 2023-02-15 (87 WETH component): The victim wrapped exactly 87 ETH in the immediately preceding block, moving its WETH balance from zero to 87. The loss receipt then transfers exactly 87 WETH from the victim through the MEV helper and unwraps it, leaving the victim at zero with no WETH inflow or return; the victim's maximum router allowance is unchanged across both blocks. The victim's earlier adjacent transactions are unrelated swaps, approvals, and liquidity provision, and it sends no later transaction through block 16650000. The searcher's preceding nonce is an unrelated arbitrage that neither calls Multichain nor touches the victim; following nonces are self-transfers. The 21-second-preceding ETH price is 1,548.09 USD.",
-    "realizedAt": 1676432855
+    "notes": "Multichain reported 445 WETH lost as of January 18. The anchor transaction transferred exactly 308.636644758370382903 WETH; the 445 WETH record is the contemporaneous incident aggregate across affected users and transactions. The USD value uses the nearest preceding CoinGecko ETH observation, 12 minutes 38 seconds before the anchor. Recurrence of 2023-02-15 (87 WETH component): The victim wrapped exactly 87 ETH in the immediately preceding block, moving its WETH balance from zero to 87. The loss receipt then transfers exactly 87 WETH from the victim through the MEV helper and unwraps it, leaving the victim at zero with no WETH inflow or return; the victim's maximum router allowance is unchanged across both blocks. The victim's earlier adjacent transactions are unrelated swaps, approvals, and liquidity provision, and it sends no later transaction through block 16650000. The searcher's preceding nonce is an unrelated arbitrage that neither calls Multichain nor touches the victim; following nonces are self-transfers. The 21-second-preceding ETH price is 1,548.09 USD. Recurrence of 2025-07-29 (200 WETH component): in block 23026900 the victim 0x4527106ae1a661a9d2ffc22575bacdaacb5e51e0 swapped 200 ETH into exactly 200 WETH at index 0 and the anchor at index 1 transferred all 200 WETH to 0xc0ffeebabe5d496b2dde509f9fa189c25cf29671's helper through the same router permit path; the victim's WETH balance is zero at both block boundaries and nothing is returned. Valued at the 157-second-preceding DefiLlama ETH price of 3,767.17 USD.",
+    "realizedAt": 1753817555
   },
   "targets": [
     {
@@ -199,10 +224,44 @@
       "reviewer": "Claude Fable 5.1",
       "reviewedAt": "2026-09-03T09:00:00Z",
       "note": "Merged the 2023-02-15 recurrence into this record. The same AnyswapV4Router runtime (hash 0xd486e19e..., unchanged since deployment in source-5) was exercised again 393 days later by an unrelated actor through the identical permit path; a re-exploitation of code already shown vulnerable is more loss from the same fault, not a second failure, so it contributes the 87 WETH component (anchor source-7, valued in source-10) and its attacker addresses, while the age stays measured at the first exploit. Its review is source-9."
+    },
+    {
+      "id": "source-12",
+      "type": "onchain-transaction",
+      "chainId": 1,
+      "transactionHash": "0xae79fdcfd7c36ed654d11b352b495340bd3cc47d0849c35ac6ffa1e4859098ec"
+    },
+    {
+      "id": "source-13",
+      "type": "onchain-transaction",
+      "chainId": 1,
+      "transactionHash": "0x321f1e0e089f91fd4d3aa1278058b203a5f516492eb27ea41e00a4d4094e66de"
+    },
+    {
+      "id": "source-14",
+      "type": "price-data",
+      "provider": "DefiLlama",
+      "url": "https://coins.llama.fi/prices/historical/1753817400/coingecko:ethereum?searchWidth=10m",
+      "observedAt": 1790611730
+    },
+    {
+      "id": "source-15",
+      "type": "source-code",
+      "repository": "https://github.com/SunWeb3Sec/DeFiHackLabs",
+      "commit": "b3719ce7fb93ee6f743853ede9471e1a8bed1de0",
+      "path": "src/test/2025-07/AnyswapWETHPermit_exp.sol"
+    },
+    {
+      "id": "source-16",
+      "type": "review-note",
+      "reviewer": "Claude Opus 5.5",
+      "reviewedAt": "2026-09-28T16:08:03Z",
+      "note": "Merged the 2025-07-29 recurrence reproduced by DeFiHackLabs src/test/2025-07/AnyswapWETHPermit_exp.sol@b3719ce7 (source-15). Anchor source-12: block 23026900 index 1, timestamp 1753817555, status 1, from 0xc0ffeebabe5d496b2dde509f9fa189c25cf29671 (nonce 41125) to attack contract 0xe08d97e151473a848c3d9ca3f323cb720472d015 selector 0x8cbf8566. callTracer: attack contract -> 0x50f02612ea1f79a84ef72d6912a5452f40a88edd (AnySwap-compatible wrapper whose underlying() 0x6f307dc3 is WETH) -> router 0x6b7a87899490ece95443e979ca9485cbe7e71522 selector 0x8d7d3eea (anySwapOutUnderlyingWithPermit) -> WETH.permit 0xd505accf (non-reverting fallback, no allowance created) -> WETH.transferFrom 0x23b872dd. Receipt log 4: WETH Transfer 200.000000000000000000 from victim 0x4527106ae1a661a9d2ffc22575bacdaacb5e51e0 to 0x50f02612; log 8 forwards 199 WETH to the attack contract, which unwraps and pays 199.9 ETH to 0x25b71878850d008ec4237c55f0a59198bcc72b43. Victim funding source-13 (same block, index 0): the victim swapped 200 ETH to exactly 200 WETH through 1inch 0x111111125421ca6dc452d289314280a0f8842a65; victim WETH balanceOf is 0 at blocks 23026899, 23026900 and 23030000 and its router allowance is type(uint256).max at 23026898 through 23030000, so gross depletion is exactly 200 WETH with no return. Router runtime keccak at block 23026899 is 0xd486e19e680b62428460944b53af4651a00108b45a6d9dd69040aa0044284434, byte-identical to target-1, so this is more loss from the same fault by a later actor; age stays measured at the 2022 anchor. Valued at DefiLlama ETH 3767.17 USD (price timestamp 1753817398, 157 s before the transaction, source-14): 753,434 USD."
     }
   ],
   "discovery": [
-    "web:2023-02-15:multichain-anyswap-v4-router-second-exploitation-wave"
+    "web:2023-02-15:multichain-anyswap-v4-router-second-exploitation-wave",
+    "dfhl:src/test/2025-07/AnyswapWETHPermit_exp.sol"
   ],
   "verification": {
     "tier": "reviewed",
@@ -212,10 +271,12 @@
     "reviewSourceIds": [
       "source-4",
       "source-9",
-      "source-11"
+      "source-11",
+      "source-16"
     ]
   },
   "notes": [
-    "The router was exploited again on 2023-02-15 (transaction 0x192e2f19ab497f93ed32b2ed205c4b2ff628c82e2f236b26bec081ac361be47f by 0xfde0d157... and 0xd050e0a4...). That recurrence is merged here as the 87 WETH component; the code age is measured at the first exploit."
+    "The router was exploited again on 2023-02-15 (transaction 0x192e2f19ab497f93ed32b2ed205c4b2ff628c82e2f236b26bec081ac361be47f by 0xfde0d157... and 0xd050e0a4...). That recurrence is merged here as the 87 WETH component; the code age is measured at the first exploit.",
+    "The router was exploited again on 2025-07-29 (transaction 0xae79fdcfd7c36ed654d11b352b495340bd3cc47d0849c35ac6ffa1e4859098ec by 0xc0ffeebabe5d496b2dde509f9fa189c25cf29671). That recurrence is merged here as the 200 WETH component (review source-16)."
   ]
 }

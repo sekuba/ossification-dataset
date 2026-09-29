@@ -5,7 +5,7 @@
     "name": "RADT DAO",
     "slug": "radt-dao"
   },
-  "name": "RADT DAO wrap withdraw arbitrary transfer",
+  "name": "RADT DAO wrapper unauthenticated withdraw",
   "incident": {
     "chainId": 56,
     "exploit": {
@@ -15,23 +15,46 @@
       "timestamp": 1663905803
     },
     "attackerAddresses": [
-      "0xa957910cb426cb52dfc6dff5e582860a22db70d2"
+      "0xa957910cb426cb52dfc6dff5e582860a22db70d2",
+      "0x90b50cab27ede09a0d59743e4112d6e87e838ff4"
     ]
   },
-  "summary": "The RADT wrapper's withdraw(address,address,uint256) let any caller move RADT out of an arbitrary account, so the attacker stripped the RADT/USDT pair, synced it and sold RADT into the drained reserves.",
+  "summary": "The RADT-DAO token (TWN) calls wrapper withdraw(from,to,amount) on every transfer, and the token's fallback lets the wrapper move any holder's balance. The wrapper, a proxy to implementation 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62, never checks that withdraw's caller is the token. With cc (slot 0x1a) false, a direct call with to = the RADT/USDT pair and a pair USDT balance above reserve runs the pair-payout branch, which transfers RADT out of the pair to the named LP holder and fee recipients. The attacker stripped the pair's RADT, called sync() and sold RADT into the remaining USDT.",
   "loss": {
-    "kind": "unspecified",
+    "kind": "gross-assets-lost",
     "usd": {
-      "amount": 94305,
+      "amount": 94459.32096524519,
       "valuationTimestamp": 1663905803,
-      "method": "unspecified",
+      "method": "stablecoin-par",
       "sourceIds": [
-        "source-4"
+        "source-7"
       ]
     },
-    "assets": [],
-    "confidence": "unknown",
-    "notes": "Imported rounded estimate. Source-4 reproduces 94304.580256723571814836 USDT depletion for the recorded transaction; full campaign valuation remains unresolved."
+    "assets": [
+      {
+        "asset": {
+          "chainId": 56,
+          "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+          "symbol": "USDT"
+        },
+        "amount": "94459.320965245189785325",
+        "usdValue": 94459.32096524519,
+        "valuation": {
+          "method": "stablecoin-par",
+          "timestamp": 1663905803,
+          "unitPriceUsd": 1,
+          "sourceIds": [
+            "source-7"
+          ]
+        },
+        "sourceIds": [
+          "source-7"
+        ]
+      }
+    ],
+    "confidence": "high",
+    "notes": "Exact net BSC-USD depletion of the RADT/USDT pair 0xaf8fb60f310dcd8e488e4fa10c48907b7abf115e. Source-1: 95305.580256723571814836 USDT out minus the attacker's 1000 USDT buy and 1 USDT balance nudge = 94304.580256723571814836; the DODO flash loan of 243673.2130680496 USDT is repaid in the same tx. Three later direct wrapper withdraw calls repeated the drain on the depleted pair: 0x2a8b13da919c35f9d50980db02b7af8f0346df313f342393b5bd5178f8f5a795 (block 21581514, 139.947367702162221125 USDT), 0x2e4a4eda9b168e9dfdc6768c75daba7b509b91ab5d5383173f4e4337721427b8 (21581562, 9.813802445018996652) and 0x112c387548f930115fdbe771e93b8030d2280ddaf1ff9422fb23c5f0d121e294 (21617521, 4.979538374436752712); a fourth, 0x35f01ebce53727872ef601d30fcbb73e9f53f62ea8e5a06988a122b643f129ff (21625307), moved no USDT. USDT is at par.",
+    "realizedAt": 1664041894
   },
   "targets": [
     {
@@ -50,39 +73,42 @@
         "transactionIndex": 98
       },
       "ageReset": {
-        "kind": "implementation-change",
-        "timestamp": 1661062876,
-        "blockNumber": 20627998,
-        "transactionHash": "0x028d710cfbd0c034c39c0d698e024784a155446b20f01c4b10c72a3a8ef36a6b",
-        "transactionIndex": 53,
+        "kind": "configuration-change",
+        "timestamp": 1661119951,
+        "blockNumber": 20647023,
+        "transactionHash": "0xb79eb3e026b0ae52b4397c2393a921353ba6f10dc4ca5a84c685aeced31a55ca",
+        "transactionIndex": 54,
         "mechanism": {
           "type": "storage-write",
           "address": "0x01112ea0679110cbc0ddea567b51ec36825aef9b",
-          "storageSlot": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb",
-          "valueBefore": "0x000000000000000000000000e0d971450997bef4508abeae8082291c2658f2b8",
-          "valueAfter": "0x0000000000000000000000009122191d7b2ccf11a2600de4eafd6b8cd3d03a62"
+          "storageSlot": "0x000000000000000000000000000000000000000000000000000000000000001a",
+          "valueBefore": "0x0000000000000000000000000000000000000000000000000000000000000001",
+          "valueAfter": "0x0000000000000000000000000000000000000000000000000000000000000000"
         },
-        "description": "Implementation activation reproduced by prestateTracer diffMode; latest causal configuration remains unresolved."
+        "description": "Owner call cc(false) (selector 0xca03656b) cleared wrapper slot 0x1a, 36 blocks after cc(true) had set it. With slot 0x1a nonzero the implementation's pair-payout routine returns early (pc 0x1889 SLOAD 0x1a, ISZERO, JUMPI to 0x189c, else return) before any pair transfer. debug_traceCall of the attacker's withdraw at block 21572418 makes 6 pair->holder transfers with the slot at 0 and none with it at 1, so the cleared flag is necessary to the exploited path. No later write to the slot occurs before the exploit, and the implementation (activated at block 20627998) is unchanged until block 21625505."
       },
-      "codeAgeSeconds": 2842927,
-      "failureModeId": "provisional:eip155:56:0xd692f71de2768017390395db815d34033013136c378177c05d0d46ef3b6f0897:failure-1",
+      "codeAgeSeconds": 2785852,
+      "failureModeId": "failure:radt-dao-wrapper-unauthenticated-withdraw",
       "evidence": {
         "identitySourceIds": [
           "source-2",
           "source-4",
-          "source-5"
+          "source-5",
+          "source-8"
         ],
         "ageSourceIds": [
-          "source-4",
           "source-5",
-          "source-6"
+          "source-6",
+          "source-8",
+          "source-9"
         ]
       },
       "verification": {
-        "tier": "provisional",
-        "curveEligible": false,
-        "limitations": [
-          "Later wrapper configuration writes and token authority history have not been fully adjudicated; implementation activation is provisional age basis."
+        "tier": "reviewed",
+        "curveEligible": true,
+        "limitations": [],
+        "reviewSourceIds": [
+          "source-8"
         ]
       }
     }
@@ -116,21 +142,46 @@
       "id": "source-4",
       "type": "review-note",
       "reviewer": "OpenAI Codex",
-      "reviewedAt": "2026-09-16T15:26:31Z",
-      "note": "Partial review, not promotion. Reproduce source-1 eth_getTransactionReceipt: USDT 0x55d398326f99059ff775485246999027b3197955 (18 decimals), Transfer log 22 pays 95305580256723571814836 raw units from pair 0xaf8fb60f310dcd8e488e4fa10c48907b7abf115e to attacker helper; logs 2 and 9 supply 1000000000000000000000 and 1000000000000000000 raw units to that pair. Recorded-transaction depletion after removing campaign inputs is 94304.580256723571814836 USDT; full campaign scope remains unresolved. source-1 debug_traceTransaction(callTracer) shows helper 0x90b50cab27ede09a0d59743e4112d6e87e838ff4 directly calling wrapper selector 0xd9caed12, delegatecalling the recorded implementation; wrapper invokes token 0xdc8cb92aa6fc7277e3ec32e3f00ad7b8437ae883. Reproduce eth_getLogs for that token Transfer topic with pair as topic1 over blocks 20579790..21572419: 4522 logs in 4309 unique transactions. Trace each with callTracer and filter wrapper calls with selector 0xd9caed12 whose caller is not that token: only source-1 matches, with zero trace errors. This bounds earlier pair depletion only, not arbitrary token-holder abuse or later campaigns. source-6 receipt identifies deployment block/index; source-5 prestateTracer(diffMode=true) witnesses the implementation slot before/after values stored in ageReset. The slot is keccak256(eip1967.proxy.implementation), one greater than the standard EIP-1967 slot. Unresolved: latest causal configuration, full first-use and campaign scope. Next: classify wrapper persistent reads against all configuration writes after activation, inspect token authority history, and extend Transfer/call-trace scan beyond pair-origin transfers and beyond recorded incident to the fix. Later wrapper txlist identifies withdrawal 0x35f01ebce53727872ef601d30fcbb73e9f53f62ea8e5a06988a122b643f129ff at block 21625307 and implementation change 0xa3c7e285d0628bdf547ce1568cb50907fcc74b959134ac02d61997776af52d8e at 21625505. Next campaign-scope step: trace that withdrawal and test whether it repeats the fault before treating the later implementation change as a fix."
+      "reviewedAt": "2026-09-28T21:43:57Z",
+      "note": "Earliest exercise. eth_getLogs of RADT 0xdc8cb92aa6fc7277e3ec32e3f00ad7b8437ae883 Transfer with the pair as sender (topic1) over blocks 20579790-21625505 gives 4651 logs in 4419 transactions; debug_traceTransaction(callTracer) on all of them (0 errors) finds wrapper 0x01112ea0679110cbc0ddea567b51ec36825aef9b withdraw (0xd9caed12) called by anything other than the RADT token only in source-1 (helper 0x90b50cab), then 0x2a8b13da and 0x2e4a4eda (0xfc4cb287), 0x112c3875 (0xad02f63c) and 0x35f01ebc (0x5c814db1)."
     },
     {
       "id": "source-6",
       "type": "onchain-transaction",
       "chainId": 56,
       "transactionHash": "0x44513a58d6b90cea4e874073c887bc8a2f103f2dfcdb5b4a24060fb1aebcbe08"
+    },
+    {
+      "id": "source-7",
+      "type": "review-note",
+      "note": "Loss: the source-1 receipt has BSC-USD 0x55d398326f99059ff775485246999027b3197955 Transfer logs 2 and 9 (helper 0x90b50cab27ede09a0d59743e4112d6e87e838ff4 to pair, 1000e18 and 1e18 wei) and log 22 (pair to helper, 95305580256723571814836 wei), so the pair's net change is -94304580256723571814836 wei. Log 27 forwards 94304.580256723571814836 USDT to 0xcfb0cfc5ca8b8c1ad56dae5dd9720ea73f967ac7. The DODO 0xda26dd3c1b917fbf733226e9e71189abb4919e3f loan (logs 1/25) nets to zero.",
+      "reviewer": "Claude Opus 5.5",
+      "reviewedAt": "2026-09-28T19:20:00Z"
+    },
+    {
+      "id": "source-8",
+      "type": "review-note",
+      "note": "Target identity and age. The wrapper proxy 0x01112ea0679110cbc0ddea567b51ec36825aef9b stores its implementation at slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbb (one below EIP-1967): 0xe0d971450997bef4508abeae8082291c2658f2b8 at block 20627997 and 0x9122191d7b2ccf11a2600de4eafd6b8cd3d03a62 from 20627998 through 21572418; keccak256(runtime of 0x9122191d) = 0x44eb68668e4395c791f8bff2761ffed1dde7641876d0d956f5a7c86f86212701 at 21572418. Wrapper slot 0x1a is 1 at block 20647022 and 0 from 20647023 (source-9, owner cc(false), selector 0xca03656b) through 21572418. debug_traceCall of source-1's withdraw input (0xd9caed12, from 0x90b50cab, to = pair, amount 0x1304649ca36b6a780000) at block 21572418, with the pair's BSC-USD balance overridden 1e18 above its actual 94453.473060895791601540 (balances mapping slot 1), emits 6 RADT Transfer logs out of the pair with slot 0x1a = 0 and none with slot 0x1a = 1, so the cleared flag is necessary to the payout branch.",
+      "reviewer": "Claude Opus 5.5",
+      "reviewedAt": "2026-09-28T21:43:57Z"
+    },
+    {
+      "id": "source-9",
+      "type": "onchain-transaction",
+      "chainId": 56,
+      "transactionHash": "0xb79eb3e026b0ae52b4397c2393a921353ba6f10dc4ca5a84c685aeced31a55ca"
     }
   ],
   "verification": {
-    "tier": "provisional",
-    "limitations": [
-      "Earliest arbitrary-holder abuse and later campaigns remain unresolved; source-4 gives the exact bounded scan and next steps.",
-      "Full campaign valuation and latest causal configuration remain provisional."
+    "tier": "reviewed",
+    "limitations": [],
+    "reviewSourceIds": [
+      "source-7",
+      "source-8"
     ]
-  }
+  },
+  "discovery": [
+    "dfhl:src/test/2022-09/RADT_exp.sol",
+    "seed:radt-dao:2022-09-23:radt-dao-wrap-withdraw-arbitrary-transfer"
+  ]
 }

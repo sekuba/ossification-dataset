@@ -194,7 +194,8 @@
       }
     ],
     "confidence": "high",
-    "notes": "The failure-finalizing notarization is anchored 252 seconds before the payout transaction. The drain receipt and call trace establish the exact eight asset quantities; the USD total uses incident-time DefiLlama prices for ETH, tBTC, MKR and scrvUSD and par for DAI, USDC, USDT and EURC."
+    "notes": "The failure-finalizing notarization is anchored 252 seconds before the payout transaction. The drain receipt and call trace establish the exact eight asset quantities; the USD total uses incident-time DefiLlama prices for ETH, tBTC, MKR and scrvUSD and par for DAI, USDC, USDT and EURC.",
+    "realizedAt": 1784778359
   },
   "targets": [
     {
@@ -310,16 +311,25 @@
       "provider": "DefiLlama",
       "url": "https://coins.llama.fi/prices/historical/1784778107/coingecko:ethereum,ethereum:0x18084fba666a33d37592fa2633fd49a74dd93a88,ethereum:0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2,ethereum:0x0655977feb2f289a4ab78af67bab0d17aab84367",
       "observedAt": 1787599377
+    },
+    {
+      "id": "source-10",
+      "type": "review-note",
+      "reviewer": "Claude Opus 5.5",
+      "reviewedAt": "2026-09-28T16:20:00Z",
+      "note": "Reconciled seed row seed:verusbridge:2026-07-23:verusbridge-duplicate-state-root-parser-divergence, which was pending only because its exploitTx 0xa1f1e65c1cea4dba4ae439cd4dcdba6cc2dbda0ed1228e61f29ae9c9324eb099 is the payout, not this record's anchor. eth_getTransactionReceipt: status 1, block 25592836, timestamp 1784778359 (2026-07-23T03:45:59Z, the seed row's date), 252 s after the anchor at block 25592815 index 622; it is already source-3 and supplies all eight loss components, same victim Delegator 0x71518580f36feceffe0721f06ba4703218cd7f63 and the same 2026-07-12 module swap (source-6) the seed row's curated review ages from. No additional loss; realizedAt set to the payout timestamp."
     }
   ],
   "discovery": [
-    "web:2026-07-23:verus-bridge-second-2026-incident"
+    "web:2026-07-23:verus-bridge-second-2026-incident",
+    "seed:verusbridge:2026-07-23:verusbridge-duplicate-state-root-parser-divergence"
   ],
   "verification": {
     "tier": "reviewed",
     "limitations": [],
     "reviewSourceIds": [
-      "source-5"
+      "source-5",
+      "source-10"
     ]
   },
   "notes": [

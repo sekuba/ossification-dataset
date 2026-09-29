@@ -46,7 +46,7 @@ const RPC_ENV_BY_CHAIN_ID = {
 }
 
 function rpcUrl(chainId) {
-  for (const name of RPC_ENV_BY_CHAIN_ID[chainId] ?? []) {
+  for (const name of RPC_ENV_BY_CHAIN_ID[chainId] ?? [`RPC_URL_FOR_CHAIN_${chainId}`]) {
     if (process.env[name]) return process.env[name]
   }
 }
@@ -124,6 +124,42 @@ function walkIncidentFiles(directory) {
     else if (stat.isFile() && entry.endsWith('.json')) result.push(absolute)
   }
   return result
+}
+
+// callTracer frames; parity trace_transaction output is rebuilt into the same tree
+// for providers without debug_traceTransaction.
+async function callTrace(chainId, hash) {
+  try {
+    return await rpc(chainId, 'debug_traceTransaction', [
+      hash,
+      { tracer: 'callTracer', tracerConfig: { onlyTopCall: false, withLog: false } },
+    ])
+  } catch (debugError) {
+    let flat
+    try {
+      flat = await rpc(chainId, 'trace_transaction', [hash])
+    } catch {
+      throw debugError
+    }
+    if (!Array.isArray(flat) || flat.length === 0) throw debugError
+    const frames = new Map()
+    for (const entry of flat) {
+      const { action = {}, result, type } = entry
+      const create = type === 'create'
+      frames.set(entry.traceAddress.join(','), {
+        type: create ? String(action.creationMethod ?? 'create').toUpperCase() : String(action.callType ?? type).toUpperCase(),
+        from: action.from,
+        to: create ? result?.address : action.to ?? action.address,
+        calls: [],
+        ...(entry.error ? { error: entry.error } : {}),
+      })
+    }
+    for (const entry of flat) {
+      if (entry.traceAddress.length === 0) continue
+      frames.get(entry.traceAddress.slice(0, -1).join(','))?.calls.push(frames.get(entry.traceAddress.join(',')))
+    }
+    return frames.get('')
+  }
 }
 
 function collectTraceFrames(frame, ancestors = [], output = []) {
@@ -251,10 +287,7 @@ async function verifyTransactionSet(source, report) {
 async function verifyTrace(chainId, exploitHash, target, report) {
   let trace
   try {
-    trace = await rpc(chainId, 'debug_traceTransaction', [
-      exploitHash,
-      { tracer: 'callTracer', tracerConfig: { onlyTopCall: false, withLog: false } },
-    ])
+    trace = await callTrace(chainId, exploitHash)
   } catch (error) {
     inconclusive(report, `${target.id}:execution-trace`, error.message)
     return
@@ -270,7 +303,7 @@ async function verifyTrace(chainId, exploitHash, target, report) {
   pass(
     report,
     `${target.id}:execution-trace`,
-    `executionAddress observed in ${entries.length} call frame(s)`,
+    `executionAddress observed in ${executionEntries.length} call frame(s)`,
   )
 
   if (target.codeArtifact.address) {
@@ -495,10 +528,7 @@ async function verifyDeployment(chainId, target, report) {
     }
     else {
       try {
-        const trace = await rpc(chainId, 'debug_traceTransaction', [
-          deployment.transactionHash,
-          { tracer: 'callTracer', tracerConfig: { onlyTopCall: false, withLog: false } },
-        ])
+        const trace = await callTrace(chainId, deployment.transactionHash)
         const creation = collectTraceFrames(trace).find(
           ({ frame }) =>
             ['CREATE', 'CREATE2'].includes(String(frame.type).toUpperCase()) &&
@@ -665,10 +695,7 @@ async function verifyAgeResetMechanism(chainId, target, anchored, report) {
       return
     }
     try {
-      const trace = await rpc(chainId, 'debug_traceTransaction', [
-        reset.transactionHash,
-        { tracer: 'callTracer', tracerConfig: { onlyTopCall: false, withLog: false } },
-      ])
+      const trace = await callTrace(chainId, reset.transactionHash)
       const creation = collectTraceFrames(trace).find(
         ({ frame }) =>
           ['CREATE', 'CREATE2'].includes(String(frame.type).toUpperCase()) &&

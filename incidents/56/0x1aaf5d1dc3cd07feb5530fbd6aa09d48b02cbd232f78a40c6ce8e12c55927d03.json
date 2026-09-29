@@ -77,7 +77,7 @@
     ],
     "confidence": "high",
     "notes": "Three calls using the unguarded forwarder entry point define the BSC campaign. In the first two, KiloEx USDT vault 0xef7af0804aab3885da59a8236fabfa19ddc6cf48 loses a transaction-local net 892947.452212280000000000 and 61974.379910380000000000 USDT. In the third, the attacker directly relays USDT.transfer through the forwarder and removes 4306.800000000000000000 USDT of accumulated KiloEx fees. The resulting gross KiloEx outflow is 959228.632122660000000000 USDT; the attacker EOA receives 959217.079253360000000000 USDT, with the difference going to flash-loan and protocol fees. This record covers BSC only and does not include the separately recorded Base loss or the out-of-scope opBNB leg. Later recovery under the cross-chain bounty agreement is not netted out of the exploit-time gross loss. Base leg of the same campaign (USDC component): Three exploit transactions (blocks 28933730, 28933848, 28935593) net 3,323,209.390248 USDC out of the KiloEx USDC liquidity pool 0xdf5acc616cd3ea9556ec340a11b54859a393ebbb, whose USDC balance falls from 3,323,951.604434 at block 28933729 to 1,555.175358 at block 28935593 (the residual difference is unrelated third-party deposits between the exploit transactions). Of that outflow the attacker EOA 0x00fac92881556a90fdb19eae9f23640b95b4bcbd keeps 3,323,170.888033 USDC; 15 USDC is the Uniswap V3 flash-loan fee and 23.502215 USDC is a KiloEx vault fee. This record covers the Base leg only; the BSC leg is a separate record and opBNB is out of the corpus, so the widely reported ~7.5M campaign figure is not used here. Between 2025-04-15 and 2025-04-18 the attacker returned the proceeds under a 10% bounty deal (on Base: 305.536342416848900260 ETH, 10,551.589691 USDC, 232.193079 USDT and 0.090531 USDbC to 0xd38a22f5330f45162f13086d6ccbde0335c1ae9e). Recovery is not netted out of the exploit-time gross figure.",
-    "realizedAt": 1744660053
+    "realizedAt": 1744660533
   },
   "targets": [
     {
@@ -225,10 +225,18 @@
       "reviewer": "Claude Fable 5.1",
       "reviewedAt": "2026-09-03T09:00:00Z",
       "note": "Merged the Base leg of the same 2025-04-14 campaign into this record. Sixty seconds after the BSC anchor the same attacker exercised the byte-identical MinimalForwarder runtime (hash 0xca3ef451...) deployed on Base at 0x3274b668aed85479e2a8511e74d7db7240ebe7c8 in source-8 (block 27437694, 34.6 days before its first exploit) through source-7 and the two further transactions in source-9, netting 3323209.390248 USDC out of the KiloEx USDC pool. One fault, one attacker, one hour is one incident; the Base forwarder is described here rather than as a target because the verifier anchors targets on the incident chain. Its review is source-13."
+    },
+    {
+      "id": "source-15",
+      "type": "review-note",
+      "reviewer": "Claude Opus 5.5",
+      "reviewedAt": "2026-09-28T16:20:00Z",
+      "note": "Reconciled seed row seed:kiloex:2025-04-14:minimalforwarder-spoofed-keeper-on-base, pending only because its exploitTx 0x6b378c84aa57097fb5845f285476e33d6832b8090d36d02fe0e1aed909228edd is the Base leg rather than this BSC anchor; that transaction is source-7 and, with the other two Base transactions in source-9, already supplies the 3323209.390248 USDC component, so no loss is added. Corrected realizedAt: eth_getTransactionReceipt on Base gives blocks 28933730, 28933848 and 28935593 (all status 1) for the three Base transactions, and eth_getBlockByNumber(28935593).timestamp = 1744660533 (2025-04-14T19:55:33Z), later than the last BSC transaction 0x1daa1c3b1872d98c2dba1564a3604a1e49d13e5fb157e79a6f28be3faa1edc7a at BSC block 48359406, timestamp 1744660053, which the previous realizedAt used."
     }
   ],
   "discovery": [
-    "web:2025-04-15:kiloex"
+    "web:2025-04-15:kiloex",
+    "seed:kiloex:2025-04-14:minimalforwarder-spoofed-keeper-on-base"
   ],
   "verification": {
     "tier": "reviewed",
@@ -236,7 +244,8 @@
     "reviewSourceIds": [
       "source-6",
       "source-13",
-      "source-14"
+      "source-14",
+      "source-15"
     ]
   },
   "notes": [
